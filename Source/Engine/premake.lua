@@ -14,7 +14,14 @@ project "AtomEngine"
 
     defines
     {
-        "ATOM_EXPORT"
+        "ATOM_EXPORT",
+        "ATOM_PLATFORM_LINUX"
+    }
+
+    includedirs
+    {
+        "Private/",
+        "Public/"
     }
 
     filter "configurations:Debug"

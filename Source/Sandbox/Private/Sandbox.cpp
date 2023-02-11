@@ -1,6 +1,19 @@
-#include "AtomEngine/Engine.h"
+#include <iostream>
+#include "Atom/Engine.h"
 
-int main()
+namespace Atom::Engine
 {
-    Atom::SayHello();
+    class Sandbox : public Application
+    {
+    public:
+        Sandbox()
+        {
+            std::cout << "Sandbox" << std::endl;
+        }
+    };
+
+    Application* CreateApplication()
+    {
+        return new Sandbox();
+    }
 }

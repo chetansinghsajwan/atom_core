@@ -19,7 +19,7 @@ project "Sandbox"
 
     includedirs
     {
-        "Public/",
         "Private/",
+        "Public/",
         "../Engine/Public/"
     }
