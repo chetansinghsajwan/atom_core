@@ -2,7 +2,7 @@ project "AtomEngine"
     kind "SharedLib"
     language "C++"
 
-    location ("Build/".._ACTION)
+    location "Build/"
     targetdir "Build/Bin"
     objdir "Build/Bin-Int"
 
