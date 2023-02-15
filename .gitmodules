@@ -1,3 +1,0 @@
-[submodule "ThirdParty/Premake-Modules/premake-export-compile-commands"]
-	path = ThirdParty/Premake-Modules/premake-export-compile-commands
-	url = https://github.com/tarruda/premake-export-compile-commands.git
