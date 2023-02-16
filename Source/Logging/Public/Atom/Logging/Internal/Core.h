@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <chrono>
 #include <memory>
+#include "Mutex.h"
 
 #define ATOM_CONFIG_DEBUG
 #define FWD(...) std::forward<decltype(__VA_ARGS__)>(__VA_ARGS__)
