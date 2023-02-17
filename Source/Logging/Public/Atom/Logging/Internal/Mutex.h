@@ -2,12 +2,97 @@
 #include <mutex>
 #include <concepts>
 
+#define STATIC_ASSERT_MSG(assertion, msg) static_assert(assertion, msg)
+#define STATIC_ASSERT(assertion) static_assert(assertion)
+#define STATIC_THROW(msg) static_assert(false, msg)
+
 namespace Atom
 {
+//// -----------------------------------------------------------------------------------------------
+//// Lockable Requirements.
+//// -----------------------------------------------------------------------------------------------
+
+    /// --------------------------------------------------------------------------------------------
+    /// Requirements for Lockable type.
+    /// --------------------------------------------------------------------------------------------
+    template <typename LockableType>
+    concept LockableRequirements = requires(LockableType lock)
+    {
+        { lock.Lock() } -> std::same_as<void>;
+        { lock.TryLock() } -> std::same_as<bool>;
+        { lock.Unlock() } -> std::same_as<void>;
+    };
+
+    /// --------------------------------------------------------------------------------------------
+    /// Alias for LockableRequirements to use inline with auto.
+    /// --------------------------------------------------------------------------------------------
+    template <typename LockableType>
+    concept Lockable = LockableRequirements<LockableType>;
+
+//// -----------------------------------------------------------------------------------------------
+//// Lockable Implementations.
+//// -----------------------------------------------------------------------------------------------
+
+    /// --------------------------------------------------------------------------------------------
+    /// NullLockable is a stateless object that doesn't has any locking mechanism.
+    /// It's used where a Lockable implementation is needed but thread-safety is not needed.
+    /// --------------------------------------------------------------------------------------------
+    class NullLockable
+    {
+    public:
+        /// ----------------------------------------------------------------------------------------
+        /// DefaultConstructor. Does nothing.
+        /// ----------------------------------------------------------------------------------------
+        constexpr NullLockable() noexcept { }
+
+        /// ----------------------------------------------------------------------------------------
+        /// CopyConstructor is deleted.
+        /// ----------------------------------------------------------------------------------------
+        constexpr NullLockable(const NullLockable& other) = delete;
+
+        /// ----------------------------------------------------------------------------------------
+        /// MoveConstructor is default.
+        /// ----------------------------------------------------------------------------------------
+        constexpr NullLockable(NullLockable&& other) = default;
+
+        /// ----------------------------------------------------------------------------------------
+        /// CopyOperator is deleted.
+        /// ----------------------------------------------------------------------------------------
+        constexpr NullLockable& operator = (const NullLockable& other) = delete;
+
+        /// ----------------------------------------------------------------------------------------
+        /// MoveOperator is default.
+        /// ----------------------------------------------------------------------------------------
+        constexpr NullLockable& operator = (NullLockable&& other) = default;
+
+        /// ----------------------------------------------------------------------------------------
+        /// Destructor. Does nothing.
+        /// ----------------------------------------------------------------------------------------
+        ~NullLockable() { }
+
+    public:
+        /// ----------------------------------------------------------------------------------------
+        /// Does nothing.
+        /// ----------------------------------------------------------------------------------------
+        constexpr void Lock() { }
+
+        /// ----------------------------------------------------------------------------------------
+        /// Always returns true.
+        /// ----------------------------------------------------------------------------------------
+        constexpr bool TryLock() { return true; }
+
+        /// ----------------------------------------------------------------------------------------
+        /// Does nothing.
+        /// ----------------------------------------------------------------------------------------
+        constexpr void Unlock() { }
+    };
+
+    STATIC_ASSERT(Lockable<NullLockable>);
+
     /// --------------------------------------------------------------------------------------------
     /// SimpleMutex implementation.
     /// 
-    /// @TODO Implement this class without {std::mutex}.
+    /// @TODO Implement this class without {std::lock}.
     /// --------------------------------------------------------------------------------------------
     class SimpleMutex
     {
@@ -42,13 +127,13 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Destructor.
         /// 
-        /// @NOTE If mutex is locked by some thread and mutex is destroyed, behaviour is undefined.
+        /// @NOTE If lock is locked by some thread and lock is destroyed, behaviour is undefined.
         /// ----------------------------------------------------------------------------------------
         ~SimpleMutex() { }
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// Locks the mutex. If the mutex is already locked by some thread then blocks the calling
+        /// Locks the lock. If the lock is already locked by some thread then blocks the calling
         /// thread until lock is acquired.
         /// 
         /// @SEE TryLock().
@@ -59,7 +144,7 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Tries to lock the mutex. If the mutex is already locked by some thread then returns but 
+        /// Tries to lock the lock. If the lock is already locked by some thread then returns but 
         /// doesn't blocks the thread.
         /// 
         /// @RETURNS {true} if lock acquired, else {false}.
@@ -70,7 +155,7 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Unlocks the mutex.
+        /// Unlocks the lock.
         /// ----------------------------------------------------------------------------------------
         void Unlock()
         {
@@ -84,127 +169,68 @@ namespace Atom
         std::mutex _impl;
     };
 
-    /// --------------------------------------------------------------------------------------------
-    /// NullMutex is a stateless object that doesn't has any locking mechanism.
-    /// It's used where a Mutex implementation is needed but thread-safety is not needed.
-    /// --------------------------------------------------------------------------------------------
-    class NullMutex
-    {
-    public:
-        /// ----------------------------------------------------------------------------------------
-        /// DefaultConstructor. Does nothing.
-        /// ----------------------------------------------------------------------------------------
-        constexpr NullMutex() noexcept { }
+    STATIC_ASSERT(Lockable<SimpleMutex>);
 
-        /// ----------------------------------------------------------------------------------------
-        /// CopyConstructor is deleted.
-        /// ----------------------------------------------------------------------------------------
-        constexpr NullMutex(const NullMutex& other) = delete;
-
-        /// ----------------------------------------------------------------------------------------
-        /// MoveConstructor is default.
-        /// ----------------------------------------------------------------------------------------
-        constexpr NullMutex(NullMutex&& other) = default;
-
-        /// ----------------------------------------------------------------------------------------
-        /// CopyOperator is deleted.
-        /// ----------------------------------------------------------------------------------------
-        constexpr NullMutex& operator = (const NullMutex& other) = delete;
-
-        /// ----------------------------------------------------------------------------------------
-        /// MoveOperator is default.
-        /// ----------------------------------------------------------------------------------------
-        constexpr NullMutex& operator = (NullMutex&& other) = default;
-
-        /// ----------------------------------------------------------------------------------------
-        /// Destructor. Does nothing.
-        /// ----------------------------------------------------------------------------------------
-        ~NullMutex() { }
-
-    public:
-        /// ----------------------------------------------------------------------------------------
-        /// Does nothing.
-        /// ----------------------------------------------------------------------------------------
-        constexpr void Lock() { }
-
-        /// ----------------------------------------------------------------------------------------
-        /// Always returns true.
-        /// ----------------------------------------------------------------------------------------
-        constexpr bool TryLock() { return true; }
-
-        /// ----------------------------------------------------------------------------------------
-        /// Does nothing.
-        /// ----------------------------------------------------------------------------------------
-        constexpr void Unlock() { }
-    };
-    
-    template <typename MutexType>
-    concept MutexRequirements = requires(MutexType mutex)
-    {
-        { mutex.Lock() } -> std::same_as<void>;
-        { mutex.TryLock() } -> std::same_as<bool>;
-        { mutex.Unlock() } -> std::same_as<void>;
-    };
-
-    template <typename MutexType>
-    concept Mutex = MutexRequirements<MutexType>;
+//// -----------------------------------------------------------------------------------------------
+//// Lock Guard.
+//// -----------------------------------------------------------------------------------------------
 
     /// --------------------------------------------------------------------------------------------
-    /// Locks the mutex on construction and unlocks at destruction. This is done to guarantee
+    /// Locks the lock on construction and unlocks at destruction. This is done to guarantee
     /// exception safety.
     /// --------------------------------------------------------------------------------------------
-    template <typename MutexType>
-    requires MutexRequirements<MutexType>
-    class MutexGuard
+    template <typename LockableType>
+        requires LockableRequirements<LockableType>
+    class LockGuard
     {
     public:
         /// ----------------------------------------------------------------------------------------
-        /// Constructor. Locks the mutex.
+        /// Constructor. Locks the lock.
         /// 
-        /// @PARAM[IN] mutex Mutex to lock.
+        /// @PARAM[IN] lock Lockable to lock.
         /// 
-        /// @THROWS UnkownException Exception thrown by {mutex.Lock()}.
+        /// @THROWS UnkownException Exception thrown by {lock.Lock()}.
         /// ----------------------------------------------------------------------------------------
-        MutexGuard(MutexType& mutex):
-            _mutex(mutex)
+        LockGuard(LockableType& lock):
+            _lock(lock)
         {
-            _mutex.Lock();
+            _lock.Lock();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Destructor. Unlocks the mutex.
+        /// Destructor. Unlocks the lock.
         /// 
-        /// @THROWS UnkownException Exception thrown by {mutex.Lock()}.
+        /// @THROWS UnkownException Exception thrown by {lock.Lock()}.
         /// ----------------------------------------------------------------------------------------
-        ~MutexGuard()
+        ~LockGuard()
         {
-            _mutex.Unlock();
+            _lock.Unlock();
         }
 
     private:
         /// ----------------------------------------------------------------------------------------
-        /// Mutex object.
+        /// Lockable object.
         /// ----------------------------------------------------------------------------------------
-        MutexType& _mutex;
+        LockableType& _lock;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Specialization for NullMutex to avoid any performance overhead.
+    /// Specialization for NullLockable to avoid any performance overhead.
     /// --------------------------------------------------------------------------------------------
     template <>
-    class MutexGuard <NullMutex>
+    class LockGuard <NullLockable>
     {
     public:
         /// ----------------------------------------------------------------------------------------
-        /// Constructor. Does nothing. It's implemented to meet the MutexRequirements.
+        /// Constructor. Does nothing. It's implemented to meet the LockableRequirements.
         /// 
-        /// @PARAM[IN] mutex Mutex reference. (UNUSED).
+        /// @PARAM[IN] lock NullLockable reference. (UNUSED).
         /// ----------------------------------------------------------------------------------------
-        constexpr MutexGuard(NullMutex& mutex) noexcept { }
+        constexpr LockGuard(NullLockable& lock) noexcept { }
 
         /// ----------------------------------------------------------------------------------------
         /// Destructor. Does nothing.
         /// ----------------------------------------------------------------------------------------
-        ~MutexGuard() { }
+        ~LockGuard() { }
     };
 }
