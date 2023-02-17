@@ -3,7 +3,7 @@
 
 namespace Atom::Engine
 {
-    class Sandbox : public Application
+    class Sandbox: public Application
     {
     public:
         Sandbox()

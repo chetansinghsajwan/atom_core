@@ -75,10 +75,10 @@ namespace Atom::Logging
                 String formattedMsg = fmt::format(msg, FWD(args)...);
                 LogMsg logMsg
                 {
-                    .loggerName = Name(),
-                    .time = Time::Now(),
-                    .lvl = lvl,
                     .msg = formattedMsg,
+                    .loggerName = Name(),
+                    .lvl = lvl,
+                    .time = Time::Now(),
                 };
 
                 Log(logMsg);

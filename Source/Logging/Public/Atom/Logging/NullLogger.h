@@ -42,7 +42,7 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Returns name of the NullLogger.
         /// ----------------------------------------------------------------------------------------
-        constexpr virtual StringView Name() const noexcept
+        constexpr virtual StringView Name() const noexcept override
         {
             return s_name;
         }
