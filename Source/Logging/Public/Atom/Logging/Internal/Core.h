@@ -6,6 +6,35 @@
 #include <chrono>
 #include <memory>
 #include "Mutex.h"
+#include "InitializerList.h"
+
+//// -----------------------------------------------------------------------------------------------
+//// Documentation Order
+//// -----------------------------------------------------------------------------------------------
+
+/// ------------------------------------------------------------------------------------------------
+/// @BRIEF
+/// 
+/// @TPARAM
+/// @PARAM[IN]
+/// @PARAM[OUT]
+/// 
+/// @THROWS
+/// 
+/// @EXCEPTION SAFETY [NOEXCEPT, STRONG, WEAK, NONE]
+/// 
+/// @THREAD_SAFETY [SAFE, CONDITIONAL, NONE]
+/// 
+/// @TIME_COMPLEXITY
+/// 
+/// @EXAMPLES
+/// 
+/// @TODO
+/// ------------------------------------------------------------------------------------------------
+
+//// -----------------------------------------------------------------------------------------------
+//// 
+//// -----------------------------------------------------------------------------------------------
 
 #define ATOM_CONFIG_DEBUG
 #define FWD(...) std::forward<decltype(__VA_ARGS__)>(__VA_ARGS__)
@@ -41,6 +70,87 @@ namespace Atom
         }
     }
 
+//// -----------------------------------------------------------------------------------------------
+//// Concepts
+//// -----------------------------------------------------------------------------------------------
+
+    template <typename FromType, typename ToType>
+    concept ConvertibleRequirements = std::convertible_to<FromType, ToType>;
+
+//// -----------------------------------------------------------------------------------------------
+//// Iterator Requirements
+//// -----------------------------------------------------------------------------------------------
+
+    template <typename IteratorType, typename ElementType>
+    concept ForwardIteratorRequirements = requires (IteratorType it)
+    {
+        { IteratorType::ElementType } -> std::convertible_to<ElementType&>;
+
+        { it.operator *  () }  -> std::convertible_to<ElementType&>;
+        { it.operator -> () }  -> std::convertible_to<ElementType*>;
+        { it.operator ++ () }  -> std::same_as<IteratorType&>;
+        { it.operator ++ (0) } -> std::same_as<IteratorType>;
+    };
+
+    template <typename IteratorType, typename ElementType>
+    concept ForwardIterator = ForwardIteratorRequirements<IteratorType, ElementType>;
+
+    template <typename IteratorType, typename ElementType>
+    concept ConstIterator = ForwardIteratorRequirements<IteratorType, ElementType>;
+
+    template <typename IteratorType, typename ElementType>
+    concept Iterator = ForwardIteratorRequirements<IteratorType, ElementType>;
+
+    template <typename IteratorType, typename ElementType>
+    concept BidirectionalIteratorRequirements = requires(IteratorType it)
+    {
+        requires ForwardIteratorRequirements<IteratorType, ElementType>;
+
+        { it.operator -- () } -> std::same_as<IteratorType&>;
+        { it.operator -- (0) } -> std::same_as<IteratorType>;
+    };
+
+    template <typename IteratorType, typename ElementType>
+    concept RandomAccessIteratorRequirements = requires
+    {
+        requires BidirectionalIteratorRequirements<IteratorType, ElementType>;
+    };
+
+//// -----------------------------------------------------------------------------------------------
+//// Iterable Requirements
+//// -----------------------------------------------------------------------------------------------
+
+    template <typename ConstIterableType, typename ElementType>
+    concept ConstIterableRequirements = requires(ConstIterableType it)
+    {
+        typename ConstIterableType::IteratorType;
+
+        it.cbegin();
+        it.cend();
+
+        it.begin();
+        it.end();
+    };
+
+    template <typename IterableType, typename ElementType>
+    concept IterableRequirements = requires(IterableType it)
+    {
+        requires ConstIterableRequirements<IterableType, ElementType>;
+
+        it.begin();
+        it.end();
+    };
+
+    template <typename ConstIterableType, typename ElementType>
+    concept ConstIterable = ConstIterableRequirements<ConstIterableType, ElementType>;
+
+    template <typename IterableType, typename ElementType>
+    concept Iterable = IterableRequirements<IterableType, ElementType>;
+
+//// -----------------------------------------------------------------------------------------------
+//// LogString Requirements
+//// -----------------------------------------------------------------------------------------------
+
     template <typename T>
     concept LogStringType = requires(T a)
     {
@@ -52,6 +162,10 @@ namespace Atom
     {
         { std::hash<T>{}(a) } -> std::convertible_to<StringView>;
     };
+
+//// -----------------------------------------------------------------------------------------------
+//// Assertions
+//// -----------------------------------------------------------------------------------------------
 
     template <typename ExceptionType = AssertionException>
     void ASSERT(bool assertion, auto&&... args)
@@ -65,9 +179,9 @@ namespace Atom
     template <typename ExceptionType = AssertionException>
     void DEBUG_ASSERT(bool assertion, auto&&... args)
     {
-#ifdef ATOM_CONFIG_DEBUG
+    #ifdef ATOM_CONFIG_DEBUG
         ASSERT<ExceptionType>(assertion, FORWARD(args)...);
-#endif
+    #endif
     }
 
     template <typename T>
@@ -75,6 +189,12 @@ namespace Atom
     {
         return std::move(obj);
     }
+}
+
+namespace Atom::Logging::Internal
+{
+    using LockableST = NullLockable;
+    using LockableMT = SimpleMutex;
 }
 
 #define ATOM_FUNCTION __func__

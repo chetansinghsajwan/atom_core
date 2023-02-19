@@ -222,7 +222,7 @@ namespace Atom
     {
     public:
         /// ----------------------------------------------------------------------------------------
-        /// Constructor. Does nothing. It's implemented to meet the LockableRequirements.
+        /// Constructor. Does nothing.
         /// 
         /// @PARAM[IN] lock NullLockable reference. (UNUSED).
         /// ----------------------------------------------------------------------------------------
