@@ -166,13 +166,13 @@ namespace Atom
     template <typename T>
     concept LogStringType = requires(T a)
     {
-        { std::hash<T>{}(a) } -> std::convertible_to<StringView>;
+        requires std::convertible_to<T, StringView>;
     };
 
     template <typename T>
     concept LogArgType = requires(T a)
     {
-        { std::hash<T>{}(a) } -> std::convertible_to<StringView>;
+        requires std::convertible_to<T, StringView>;
     };
 
 //// -----------------------------------------------------------------------------------------------

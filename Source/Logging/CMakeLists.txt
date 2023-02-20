@@ -11,4 +11,4 @@ target_include_directories(Atom.Logging PUBLIC "Public/")
 target_include_directories(Atom.Logging PUBLIC "../../ThirdParty/Fmt/fmt/include/")
 set_target_properties(Atom.Logging PROPERTIES CXX_STANDARD "20")
 
-target_link_libraries(Atom.Logging PRIVATE fmt)
+target_link_libraries(Atom.Logging PUBLIC fmt)

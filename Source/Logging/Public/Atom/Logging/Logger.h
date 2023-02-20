@@ -72,7 +72,7 @@ namespace Atom::Logging
         {
             if (ShouldLog(lvl))
             {
-                String formattedMsg = fmt::format(msg, FWD(args)...);
+                String formattedMsg = fmt::format(fmt::runtime(msg), FWD(args)...);
                 LogMsg logMsg
                 {
                     .msg = formattedMsg,
@@ -109,7 +109,7 @@ namespace Atom::Logging
 
     /// --------------------------------------------------------------------------------------------
     /// Ptr type used by this logging api to manage a Logger. It's recommended to use this 
-    /// type to store logger instance. This keeps compatibility with thes logging api.
+    /// type to store logger instance. This keeps compatibility with this logging api.
     /// --------------------------------------------------------------------------------------------
     using LoggerPtr = SharedPtr<Logger>;
 
