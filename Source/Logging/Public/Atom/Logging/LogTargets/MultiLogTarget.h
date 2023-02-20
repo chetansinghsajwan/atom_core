@@ -4,7 +4,9 @@
 namespace Atom::Logging::Internal
 {
     /// --------------------------------------------------------------------------------------------
-    /// MultiLogTargetImpl is used to store multiple LogTarget objects.
+    /// --- DOC_TEMPLATE 
+    /// --------------------------------------------------------------------------------------------
+    /// MultiLogTargetTemplate is used to store multiple LogTarget objects.
     /// 
     /// @TPARAM LockableType Type used to ensure thread safety.
     /// 
@@ -13,9 +15,9 @@ namespace Atom::Logging::Internal
     /// @THREAD_SAFETY SAFE
     /// --------------------------------------------------------------------------------------------
     template <Lockable LockableType>
-    class MultiLogTargetImpl: public LogTarget
+    class MultiLogTargetTemplate: public LogTarget
     {
-        using ThisT = MultiLogTargetImpl;
+        using ThisT = MultiLogTargetTemplate;
         using Container = DynamicArray<LogTargetPtr>;
         using ConstIteratorType = typename Container::const_iterator;
 
@@ -23,7 +25,7 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         /// Default constructor.
         /// ----------------------------------------------------------------------------------------
-        constexpr MultiLogTargetImpl() noexcept { }
+        constexpr MultiLogTargetTemplate() noexcept { }
 
         /// ----------------------------------------------------------------------------------------
         /// Constructs and adds LogTarget object.
@@ -35,7 +37,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @TIME_COMPLEXITY @COPY_FROM _AddTarget(LogTargetPtr target).
         /// ----------------------------------------------------------------------------------------
-        constexpr MultiLogTargetImpl(LogTargetPtr& target)
+        constexpr MultiLogTargetTemplate(LogTargetPtr& target)
         {
             _AddTarget(target);
         }
@@ -52,7 +54,7 @@ namespace Atom::Logging::Internal
         /// @TIME_COMPLEXITY @COPY_FROM _AddTargets(ConstIterator<LogTargetPtr> auto begin,
         ///     ConstIterator<LogTargetPtr> auto end)
         /// ----------------------------------------------------------------------------------------
-        constexpr MultiLogTargetImpl(InitializerList<LogTargetPtr> targets)
+        constexpr MultiLogTargetTemplate(InitializerList<LogTargetPtr> targets)
         {
             _AddTargets(targets.begin(), targets.end());
         }
@@ -69,7 +71,7 @@ namespace Atom::Logging::Internal
         /// @TIME_COMPLEXITY @COPY_FROM _AddTargets(ConstIterator<LogTargetPtr> auto begin,
         ///     ConstIterator<LogTargetPtr> auto end)
         /// ----------------------------------------------------------------------------------------
-        constexpr MultiLogTargetImpl(const ConstIterable<LogTargetPtr> auto& targets)
+        constexpr MultiLogTargetTemplate(const ConstIterable<LogTargetPtr> auto& targets)
         {
             _AddTargets(targets.begin(), targets.end());
         }
@@ -86,7 +88,7 @@ namespace Atom::Logging::Internal
         /// @TIME_COMPLEXITY @COPY_FROM _AddTargets(ConstIterator<LogTargetPtr> auto begin,
         ///     ConstIterator<LogTargetPtr> auto end)
         /// ----------------------------------------------------------------------------------------
-        constexpr MultiLogTargetImpl(ConstIterator<LogTargetPtr> auto begin,
+        constexpr MultiLogTargetTemplate(ConstIterator<LogTargetPtr> auto begin,
             ConstIterator<LogTargetPtr> auto end)
         {
             _AddTargets(begin, end);
@@ -429,7 +431,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @TODO Make ThreadSafe.
         /// ----------------------------------------------------------------------------------------
-        ConstIteratorType begin() const noexcept
+        ConstIteratorType Begin() const noexcept
         {
             return _targets.cbegin();
         }
@@ -441,9 +443,30 @@ namespace Atom::Logging::Internal
         /// 
         /// @TODO Make ThreadSafe.
         /// ----------------------------------------------------------------------------------------
-        ConstIteratorType end() const noexcept
+        ConstIteratorType End() const noexcept
         {
             return _targets.cend();
+        }
+
+    //// -------------------------------------------------------------------------------------------
+    //// STD Iteration
+    //// -------------------------------------------------------------------------------------------
+
+    public:
+        /// ----------------------------------------------------------------------------------------
+        /// @COPY_DOC Begin().
+        /// ----------------------------------------------------------------------------------------
+        ConstIteratorType begin() const noexcept
+        {
+            return Begin();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// @COPY_DOC Begin().
+        /// ----------------------------------------------------------------------------------------
+        ConstIteratorType end() const noexcept
+        {
+            return End();
         }
 
     //// -------------------------------------------------------------------------------------------
@@ -646,6 +669,9 @@ namespace Atom::Logging::Internal
 
 namespace Atom::Logging
 {
-    using MultiLogTargetST = Internal::MultiLogTargetImpl<Internal::LockableST>;
-    using MultiLogTargetMT = Internal::MultiLogTargetImpl<Internal::LockableMT>;
+    using MultiLogTargetST = Internal::MultiLogTargetTemplate<NullLockable>;
+    using MultiLogTargetMT = Internal::MultiLogTargetTemplate<SimpleMutex>;
+
+    // STATIC_ASSERT(ConstIterable<MultiLogTargetST, LogTargetPtr>);
+    // STATIC_ASSERT(ConstIterable<MultiLogTargetMT, LogTargetPtr>);
 }
