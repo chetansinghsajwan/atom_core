@@ -1,19 +1,24 @@
 #include <iostream>
 #include "Atom/Engine.h"
+#include "Atom/Logging/SimpleLogger.h"
+#include "Atom/Logging/LogTargets/ConsoleLogTarget.h"
+
+using namespace Atom;
+using namespace Atom::Engine;
+using namespace Atom::Logging;
+
+class Sandbox: public Application { };
 
 namespace Atom::Engine
 {
-    class Sandbox: public Application
+    extern Application* CreateApplication()
     {
-    public:
-        Sandbox()
-        {
-            std::cout << "Sandbox" << std::endl;
-        }
-    };
+        SharedPtr<ConsoleLogTarget> target = MakeShared<ConsoleLogTarget>();
+        SimpleLoggerST logger("Test", target);
+        logger.SetLogLevel(LogLevel::Debug);
 
-    Application* CreateApplication()
-    {
+        logger.LogWarn("Just a warning");
+
         return new Sandbox();
     }
 }

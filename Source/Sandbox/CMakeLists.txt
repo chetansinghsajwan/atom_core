@@ -4,9 +4,10 @@
 
 set(SOURCES "Private/Sandbox.cpp")
 
-add_library(Sandbox ${SOURCES})
+add_executable(Sandbox ${SOURCES})
 target_include_directories(Sandbox PRIVATE "Private/")
 target_include_directories(Sandbox PUBLIC "Public/")
 set_target_properties(Sandbox PROPERTIES CXX_STANDARD "20")
 
 target_link_libraries(Sandbox PUBLIC Atom.Engine)
+target_link_libraries(Sandbox PUBLIC Atom.Logging)
