@@ -65,6 +65,12 @@ namespace Atom
     template <typename T>
     using SharedPtr = std::shared_ptr<T>;
 
+    template <typename T>
+    SharedPtr<T> MakeShared(auto&&... args) noexcept
+    {
+        return std::make_shared<T>(FWD(args)...);
+    }
+
     template <typename K, typename T>
     using UnorderedMap = std::unordered_map<K, T>;
 

@@ -112,4 +112,14 @@ namespace Atom::Logging
     /// type to store logger instance. This keeps compatibility with thes logging api.
     /// --------------------------------------------------------------------------------------------
     using LoggerPtr = SharedPtr<Logger>;
+
+    /// --------------------------------------------------------------------------------------------
+    /// 
+    /// --------------------------------------------------------------------------------------------
+    template <typename LoggerType>
+    requires std::is_base_of_v<Logger, LoggerType>
+    LoggerPtr MAKE_LOGGER(auto&&... args) noexcept
+    {
+        return MakeShared<LoggerType>(FWD(args)...);
+    }
 }
