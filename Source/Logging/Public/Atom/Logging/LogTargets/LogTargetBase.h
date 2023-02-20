@@ -1,5 +1,6 @@
 #pragma once
-#include "fmt/core.h"
+#include "fmt/format.h"
+#include "fmt/chrono.h"
 #include "Atom/Logging/LogTarget.h"
 
 namespace Atom::Logging::Internal
@@ -37,11 +38,8 @@ namespace Atom::Logging::Internal
         {
             if (CheckLogLevel(logMsg.lvl))
             {
-                // TODO: Fix this compilation error.
-                // String result = fmt::format("[{TIME}] [{LEVEL}] {LOGGER_NAME}: {MSG}",
-                //     logMsg.time, logMsg.lvl, logMsg.loggerName, logMsg.msg);
-
-                String result;
+                String result = fmt::format("[{}] [{}] {}: {}",
+                    logMsg.time, logMsg.lvl, logMsg.loggerName, logMsg.msg);
 
                 _hasWritten = true;
                 _Write(logMsg, result);
