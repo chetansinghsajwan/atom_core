@@ -37,7 +37,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @TIME_COMPLEXITY @COPY_FROM _AddTarget(LogTargetPtr target).
         /// ----------------------------------------------------------------------------------------
-        constexpr MultiLogTargetTemplate(LogTargetPtr& target)
+        constexpr MultiLogTargetTemplate(LogTargetPtr target)
         {
             _AddTarget(target);
         }
@@ -145,7 +145,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        bool AddTarget(LogTargetPtr& target) noexcept
+        bool AddTarget(LogTargetPtr target) noexcept
         {
             if (target == nullptr) return false;
 
@@ -242,7 +242,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        bool RemoveTarget(LogTargetPtr& target)
+        bool RemoveTarget(LogTargetPtr target)
         {
             if (target == nullptr) return false;
 
@@ -335,7 +335,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        bool HasTarget(LogTargetPtr& target) const noexcept
+        bool HasTarget(LogTargetPtr target) const noexcept
         {
             LockGuard guard(_lock);
             return _HasTarget(target);
@@ -489,7 +489,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY NONE
         /// ----------------------------------------------------------------------------------------
-        bool _AddTarget(LogTargetPtr& target)
+        bool _AddTarget(LogTargetPtr target)
         {
             if (target == nullptr)
                 return false;
@@ -539,7 +539,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @TIME_COMPLEXITY @COPY_FROM ${Container}::Remove(LogTarget& target)
         /// ----------------------------------------------------------------------------------------
-        bool _RemoveTarget(LogTargetPtr& target)
+        bool _RemoveTarget(LogTargetPtr target)
         {
             ATOM_DEBUG_EXPECTS(target != nullptr);
 
@@ -598,7 +598,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @TIME_COMPLEXITY Linear
         /// ----------------------------------------------------------------------------------------
-        bool _HasTarget(LogTargetPtr& target) const noexcept
+        bool _HasTarget(LogTargetPtr target) const noexcept
         {
             if (target == nullptr) return false;
 
