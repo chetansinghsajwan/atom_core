@@ -1,5 +1,6 @@
 #pragma once
 #include <mutex>
+#include <atomic>
 #include <concepts>
 
 #define STATIC_ASSERT_MSG(assertion, msg) static_assert(assertion, msg)
@@ -233,4 +234,11 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ~LockGuard() { }
     };
+
+//// -----------------------------------------------------------------------------------------------
+//// Atomic
+//// -----------------------------------------------------------------------------------------------
+
+    template <typename T>
+    using Atomic = std::atomic<T>;
 }

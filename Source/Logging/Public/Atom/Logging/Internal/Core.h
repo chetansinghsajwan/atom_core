@@ -42,6 +42,12 @@
 
 namespace Atom
 {
+    namespace TTI
+    {
+        template <bool condition, typename TrueType, typename FalseType>
+        using ConditionalType = std::conditional_t<condition, TrueType, FalseType>;
+    }
+
     using byte = unsigned char;
     using String = std::string;
     using StringView = std::string_view;
