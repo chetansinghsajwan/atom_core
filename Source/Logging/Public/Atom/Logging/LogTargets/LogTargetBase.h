@@ -38,7 +38,7 @@ namespace Atom::Logging::Internal
         {
             if (CheckLogLevel(logMsg.lvl))
             {
-                String result = fmt::format("[{}] [{}] {}: {}",
+                String result = fmt::format("[{}] [{}] {}: {}\n",
                     logMsg.time, logMsg.lvl, logMsg.loggerName, logMsg.msg);
 
                 _hasWritten = true;
