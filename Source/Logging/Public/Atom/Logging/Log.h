@@ -90,6 +90,11 @@ namespace Atom::Logging
 //// -----------------------------------------------------------------------------------------------
 
     /// --------------------------------------------------------------------------------------------
+    /// @TODO Add this as option.
+    /// --------------------------------------------------------------------------------------------
+    static constexpr LogLevel STATIC_LOG_LEVEL = LogLevel::Debug;
+
+    /// --------------------------------------------------------------------------------------------
     /// Checks at compile time if message of specified level {lvl} should be logged.
     /// 
     /// @TPARAM[IN] lvl LogLevel of the msg to check for.
@@ -97,10 +102,7 @@ namespace Atom::Logging
     template <LogLevel lvl>
     constexpr bool STATIC_CHECK_LOG_LEVEL() noexcept
     {
-        /// @TODO Add this as option.
-        static constexpr LogLevel staticLevel = LogLevel::Debug;
-
-        return lvl >= staticLevel && lvl != LogLevel::OFF;
+        return lvl >= STATIC_LOG_LEVEL && lvl != LogLevel::OFF;
     }
 
     /// --------------------------------------------------------------------------------------------

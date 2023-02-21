@@ -21,22 +21,22 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// CopyConstructor is deleted.
         /// ----------------------------------------------------------------------------------------
-        constexpr NullLockable(const NullLockable& other) = delete;
+        constexpr NullLockable(const NullLockable& other) { }
 
         /// ----------------------------------------------------------------------------------------
         /// MoveConstructor is default.
         /// ----------------------------------------------------------------------------------------
-        constexpr NullLockable(NullLockable&& other) = default;
+        constexpr NullLockable(NullLockable&& other) { }
 
         /// ----------------------------------------------------------------------------------------
         /// CopyOperator is deleted.
         /// ----------------------------------------------------------------------------------------
-        constexpr NullLockable& operator = (const NullLockable& other) = delete;
+        constexpr NullLockable& operator = (const NullLockable& other) { return *this; }
 
         /// ----------------------------------------------------------------------------------------
         /// MoveOperator is default.
         /// ----------------------------------------------------------------------------------------
-        constexpr NullLockable& operator = (NullLockable&& other) = default;
+        constexpr NullLockable& operator = (NullLockable&& other) { return *this; }
 
         /// ----------------------------------------------------------------------------------------
         /// Destructor. Does nothing.
