@@ -24,6 +24,7 @@ namespace Atom::Engine
 
         while (true)
         {
+            _window->OnUpdate();
         }
     }
 }

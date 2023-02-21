@@ -17,5 +17,8 @@ namespace Atom::Engine
         static UniquePtr<Window> CreateWindow(WindowProps props);
 
         static void CloseWindow(UniquePtr<Window> window);
+
+    protected:
+        static SizeT s_windowCount;
     };
 }
