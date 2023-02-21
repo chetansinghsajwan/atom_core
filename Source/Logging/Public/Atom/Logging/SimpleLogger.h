@@ -25,7 +25,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @PARAM[IN] name Name of this logger.
         /// ----------------------------------------------------------------------------------------
-        constexpr explicit SimpleLoggerTemplate(String name) noexcept:
+        explicit SimpleLoggerTemplate(String name) noexcept:
             _name(MOVE(name)), targets() { }
 
         /// ----------------------------------------------------------------------------------------
@@ -35,7 +35,7 @@ namespace Atom::Logging::Internal
         /// @PARAM[IN] name Name of this logger.
         /// @PARAM[IN] target LogTarget object to add.
         /// ----------------------------------------------------------------------------------------
-        constexpr SimpleLoggerTemplate(String name, LogTargetPtr target) noexcept:
+        SimpleLoggerTemplate(String name, LogTargetPtr target) noexcept:
             _name(MOVE(name)), targets(target) { }
 
         /// ----------------------------------------------------------------------------------------
@@ -45,7 +45,7 @@ namespace Atom::Logging::Internal
         /// @PARAM[IN] name Name of this logger.
         /// @PARAM[IN] targets LogTarget objects to add.
         /// ----------------------------------------------------------------------------------------
-        constexpr SimpleLoggerTemplate(String name, InitializerList<LogTargetPtr> targets) noexcept:
+        SimpleLoggerTemplate(String name, InitializerList<LogTargetPtr> targets) noexcept:
             _name(MOVE(name)), targets(targets) { }
 
         /// ----------------------------------------------------------------------------------------
@@ -55,7 +55,7 @@ namespace Atom::Logging::Internal
         /// @PARAM[IN] name Name of this logger.
         /// @PARAM[IN] targets LogTarget objects to add.
         /// ----------------------------------------------------------------------------------------
-        constexpr SimpleLoggerTemplate(String name, const ConstIterable<LogTargetPtr> auto& targets)
+        SimpleLoggerTemplate(String name, const ConstIterable<LogTargetPtr> auto& targets)
             noexcept: _name(MOVE(name)), targets(targets) { }
 
         /// ----------------------------------------------------------------------------------------
@@ -66,7 +66,7 @@ namespace Atom::Logging::Internal
         /// @PARAM[IN] begin ConstIterator to beginning of range to add.
         /// @PARAM[IN] end ConstIterator to end of range to add.
         /// ----------------------------------------------------------------------------------------
-        constexpr SimpleLoggerTemplate(String name, ConstIterator<LogTargetPtr> auto begin,
+        SimpleLoggerTemplate(String name, ConstIterator<LogTargetPtr> auto begin,
             ConstIterator<LogTargetPtr> auto end) noexcept:
             _name(MOVE(name)), targets(begin, end) { }
 
@@ -76,7 +76,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        constexpr StringView Name() const noexcept override final
+        StringView Name() const noexcept override final
         {
             return _name;
         }
@@ -106,7 +106,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        constexpr void SetLogLevel(LogLevel lvl) noexcept
+        void SetLogLevel(LogLevel lvl) noexcept
         {
             _logLevel = lvl;
         }
@@ -116,7 +116,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        constexpr LogLevel GetLogLevel(LogLevel lvl) noexcept
+        LogLevel GetLogLevel(LogLevel lvl) noexcept
         {
             return _logLevel;
         }
@@ -126,7 +126,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        constexpr bool CheckLogLevel(LogLevel lvl) const noexcept override final
+        bool CheckLogLevel(LogLevel lvl) const noexcept override final
         {
             return lvl != LogLevel::OFF && lvl >= _logLevel;
         }
@@ -136,7 +136,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        constexpr void SetFlushLevel(LogLevel lvl) noexcept
+        void SetFlushLevel(LogLevel lvl) noexcept
         {
             _flushLevel = lvl;
         }
@@ -146,7 +146,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        constexpr LogLevel GetFlushLevel() const noexcept
+        LogLevel GetFlushLevel() const noexcept
         {
             return _flushLevel;
         }
@@ -156,7 +156,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        constexpr bool CheckFlushLevel(LogLevel lvl) const noexcept
+        bool CheckFlushLevel(LogLevel lvl) const noexcept
         {
             return lvl != LogLevel::OFF && lvl >= _flushLevel;
         }

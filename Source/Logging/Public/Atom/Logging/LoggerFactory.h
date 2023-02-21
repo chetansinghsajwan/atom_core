@@ -9,7 +9,7 @@ namespace Atom::Logging
     public:
         LoggerPtr CreateLogger(String name) noexcept
         {
-            return MakeShared<SimpleLoggerST>(MOVE(name));
+            return MAKE_LOGGER<SimpleLoggerST>(MOVE(name));
         }
     };
 

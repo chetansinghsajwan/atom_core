@@ -28,7 +28,7 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         /// Default constructor.
         /// ----------------------------------------------------------------------------------------
-        constexpr MultiLogTargetTemplate() noexcept { }
+        MultiLogTargetTemplate() noexcept { }
 
         /// ----------------------------------------------------------------------------------------
         /// Constructs and adds LogTarget object.
@@ -40,7 +40,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @TIME_COMPLEXITY @COPY_FROM _AddTarget(LogTargetPtr target).
         /// ----------------------------------------------------------------------------------------
-        constexpr MultiLogTargetTemplate(LogTargetPtr target)
+        MultiLogTargetTemplate(LogTargetPtr target)
         {
             _AddTarget(target);
         }
@@ -57,7 +57,7 @@ namespace Atom::Logging::Internal
         /// @TIME_COMPLEXITY @COPY_FROM _AddTargets(ConstIterator<LogTargetPtr> auto begin,
         ///     ConstIterator<LogTargetPtr> auto end)
         /// ----------------------------------------------------------------------------------------
-        constexpr MultiLogTargetTemplate(InitializerList<LogTargetPtr> targets)
+        MultiLogTargetTemplate(InitializerList<LogTargetPtr> targets)
         {
             _AddTargets(targets.begin(), targets.end());
         }
@@ -74,7 +74,7 @@ namespace Atom::Logging::Internal
         /// @TIME_COMPLEXITY @COPY_FROM _AddTargets(ConstIterator<LogTargetPtr> auto begin,
         ///     ConstIterator<LogTargetPtr> auto end)
         /// ----------------------------------------------------------------------------------------
-        constexpr MultiLogTargetTemplate(const ConstIterable<LogTargetPtr> auto& targets)
+        MultiLogTargetTemplate(const ConstIterable<LogTargetPtr> auto& targets)
         {
             _AddTargets(targets.begin(), targets.end());
         }
@@ -91,7 +91,7 @@ namespace Atom::Logging::Internal
         /// @TIME_COMPLEXITY @COPY_FROM _AddTargets(ConstIterator<LogTargetPtr> auto begin,
         ///     ConstIterator<LogTargetPtr> auto end)
         /// ----------------------------------------------------------------------------------------
-        constexpr MultiLogTargetTemplate(ConstIterator<LogTargetPtr> auto begin,
+        MultiLogTargetTemplate(ConstIterator<LogTargetPtr> auto begin,
             ConstIterator<LogTargetPtr> auto end)
         {
             _AddTargets(begin, end);
@@ -416,7 +416,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        constexpr SizeT Count() const noexcept
+        SizeT Count() const noexcept
         {
             LockGuard guard(_lock);
             return _targets.size();
