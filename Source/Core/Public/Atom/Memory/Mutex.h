@@ -27,9 +27,9 @@ namespace Atom
         SimpleMutex(const SimpleMutex& other) = delete;
 
         /// ----------------------------------------------------------------------------------------
-        /// MoveConstructor is default.
+        /// MoveConstructor is delete.
         /// ----------------------------------------------------------------------------------------
-        SimpleMutex(SimpleMutex&& other) = default;
+        SimpleMutex(SimpleMutex&& other) = delete;
 
         /// ----------------------------------------------------------------------------------------
         /// CopyOperator is deleted.
@@ -37,9 +37,9 @@ namespace Atom
         SimpleMutex& operator = (const SimpleMutex& other) = delete;
 
         /// ----------------------------------------------------------------------------------------
-        /// MoveOperator is default.
+        /// MoveOperator is delete.
         /// ----------------------------------------------------------------------------------------
-        SimpleMutex& operator = (SimpleMutex&& other) = default;
+        SimpleMutex& operator = (SimpleMutex&& other) = delete;
 
         /// ----------------------------------------------------------------------------------------
         /// Destructor.
