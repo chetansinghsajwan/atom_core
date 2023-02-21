@@ -4,6 +4,7 @@ project(AtomEngine VERSION 0.1.0 LANGUAGES CXX)
 enable_testing()
 
 add_subdirectory(ThirdParty/Fmt/fmt)
+add_subdirectory(ThirdParty/Catch2/Catch2)
 
 add_subdirectory(Source/Core)
 add_subdirectory(Source/Logging)
