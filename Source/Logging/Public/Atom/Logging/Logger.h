@@ -1,5 +1,7 @@
 #pragma once
 #include "fmt/format.h"
+
+#include "Atom/Memory.h"
 #include "Atom/Logging/LogMsg.h"
 
 namespace Atom::Logging
@@ -117,7 +119,7 @@ namespace Atom::Logging
     /// 
     /// --------------------------------------------------------------------------------------------
     template <typename LoggerType>
-    requires std::is_base_of_v<Logger, LoggerType>
+    requires TTI::IsBaseOf<Logger, LoggerType>
     LoggerPtr MAKE_LOGGER(auto&&... args) noexcept
     {
         return MakeShared<LoggerType>(FWD(args)...);

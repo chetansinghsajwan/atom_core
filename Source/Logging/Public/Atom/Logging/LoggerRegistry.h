@@ -1,4 +1,7 @@
 #pragma once
+#include "Atom/Exceptions.h"
+#include "Atom/String.h"
+#include "Atom/Containers.h"
 #include "Atom/Logging/Logger.h"
 #include "Atom/Logging/NullLogger.h"
 

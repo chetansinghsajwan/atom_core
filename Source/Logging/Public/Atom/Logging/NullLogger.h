@@ -66,5 +66,5 @@ namespace Atom::Logging
         }
     };
 
-    LoggerPtr NullLogger::Instance = std::make_shared<NullLogger>();
+    LoggerPtr NullLogger::Instance = MakeShared<NullLogger>();
 }

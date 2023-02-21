@@ -1,4 +1,7 @@
 #pragma once
+#include "Atom/Memory.h"
+#include "Atom/Containers.h"
+#include "Atom/Exceptions.h"
 #include "Atom/Logging/LogTarget.h"
 
 namespace Atom::Logging::Internal

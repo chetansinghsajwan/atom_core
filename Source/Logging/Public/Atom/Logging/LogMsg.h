@@ -1,6 +1,9 @@
 #pragma once
-#include "Atom/Logging/Internal/Core.h"
 #include "fmt/format.h"
+
+#include "Atom/Chrono.h"
+#include "Atom/String.h"
+#include "Atom/Logging/Internal/Core.h"
 
 namespace Atom::Logging
 {

@@ -5,6 +5,7 @@ enable_testing()
 
 add_subdirectory(ThirdParty/Fmt/fmt)
 
+add_subdirectory(Source/Core)
 add_subdirectory(Source/Logging)
 add_subdirectory(Source/Engine)
 add_subdirectory(Source/Sandbox)

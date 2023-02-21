@@ -1,10 +1,10 @@
 #pragma once
 #include <initializer_list>
 
+#include "Atom/Core.h"
+
 namespace Atom
 {
-    using SizeT = std::size_t;
-
     template <typename ElementType>
     using ConstArrayIterator = ElementType*;
 
