@@ -2,6 +2,7 @@
 #include <mutex>
 
 #include "Atom/Core.h"
+#include "Atom/Exceptions.h"
 #include "Atom/Memory/Lockable.h"
 
 namespace Atom
