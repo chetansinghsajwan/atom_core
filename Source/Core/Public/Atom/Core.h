@@ -25,7 +25,31 @@
 /// ------------------------------------------------------------------------------------------------
 
 //// -----------------------------------------------------------------------------------------------
-//// MACROS
+//// ATOM API
+//// -----------------------------------------------------------------------------------------------
+
+#if defined(ATOM_PLATFORM_WIN)
+    #ifdef ATOM_EXPORT
+        #define ATOM_API __declspec(dllexport)
+    #else
+        #define ATOM_API __declspec(dllimport)
+    #endif
+
+#elif defined(ATOM_PLATFORM_LINUX)
+    #ifdef ATOM_EXPORT
+        #define ATOM_API __attribute__((visibility("default")))
+    #else
+        #define ATOM_API
+    #endif
+
+#else
+    #define ATOM_API
+    #error "AtomEngine only supports Windows and Linux platform."
+
+#endif
+
+//// -----------------------------------------------------------------------------------------------
+//// UTILS
 //// -----------------------------------------------------------------------------------------------
 
 #define ATOM_CONFIG_DEBUG
@@ -33,10 +57,6 @@
 #define FORWARD(...) std::forward<decltype(__VA_ARGS__)>(__VA_ARGS__)
 
 #define ATOM_FUNCTION __func__
-
-#define STATIC_ASSERT_MSG(assertion, msg) static_assert(assertion, msg)
-#define STATIC_ASSERT(assertion) static_assert(assertion)
-#define STATIC_THROW(msg) static_assert(false, msg)
 
 namespace Atom
 {

@@ -22,6 +22,10 @@ namespace Atom
     }
 }
 
+#define STATIC_ASSERT_MSG(assertion, msg) static_assert(assertion, msg)
+#define STATIC_ASSERT(assertion) static_assert(assertion)
+#define STATIC_THROW(msg) static_assert(false, msg)
+
 #define ATOM_DEBUG_EXPECTS_MSG(assertion, msg) DEBUG_ASSERT<AssertionException>(assertion, \
     String(ATOM_FUNCTION) + ": [DEBUG] Expects {" #assertion "}. " msg)
 

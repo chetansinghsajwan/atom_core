@@ -1,5 +1,5 @@
 #pragma once
-#include "Atom/Engine/Core.h"
+#include "Atom/Core.h"
 
 namespace Atom::Engine
 {
