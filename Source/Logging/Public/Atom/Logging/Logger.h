@@ -72,7 +72,7 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         void Log(LogLevel lvl, const LogStringType auto& msg, LogArgType auto&&... args)
         {
-            if (ShouldLog(lvl))
+            if (CheckLogLevel(lvl))
             {
                 String formattedMsg = fmt::format(fmt::runtime(msg), FWD(args)...);
                 LogMsg logMsg
@@ -106,7 +106,7 @@ namespace Atom::Logging
         /// 
         /// Check if the message should be passed for logging.
         /// ----------------------------------------------------------------------------------------
-        virtual bool ShouldLog(LogLevel lvl) const noexcept = 0;
+        virtual bool CheckLogLevel(LogLevel lvl) const noexcept = 0;
     };
 
     /// --------------------------------------------------------------------------------------------

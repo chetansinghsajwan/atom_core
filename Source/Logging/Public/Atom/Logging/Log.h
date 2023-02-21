@@ -17,9 +17,9 @@ namespace Atom::Logging
     /// 
     /// @PARAM[IN] lvl LogLevel to check against.
     /// ----------------------------------------------------------------------------------------
-    inline bool SHOULD_LOG(LogLevel lvl) noexcept
+    inline bool CHECK_LOG_LEVEL(LogLevel lvl) noexcept
     {
-        return GET_ROOT_LOGGER()->ShouldLog(lvl);
+        return GET_ROOT_LOGGER()->CheckLogLevel(lvl);
     }
 
     /// ----------------------------------------------------------------------------------------
@@ -95,7 +95,7 @@ namespace Atom::Logging
     /// @TPARAM[IN] lvl LogLevel of the msg to check for.
     /// --------------------------------------------------------------------------------------------
     template <LogLevel lvl>
-    constexpr bool STATIC_SHOULD_LOG() noexcept
+    constexpr bool STATIC_CHECK_LOG_LEVEL() noexcept
     {
         /// @TODO Add this as option.
         static constexpr LogLevel staticLevel = LogLevel::Debug;
@@ -115,7 +115,7 @@ namespace Atom::Logging
     template <LogLevel lvl>
     inline void STATIC_LOG(const LogStringType auto& msg, LogArgType auto&&... args)
     {
-        if constexpr (STATIC_SHOULD_LOG<lvl>())
+        if constexpr (STATIC_CHECK_LOG_LEVEL<lvl>())
         {
             LOG(lvl, msg, FWD(args)...);
         }

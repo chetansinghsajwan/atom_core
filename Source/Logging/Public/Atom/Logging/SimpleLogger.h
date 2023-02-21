@@ -126,7 +126,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        constexpr bool ShouldLog(LogLevel lvl) const noexcept override final
+        constexpr bool CheckLogLevel(LogLevel lvl) const noexcept override final
         {
             return lvl != LogLevel::OFF && lvl >= _logLevel;
         }
