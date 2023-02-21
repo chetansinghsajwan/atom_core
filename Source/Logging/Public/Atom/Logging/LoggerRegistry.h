@@ -4,6 +4,7 @@
 #include "Atom/Containers.h"
 #include "Atom/Logging/Logger.h"
 #include "Atom/Logging/NullLogger.h"
+#include "Atom/Logging/LoggerFactory.h"
 
 namespace Atom::Logging
 {
@@ -19,6 +20,12 @@ namespace Atom::Logging
         using Container = UnorderedMap<String, LoggerPtr>;
         using Iterator = Container::iterator;
         using ConstIterator = Container::const_iterator;
+
+    public:
+        LoggerRegistry() noexcept
+        {
+            SetDefaultLogger(GET_LOGGER_FACTORY().CreateLogger("DefaultLogger"));
+        }
 
     public:
         /// ----------------------------------------------------------------------------------------
