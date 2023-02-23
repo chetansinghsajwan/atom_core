@@ -7,3 +7,4 @@
 #include "Atom/Memory/Atomic.h"
 #include "Atom/Memory/SharedPtr.h"
 #include "Atom/Memory/UniquePtr.h"
+#include "Atom/Memory/ObjectBox.h"

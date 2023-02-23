@@ -14,7 +14,7 @@ target_compile_definitions(Atom.Core PRIVATE ATOM_EXPORT)
 target_compile_definitions(Atom.Core PUBLIC ATOM_PLATFORM_LINUX)
 
 # --------------------------------------------------------------------------------------------------
-# Atom.Core Tests
+# Atom.Core.Tests
 # --------------------------------------------------------------------------------------------------
 
 file(GLOB_RECURSE TEST_SOURCES "Tests/**.cpp")
