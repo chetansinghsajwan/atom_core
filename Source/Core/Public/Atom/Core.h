@@ -64,10 +64,19 @@ namespace Atom
     using byte = unsigned char;
     using SizeT = std::size_t;
     using DiffT = long long;
+    using NullType = std::nullptr_t;
 
     template <typename T>
     T&& MOVE(T& obj) noexcept
     {
         return std::move(obj);
+    }
+
+    template <typename T>
+    void SWAP(T& lhs, T& rhs)
+    {
+        T tmp = MOVE(lhs);
+        lhs = MOVE(rhs);
+        rhs = MOVE(tmp);
     }
 }
