@@ -22,6 +22,9 @@ namespace Atom
         template <typename LHS, typename RHS>
         concept SameAs = std::same_as<LHS, RHS>;
 
+        template <typename LHS, typename RHS>
+        concept NotSameAs = !std::same_as<LHS, RHS>;
+
         template <bool Requirements>
         using EnableIf = std::enable_if_t<Requirements>;
 

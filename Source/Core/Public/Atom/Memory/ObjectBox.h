@@ -320,7 +320,7 @@ namespace Atom
                 return _stackMem;
             }
 
-            // We need to allocate heap memory.
+            // Check for already allocated heap memory.
             if (_heapMem != nullptr)
             {
                 if (_heapMemSize < size)
@@ -329,6 +329,7 @@ namespace Atom
                     _heapMemSize = size;
                 }
             }
+            // We need to allocate heap memory.
             else
             {
                 _heapMem = _memAllocator.Alloc(size);
@@ -350,7 +351,7 @@ namespace Atom
 
         bool _IsUsingStackMem() const noexcept
         {
-            return _object == _stackMem;
+            return _object.obj == _stackMem;
         }
 
     //// -------------------------------------------------------------------------------------------
