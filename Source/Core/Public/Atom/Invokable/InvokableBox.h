@@ -15,8 +15,8 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
-    template <typename Result, typename... Args>
-    class InvokableBox <Result(Args...)>:
+    template <typename TResult, typename... TArgs>
+    class InvokableBox <TResult(TArgs...)>:
         public ObjectBox<50, DefaultMemAllocator>
     {
     public:
@@ -51,23 +51,23 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <typename InvokableType>
-            requires Invokable<InvokableType, Result, Args...>
-        InvokableBox(InvokableType&& invokable):
+        template <typename TInvokable>
+            requires RInvokable<TInvokable, TResult(TArgs...)>::Value
+        InvokableBox(TInvokable&& invokable):
             ObjectBox(FORWARD(invokable))
         {
-            _SetInvoker<InvokableType>();
+            _SetInvoker<TInvokable>();
         }
 
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <typename InvokableType>
-            requires Invokable<InvokableType, Result, Args...>
-        InvokableBox& operator = (InvokableType&& invokable)
+        template <typename TInvokable>
+            requires RInvokable<TInvokable, TResult(TArgs...)>::Value
+        InvokableBox& operator = (TInvokable&& invokable)
         {
             ObjectBox::operator = (FORWARD(invokable));
-            _SetInvoker<InvokableType>();
+            _SetInvoker<TInvokable>();
             return *this;
         }
 
@@ -110,7 +110,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        Result Invoke(Args&&... args)
+        TResult Invoke(TArgs&&... args)
         {
             ASSERT<NullPointerException>(ObjectBox::_HasObject(),
                 "InvokableTarget is null.");
@@ -121,7 +121,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        Result operator () (Args&&... args)
+        TResult operator () (TArgs&&... args)
         {
             return Invoke(FORWARD(args)...);
         }
@@ -130,37 +130,37 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <typename InvokableType>
-            requires Invokable<InvokableType, Result, Args...>
+        template <typename TInvokable>
+            requires RInvokable<TInvokable, TResult(TArgs...)>::Value
         void _SetInvoker()
         {
-            _invoker.template Set<InvokableType>();
+            _invoker.template Set<TInvokable>();
         }
 
     protected:
         struct Invoker
         {
-            template <typename InvokableType>
-                requires Invokable<InvokableType, Result, Args...>
+            template <typename TInvokable>
+                requires RInvokable<TInvokable, TResult(TArgs...)>::Value
             void Set()
             {
-                _impl = [](void* obj, Result& result, Args&&... args)
+                _impl = [](void* obj, TResult& result, TArgs&&... args)
                 {
-                    InvokableType& invokable = *reinterpret_cast<InvokableType*>(obj);
+                    TInvokable& invokable = *reinterpret_cast<TInvokable*>(obj);
                     result = invokable(FORWARD(args)...);
                 };
             }
 
-            Result Invoke(void* invokable, Args&&... args)
+            TResult Invoke(void* invokable, TArgs&&... args)
             {
-                Result result;
+                TResult result;
                 _impl(invokable, result, FORWARD(args)...);
 
                 return result;
             }
 
         protected:
-            void (*_impl) (void* invokable, Result& result, Args&&... args);
+            void (*_impl) (void* invokable, TResult& result, TArgs&&... args);
         };
 
         Invoker _invoker;

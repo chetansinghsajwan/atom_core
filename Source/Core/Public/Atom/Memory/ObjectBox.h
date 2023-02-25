@@ -31,9 +31,12 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
-    template <SizeT StackSize = 50, typename MemAllocator = DefaultMemAllocator>
+    template <SizeT StackSize = 50, typename MemAllocatorT = DefaultMemAllocator>
     class ObjectBox: public Internal::ObjectBoxIdentifier
     {
+        /// ----------------------------------------------------------------------------------------
+        /// 
+        /// ----------------------------------------------------------------------------------------
         struct ObjectData
         {
             void (*copy) (void* obj, const void* other);
@@ -44,11 +47,15 @@ namespace Atom
             void* obj;
         };
 
-        template <typename ObjectType>
-        using ObjectRequirements = TTI::EnableIf<
-            TTI::IsNotBaseOf<Internal::ObjectBoxIdentifier, ObjectType> and
-            TTI::IsCopyConstructible<ObjectType> and
-            TTI::IsMoveConstructible<ObjectType>>;
+    public:
+        /// ----------------------------------------------------------------------------------------
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        template <typename TObject>
+        static constexpr bool RObject =
+            TTI::IsNotBaseOf<Internal::ObjectBoxIdentifier, TObject>&&
+            TTI::IsCopyConstructible<TObject>&&
+            TTI::IsMoveConstructible<TObject>;
 
     //// -------------------------------------------------------------------------------------------
     //// Constructors and Operators.
@@ -86,8 +93,9 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Constructor. Assigns object.
         /// ----------------------------------------------------------------------------------------
-        template <typename ObjectType, typename = ObjectRequirements<ObjectType>>
-        ObjectBox(ObjectType&& object): ObjectBox()
+        template <typename TObject>
+            requires RObject<TObject>
+        ObjectBox(TObject&& object): ObjectBox()
         {
             _SetObject(FORWARD(object));
         }
@@ -95,8 +103,9 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Operator. Assigns object.
         /// ----------------------------------------------------------------------------------------
-        template <typename ObjectType, typename = ObjectRequirements<ObjectType>>
-        ObjectBox& operator = (ObjectType&& object)
+        template <typename TObject>
+            requires RObject<TObject>
+        ObjectBox& operator = (TObject&& object)
         {
             _SetObject(FORWARD(object));
             return *this;
@@ -192,7 +201,7 @@ namespace Atom
         {
             return *_GetObject<T>();
         }
-    
+
     //// -------------------------------------------------------------------------------------------
     //// Box Manipulation Functions
     //// -------------------------------------------------------------------------------------------
@@ -202,7 +211,7 @@ namespace Atom
         /// 
         /// ----------------------------------------------------------------------------------------
         template <SizeT OtherStackSize>
-        void _MoveBox(ObjectBox<OtherStackSize, MemAllocator>& otherBox)
+        void _MoveBox(ObjectBox<OtherStackSize, MemAllocatorT>& otherBox)
         {
             _DisposeBox();
 
@@ -223,7 +232,7 @@ namespace Atom
         /// When allocator type is different, we cannot handle heap memory.
         /// ----------------------------------------------------------------------------------------
         template <SizeT OtherStackSize, typename OtherMemAllocator,
-            typename = TTI::EnableIf<TTI::IsNotSame<MemAllocator, OtherMemAllocator>>>
+            typename = TTI::EnableIf<TTI::IsNotSame<MemAllocatorT, OtherMemAllocator>>>
         void _MoveBox(ObjectBox<OtherStackSize, OtherMemAllocator>& otherBox)
         {
             _MoveObject(otherBox._object);
@@ -240,32 +249,33 @@ namespace Atom
     //// -------------------------------------------------------------------------------------------
 
     protected:
-        template <typename ObjectType, typename = ObjectRequirements<ObjectType>>
-        void _SetObject(ObjectType&& object)
+        template <typename TObject>
+            requires RObject<TObject>
+        void _SetObject(TObject&& object)
         {
             // TODO: Add static_assert for requirements.
 
             _DisposeObject();
 
-            _object.size = sizeof(ObjectType);
+            _object.size = sizeof(TObject);
             _object.obj = _AllocMem(_object.size);
 
             _object.copy = [](void* obj, const void* other)
             {
-                new (obj) ObjectType(*reinterpret_cast<const ObjectType*>(other));
+                new (obj) TObject(*reinterpret_cast<const TObject*>(other));
             };
 
             _object.move = [](void* obj, void* other)
             {
-                new (obj) ObjectType(MOVE(*reinterpret_cast<ObjectType*>(other)));
+                new (obj) TObject(MOVE(*reinterpret_cast<TObject*>(other)));
             };
 
             _object.dtor = [](void* obj)
             {
-                reinterpret_cast<ObjectType*>(obj)->ObjectType::~ObjectType();
+                reinterpret_cast<TObject*>(obj)->TObject::~TObject();
             };
 
-            new (_object.obj) ObjectType(FORWARD(object));
+            new (_object.obj) TObject(FORWARD(object));
         }
 
         template <typename T = void>
@@ -363,7 +373,7 @@ namespace Atom
         byte _stackMem[StackSize];
 
         /// Heap Memory management
-        MemAllocator _memAllocator;
+        MemAllocatorT _memAllocator;
         SizeT _heapMemSize;
         void* _heapMem;
 

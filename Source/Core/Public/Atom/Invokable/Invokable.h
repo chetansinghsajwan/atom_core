@@ -4,11 +4,69 @@
 
 namespace Atom
 {
-    template <typename InvokableType, typename ResultType, typename... Args>
-    concept Invokable = requires(InvokableType invokable, Args... args)
+    namespace Internal
     {
-        requires std::invocable<InvokableType, Args...>;
+        template <typename TInvokable, typename TResult, typename... TArgs>
+        concept RInvokable = requires(TInvokable invokable, TArgs... args)
+        {
+            requires std::invocable<TInvokable, TArgs...>;
 
-        { invokable(FORWARD(args)...) } -> TTI::SameAs<ResultType>;
+            { invokable(FORWARD(args)...) } -> TTI::SameAs<TResult>;
+        };
+
+        template <typename TInvokable, typename TResult, typename... TArgs>
+        concept RInvokableConst = requires(const TInvokable invokable, TArgs... args)
+        {
+            requires std::invocable<TInvokable, TArgs...>;
+
+            { invokable(FORWARD(args)...) } -> TTI::SameAs<TResult>;
+        };
+
+        template <typename TInvokable, typename TResult, typename... TArgs>
+        concept RInvokableNoexcept = requires(TInvokable invokable, TArgs... args)
+        {
+            requires std::invocable<TInvokable, TArgs...>;
+
+            { invokable(FORWARD(args)...) } noexcept -> TTI::SameAs<TResult>;
+        };
+
+        template <typename TInvokable, typename TResult, typename... TArgs>
+        concept RInvokableConstNoexcept = requires(const TInvokable invokable, TArgs... args)
+        {
+            requires std::invocable<TInvokable, TArgs...>;
+
+            { invokable(FORWARD(args)...) } noexcept -> TTI::SameAs<TResult>;
+        };
+    }
+
+    template <typename TInvokable, typename TResult, typename... TArgs>
+    struct RInvokable;
+
+    template <typename TInvokable, typename TResult, typename... TArgs>
+    struct RInvokable <TInvokable, TResult(TArgs...)>
+    {
+        static constinit const bool Value = Internal::RInvokable<
+            TInvokable, TResult, TArgs...>;
+    };
+
+    template <typename TInvokable, typename TResult, typename... TArgs>
+    struct RInvokable <TInvokable, TResult(TArgs...) const>
+    {
+        static constinit const bool Value = Internal::RInvokableConst<
+            TInvokable, TResult, TArgs...>;
+    };
+
+    template <typename TInvokable, typename TResult, typename... TArgs>
+    struct RInvokable <TInvokable, TResult(TArgs...) noexcept>
+    {
+        static constinit const bool Value = Internal::RInvokableNoexcept<
+            TInvokable, TResult, TArgs...>;
+    };
+
+    template <typename TInvokable, typename TResult, typename... TArgs>
+    struct RInvokable <TInvokable, TResult(TArgs...) const noexcept>
+    {
+        static constinit const bool Value = Internal::RInvokableConstNoexcept<
+            TInvokable, TResult, TArgs...>;
     };
 }
