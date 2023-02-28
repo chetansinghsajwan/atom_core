@@ -2,6 +2,7 @@
 #include "Atom/Core.h"
 #include "Atom/Memory.h"
 #include "Atom/Exceptions.h"
+#include "Atom/TTI.h"
 #include "Atom/Invokable/Invokable.h"
 
 namespace Atom
@@ -137,7 +138,13 @@ namespace Atom
             _invoker.template Set<TInvokable>();
         }
 
+        TResult _InvokeInvokable(TArgs&&... args)
+        {
+            return _invoker.Invoke(FORWARD(args)...);
+        }
+
     protected:
+        template <typename>
         struct Invoker
         {
             template <typename TInvokable>
@@ -163,6 +170,29 @@ namespace Atom
             void (*_impl) (void* invokable, TResult& result, TArgs&&... args);
         };
 
-        Invoker _invoker;
+        template <>
+        struct Invoker <void>
+        {
+            template <typename TInvokable>
+                requires RInvokable<TInvokable, TResult(TArgs...)>::Value
+            void Set()
+            {
+                _impl = [](void* obj, TArgs&&... args)
+                {
+                    TInvokable& invokable = *reinterpret_cast<TInvokable*>(obj);
+                    invokable(FORWARD(args)...);
+                };
+            }
+
+            TResult Invoke(void* invokable, TArgs&&... args)
+            {
+                _impl(invokable, FORWARD(args)...);
+            }
+
+        protected:
+            void (*_impl) (void* invokable, TArgs&&... args);
+        };
+
+        Invoker<TResult> _invoker;
     };
 }
