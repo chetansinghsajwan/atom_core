@@ -65,6 +65,7 @@ namespace Atom
     using SizeT = std::size_t;
     using DiffT = long long;
     using NullType = std::nullptr_t;
+    using TypeInfo = std::type_info;
 
     template <typename T>
     T&& MOVE(T& obj) noexcept

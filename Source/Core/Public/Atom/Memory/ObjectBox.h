@@ -45,6 +45,7 @@ namespace Atom
 
             SizeT size;
             void* obj;
+            const TypeInfo* type;
         };
 
     public:
@@ -259,6 +260,7 @@ namespace Atom
 
             _object.size = sizeof(TObject);
             _object.obj = _AllocMem(_object.size);
+            _object.type = &typeid(TObject);
 
             _object.copy = [](void* obj, const void* other)
             {
@@ -282,6 +284,11 @@ namespace Atom
         T* _GetObject() noexcept
         {
             return reinterpret_cast<T*>(_object.obj);
+        }
+
+        const TypeInfo& _GetObjectType() const noexcept
+        {
+            return *_object.type;
         }
 
         bool _HasObject() const noexcept
