@@ -5,7 +5,7 @@
 //// ATOM API
 //// -----------------------------------------------------------------------------------------------
 
-#if defined(ATOM_PLATFORM_WIN)
+#if defined(ATOM_PLATFORM_WINDOWS)
     #ifdef ATOM_EXPORT
         #define ATOM_API __declspec(dllexport)
     #else
