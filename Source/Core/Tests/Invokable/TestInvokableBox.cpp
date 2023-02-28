@@ -4,53 +4,75 @@
 
 using namespace Atom;
 
-TEST_CASE("InvokableBox")
+TEST_CASE("Atom/Invokable/InvokableBox")
 {
-    InvokableBox<bool(int)> lambdaInvokable = [](int value)
+    SECTION("NotMoveAssignable Result")
     {
-        return value == 1;
-    };
+        struct NotMoveAssignable
+        {
+            NotMoveAssignable() = default;
 
-    CHECK(lambdaInvokable(0) == false);
-    CHECK(lambdaInvokable(1) == true);
+            NotMoveAssignable(const NotMoveAssignable& other) = default;
+            NotMoveAssignable(NotMoveAssignable&& other) = default;
 
-    class Lambda final
+            NotMoveAssignable& operator = (const NotMoveAssignable& other) = delete;
+            NotMoveAssignable& operator = (NotMoveAssignable&& other) = delete;
+        };
+
+        InvokableBox<NotMoveAssignable(int)> invokable = [](int value)
+        {
+            return NotMoveAssignable();
+        };
+    }
+
+    SECTION("Invocation")
     {
-    public:
-        Lambda(int* capturedValue) noexcept:
-            _capturedValue(capturedValue) { }
-
-        Lambda(const Lambda& other) noexcept
+        InvokableBox<bool(int)> lambdaInvokable = [](int value)
         {
-            _capturedValue = other._capturedValue;
-        }
+            return value == 1;
+        };
 
-        Lambda(Lambda&& other) noexcept
+        CHECK(lambdaInvokable(0) == false);
+        CHECK(lambdaInvokable(1) == true);
+
+        class Lambda final
         {
-            this->_capturedValue = other._capturedValue;
-            other._capturedValue = nullptr;
-        }
+        public:
+            Lambda(int* capturedValue) noexcept:
+                _capturedValue(capturedValue) { }
 
-        ~Lambda() { }
+            Lambda(const Lambda& other) noexcept
+            {
+                _capturedValue = other._capturedValue;
+            }
 
-    public:
-        int operator () ()
-        {
-            return *_capturedValue;
-        }
+            Lambda(Lambda&& other) noexcept
+            {
+                this->_capturedValue = other._capturedValue;
+                other._capturedValue = nullptr;
+            }
 
-    private:
-        int* _capturedValue;
-    };
+            ~Lambda() { }
 
-    int capturedValue = 10;
-    InvokableBox<int()> captureLambdaInvokable = Lambda(&capturedValue);
+        public:
+            int operator () ()
+            {
+                return *_capturedValue;
+            }
 
-     CHECK(captureLambdaInvokable() != 0);
-     CHECK(captureLambdaInvokable() == capturedValue);
+        private:
+            int* _capturedValue;
+        };
+
+        int capturedValue = 10;
+        InvokableBox<int()> captureLambdaInvokable = Lambda(&capturedValue);
+
+        CHECK(captureLambdaInvokable() != 0);
+        CHECK(captureLambdaInvokable() == capturedValue);
+    }
 }
 
-TEST_CASE("InvokableBox", "[Benchmarks]")
+TEST_CASE("Atom/Invokable/InvokableBox", "[Benchmarks]")
 {
     //// |-----------------------------------------------------------------------------------------|
     //// | BENCHMARK NAME                                 SAMPLES       ITERATIONS    ESTIMATED    |
@@ -74,7 +96,7 @@ TEST_CASE("InvokableBox", "[Benchmarks]")
     //// |                                                 0.193768 ns  0.0177648 ns   0.356329 ns |
     //// |-----------------------------------------------------------------------------------------|
 
-    BENCHMARK("ATOM InvokableBox Construction")
+    BENCHMARK("ATOM InvokableBox [Construction]")
     {
         InvokableBox<bool(int)> invokable = [](int value)
         {
@@ -84,7 +106,7 @@ TEST_CASE("InvokableBox", "[Benchmarks]")
         return invokable;
     };
 
-    BENCHMARK("STD Function Construction")
+    BENCHMARK("STD Function [Construction]")
     {
         std::function<bool(int)> function = [](int value)
         {
@@ -104,12 +126,12 @@ TEST_CASE("InvokableBox", "[Benchmarks]")
         return value == 1;
     };
 
-    BENCHMARK("ATOM InvokableBox")
+    BENCHMARK("ATOM InvokableBox [Invocation]")
     {
         return invokable(0);
     };
 
-    BENCHMARK("STD Function")
+    BENCHMARK("STD Function [Invocation]")
     {
         return function(0);
     };

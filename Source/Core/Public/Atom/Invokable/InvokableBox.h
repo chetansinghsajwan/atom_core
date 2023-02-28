@@ -169,7 +169,7 @@ namespace Atom
                 _impl = [](void* obj, TResult& result, TArgs&&... args)
                 {
                     TInvokable& invokable = *reinterpret_cast<TInvokable*>(obj);
-                    result = invokable(FORWARD(args)...);
+                    new (&result) TResult(invokable(FORWARD(args)...));
                 };
             }
 
