@@ -127,6 +127,21 @@ namespace Atom
             return Invoke(FORWARD(args)...);
         }
 
+    public:
+        template <typename T>
+        T* GetInvokable() noexcept
+        {
+            if (typeid(T) != GetInvokableType())
+                return nullptr;
+
+            return ObjectBox::_GetObject<T>();
+        }
+
+        const TypeInfo& GetInvokableType() const noexcept
+        {
+            return ObjectBox::_GetObjectType();
+        }
+
     protected:
         /// ----------------------------------------------------------------------------------------
         /// 
