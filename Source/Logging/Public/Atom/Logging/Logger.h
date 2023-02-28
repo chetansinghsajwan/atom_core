@@ -17,7 +17,7 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Calls Log(LogLevel::Trace, msg, FWD(args)...).
         /// ----------------------------------------------------------------------------------------
-        void LogTrace(const LogStringType auto& msg, LogArgType auto&&... args)
+        void LogTrace(const RLogString auto& msg, RLogArg auto&&... args)
         {
             Log(LogLevel::Trace, msg, FWD(args)...);
         }
@@ -25,7 +25,7 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Calls Log(LogLevel::Debug, msg, FWD(args)...).
         /// ----------------------------------------------------------------------------------------
-        void LogDebug(const LogStringType auto& msg, LogArgType auto&&... args)
+        void LogDebug(const RLogString auto& msg, RLogArg auto&&... args)
         {
             Log(LogLevel::Debug, msg, FWD(args)...);
         }
@@ -33,7 +33,7 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Calls Log(LogLevel::Info, msg, FWD(args)...).
         /// ----------------------------------------------------------------------------------------
-        void LogInfo(const LogStringType auto& msg, LogArgType auto&&... args)
+        void LogInfo(const RLogString auto& msg, RLogArg auto&&... args)
         {
             Log(LogLevel::Info, msg, FWD(args)...);
         }
@@ -41,7 +41,7 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Calls Log(LogLevel::Warn, msg, FWD(args)...).
         /// ----------------------------------------------------------------------------------------
-        void LogWarn(const LogStringType auto& msg, LogArgType auto&&... args)
+        void LogWarn(const RLogString auto& msg, RLogArg auto&&... args)
         {
             Log(LogLevel::Warn, msg, FWD(args)...);
         }
@@ -49,7 +49,7 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Calls Log(LogLevel::Error, msg, FWD(args)...).
         /// ----------------------------------------------------------------------------------------
-        void LogError(const LogStringType auto& msg, LogArgType auto&&... args)
+        void LogError(const RLogString auto& msg, RLogArg auto&&... args)
         {
             Log(LogLevel::Error, msg, FWD(args)...);
         }
@@ -57,7 +57,7 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Calls Log(LogLevel::Fatal, msg, FWD(args)...).
         /// ----------------------------------------------------------------------------------------
-        void LogFatal(const LogStringType auto& msg, LogArgType auto&&... args)
+        void LogFatal(const RLogString auto& msg, RLogArg auto&&... args)
         {
             Log(LogLevel::Fatal, msg, FWD(args)...);
         }
@@ -70,7 +70,7 @@ namespace Atom::Logging
         /// @PARAM[IN] msg Log message containing format of the msg.
         /// @PARAM[IN] args... Arguments used with {msg} to construct the formatted message.
         /// ----------------------------------------------------------------------------------------
-        void Log(LogLevel lvl, const LogStringType auto& msg, LogArgType auto&&... args)
+        void Log(LogLevel lvl, const RLogString auto& msg, RLogArg auto&&... args)
         {
             if (CheckLogLevel(lvl))
             {
@@ -118,10 +118,10 @@ namespace Atom::Logging
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
-    template <typename LoggerType>
-    requires TTI::IsBaseOf<Logger, LoggerType>
+    template <typename TLogger>
+        requires TTI::IsBaseOf<Logger, TLogger>
     LoggerPtr MAKE_LOGGER(auto&&... args) noexcept
     {
-        return MakeShared<LoggerType>(FWD(args)...);
+        return MakeShared<TLogger>(FWD(args)...);
     }
 }

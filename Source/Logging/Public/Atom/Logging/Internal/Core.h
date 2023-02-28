@@ -1,5 +1,6 @@
 #pragma once
 #include "Atom/TTI.h"
+#include "Atom/String.h"
 
 namespace Atom
 {
@@ -8,14 +9,14 @@ namespace Atom
 //// -----------------------------------------------------------------------------------------------
 
     template <typename T>
-    concept LogStringType = requires(T str)
+    concept RLogString = requires(T str)
     {
-        requires TTI::ConvertibleTo<T, StringView>;
+        requires TTI::RConvertible<T, StringView>;
     };
 
     template <typename T>
-    concept LogArgType = requires(T arg)
+    concept RLogArg = requires(T arg)
     {
-        requires TTI::ConvertibleTo<T, StringView>;
+        requires TTI::RConvertible<T, StringView>;
     };
 }

@@ -8,8 +8,8 @@ namespace Atom
     /// Locks the lock on construction and unlocks at destruction. This is done to guarantee
     /// exception safety.
     /// --------------------------------------------------------------------------------------------
-    template <typename LockableType>
-        requires LockableRequirements<LockableType>
+    template <typename TLockable>
+        requires RLockable<TLockable>
     class LockGuard
     {
     public:
@@ -20,7 +20,7 @@ namespace Atom
         /// 
         /// @THROWS UnkownException Exception thrown by {lock.Lock()}.
         /// ----------------------------------------------------------------------------------------
-        LockGuard(LockableType& lock):
+        LockGuard(TLockable& lock):
             _lock(lock)
         {
             _lock.Lock();
@@ -40,6 +40,6 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Lockable object.
         /// ----------------------------------------------------------------------------------------
-        LockableType& _lock;
+        TLockable& _lock;
     };
 }

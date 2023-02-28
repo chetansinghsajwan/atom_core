@@ -25,7 +25,7 @@ namespace Atom::Logging
     /// ----------------------------------------------------------------------------------------
     /// Calls Log on GET_ROOT_LOGGER().
     /// ----------------------------------------------------------------------------------------
-    inline void LOG(LogLevel lvl, const LogStringType auto& msg, LogArgType auto&&... args)
+    inline void LOG(LogLevel lvl, const RLogString auto& msg, RLogArg auto&&... args)
     {
         GET_ROOT_LOGGER()->Log(lvl, msg, FWD(args)...);
     }
@@ -33,7 +33,7 @@ namespace Atom::Logging
     /// --------------------------------------------------------------------------------------------
     /// Calls LOG(LogLevel::Trace, msg, FWD(args)...).
     /// --------------------------------------------------------------------------------------------
-    inline void LOG_TRACE(const LogStringType auto& msg, LogArgType auto&&... args)
+    inline void LOG_TRACE(const RLogString auto& msg, RLogArg auto&&... args)
     {
         LOG(LogLevel::Trace, msg, FWD(args)...);
     }
@@ -41,7 +41,7 @@ namespace Atom::Logging
     /// --------------------------------------------------------------------------------------------
     /// Calls LOG(LogLevel::Debug, msg, FWD(args)...).
     /// --------------------------------------------------------------------------------------------
-    inline void LOG_DEBUG(const LogStringType auto& msg, LogArgType auto&&... args)
+    inline void LOG_DEBUG(const RLogString auto& msg, RLogArg auto&&... args)
     {
         LOG(LogLevel::Debug, msg, FWD(args)...);
     }
@@ -49,7 +49,7 @@ namespace Atom::Logging
     /// --------------------------------------------------------------------------------------------
     /// Calls LOG(LogLevel::Info, msg, FWD(args)...).
     /// --------------------------------------------------------------------------------------------
-    inline void LOG_INFO(const LogStringType auto& msg, LogArgType auto&&... args)
+    inline void LOG_INFO(const RLogString auto& msg, RLogArg auto&&... args)
     {
         LOG(LogLevel::Info, msg, FWD(args)...);
     }
@@ -57,7 +57,7 @@ namespace Atom::Logging
     /// --------------------------------------------------------------------------------------------
     /// Calls LOG(LogLevel::Warn, msg, FWD(args)...).
     /// --------------------------------------------------------------------------------------------
-    inline void LOG_WARN(const LogStringType auto& msg, LogArgType auto&&... args)
+    inline void LOG_WARN(const RLogString auto& msg, RLogArg auto&&... args)
     {
         LOG(LogLevel::Warn, msg, FWD(args)...);
     }
@@ -65,7 +65,7 @@ namespace Atom::Logging
     /// --------------------------------------------------------------------------------------------
     /// Calls LOG(LogLevel::Error, msg, FWD(args)...).
     /// --------------------------------------------------------------------------------------------
-    inline void LOG_ERROR(const LogStringType auto& msg, LogArgType auto&&... args)
+    inline void LOG_ERROR(const RLogString auto& msg, RLogArg auto&&... args)
     {
         LOG(LogLevel::Error, msg, FWD(args)...);
     }
@@ -73,7 +73,7 @@ namespace Atom::Logging
     /// --------------------------------------------------------------------------------------------
     /// Calls LOG(LogLevel::Fatal, msg, FWD(args)...).
     /// --------------------------------------------------------------------------------------------
-    inline void LOG_FATAL(const LogStringType auto& msg, LogArgType auto&&... args)
+    inline void LOG_FATAL(const RLogString auto& msg, RLogArg auto&&... args)
     {
         LOG(LogLevel::Fatal, msg, FWD(args)...);
     }
@@ -115,7 +115,7 @@ namespace Atom::Logging
     /// @TODO Check the overhead of this function when it should not log anything.
     /// --------------------------------------------------------------------------------------------
     template <LogLevel lvl>
-    inline void STATIC_LOG(const LogStringType auto& msg, LogArgType auto&&... args)
+    inline void STATIC_LOG(const RLogString auto& msg, RLogArg auto&&... args)
     {
         if constexpr (STATIC_CHECK_LOG_LEVEL<lvl>())
         {
@@ -126,7 +126,7 @@ namespace Atom::Logging
     /// --------------------------------------------------------------------------------------------
     /// Calls STATIC_LOG<LogLevel::Trace>(msg, FWD(args)...).
     /// --------------------------------------------------------------------------------------------
-    inline void STATIC_LOG_TRACE(const LogStringType auto& msg, LogArgType auto&&... args)
+    inline void STATIC_LOG_TRACE(const RLogString auto& msg, RLogArg auto&&... args)
     {
         STATIC_LOG<LogLevel::Trace>(msg, FWD(args)...);
     }
@@ -134,7 +134,7 @@ namespace Atom::Logging
     /// --------------------------------------------------------------------------------------------
     /// Calls STATIC_LOG<LogLevel::Debug>(msg, FWD(args)...).
     /// --------------------------------------------------------------------------------------------
-    inline void STATIC_LOG_DEBUG(const LogStringType auto& msg, LogArgType auto&&... args)
+    inline void STATIC_LOG_DEBUG(const RLogString auto& msg, RLogArg auto&&... args)
     {
         STATIC_LOG<LogLevel::Debug>(msg, FWD(args)...);
     }
@@ -142,7 +142,7 @@ namespace Atom::Logging
     /// --------------------------------------------------------------------------------------------
     /// Calls STATIC_LOG<LogLevel::Info>(msg, FWD(args)...).
     /// --------------------------------------------------------------------------------------------
-    inline void STATIC_LOG_INFO(const LogStringType auto& msg, LogArgType auto&&... args)
+    inline void STATIC_LOG_INFO(const RLogString auto& msg, RLogArg auto&&... args)
     {
         STATIC_LOG<LogLevel::Info>(msg, FWD(args)...);
     }
@@ -150,7 +150,7 @@ namespace Atom::Logging
     /// --------------------------------------------------------------------------------------------
     /// Calls STATIC_LOG<LogLevel::Warn>(msg, FWD(args)...).
     /// --------------------------------------------------------------------------------------------
-    inline void STATIC_LOG_WARN(const LogStringType auto& msg, LogArgType auto&&... args)
+    inline void STATIC_LOG_WARN(const RLogString auto& msg, RLogArg auto&&... args)
     {
         STATIC_LOG<LogLevel::Warn>(msg, FWD(args)...);
     }
@@ -158,7 +158,7 @@ namespace Atom::Logging
     /// --------------------------------------------------------------------------------------------
     /// Calls STATIC_LOG<LogLevel::Error>(msg, FWD(args)...).
     /// --------------------------------------------------------------------------------------------
-    inline void STATIC_LOG_ERROR(const LogStringType auto& msg, LogArgType auto&&... args)
+    inline void STATIC_LOG_ERROR(const RLogString auto& msg, RLogArg auto&&... args)
     {
         STATIC_LOG<LogLevel::Error>(msg, FWD(args)...);
     }
@@ -166,7 +166,7 @@ namespace Atom::Logging
     /// --------------------------------------------------------------------------------------------
     /// Calls STATIC_LOG<LogLevel::Fatal>(msg, FWD(args)...).
     /// --------------------------------------------------------------------------------------------
-    inline void STATIC_LOG_FATAL(const LogStringType auto& msg, LogArgType auto&&... args)
+    inline void STATIC_LOG_FATAL(const RLogString auto& msg, RLogArg auto&&... args)
     {
         STATIC_LOG<LogLevel::Fatal>(msg, FWD(args)...);
     }

@@ -11,18 +11,18 @@ namespace Atom::Logging::Internal
     /// --------------------------------------------------------------------------------------------
     /// MultiLogTargetTemplate is used to store multiple LogTarget objects.
     /// 
-    /// @TPARAM LockableType Type used to ensure thread safety.
+    /// @TPARAM TLockable Type used to ensure thread safety.
     /// 
-    /// @REQUIRES LockableType Lockable<LockableType>.
+    /// @REQUIRES TLockable RLockable<TLockable>.
     /// 
     /// @THREAD_SAFETY SAFE
     /// --------------------------------------------------------------------------------------------
-    template <Lockable LockableType>
+    template <RLockable TLockable>
     class MultiLogTargetTemplate: public LogTarget
     {
         using ThisT = MultiLogTargetTemplate;
         using Container = DynamicArray<LogTargetPtr>;
-        using ConstIteratorType = typename Container::const_iterator;
+        using TConstIterator = typename Container::const_iterator;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -51,11 +51,11 @@ namespace Atom::Logging::Internal
         /// @PARAM[IN] target InitializerList of LogTarget objects to add.
         ///     If {targets} contains null objects, this doesn't adds them.
         /// 
-        /// @EXCEPTION_SAFETY @COPY_FROM _AddTargets(ConstIterator<LogTargetPtr> auto begin,
-        ///     ConstIterator<LogTargetPtr> auto end)
+        /// @EXCEPTION_SAFETY @COPY_FROM _AddTargets(RConstIterator<LogTargetPtr> auto begin,
+        ///     RConstIterator<LogTargetPtr> auto end)
         /// 
-        /// @TIME_COMPLEXITY @COPY_FROM _AddTargets(ConstIterator<LogTargetPtr> auto begin,
-        ///     ConstIterator<LogTargetPtr> auto end)
+        /// @TIME_COMPLEXITY @COPY_FROM _AddTargets(RConstIterator<LogTargetPtr> auto begin,
+        ///     RConstIterator<LogTargetPtr> auto end)
         /// ----------------------------------------------------------------------------------------
         MultiLogTargetTemplate(InitializerList<LogTargetPtr> targets)
         {
@@ -65,16 +65,16 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         /// Constructs with LogTarget objects.
         /// 
-        /// @PARAM[IN] target ConstIterable of LogTarget objects to add.
+        /// @PARAM[IN] target RConstIterable of LogTarget objects to add.
         ///     If {targets} contains null objects, this doesn't adds them.
         /// 
-        /// @EXCEPTION_SAFETY @COPY_FROM _AddTargets(ConstIterator<LogTargetPtr> auto begin,
-        ///     ConstIterator<LogTargetPtr> auto end)
+        /// @EXCEPTION_SAFETY @COPY_FROM _AddTargets(RConstIterator<LogTargetPtr> auto begin,
+        ///     RConstIterator<LogTargetPtr> auto end)
         /// 
-        /// @TIME_COMPLEXITY @COPY_FROM _AddTargets(ConstIterator<LogTargetPtr> auto begin,
-        ///     ConstIterator<LogTargetPtr> auto end)
+        /// @TIME_COMPLEXITY @COPY_FROM _AddTargets(RConstIterator<LogTargetPtr> auto begin,
+        ///     RConstIterator<LogTargetPtr> auto end)
         /// ----------------------------------------------------------------------------------------
-        MultiLogTargetTemplate(const ConstIterable<LogTargetPtr> auto& targets)
+        MultiLogTargetTemplate(const RConstIterable<LogTargetPtr> auto& targets)
         {
             _AddTargets(targets.begin(), targets.end());
         }
@@ -82,17 +82,17 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         /// Constructs with LogTarget objects.
         /// 
-        /// @PARAM[IN] begin, end ConstIterator to beginning and end of range to add.
+        /// @PARAM[IN] begin, end RConstIterator to beginning and end of range to add.
         ///     If range {[begin, end]} contains null objects, this doesn't adds them.
         /// 
-        /// @EXCEPTION_SAFETY @COPY_FROM _AddTargets(ConstIterator<LogTargetPtr> auto begin,
-        ///     ConstIterator<LogTargetPtr> auto end)
+        /// @EXCEPTION_SAFETY @COPY_FROM _AddTargets(RConstIterator<LogTargetPtr> auto begin,
+        ///     RConstIterator<LogTargetPtr> auto end)
         /// 
-        /// @TIME_COMPLEXITY @COPY_FROM _AddTargets(ConstIterator<LogTargetPtr> auto begin,
-        ///     ConstIterator<LogTargetPtr> auto end)
+        /// @TIME_COMPLEXITY @COPY_FROM _AddTargets(RConstIterator<LogTargetPtr> auto begin,
+        ///     RConstIterator<LogTargetPtr> auto end)
         /// ----------------------------------------------------------------------------------------
-        MultiLogTargetTemplate(ConstIterator<LogTargetPtr> auto begin,
-            ConstIterator<LogTargetPtr> auto end)
+        MultiLogTargetTemplate(RConstIterator<LogTargetPtr> auto begin,
+            RConstIterator<LogTargetPtr> auto end)
         {
             _AddTargets(begin, end);
         }
@@ -163,15 +163,15 @@ namespace Atom::Logging::Internal
         ///     If {targets} contains null objects, this doesn't adds them.
         /// @RETURNS Count of LogTarget objects added.
         /// 
-        /// @EXCEPTION_SAFETY @COPY_FROM _AddTargets(ConstIterator<LogTargetPtr> auto begin,
-        ///     ConstIterator<LogTargetPtr> auto end)
+        /// @EXCEPTION_SAFETY @COPY_FROM _AddTargets(RConstIterator<LogTargetPtr> auto begin,
+        ///     RConstIterator<LogTargetPtr> auto end)
         /// 
-        /// @TIME_COMPLEXITY @COPY_FROM _AddTargets(ConstIterator<LogTargetPtr> auto begin,
-        ///     ConstIterator<LogTargetPtr> auto end)
+        /// @TIME_COMPLEXITY @COPY_FROM _AddTargets(RConstIterator<LogTargetPtr> auto begin,
+        ///     RConstIterator<LogTargetPtr> auto end)
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        SizeT AddTargets(const ConstIterable<LogTargetPtr> auto& targets)
+        SizeT AddTargets(const RConstIterable<LogTargetPtr> auto& targets)
         {
             auto begin = targets.begin();
             auto end = targets.end();
@@ -190,11 +190,11 @@ namespace Atom::Logging::Internal
         ///     If {targets} contains null objects, this doesn't adds them.
         /// @RETURNS Count of LogTarget objects added.
         /// 
-        /// @EXCEPTION_SAFETY @COPY_FROM _AddTargets(ConstIterator<LogTargetPtr> auto begin,
-        ///     ConstIterator<LogTargetPtr> auto end)
+        /// @EXCEPTION_SAFETY @COPY_FROM _AddTargets(RConstIterator<LogTargetPtr> auto begin,
+        ///     RConstIterator<LogTargetPtr> auto end)
         /// 
-        /// @TIME_COMPLEXITY @COPY_FROM _AddTargets(ConstIterator<LogTargetPtr> auto begin,
-        ///     ConstIterator<LogTargetPtr> auto end)
+        /// @TIME_COMPLEXITY @COPY_FROM _AddTargets(RConstIterator<LogTargetPtr> auto begin,
+        ///     RConstIterator<LogTargetPtr> auto end)
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
@@ -210,20 +210,20 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         /// Adds LogTarget objects.
         /// 
-        /// @PARAM[IN] begin, end ConstIterator to beginning and end of range to add.
+        /// @PARAM[IN] begin, end RConstIterator to beginning and end of range to add.
         ///     If range {[begin, end]} contains null objects, this doesn't adds them.
         /// @RETURNS Count of LogTarget objects added.
         /// 
-        /// @EXCEPTION_SAFETY @COPY_FROM _AddTargets(ConstIterator<LogTargetPtr> auto begin,
-        ///     ConstIterator<LogTargetPtr> auto end)
+        /// @EXCEPTION_SAFETY @COPY_FROM _AddTargets(RConstIterator<LogTargetPtr> auto begin,
+        ///     RConstIterator<LogTargetPtr> auto end)
         /// 
-        /// @TIME_COMPLEXITY @COPY_FROM _AddTargets(ConstIterator<LogTargetPtr> auto begin,
-        ///     ConstIterator<LogTargetPtr> auto end)
+        /// @TIME_COMPLEXITY @COPY_FROM _AddTargets(RConstIterator<LogTargetPtr> auto begin,
+        ///     RConstIterator<LogTargetPtr> auto end)
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        SizeT AddTargets(ConstIterator<LogTargetPtr> auto begin,
-            ConstIterator<LogTargetPtr> auto end)
+        SizeT AddTargets(RConstIterator<LogTargetPtr> auto begin,
+            RConstIterator<LogTargetPtr> auto end)
         {
             if (begin == end)
                 return 0;
@@ -260,15 +260,15 @@ namespace Atom::Logging::Internal
         ///     If {targets} contains null objects, this doesn't searches them.
         /// @RETURNS Count of LogTarget objects removed.
         /// 
-        /// @EXCEPTION_SAFETY @COPY_FROM _RemoveTargets(ConstIterator<LogTargetPtr> auto begin,
-        ///     ConstIterator<LogTargetPtr> auto end)
+        /// @EXCEPTION_SAFETY @COPY_FROM _RemoveTargets(RConstIterator<LogTargetPtr> auto begin,
+        ///     RConstIterator<LogTargetPtr> auto end)
         /// 
-        /// @TIME_COMPLEXITY @COPY_FROM _RemoveTargets(ConstIterator<LogTargetPtr> auto begin,
-        ///     ConstIterator<LogTargetPtr> auto end)
+        /// @TIME_COMPLEXITY @COPY_FROM _RemoveTargets(RConstIterator<LogTargetPtr> auto begin,
+        ///     RConstIterator<LogTargetPtr> auto end)
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        SizeT RemoveTargets(Iterable<LogTargetPtr> auto& targets)
+        SizeT RemoveTargets(RIterable<LogTargetPtr> auto& targets)
         {
             auto begin = targets.begin();
             auto end = targets.end();
@@ -287,11 +287,11 @@ namespace Atom::Logging::Internal
         ///     If {targets} contains null objects, this doesn't searches them.
         /// @RETURNS Count of LogTarget objects removed.
         /// 
-        /// @EXCEPTION_SAFETY @COPY_FROM _RemoveTargets(ConstIterator<LogTargetPtr> auto begin,
-        ///     ConstIterator<LogTargetPtr> auto end)
+        /// @EXCEPTION_SAFETY @COPY_FROM _RemoveTargets(RConstIterator<LogTargetPtr> auto begin,
+        ///     RConstIterator<LogTargetPtr> auto end)
         /// 
-        /// @TIME_COMPLEXITY @COPY_FROM _RemoveTargets(ConstIterator<LogTargetPtr> auto begin,
-        ///     ConstIterator<LogTargetPtr> auto end)
+        /// @TIME_COMPLEXITY @COPY_FROM _RemoveTargets(RConstIterator<LogTargetPtr> auto begin,
+        ///     RConstIterator<LogTargetPtr> auto end)
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
@@ -307,21 +307,21 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         /// Removes LogTarget objects if found.
         /// 
-        /// @PARAM[IN] begin ConstIterator to beginning of range to remove.
-        /// @PARAM[IN] end ConstIterator to end of range to remove.
+        /// @PARAM[IN] begin RConstIterator to beginning of range to remove.
+        /// @PARAM[IN] end RConstIterator to end of range to remove.
         ///     If range {[begin, end]} contains null objects, this doesn't searches them.
         /// @RETURNS Count of LogTarget objects removed.
         /// 
-        /// @EXCEPTION_SAFETY @COPY_FROM _RemoveTargets(ConstIterator<LogTargetPtr> auto begin,
-        ///     ConstIterator<LogTargetPtr> auto end)
+        /// @EXCEPTION_SAFETY @COPY_FROM _RemoveTargets(RConstIterator<LogTargetPtr> auto begin,
+        ///     RConstIterator<LogTargetPtr> auto end)
         /// 
-        /// @TIME_COMPLEXITY @COPY_FROM _RemoveTargets(ConstIterator<LogTargetPtr> auto begin,
-        ///     ConstIterator<LogTargetPtr> auto end)
+        /// @TIME_COMPLEXITY @COPY_FROM _RemoveTargets(RConstIterator<LogTargetPtr> auto begin,
+        ///     RConstIterator<LogTargetPtr> auto end)
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        SizeT RemoveTargets(ConstIterator<LogTargetPtr> auto begin,
-            ConstIterator<LogTargetPtr> auto end)
+        SizeT RemoveTargets(RConstIterator<LogTargetPtr> auto begin,
+            RConstIterator<LogTargetPtr> auto end)
         {
             LockGuard guard(_lock);
             return _RemoveTargets(begin, end);
@@ -355,7 +355,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        SizeT HasTargets(Iterable<LogTargetPtr> auto& targets) const noexcept
+        SizeT HasTargets(RIterable<LogTargetPtr> auto& targets) const noexcept
         {
             LockGuard guard(_lock);
             return _HasTargets(targets.begin(), targets.end());
@@ -381,8 +381,8 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         /// Checks if this has LogTarget objects.
         /// 
-        /// @PARAM[IN] begin ConstIterator to beginning of range to search.
-        /// @PARAM[IN] end ConstIterator to end of range to search.
+        /// @PARAM[IN] begin RConstIterator to beginning of range to search.
+        /// @PARAM[IN] end RConstIterator to end of range to search.
         ///     If range {[begin, end]} contains null objects, this doesn't searches them.
         /// @RETURNS Count of LogTarget objects found.
         /// 
@@ -390,8 +390,8 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        SizeT HasTargets(ConstIterator<LogTargetPtr> auto begin,
-            ConstIterator<LogTargetPtr> auto end)
+        SizeT HasTargets(RConstIterator<LogTargetPtr> auto begin,
+            RConstIterator<LogTargetPtr> auto end)
             const noexcept
         {
             LockGuard guard(_lock);
@@ -428,25 +428,25 @@ namespace Atom::Logging::Internal
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// ConstIterator to beginning of iteration range.
+        /// RConstIterator to beginning of iteration range.
         /// 
         /// @THREAD_SAFETY NONE
         /// 
         /// @TODO Make ThreadSafe.
         /// ----------------------------------------------------------------------------------------
-        ConstIteratorType Begin() const noexcept
+        TConstIterator Begin() const noexcept
         {
             return _targets.cbegin();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// ConstIterator to end of iteration range.
+        /// RConstIterator to end of iteration range.
         /// 
         /// @THREAD_SAFETY NONE
         /// 
         /// @TODO Make ThreadSafe.
         /// ----------------------------------------------------------------------------------------
-        ConstIteratorType End() const noexcept
+        TConstIterator End() const noexcept
         {
             return _targets.cend();
         }
@@ -459,7 +459,7 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         /// @COPY_DOC Begin().
         /// ----------------------------------------------------------------------------------------
-        ConstIteratorType begin() const noexcept
+        TConstIterator begin() const noexcept
         {
             return Begin();
         }
@@ -467,7 +467,7 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         /// @COPY_DOC Begin().
         /// ----------------------------------------------------------------------------------------
-        ConstIteratorType end() const noexcept
+        TConstIterator end() const noexcept
         {
             return End();
         }
@@ -504,8 +504,8 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         /// Adds the LogTarget objects.
         /// 
-        /// @PARAM[IN] begin ConstIterator to beginning of range to add.
-        /// @PARAM[IN] end ConstIterator to end of range to add.
+        /// @PARAM[IN] begin RConstIterator to beginning of range to add.
+        /// @PARAM[IN] end RConstIterator to end of range to add.
         ///     If range {[begin, end]} contains null objects, this doesn't adds them.
         /// @RETURNS Count of LogTarget objects added.
         /// 
@@ -515,8 +515,8 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY NONE
         /// ----------------------------------------------------------------------------------------
-        SizeT _AddTargets(ConstIterator<LogTargetPtr> auto begin,
-            ConstIterator<LogTargetPtr> auto end)
+        SizeT _AddTargets(RConstIterator<LogTargetPtr> auto begin,
+            RConstIterator<LogTargetPtr> auto end)
         {
             SizeT count = 0;
             for (auto it = begin; it != end; it++)
@@ -561,8 +561,8 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         /// Removes LogTarget objects.
         /// 
-        /// @PARAM[IN] begin ConstIterator to beginning of the range to remove.
-        /// @PARAM[IN] end ConstIterator to end of the range to remove.
+        /// @PARAM[IN] begin RConstIterator to beginning of the range to remove.
+        /// @PARAM[IN] end RConstIterator to end of the range to remove.
         ///     If range {[begin, end]} contains null objects, this doesn't searches them.
         /// @RETURNS Count of LogTarget objects removed.
         /// 
@@ -570,8 +570,8 @@ namespace Atom::Logging::Internal
         /// 
         /// @TIME_COMPLEXITY @COPY_FROM ${Container}::Remove(LogTarget& target)
         /// ----------------------------------------------------------------------------------------
-        SizeT _RemoveTargets(ConstIterator<LogTargetPtr> auto begin,
-            ConstIterator<LogTargetPtr> auto end)
+        SizeT _RemoveTargets(RConstIterator<LogTargetPtr> auto begin,
+            RConstIterator<LogTargetPtr> auto end)
         {
             SizeT removed = 0;
             for (auto otherIt = begin; otherIt != end; otherIt++)
@@ -619,8 +619,8 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         /// Search LogTarget objects.
         /// 
-        /// @PARAM[IN] begin ConstIterator to beginning of range to search for.
-        /// @PARAM[IN] end ConstIterator to end of range to search for.
+        /// @PARAM[IN] begin RConstIterator to beginning of range to search for.
+        /// @PARAM[IN] end RConstIterator to end of range to search for.
         ///     If range {[begin, end]} contains null objects, this doesn't searches them.
         /// @RETURNS Count of LogTarget objects found.
         /// 
@@ -628,8 +628,8 @@ namespace Atom::Logging::Internal
         /// 
         /// @TIME_COMPLEXITY Exponential
         /// ----------------------------------------------------------------------------------------
-        SizeT _HasTargets(ConstIterator<LogTargetPtr> auto begin,
-            ConstIterator<LogTargetPtr> auto end) const noexcept
+        SizeT _HasTargets(RConstIterator<LogTargetPtr> auto begin,
+            RConstIterator<LogTargetPtr> auto end) const noexcept
         {
             SizeT found = 0;
             for (auto otherIt = begin; otherIt != end; otherIt++)
@@ -666,7 +666,7 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         /// Lockable object for thread safety.
         /// ----------------------------------------------------------------------------------------
-        LockableType _lock;
+        TLockable _lock;
     };
 }
 
@@ -675,6 +675,6 @@ namespace Atom::Logging
     using MultiLogTargetST = Internal::MultiLogTargetTemplate<NullLockable>;
     using MultiLogTargetMT = Internal::MultiLogTargetTemplate<SimpleMutex>;
 
-    // STATIC_ASSERT(ConstIterable<MultiLogTargetST, LogTargetPtr>);
-    // STATIC_ASSERT(ConstIterable<MultiLogTargetMT, LogTargetPtr>);
+    // STATIC_ASSERT(RConstIterable<MultiLogTargetST, LogTargetPtr>);
+    // STATIC_ASSERT(RConstIterable<MultiLogTargetMT, LogTargetPtr>);
 }

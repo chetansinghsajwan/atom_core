@@ -61,7 +61,7 @@ namespace Atom
         constexpr void Unlock() { }
     };
 
-    STATIC_ASSERT(Lockable<NullLockable>);
+    static_assert(RLockable<NullLockable>);
 
     /// --------------------------------------------------------------------------------------------
     /// Specialization for NullLockable to avoid any performance overhead.

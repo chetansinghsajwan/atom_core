@@ -4,20 +4,20 @@
 
 namespace Atom
 {
-    template <typename ExceptionType = AssertionException>
+    template <typename TException = AssertionException>
     void ASSERT(bool assertion, auto&&... args)
     {
         if (!assertion)
         {
-            throw ExceptionType(FORWARD(args)...);
+            throw TException(FORWARD(args)...);
         }
     }
 
-    template <typename ExceptionType = AssertionException>
+    template <typename TException = AssertionException>
     void DEBUG_ASSERT(bool assertion, auto&&... args)
     {
     #ifdef ATOM_CONFIG_DEBUG
-        ASSERT<ExceptionType>(assertion, FORWARD(args)...);
+        ASSERT<TException>(assertion, FORWARD(args)...);
     #endif
     }
 }

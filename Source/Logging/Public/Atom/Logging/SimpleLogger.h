@@ -16,8 +16,8 @@ namespace Atom::Logging::Internal
     template <bool ST>
     class SimpleLoggerTemplate: public Logger
     {
-        using MultiLogTarget = TTI::ConditionalType<ST, MultiLogTargetST, MultiLogTargetMT>;
-        using AtomicLogLevel = TTI::ConditionalType<ST, LogLevel, Atomic<LogLevel>>;
+        using MultiLogTarget = TTI::TConditional<ST, MultiLogTargetST, MultiLogTargetMT>;
+        using AtomicLogLevel = TTI::TConditional<ST, LogLevel, Atomic<LogLevel>>;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -55,7 +55,7 @@ namespace Atom::Logging::Internal
         /// @PARAM[IN] name Name of this logger.
         /// @PARAM[IN] targets LogTarget objects to add.
         /// ----------------------------------------------------------------------------------------
-        SimpleLoggerTemplate(String name, const ConstIterable<LogTargetPtr> auto& targets)
+        SimpleLoggerTemplate(String name, const RConstIterable<LogTargetPtr> auto& targets)
             noexcept: _name(MOVE(name)), targets(targets) { }
 
         /// ----------------------------------------------------------------------------------------
@@ -63,11 +63,11 @@ namespace Atom::Logging::Internal
         /// Constructs {this->targets(begin, end)}.
         /// 
         /// @PARAM[IN] name Name of this logger.
-        /// @PARAM[IN] begin ConstIterator to beginning of range to add.
-        /// @PARAM[IN] end ConstIterator to end of range to add.
+        /// @PARAM[IN] begin RConstIterator to beginning of range to add.
+        /// @PARAM[IN] end RConstIterator to end of range to add.
         /// ----------------------------------------------------------------------------------------
-        SimpleLoggerTemplate(String name, ConstIterator<LogTargetPtr> auto begin,
-            ConstIterator<LogTargetPtr> auto end) noexcept:
+        SimpleLoggerTemplate(String name, RConstIterator<LogTargetPtr> auto begin,
+            RConstIterator<LogTargetPtr> auto end) noexcept:
             _name(MOVE(name)), targets(begin, end) { }
 
     public:

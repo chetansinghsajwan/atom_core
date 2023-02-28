@@ -5,59 +5,49 @@
 namespace Atom
 {
 //// -----------------------------------------------------------------------------------------------
-//// Concepts
-//// -----------------------------------------------------------------------------------------------
-
-    template <typename FromType, typename ToType>
-    concept ConvertibleRequirements = TTI::ConvertibleTo<FromType, ToType>;
-
-//// -----------------------------------------------------------------------------------------------
 //// Iterator Requirements
 //// -----------------------------------------------------------------------------------------------
 
-    template <typename IteratorType, typename ElementType>
-    concept ForwardIteratorRequirements = requires (IteratorType it)
+    template <typename TIterator, typename TElement>
+    concept RForwardIterator = requires (TIterator it)
     {
-        { IteratorType::ElementType } -> TTI::ConvertibleTo<ElementType&>;
+        { TIterator::TElement } -> TTI::RConvertible<TElement&>;
 
-        { it.operator *  () }  -> TTI::ConvertibleTo<ElementType&>;
-        { it.operator -> () }  -> TTI::ConvertibleTo<ElementType*>;
-        { it.operator ++ () }  -> TTI::SameAs<IteratorType&>;
-        { it.operator ++ (0) } -> TTI::SameAs<IteratorType>;
+        { it.operator *  () }  -> TTI::RConvertible<TElement&>;
+        { it.operator -> () }  -> TTI::RConvertible<TElement*>;
+        { it.operator ++ () }  -> TTI::RSameAs<TIterator&>;
+        { it.operator ++ (0) } -> TTI::RSameAs<TIterator>;
     };
 
-    template <typename IteratorType, typename ElementType>
-    concept ForwardIterator = ForwardIteratorRequirements<IteratorType, ElementType>;
+    template <typename TIterator, typename TElement>
+    concept RConstIterator = RForwardIterator<TIterator, TElement>;
 
-    template <typename IteratorType, typename ElementType>
-    concept ConstIterator = ForwardIteratorRequirements<IteratorType, ElementType>;
+    template <typename TIterator, typename TElement>
+    concept RIterator = RForwardIterator<TIterator, TElement>;
 
-    template <typename IteratorType, typename ElementType>
-    concept Iterator = ForwardIteratorRequirements<IteratorType, ElementType>;
-
-    template <typename IteratorType, typename ElementType>
-    concept BidirectionalIteratorRequirements = requires(IteratorType it)
+    template <typename TIterator, typename TElement>
+    concept RBidirectionalIterator = requires(TIterator it)
     {
-        requires ForwardIteratorRequirements<IteratorType, ElementType>;
+        requires RForwardIterator<TIterator, TElement>;
 
-        { it.operator -- () } -> TTI::SameAs<IteratorType&>;
-        { it.operator -- (0) } -> TTI::SameAs<IteratorType>;
+        { it.operator -- () } -> TTI::RSameAs<TIterator&>;
+        { it.operator -- (0) } -> TTI::RSameAs<TIterator>;
     };
 
-    template <typename IteratorType, typename ElementType>
-    concept RandomAccessIteratorRequirements = requires
+    template <typename TIterator, typename TElement>
+    concept RRandomAccessIterator = requires
     {
-        requires BidirectionalIteratorRequirements<IteratorType, ElementType>;
+        requires RBidirectionalIterator<TIterator, TElement>;
     };
 
 //// -----------------------------------------------------------------------------------------------
 //// Iterable Requirements
 //// -----------------------------------------------------------------------------------------------
 
-    template <typename ConstIterableType, typename ElementType>
-    concept ConstIterableRequirements = requires(ConstIterableType it)
+    template <typename TConstIterable, typename TElement>
+    concept RConstIterable = requires(TConstIterable it)
     {
-        typename ConstIterableType::IteratorType;
+        typename TConstIterable::TIterator;
 
         it.cbegin();
         it.cend();
@@ -66,18 +56,12 @@ namespace Atom
         it.end();
     };
 
-    template <typename IterableType, typename ElementType>
-    concept IterableRequirements = requires(IterableType it)
+    template <typename TIterable, typename TElement>
+    concept RIterable = requires(TIterable it)
     {
-        requires ConstIterableRequirements<IterableType, ElementType>;
+        requires RConstIterable<TIterable, TElement>;
 
         it.begin();
         it.end();
     };
-
-    template <typename ConstIterableType, typename ElementType>
-    concept ConstIterable = ConstIterableRequirements<ConstIterableType, ElementType>;
-
-    template <typename IterableType, typename ElementType>
-    concept Iterable = IterableRequirements<IterableType, ElementType>;
 }

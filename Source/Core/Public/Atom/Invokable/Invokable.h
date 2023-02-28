@@ -11,7 +11,7 @@ namespace Atom
         {
             requires std::invocable<TInvokable, TArgs...>;
 
-            { invokable(FORWARD(args)...) } -> TTI::SameAs<TResult>;
+            { invokable(FORWARD(args)...) } -> TTI::RSameAs<TResult>;
         };
 
         template <typename TInvokable, typename TResult, typename... TArgs>
@@ -19,7 +19,7 @@ namespace Atom
         {
             requires std::invocable<TInvokable, TArgs...>;
 
-            { invokable(FORWARD(args)...) } -> TTI::SameAs<TResult>;
+            { invokable(FORWARD(args)...) } -> TTI::RSameAs<TResult>;
         };
 
         template <typename TInvokable, typename TResult, typename... TArgs>
@@ -27,7 +27,7 @@ namespace Atom
         {
             requires std::invocable<TInvokable, TArgs...>;
 
-            { invokable(FORWARD(args)...) } noexcept -> TTI::SameAs<TResult>;
+            { invokable(FORWARD(args)...) } noexcept -> TTI::RSameAs<TResult>;
         };
 
         template <typename TInvokable, typename TResult, typename... TArgs>
@@ -35,7 +35,7 @@ namespace Atom
         {
             requires std::invocable<TInvokable, TArgs...>;
 
-            { invokable(FORWARD(args)...) } noexcept -> TTI::SameAs<TResult>;
+            { invokable(FORWARD(args)...) } noexcept -> TTI::RSameAs<TResult>;
         };
     }
 

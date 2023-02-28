@@ -233,7 +233,7 @@ namespace Atom
         /// When allocator type is different, we cannot handle heap memory.
         /// ----------------------------------------------------------------------------------------
         template <SizeT OtherStackSize, typename OtherMemAllocator,
-            typename = TTI::EnableIf<TTI::IsNotSame<MemAllocatorT, OtherMemAllocator>>>
+            typename = TTI::TEnableIf<TTI::IsNotSame<MemAllocatorT, OtherMemAllocator>>>
         void _MoveBox(ObjectBox<OtherStackSize, OtherMemAllocator>& otherBox)
         {
             _MoveObject(otherBox._object);

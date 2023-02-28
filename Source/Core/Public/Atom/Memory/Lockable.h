@@ -7,17 +7,11 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// Requirements for Lockable type.
     /// --------------------------------------------------------------------------------------------
-    template <typename LockableType>
-    concept LockableRequirements = requires(LockableType lock)
+    template <typename TLockable>
+    concept RLockable = requires(TLockable lock)
     {
-        { lock.Lock() } -> TTI::SameAs<void>;
-        { lock.TryLock() } -> TTI::SameAs<bool>;
-        { lock.Unlock() } -> TTI::SameAs<void>;
+        { lock.Lock() } -> TTI::RSameAs<void>;
+        { lock.TryLock() } -> TTI::RSameAs<bool>;
+        { lock.Unlock() } -> TTI::RSameAs<void>;
     };
-
-    /// --------------------------------------------------------------------------------------------
-    /// Alias for LockableRequirements to use inline with auto.
-    /// --------------------------------------------------------------------------------------------
-    template <typename LockableType>
-    concept Lockable = LockableRequirements<LockableType>;
 }

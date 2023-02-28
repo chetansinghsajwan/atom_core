@@ -86,5 +86,5 @@ namespace Atom
         std::mutex _impl;
     };
 
-    // STATIC_ASSERT(Lockable<SimpleMutex>);
+    static_assert(RLockable<SimpleMutex>);
 }

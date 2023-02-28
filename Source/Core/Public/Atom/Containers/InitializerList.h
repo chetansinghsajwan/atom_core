@@ -5,17 +5,17 @@
 
 namespace Atom
 {
-    template <typename ElementType>
-    using ConstArrayIterator = ElementType*;
+    template <typename TElement>
+    using ConstArrayIterator = TElement*;
 
-    template <typename ElementType>
+    template <typename TElement>
     class InitializerList
     {
-        using StdInitializerList = ::std::initializer_list<ElementType>;
+        using StdInitializerList = ::std::initializer_list<TElement>;
 
     public:
-        using ConstIteratorType = ConstArrayIterator<ElementType>;
-        using IteratorType = ConstArrayIterator<ElementType>;
+        using TConstIterator = ConstArrayIterator<TElement>;
+        using TIterator = ConstArrayIterator<TElement>;
 
     public:
         constexpr InitializerList(StdInitializerList initList) noexcept:
@@ -26,24 +26,24 @@ namespace Atom
 //// -----------------------------------------------------------------------------------------------
 
     public:
-        constexpr ConstIteratorType Begin() const noexcept
+        constexpr TConstIterator Begin() const noexcept
         {
-            return ConstIteratorType(_arr);
+            return TConstIterator(_arr);
         }
 
-        constexpr ConstIteratorType ConstBegin() const noexcept
+        constexpr TConstIterator ConstBegin() const noexcept
         {
-            return ConstIteratorType(_arr);
+            return TConstIterator(_arr);
         }
 
-        constexpr ConstIteratorType End() const noexcept
+        constexpr TConstIterator End() const noexcept
         {
-            return ConstIteratorType(_arr + _count);
+            return TConstIterator(_arr + _count);
         }
 
-        constexpr ConstIteratorType ConstEnd() const noexcept
+        constexpr TConstIterator ConstEnd() const noexcept
         {
-            return ConstIteratorType(_arr + _count);
+            return TConstIterator(_arr + _count);
         }
 
 //// -----------------------------------------------------------------------------------------------
@@ -51,22 +51,22 @@ namespace Atom
 //// -----------------------------------------------------------------------------------------------
 
     public:
-        constexpr ConstIteratorType begin() const noexcept
+        constexpr TConstIterator begin() const noexcept
         {
             return Begin();
         }
 
-        constexpr ConstIteratorType cbegin() const noexcept
+        constexpr TConstIterator cbegin() const noexcept
         {
             return ConstBegin();
         }
 
-        constexpr ConstIteratorType end() const noexcept
+        constexpr TConstIterator end() const noexcept
         {
             return End();
         }
 
-        constexpr ConstIteratorType cend() const noexcept
+        constexpr TConstIterator cend() const noexcept
         {
             return ConstEnd();
         }
@@ -83,7 +83,7 @@ namespace Atom
         }
 
     protected:
-        const ElementType* _arr;
+        const TElement* _arr;
         const SizeT _count;
     };
 }

@@ -6,6 +6,6 @@
 
 namespace Atom
 {
-    template <typename K, typename T>
-    using UnorderedMap = std::unordered_map<K, T>;
+    template <typename TKey, typename TElement>
+    using UnorderedMap = std::unordered_map<TKey, TElement>;
 }
