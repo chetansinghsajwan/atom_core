@@ -19,6 +19,8 @@ namespace Atom::Engine
 
     protected:
         GLFWwindow* _glfwWindow;
+        Vector2 _position;
+        Vector2 _size;
         bool _vSyncEnabled;
     };
 }

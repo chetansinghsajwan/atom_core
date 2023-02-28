@@ -14,6 +14,8 @@ namespace Atom::Engine
     public:
         virtual void Run();
 
+        virtual void OnWindowEvent(const SWindowEvent& event);
+
     protected:
         UniquePtr<Window> _window;
     };
