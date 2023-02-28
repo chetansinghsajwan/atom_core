@@ -466,7 +466,7 @@ namespace Atom::Logging
         LoggerPtr _defaultLogger;
     };
 
-    LoggerRegistry& GET_REGISTRY() noexcept
+    inline LoggerRegistry& GET_REGISTRY() noexcept
     {
         static LoggerRegistry instance;
         return instance;

@@ -3,7 +3,7 @@
 
 namespace Atom::Logging
 {
-    LoggerPtr GET_ROOT_LOGGER()
+    inline LoggerPtr GET_ROOT_LOGGER()
     {
         return GET_REGISTRY().GetDefaultLogger();
     }
@@ -78,7 +78,7 @@ namespace Atom::Logging
         LOG(LogLevel::Fatal, msg, FWD(args)...);
     }
 
-    void FLUSH_LOGS()
+    inline void FLUSH_LOGS()
     {
         GET_ROOT_LOGGER()->Flush();
     }
@@ -92,7 +92,7 @@ namespace Atom::Logging
     /// --------------------------------------------------------------------------------------------
     /// @TODO Add this as option.
     /// --------------------------------------------------------------------------------------------
-    static constexpr LogLevel STATIC_LOG_LEVEL = LogLevel::Debug;
+    constexpr LogLevel STATIC_LOG_LEVEL = LogLevel::Debug;
 
     /// --------------------------------------------------------------------------------------------
     /// Checks at compile time if message of specified level {lvl} should be logged.

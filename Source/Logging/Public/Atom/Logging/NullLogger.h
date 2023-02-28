@@ -66,5 +66,5 @@ namespace Atom::Logging
         }
     };
 
-    LoggerPtr NullLogger::Instance = MakeShared<NullLogger>();
+    inline LoggerPtr NullLogger::Instance = MakeShared<NullLogger>();
 }

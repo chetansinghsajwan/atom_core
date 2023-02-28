@@ -13,13 +13,13 @@ namespace Atom::Logging
         }
     };
 
-    LoggerFactory& GET_LOGGER_FACTORY() noexcept
+    inline LoggerFactory& GET_LOGGER_FACTORY() noexcept
     {
         static LoggerFactory instance;
         return instance;
     }
 
-    LoggerPtr CREATE_LOGGER(auto&&... args) noexcept
+    inline LoggerPtr CREATE_LOGGER(auto&&... args) noexcept
     {
         return GET_LOGGER_FACTORY().CreateLogger(FWD(args)...);
     }

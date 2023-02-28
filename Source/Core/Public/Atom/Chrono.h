@@ -9,7 +9,7 @@ namespace Atom
 
     namespace Time
     {
-        auto Now()
+        inline auto Now()
         {
             return std::chrono::system_clock::now();
         }
