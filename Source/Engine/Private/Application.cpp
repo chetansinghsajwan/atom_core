@@ -2,7 +2,18 @@
 
 namespace Atom::Engine
 {
-    Application::Application() { }
+    Application::Application()
+    {
+        WindowProps windowProps
+        {
+            .windowName = "Sandbox",
+            .dimensions = { 1920, 1080 }
+        };
+
+        _window = WindowManger::CreateWindow(windowProps);
+        ATOM_DEBUG_EXPECTS(_window != nullptr);
+    }
+
     Application::~Application()
     {
         if (_window != nullptr)
@@ -13,15 +24,6 @@ namespace Atom::Engine
 
     void Application::Run()
     {
-        WindowProps windowProps
-        {
-            .windowName = "Sandbox",
-            .dimensions = { 1920, 1080 }
-        };
-
-        _window = WindowManger::CreateWindow(windowProps);
-        ATOM_DEBUG_EXPECTS(_window != nullptr);
-
         while (true)
         {
             _window->OnUpdate();

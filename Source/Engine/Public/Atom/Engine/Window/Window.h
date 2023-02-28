@@ -33,7 +33,7 @@ namespace Atom::Engine
 
     public:
         virtual void OnUpdate() = 0;
-    
+
         Vector2 GetDimensions() const noexcept
         {
             return _dimensions;
