@@ -57,29 +57,3 @@ namespace Atom
         rhs = MOVE(tmp);
     }
 }
-
-namespace Atom
-{
-    struct Vector1
-    {
-        SizeT x;
-    };
-
-    struct Vector2
-    {
-        SizeT x;
-        SizeT y;
-
-        Vector2 operator - (Vector2 rhs)
-        {
-            return { x - rhs.x, y - rhs.y };
-        }
-    };
-
-    struct Vector3
-    {
-        SizeT x;
-        SizeT y;
-        SizeT z;
-    };
-}

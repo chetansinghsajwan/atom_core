@@ -3,6 +3,7 @@
 #include "Atom/String.h"
 #include "Atom/Memory.h"
 #include "Atom/Invokable.h"
+#include "Atom/Math.h"
 
 namespace Atom::Engine
 {
