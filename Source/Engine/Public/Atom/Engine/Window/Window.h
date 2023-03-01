@@ -4,32 +4,6 @@
 #include "Atom/Memory.h"
 #include "Atom/Invokable.h"
 
-namespace Atom
-{
-    struct Vector1
-    {
-        SizeT x;
-    };
-
-    struct Vector2
-    {
-        SizeT x;
-        SizeT y;
-
-        Vector2 operator - (Vector2 rhs)
-        {
-            return { x - rhs.x, y - rhs.y };
-        }
-    };
-
-    struct Vector3
-    {
-        SizeT x;
-        SizeT y;
-        SizeT z;
-    };
-}
-
 namespace Atom::Engine
 {
     enum struct EWindowEventType
