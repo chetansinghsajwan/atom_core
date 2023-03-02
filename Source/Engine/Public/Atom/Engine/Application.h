@@ -17,7 +17,7 @@ namespace Atom::Engine
         virtual void OnWindowEvent(const SWindowEvent& event);
 
     protected:
-        UniquePtr<Window> _window;
+        Window* _window;
     };
 
     extern Application* CreateApplication();

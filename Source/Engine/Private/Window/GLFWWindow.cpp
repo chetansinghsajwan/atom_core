@@ -7,59 +7,52 @@ namespace Atom::Engine
 {
     GLFWWindow::GLFWWindow(const WindowProps& props)
     {
-        glfwSetErrorCallback(
-            [](int error_code, const char* description)
-            {
-                // TODO: Fix this compilation error.
-                // LOG_FATAL("GLFW Error: ", description);
-            });
-
-        _dimensions = props.dimensions;
-
-        _glfwWindow = glfwCreateWindow(_dimensions.x, _dimensions.y,
+        _glfwWindow = glfwCreateWindow(props.windowSize.x, props.windowSize.y,
             props.windowName.data(), nullptr, nullptr);
 
         glfwMakeContextCurrent(_glfwWindow);
         glfwSetWindowUserPointer(_glfwWindow, this);
 
         glfwSetWindowPosCallback(_glfwWindow,
-            [](GLFWwindow* window, int xpos, int ypos)
+            [](GLFWwindow* glfwWindow, int xpos, int ypos)
             {
-                GLFWWindow* _this = reinterpret_cast<GLFWWindow*>(
-                    glfwGetWindowUserPointer(window));
+                GLFWWindow& window = *reinterpret_cast<GLFWWindow*>(
+                    glfwGetWindowUserPointer(glfwWindow));
 
-                SVector2 oldPos = _this->_position;
+                SVector2 oldPos = window._windowPos;
                 SVector2 newPos = { (float)xpos, (float)ypos };
-                _this->_position = newPos;
+                window._windowPos = newPos;
 
-                _this->_eventSource.Dispatch(SWindowRepositionEvent(
+                window._eventSource.Dispatch(SWindowRepositionEvent(
                     newPos, newPos - oldPos));
             });
 
         glfwSetWindowSizeCallback(_glfwWindow,
-            [](GLFWwindow* window, int width, int height)
+            [](GLFWwindow* glfwWindow, int width, int height)
             {
-                GLFWWindow* _this = reinterpret_cast<GLFWWindow*>(
-                    glfwGetWindowUserPointer(window));
+                GLFWWindow& window = *reinterpret_cast<GLFWWindow*>(
+                    glfwGetWindowUserPointer(glfwWindow));
 
                 SVector2 newSize = { (float)width, (float)height };
-                SVector2 oldSize = _this->_size;
-                _this->_size = newSize;
+                SVector2 oldSize = window._windowSize;
+                window._windowSize = newSize;
 
-                _this->_eventSource.Dispatch(SWindowResizeEvent(
+                window._eventSource.Dispatch(SWindowResizeEvent(
                     newSize, newSize - oldSize));
             });
 
         glfwSetWindowCloseCallback(_glfwWindow,
-            [](GLFWwindow* window)
+            [](GLFWwindow* glfwWindow)
             {
-                GLFWWindow* _this = reinterpret_cast<GLFWWindow*>(
-                    glfwGetWindowUserPointer(window));
+                GLFWWindow& window = *reinterpret_cast<GLFWWindow*>(
+                    glfwGetWindowUserPointer(glfwWindow));
 
-                _this->_eventSource.Dispatch(SWindowCloseEvent());
+                window._eventSource.Dispatch(SWindowCloseEvent());
             });
 
-        EnableVSync();
+        UpdatePos();
+        UpdateSize();
+        SetVSync(true);
     }
 
     GLFWWindow::~GLFWWindow()
@@ -67,26 +60,63 @@ namespace Atom::Engine
         glfwDestroyWindow(_glfwWindow);
     }
 
-    void GLFWWindow::OnUpdate()
+    void GLFWWindow::Update()
     {
         glfwPollEvents();
         glfwSwapBuffers(_glfwWindow);
     }
 
-    void GLFWWindow::EnableVSync()
+    void GLFWWindow::SetPos(SVector2 pos)
     {
-        glfwSwapInterval(1);
-        _vSyncEnabled = true;
+        glfwSetWindowPos(_glfwWindow, pos.x, pos.y);
+        _windowPos = pos;
     }
 
-    void GLFWWindow::DisableVSync()
+    SVector2 GLFWWindow::GetPos() const noexcept
     {
-        glfwSwapInterval(0);
-        _vSyncEnabled = false;
+        return _windowPos;
     }
 
-    bool GLFWWindow::IsVSyncEnabled() const noexcept
+    SVector2 GLFWWindow::UpdatePos()
     {
-        return _vSyncEnabled;
+        int xpos, ypos;
+        glfwGetWindowPos(_glfwWindow, &xpos, &ypos);
+        _windowPos = { (float)xpos, (float)ypos };
+        return _windowPos;
+    }
+
+    void GLFWWindow::SetSize(SVector2 size)
+    {
+        glfwSetWindowSize(_glfwWindow, size.x, size.y);
+        _windowSize = size;
+    }
+
+    SVector2 GLFWWindow::GetSize() const noexcept
+    {
+        return _windowSize;
+    }
+
+    SVector2 GLFWWindow::UpdateSize()
+    {
+        int xpos, ypos;
+        glfwGetWindowSize(_glfwWindow, &xpos, &ypos);
+        _windowSize = { (float)xpos, (float)ypos };
+        return _windowSize;
+    }
+
+    void GLFWWindow::SetVSync(bool enable)
+    {
+        glfwSwapInterval(enable ? 1 : 0);
+        _windowVSync = enable;
+    }
+
+    bool GLFWWindow::GetVSync() const noexcept
+    {
+        return _windowVSync;
+    }
+
+    void* GLFWWindow::GetNative() const noexcept
+    {
+        return _glfwWindow;
     }
 }

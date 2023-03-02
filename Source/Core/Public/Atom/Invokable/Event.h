@@ -5,6 +5,9 @@
 
 namespace Atom
 {
+    /// --------------------------------------------------------------------------------------------
+    /// EventKey is used to identify events registered for this key.
+    /// --------------------------------------------------------------------------------------------
     struct EventKey
     {
     public:
@@ -33,6 +36,9 @@ namespace Atom
         constexpr EventSource() noexcept { }
 
     public:
+        /// ----------------------------------------------------------------------------------------
+        /// Calls Subscribe(FORWARD(listener));
+        /// ----------------------------------------------------------------------------------------
         template <typename TInvokable>
             requires RInvokable<TInvokable, void(TArgs...)>::Value
         EventKey operator += (TInvokable&& listener) noexcept
@@ -40,12 +46,18 @@ namespace Atom
             return Subscribe(FORWARD(listener));
         }
 
+        /// ----------------------------------------------------------------------------------------
+        /// Calls Unsubscribe(key);
+        /// ----------------------------------------------------------------------------------------
         bool operator -= (EventKey key) noexcept
         {
             return Unsubscribe(key);
         }
 
     public:
+        /// ----------------------------------------------------------------------------------------
+        /// 
+        /// ----------------------------------------------------------------------------------------
         template <typename TInvokable>
             requires RInvokable<TInvokable, void(TArgs...)>::Value
         EventKey Subscribe(TInvokable&& listener) noexcept
@@ -53,11 +65,19 @@ namespace Atom
             return _AddListener(FORWARD(listener));
         }
 
+        /// ----------------------------------------------------------------------------------------
+        /// 
+        /// ----------------------------------------------------------------------------------------
         bool Unsubscribe(EventKey key) noexcept
         {
             return _RemoveListener(key);
         }
 
+        /// ----------------------------------------------------------------------------------------
+        /// Dispatches the events. Calls each event listener(invokables) with given args.
+        /// 
+        /// @TODO Add detailed documentation on argument passing.
+        /// ----------------------------------------------------------------------------------------
         void Dispatch(TArgs... args)
         {
             for (auto& listener : _listeners)
@@ -110,18 +130,21 @@ namespace Atom
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Event is just a frontend to EventSource to prevent users from dispatching events.
+    /// {Event} is just a frontend to {EventSource} to prevent users from dispatching events.
     /// --------------------------------------------------------------------------------------------
     template <typename... TArgs>
     class Event
     {
     public:
+        /// ----------------------------------------------------------------------------------------
+        /// Constructs with source object.
+        /// ----------------------------------------------------------------------------------------
         constexpr Event(EventSource<TArgs...>& source) noexcept:
             _source(&source) { }
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// 
+        /// Calls Subscribe(FORWARD(listener));
         /// ----------------------------------------------------------------------------------------
         template <typename TInvokable>
             requires RInvokable<TInvokable, void(TArgs...)>::Value
@@ -131,7 +154,7 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        /// Calls Unsubscribe(key);
         /// ----------------------------------------------------------------------------------------
         bool operator -= (EventKey key) noexcept
         {
@@ -140,7 +163,7 @@ namespace Atom
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// 
+        /// Calls Subscribe(FORWARD(listener)) on {Source}.
         /// ----------------------------------------------------------------------------------------
         template <typename TInvokable>
             requires RInvokable<TInvokable, void(TArgs...)>::Value
@@ -150,7 +173,7 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        /// Calls Unsubscribe(key) on {Source}.
         /// ----------------------------------------------------------------------------------------
         bool Unsubscribe(EventKey key) noexcept
         {

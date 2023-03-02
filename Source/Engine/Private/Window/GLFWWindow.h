@@ -11,16 +11,30 @@ namespace Atom::Engine
         ~GLFWWindow();
 
     public:
-        void OnUpdate() override;
+        virtual void Update() override;
 
-        void EnableVSync();
-        void DisableVSync();
-        bool IsVSyncEnabled() const noexcept;
+        virtual void SetPos(SVector2 size) override;
+        virtual SVector2 GetPos() const noexcept override;
+        virtual SVector2 UpdatePos();
+
+        virtual void SetSize(SVector2 size) override;
+        virtual SVector2 GetSize() const noexcept override;
+        virtual SVector2 UpdateSize();
+
+        void SetVSync(bool enable);
+        bool GetVSync() const noexcept;
+
+        virtual void* GetNative() const noexcept override final;
+
+        GLFWwindow* GetNativeGLFW() const noexcept
+        {
+            return _glfwWindow;
+        }
 
     protected:
         GLFWwindow* _glfwWindow;
-        SVector2 _position;
-        SVector2 _size;
-        bool _vSyncEnabled;
+        SVector2 _windowPos;
+        SVector2 _windowSize;
+        bool _windowVSync;
     };
 }

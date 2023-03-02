@@ -8,15 +8,15 @@ namespace Atom::Engine
     struct WindowProps
     {
         String windowName;
-        SVector2 dimensions;
+        SVector2 windowSize;
     };
 
     class ATOM_API WindowManger
     {
     public:
-        static UniquePtr<Window> CreateWindow(WindowProps props);
+        static Window* CreateWindow(WindowProps props);
 
-        static void CloseWindow(UniquePtr<Window> window);
+        static void CloseWindow(Window* window);
 
     protected:
         static SizeT s_windowCount;

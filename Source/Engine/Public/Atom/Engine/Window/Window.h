@@ -48,24 +48,26 @@ namespace Atom::Engine
             SWindowEvent(EWindowEventType::Close) { }
     };
 
-    class Window
+    struct Window
     {
     public:
         virtual ~Window() = default;
 
     public:
-        virtual void OnUpdate() = 0;
+        virtual void Update() = 0;
 
-        SVector2 GetDimensions() const noexcept
-        {
-            return _dimensions;
-        }
+        virtual SVector2 GetSize() const noexcept = 0;
+        virtual void SetSize(SVector2 size) = 0;
+
+        virtual SVector2 GetPos() const noexcept = 0;
+        virtual void SetPos(SVector2 pos) = 0;
+
+        virtual void* GetNative() const noexcept = 0;
 
     public:
         Event<const SWindowEvent&> OnEvent = _eventSource;
 
     protected:
         EventSource<const SWindowEvent&> _eventSource;
-        SVector2 _dimensions;
     };
 }

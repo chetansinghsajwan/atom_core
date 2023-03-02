@@ -7,7 +7,7 @@ namespace Atom::Engine
         WindowProps windowProps
         {
             .windowName = "Sandbox",
-            .dimensions = { 1920, 1080 }
+            .windowSize = { 1920, 1080 }
         };
 
         _window = WindowManger::CreateWindow(windowProps);
@@ -23,7 +23,7 @@ namespace Atom::Engine
     {
         if (_window != nullptr)
         {
-            WindowManger::CloseWindow(MOVE(_window));
+            WindowManger::CloseWindow(_window);
         }
     }
 
@@ -31,7 +31,7 @@ namespace Atom::Engine
     {
         while (true)
         {
-            _window->OnUpdate();
+            _window->Update();
         }
     }
 
