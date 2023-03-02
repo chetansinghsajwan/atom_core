@@ -28,8 +28,8 @@ namespace Atom::Engine
                 GLFWWindow* _this = reinterpret_cast<GLFWWindow*>(
                     glfwGetWindowUserPointer(window));
 
-                Vector2 oldPos = _this->_position;
-                Vector2 newPos = { (float)xpos, (float)ypos };
+                SVector2 oldPos = _this->_position;
+                SVector2 newPos = { (float)xpos, (float)ypos };
                 _this->_position = newPos;
 
                 _this->_eventSource.Dispatch(SWindowRepositionEvent(
@@ -42,8 +42,8 @@ namespace Atom::Engine
                 GLFWWindow* _this = reinterpret_cast<GLFWWindow*>(
                     glfwGetWindowUserPointer(window));
 
-                Vector2 newSize = { (float)width, (float)height };
-                Vector2 oldSize = _this->_size;
+                SVector2 newSize = { (float)width, (float)height };
+                SVector2 oldSize = _this->_size;
                 _this->_size = newSize;
 
                 _this->_eventSource.Dispatch(SWindowResizeEvent(

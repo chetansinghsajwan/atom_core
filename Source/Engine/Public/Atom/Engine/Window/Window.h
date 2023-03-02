@@ -24,22 +24,22 @@ namespace Atom::Engine
 
     struct SWindowResizeEvent: public SWindowEvent
     {
-        constexpr SWindowResizeEvent(Vector2 size, Vector2 delta) noexcept:
+        constexpr SWindowResizeEvent(SVector2 size, SVector2 delta) noexcept:
             size(size), delta(delta),
             SWindowEvent(EWindowEventType::Resize) { }
 
-        Vector2 size;
-        Vector2 delta;
+        SVector2 size;
+        SVector2 delta;
     };
 
     struct SWindowRepositionEvent: public SWindowEvent
     {
-        constexpr SWindowRepositionEvent(Vector2 position, Vector2 delta) noexcept:
+        constexpr SWindowRepositionEvent(SVector2 position, SVector2 delta) noexcept:
             position(position), delta(delta),
             SWindowEvent(EWindowEventType::Reposition) { }
 
-        Vector2 position;
-        Vector2 delta;
+        SVector2 position;
+        SVector2 delta;
     };
 
     struct SWindowCloseEvent: public SWindowEvent
@@ -56,7 +56,7 @@ namespace Atom::Engine
     public:
         virtual void OnUpdate() = 0;
 
-        Vector2 GetDimensions() const noexcept
+        SVector2 GetDimensions() const noexcept
         {
             return _dimensions;
         }
@@ -66,6 +66,6 @@ namespace Atom::Engine
 
     protected:
         EventSource<const SWindowEvent&> _eventSource;
-        Vector2 _dimensions;
+        SVector2 _dimensions;
     };
 }

@@ -8,7 +8,7 @@ namespace Atom::Engine
     struct WindowProps
     {
         String windowName;
-        Vector2 dimensions;
+        SVector2 dimensions;
     };
 
     class ATOM_API WindowManger
