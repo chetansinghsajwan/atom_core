@@ -36,5 +36,7 @@ namespace Atom::Engine
         SVector2 _windowPos;
         SVector2 _windowSize;
         bool _windowVSync;
+
+        EventSource<const SWindowEvent&> _windowEventSource;
     };
 }

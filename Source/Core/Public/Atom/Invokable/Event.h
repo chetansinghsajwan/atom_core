@@ -6,12 +6,12 @@
 namespace Atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// EventKey is used to identify events registered for this key.
+    /// SEventKey is used to identify events registered for this key.
     /// --------------------------------------------------------------------------------------------
-    struct EventKey
+    struct SEventKey
     {
     public:
-        EventKey(const TypeInfo& typeInfo) noexcept:
+        SEventKey(const TypeInfo& typeInfo) noexcept:
             _typeInfo(typeInfo) { }
 
     public:
@@ -25,23 +25,17 @@ namespace Atom
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// EventSource is used to manage listeners and dispatch event.
-    /// 
-    /// @TODO Add async dispatching.
+    /// {Event} is just a frontend to {EventSource} to prevent users from dispatching events.
     /// --------------------------------------------------------------------------------------------
     template <typename... TArgs>
-    class EventSource
+    struct IEvent
     {
-    public:
-        constexpr EventSource() noexcept { }
-
-    public:
         /// ----------------------------------------------------------------------------------------
         /// Calls Subscribe(FORWARD(listener));
         /// ----------------------------------------------------------------------------------------
         template <typename TInvokable>
             requires RInvokable<TInvokable, void(TArgs...)>::Value
-        EventKey operator += (TInvokable&& listener) noexcept
+        SEventKey operator += (TInvokable&& listener) noexcept
         {
             return Subscribe(FORWARD(listener));
         }
@@ -49,26 +43,56 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Calls Unsubscribe(key);
         /// ----------------------------------------------------------------------------------------
-        bool operator -= (EventKey key) noexcept
+        bool operator -= (SEventKey key) noexcept
         {
             return Unsubscribe(key);
         }
+
+        /// ----------------------------------------------------------------------------------------
+        /// Calls Subscribe(FORWARD(listener)) on {Source}.
+        /// ----------------------------------------------------------------------------------------
+        template <typename TInvokable>
+            requires RInvokable<TInvokable, void(TArgs...)>::Value
+        SEventKey Subscribe(TInvokable&& listener) noexcept
+        {
+            return Subscribe(InvokableBox<void(TArgs...)>(FORWARD(listener)));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        virtual SEventKey Subscribe(InvokableBox<void(TArgs...)>&& invokable) noexcept = 0;
+
+        /// ----------------------------------------------------------------------------------------
+        /// Calls Unsubscribe(key) on {Source}.
+        /// ----------------------------------------------------------------------------------------
+        virtual SizeT Unsubscribe(SEventKey key) noexcept = 0;
+    };
+
+    /// --------------------------------------------------------------------------------------------
+    /// EventSource is used to manage listeners and dispatch event.
+    /// 
+    /// @TODO Add async dispatching.
+    /// --------------------------------------------------------------------------------------------
+    template <typename... TArgs>
+    class EventSource: public IEvent<TArgs...>
+    {
+    public:
+        constexpr EventSource() noexcept { }
 
     public:
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <typename TInvokable>
-            requires RInvokable<TInvokable, void(TArgs...)>::Value
-        EventKey Subscribe(TInvokable&& listener) noexcept
+        virtual SEventKey Subscribe(InvokableBox<void(TArgs...)>&& invokable) noexcept override final
         {
-            return _AddListener(FORWARD(listener));
+            return _AddListener(FORWARD(invokable));
         }
 
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        bool Unsubscribe(EventKey key) noexcept
+        virtual SizeT Unsubscribe(SEventKey key) noexcept override final
         {
             return _RemoveListener(key);
         }
@@ -87,39 +111,38 @@ namespace Atom
         }
 
     protected:
-        template <typename TInvokable>
-            requires RInvokable<TInvokable, void(TArgs...)>::Value
-        EventKey _AddListener(TInvokable&& listener)
+        SEventKey _AddListener(InvokableBox<void(TArgs...)>&& invokable)
         {
-            _listeners.emplace_back(FORWARD(listener));
-            return EventKey(_listeners.back().GetInvokableType());
+            _listeners.push_back(MOVE(invokable));
+            return SEventKey(_listeners.back().GetInvokableType());
         }
 
-        bool _RemoveListener(EventKey key) noexcept
+        SizeT _RemoveListener(SEventKey key) noexcept
         {
             for (auto it = _listeners.begin(); it != _listeners.end(); it++)
             {
                 if (it->GetInvokableType() == key.GetType())
                 {
                     _listeners.erase(it);
-                    return true;
+                    return 1;
                 }
             }
 
-            return false;
+            return 0;
         }
 
-        bool _HasListener(EventKey key) noexcept
+        SizeT _CountListeners(SEventKey key) noexcept
         {
+            SizeT count = 0;
             for (auto it = _listeners.begin(); it != _listeners.end(); it++)
             {
                 if (it->GetInvokableType() == key.GetType())
                 {
-                    return true;
+                    count++;
                 }
             }
 
-            return false;
+            return count;
         }
 
     protected:
@@ -127,63 +150,5 @@ namespace Atom
         /// List of event listeners.
         /// ----------------------------------------------------------------------------------------
         DynamicArray<InvokableBox<void(TArgs...)>> _listeners;
-    };
-
-    /// --------------------------------------------------------------------------------------------
-    /// {Event} is just a frontend to {EventSource} to prevent users from dispatching events.
-    /// --------------------------------------------------------------------------------------------
-    template <typename... TArgs>
-    class Event
-    {
-    public:
-        /// ----------------------------------------------------------------------------------------
-        /// Constructs with source object.
-        /// ----------------------------------------------------------------------------------------
-        constexpr Event(EventSource<TArgs...>& source) noexcept:
-            _source(&source) { }
-
-    public:
-        /// ----------------------------------------------------------------------------------------
-        /// Calls Subscribe(FORWARD(listener));
-        /// ----------------------------------------------------------------------------------------
-        template <typename TInvokable>
-            requires RInvokable<TInvokable, void(TArgs...)>::Value
-        EventKey operator += (TInvokable&& listener) noexcept
-        {
-            return Subscribe(FORWARD(listener));
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// Calls Unsubscribe(key);
-        /// ----------------------------------------------------------------------------------------
-        bool operator -= (EventKey key) noexcept
-        {
-            return Unsubscribe(key);
-        }
-
-    public:
-        /// ----------------------------------------------------------------------------------------
-        /// Calls Subscribe(FORWARD(listener)) on {Source}.
-        /// ----------------------------------------------------------------------------------------
-        template <typename TInvokable>
-            requires RInvokable<TInvokable, void(TArgs...)>::Value
-        EventKey Subscribe(TInvokable&& listener) noexcept
-        {
-            return _source->Subscribe(FORWARD(listener));
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// Calls Unsubscribe(key) on {Source}.
-        /// ----------------------------------------------------------------------------------------
-        bool Unsubscribe(EventKey key) noexcept
-        {
-            return _source->Unsubscribe(MOVE(key));
-        }
-
-    protected:
-        /// ----------------------------------------------------------------------------------------
-        /// EventSource object handling events.
-        /// ----------------------------------------------------------------------------------------
-        EventSource<TArgs...>* _source;
     };
 }

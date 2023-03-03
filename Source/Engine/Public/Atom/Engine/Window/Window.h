@@ -51,6 +51,9 @@ namespace Atom::Engine
     struct Window
     {
     public:
+        Window(IEvent<const SWindowEvent&>& event) noexcept:
+            OnEvent{ event } { }
+
         virtual ~Window() = default;
 
     public:
@@ -65,9 +68,6 @@ namespace Atom::Engine
         virtual void* GetNative() const noexcept = 0;
 
     public:
-        Event<const SWindowEvent&> OnEvent = _eventSource;
-
-    protected:
-        EventSource<const SWindowEvent&> _eventSource;
+        IEvent<const SWindowEvent&>& OnEvent;
     };
 }

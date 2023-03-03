@@ -5,7 +5,8 @@ using namespace Atom::Logging;
 
 namespace Atom::Engine
 {
-    GLFWWindow::GLFWWindow(const WindowProps& props)
+    GLFWWindow::GLFWWindow(const WindowProps& props):
+        Window(_windowEventSource)
     {
         _glfwWindow = glfwCreateWindow(props.windowSize.x, props.windowSize.y,
             props.windowName.data(), nullptr, nullptr);
@@ -23,7 +24,7 @@ namespace Atom::Engine
                 SVector2 newPos = { (float)xpos, (float)ypos };
                 window._windowPos = newPos;
 
-                window._eventSource.Dispatch(SWindowRepositionEvent(
+                window._windowEventSource.Dispatch(SWindowRepositionEvent(
                     newPos, newPos - oldPos));
             });
 
@@ -37,7 +38,7 @@ namespace Atom::Engine
                 SVector2 oldSize = window._windowSize;
                 window._windowSize = newSize;
 
-                window._eventSource.Dispatch(SWindowResizeEvent(
+                window._windowEventSource.Dispatch(SWindowResizeEvent(
                     newSize, newSize - oldSize));
             });
 
@@ -47,7 +48,7 @@ namespace Atom::Engine
                 GLFWWindow& window = *reinterpret_cast<GLFWWindow*>(
                     glfwGetWindowUserPointer(glfwWindow));
 
-                window._eventSource.Dispatch(SWindowCloseEvent());
+                window._windowEventSource.Dispatch(SWindowCloseEvent());
             });
 
         UpdatePos();
