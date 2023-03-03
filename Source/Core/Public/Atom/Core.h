@@ -29,6 +29,13 @@
 //// -----------------------------------------------------------------------------------------------
 
 #define ATOM_CONFIG_DEBUG
+
+#if defined(ATOM_CONFIG_DEBUG)
+    #define ATOM_DEBUG_IF if constexpr (true)
+#else
+    #define ATOM_DEBUG_IF if constexpr (false)
+#endif
+
 #define FWD(...) std::forward<decltype(__VA_ARGS__)>(__VA_ARGS__)
 #define FORWARD(...) std::forward<decltype(__VA_ARGS__)>(__VA_ARGS__)
 

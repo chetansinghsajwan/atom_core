@@ -16,9 +16,10 @@ namespace Atom
     template <typename TException = AssertionException>
     void DEBUG_ASSERT(bool assertion, auto&&... args)
     {
-    #ifdef ATOM_CONFIG_DEBUG
-        ASSERT<TException>(assertion, FORWARD(args)...);
-    #endif
+        ATOM_DEBUG_IF
+        {
+            ASSERT<TException>(assertion, FORWARD(args)...);
+        }
     }
 }
 
