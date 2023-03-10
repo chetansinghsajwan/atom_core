@@ -13,6 +13,8 @@ set_target_properties(Atom.Core PROPERTIES CXX_STANDARD "20")
 target_compile_definitions(Atom.Core PRIVATE ATOM_EXPORT)
 target_compile_definitions(Atom.Core PUBLIC ATOM_PLATFORM_LINUX)
 
+target_link_libraries(Atom.Core PUBLIC WjCryptLib)
+
 # --------------------------------------------------------------------------------------------------
 # Atom.Core.Tests
 # --------------------------------------------------------------------------------------------------
