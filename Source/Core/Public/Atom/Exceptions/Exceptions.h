@@ -2,6 +2,7 @@
 #include <stdexcept>
 
 #include "Atom/Core.h"
+#include "Atom/String.h"
 
 namespace Atom
 {
