@@ -43,14 +43,25 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Adds data to the generator. This can be called infinite times.
+        /// Processes data. This can be called infinite times.
         /// 
         /// @PARAM[IN] in_data Ptr to the input data.
         /// @PARAM[IN] in_data_size Size of the data.
         /// ----------------------------------------------------------------------------------------
-        void AddData(const void* in_data, size_t in_data_size)
+        void ProcessBytes(const void* in_data, size_t in_data_size)
         {
             Sha1Update(&m_context, in_data, in_data_size);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// Processes single byte. This can be called infinite times.
+        /// 
+        /// @PARAM[IN] in_data Data to process.
+        /// @PARAM[IN] in_data_size Size of the data.
+        /// ----------------------------------------------------------------------------------------
+        void ProcessByte(byte in_data)
+        {
+            Sha1Update(&m_context, &in_data, 1);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -73,12 +84,12 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// Generates SHA1 Hash using {SHA1HashGenerator}.
     /// --------------------------------------------------------------------------------------------
-    SHA1Hash ATOM_API GENERATE_SHA1_HASH(const void* in_data, const size_t in_size)
+    inline SHA1Hash GENERATE_SHA1_HASH(const void* in_data, const size_t in_size)
     {
         SHA1HashGenerator generator;
         SHA1Hash hash;
 
-        generator.AddData(in_data, in_size);
+        generator.ProcessBytes(in_data, in_size);
         generator.Generate(hash);
 
         return hash;

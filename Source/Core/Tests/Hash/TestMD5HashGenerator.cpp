@@ -11,6 +11,6 @@ TEST_CASE("Atom/MD5HashGenerator")
     MD5Hash out;
     MD5HashGenerator generator = MD5HashGenerator();
 
-    generator.AddData(data, sizeof(int) * 6);
+    generator.ProcessBytes(data, sizeof(int) * 6);
     generator.Generate(out);
 }

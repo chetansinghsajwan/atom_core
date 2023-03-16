@@ -11,6 +11,6 @@ TEST_CASE("Atom/SHA1HashGenerator")
     SHA1Hash out;
     SHA1HashGenerator generator = SHA1HashGenerator();
 
-    generator.AddData(data, sizeof(int) * 6);
+    generator.ProcessBytes(data, sizeof(int) * 6);
     generator.Generate(out);
 }

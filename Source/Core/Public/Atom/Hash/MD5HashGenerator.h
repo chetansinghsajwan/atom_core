@@ -43,14 +43,25 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Adds data to the generator. This can be called infinite times.
+        /// Processes data. This can be called infinite times.
         /// 
         /// @PARAM[IN] in_data Ptr to the input data.
         /// @PARAM[IN] in_data_size Size of the data.
         /// ----------------------------------------------------------------------------------------
-        void AddData(const void* in_data, size_t in_data_size)
+        void ProcessBytes(const void* in_data, size_t in_data_size)
         {
             Md5Update(&m_context, in_data, in_data_size);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// Processes single byte. This can be called infinite times.
+        /// 
+        /// @PARAM[IN] in_data Data to process.
+        /// @PARAM[IN] in_data_size Size of the data.
+        /// ----------------------------------------------------------------------------------------
+        void ProcessByte(byte in_data)
+        {
+            Md5Update(&m_context, &in_data, 1);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -73,12 +84,12 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// Generates MD5 Hash using {MD5HashGenerator}.
     /// --------------------------------------------------------------------------------------------
-    MD5Hash ATOM_API GENERATE_MD5_HASH(const void* in_data, const size_t in_size)
+    inline MD5Hash GENERATE_MD5_HASH(const void* in_data, const size_t in_size)
     {
         MD5HashGenerator generator;
         MD5Hash hash;
 
-        generator.AddData(in_data, in_size);
+        generator.ProcessBytes(in_data, in_size);
         generator.Generate(hash);
 
         return hash;
