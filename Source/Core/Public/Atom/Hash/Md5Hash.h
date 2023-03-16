@@ -6,6 +6,7 @@ extern "C"
 }
 
 #include "Atom/Core.h"
+#include "Atom/Exceptions.h"
 
 namespace Atom
 {
@@ -46,18 +47,27 @@ namespace Atom
         /// Processes data. This can be called infinite times.
         /// 
         /// @PARAM[IN] in_data Ptr to the input data.
-        /// @PARAM[IN] in_data_size Size of the data.
+        /// @PARAM[IN] in_dataSize Size of the data.
         /// ----------------------------------------------------------------------------------------
-        void ProcessBytes(const void* in_data, size_t in_data_size)
+        void ProcessBytes(const void* in_data, size_t in_dataSize)
         {
-            Md5Update(&m_context, in_data, in_data_size);
+            ATOM_DEBUG_EXPECTS(in_data != nullptr);
+            ATOM_DEBUG_EXPECTS(in_dataSize > 0);
+
+            Md5Update(&m_context, in_data, in_dataSize);
         }
 
         /// ----------------------------------------------------------------------------------------
         /// Processes single byte. This can be called infinite times.
         /// 
         /// @PARAM[IN] in_data Data to process.
-        /// @PARAM[IN] in_data_size Size of the data.
+        /// @PARAM[IN] in_dataSize Size of the data.
+        /// 
+        /// @EXPECTS {in_data != nullptr}.
+        /// @EXPECTS {in_dataSize > 0}.
+        /// 
+        /// @THROWS AssertionException Expects {in_data != nullptr}.
+        /// @THROWS AssertionException Expects {in_dataSize > 0}.
         /// ----------------------------------------------------------------------------------------
         void ProcessByte(byte in_data)
         {
@@ -67,11 +77,13 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Generates Md5 Hash.
         /// 
-        /// @PARAM[OUT] out_hash Reference to {Md5Hash} object to get output in.
+        /// @RETURNS {Md5Hash} object.
         /// ----------------------------------------------------------------------------------------
-        void Generate(Md5Hash& out_hash) noexcept
+        Md5Hash Generate() noexcept
         {
-            Md5Finalise(&m_context, reinterpret_cast<MD5_HASH*>(out_hash.bytes));
+            Md5Hash hash;
+            Md5Finalise(&m_context, reinterpret_cast<MD5_HASH*>(hash.bytes));
+            return hash;
         }
 
     private:
@@ -84,14 +96,11 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// Generates Md5 Hash using {Md5HashGenerator}.
     /// --------------------------------------------------------------------------------------------
-    inline Md5Hash GENERATE_Md5_HASH(const void* in_data, const size_t in_size)
+    inline Md5Hash GENERATE_Md5_HASH(const void* in_data, const size_t in_dataSize)
     {
         Md5HashGenerator generator;
-        Md5Hash hash;
 
-        generator.ProcessBytes(in_data, in_size);
-        generator.Generate(hash);
-
-        return hash;
+        generator.ProcessBytes(in_data, in_dataSize);
+        return generator.Generate();
     }
 }

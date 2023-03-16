@@ -6,6 +6,7 @@ extern "C"
 }
 
 #include "Atom/Core.h"
+#include "Atom/Exceptions.h"
 
 namespace Atom
 {
@@ -46,18 +47,26 @@ namespace Atom
         /// Processes data. This can be called infinite times.
         /// 
         /// @PARAM[IN] in_data Ptr to the input data.
-        /// @PARAM[IN] in_data_size Size of the data.
+        /// @PARAM[IN] in_dataSize Size of the data.
+        /// 
+        /// @EXPECTS {in_data != nullptr}.
+        /// @EXPECTS {in_dataSize > 0}.
+        /// 
+        /// @THROWS AssertionException Expects {in_data != nullptr}.
+        /// @THROWS AssertionException Expects {in_dataSize > 0}.
         /// ----------------------------------------------------------------------------------------
-        void ProcessBytes(const void* in_data, size_t in_data_size)
+        void ProcessBytes(const void* in_data, size_t in_dataSize)
         {
-            Sha1Update(&m_context, in_data, in_data_size);
+            ATOM_DEBUG_EXPECTS(in_data != nullptr);
+            ATOM_DEBUG_EXPECTS(in_dataSize > 0);
+
+            Sha1Update(&m_context, in_data, in_dataSize);
         }
 
         /// ----------------------------------------------------------------------------------------
         /// Processes single byte. This can be called infinite times.
         /// 
         /// @PARAM[IN] in_data Data to process.
-        /// @PARAM[IN] in_data_size Size of the data.
         /// ----------------------------------------------------------------------------------------
         void ProcessByte(byte in_data)
         {
@@ -67,11 +76,13 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Generates Sha1 Hash.
         /// 
-        /// @PARAM[OUT] out_hash Reference to {Sha1Hash} object to get output in.
+        /// @RETURNS {Sha1Hash} object.
         /// ----------------------------------------------------------------------------------------
-        void Generate(Sha1Hash& out_hash) noexcept
+        Sha1Hash Generate() noexcept
         {
-            Sha1Finalise(&m_context, reinterpret_cast<SHA1_HASH*>(out_hash.bytes));
+            Sha1Hash hash;
+            Sha1Finalise(&m_context, reinterpret_cast<SHA1_HASH*>(hash.bytes));
+            return hash;
         }
 
     private:
@@ -84,14 +95,11 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// Generates Sha1 Hash using {Sha1HashGenerator}.
     /// --------------------------------------------------------------------------------------------
-    inline Sha1Hash GENERATE_Sha1_HASH(const void* in_data, const size_t in_size)
+    inline Sha1Hash GENERATE_Sha1_HASH(const void* in_data, const size_t in_dataSize)
     {
         Sha1HashGenerator generator;
-        Sha1Hash hash;
 
-        generator.ProcessBytes(in_data, in_size);
-        generator.Generate(hash);
-
-        return hash;
+        generator.ProcessBytes(in_data, in_dataSize);
+        return generator.Generate();
     }
 }
