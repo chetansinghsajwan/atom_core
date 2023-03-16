@@ -10,17 +10,17 @@ extern "C"
 namespace Atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// SHA1 Hash output.
+    /// Sha1 Hash output.
     /// --------------------------------------------------------------------------------------------
-    struct ATOM_API SHA1Hash
+    struct ATOM_API Sha1Hash
     {
         byte bytes[20];
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// SHA1 Hash Generator.
+    /// Sha1 Hash Generator.
     /// --------------------------------------------------------------------------------------------
-    class ATOM_API SHA1HashGenerator
+    class ATOM_API Sha1HashGenerator
     {
     public:
         /// ----------------------------------------------------------------------------------------
@@ -28,14 +28,14 @@ namespace Atom
         /// 
         /// Same as calling Reset.
         /// ----------------------------------------------------------------------------------------
-        SHA1HashGenerator() noexcept
+        Sha1HashGenerator() noexcept
         {
             Reset();
         }
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// Resets the {SHA1HashGenerator} to its initial state.
+        /// Resets the {Sha1HashGenerator} to its initial state.
         /// ----------------------------------------------------------------------------------------
         void Reset() noexcept
         {
@@ -65,29 +65,29 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Generates SHA1 Hash.
+        /// Generates Sha1 Hash.
         /// 
-        /// @PARAM[OUT] out_hash Reference to {SHA1Hash} object to get output in.
+        /// @PARAM[OUT] out_hash Reference to {Sha1Hash} object to get output in.
         /// ----------------------------------------------------------------------------------------
-        void Generate(SHA1Hash& out_hash) noexcept
+        void Generate(Sha1Hash& out_hash) noexcept
         {
             Sha1Finalise(&m_context, reinterpret_cast<SHA1_HASH*>(out_hash.bytes));
         }
 
     private:
         /// ----------------------------------------------------------------------------------------
-        /// Underlying SHA1 implementation.
+        /// Underlying Sha1 implementation.
         /// ----------------------------------------------------------------------------------------
         Sha1Context m_context;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Generates SHA1 Hash using {SHA1HashGenerator}.
+    /// Generates Sha1 Hash using {Sha1HashGenerator}.
     /// --------------------------------------------------------------------------------------------
-    inline SHA1Hash GENERATE_SHA1_HASH(const void* in_data, const size_t in_size)
+    inline Sha1Hash GENERATE_Sha1_HASH(const void* in_data, const size_t in_size)
     {
-        SHA1HashGenerator generator;
-        SHA1Hash hash;
+        Sha1HashGenerator generator;
+        Sha1Hash hash;
 
         generator.ProcessBytes(in_data, in_size);
         generator.Generate(hash);

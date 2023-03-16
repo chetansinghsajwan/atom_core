@@ -1,15 +1,15 @@
 #include "catch2/catch_all.hpp"
 
-#include "Atom/Hash/MD5HashGenerator.h"
+#include "Atom/Hash/Sha1Hash.h"
 
 using namespace Atom;
 
-TEST_CASE("Atom/MD5HashGenerator")
+TEST_CASE("Atom/Sha1HashGenerator")
 {
     int data[] = { 0, 1, 2, 3, 4, 5 };
 
-    MD5Hash out;
-    MD5HashGenerator generator = MD5HashGenerator();
+    Sha1Hash out;
+    Sha1HashGenerator generator = Sha1HashGenerator();
 
     generator.ProcessBytes(data, sizeof(int) * 6);
     generator.Generate(out);

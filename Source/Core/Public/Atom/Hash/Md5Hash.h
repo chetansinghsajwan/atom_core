@@ -10,17 +10,17 @@ extern "C"
 namespace Atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// MD5 Hash output.
+    /// Md5 Hash output.
     /// --------------------------------------------------------------------------------------------
-    struct ATOM_API MD5Hash
+    struct ATOM_API Md5Hash
     {
         byte bytes[16];
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// MD5 Hash Generator.
+    /// Md5 Hash Generator.
     /// --------------------------------------------------------------------------------------------
-    class ATOM_API MD5HashGenerator
+    class ATOM_API Md5HashGenerator
     {
     public:
         /// ----------------------------------------------------------------------------------------
@@ -28,14 +28,14 @@ namespace Atom
         /// 
         /// Same as calling Reset.
         /// ----------------------------------------------------------------------------------------
-        MD5HashGenerator() noexcept
+        Md5HashGenerator() noexcept
         {
             Reset();
         }
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// Resets the {MD5HashGenerator} to its initial state.
+        /// Resets the {Md5HashGenerator} to its initial state.
         /// ----------------------------------------------------------------------------------------
         void Reset() noexcept
         {
@@ -65,29 +65,29 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Generates MD5 Hash.
+        /// Generates Md5 Hash.
         /// 
-        /// @PARAM[OUT] out_hash Reference to {MD5Hash} object to get output in.
+        /// @PARAM[OUT] out_hash Reference to {Md5Hash} object to get output in.
         /// ----------------------------------------------------------------------------------------
-        void Generate(MD5Hash& out_hash) noexcept
+        void Generate(Md5Hash& out_hash) noexcept
         {
             Md5Finalise(&m_context, reinterpret_cast<MD5_HASH*>(out_hash.bytes));
         }
 
     private:
         /// ----------------------------------------------------------------------------------------
-        /// Underlying MD5 implementation.
+        /// Underlying Md5 implementation.
         /// ----------------------------------------------------------------------------------------
         Md5Context m_context;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Generates MD5 Hash using {MD5HashGenerator}.
+    /// Generates Md5 Hash using {Md5HashGenerator}.
     /// --------------------------------------------------------------------------------------------
-    inline MD5Hash GENERATE_MD5_HASH(const void* in_data, const size_t in_size)
+    inline Md5Hash GENERATE_Md5_HASH(const void* in_data, const size_t in_size)
     {
-        MD5HashGenerator generator;
-        MD5Hash hash;
+        Md5HashGenerator generator;
+        Md5Hash hash;
 
         generator.ProcessBytes(in_data, in_size);
         generator.Generate(hash);
