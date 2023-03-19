@@ -31,28 +31,28 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Registers Logger with its name.
         /// 
-        /// @PARAM[IN] logger Logger to register.
+        /// @PARAM[IN] in_logger Logger to register.
         /// 
-        /// @THROWS NullPointerException Asserts {logger != nullptr}.
-        /// @THROWS InvalidArgumentException Asserts {!key.empty()}, {key = logger->Name()}.
-        /// @THROWS InvalidOperationException Asserts {!HasLogger(key)}, {key = logger->Name()}.
+        /// @THROWS NullPointerException Asserts {in_logger != nullptr}.
+        /// @THROWS InvalidArgumentException Asserts {!key.empty()}, {key = in_logger->Name()}.
+        /// @THROWS InvalidOperationException Asserts {!HasLogger(key)}, {key = in_logger->Name()}.
         /// 
         /// @EXCEPTION_SAFETY VeryStrong
         /// ----------------------------------------------------------------------------------------
-        void RegisterLogger(LoggerPtr logger)
+        void RegisterLogger(LoggerPtr in_logger)
         {
-            ASSERT<NullPointerException>(logger != nullptr,
+            ASSERT<NullPointerException>(in_logger != nullptr,
                 TEXT("Cannot register NULL Logger."));
 
-            StringView key = logger->Name();
+            StringView key = in_logger->Name();
 
             ASSERT<InvalidArgumentException>(!key.empty(),
-                TEXT("Cannot register logger with NULL key."));
+                TEXT("Cannot register in_logger with NULL key."));
 
-            ASSERT<InvalidOperationException>(_HasLogger(key) == false,
+            ASSERT<InvalidOperationException>(m_HasLogger(key) == false,
                 TEXT("Logger for key{{key}} is already registered."));
 
-            _RegisterLogger(logger, String(key));
+            m_RegisterLogger(in_logger, String(key));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -62,46 +62,46 @@ namespace Atom::Logging
         /// If a logger with this key is already registered throws exception.
         /// Use UnregisterLogger of ForceRegisterLogger to register logger in that case.
         /// 
-        /// @PARAM[IN] logger Logger to register.
-        /// @PARAM[IN] key String used as key to register logger.
+        /// @PARAM[IN] in_logger Logger to register.
+        /// @PARAM[IN] in_key String used as key to register logger.
         /// 
-        /// @THROWS NullPointerException Asserts {logger != nullptr}.
-        /// @THROWS InvalidArgumentException Asserts {!key.empty()}.
-        /// @THROWS InvalidOperationException Asserts {!HasLogger(key)}.
+        /// @THROWS NullPointerException Asserts {in_logger != nullptr}.
+        /// @THROWS InvalidArgumentException Asserts {!in_key.empty()}.
+        /// @THROWS InvalidOperationException Asserts {!HasLogger(in_key)}.
         /// 
         /// @EXCEPTION_SAFETY VeryStrong
         /// ----------------------------------------------------------------------------------------
-        void RegisterLogger(LoggerPtr logger, StringView key)
+        void RegisterLogger(LoggerPtr in_logger, StringView in_key)
         {
-            ASSERT<NullPointerException>(logger != nullptr,
+            ASSERT<NullPointerException>(in_logger != nullptr,
                 TEXT("Cannot register NULL Logger."));
 
-            ASSERT<InvalidArgumentException>(!key.empty(),
-                TEXT("Cannot register logger with NULL key."));
+            ASSERT<InvalidArgumentException>(!in_key.empty(),
+                TEXT("Cannot register in_logger with NULL key."));
 
-            ASSERT<InvalidOperationException>(_HasLogger(key) == false,
+            ASSERT<InvalidOperationException>(m_HasLogger(in_key) == false,
                 TEXT("Logger for key{{key}} is already registered."));
 
-            _RegisterLogger(logger, String(key));
+            m_RegisterLogger(in_logger, String(in_key));
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Overload for void RegisterLogger(LoggerPtr logger, StringView key) for performance.
+        /// Overload for void RegisterLogger(LoggerPtr in_logger, StringView key) for performance.
         /// 
         /// @PARAM[IN] key RValue reference to String, to avoid allocating memory to store the key.
         /// ----------------------------------------------------------------------------------------
-        void RegisterLogger(LoggerPtr logger, String&& key)
+        void RegisterLogger(LoggerPtr in_logger, String&& in_key)
         {
-            ASSERT<NullPointerException>(logger != nullptr,
+            ASSERT<NullPointerException>(in_logger != nullptr,
                 TEXT("Cannot register NULL Logger."));
 
-            ASSERT<InvalidArgumentException>(!key.empty(),
-                TEXT("Cannot register logger with NULL key."));
+            ASSERT<InvalidArgumentException>(!in_key.empty(),
+                TEXT("Cannot register in_logger with NULL key."));
 
-            ASSERT<InvalidOperationException>(_HasLogger(key) == false,
+            ASSERT<InvalidOperationException>(m_HasLogger(in_key) == false,
                 TEXT("Logger for key{{key}} is already registered."));
 
-            _RegisterLogger(logger, MOVE(key));
+            m_RegisterLogger(in_logger, MOVE(in_key));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -113,134 +113,134 @@ namespace Atom::Logging
         /// 
         /// @EXCEPTION_SAFETY VeryStrong
         /// ----------------------------------------------------------------------------------------
-        void ForceRegisterLogger(LoggerPtr logger)
+        void ForceRegisterLogger(LoggerPtr in_logger)
         {
-            ASSERT<NullPointerException>(logger != nullptr,
+            ASSERT<NullPointerException>(in_logger != nullptr,
                 TEXT("Cannot register NULL Logger."));
 
-            StringView key = logger->Name();
+            StringView key = in_logger->Name();
 
             ASSERT<InvalidArgumentException>(!key.empty(),
                 TEXT("Cannot register logger with NULL key."));
 
-            _ForceRegisterLogger(logger, String(key));
+            m_ForceRegisterLogger(in_logger, String(key));
         }
 
         /// ----------------------------------------------------------------------------------------
         /// Force registers logger with specified key. If a logger with key {key} is already 
         /// registered, then unregisters it and registers this.
         /// 
-        /// @PARAM[IN] logger Logger to register.
+        /// @PARAM[IN] in_logger Logger to register.
         /// @PARAM[IN] key String used as key to register logger.
         /// 
-        /// @THROWS NullPointerException Asserts {logger != nullptr}.
+        /// @THROWS NullPointerException Asserts {in_logger != nullptr}.
         /// @THROWS InvalidArgumentException Asserts {!key.empty()}.
         /// 
         /// @EXCEPTION_SAFETY VeryStrong
         /// ----------------------------------------------------------------------------------------
-        void ForceRegisterLogger(LoggerPtr logger, StringView key)
+        void ForceRegisterLogger(LoggerPtr in_logger, StringView key)
         {
-            ASSERT<NullPointerException>(logger != nullptr,
+            ASSERT<NullPointerException>(in_logger != nullptr,
                 TEXT("Cannot register NULL Logger."));
 
             ASSERT<InvalidArgumentException>(!key.empty(),
                 TEXT("Cannot register logger with NULL key."));
 
-            _ForceRegisterLogger(logger, String(key));
+            m_ForceRegisterLogger(in_logger, String(key));
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Overload for void ForceRegisterLogger(LoggerPtr logger, StringView key) for performance.
+        /// Overload for void ForceRegisterLogger(LoggerPtr in_logger, StringView key) for performance.
         /// 
         /// @PARAM[IN] key RValue reference to String, to avoid allocating memory to store the key.
         /// ----------------------------------------------------------------------------------------
-        void ForceRegisterLogger(LoggerPtr logger, String&& key)
+        void ForceRegisterLogger(LoggerPtr in_logger, String&& in_key)
         {
-            ASSERT<NullPointerException>(logger != nullptr,
+            ASSERT<NullPointerException>(in_logger != nullptr,
                 TEXT("Cannot register NULL Logger."));
 
-            ASSERT<InvalidArgumentException>(!key.empty(),
+            ASSERT<InvalidArgumentException>(!in_key.empty(),
                 TEXT("Cannot register logger with NULL key."));
 
-            _ForceRegisterLogger(logger, MOVE(key));
+            m_ForceRegisterLogger(in_logger, MOVE(in_key));
         }
 
         /// ----------------------------------------------------------------------------------------
         /// Tries to register logger with its name.
         /// 
-        /// @PARAM[IN] logger Logger to register.
+        /// @PARAM[IN] in_logger Logger to register.
         /// ----------------------------------------------------------------------------------------
-        bool TryRegisterLogger(LoggerPtr logger) noexcept
+        bool TryRegisterLogger(LoggerPtr in_logger) noexcept
         {
-            if (logger == nullptr)
+            if (in_logger == nullptr)
                 return false;
 
-            StringView key = logger->Name();
+            StringView key = in_logger->Name();
             if (key.empty())
                 return false;
 
-            if (_HasLogger(key))
+            if (m_HasLogger(key))
                 return false;
 
-            _RegisterLogger(logger, String(key));
+            m_RegisterLogger(in_logger, String(key));
             return true;
         }
 
         /// ----------------------------------------------------------------------------------------
         /// Tries to register logger with specified key.
         /// 
-        /// @PARAM[IN] logger Logger to register.
-        /// @PARAM[IN] key String used as key to register logger.
+        /// @PARAM[IN] in_logger Logger to register.
+        /// @PARAM[IN] in_key String used as key to register logger.
         /// ----------------------------------------------------------------------------------------
-        bool TryRegisterLogger(LoggerPtr logger, StringView key) noexcept
+        bool TryRegisterLogger(LoggerPtr in_logger, StringView in_key) noexcept
         {
-            if (logger == nullptr)
+            if (in_logger == nullptr)
                 return false;
 
-            if (key.empty())
+            if (in_key.empty())
                 return false;
 
-            if (_HasLogger(key))
+            if (m_HasLogger(in_key))
                 return false;
 
-            _RegisterLogger(logger, String(key));
+            m_RegisterLogger(in_logger, String(in_key));
             return true;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Overload for bool TryRegisterLogger(LoggerPtr logger, StringView key) noexcept for 
+        /// Overload for bool TryRegisterLogger(LoggerPtr in_logger, StringView key) noexcept for 
         /// performance.
         /// 
         /// @PARAM[IN] key RValue reference to String, to avoid allocating memory to store the key.
         /// ----------------------------------------------------------------------------------------
-        bool TryRegisterLogger(LoggerPtr logger, String&& key) noexcept
+        bool TryRegisterLogger(LoggerPtr in_logger, String&& in_key) noexcept
         {
-            if (logger == nullptr)
+            if (in_logger == nullptr)
                 return false;
 
-            if (key.empty())
+            if (in_key.empty())
                 return false;
 
-            if (_HasLogger(key))
+            if (m_HasLogger(in_key))
                 return false;
 
-            _RegisterLogger(logger, MOVE(key));
+            m_RegisterLogger(in_logger, MOVE(in_key));
             return true;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Unregisters the logger registered with key {key}.
+        /// Unregisters the logger registered with key {in_key}.
         /// 
-        /// @THROWS InvalidArgumentException Asserts {!key.empty()}.
+        /// @THROWS InvalidArgumentException Asserts {!in_key.empty()}.
         /// 
         /// @EXCEPTION_SAFETY VeryStrong
         /// ----------------------------------------------------------------------------------------
-        bool UnregisterLogger(StringView key)
+        bool UnregisterLogger(StringView in_key)
         {
-            ASSERT<InvalidArgumentException>(!key.empty(),
+            ASSERT<InvalidArgumentException>(!in_key.empty(),
                 TEXT("Cannot access logger with NULL key."));
 
-            return _UnregisterLogger(key) != nullptr;
+            return m_UnregisterLogger(in_key) != nullptr;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -248,38 +248,38 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         void UnregisterAllLoggers()
         {
-            _loggers.clear();
+            m_loggers.clear();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Unregisters and returns the logger registered with key {key}.
+        /// Unregisters and returns the logger registered with key {in_key}.
         /// 
-        /// @PARAM[IN] key Key used to register the logger.
-        /// @RETURNS Logger registered with key {key}. If no logger was registered returns nullptr.
+        /// @PARAM[IN] in_key Key used to register the logger.
+        /// @RETURNS Logger registered with key {in_key}. If no logger was registered returns nullptr.
         /// 
-        /// @THROWS InvalidArgumentException Asserts {!key.empty()}.
+        /// @THROWS InvalidArgumentException Asserts {!in_key.empty()}.
         /// 
         /// @EXCEPTION_SAFETY VeryStrong
         /// ----------------------------------------------------------------------------------------
-        LoggerPtr UnregisterAndGetLogger(StringView key)
+        LoggerPtr UnregisterAndGetLogger(StringView in_key)
         {
-            ASSERT<InvalidArgumentException>(!key.empty(),
+            ASSERT<InvalidArgumentException>(!in_key.empty(),
                 TEXT("Cannot access logger with NULL key."));
 
-            return _UnregisterLogger(key);
+            return m_UnregisterLogger(in_key);
         }
 
         /// ----------------------------------------------------------------------------------------
         /// Get the logger registered with key {key}.
         /// ----------------------------------------------------------------------------------------
-        LoggerPtr GetLogger(StringView key) const noexcept
+        LoggerPtr GetLogger(StringView in_key) const noexcept
         {
-            ASSERT<InvalidArgumentException>(!key.empty(),
+            ASSERT<InvalidArgumentException>(!in_key.empty(),
                 TEXT("Cannot access logger with NULL key."));
 
-            for (auto pair : _loggers)
+            for (auto pair : m_loggers)
             {
-                if (pair.first == key)
+                if (pair.first == in_key)
                 {
                     return pair.second;
                 }
@@ -289,14 +289,14 @@ namespace Atom::Logging
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Checks if a logger for key {key} is registered.
+        /// Checks if a logger for key {in_key} is registered.
         /// ----------------------------------------------------------------------------------------
-        bool HasLogger(StringView key) const noexcept
+        bool HasLogger(StringView in_key) const noexcept
         {
-            ASSERT<InvalidArgumentException>(!key.empty(),
+            ASSERT<InvalidArgumentException>(!in_key.empty(),
                 TEXT("Cannot access logger with NULL key."));
 
-            return _HasLogger(key);
+            return m_HasLogger(in_key);
         }
 
     //// -------------------------------------------------------------------------------------------
@@ -315,22 +315,22 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         LoggerPtr GetDefaultLogger() const noexcept
         {
-            return _defaultLogger;
+            return m_defaultLogger;
         }
 
         /// ----------------------------------------------------------------------------------------
         /// Set the default logger.
         /// 
-        /// @PARAM[IN] logger Logger to set as default logger. If null sets a fake logger instead.
+        /// @PARAM[IN] in_logger Logger to set as default logger. If null sets a fake logger instead.
         /// ----------------------------------------------------------------------------------------
-        void SetDefaultLogger(LoggerPtr logger) noexcept
+        void SetDefaultLogger(LoggerPtr in_logger) noexcept
         {
-            if (logger == nullptr)
+            if (in_logger == nullptr)
             {
-                logger = NullLogger::Instance;
+                in_logger = NullLogger::Instance;
             }
 
-            _defaultLogger = logger;
+            m_defaultLogger = in_logger;
         }
 
     //// -------------------------------------------------------------------------------------------
@@ -343,7 +343,7 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         ConstIterator begin() const noexcept
         {
-            return _loggers.begin();
+            return m_loggers.begin();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -351,7 +351,7 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         ConstIterator end() const noexcept
         {
-            return _loggers.cend();
+            return m_loggers.cend();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -359,7 +359,7 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         ConstIterator cbegin() const noexcept
         {
-            return _loggers.cbegin();
+            return m_loggers.cbegin();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -367,7 +367,7 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         ConstIterator cend() const noexcept
         {
-            return _loggers.cend();
+            return m_loggers.cend();
         }
 
     //// -------------------------------------------------------------------------------------------
@@ -387,12 +387,12 @@ namespace Atom::Logging
         /// 
         /// @EXCEPTION_SAFETY VeryStrong
         /// ----------------------------------------------------------------------------------------
-        void _RegisterLogger(LoggerPtr logger, String key)
+        void m_RegisterLogger(LoggerPtr in_logger, String in_key)
         {
-            ATOM_DEBUG_EXPECTS(logger != nullptr);
-            ATOM_DEBUG_EXPECTS(!key.empty());
+            ATOM_DEBUG_EXPECTS(in_logger != nullptr);
+            ATOM_DEBUG_EXPECTS(!in_key.empty());
 
-            bool result = _loggers.insert({ MOVE(key), MOVE(logger) }).second;
+            bool result = m_loggers.insert({ MOVE(in_key), MOVE(in_logger) }).second;
             ATOM_DEBUG_EXPECTS(result);
         }
 
@@ -400,42 +400,42 @@ namespace Atom::Logging
         /// 
         /// @EXCEPTION_SAFETY VeryStrong
         /// ----------------------------------------------------------------------------------------
-        void _ForceRegisterLogger(LoggerPtr logger, String key)
+        void m_ForceRegisterLogger(LoggerPtr in_logger, String in_key)
         {
-            ATOM_DEBUG_EXPECTS(logger != nullptr);
-            ATOM_DEBUG_EXPECTS(!key.empty());
+            ATOM_DEBUG_EXPECTS(in_logger != nullptr);
+            ATOM_DEBUG_EXPECTS(!in_key.empty());
 
-            _loggers.insert_or_assign(MOVE(key), MOVE(logger));
+            m_loggers.insert_or_assign(MOVE(in_key), MOVE(in_logger));
         }
 
         /// ----------------------------------------------------------------------------------------
         /// 
         /// @EXCEPTION_SAFETY VeryStrong
         /// ----------------------------------------------------------------------------------------
-        LoggerPtr _UnregisterLogger(StringView key)
+        LoggerPtr m_UnregisterLogger(StringView in_key)
         {
-            auto it = _FindEntry(key);
+            auto it = m_FindEntry(in_key);
             if (it == end())
             {
                 return nullptr;
             }
 
             LoggerPtr logger = MOVE(it->second);
-            _loggers.erase(it);
+            m_loggers.erase(it);
             return logger;
         }
 
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        bool _HasLogger(StringView key) const noexcept
+        bool m_HasLogger(StringView in_key) const noexcept
         {
-            ATOM_DEBUG_EXPECTS_MSG(!key.empty(),
+            ATOM_DEBUG_EXPECTS_MSG(!in_key.empty(),
                 TEXT("Cannot access logger with NULL key."));
 
-            for (auto pair : _loggers)
+            for (auto pair : m_loggers)
             {
-                if (pair.first == key)
+                if (pair.first == in_key)
                 {
                     return true;
                 }
@@ -447,12 +447,12 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        ConstIterator _FindEntry(StringView key) const noexcept
+        ConstIterator m_FindEntry(StringView in_key) const noexcept
         {
-            auto it = _loggers.cbegin();
-            for (; it != _loggers.cend(); it++)
+            auto it = m_loggers.cbegin();
+            for (; it != m_loggers.cend(); it++)
             {
-                if (it->first == key)
+                if (it->first == in_key)
                 {
                     break;
                 }
@@ -462,13 +462,13 @@ namespace Atom::Logging
         }
 
     protected:
-        Container _loggers;
-        LoggerPtr _defaultLogger;
+        Container m_loggers;
+        LoggerPtr m_defaultLogger;
     };
 
     inline LoggerRegistry& GET_REGISTRY() noexcept
     {
-        static LoggerRegistry instance;
-        return instance;
+        static LoggerRegistry s_instance;
+        return s_instance;
     }
 }
