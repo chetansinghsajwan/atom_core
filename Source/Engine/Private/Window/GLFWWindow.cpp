@@ -8,8 +8,9 @@ namespace Atom::Engine
     GLFWWindow::GLFWWindow(const WindowProps& props):
         Window(_windowEventSource)
     {
+        // TODO: Requires encoding conversion.
         _glfwWindow = glfwCreateWindow(props.windowSize.x, props.windowSize.y,
-            props.windowName.data(), nullptr, nullptr);
+            (const char*)props.windowName.data(), nullptr, nullptr);
 
         glfwMakeContextCurrent(_glfwWindow);
         glfwSetWindowUserPointer(_glfwWindow, this);

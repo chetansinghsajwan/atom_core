@@ -38,11 +38,14 @@ namespace Atom::Logging::Internal
         {
             if (CheckLogLevel(logMsg.lvl))
             {
-                String result = fmt::format("[{}] [{}] {}: {}\n",
-                    logMsg.time, logMsg.lvl, logMsg.loggerName, logMsg.msg);
+                // String result = fmt::format(TEXT("[{}] [{}] {}: {}\n"),
+                StringASCII result = fmt::format("[{}] [{}] {}: {}\n",
+                    logMsg.time, logMsg.lvl,
+                    (const char*)logMsg.loggerName.data(),
+                    (const char*)logMsg.msg.data());
 
                 _hasWritten = true;
-                _Write(logMsg, result);
+                _Write(logMsg, (const Char*)result.data());
 
                 if (CheckFlushLevel(logMsg.lvl))
                 {

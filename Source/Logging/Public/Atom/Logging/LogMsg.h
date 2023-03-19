@@ -21,26 +21,32 @@ namespace Atom::Logging
         OFF         ///< Used to indicate logging is off.
     };
 
-    enum class color { red, green, blue };
-
     /// --------------------------------------------------------------------------------------------
     /// Lightweight object containing all the details of the log.
     /// --------------------------------------------------------------------------------------------
     struct LogMsg
     {
+        /// ----------------------------------------------------------------------------------------
         /// Message of the log.
+        /// ----------------------------------------------------------------------------------------
         StringView msg;
 
+        /// ----------------------------------------------------------------------------------------
         /// Name of the logger through which this message was logged.
+        /// ----------------------------------------------------------------------------------------
         StringView loggerName;
 
+        /// ----------------------------------------------------------------------------------------
         /// Level of this message.
+        /// ----------------------------------------------------------------------------------------
         LogLevel lvl;
 
+        /// ----------------------------------------------------------------------------------------
         /// Time when this message was logged.
         /// 
         /// This is necessary to store as the message may be logged asynchronously or may face 
         /// some latency in writing.
+        /// ----------------------------------------------------------------------------------------
         TimePoint time;
     };
 }
@@ -48,24 +54,24 @@ namespace Atom::Logging
 namespace fmt
 {
     template <>
-    struct formatter<Atom::Logging::LogLevel>: formatter<Atom::StringView>
+    struct formatter<Atom::Logging::LogLevel>: formatter<Atom::StringViewASCII>
     {
         template <typename FormatContext>
         auto format(Atom::Logging::LogLevel c, FormatContext& ctx) const
         {
-            string_view name = "UNKNOWN";
+            Atom::StringView name = TEXT("UNKNOWN");
             switch (c)
             {
-                case Atom::Logging::LogLevel::Trace: name = "TRACE"; break;
-                case Atom::Logging::LogLevel::Debug: name = "DEBUG"; break;
-                case Atom::Logging::LogLevel::Info: name = "INFO"; break;
-                case Atom::Logging::LogLevel::Warn: name = "WARN"; break;
-                case Atom::Logging::LogLevel::Error: name = "ERROR"; break;
-                case Atom::Logging::LogLevel::Fatal: name = "FATAL"; break;
-                case Atom::Logging::LogLevel::OFF: name = "OFF"; break;
+                case Atom::Logging::LogLevel::Trace: name = TEXT("TRACE"); break;
+                case Atom::Logging::LogLevel::Debug: name = TEXT("DEBUG"); break;
+                case Atom::Logging::LogLevel::Info: name = TEXT("INFO"); break;
+                case Atom::Logging::LogLevel::Warn: name = TEXT("WARN"); break;
+                case Atom::Logging::LogLevel::Error: name = TEXT("ERROR"); break;
+                case Atom::Logging::LogLevel::Fatal: name = TEXT("FATAL"); break;
+                case Atom::Logging::LogLevel::OFF: name = TEXT("OFF"); break;
             }
 
-            return formatter<string_view>::format(name, ctx);
+            return formatter<Atom::StringViewASCII>::format((const char*)name.data(), ctx);
         }
     };
 }

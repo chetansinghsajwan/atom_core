@@ -14,10 +14,10 @@ namespace Atom::Engine
     extern Application* CreateApplication()
     {
         SharedPtr<ConsoleLogTarget> target = MakeShared<ConsoleLogTarget>();
-        SimpleLoggerST logger("Test", target);
+        SimpleLoggerST logger(TEXT("Test"), target);
         logger.SetLogLevel(LogLevel::Debug);
 
-        logger.LogWarn("Just a warning");
+        logger.LogWarn(TEXT("Just a warning"));
 
         return new Sandbox();
     }

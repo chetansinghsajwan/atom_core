@@ -9,7 +9,8 @@ namespace Atom
     {
         if (!assertion)
         {
-            throw TException(FORWARD(args)...);
+            // String msg{ FORWARD(args)... };
+            // throw TException((const char*)msg.data());
         }
     }
 
@@ -27,7 +28,11 @@ namespace Atom
 #define STATIC_ASSERT(assertion) static_assert(assertion)
 #define STATIC_THROW(msg) static_assert(false, msg)
 
-#define ATOM_DEBUG_EXPECTS_MSG(assertion, msg) DEBUG_ASSERT<AssertionException>(assertion, \
-    String(ATOM_FUNCTION) + ": [DEBUG] Expects {" #assertion "}. " msg)
+// #define ATOM_DEBUG_EXPECTS_MSG(assertion, msg) DEBUG_ASSERT<AssertionException>(assertion, \
+//     ::Atom::StringASCII(ATOM_FUNCTION) + TEXT(": [DEBUG] Expects {" #assertion "}. ") msg)
 
-#define ATOM_DEBUG_EXPECTS(assertion) ATOM_DEBUG_EXPECTS_MSG(assertion, "")
+#define ATOM_DEBUG_EXPECTS_MSG(assertion, msg) \
+    DEBUG_ASSERT<AssertionException>(assertion, \
+    TEXT(": [DEBUG] Expects {") TEXT(#assertion) TEXT("}. ") msg)
+
+#define ATOM_DEBUG_EXPECTS(assertion) ATOM_DEBUG_EXPECTS_MSG(assertion, TEXT(""))

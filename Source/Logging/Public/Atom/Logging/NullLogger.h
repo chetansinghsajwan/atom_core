@@ -26,7 +26,7 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Name of the NullLogger.
         /// ----------------------------------------------------------------------------------------
-        static constexpr StringView s_name = "NullLogger";
+        static constexpr StringView s_name = TEXT("NullLogger");
 
     //// -------------------------------------------------------------------------------------------
     //// NonStatic Members

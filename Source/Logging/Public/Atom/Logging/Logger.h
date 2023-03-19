@@ -74,10 +74,10 @@ namespace Atom::Logging
         {
             if (CheckLogLevel(lvl))
             {
-                String formattedMsg = fmt::format(fmt::runtime(msg), FWD(args)...);
+                StringASCII formattedMsg = fmt::format(fmt::runtime((const char*)msg), FWD(args)...);
                 LogMsg logMsg
                 {
-                    .msg = formattedMsg,
+                    .msg = (const Char*)formattedMsg.data(),
                     .loggerName = Name(),
                     .lvl = lvl,
                     .time = Time::Now(),
