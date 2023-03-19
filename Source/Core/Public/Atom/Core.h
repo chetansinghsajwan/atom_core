@@ -28,7 +28,7 @@
 //// UTILS
 //// -----------------------------------------------------------------------------------------------
 
-#define ATOM_CONFIG_DEBUG
+#define ATOM_CONFIG_DEBUG true
 
 #if defined(ATOM_CONFIG_DEBUG)
     #define ATOM_DEBUG_IF if constexpr (true)
