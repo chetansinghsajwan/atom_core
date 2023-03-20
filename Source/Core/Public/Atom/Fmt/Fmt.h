@@ -19,9 +19,6 @@ namespace Atom::Fmt
         requires RBackInsertable<Char, TBackInsertable>
     void FormatTo(TBackInsertable& out, FormatString<TArgs...> fmt, TArgs&&... args)
     {
-        static_assert(TTI::IsNotSame<Char, CharUTF16>, "UTF16 String formatting is not supported yet.");
-        static_assert(TTI::IsNotSame<Char, CharUTF32>, "UTF32 String formatting is not supported yet.");
-
         struct Wrapper
         {
             struct Input
