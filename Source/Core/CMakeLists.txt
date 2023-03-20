@@ -14,6 +14,7 @@ target_compile_definitions(Atom.Core PRIVATE ATOM_EXPORT)
 target_compile_definitions(Atom.Core PUBLIC ATOM_PLATFORM_LINUX)
 
 target_link_libraries(Atom.Core PUBLIC WjCryptLib)
+target_link_libraries(Atom.Core PUBLIC fmt)
 
 # --------------------------------------------------------------------------------------------------
 # Atom.Core.Tests
