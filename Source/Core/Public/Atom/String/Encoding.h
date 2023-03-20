@@ -8,7 +8,7 @@ namespace Atom
     using CharUTF16 = char16_t;
     using CharUTF32 = char32_t;
 
-    using Char = CharUTF8;
+    using Char = CharUTF16;
 }
 
-#define TEXT(txt) u8##txt
+#define TEXT(txt) u##txt
