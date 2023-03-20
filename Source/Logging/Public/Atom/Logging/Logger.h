@@ -15,51 +15,51 @@ namespace Atom::Logging
         virtual StringView Name() const noexcept = 0;
 
         /// ----------------------------------------------------------------------------------------
-        /// Calls Log(LogLevel::Trace, in_msg, FWD(in_args)...).
+        /// Calls Log(LogLevel::Trace, in_msg, FORWARD(in_args)...).
         /// ----------------------------------------------------------------------------------------
         void LogTrace(const RLogString auto& in_msg, RLogArg auto&&... in_args)
         {
-            Log(LogLevel::Trace, in_msg, FWD(in_args)...);
+            Log(LogLevel::Trace, in_msg, FORWARD(in_args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Calls Log(LogLevel::Debug, in_msg, FWD(in_args)...).
+        /// Calls Log(LogLevel::Debug, in_msg, FORWARD(in_args)...).
         /// ----------------------------------------------------------------------------------------
         void LogDebug(const RLogString auto& in_msg, RLogArg auto&&... in_args)
         {
-            Log(LogLevel::Debug, in_msg, FWD(in_args)...);
+            Log(LogLevel::Debug, in_msg, FORWARD(in_args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Calls Log(LogLevel::Info, in_msg, FWD(in_args)...).
+        /// Calls Log(LogLevel::Info, in_msg, FORWARD(in_args)...).
         /// ----------------------------------------------------------------------------------------
         void LogInfo(const RLogString auto& in_msg, RLogArg auto&&... in_args)
         {
-            Log(LogLevel::Info, in_msg, FWD(in_args)...);
+            Log(LogLevel::Info, in_msg, FORWARD(in_args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Calls Log(LogLevel::Warn, in_msg, FWD(in_args)...).
+        /// Calls Log(LogLevel::Warn, in_msg, FORWARD(in_args)...).
         /// ----------------------------------------------------------------------------------------
         void LogWarn(const RLogString auto& in_msg, RLogArg auto&&... in_args)
         {
-            Log(LogLevel::Warn, in_msg, FWD(in_args)...);
+            Log(LogLevel::Warn, in_msg, FORWARD(in_args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Calls Log(LogLevel::Error, in_msg, FWD(in_args)...).
+        /// Calls Log(LogLevel::Error, in_msg, FORWARD(in_args)...).
         /// ----------------------------------------------------------------------------------------
         void LogError(const RLogString auto& in_msg, RLogArg auto&&... in_args)
         {
-            Log(LogLevel::Error, in_msg, FWD(in_args)...);
+            Log(LogLevel::Error, in_msg, FORWARD(in_args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Calls Log(LogLevel::Fatal, in_msg, FWD(in_args)...).
+        /// Calls Log(LogLevel::Fatal, in_msg, FORWARD(in_args)...).
         /// ----------------------------------------------------------------------------------------
         void LogFatal(const RLogString auto& in_msg, RLogArg auto&&... in_args)
         {
-            Log(LogLevel::Fatal, in_msg, FWD(in_args)...);
+            Log(LogLevel::Fatal, in_msg, FORWARD(in_args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -77,7 +77,7 @@ namespace Atom::Logging
                 String formattedMsg = Fmt::Format(Fmt::Runtime(in_msg), FORWARD(in_args)...);
                 LogMsg logMsg
                 {
-                    .in_msg = formattedMsg,
+                    .msg = formattedMsg,
                     .loggerName = Name(),
                     .lvl = in_lvl,
                     .time = Time::Now(),
@@ -122,6 +122,6 @@ namespace Atom::Logging
         requires TTI::IsBaseOf<Logger, TLogger>
     LoggerPtr MAKE_LOGGER(auto&&... in_args) noexcept
     {
-        return MakeShared<TLogger>(FWD(in_args)...);
+        return MakeShared<TLogger>(FORWARD(in_args)...);
     }
 }

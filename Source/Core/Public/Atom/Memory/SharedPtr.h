@@ -11,6 +11,6 @@ namespace Atom
     template <typename T>
     SharedPtr<T> MakeShared(auto&&... args) noexcept
     {
-        return std::make_shared<T>(FWD(args)...);
+        return std::make_shared<T>(FORWARD(args)...);
     }
 }

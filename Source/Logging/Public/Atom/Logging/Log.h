@@ -27,55 +27,55 @@ namespace Atom::Logging
     /// ----------------------------------------------------------------------------------------
     inline void LOG(LogLevel lvl, const RLogString auto& msg, RLogArg auto&&... args)
     {
-        GET_ROOT_LOGGER()->Log(lvl, msg, FWD(args)...);
+        GET_ROOT_LOGGER()->Log(lvl, msg, FORWARD(args)...);
     }
 
     /// --------------------------------------------------------------------------------------------
-    /// Calls LOG(LogLevel::Trace, msg, FWD(args)...).
+    /// Calls LOG(LogLevel::Trace, msg, FORWARD(args)...).
     /// --------------------------------------------------------------------------------------------
     inline void LOG_TRACE(const RLogString auto& msg, RLogArg auto&&... args)
     {
-        LOG(LogLevel::Trace, msg, FWD(args)...);
+        LOG(LogLevel::Trace, msg, FORWARD(args)...);
     }
 
     /// --------------------------------------------------------------------------------------------
-    /// Calls LOG(LogLevel::Debug, msg, FWD(args)...).
+    /// Calls LOG(LogLevel::Debug, msg, FORWARD(args)...).
     /// --------------------------------------------------------------------------------------------
     inline void LOG_DEBUG(const RLogString auto& msg, RLogArg auto&&... args)
     {
-        LOG(LogLevel::Debug, msg, FWD(args)...);
+        LOG(LogLevel::Debug, msg, FORWARD(args)...);
     }
 
     /// --------------------------------------------------------------------------------------------
-    /// Calls LOG(LogLevel::Info, msg, FWD(args)...).
+    /// Calls LOG(LogLevel::Info, msg, FORWARD(args)...).
     /// --------------------------------------------------------------------------------------------
     inline void LOG_INFO(const RLogString auto& msg, RLogArg auto&&... args)
     {
-        LOG(LogLevel::Info, msg, FWD(args)...);
+        LOG(LogLevel::Info, msg, FORWARD(args)...);
     }
 
     /// --------------------------------------------------------------------------------------------
-    /// Calls LOG(LogLevel::Warn, msg, FWD(args)...).
+    /// Calls LOG(LogLevel::Warn, msg, FORWARD(args)...).
     /// --------------------------------------------------------------------------------------------
     inline void LOG_WARN(const RLogString auto& msg, RLogArg auto&&... args)
     {
-        LOG(LogLevel::Warn, msg, FWD(args)...);
+        LOG(LogLevel::Warn, msg, FORWARD(args)...);
     }
 
     /// --------------------------------------------------------------------------------------------
-    /// Calls LOG(LogLevel::Error, msg, FWD(args)...).
+    /// Calls LOG(LogLevel::Error, msg, FORWARD(args)...).
     /// --------------------------------------------------------------------------------------------
     inline void LOG_ERROR(const RLogString auto& msg, RLogArg auto&&... args)
     {
-        LOG(LogLevel::Error, msg, FWD(args)...);
+        LOG(LogLevel::Error, msg, FORWARD(args)...);
     }
 
     /// --------------------------------------------------------------------------------------------
-    /// Calls LOG(LogLevel::Fatal, msg, FWD(args)...).
+    /// Calls LOG(LogLevel::Fatal, msg, FORWARD(args)...).
     /// --------------------------------------------------------------------------------------------
     inline void LOG_FATAL(const RLogString auto& msg, RLogArg auto&&... args)
     {
-        LOG(LogLevel::Fatal, msg, FWD(args)...);
+        LOG(LogLevel::Fatal, msg, FORWARD(args)...);
     }
 
     inline void FLUSH_LOGS()
@@ -119,55 +119,55 @@ namespace Atom::Logging
     {
         if constexpr (STATIC_CHECK_LOG_LEVEL<lvl>())
         {
-            LOG(lvl, msg, FWD(args)...);
+            LOG(lvl, msg, FORWARD(args)...);
         }
     }
 
     /// --------------------------------------------------------------------------------------------
-    /// Calls STATIC_LOG<LogLevel::Trace>(msg, FWD(args)...).
+    /// Calls STATIC_LOG<LogLevel::Trace>(msg, FORWARD(args)...).
     /// --------------------------------------------------------------------------------------------
     inline void STATIC_LOG_TRACE(const RLogString auto& msg, RLogArg auto&&... args)
     {
-        STATIC_LOG<LogLevel::Trace>(msg, FWD(args)...);
+        STATIC_LOG<LogLevel::Trace>(msg, FORWARD(args)...);
     }
 
     /// --------------------------------------------------------------------------------------------
-    /// Calls STATIC_LOG<LogLevel::Debug>(msg, FWD(args)...).
+    /// Calls STATIC_LOG<LogLevel::Debug>(msg, FORWARD(args)...).
     /// --------------------------------------------------------------------------------------------
     inline void STATIC_LOG_DEBUG(const RLogString auto& msg, RLogArg auto&&... args)
     {
-        STATIC_LOG<LogLevel::Debug>(msg, FWD(args)...);
+        STATIC_LOG<LogLevel::Debug>(msg, FORWARD(args)...);
     }
 
     /// --------------------------------------------------------------------------------------------
-    /// Calls STATIC_LOG<LogLevel::Info>(msg, FWD(args)...).
+    /// Calls STATIC_LOG<LogLevel::Info>(msg, FORWARD(args)...).
     /// --------------------------------------------------------------------------------------------
     inline void STATIC_LOG_INFO(const RLogString auto& msg, RLogArg auto&&... args)
     {
-        STATIC_LOG<LogLevel::Info>(msg, FWD(args)...);
+        STATIC_LOG<LogLevel::Info>(msg, FORWARD(args)...);
     }
 
     /// --------------------------------------------------------------------------------------------
-    /// Calls STATIC_LOG<LogLevel::Warn>(msg, FWD(args)...).
+    /// Calls STATIC_LOG<LogLevel::Warn>(msg, FORWARD(args)...).
     /// --------------------------------------------------------------------------------------------
     inline void STATIC_LOG_WARN(const RLogString auto& msg, RLogArg auto&&... args)
     {
-        STATIC_LOG<LogLevel::Warn>(msg, FWD(args)...);
+        STATIC_LOG<LogLevel::Warn>(msg, FORWARD(args)...);
     }
 
     /// --------------------------------------------------------------------------------------------
-    /// Calls STATIC_LOG<LogLevel::Error>(msg, FWD(args)...).
+    /// Calls STATIC_LOG<LogLevel::Error>(msg, FORWARD(args)...).
     /// --------------------------------------------------------------------------------------------
     inline void STATIC_LOG_ERROR(const RLogString auto& msg, RLogArg auto&&... args)
     {
-        STATIC_LOG<LogLevel::Error>(msg, FWD(args)...);
+        STATIC_LOG<LogLevel::Error>(msg, FORWARD(args)...);
     }
 
     /// --------------------------------------------------------------------------------------------
-    /// Calls STATIC_LOG<LogLevel::Fatal>(msg, FWD(args)...).
+    /// Calls STATIC_LOG<LogLevel::Fatal>(msg, FORWARD(args)...).
     /// --------------------------------------------------------------------------------------------
     inline void STATIC_LOG_FATAL(const RLogString auto& msg, RLogArg auto&&... args)
     {
-        STATIC_LOG<LogLevel::Fatal>(msg, FWD(args)...);
+        STATIC_LOG<LogLevel::Fatal>(msg, FORWARD(args)...);
     }
 }

@@ -21,6 +21,6 @@ namespace Atom::Logging
 
     inline LoggerPtr CREATE_LOGGER(auto&&... args) noexcept
     {
-        return GET_LOGGER_FACTORY().CreateLogger(FWD(args)...);
+        return GET_LOGGER_FACTORY().CreateLogger(FORWARD(args)...);
     }
 }

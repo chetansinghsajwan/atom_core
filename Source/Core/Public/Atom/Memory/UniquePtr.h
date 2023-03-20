@@ -11,6 +11,6 @@ namespace Atom
     template <typename T>
     UniquePtr<T> MakeUnique(auto&&... args) noexcept
     {
-        return std::make_unique<T>(FWD(args)...);
+        return std::make_unique<T>(FORWARD(args)...);
     }
 }
