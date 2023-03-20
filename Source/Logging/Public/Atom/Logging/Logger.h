@@ -1,7 +1,7 @@
 #pragma once
-#include "fmt/format.h"
-
 #include "Atom/Memory.h"
+#include "Atom/Fmt.h"
+
 #include "Atom/Logging/LogMsg.h"
 
 namespace Atom::Logging
@@ -74,10 +74,10 @@ namespace Atom::Logging
         {
             if (CheckLogLevel(lvl))
             {
-                StringASCII formattedMsg = fmt::format(fmt::runtime((const char*)msg), FWD(args)...);
+                String formattedMsg = Fmt::Format(Fmt::Runtime(msg), FORWARD(args)...);
                 LogMsg logMsg
                 {
-                    .msg = (const Char*)formattedMsg.data(),
+                    .msg = formattedMsg,
                     .loggerName = Name(),
                     .lvl = lvl,
                     .time = Time::Now(),

@@ -17,7 +17,7 @@ namespace Atom::Fmt
 
     using RuntimeFormatString = fmt::runtime_format_string<Char>;
 
-    RuntimeFormatString Runtime(StringView fmt) noexcept
+    inline RuntimeFormatString Runtime(StringView fmt) noexcept
     {
         return RuntimeFormatString{ fmt };
     }

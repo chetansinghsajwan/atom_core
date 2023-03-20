@@ -1,6 +1,6 @@
 #pragma once
-#include "fmt/format.h"
-#include "fmt/chrono.h"
+#include "Atom/Fmt.h"
+
 #include "Atom/Logging/LogTarget.h"
 
 namespace Atom::Logging::Internal
@@ -19,8 +19,8 @@ namespace Atom::Logging::Internal
         /// Default constructs LogTargetBase().
         /// ----------------------------------------------------------------------------------------
         LogTargetBase() noexcept:
-            _logLevel(LogLevel::Debug), _flushLevel(LogLevel::Info),
-            _hasWritten(false), _alwaysFlush(false) { }
+            m_logLevel(LogLevel::Debug), m_flushLevel(LogLevel::Info),
+            m_hasWritten(false), m_alwaysFlush(false) { }
 
     //// -------------------------------------------------------------------------------------------
     //// API Functions
@@ -32,24 +32,21 @@ namespace Atom::Logging::Internal
         /// 
         /// @EXCEPTION_SAFETY Strong.
         /// 
-        /// @SEE _Write().
+        /// @SEE m_Write().
         /// ----------------------------------------------------------------------------------------
-        virtual void Write(const LogMsg& logMsg) override final
+        virtual void Write(const LogMsg& in_logMsg) override final
         {
-            if (CheckLogLevel(logMsg.lvl))
+            if (CheckLogLevel(in_logMsg.lvl))
             {
-                // String result = fmt::format(TEXT("[{}] [{}] {}: {}\n"),
-                StringASCII result = fmt::format("[{}] [{}] {}: {}\n",
-                    logMsg.time, logMsg.lvl,
-                    (const char*)logMsg.loggerName.data(),
-                    (const char*)logMsg.msg.data());
+                String result = Fmt::Format(TEXT("[{}] [{}] {}: {}\n"),
+                    in_logMsg.time, in_logMsg.lvl, in_logMsg.loggerName, in_logMsg.msg);
 
-                _hasWritten = true;
-                _Write(logMsg, (const Char*)result.data());
+                m_hasWritten = true;
+                m_Write(in_logMsg, result);
 
-                if (CheckFlushLevel(logMsg.lvl))
+                if (CheckFlushLevel(in_logMsg.lvl))
                 {
-                    _Flush();
+                    m_Flush();
                 }
             }
         }
@@ -63,7 +60,7 @@ namespace Atom::Logging::Internal
         {
             if (ShouldFlush())
             {
-                _Flush();
+                m_Flush();
             }
         }
 
@@ -72,24 +69,24 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         LogLevel GetLogLevel() const noexcept
         {
-            return _logLevel;
+            return m_logLevel;
         }
 
         /// ----------------------------------------------------------------------------------------
         /// Sets the log level.
         /// ----------------------------------------------------------------------------------------
-        void SetLogLevel(LogLevel lvl) noexcept
+        void SetLogLevel(LogLevel in_lvl) noexcept
         {
-            _logLevel = lvl;
+            m_logLevel = in_lvl;
         }
 
         /// ----------------------------------------------------------------------------------------
         /// Checks if we should log the message of specified level.
         /// ----------------------------------------------------------------------------------------
-        bool CheckLogLevel(LogLevel lvl) const noexcept
+        bool CheckLogLevel(LogLevel in_lvl) const noexcept
         {
-            if (lvl == LogLevel::OFF) return false;
-            if (lvl < _logLevel) return false;
+            if (in_lvl == LogLevel::OFF) return false;
+            if (in_lvl < m_logLevel) return false;
 
             return true;
         }
@@ -99,26 +96,26 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         LogLevel GetFlushLevel() const noexcept
         {
-            return _flushLevel;
+            return m_flushLevel;
         }
 
         /// ----------------------------------------------------------------------------------------
         /// Sets the flush level.
         /// ----------------------------------------------------------------------------------------
-        void SetFlushLevel(LogLevel lvl) noexcept
+        void SetFlushLevel(LogLevel in_lvl) noexcept
         {
-            _flushLevel = lvl;
+            m_flushLevel = in_lvl;
         }
 
         /// ----------------------------------------------------------------------------------------
         /// Checks if should flush after logging the message of specified level.
         /// It also asks ShouldFlush().
         /// ----------------------------------------------------------------------------------------
-        bool CheckFlushLevel(LogLevel lvl) const noexcept
+        bool CheckFlushLevel(LogLevel in_lvl) const noexcept
         {
-            if (!_hasWritten) return false;
-            if (lvl == LogLevel::OFF) return false;
-            if (lvl < _flushLevel) return false;
+            if (!m_hasWritten) return false;
+            if (in_lvl == LogLevel::OFF) return false;
+            if (in_lvl < m_flushLevel) return false;
 
             return true;
         }
@@ -130,7 +127,7 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         bool ShouldFlush() const noexcept
         {
-            return _alwaysFlush || _hasWritten;
+            return m_alwaysFlush || m_hasWritten;
         }
 
     //// -------------------------------------------------------------------------------------------
@@ -141,15 +138,15 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         /// Write implementation.
         /// 
-        /// @PARAM[IN] logMsg Log message object passed for logging.
-        /// @PARAM[IN] formattedMsg Formatted message generated from {logMsg}.
+        /// @PARAM[IN] in_logMsg Log message object passed for logging.
+        /// @PARAM[IN] in_formattedMsg Formatted message generated from {in_logMsg}.
         /// ----------------------------------------------------------------------------------------
-        virtual void _Write(const LogMsg& logMsg, StringView formattedMsg) = 0;
+        virtual void m_Write(const LogMsg& in_logMsg, StringView in_formattedMsg) = 0;
 
         /// ----------------------------------------------------------------------------------------
         /// Flush implementation.
         /// ----------------------------------------------------------------------------------------
-        virtual void _Flush() = 0;
+        virtual void m_Flush() = 0;
 
     //// -------------------------------------------------------------------------------------------
     //// Variables
@@ -159,23 +156,23 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         /// Log Level used to filter log messages.
         /// ----------------------------------------------------------------------------------------
-        LogLevel _logLevel;
+        LogLevel m_logLevel;
 
         /// ----------------------------------------------------------------------------------------
         /// Flush level used to check if to call flush after logging.
         /// ----------------------------------------------------------------------------------------
-        LogLevel _flushLevel;
+        LogLevel m_flushLevel;
 
         /// ----------------------------------------------------------------------------------------
         /// Value used to check if there has been any write since last flush.
         /// ----------------------------------------------------------------------------------------
-        bool _hasWritten;
+        bool m_hasWritten;
 
         /// ----------------------------------------------------------------------------------------
-        /// If true always calls underlying flush _Flush(), even if not necessary.
-        /// This doesn't override CheckFlushLevel(LogLevel lvl) check. It only affects 
+        /// If true always calls underlying flush m_Flush(), even if not necessary.
+        /// This doesn't override CheckFlushLevel(LogLevel in_lvl) check. It only affects 
         /// ShouldFlush().
         /// ----------------------------------------------------------------------------------------
-        bool _alwaysFlush;
+        bool m_alwaysFlush;
     };
 }

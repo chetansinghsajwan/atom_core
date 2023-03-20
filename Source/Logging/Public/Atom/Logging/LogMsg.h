@@ -1,8 +1,10 @@
 #pragma once
-#include "fmt/format.h"
+#include "fmt/chrono.h" // TODO: Remove this
 
 #include "Atom/Chrono.h"
 #include "Atom/String.h"
+#include "Atom/Fmt.h"
+
 #include "Atom/Logging/Internal/Core.h"
 
 namespace Atom::Logging
@@ -53,25 +55,40 @@ namespace Atom::Logging
 
 namespace fmt
 {
-    template <>
-    struct formatter<Atom::Logging::LogLevel>: formatter<Atom::StringViewASCII>
+    template < >
+    struct formatter<Atom::StringView, Atom::Char>:
+        public formatter<basic_string_view<Atom::Char>, Atom::Char>
     {
-        template <typename FormatContext>
-        auto format(Atom::Logging::LogLevel c, FormatContext& ctx) const
+        using _fmtStringFormatter = formatter<basic_string_view<Atom::Char>, Atom::Char>;
+        using _fmtString = basic_string_view<Atom::Char>;
+
+        template <typename TFormatContext>
+        auto format(Atom::StringView str, TFormatContext& ctx) const
+        {
+            return _fmtStringFormatter::format(_fmtString{ str.data(), str.size() }, ctx);
+        }
+    };
+
+    template < >
+    struct formatter<Atom::Logging::LogLevel, Atom::Char>:
+        public formatter<Atom::StringView, Atom::Char>
+    {
+        template <typename TFormatContext>
+        auto format(Atom::Logging::LogLevel lvl, TFormatContext& ctx) const
         {
             Atom::StringView name = TEXT("UNKNOWN");
-            switch (c)
+            switch (lvl)
             {
                 case Atom::Logging::LogLevel::Trace: name = TEXT("TRACE"); break;
                 case Atom::Logging::LogLevel::Debug: name = TEXT("DEBUG"); break;
-                case Atom::Logging::LogLevel::Info: name = TEXT("INFO"); break;
-                case Atom::Logging::LogLevel::Warn: name = TEXT("WARN"); break;
+                case Atom::Logging::LogLevel::Info:  name = TEXT("INFO");  break;
+                case Atom::Logging::LogLevel::Warn:  name = TEXT("WARN");  break;
                 case Atom::Logging::LogLevel::Error: name = TEXT("ERROR"); break;
                 case Atom::Logging::LogLevel::Fatal: name = TEXT("FATAL"); break;
-                case Atom::Logging::LogLevel::OFF: name = TEXT("OFF"); break;
+                case Atom::Logging::LogLevel::OFF:   name = TEXT("OFF");   break;
             }
 
-            return formatter<Atom::StringViewASCII>::format((const char*)name.data(), ctx);
+            return formatter<Atom::StringView, Atom::Char>::format(name, ctx);
         }
     };
 }
