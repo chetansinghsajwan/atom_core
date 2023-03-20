@@ -15,6 +15,13 @@ namespace Atom::Fmt
     template <typename... TArgs>
     using FormatString = fmt::basic_format_string<Char, fmt::type_identity_t<TArgs>...>;
 
+    using RuntimeFormatString = fmt::runtime_format_string<Char>;
+
+    RuntimeFormatString Runtime(StringView fmt) noexcept
+    {
+        return RuntimeFormatString{ fmt };
+    }
+
     template <typename TBackInsertable, typename... TArgs>
         requires RBackInsertable<Char, TBackInsertable>
     void FormatTo(TBackInsertable& out, FormatString<TArgs...> fmt, TArgs&&... args)
