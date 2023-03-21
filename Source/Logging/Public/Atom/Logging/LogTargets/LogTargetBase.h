@@ -19,7 +19,7 @@ namespace Atom::Logging::Internal
         /// Default constructs LogTargetBase().
         /// ----------------------------------------------------------------------------------------
         LogTargetBase() noexcept:
-            m_logLevel(LogLevel::Debug), m_flushLevel(LogLevel::Info),
+            m_logLevel(ELogLevel::Debug), m_flushLevel(ELogLevel::Info),
             m_hasWritten(false), m_alwaysFlush(false) { }
 
     //// -------------------------------------------------------------------------------------------
@@ -67,7 +67,7 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         /// Get the log level.
         /// ----------------------------------------------------------------------------------------
-        LogLevel GetLogLevel() const noexcept
+        ELogLevel GetLogLevel() const noexcept
         {
             return m_logLevel;
         }
@@ -75,7 +75,7 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         /// Sets the log level.
         /// ----------------------------------------------------------------------------------------
-        void SetLogLevel(LogLevel in_lvl) noexcept
+        void SetLogLevel(ELogLevel in_lvl) noexcept
         {
             m_logLevel = in_lvl;
         }
@@ -83,9 +83,9 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         /// Checks if we should log the message of specified level.
         /// ----------------------------------------------------------------------------------------
-        bool CheckLogLevel(LogLevel in_lvl) const noexcept
+        bool CheckLogLevel(ELogLevel in_lvl) const noexcept
         {
-            if (in_lvl == LogLevel::OFF) return false;
+            if (in_lvl == ELogLevel::OFF) return false;
             if (in_lvl < m_logLevel) return false;
 
             return true;
@@ -94,7 +94,7 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         /// Gets the flush level.
         /// ----------------------------------------------------------------------------------------
-        LogLevel GetFlushLevel() const noexcept
+        ELogLevel GetFlushLevel() const noexcept
         {
             return m_flushLevel;
         }
@@ -102,7 +102,7 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         /// Sets the flush level.
         /// ----------------------------------------------------------------------------------------
-        void SetFlushLevel(LogLevel in_lvl) noexcept
+        void SetFlushLevel(ELogLevel in_lvl) noexcept
         {
             m_flushLevel = in_lvl;
         }
@@ -111,10 +111,10 @@ namespace Atom::Logging::Internal
         /// Checks if should flush after logging the message of specified level.
         /// It also asks ShouldFlush().
         /// ----------------------------------------------------------------------------------------
-        bool CheckFlushLevel(LogLevel in_lvl) const noexcept
+        bool CheckFlushLevel(ELogLevel in_lvl) const noexcept
         {
             if (!m_hasWritten) return false;
-            if (in_lvl == LogLevel::OFF) return false;
+            if (in_lvl == ELogLevel::OFF) return false;
             if (in_lvl < m_flushLevel) return false;
 
             return true;
@@ -156,12 +156,12 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         /// Log Level used to filter log messages.
         /// ----------------------------------------------------------------------------------------
-        LogLevel m_logLevel;
+        ELogLevel m_logLevel;
 
         /// ----------------------------------------------------------------------------------------
         /// Flush level used to check if to call flush after logging.
         /// ----------------------------------------------------------------------------------------
-        LogLevel m_flushLevel;
+        ELogLevel m_flushLevel;
 
         /// ----------------------------------------------------------------------------------------
         /// Value used to check if there has been any write since last flush.
@@ -170,7 +170,7 @@ namespace Atom::Logging::Internal
 
         /// ----------------------------------------------------------------------------------------
         /// If true always calls underlying flush m_Flush(), even if not necessary.
-        /// This doesn't override CheckFlushLevel(LogLevel in_lvl) check. It only affects 
+        /// This doesn't override CheckFlushLevel(ELogLevel in_lvl) check. It only affects 
         /// ShouldFlush().
         /// ----------------------------------------------------------------------------------------
         bool m_alwaysFlush;

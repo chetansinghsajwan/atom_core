@@ -17,7 +17,7 @@ namespace Atom::Logging::Internal
     class SimpleLoggerTemplate: public Logger
     {
         using MultiLogTarget = TTI::TConditional<ST, MultiLogTargetST, MultiLogTargetMT>;
-        using AtomicLogLevel = TTI::TConditional<ST, LogLevel, Atomic<LogLevel>>;
+        using AtomicLogLevel = TTI::TConditional<ST, ELogLevel, Atomic<ELogLevel>>;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -106,7 +106,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        void SetLogLevel(LogLevel lvl) noexcept
+        void SetLogLevel(ELogLevel lvl) noexcept
         {
             _logLevel = lvl;
         }
@@ -116,7 +116,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        LogLevel GetLogLevel(LogLevel lvl) noexcept
+        ELogLevel GetLogLevel(ELogLevel lvl) noexcept
         {
             return _logLevel;
         }
@@ -126,9 +126,9 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        bool CheckLogLevel(LogLevel lvl) const noexcept override final
+        bool CheckLogLevel(ELogLevel lvl) const noexcept override final
         {
-            return lvl != LogLevel::OFF && lvl >= _logLevel;
+            return lvl != ELogLevel::OFF && lvl >= _logLevel;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -136,7 +136,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        void SetFlushLevel(LogLevel lvl) noexcept
+        void SetFlushLevel(ELogLevel lvl) noexcept
         {
             _flushLevel = lvl;
         }
@@ -146,7 +146,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        LogLevel GetFlushLevel() const noexcept
+        ELogLevel GetFlushLevel() const noexcept
         {
             return _flushLevel;
         }
@@ -156,9 +156,9 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        bool CheckFlushLevel(LogLevel lvl) const noexcept
+        bool CheckFlushLevel(ELogLevel lvl) const noexcept
         {
-            return lvl != LogLevel::OFF && lvl >= _flushLevel;
+            return lvl != ELogLevel::OFF && lvl >= _flushLevel;
         }
 
     public:
@@ -176,12 +176,12 @@ namespace Atom::Logging::Internal
         const String _name;
 
         /// ----------------------------------------------------------------------------------------
-        /// LogLevel used to filter logs.
+        /// ELogLevel used to filter logs.
         /// ----------------------------------------------------------------------------------------
         AtomicLogLevel _logLevel;
 
         /// ----------------------------------------------------------------------------------------
-        /// LogLevel used to filter flush after logs.
+        /// ELogLevel used to filter flush after logs.
         /// ----------------------------------------------------------------------------------------
         AtomicLogLevel _flushLevel;
     };

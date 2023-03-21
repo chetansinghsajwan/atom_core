@@ -15,62 +15,62 @@ namespace Atom::Logging
         virtual StringView Name() const noexcept = 0;
 
         /// ----------------------------------------------------------------------------------------
-        /// Calls Log(LogLevel::Trace, in_msg, FORWARD(in_args)...).
+        /// Calls Log(ELogLevel::Trace, in_msg, FORWARD(in_args)...).
         /// ----------------------------------------------------------------------------------------
         void LogTrace(const RLogString auto& in_msg, RLogArg auto&&... in_args)
         {
-            Log(LogLevel::Trace, in_msg, FORWARD(in_args)...);
+            Log(ELogLevel::Trace, in_msg, FORWARD(in_args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Calls Log(LogLevel::Debug, in_msg, FORWARD(in_args)...).
+        /// Calls Log(ELogLevel::Debug, in_msg, FORWARD(in_args)...).
         /// ----------------------------------------------------------------------------------------
         void LogDebug(const RLogString auto& in_msg, RLogArg auto&&... in_args)
         {
-            Log(LogLevel::Debug, in_msg, FORWARD(in_args)...);
+            Log(ELogLevel::Debug, in_msg, FORWARD(in_args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Calls Log(LogLevel::Info, in_msg, FORWARD(in_args)...).
+        /// Calls Log(ELogLevel::Info, in_msg, FORWARD(in_args)...).
         /// ----------------------------------------------------------------------------------------
         void LogInfo(const RLogString auto& in_msg, RLogArg auto&&... in_args)
         {
-            Log(LogLevel::Info, in_msg, FORWARD(in_args)...);
+            Log(ELogLevel::Info, in_msg, FORWARD(in_args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Calls Log(LogLevel::Warn, in_msg, FORWARD(in_args)...).
+        /// Calls Log(ELogLevel::Warn, in_msg, FORWARD(in_args)...).
         /// ----------------------------------------------------------------------------------------
         void LogWarn(const RLogString auto& in_msg, RLogArg auto&&... in_args)
         {
-            Log(LogLevel::Warn, in_msg, FORWARD(in_args)...);
+            Log(ELogLevel::Warn, in_msg, FORWARD(in_args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Calls Log(LogLevel::Error, in_msg, FORWARD(in_args)...).
+        /// Calls Log(ELogLevel::Error, in_msg, FORWARD(in_args)...).
         /// ----------------------------------------------------------------------------------------
         void LogError(const RLogString auto& in_msg, RLogArg auto&&... in_args)
         {
-            Log(LogLevel::Error, in_msg, FORWARD(in_args)...);
+            Log(ELogLevel::Error, in_msg, FORWARD(in_args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Calls Log(LogLevel::Fatal, in_msg, FORWARD(in_args)...).
+        /// Calls Log(ELogLevel::Fatal, in_msg, FORWARD(in_args)...).
         /// ----------------------------------------------------------------------------------------
         void LogFatal(const RLogString auto& in_msg, RLogArg auto&&... in_args)
         {
-            Log(LogLevel::Fatal, in_msg, FORWARD(in_args)...);
+            Log(ELogLevel::Fatal, in_msg, FORWARD(in_args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
         /// Logs message if level is high enough to pass the filter level. Flushes if level passes 
         /// flush filter level.
         /// 
-        /// @PARAM[IN] in_lvl LogLevel to log at.
+        /// @PARAM[IN] in_lvl ELogLevel to log at.
         /// @PARAM[IN] in_msg Log message containing format of the in_msg.
         /// @PARAM[IN] in_args... Arguments used with {in_msg} to construct the formatted message.
         /// ----------------------------------------------------------------------------------------
-        void Log(LogLevel in_lvl, const RLogString auto& in_msg, RLogArg auto&&... in_args)
+        void Log(ELogLevel in_lvl, const RLogString auto& in_msg, RLogArg auto&&... in_args)
         {
             if (CheckLogLevel(in_lvl))
             {
@@ -106,7 +106,7 @@ namespace Atom::Logging
         /// 
         /// Check if the message should be passed for logging.
         /// ----------------------------------------------------------------------------------------
-        virtual bool CheckLogLevel(LogLevel in_lvl) const noexcept = 0;
+        virtual bool CheckLogLevel(ELogLevel in_lvl) const noexcept = 0;
     };
 
     /// --------------------------------------------------------------------------------------------

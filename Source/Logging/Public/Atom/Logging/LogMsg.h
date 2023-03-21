@@ -10,9 +10,9 @@
 namespace Atom::Logging
 {
     /// --------------------------------------------------------------------------------------------
-    /// LogLevel is used to define the level of the log.
+    /// ELogLevel is used to define the level of the log.
     /// --------------------------------------------------------------------------------------------
-    enum class LogLevel: byte
+    enum class ELogLevel: byte
     {
         Trace,
         Debug,
@@ -41,7 +41,7 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Level of this message.
         /// ----------------------------------------------------------------------------------------
-        LogLevel lvl;
+        ELogLevel lvl;
 
         /// ----------------------------------------------------------------------------------------
         /// Time when this message was logged.
@@ -70,22 +70,22 @@ namespace fmt
     };
 
     template < >
-    struct formatter<Atom::Logging::LogLevel, Atom::Char>:
+    struct formatter<Atom::Logging::ELogLevel, Atom::Char>:
         public formatter<Atom::StringView, Atom::Char>
     {
         template <typename TFormatContext>
-        auto format(Atom::Logging::LogLevel lvl, TFormatContext& ctx) const
+        auto format(Atom::Logging::ELogLevel lvl, TFormatContext& ctx) const
         {
             Atom::StringView name = TEXT("UNKNOWN");
             switch (lvl)
             {
-                case Atom::Logging::LogLevel::Trace: name = TEXT("TRACE"); break;
-                case Atom::Logging::LogLevel::Debug: name = TEXT("DEBUG"); break;
-                case Atom::Logging::LogLevel::Info:  name = TEXT("INFO");  break;
-                case Atom::Logging::LogLevel::Warn:  name = TEXT("WARN");  break;
-                case Atom::Logging::LogLevel::Error: name = TEXT("ERROR"); break;
-                case Atom::Logging::LogLevel::Fatal: name = TEXT("FATAL"); break;
-                case Atom::Logging::LogLevel::OFF:   name = TEXT("OFF");   break;
+                case Atom::Logging::ELogLevel::Trace: name = TEXT("TRACE"); break;
+                case Atom::Logging::ELogLevel::Debug: name = TEXT("DEBUG"); break;
+                case Atom::Logging::ELogLevel::Info:  name = TEXT("INFO");  break;
+                case Atom::Logging::ELogLevel::Warn:  name = TEXT("WARN");  break;
+                case Atom::Logging::ELogLevel::Error: name = TEXT("ERROR"); break;
+                case Atom::Logging::ELogLevel::Fatal: name = TEXT("FATAL"); break;
+                case Atom::Logging::ELogLevel::OFF:   name = TEXT("OFF");   break;
             }
 
             return formatter<Atom::StringView, Atom::Char>::format(name, ctx);

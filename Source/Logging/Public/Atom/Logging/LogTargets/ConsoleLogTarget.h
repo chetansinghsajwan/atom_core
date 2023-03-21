@@ -13,37 +13,37 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Default constructs the ConsoleLogTarget.
         /// 
-        /// ErrorLogLevel is set to LogLevel::Error.
+        /// ErrorLogLevel is set to ELogLevel::Error.
         /// ----------------------------------------------------------------------------------------
         ConsoleLogTarget() noexcept:
             _stdout(stdout), _stderr(stderr),
-            _errLogLevel(LogLevel::Error) { }
+            _errLogLevel(ELogLevel::Error) { }
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// Retuns the LogLevel specified for error logging.
+        /// Retuns the ELogLevel specified for error logging.
         /// ----------------------------------------------------------------------------------------
-        LogLevel GetErrLogLevel() const noexcept
+        ELogLevel GetErrLogLevel() const noexcept
         {
             return _errLogLevel;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Sets the LogLevel specified for error logging.
+        /// Sets the ELogLevel specified for error logging.
         /// 
         /// Logs of same or above level are written to stderr.
         /// ----------------------------------------------------------------------------------------
-        void SetErrLogLevel(LogLevel lvl) noexcept
+        void SetErrLogLevel(ELogLevel lvl) noexcept
         {
             _errLogLevel = lvl;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Checks if LogLevel should be written to stderr.
+        /// Checks if ELogLevel should be written to stderr.
         /// 
         /// @RETURNS {true} if {lvl >= GetErrLogLevel()}, else {false}.
         /// ----------------------------------------------------------------------------------------
-        bool ShouldLogAsError(LogLevel lvl) const noexcept
+        bool ShouldLogAsError(ELogLevel lvl) const noexcept
         {
             return lvl >= _errLogLevel;
         }
@@ -90,6 +90,6 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// ErrorLogLevel used to check if the message should be logged to stderr or stdout.
         /// ----------------------------------------------------------------------------------------
-        LogLevel _errLogLevel;
+        ELogLevel _errLogLevel;
     };
 }

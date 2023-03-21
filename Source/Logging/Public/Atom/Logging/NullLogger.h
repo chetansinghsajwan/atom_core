@@ -60,7 +60,7 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Always returns false to avoid constructing log msg.
         /// ----------------------------------------------------------------------------------------
-        constexpr virtual bool CheckLogLevel(LogLevel lvl) const noexcept override
+        constexpr virtual bool CheckLogLevel(ELogLevel lvl) const noexcept override
         {
             return false;
         }

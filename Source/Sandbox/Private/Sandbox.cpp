@@ -15,7 +15,7 @@ namespace Atom::Engine
     {
         SharedPtr<ConsoleLogTarget> target = MakeShared<ConsoleLogTarget>();
         SimpleLoggerST logger(TEXT("Test"), target);
-        logger.SetLogLevel(LogLevel::Debug);
+        logger.SetLogLevel(ELogLevel::Debug);
 
         logger.LogWarn(TEXT("Just a warning"));
 
