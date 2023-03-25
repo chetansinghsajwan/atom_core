@@ -5,7 +5,7 @@
 file(GLOB_RECURSE SOURCES "Private/**.cpp"
     "Private/**.h" "Public/**.h")
 
-add_library(Atom.Logging SHARED ${SOURCES})
+add_library(Atom.Logging STATIC ${SOURCES})
 target_include_directories(Atom.Logging PRIVATE "Private/")
 target_include_directories(Atom.Logging PUBLIC "Public/")
 set_target_properties(Atom.Logging PROPERTIES CXX_STANDARD "20")

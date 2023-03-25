@@ -7,7 +7,7 @@ using namespace Atom;
 using namespace Atom::Engine;
 using namespace Atom::Logging;
 
-class Sandbox: public Application { };
+class SandboxApplication: public Application { };
 
 namespace Atom::Engine
 {
@@ -19,6 +19,6 @@ namespace Atom::Engine
 
         logger.LogWarn(TEXT("Just a warning"));
 
-        return new Sandbox();
+        return new SandboxApplication();
     }
 }

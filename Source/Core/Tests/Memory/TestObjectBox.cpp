@@ -5,8 +5,8 @@ using namespace Atom;
 
 TEST_CASE("ObjectBox")
 {
-    ObjectBox box0 = 10;
-    ObjectBox box1 = box0;
+    ObjectBox<> box0 = 10;
+    ObjectBox<> box1 = box0;
 
     CHECK(box0.GetObject<int>() == 10);
     CHECK(box1.GetObject<int>() == 10);

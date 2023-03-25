@@ -12,7 +12,7 @@ namespace Atom
     class BasicUuidRandomGenerator
     {
     public:
-        explicit BasicUuidRandomGenerator(uint seed = 0) noexcept:
+        explicit BasicUuidRandomGenerator(uint32_t seed = 0) noexcept:
             m_generator{ seed } { }
 
     public:

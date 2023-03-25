@@ -4,7 +4,7 @@
 
 namespace Atom
 {
-    namespace Internal
+    namespace PrivateInvokable
     {
         template <typename TInvokable, typename TResult, typename... TArgs>
         concept RInvokable = requires(TInvokable invokable, TArgs... args)
@@ -45,28 +45,28 @@ namespace Atom
     template <typename TInvokable, typename TResult, typename... TArgs>
     struct RInvokable <TInvokable, TResult(TArgs...)>
     {
-        static constinit const bool Value = Internal::RInvokable<
+        static constinit const bool Value = PrivateInvokable::RInvokable<
             TInvokable, TResult, TArgs...>;
     };
 
     template <typename TInvokable, typename TResult, typename... TArgs>
     struct RInvokable <TInvokable, TResult(TArgs...) const>
     {
-        static constinit const bool Value = Internal::RInvokableConst<
+        static constinit const bool Value = PrivateInvokable::RInvokableConst<
             TInvokable, TResult, TArgs...>;
     };
 
     template <typename TInvokable, typename TResult, typename... TArgs>
     struct RInvokable <TInvokable, TResult(TArgs...) noexcept>
     {
-        static constinit const bool Value = Internal::RInvokableNoexcept<
+        static constinit const bool Value = PrivateInvokable::RInvokableNoexcept<
             TInvokable, TResult, TArgs...>;
     };
 
     template <typename TInvokable, typename TResult, typename... TArgs>
     struct RInvokable <TInvokable, TResult(TArgs...) const noexcept>
     {
-        static constinit const bool Value = Internal::RInvokableConstNoexcept<
+        static constinit const bool Value = PrivateInvokable::RInvokableConstNoexcept<
             TInvokable, TResult, TArgs...>;
     };
 }

@@ -19,7 +19,7 @@ namespace Atom
         /// 
         /// @POST Mutex is not locked.
         /// ----------------------------------------------------------------------------------------
-        constexpr SimpleMutex() noexcept { }
+        SimpleMutex() noexcept { }
 
         /// ----------------------------------------------------------------------------------------
         /// CopyConstructor is deleted.

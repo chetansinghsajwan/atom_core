@@ -7,6 +7,60 @@
 
 namespace Atom
 {
+    namespace Private
+    {
+        struct InvokableBoxIdentifier { };
+        
+        template <typename TResult, typename... TArgs>
+        struct Invoker
+        {
+            template <typename TInvokable>
+            requires RInvokable<TInvokable, TResult(TArgs...)>::Value
+            void Set()
+            {
+                m_impl = [](void* obj, TResult& result, TArgs&&... args)
+                {
+                    TInvokable& invokable = *reinterpret_cast<TInvokable*>(obj);
+                    new (&result) TResult(invokable(FORWARD(args)...));
+                };
+            }
+
+            TResult Invoke(void* invokable, TArgs&&... args)
+            {
+                TResult result;
+                m_impl(invokable, result, FORWARD(args)...);
+
+                return result;
+            }
+
+        protected:
+            void (*m_impl) (void* invokable, TResult& result, TArgs&&... args);
+        };
+
+        template <typename... TArgs>
+        struct Invoker <void, TArgs...>
+        {
+            template <typename TInvokable>
+            requires RInvokable<TInvokable, void(TArgs...)>::Value
+            void Set()
+            {
+                m_impl = [](void* obj, TArgs&&... args)
+                {
+                    TInvokable& invokable = *reinterpret_cast<TInvokable*>(obj);
+                    invokable(FORWARD(args)...);
+                };
+            }
+
+            void Invoke(void* invokable, TArgs&&... args)
+            {
+                m_impl(invokable, FORWARD(args)...);
+            }
+
+        protected:
+            void (*m_impl) (void* invokable, TArgs&&... args);
+        };
+    }
+    
     /// --------------------------------------------------------------------------------------------
     /// InvokableBox declaration.
     /// --------------------------------------------------------------------------------------------
@@ -18,7 +72,8 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <typename TResult, typename... TArgs>
     class InvokableBox <TResult(TArgs...)>:
-        public ObjectBox<50, DefaultMemAllocator>
+        public ObjectBox<50, DefaultMemAllocator>,
+        public Private::InvokableBoxIdentifier
     {
     public:
         /// ----------------------------------------------------------------------------------------
@@ -46,29 +101,31 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         bool operator == (NullType null) const noexcept
         {
-            ObjectBox::operator == (null);
+            return ObjectBox::operator == (null);
         }
 
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
         template <typename TInvokable>
-            requires RInvokable<TInvokable, TResult(TArgs...)>::Value
+        requires (RInvokable<TInvokable, TResult(TArgs...)>::Value &&
+            !TTI::IsBaseOf<Private::InvokableBoxIdentifier, TInvokable>)
         InvokableBox(TInvokable&& invokable):
             ObjectBox(FORWARD(invokable))
         {
-            _SetInvoker<TInvokable>();
+            m_SetInvoker<TInvokable>();
         }
 
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
         template <typename TInvokable>
-            requires RInvokable<TInvokable, TResult(TArgs...)>::Value
+        requires (RInvokable<TInvokable, TResult(TArgs...)>::Value &&
+            !TTI::IsBaseOf<Private::InvokableBoxIdentifier, TInvokable>)
         InvokableBox& operator = (TInvokable&& invokable)
         {
             ObjectBox::operator = (FORWARD(invokable));
-            _SetInvoker<TInvokable>();
+            m_SetInvoker<TInvokable>();
             return *this;
         }
 
@@ -116,7 +173,7 @@ namespace Atom
             ATOM_ASSERT(ObjectBox::_HasObject(), NullPointerException(
                 TEXT("InvokableTarget is null.")));
 
-            return _invoker.Invoke(ObjectBox::_GetObject(), FORWARD(args)...);
+            return m_invoker.Invoke(ObjectBox::_GetObject(), FORWARD(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -147,67 +204,20 @@ namespace Atom
         /// 
         /// ----------------------------------------------------------------------------------------
         template <typename TInvokable>
-            requires RInvokable<TInvokable, TResult(TArgs...)>::Value
-        void _SetInvoker()
+        requires RInvokable<TInvokable, TResult(TArgs...)>::Value
+        void m_SetInvoker()
         {
-            _invoker.template Set<TInvokable>();
+            m_invoker.template Set<TInvokable>();
         }
 
-        TResult _InvokeInvokable(TArgs&&... args)
+        TResult m_InvokeInvokable(TArgs&&... args)
         {
-            return _invoker.Invoke(FORWARD(args)...);
+            return m_invoker.Invoke(FORWARD(args)...);
         }
 
     protected:
-        template <typename>
-        struct Invoker
-        {
-            template <typename TInvokable>
-                requires RInvokable<TInvokable, TResult(TArgs...)>::Value
-            void Set()
-            {
-                _impl = [](void* obj, TResult& result, TArgs&&... args)
-                {
-                    TInvokable& invokable = *reinterpret_cast<TInvokable*>(obj);
-                    new (&result) TResult(invokable(FORWARD(args)...));
-                };
-            }
+        using TInvoker = Private::Invoker<TResult, TArgs...>;
 
-            TResult Invoke(void* invokable, TArgs&&... args)
-            {
-                TResult result;
-                _impl(invokable, result, FORWARD(args)...);
-
-                return result;
-            }
-
-        protected:
-            void (*_impl) (void* invokable, TResult& result, TArgs&&... args);
-        };
-
-        template <>
-        struct Invoker <void>
-        {
-            template <typename TInvokable>
-                requires RInvokable<TInvokable, TResult(TArgs...)>::Value
-            void Set()
-            {
-                _impl = [](void* obj, TArgs&&... args)
-                {
-                    TInvokable& invokable = *reinterpret_cast<TInvokable*>(obj);
-                    invokable(FORWARD(args)...);
-                };
-            }
-
-            TResult Invoke(void* invokable, TArgs&&... args)
-            {
-                _impl(invokable, FORWARD(args)...);
-            }
-
-        protected:
-            void (*_impl) (void* invokable, TArgs&&... args);
-        };
-
-        Invoker<TResult> _invoker;
+        TInvoker m_invoker;
     };
 }

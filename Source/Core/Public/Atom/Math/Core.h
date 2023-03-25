@@ -4,8 +4,13 @@
 
 namespace Atom::Math
 {
+    constexpr float Abs(float value) noexcept
+    {
+        return value * (value < 0 ? -1 : 1);
+    }
+
     constexpr bool IsApproximatelyZero(float lhs, float rhs) noexcept
     {
-        return std::fabs(lhs - rhs) < 0.0001f;
+        return Abs(lhs - rhs) < 0.0001f;
     }
 }
