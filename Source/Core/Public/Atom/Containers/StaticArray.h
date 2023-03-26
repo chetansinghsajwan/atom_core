@@ -1,7 +1,7 @@
 #pragma once
 #include <array>
 
-#include "Atom/Core.h"
+#include "Atom/Containers/Insertable.h"
 
 namespace Atom
 {

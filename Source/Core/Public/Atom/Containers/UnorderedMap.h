@@ -1,8 +1,7 @@
 #pragma once
 #include <unordered_map>
 
-#include "Atom/Core.h"
-#include "Atom/Containers/Core.h"
+#include "Atom/Containers/Insertable.h"
 
 namespace Atom
 {

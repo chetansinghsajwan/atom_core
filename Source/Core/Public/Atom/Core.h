@@ -52,6 +52,8 @@
 
 #define ATOM_FUNCTION __func__
 
+#define declval(T) ::std::declval<T>()
+
 namespace Atom
 {
     using byte = unsigned char;
@@ -75,3 +77,5 @@ namespace Atom
         rhs = MOVE(tmp);
     }
 }
+
+#include "Atom/Core/Requirements.h"
