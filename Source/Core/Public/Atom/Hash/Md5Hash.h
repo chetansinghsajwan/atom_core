@@ -7,6 +7,7 @@ extern "C"
 
 #include "Atom/Core.h"
 #include "Atom/Exceptions.h"
+#include "Atom/Math.h"
 
 namespace Atom
 {
@@ -48,26 +49,41 @@ namespace Atom
         /// 
         /// @PARAM[IN] in_data Ptr to the input data.
         /// @PARAM[IN] in_dataSize Size of the data.
-        /// ----------------------------------------------------------------------------------------
-        void ProcessBytes(const void* in_data, size_t in_dataSize)
-        {
-            ATOM_DEBUG_EXPECTS(in_data != nullptr);
-            ATOM_DEBUG_EXPECTS(in_dataSize > 0);
-
-            Md5Update(&m_context, in_data, in_dataSize);
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// Processes single byte. This can be called infinite times.
-        /// 
-        /// @PARAM[IN] in_data Data to process.
-        /// @PARAM[IN] in_dataSize Size of the data.
         /// 
         /// @EXPECTS {in_data != nullptr}.
         /// @EXPECTS {in_dataSize > 0}.
         /// 
         /// @THROWS AssertionException Expects {in_data != nullptr}.
         /// @THROWS AssertionException Expects {in_dataSize > 0}.
+        /// ----------------------------------------------------------------------------------------
+        void ProcessBytes(const void* in_data, size_t in_dataSize)
+        {
+            ATOM_DEBUG_EXPECTS(in_data != nullptr);
+            ATOM_DEBUG_EXPECTS(in_dataSize > 0);
+
+            // Max size of input allowed at once.
+            static constexpr size_t maxInput = NumLimits<uint32_t>::max();
+
+            const byte* data = (byte*)in_data;
+
+            // Process data in blocks.
+            for (size_t i = 0; in_dataSize > 0; i++)
+            {
+                if (in_dataSize <= maxInput)
+                {
+                    Md5Update(&m_context, data + (i * maxInput), (uint32_t)in_dataSize);
+                }
+                else
+                {
+                    Md5Update(&m_context, data + (i * maxInput), maxInput);
+                }
+            }
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// Processes single byte. This can be called infinite times.
+        /// 
+        /// @PARAM[IN] in_data Data to process.
         /// ----------------------------------------------------------------------------------------
         void ProcessByte(byte in_data)
         {

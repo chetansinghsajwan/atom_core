@@ -17,7 +17,7 @@ using namespace Atom::Logging;
 
 namespace Atom::Engine
 {
-    Window* WindowManger::CreateWindow(WindowProps props)
+    Window* WindowManger::CreateWindow(SWindowProps props)
     {
         if (s_windowCount == 0)
         {

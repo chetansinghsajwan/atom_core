@@ -2,24 +2,52 @@
 #include "GLFW/glfw3.h"
 #include "Atom/Engine/Window/WindowManager.h"
 
+#include "Atom/Math.h"
+
 namespace Atom::Engine
 {
+    struct GLFW_SWindowCoords
+    {
+        int x;
+        int y;
+    };
+
+    struct GLFW_WindowCoordsConverter
+    {
+    public:
+        static constexpr GLFW_SWindowCoords ToGLFW(SWindowCoords coords)
+        {
+            coords.x = Math::Clamp<int>(coords.x, NumLimits<int>::max());
+            coords.y = Math::Clamp<int>(coords.y, NumLimits<int>::max());
+
+            return { (int)coords.x, (int)coords.y };
+        };
+
+        static constexpr SWindowCoords FromGLFW(GLFW_SWindowCoords coords)
+        {
+            coords.x = Math::Clamp<int>(coords.x, NumLimits<int>::max());
+            coords.y = Math::Clamp<int>(coords.y, NumLimits<int>::max());
+
+            return { (int)coords.x, (int)coords.y };
+        };
+    };
+
     class GLFWWindow: public Window
     {
     public:
-        GLFWWindow(const WindowProps& props);
+        GLFWWindow(const SWindowProps& props);
         ~GLFWWindow();
 
     public:
         virtual void Update() override;
 
-        virtual void SetPos(SVector2 size) override;
-        virtual SVector2 GetPos() const noexcept override;
-        virtual SVector2 UpdatePos();
+        virtual void SetPos(SWindowCoords size) override;
+        virtual SWindowCoords GetPos() const noexcept override;
+        virtual SWindowCoords UpdatePos();
 
-        virtual void SetSize(SVector2 size) override;
-        virtual SVector2 GetSize() const noexcept override;
-        virtual SVector2 UpdateSize();
+        virtual void SetSize(SWindowCoords size) override;
+        virtual SWindowCoords GetSize() const noexcept override;
+        virtual SWindowCoords UpdateSize();
 
         void SetVSync(bool enable);
         bool GetVSync() const noexcept;
@@ -28,15 +56,15 @@ namespace Atom::Engine
 
         GLFWwindow* GetNativeGLFW() const noexcept
         {
-            return _glfwWindow;
+            return m_glfwWindow;
         }
 
     protected:
-        GLFWwindow* _glfwWindow;
-        SVector2 _windowPos;
-        SVector2 _windowSize;
-        bool _windowVSync;
+        GLFWwindow* m_glfwWindow;
+        SWindowCoords m_windowPos;
+        SWindowCoords m_windowSize;
+        bool m_windowVSync;
 
-        EventSource<const SWindowEvent&> _windowEventSource;
+        EventSource<const SWindowEvent&> m_windowEventSource;
     };
 }

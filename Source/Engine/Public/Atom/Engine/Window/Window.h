@@ -7,6 +7,17 @@
 
 namespace Atom::Engine
 {
+    struct SWindowCoords
+    {
+        int x;
+        int y;
+    };
+
+    constexpr SWindowCoords operator - (const SWindowCoords& lhs, const SWindowCoords& rhs) noexcept
+    {
+        return { lhs.x - rhs.x, lhs.y - rhs.y };
+    }
+
     enum struct EWindowEventType
     {
         Resize,
@@ -24,22 +35,22 @@ namespace Atom::Engine
 
     struct SWindowResizeEvent: public SWindowEvent
     {
-        constexpr SWindowResizeEvent(SVector2 size, SVector2 delta) noexcept:
+        constexpr SWindowResizeEvent(SWindowCoords size, SWindowCoords delta) noexcept:
             size(size), delta(delta),
             SWindowEvent(EWindowEventType::Resize) { }
 
-        SVector2 size;
-        SVector2 delta;
+        SWindowCoords size;
+        SWindowCoords delta;
     };
 
     struct SWindowRepositionEvent: public SWindowEvent
     {
-        constexpr SWindowRepositionEvent(SVector2 position, SVector2 delta) noexcept:
+        constexpr SWindowRepositionEvent(SWindowCoords position, SWindowCoords delta) noexcept:
             position(position), delta(delta),
             SWindowEvent(EWindowEventType::Reposition) { }
 
-        SVector2 position;
-        SVector2 delta;
+        SWindowCoords position;
+        SWindowCoords delta;
     };
 
     struct SWindowCloseEvent: public SWindowEvent
@@ -59,11 +70,11 @@ namespace Atom::Engine
     public:
         virtual void Update() = 0;
 
-        virtual SVector2 GetSize() const noexcept = 0;
-        virtual void SetSize(SVector2 size) = 0;
+        virtual SWindowCoords GetSize() const noexcept = 0;
+        virtual void SetSize(SWindowCoords size) = 0;
 
-        virtual SVector2 GetPos() const noexcept = 0;
-        virtual void SetPos(SVector2 pos) = 0;
+        virtual SWindowCoords GetPos() const noexcept = 0;
+        virtual void SetPos(SWindowCoords pos) = 0;
 
         virtual void* GetNative() const noexcept = 0;
 

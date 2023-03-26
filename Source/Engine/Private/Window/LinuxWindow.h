@@ -6,7 +6,7 @@ namespace Atom::Engine
     class LinuxWindow: public GLFWWindow
     {
     public:
-        LinuxWindow(const WindowProps& props):
+        LinuxWindow(const SWindowProps& props):
             GLFWWindow(props) { }
     };
 }

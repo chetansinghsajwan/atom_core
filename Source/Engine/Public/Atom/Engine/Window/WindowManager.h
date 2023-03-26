@@ -5,16 +5,16 @@
 
 namespace Atom::Engine
 {
-    struct WindowProps
+    struct SWindowProps
     {
         String windowName;
-        SVector2 windowSize;
+        SWindowCoords windowSize;
     };
 
     class ATOM_API WindowManger
     {
     public:
-        static Window* CreateWindow(WindowProps props);
+        static Window* CreateWindow(SWindowProps props);
 
         static void CloseWindow(Window* window);
 

@@ -7,6 +7,7 @@ extern "C"
 
 #include "Atom/Core.h"
 #include "Atom/Exceptions.h"
+#include "Atom/Math.h"
 
 namespace Atom
 {
@@ -60,7 +61,23 @@ namespace Atom
             ATOM_DEBUG_EXPECTS(in_data != nullptr);
             ATOM_DEBUG_EXPECTS(in_dataSize > 0);
 
-            Sha1Update(&m_context, in_data, in_dataSize);
+            // Max size of input allowed at once.
+            static constexpr size_t maxInput = NumLimits<uint32_t>::max();
+
+            const byte* data = (byte*)in_data;
+
+            // Process data in blocks.
+            for (size_t i = 0; in_dataSize > 0; i++)
+            {
+                if (in_dataSize <= maxInput)
+                {
+                    Sha1Update(&m_context, data + (i * maxInput), (uint32_t)in_dataSize);
+                }
+                else
+                {
+                    Sha1Update(&m_context, data + (i * maxInput), maxInput);
+                }
+            }
         }
 
         /// ----------------------------------------------------------------------------------------

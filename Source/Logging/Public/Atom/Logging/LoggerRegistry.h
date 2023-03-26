@@ -277,9 +277,6 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         LoggerPtr GetLogger(StringView in_key) const noexcept
         {
-            ATOM_DEBUG_ASSERT(!in_key.empty(), InvalidArgumentException(
-                TEXT("Cannot access logger with NULL key.")));
-
             for (auto pair : m_loggers)
             {
                 if (pair.first == in_key)
@@ -296,9 +293,6 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         bool HasLogger(StringView in_key) const noexcept
         {
-            ATOM_DEBUG_ASSERT(!in_key.empty(), InvalidArgumentException(
-                TEXT("Cannot access logger with NULL key.")));
-
             return m_HasLogger(in_key);
         }
 
@@ -433,9 +427,6 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         bool m_HasLogger(StringView in_key) const noexcept
         {
-            ATOM_DEBUG_EXPECTS_MSG(!in_key.empty(),
-                TEXT("Cannot access logger with NULL key."));
-
             for (auto pair : m_loggers)
             {
                 if (pair.first == in_key)

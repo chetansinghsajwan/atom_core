@@ -4,7 +4,7 @@ namespace Atom::Engine
 {
     Application::Application()
     {
-        WindowProps windowProps
+        SWindowProps windowProps
         {
             .windowName = TEXT("Sandbox"),
             .windowSize = { 1920, 1080 }

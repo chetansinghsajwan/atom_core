@@ -5,51 +5,54 @@ using namespace Atom::Logging;
 
 namespace Atom::Engine
 {
-    GLFWWindow::GLFWWindow(const WindowProps& props):
-        Window(_windowEventSource)
+    GLFWWindow::GLFWWindow(const SWindowProps& props):
+        Window(m_windowEventSource)
     {
+        GLFW_SWindowCoords glfwWindowSize = GLFW_WindowCoordsConverter::ToGLFW(
+            props.windowSize);
+
         // TODO: Requires encoding conversion.
-        _glfwWindow = glfwCreateWindow(props.windowSize.x, props.windowSize.y,
+        m_glfwWindow = glfwCreateWindow(glfwWindowSize.x, glfwWindowSize.y,
             (const char*)props.windowName.data(), nullptr, nullptr);
 
-        glfwMakeContextCurrent(_glfwWindow);
-        glfwSetWindowUserPointer(_glfwWindow, this);
+        glfwMakeContextCurrent(m_glfwWindow);
+        glfwSetWindowUserPointer(m_glfwWindow, this);
 
-        glfwSetWindowPosCallback(_glfwWindow,
+        glfwSetWindowPosCallback(m_glfwWindow,
             [](GLFWwindow* glfwWindow, int xpos, int ypos)
             {
                 GLFWWindow& window = *reinterpret_cast<GLFWWindow*>(
                     glfwGetWindowUserPointer(glfwWindow));
 
-                SVector2 oldPos = window._windowPos;
-                SVector2 newPos = { (float)xpos, (float)ypos };
-                window._windowPos = newPos;
+                SWindowCoords oldPos = window.m_windowPos;
+                SWindowCoords newPos = GLFW_WindowCoordsConverter::FromGLFW({ xpos, ypos });
+                window.m_windowPos = newPos;
 
-                window._windowEventSource.Dispatch(SWindowRepositionEvent(
+                window.m_windowEventSource.Dispatch(SWindowRepositionEvent(
                     newPos, newPos - oldPos));
             });
 
-        glfwSetWindowSizeCallback(_glfwWindow,
+        glfwSetWindowSizeCallback(m_glfwWindow,
             [](GLFWwindow* glfwWindow, int width, int height)
             {
                 GLFWWindow& window = *reinterpret_cast<GLFWWindow*>(
                     glfwGetWindowUserPointer(glfwWindow));
 
-                SVector2 newSize = { (float)width, (float)height };
-                SVector2 oldSize = window._windowSize;
-                window._windowSize = newSize;
+                SWindowCoords oldSize = window.m_windowSize;
+                SWindowCoords newSize = GLFW_WindowCoordsConverter::FromGLFW({ width, height });
+                window.m_windowSize = newSize;
 
-                window._windowEventSource.Dispatch(SWindowResizeEvent(
+                window.m_windowEventSource.Dispatch(SWindowResizeEvent(
                     newSize, newSize - oldSize));
             });
 
-        glfwSetWindowCloseCallback(_glfwWindow,
+        glfwSetWindowCloseCallback(m_glfwWindow,
             [](GLFWwindow* glfwWindow)
             {
                 GLFWWindow& window = *reinterpret_cast<GLFWWindow*>(
                     glfwGetWindowUserPointer(glfwWindow));
 
-                window._windowEventSource.Dispatch(SWindowCloseEvent());
+                window.m_windowEventSource.Dispatch(SWindowCloseEvent());
             });
 
         UpdatePos();
@@ -59,66 +62,71 @@ namespace Atom::Engine
 
     GLFWWindow::~GLFWWindow()
     {
-        glfwDestroyWindow(_glfwWindow);
+        glfwDestroyWindow(m_glfwWindow);
     }
 
     void GLFWWindow::Update()
     {
         glfwPollEvents();
-        glfwSwapBuffers(_glfwWindow);
+        glfwSwapBuffers(m_glfwWindow);
     }
 
-    void GLFWWindow::SetPos(SVector2 pos)
+    void GLFWWindow::SetPos(SWindowCoords pos)
     {
-        glfwSetWindowPos(_glfwWindow, pos.x, pos.y);
-        _windowPos = pos;
+        GLFW_SWindowCoords glfwPos = GLFW_WindowCoordsConverter::ToGLFW(pos);
+
+        glfwSetWindowPos(m_glfwWindow, glfwPos.x, glfwPos.y);
+        m_windowPos = GLFW_WindowCoordsConverter::FromGLFW(glfwPos);
     }
 
-    SVector2 GLFWWindow::GetPos() const noexcept
+    SWindowCoords GLFWWindow::GetPos() const noexcept
     {
-        return _windowPos;
+        return m_windowPos;
     }
 
-    SVector2 GLFWWindow::UpdatePos()
+    SWindowCoords GLFWWindow::UpdatePos()
     {
-        int xpos, ypos;
-        glfwGetWindowPos(_glfwWindow, &xpos, &ypos);
-        _windowPos = { (float)xpos, (float)ypos };
-        return _windowPos;
+        GLFW_SWindowCoords glfwPos;
+        glfwGetWindowPos(m_glfwWindow, &glfwPos.x, &glfwPos.y);
+
+        return GLFW_WindowCoordsConverter::FromGLFW(glfwPos);
     }
 
-    void GLFWWindow::SetSize(SVector2 size)
+    void GLFWWindow::SetSize(SWindowCoords size)
     {
-        glfwSetWindowSize(_glfwWindow, size.x, size.y);
-        _windowSize = size;
+        GLFW_SWindowCoords glfwSize = GLFW_WindowCoordsConverter::ToGLFW(size);
+
+        glfwSetWindowSize(m_glfwWindow, glfwSize.x, glfwSize.y);
+        m_windowSize = GLFW_WindowCoordsConverter::FromGLFW(glfwSize);
     }
 
-    SVector2 GLFWWindow::GetSize() const noexcept
+    SWindowCoords GLFWWindow::GetSize() const noexcept
     {
-        return _windowSize;
+        return m_windowSize;
     }
 
-    SVector2 GLFWWindow::UpdateSize()
+    SWindowCoords GLFWWindow::UpdateSize()
     {
-        int xpos, ypos;
-        glfwGetWindowSize(_glfwWindow, &xpos, &ypos);
-        _windowSize = { (float)xpos, (float)ypos };
-        return _windowSize;
+        GLFW_SWindowCoords glfwSize;
+        glfwGetWindowSize(m_glfwWindow, &glfwSize.x, &glfwSize.y);
+
+        m_windowSize = GLFW_WindowCoordsConverter::FromGLFW(glfwSize);
+        return m_windowSize;
     }
 
     void GLFWWindow::SetVSync(bool enable)
     {
         glfwSwapInterval(enable ? 1 : 0);
-        _windowVSync = enable;
+        m_windowVSync = enable;
     }
 
     bool GLFWWindow::GetVSync() const noexcept
     {
-        return _windowVSync;
+        return m_windowVSync;
     }
 
     void* GLFWWindow::GetNative() const noexcept
     {
-        return _glfwWindow;
+        return m_glfwWindow;
     }
 }
