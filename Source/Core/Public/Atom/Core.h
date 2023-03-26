@@ -64,7 +64,7 @@ namespace Atom
     using TypeInfo = std::type_info;
 
     template <typename T>
-    T&& MOVE(T& obj) noexcept
+    constexpr T&& MOVE(T& obj) noexcept
     {
         return std::move(obj);
     }

@@ -29,7 +29,7 @@ namespace Atom
     template <typename TDerived, typename TBase>
     concept RDerivedFrom = requires
     {
-        std::derived_from<TDerived, TBase>;
+        requires std::derived_from<TDerived, TBase>;
     };
 
 //// -----------------------------------------------------------------------------------------------
@@ -114,7 +114,7 @@ namespace Atom
     template <typename T>
     concept RDestructible = requires
     {
-        std::destructible<T>;
+        requires std::destructible<T>;
     };
 
 //// -----------------------------------------------------------------------------------------------

@@ -11,9 +11,9 @@ namespace Atom
     /// Ensures {TConstIterable} is {ConstIterable} for element type {TElement}.
     /// --------------------------------------------------------------------------------------------
     template <typename TConstIterable, typename TElement>
-    concept RConstIterable = requires(TConstIterable iterable)
+    concept RConstIterable = requires(const TConstIterable iterable)
     {
-        RConstIterator<typename TConstIterable::TConstIterator, TElement>;
+        requires RConstIterator<typename TConstIterable::TConstIterator, TElement>;
 
         { iterable.ConstBegin() } -> RSameAs<typename TConstIterable::TConstIterator>;
         { iterable.ConstEnd() }   -> RSameAs<typename TConstIterable::TConstIterator>;
@@ -38,9 +38,9 @@ namespace Atom
     template <typename TIterable, typename TElement>
     concept RIterable = requires(TIterable iterable)
     {
-        RConstIterable<TIterable, TElement>;
+        requires RConstIterable<TIterable, TElement>;
 
-        RIterator<typename TIterable::TIterator, TElement>;
+        requires RIterator<typename TIterable::TIterator, TElement>;
 
         { iterable.Begin() } -> RSameAs<typename TIterable::TIterator>;
         { iterable.End() }   -> RSameAs<typename TIterable::TIterator>;
@@ -70,7 +70,8 @@ namespace Atom
         TConstIterator end() const noexcept { return {}; };
     };
 
-    static_assert(RConstIterable<ConstIterableTestImpl<int>, int>, "");
+    static_assert(RConstIterable<ConstIterableTestImpl<int>, int>,
+        "ConstIterableTestImpl does not meet RConstIterable requirements.");
 
     /// --------------------------------------------------------------------------------------------
     /// Type to check if {RIterable} is accepted during defining concepts.
@@ -81,6 +82,12 @@ namespace Atom
         using TConstIterator = ConstIteratorTestImpl<TElement>;
         using TIterator = IteratorTestImpl<TElement>;
 
+        using ConstIterableTestImpl<TElement>::Begin;
+        using ConstIterableTestImpl<TElement>::begin;
+
+        using ConstIterableTestImpl<TElement>::End;
+        using ConstIterableTestImpl<TElement>::end;
+
         constexpr TIterator Begin() noexcept { return {}; };
         constexpr TIterator End() noexcept { return {}; };
 
@@ -88,5 +95,6 @@ namespace Atom
         constexpr TIterator end() noexcept { return {}; };
     };
 
-    static_assert(RIterable<IterableTestImpl<int>, int>, "");
+    static_assert(RIterable<IterableTestImpl<int>, int>,
+        "IterableTestImpl does not meet RIterable requirements.");
 }

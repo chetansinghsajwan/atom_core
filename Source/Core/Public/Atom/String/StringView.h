@@ -3,6 +3,8 @@
 
 #include "Atom/String/Encoding.h"
 
+#include "Atom/Containers.h"
+
 namespace Atom
 {
     template <typename TChar>
