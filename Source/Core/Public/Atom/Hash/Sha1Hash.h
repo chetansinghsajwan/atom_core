@@ -56,18 +56,18 @@ namespace Atom
         /// @THROWS AssertionException Expects {in_data != nullptr}.
         /// @THROWS AssertionException Expects {in_dataSize > 0}.
         /// ----------------------------------------------------------------------------------------
-        void ProcessBytes(const void* in_data, size_t in_dataSize)
+        void ProcessBytes(const void* in_data, usize in_dataSize)
         {
             ATOM_DEBUG_EXPECTS(in_data != nullptr);
             ATOM_DEBUG_EXPECTS(in_dataSize > 0);
 
             // Max size of input allowed at once.
-            static constexpr size_t maxInput = NumLimits<uint32_t>::max();
+            static constexpr usize maxInput = NumLimits<uint32_t>::max();
 
             const byte* data = (byte*)in_data;
 
             // Process data in blocks.
-            for (size_t i = 0; in_dataSize > 0; i++)
+            for (usize i = 0; in_dataSize > 0; i++)
             {
                 if (in_dataSize <= maxInput)
                 {
@@ -112,7 +112,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// Generates Sha1 Hash using {Sha1HashGenerator}.
     /// --------------------------------------------------------------------------------------------
-    inline Sha1Hash GENERATE_Sha1_HASH(const void* in_data, const size_t in_dataSize)
+    inline Sha1Hash GENERATE_Sha1_HASH(const void* in_data, const usize in_dataSize)
     {
         Sha1HashGenerator generator;
 

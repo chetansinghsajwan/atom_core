@@ -56,8 +56,9 @@
 namespace Atom
 {
     using byte = unsigned char;
-    using SizeT = std::size_t;
-    using DiffT = long long;
+    using usize = std::size_t;
+    using isize = std::ptrdiff_t;
+
     using NullType = std::nullptr_t;
     using TypeInfo = std::type_info;
 

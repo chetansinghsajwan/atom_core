@@ -7,12 +7,12 @@ namespace Atom
 {
     struct DefaultMemAllocator
     {
-        void* Alloc(SizeT size)
+        void* Alloc(usize size)
         {
             return std::malloc(size);
         }
 
-        void* Realloc(void* mem, SizeT size)
+        void* Realloc(void* mem, usize size)
         {
             return std::realloc(mem, size);
         }
@@ -31,7 +31,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
-    template <SizeT StackSize = 50, typename MemAllocatorT = DefaultMemAllocator>
+    template <usize StackSize = 50, typename MemAllocatorT = DefaultMemAllocator>
     class ObjectBox: public Internal::ObjectBoxIdentifier
     {
         /// ----------------------------------------------------------------------------------------
@@ -43,7 +43,7 @@ namespace Atom
             void (*move) (void* obj, void* other);
             void (*dtor) (void* obj);
 
-            SizeT size;
+            usize size;
             void* obj;
             const TypeInfo* type;
         };
@@ -123,7 +123,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// TemplatedCopyConstructor.
         /// ----------------------------------------------------------------------------------------
-        template <SizeT OtherStackSize, typename OtherMemAllocator>
+        template <usize OtherStackSize, typename OtherMemAllocator>
         ObjectBox(const ObjectBox<OtherStackSize, OtherMemAllocator>& other): ObjectBox()
         {
             _CopyObject(other._object);
@@ -141,7 +141,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// TemplatedCopyAssignmentOperator.
         /// ----------------------------------------------------------------------------------------
-        template <SizeT OtherStackSize, typename OtherMemAllocator>
+        template <usize OtherStackSize, typename OtherMemAllocator>
         ObjectBox& operator = (const ObjectBox<OtherStackSize, OtherMemAllocator>& other)
         {
             _CopyObject(other._object);
@@ -159,7 +159,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// TemplatedMoveConstructor.
         /// ----------------------------------------------------------------------------------------
-        template <SizeT OtherStackSize, typename OtherMemAllocator>
+        template <usize OtherStackSize, typename OtherMemAllocator>
         ObjectBox(ObjectBox<OtherStackSize, OtherMemAllocator>&& other): ObjectBox()
         {
             _MoveBox(other);
@@ -177,7 +177,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// TemplatedMoveAssignmentOperator.
         /// ----------------------------------------------------------------------------------------
-        template <SizeT OtherStackSize, typename OtherMemAllocator>
+        template <usize OtherStackSize, typename OtherMemAllocator>
         ObjectBox& operator = (ObjectBox<OtherStackSize, OtherMemAllocator>&& other)
         {
             _MoveBox(other);
@@ -211,7 +211,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <SizeT OtherStackSize>
+        template <usize OtherStackSize>
         void _MoveBox(ObjectBox<OtherStackSize, MemAllocatorT>& otherBox)
         {
             _DisposeBox();
@@ -232,7 +232,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// When allocator type is different, we cannot handle heap memory.
         /// ----------------------------------------------------------------------------------------
-        template <SizeT OtherStackSize, typename OtherMemAllocator,
+        template <usize OtherStackSize, typename OtherMemAllocator,
             typename = TTI::TEnableIf<TTI::IsNotSame<MemAllocatorT, OtherMemAllocator>>>
         void _MoveBox(ObjectBox<OtherStackSize, OtherMemAllocator>& otherBox)
         {
@@ -329,7 +329,7 @@ namespace Atom
     //// -------------------------------------------------------------------------------------------
 
     protected:
-        void* _AllocMem(SizeT size)
+        void* _AllocMem(usize size)
         {
             // Check if stack memory is big enough.
             if (size <= StackSize)
@@ -381,7 +381,7 @@ namespace Atom
 
         /// Heap Memory management
         MemAllocatorT _memAllocator;
-        SizeT _heapMemSize;
+        usize _heapMemSize;
         void* _heapMem;
 
         /// Object

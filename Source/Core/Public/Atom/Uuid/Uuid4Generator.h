@@ -19,7 +19,7 @@ namespace Atom
         Uuid Generate() noexcept
         {
             Uuid uuid;
-            for (size_t i = 0; i < 16; i += 4)
+            for (usize i = 0; i < 16; i += 4)
             {
                 *reinterpret_cast<uint32_t*>(uuid.bytes.data() + i) = m_distribution(m_generator);
             }

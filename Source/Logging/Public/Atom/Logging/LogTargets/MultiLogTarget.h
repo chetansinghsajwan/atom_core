@@ -171,7 +171,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        SizeT AddTargets(const RConstIterable<LogTargetPtr> auto& targets)
+        usize AddTargets(const RConstIterable<LogTargetPtr> auto& targets)
         {
             auto begin = targets.begin();
             auto end = targets.end();
@@ -198,7 +198,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        SizeT AddTargets(InitializerList<LogTargetPtr> targets)
+        usize AddTargets(InitializerList<LogTargetPtr> targets)
         {
             if (targets.size() == 0)
                 return 0;
@@ -222,7 +222,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        SizeT AddTargets(RConstIterator<LogTargetPtr> auto begin,
+        usize AddTargets(RConstIterator<LogTargetPtr> auto begin,
             RConstIterator<LogTargetPtr> auto end)
         {
             if (begin == end)
@@ -268,7 +268,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        SizeT RemoveTargets(RIterable<LogTargetPtr> auto& targets)
+        usize RemoveTargets(RIterable<LogTargetPtr> auto& targets)
         {
             auto begin = targets.begin();
             auto end = targets.end();
@@ -295,7 +295,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        SizeT RemoveTargets(InitializerList<LogTargetPtr> targets)
+        usize RemoveTargets(InitializerList<LogTargetPtr> targets)
         {
             if (targets.size() == 0)
                 return 0;
@@ -320,7 +320,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        SizeT RemoveTargets(RConstIterator<LogTargetPtr> auto begin,
+        usize RemoveTargets(RConstIterator<LogTargetPtr> auto begin,
             RConstIterator<LogTargetPtr> auto end)
         {
             LockGuard guard(_lock);
@@ -355,7 +355,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        SizeT HasTargets(RIterable<LogTargetPtr> auto& targets) const noexcept
+        usize HasTargets(RIterable<LogTargetPtr> auto& targets) const noexcept
         {
             LockGuard guard(_lock);
             return _HasTargets(targets.begin(), targets.end());
@@ -372,7 +372,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        SizeT HasTargets(InitializerList<LogTargetPtr> targets) const noexcept
+        usize HasTargets(InitializerList<LogTargetPtr> targets) const noexcept
         {
             if (targets.size() == 0)
                 return 0;
@@ -393,7 +393,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        SizeT HasTargets(RConstIterator<LogTargetPtr> auto begin,
+        usize HasTargets(RConstIterator<LogTargetPtr> auto begin,
             RConstIterator<LogTargetPtr> auto end)
             const noexcept
         {
@@ -404,11 +404,11 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         /// Reserves memory for {capacity} LogTarget objects.
         /// 
-        /// @EXCEPTION_SAFETY @COPY_FROM _Reserve(SizeT capacity)
+        /// @EXCEPTION_SAFETY @COPY_FROM _Reserve(usize capacity)
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        void Reserve(SizeT capacity)
+        void Reserve(usize capacity)
         {
             LockGuard guard(_lock);
             _Reserve(capacity);
@@ -419,7 +419,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        SizeT Count() const noexcept
+        usize Count() const noexcept
         {
             LockGuard guard(_lock);
             return _targets.size();
@@ -518,10 +518,10 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY NONE
         /// ----------------------------------------------------------------------------------------
-        SizeT _AddTargets(RConstIterator<LogTargetPtr> auto begin,
+        usize _AddTargets(RConstIterator<LogTargetPtr> auto begin,
             RConstIterator<LogTargetPtr> auto end)
         {
-            SizeT count = 0;
+            usize count = 0;
             for (auto it = begin; it != end; it++)
             {
                 if (*it == nullptr)
@@ -573,10 +573,10 @@ namespace Atom::Logging::Internal
         /// 
         /// @TIME_COMPLEXITY @COPY_FROM ${Container}::Remove(LogTarget& target)
         /// ----------------------------------------------------------------------------------------
-        SizeT _RemoveTargets(RConstIterator<LogTargetPtr> auto begin,
+        usize _RemoveTargets(RConstIterator<LogTargetPtr> auto begin,
             RConstIterator<LogTargetPtr> auto end)
         {
-            SizeT removed = 0;
+            usize removed = 0;
             for (auto otherIt = begin; otherIt != end; otherIt++)
             {
                 for (auto it = _targets.begin(); it != _targets.end(); it++)
@@ -631,10 +631,10 @@ namespace Atom::Logging::Internal
         /// 
         /// @TIME_COMPLEXITY Exponential
         /// ----------------------------------------------------------------------------------------
-        SizeT _HasTargets(RConstIterator<LogTargetPtr> auto begin,
+        usize _HasTargets(RConstIterator<LogTargetPtr> auto begin,
             RConstIterator<LogTargetPtr> auto end) const noexcept
         {
-            SizeT found = 0;
+            usize found = 0;
             for (auto otherIt = begin; otherIt != end; otherIt++)
             {
                 for (auto it = _targets.begin(); it != _targets.end(); it++)
@@ -653,9 +653,9 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         /// Reserves memory for {capacity} LogTarget objects.
         /// 
-        /// @EXCEPTION_SAFETY @COPY_FROM ${Container}::Reserve(SizeT capacity).
+        /// @EXCEPTION_SAFETY @COPY_FROM ${Container}::Reserve(usize capacity).
         /// ----------------------------------------------------------------------------------------
-        void _Reserve(SizeT capacity)
+        void _Reserve(usize capacity)
         {
             _targets.reserve(capacity);
         }

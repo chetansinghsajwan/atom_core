@@ -10,7 +10,7 @@ namespace Atom
         constexpr ArrayView(TElement* in_begin, TElement* in_end) noexcept :
             m_arr{ in_begin }, m_count{ in_end - in_begin } { }
 
-        constexpr ArrayView(TElement* in_arr, SizeT in_count) noexcept :
+        constexpr ArrayView(TElement* in_arr, usize in_count) noexcept :
             m_arr{ in_arr }, m_count{ in_count } { }
 
         //// -------------------------------------------------------------------------------------------
@@ -70,6 +70,6 @@ namespace Atom
 
     protected:
         TElement* m_arr;
-        SizeT m_count;
+        usize m_count;
     };
 }

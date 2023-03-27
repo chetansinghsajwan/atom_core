@@ -44,5 +44,5 @@ namespace Atom::Engine
         delete window;
     }
 
-    SizeT WindowManger::s_windowCount = 0;
+    usize WindowManger::s_windowCount = 0;
 }

@@ -19,6 +19,6 @@ namespace Atom::Engine
         static void CloseWindow(Window* window);
 
     protected:
-        static SizeT s_windowCount;
+        static usize s_windowCount;
     };
 }

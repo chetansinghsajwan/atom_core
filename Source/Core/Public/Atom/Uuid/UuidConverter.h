@@ -38,8 +38,8 @@ namespace Atom
         static constexpr Uuid FromString(StringView in_str) noexcept
         {
             bool firstDigit = true;
-            size_t hasBraces = 0;
-            size_t index = 0;
+            usize hasBraces = 0;
+            usize index = 0;
 
             Uuid uuid = { 0 };
 
@@ -52,7 +52,7 @@ namespace Atom
             if (hasBraces && in_str.back() != TEXT('}'))
                 return Uuid{};
 
-            for (size_t i = hasBraces; i < in_str.size() - hasBraces; ++i)
+            for (usize i = hasBraces; i < in_str.size() - hasBraces; ++i)
             {
                 if (in_str[i] == TEXT('-')) continue;
 
@@ -86,7 +86,7 @@ namespace Atom
             requires RBackInsertable<Char, TBackInsertable>
         static constexpr void ToString(const Uuid& in_uuid, TBackInsertable& out_str) noexcept
         {
-            for (size_t i = 0, index = 0; i < 36; ++i)
+            for (usize i = 0, index = 0; i < 36; ++i)
             {
                 if (i == 8 || i == 13 || i == 18 || i == 23)
                 {

@@ -66,7 +66,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Calls Unsubscribe(key) on {Source}.
         /// ----------------------------------------------------------------------------------------
-        virtual SizeT Unsubscribe(SEventKey key) noexcept = 0;
+        virtual usize Unsubscribe(SEventKey key) noexcept = 0;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -92,7 +92,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        virtual SizeT Unsubscribe(SEventKey key) noexcept override final
+        virtual usize Unsubscribe(SEventKey key) noexcept override final
         {
             return _RemoveListener(key);
         }
@@ -117,7 +117,7 @@ namespace Atom
             return SEventKey(_listeners.back().GetInvokableType());
         }
 
-        SizeT _RemoveListener(SEventKey key) noexcept
+        usize _RemoveListener(SEventKey key) noexcept
         {
             for (auto it = _listeners.begin(); it != _listeners.end(); it++)
             {
@@ -131,9 +131,9 @@ namespace Atom
             return 0;
         }
 
-        SizeT _CountListeners(SEventKey key) noexcept
+        usize _CountListeners(SEventKey key) noexcept
         {
-            SizeT count = 0;
+            usize count = 0;
             for (auto it = _listeners.begin(); it != _listeners.end(); it++)
             {
                 if (it->GetInvokableType() == key.GetType())

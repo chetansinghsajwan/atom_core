@@ -56,7 +56,7 @@ namespace Atom::Private
             hash.bytes[6] |= ((int)UuidVersion << 4);
 
             Uuid uuid;
-            for (size_t i = 0; i < 16; i++)
+            for (usize i = 0; i < 16; i++)
             {
                 uuid.bytes[i] = hash.bytes[i];
             }
