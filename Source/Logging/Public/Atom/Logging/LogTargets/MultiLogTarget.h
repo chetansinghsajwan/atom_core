@@ -200,7 +200,7 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         SizeT AddTargets(InitializerList<LogTargetPtr> targets)
         {
-            if (targets.IsEmpty())
+            if (targets.size() == 0)
                 return 0;
 
             LockGuard guard(_lock);
@@ -297,7 +297,7 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         SizeT RemoveTargets(InitializerList<LogTargetPtr> targets)
         {
-            if (targets.IsEmpty())
+            if (targets.size() == 0)
                 return 0;
 
             LockGuard guard(_lock);
@@ -374,6 +374,9 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         SizeT HasTargets(InitializerList<LogTargetPtr> targets) const noexcept
         {
+            if (targets.size() == 0)
+                return 0;
+
             LockGuard guard(_lock);
             return _HasTargets(targets.begin(), targets.end());
         }
