@@ -19,7 +19,7 @@ namespace Atom
 
     /// --------------------------------------------------------------------------------------------
     /// FrontInsertable: Represents a type that allows inserting elements of type {Element} 
-    /// into front of contatiner.
+    /// into front of container.
     /// --------------------------------------------------------------------------------------------
 
     /// --------------------------------------------------------------------------------------------
@@ -34,7 +34,7 @@ namespace Atom
 
     /// --------------------------------------------------------------------------------------------
     /// FrontInsertable: Represents a type that allows inserting elements of type {Element} 
-    /// into back of contatiner.
+    /// into back of container.
     /// --------------------------------------------------------------------------------------------
 
     /// --------------------------------------------------------------------------------------------
@@ -49,7 +49,7 @@ namespace Atom
 
     /// --------------------------------------------------------------------------------------------
     /// IndexInsertable: Represents a type that allows inserting elements of type {Element} 
-    /// at specified index of contatiner.
+    /// at specified index of container.
     /// --------------------------------------------------------------------------------------------
 
     /// --------------------------------------------------------------------------------------------
@@ -71,4 +71,7 @@ namespace Atom
         constexpr void InsertBack(const T&) noexcept { }
         constexpr void InsertBack(const RConstIterable<T> auto& iterable) noexcept { }
     };
+
+    static_assert(RBackInsertable<BackInsertableTestImpl<int>, int>,
+        "BackInsertableTestImpl does not satisfy RBackInsertable requirements.");
 }

@@ -2,8 +2,6 @@
 #include "Atom/Core.h"
 #include "Atom/Exceptions/Exceptions.h"
 
-#include <numeric>
-
 #define ATOM_ASSERT(assertion, exception) \
     if (!(assertion)) throw exception
 

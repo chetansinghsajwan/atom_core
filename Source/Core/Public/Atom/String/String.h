@@ -16,4 +16,25 @@ namespace Atom
     using StringUTF32 = BasicString<CharUTF32>;
 
     using String = BasicString<Char>;
+
+    struct StringWrapper
+    {
+        constexpr StringWrapper(String& in_str) noexcept:
+            str{ in_str } { }
+
+        constexpr void InsertBack(Char ch) noexcept
+        {
+            str.push_back(ch);
+        }
+
+        constexpr void InsertBack(const RConstIterable<Char> auto& chars) noexcept
+        {
+            str.insert(str.end(), chars.Begin(), chars.End());
+        }
+
+        String& str;
+    };
+
+    static_assert(RBackInsertable<StringWrapper, Char>,
+        "StringWrapper does not satisfy RBackInsertable requirements.");
 }

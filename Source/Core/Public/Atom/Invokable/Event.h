@@ -1,7 +1,6 @@
 #pragma once
 #include "Atom/Containers.h"
 #include "Atom/Invokable/InvokableBox.h"
-#include <functional>
 
 namespace Atom
 {

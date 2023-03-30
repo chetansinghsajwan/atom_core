@@ -1,4 +1,6 @@
 #pragma once
+// #include "Atom/Exceptions.h"
+
 #include "Atom/Containers/ArrayIterator.h"
 
 namespace Atom
@@ -7,69 +9,73 @@ namespace Atom
     class ArrayView
     {
     public:
-        constexpr ArrayView(TElement* in_begin, TElement* in_end) noexcept :
-            m_arr{ in_begin }, m_count{ in_end - in_begin } { }
+        constexpr ArrayView(const TElement* in_begin, const TElement* in_end) noexcept:
+            m_arr{ in_begin }, m_count{ usize(in_end - in_begin) }
+        {
+            // TODO: Resolve circular dependencies.
+            // ATOM_DEBUG_ASSERT(in_end > in_begin, "Invalid values.");
+        }
 
-        constexpr ArrayView(TElement* in_arr, usize in_count) noexcept :
+        constexpr ArrayView(const TElement* in_arr, usize in_count) noexcept:
             m_arr{ in_arr }, m_count{ in_count } { }
 
-        //// -------------------------------------------------------------------------------------------
-        //// Iteration.
-        //// -------------------------------------------------------------------------------------------
+    //// -------------------------------------------------------------------------------------------
+    //// Iteration.
+    //// -------------------------------------------------------------------------------------------
 
     public:
-        /// --------------------------------------------------------------------------------------------
-        /// Get {ConstIterator} to the beginning of the array.
-        /// 
-        /// @{
+    /// --------------------------------------------------------------------------------------------
+    /// Get {ConstIterator} to the beginning of the array.
+    /// 
+    /// @{
 
-        constexpr ConstArrayIterator<TElement> ConstBegin() const noexcept
+        constexpr ArrayIterator<const TElement> ConstBegin() const noexcept
         {
             return m_arr;
         }
 
-        constexpr ConstArrayIterator<TElement> Begin() const noexcept
+        constexpr ArrayIterator<const TElement> Begin() const noexcept
         {
             return ConstBegin();
         }
 
-        constexpr ConstArrayIterator<TElement> begin() const noexcept
+        constexpr ArrayIterator<const TElement> begin() const noexcept
         {
             return ConstBegin();
         }
 
-        /// @}
-        /// --------------------------------------------------------------------------------------------
+    /// @}
+    /// --------------------------------------------------------------------------------------------
 
-        /// --------------------------------------------------------------------------------------------
-        /// Get {ConstIterator} to the end of the array.
-        /// 
-        /// @{
+    /// --------------------------------------------------------------------------------------------
+    /// Get {ConstIterator} to the end of the array.
+    /// 
+    /// @{
 
-        constexpr ConstArrayIterator<TElement> ConstEnd() const noexcept
+        constexpr ArrayIterator<const TElement> ConstEnd() const noexcept
         {
             return m_arr + m_count;
         }
 
-        constexpr ConstArrayIterator<TElement> End() const noexcept
+        constexpr ArrayIterator<const TElement> End() const noexcept
         {
             return ConstEnd();
         }
 
-        constexpr ConstArrayIterator<TElement> end() const noexcept
+        constexpr ArrayIterator<const TElement> end() const noexcept
         {
             return ConstEnd();
         }
 
-        /// @}
-        /// --------------------------------------------------------------------------------------------
+    /// @}
+    /// --------------------------------------------------------------------------------------------
 
-        //// -------------------------------------------------------------------------------------------
-        //// Fields.
-        //// -------------------------------------------------------------------------------------------
+    //// -------------------------------------------------------------------------------------------
+    //// Fields.
+    //// -------------------------------------------------------------------------------------------
 
     protected:
-        TElement* m_arr;
+        const TElement* m_arr;
         usize m_count;
     };
 }

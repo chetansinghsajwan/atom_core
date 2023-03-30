@@ -82,9 +82,8 @@ namespace Atom
             return uuid;
         }
 
-        template <typename TBackInsertable>
-            requires RBackInsertable<Char, TBackInsertable>
-        static constexpr void ToString(const Uuid& in_uuid, TBackInsertable& out_str) noexcept
+        static constexpr void ToString(const Uuid& in_uuid, 
+            RBackInsertable<Char> auto& out_str) noexcept
         {
             for (usize i = 0, index = 0; i < 36; ++i)
             {

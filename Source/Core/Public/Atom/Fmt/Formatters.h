@@ -1,0 +1,262 @@
+#pragma once
+#include "fmt/format.h"
+
+#include "Atom/String.h"
+#include "Atom/Containers.h"
+#include "Atom/Exceptions.h"
+#include "Atom/TTI.h"
+
+namespace Atom::Fmt
+{
+	using _TFormatParseContext = ::fmt::basic_format_parse_context<Char>;
+	using _TFormatParseContextIterator = typename _TFormatParseContext::iterator;
+
+	using _TFormatContextOut = fmt::detail::buffer_appender<Char>;
+	using _TFormatContext = ::fmt::basic_format_context<_TFormatContextOut, Char>;
+
+	template <typename... TArgs>
+	using _TFormatString = fmt::basic_format_string<Char, fmt::type_identity_t<TArgs>...>;
+	using _TRuntimeFormatString = fmt::runtime_format_string<Char>;
+	using _TStringView = fmt::basic_string_view<Char>;
+
+	using _TFormatArg = fmt::basic_format_arg<_TFormatContext>;
+	using _TFormatArgs = fmt::basic_format_args<_TFormatContext>;
+
+	template <typename T>
+	using _TFormatter = fmt::formatter<T, Char>;
+
+	using _TFormatError = fmt::format_error;
+
+	/// --------------------------------------------------------------------------------------------
+	/// Exception thrown during formatting error.
+	/// --------------------------------------------------------------------------------------------
+	class FormatException: public Exception
+	{
+	public:
+		FormatException(String msg) noexcept:
+			Exception(msg) { }
+
+		FormatException(const _TFormatError& in_fmt_err) noexcept:
+			// TODO: Requires encoding conversion.
+			Exception(TEXT("Unkown fmt::format_error exception.")) { }
+	};
+
+	/// --------------------------------------------------------------------------------------------
+	/// A single format argument.
+	/// --------------------------------------------------------------------------------------------
+	class FormatArg
+	{
+	public:
+		constexpr FormatArg(_TFormatArg in_fmt_arg) noexcept:
+			m_fmt_arg{ in_fmt_arg } { }
+
+	private:
+		_TFormatArg m_fmt_arg;
+	};
+
+	/// --------------------------------------------------------------------------------------------
+	/// List of format arguments.
+	/// --------------------------------------------------------------------------------------------    
+	class FormatArgs
+	{
+	public:
+		constexpr FormatArgs(_TFormatArgs in_fmt_args) noexcept:
+			m_fmt_args{ in_fmt_args } { }
+
+	public:
+		constexpr FormatArg GetArg(int id) const
+		{
+			return FormatArg{ m_fmt_args.get(id) };
+		}
+
+		FormatArg GetArg(StringView name) const
+		{
+			_TStringView fmt_name = { name.data(), name.size() };
+			return FormatArg{ m_fmt_args.get(fmt_name) };
+		}
+
+		int GetArgID(StringView name) const
+		{
+			_TStringView fmt_name = { name.data(), name.size() };
+			return m_fmt_args.get_id(fmt_name);
+		}
+
+	private:
+		_TFormatArgs m_fmt_args;
+	};
+
+	/// --------------------------------------------------------------------------------------------
+	/// Context to parse format string.
+	/// --------------------------------------------------------------------------------------------
+	struct FormatParseContext
+	{
+		ArrayView<Char> GetRange() noexcept
+		{
+			return ArrayView<Char>{ fmt_ctx.begin(), fmt_ctx.end() };
+		}
+
+		void AdvanceTo(ArrayIterator<const Char> it) noexcept
+		{
+			fmt_ctx.advance_to(it);
+		}
+
+		_TFormatParseContext& fmt_ctx;
+	};
+
+	/// --------------------------------------------------------------------------------------------
+	/// Context to write formatted string.
+	/// --------------------------------------------------------------------------------------------
+	struct FormatContext
+	{
+		void Write(Char ch)
+		{
+			auto out = fmt_ctx.out();
+			*out++ = ch;
+			fmt_ctx.advance_to(MOVE(out));
+		}
+
+		void Write(const RConstIterable<Char> auto& chars)
+		{
+			auto out = fmt_ctx.out();
+			for (Char ch : chars)
+			{
+				*out++ = ch;
+			}
+			fmt_ctx.advance_to(MOVE(out));
+		}
+
+		_TFormatContext& fmt_ctx;
+	};
+
+	/// --------------------------------------------------------------------------------------------
+	/// Parses and writes string representation for types according to the specified format 
+	/// specifiers.
+	/// --------------------------------------------------------------------------------------------
+	template <typename T>
+	struct Formatter;
+	// {
+	// 	static_assert(sizeof(T) == 0, "Formatter for this type is not defined.");
+	// };
+
+	/// --------------------------------------------------------------------------------------------
+	/// Ensures {TFormatter} is {Formatter} for type {T}.
+	/// --------------------------------------------------------------------------------------------
+	template <typename TFormatter, typename T>
+	concept RFormatter = requires(TFormatter formatter)
+	{
+		formatter.Parse(declval(FormatParseContext&));
+		formatter.Format(declval(T&), declval(FormatContext&));
+	};
+
+	/// --------------------------------------------------------------------------------------------
+	/// Formattable refers to a type for which exists a valid {Formatter<T>} specialization which 
+	/// satisfies {RFormatter<Formatter<T>, T>} requirement.
+	/// --------------------------------------------------------------------------------------------
+
+	/// --------------------------------------------------------------------------------------------
+	/// Ensures {T} is {Formattable}.
+	/// --------------------------------------------------------------------------------------------
+	template <typename T>
+	concept RFormattable = requires { {1}; };
+	// concept RFormattable = RFormatter<Formatter<T>, T>;
+}
+
+namespace Atom::Fmt
+{
+	/// -----------------------------------------------------------------------------------------------
+	/// {Formatter} specialization for {StringView}.
+	/// 
+	/// @INTERNAL
+	/// Uses {fmt::formatter<fmt::string_view>} specialization.
+	/// -----------------------------------------------------------------------------------------------
+	template < >
+	struct Formatter<StringView>
+	{
+		void Parse(FormatParseContext& ctx) noexcept
+		{
+			_TFormatParseContext& fmt_ctx = ctx.fmt_ctx;
+
+			fmt_ctx.advance_to(fmt_formatter.parse(fmt_ctx));
+		}
+
+		void Format(StringView str, FormatContext& ctx) noexcept
+		{
+			_TFormatContext& fmt_ctx = ctx.fmt_ctx;
+
+			_TStringView fmt_str{ str.data(), str.size() };
+			fmt_ctx.advance_to(fmt_formatter.format(fmt_str, fmt_ctx));
+		}
+
+		_TFormatter<_TStringView> fmt_formatter;
+	};
+
+	static_assert(RFormattable<StringView>, "StringView is not formattable.");
+
+	/// -----------------------------------------------------------------------------------------------
+	/// {Formatter} specialization for types which satisfy {RStringViewConvertible} requirement.
+	/// -----------------------------------------------------------------------------------------------
+	template <RStringViewConvertible T>
+	struct Formatter<T>: Formatter<StringView>
+	{
+		constexpr void Format(const T& in, FormatContext& ctx) noexcept
+		{
+			Formatter<StringView>::Format(
+				StringViewConverter<T>::Convert(in), ctx);
+		}
+	};
+}
+
+// namespace fmt
+// {
+// 	/// --------------------------------------------------------------------------------------------
+// 	/// @INTERNAL
+// 	/// 
+// 	/// {fmt::formatter} specialization for all types that implement {Atom::Fmt::Formatter}.
+// 	/// {fmt} uses this type and users specialize {Atom::Fmt::Formatter}.
+// 	/// 
+// 	/// This is specialized for {Char} character type only as {Atom} uses that type for 
+// 	/// character representation.
+// 	/// --------------------------------------------------------------------------------------------
+// 	template <Atom::Fmt::RFormattable T>
+// 	struct formatter <T, Atom::Char>
+// 	{
+// 		Atom::Fmt::_TFormatParseContextIterator parse(Atom::Fmt::_TFormatParseContext& ctx)
+// 		{
+// 			m_formatter.Parse(Atom::Fmt::FormatParseContext(ctx));
+// 			return ctx.begin();
+// 		}
+// 
+// 		Atom::Fmt::_TFormatContextOut format(const T& in, Atom::Fmt::_TFormatContext& ctx)
+// 		{
+// 			m_formatter.Format(in, Atom::Fmt::FormatContext(ctx));
+// 			return ctx.out();
+// 		}
+// 
+// 	private:
+// 		/// ----------------------------------------------------------------------------------------
+// 		/// This contains actual implementation.
+// 		/// ----------------------------------------------------------------------------------------
+// 		Atom::Fmt::Formatter<T> m_formatter;
+// 	};
+// }
+
+namespace fmt
+{
+	template <Atom::RStringViewConvertible T>
+	struct formatter <T, Atom::Char>
+	{
+		Atom::Fmt::_TFormatParseContextIterator parse(Atom::Fmt::_TFormatParseContext& ctx)
+		{
+			return fmt_formatter.parse(ctx);
+		}
+
+		Atom::Fmt::_TFormatContextOut format(const T& in, Atom::Fmt::_TFormatContext& ctx)
+		{
+			Atom::StringView str = Atom::StringViewConverter<T>::Convert(in);
+			basic_string_view<Atom::Char> fmt_str = { str.data(), str.size() };
+			return fmt_formatter.format(fmt_str, ctx);
+		}
+
+		formatter<fmt::basic_string_view<Atom::Char>, Atom::Char> fmt_formatter;
+	};
+}

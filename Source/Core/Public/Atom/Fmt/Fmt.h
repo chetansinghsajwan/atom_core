@@ -1,84 +1,79 @@
 #pragma once
-#include "fmt/format.h"
-
 #include "Atom/String.h"
-#include "Atom/TTI.h"
+
+#include "Atom/Fmt/Formatters.h"
 
 namespace Atom::Fmt
 {
-    template <typename TElement, typename TBackInsertable>
-    concept RBackInsertable = requires(TBackInsertable insertable)
-    {
-        insertable.InsertBack(TElement());
-    };
+    /// --------------------------------------------------------------------------------------------
+    /// 
+    /// --------------------------------------------------------------------------------------------
+    template <RFormattable... TArgs>
+    using FormatString = _TFormatString<TArgs...>;
 
-    template <typename... TArgs>
-    using FormatString = fmt::basic_format_string<Char, fmt::type_identity_t<TArgs>...>;
+    /// --------------------------------------------------------------------------------------------
+    /// 
+    /// --------------------------------------------------------------------------------------------
+    using RuntimeFormatString = _TRuntimeFormatString;
 
-    using RuntimeFormatString = fmt::runtime_format_string<Char>;
-
+    /// --------------------------------------------------------------------------------------------
+    /// 
+    /// --------------------------------------------------------------------------------------------
     inline RuntimeFormatString Runtime(StringView fmt) noexcept
     {
         return RuntimeFormatString{ fmt };
     }
 
-    template <typename TBackInsertable, typename... TArgs>
-        requires RBackInsertable<Char, TBackInsertable>
-    void FormatTo(TBackInsertable& out, FormatString<TArgs...> fmt, TArgs&&... args)
+    /// --------------------------------------------------------------------------------------------
+    /// 
+    /// --------------------------------------------------------------------------------------------
+    template <RBackInsertable<Char> TBackInsertable, RFormattable... TArgs>
+    void FormatTo(TBackInsertable& out, FormatString<TArgs...> in_fmt, TArgs&&... in_args)
     {
-        struct Wrapper
+        struct OutputIterator
         {
-            struct Input
-            {
-                void operator = (Char ch)
-                {
-                    out.InsertBack(ch);
-                }
-
-                TBackInsertable& out;
-            };
-
-            Wrapper(TBackInsertable* in_out) noexcept:
-                out{ in_out } { }
-
-            Wrapper& operator ++ (int)
+            OutputIterator& operator ++ (int)
             {
                 return *this;
             }
 
-            auto operator * ()
+            OutputIterator& operator * ()
             {
-                return Input{ *out };
+                return *this;
+            }
+
+            OutputIterator& operator = (Char ch)
+            {
+                out->InsertBack(ch);
+                return *this;
             }
 
             TBackInsertable* out;
         };
 
-        fmt::detail::iterator_buffer<Wrapper, Char> buf{ Wrapper{ &out } };
-        fmt::detail::vformat_to<Char>(buf, fmt,
-            fmt::make_format_args<fmt::buffer_context<Char>>(FORWARD(args)...),
-            fmt::detail::locale_ref{});
+        fmt::detail::iterator_buffer<OutputIterator, Char> buf{ OutputIterator{ &out } };
+
+        try
+        {
+            fmt::detail::vformat_to<Char>(buf, in_fmt,
+                fmt::make_format_args<fmt::buffer_context<Char>>(FORWARD(in_args)...),
+                fmt::detail::locale_ref{});
+        }
+        catch (const _TFormatError& err)
+        {
+            throw FormatException(err);
+        }
     }
 
-    template <typename... TArgs>
-    String Format(FormatString<TArgs...> fmt, TArgs&&... args)
+    /// --------------------------------------------------------------------------------------------
+    /// 
+    /// --------------------------------------------------------------------------------------------
+    template <RFormattable... TArgs>
+    String Format(FormatString<TArgs...> in_fmt, TArgs&&... in_args)
     {
-        struct StringWrapper
-        {
-            constexpr StringWrapper(String& in_str) noexcept:
-                str{ in_str } { }
-
-            void InsertBack(Char ch)
-            {
-                str.push_back(ch);
-            }
-
-            String& str;
-        };
-
         String out;
         StringWrapper outWrapper = out;
-        FormatTo(outWrapper, fmt, FORWARD(args)...);
+        FormatTo(outWrapper, in_fmt, FORWARD(in_args)...);
 
         return out;
     }

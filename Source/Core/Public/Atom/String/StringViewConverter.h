@@ -8,10 +8,10 @@ namespace Atom
     /// Converts object to {StringView}.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    class StringViewConverter
-    {
-        static_assert(sizeof(T) == 0, "StringViewConverter for this type is not defined.");
-    };
+    class StringViewConverter;
+    // {
+    //     static_assert(sizeof(T) == 0, "StringViewConverter for this type is not defined.");
+    // };
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures {T} is convertible to {StringView}.

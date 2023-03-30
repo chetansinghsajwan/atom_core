@@ -16,7 +16,7 @@ namespace Atom
         String m_msg;
     };
 
-    // using Exception = std::exception;
+    // TODO: Change to RuntimeException.
     using RuntimeError = Exception;
     using InvalidOperationException = Exception;
     using InvalidArgumentException = Exception;
