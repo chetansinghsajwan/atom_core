@@ -38,8 +38,12 @@ namespace Atom::Logging::Internal
         {
             if (CheckLogLevel(in_logMsg.lvl))
             {
-                String result = Fmt::Format(TEXT("[{}] [{}] {}: {}\n"),
-                    in_logMsg.time, in_logMsg.lvl, in_logMsg.loggerName, in_logMsg.msg);
+                // TODO: Add chrono support for Atom.Fmt.
+                // String result = Fmt::Format(TEXT("[{}] [{}] {}: {}\n"),
+                //     in_logMsg.time, in_logMsg.lvl, in_logMsg.loggerName, in_logMsg.msg);
+
+                String result = Fmt::Format(TEXT("[{}] {}: {}\n"),
+                    in_logMsg.lvl, in_logMsg.loggerName, in_logMsg.msg);
 
                 m_hasWritten = true;
                 m_Write(in_logMsg, result);

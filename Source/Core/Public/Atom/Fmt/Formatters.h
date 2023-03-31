@@ -157,8 +157,7 @@ namespace Atom::Fmt
 	/// Ensures {T} is {Formattable}.
 	/// --------------------------------------------------------------------------------------------
 	template <typename T>
-	concept RFormattable = requires { {1}; };
-	// concept RFormattable = RFormatter<Formatter<T>, T>;
+	concept RFormattable = RFormatter<Formatter<T>, T>;
 }
 
 namespace Atom::Fmt
@@ -169,8 +168,9 @@ namespace Atom::Fmt
 	/// @INTERNAL
 	/// Uses {fmt::formatter<fmt::string_view>} specialization.
 	/// -----------------------------------------------------------------------------------------------
-	template < >
-	struct Formatter<StringView>
+	template <typename T>
+	requires RSameAs<std::decay_t<T>, StringView>
+	struct Formatter<T>
 	{
 		void Parse(FormatParseContext& ctx) noexcept
 		{
@@ -193,6 +193,19 @@ namespace Atom::Fmt
 	static_assert(RFormattable<StringView>, "StringView is not formattable.");
 
 	/// -----------------------------------------------------------------------------------------------
+	/// {Formatter} specialization for {Char} array.
+	/// -----------------------------------------------------------------------------------------------
+	template <usize N>
+	struct Formatter<const Char(&)[N]>: Formatter<StringView>
+	{
+		void Format(const Char(&chars)[N], FormatContext& ctx) noexcept
+		{
+			StringView str{ chars, N };
+			Formatter<StringView>::Format(str, ctx);
+		}
+	};
+
+	/// -----------------------------------------------------------------------------------------------
 	/// {Formatter} specialization for types which satisfy {RStringViewConvertible} requirement.
 	/// -----------------------------------------------------------------------------------------------
 	template <RStringViewConvertible T>
@@ -206,57 +219,38 @@ namespace Atom::Fmt
 	};
 }
 
-// namespace fmt
-// {
-// 	/// --------------------------------------------------------------------------------------------
-// 	/// @INTERNAL
-// 	/// 
-// 	/// {fmt::formatter} specialization for all types that implement {Atom::Fmt::Formatter}.
-// 	/// {fmt} uses this type and users specialize {Atom::Fmt::Formatter}.
-// 	/// 
-// 	/// This is specialized for {Char} character type only as {Atom} uses that type for 
-// 	/// character representation.
-// 	/// --------------------------------------------------------------------------------------------
-// 	template <Atom::Fmt::RFormattable T>
-// 	struct formatter <T, Atom::Char>
-// 	{
-// 		Atom::Fmt::_TFormatParseContextIterator parse(Atom::Fmt::_TFormatParseContext& ctx)
-// 		{
-// 			m_formatter.Parse(Atom::Fmt::FormatParseContext(ctx));
-// 			return ctx.begin();
-// 		}
-// 
-// 		Atom::Fmt::_TFormatContextOut format(const T& in, Atom::Fmt::_TFormatContext& ctx)
-// 		{
-// 			m_formatter.Format(in, Atom::Fmt::FormatContext(ctx));
-// 			return ctx.out();
-// 		}
-// 
-// 	private:
-// 		/// ----------------------------------------------------------------------------------------
-// 		/// This contains actual implementation.
-// 		/// ----------------------------------------------------------------------------------------
-// 		Atom::Fmt::Formatter<T> m_formatter;
-// 	};
-// }
-
 namespace fmt
 {
-	template <Atom::RStringViewConvertible T>
-	struct formatter <T, Atom::Char>
+	/// --------------------------------------------------------------------------------------------
+	/// @INTERNAL
+	/// 
+	/// {fmt::formatter} specialization for all types that implement {Atom::Fmt::Formatter}.
+	/// {fmt} uses this type and users specialize {Atom::Fmt::Formatter}.
+	/// 
+	/// This is specialized for {Char} character type only as {Atom} uses that type for 
+	/// character representation.
+	/// --------------------------------------------------------------------------------------------
+	template <Atom::Fmt::RFormattable T>
+	struct formatter <T, Atom::Char, Atom::TTI::TEnableIf<
+		Atom::TTI::IsNotSame<T, Atom::StringView> >>
 	{
-		Atom::Fmt::_TFormatParseContextIterator parse(Atom::Fmt::_TFormatParseContext& ctx)
+		Atom::Fmt::_TFormatParseContextIterator parse(Atom::Fmt::_TFormatParseContext& fmt_ctx)
 		{
-			return fmt_formatter.parse(ctx);
+			Atom::Fmt::FormatParseContext ctx(fmt_ctx);
+			this->formatter.Parse(ctx);
+			return fmt_ctx.begin();
 		}
 
-		Atom::Fmt::_TFormatContextOut format(const T& in, Atom::Fmt::_TFormatContext& ctx)
+		Atom::Fmt::_TFormatContextOut format(const T& in, Atom::Fmt::_TFormatContext& fmt_ctx)
 		{
-			Atom::StringView str = Atom::StringViewConverter<T>::Convert(in);
-			basic_string_view<Atom::Char> fmt_str = { str.data(), str.size() };
-			return fmt_formatter.format(fmt_str, ctx);
+			Atom::Fmt::FormatContext ctx(fmt_ctx);
+			this->formatter.Format(in, ctx);
+			return fmt_ctx.out();
 		}
 
-		formatter<fmt::basic_string_view<Atom::Char>, Atom::Char> fmt_formatter;
+		/// ----------------------------------------------------------------------------------------
+		/// This contains actual implementation.
+		/// ----------------------------------------------------------------------------------------
+		Atom::Fmt::Formatter<T> formatter;
 	};
 }

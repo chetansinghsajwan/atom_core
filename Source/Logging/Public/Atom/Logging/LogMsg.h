@@ -55,8 +55,9 @@ namespace Atom::Logging
 
 namespace Atom
 {
-    template < >
-    struct StringViewConverter<Logging::ELogLevel>
+    template <typename T>
+    requires RSameAs<std::decay_t<T>, Logging::ELogLevel>
+    struct StringViewConverter<T>
     {
         static constexpr StringView Convert(Logging::ELogLevel in_lvl) noexcept
         {
