@@ -90,6 +90,9 @@ namespace Atom::Fmt
 	/// --------------------------------------------------------------------------------------------
 	struct FormatParseContext
 	{
+		constexpr FormatParseContext(_TFormatParseContext& in_fmt_ctx) noexcept:
+			fmt_ctx{ in_fmt_ctx } { }
+
 		ArrayView<Char> GetRange() noexcept
 		{
 			return ArrayView<Char>{ fmt_ctx.begin(), fmt_ctx.end() };
@@ -108,6 +111,9 @@ namespace Atom::Fmt
 	/// --------------------------------------------------------------------------------------------
 	struct FormatContext
 	{
+		constexpr FormatContext(_TFormatContext& in_fmt_ctx) noexcept:
+			fmt_ctx{ in_fmt_ctx } { }
+
 		void Write(Char ch)
 		{
 			auto out = fmt_ctx.out();
@@ -169,7 +175,7 @@ namespace Atom::Fmt
 	/// Uses {fmt::formatter<fmt::string_view>} specialization.
 	/// -----------------------------------------------------------------------------------------------
 	template <typename T>
-	requires RSameAs<std::decay_t<T>, StringView>
+		requires RSameAs<std::decay_t<T>, StringView>
 	struct Formatter<T>
 	{
 		void Parse(FormatParseContext& ctx) noexcept
