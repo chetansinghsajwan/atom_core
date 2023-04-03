@@ -220,8 +220,10 @@ namespace Atom::Fmt
 		constexpr void Format(const T& in, FormatContext& ctx) noexcept
 		{
 			Formatter<StringView>::Format(
-				StringViewConverter<T>::Convert(in), ctx);
+				converter.Convert(in), ctx);
 		}
+
+		StringViewConverter<T> converter;
 	};
 }
 

@@ -5,22 +5,25 @@
 namespace Atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// Converts object to {StringView}.
+    /// Converts {T} object to {StringView}.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    class StringViewConverter;
-    // {
-    //     static_assert(sizeof(T) == 0, "StringViewConverter for this type is not defined.");
-    // };
+    struct StringViewConverter;
+
+    /// --------------------------------------------------------------------------------------------
+    /// Ensures {TConverter} can convert {T} object to {StringView}.
+    /// --------------------------------------------------------------------------------------------
+    template <typename TConverter, typename T>
+    concept RStringViewConverter = requires(TConverter converter)
+    {
+        { converter.Convert(declval(T)) } -> RSameAs<StringView>;
+    };
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures {T} is convertible to {StringView}.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    concept RStringViewConvertible = requires(const T& in)
-    {
-        { StringViewConverter<T>::Convert(in) } -> RSameAs<StringView>;
-    };
+    concept RStringViewConvertible = RStringViewConverter<StringViewConverter<T>, T>;
 
     /// --------------------------------------------------------------------------------------------
     /// {StringViewConverter} specialization for {StringView}.
@@ -28,28 +31,39 @@ namespace Atom
     template < >
     class StringViewConverter<StringView>
     {
-        static constexpr StringView Convert(StringView in) noexcept
+        constexpr StringView Convert(StringView in) noexcept
         {
             return in;
         }
     };
 
     /// --------------------------------------------------------------------------------------------
+    /// {StirngViewConverter} specialization for {T} containing {const}, {volatile} or {lvalue} 
+    /// and {rvalue} reference.
+    /// 
+    /// @TODO Needs refactoring.
+    /// --------------------------------------------------------------------------------------------
+	template <typename T>
+	requires (!RSameAs<T, TTI::TRemoveCVRef<T>>) && RStringViewConvertible<TTI::TRemoveCVRef<T>>
+	struct StringViewConverter<T>: StringViewConverter<TTI::TRemoveCVRef<T>> { };
+
+    /// --------------------------------------------------------------------------------------------
     /// {StringConverter} specialization for types which are {StringViewConvertible}.
     /// --------------------------------------------------------------------------------------------
-    template <RStringViewConvertible TStringViewConvertible>
-    class StringConverter <TStringViewConvertible>
+    template <RStringViewConvertible T>
+    struct StringConverter<T>
     {
-        static constexpr String Convert(const TStringViewConvertible& in) noexcept
+        constexpr String Convert(const T& in) noexcept
         {
-            return StringViewConverter<TStringViewConvertible>::Convert();
+            return converter.Convert();
         }
 
-        static constexpr void Convert(const TStringViewConvertible& in, 
-            RBackInsertable<Char> auto& out) noexcept
+        constexpr void Convert(const T& in, RBackInsertable<Char> auto& out) noexcept
         {
-            StringView strView = Convert(in);
+            StringView strView = converter.Convert(in);
             out.InsertBack(in);
         }
+
+        StringViewConverter<T> converter;
     };
 }

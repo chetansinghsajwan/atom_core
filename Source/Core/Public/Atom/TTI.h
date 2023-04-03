@@ -45,5 +45,8 @@ namespace Atom
 
         template <typename T1, typename T2>
         constexpr bool IsNotSame = !IsSame<T1, T2>;
+
+        template <typename T>
+        using TRemoveCVRef = std::remove_cvref_t<T>;
     }
 }

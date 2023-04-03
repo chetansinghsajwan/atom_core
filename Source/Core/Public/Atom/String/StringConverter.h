@@ -1,31 +1,47 @@
 #pragma once
+#include "Atom/TTI.h"
+
 #include "Atom/String/String.h"
 
 namespace Atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// Converts objects to string.
+    /// Converts {T} object to {String}.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    class StringConverter
-    {
-        static_assert(sizeof(T) == 0, "StringConverter for type is not defined.");
-    };
+    class StringConverter;
 
     /// --------------------------------------------------------------------------------------------
-    /// Requirements for objects which are convertible to string. This checks for valid 
-    /// {StringConverter<T>} specialization.
+    /// Ensures {TStringConverter} can convert {T} object to {String}.
     /// 
-    /// @TPARAM[IN] T Type to convert to stirng.
+    /// @TPARAM[IN] TConverter Converter type to convert to stirng.
+    /// @TPARAM[IN] T Object type to convert to stirng.
+    /// --------------------------------------------------------------------------------------------
+    template <typename TStringConverter, typename T>
+    concept RStringConverter = requires(TStringConverter converter)
+    {
+        { converter.Convert(declval(T)) }
+            -> RSameAs<String>;
+
+        { converter.Convert(declval(T), declval(BackInsertableTestImpl<Char>&)) }
+            -> RSameAs<void>;
+    };
+
+    /// --------------------------------------------------------------------------------------------
+    /// Ensures {StringConverter<T>} for {T} is {RStringConverter}.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    concept RStringConvertible = requires(T t)
-    {
-        StringConverter<T>::Convert(t);
+    concept RStringConvertible = RStringConverter<StringConverter<T>, T>;
 
-        StringConverter<T>::Convert({}, t);
-        StringConverter<T>::Convert({}, MOVE(t));
-    };
+    /// --------------------------------------------------------------------------------------------
+    /// {StirngConverter} specialization for {T} containing {const}, {volatile} or {lvalue} 
+    /// and {rvalue} reference.
+    /// 
+    /// @TODO Needs refactoring.
+    /// --------------------------------------------------------------------------------------------
+	template <typename T>
+	requires (!RSameAs<T, TTI::TRemoveCVRef<T>>) && RStringConvertible<TTI::TRemoveCVRef<T>>
+	struct StringConverter<T>: StringConverter<TTI::TRemoveCVRef<T>> { };
 
     /// --------------------------------------------------------------------------------------------
     /// {StringConverter} specialization for {String}.
@@ -33,17 +49,17 @@ namespace Atom
     template < >
     class StringConverter<String>
     {
-        static constexpr String Convert(String&& str) noexcept
+        constexpr String Convert(String&& str) noexcept
         {
             return MOVE(str);
         }
 
-        static constexpr String Convert(const String& str) noexcept
+        constexpr String Convert(const String& str) noexcept
         {
             return String{ str };
         }
 
-        static constexpr void Convert(const String& str, RBackInsertable<Char> auto& out) noexcept
+        constexpr void Convert(const String& str, RBackInsertable<Char> auto& out) noexcept
         {
             out.InsertBack(str);
         }
