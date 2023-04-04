@@ -139,10 +139,10 @@ namespace Atom::Fmt
 	/// specifiers.
 	/// --------------------------------------------------------------------------------------------
 	template <typename T>
-	struct Formatter;
-	// {
-	// 	static_assert(sizeof(T) == 0, "Formatter for this type is not defined.");
-	// };
+	struct FormatterImpl;
+
+	template <typename T>
+	using Formatter = FormatterImpl<TTI::TRemoveCVRef<T>>;
 
 	/// --------------------------------------------------------------------------------------------
 	/// Ensures {TFormatter} is {Formatter} for type {T}.
@@ -151,7 +151,7 @@ namespace Atom::Fmt
 	concept RFormatter = requires(TFormatter formatter)
 	{
 		formatter.Parse(declval(FormatParseContext&));
-		formatter.Format(declval(T&), declval(FormatContext&));
+		formatter.Format(declval(T), declval(FormatContext&));
 	};
 
 	/// --------------------------------------------------------------------------------------------
@@ -174,9 +174,8 @@ namespace Atom::Fmt
 	/// @INTERNAL
 	/// Uses {fmt::formatter<fmt::string_view>} specialization.
 	/// -----------------------------------------------------------------------------------------------
-	template <typename T>
-		requires RSameAs<std::decay_t<T>, StringView>
-	struct Formatter<T>
+	template < >
+	struct FormatterImpl<StringView>
 	{
 		void Parse(FormatParseContext& ctx) noexcept
 		{
@@ -202,7 +201,7 @@ namespace Atom::Fmt
 	/// {Formatter} specialization for {Char} array.
 	/// -----------------------------------------------------------------------------------------------
 	template <usize N>
-	struct Formatter<const Char(&)[N]>: Formatter<StringView>
+	struct FormatterImpl<Char[N]>: Formatter<StringView>
 	{
 		void Format(const Char(&chars)[N], FormatContext& ctx) noexcept
 		{
@@ -215,7 +214,7 @@ namespace Atom::Fmt
 	/// {Formatter} specialization for types which satisfy {RStringViewConvertible} requirement.
 	/// -----------------------------------------------------------------------------------------------
 	template <RStringViewConvertible T>
-	struct Formatter<T>: Formatter<StringView>
+	struct FormatterImpl<T>: Formatter<StringView>
 	{
 		constexpr void Format(const T& in, FormatContext& ctx) noexcept
 		{
@@ -225,10 +224,28 @@ namespace Atom::Fmt
 
 		StringViewConverter<T> converter;
 	};
+
+	template <typename T>
+	struct _TFormatterFilter
+	{
+		static constexpr bool Enable = true;
+	};
+
+	template < >
+	struct _TFormatterFilter<StringView>
+	{
+		static constexpr bool Enable = false;
+	};
+
+	template <usize N>
+	struct _TFormatterFilter<Char[N]>
+	{
+		static constexpr bool Enable = false;
+	};
 }
 
 namespace fmt
-{
+{	
 	/// --------------------------------------------------------------------------------------------
 	/// @INTERNAL
 	/// 
@@ -239,8 +256,8 @@ namespace fmt
 	/// character representation.
 	/// --------------------------------------------------------------------------------------------
 	template <Atom::Fmt::RFormattable T>
-	struct formatter <T, Atom::Char, Atom::TTI::TEnableIf<
-		Atom::TTI::IsNotSame<T, Atom::StringView> >>
+	requires Atom::Fmt::_TFormatterFilter<T>::Enable
+	struct formatter <T, Atom::Char>
 	{
 		Atom::Fmt::_TFormatParseContextIterator parse(Atom::Fmt::_TFormatParseContext& fmt_ctx)
 		{
