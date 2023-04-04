@@ -47,7 +47,7 @@ namespace Atom
     /// {StringConverter} specialization for {String}.
     /// --------------------------------------------------------------------------------------------
     template < >
-    class StringConverter<String>
+    struct StringConverter<String>
     {
         constexpr String Convert(String&& str) noexcept
         {
