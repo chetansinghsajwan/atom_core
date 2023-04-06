@@ -10,3 +10,6 @@
 [submodule "ThirdParty/WjCryptLib"]
 	path = ThirdParty/WjCryptLib
 	url = https://github.com/WaterJuice/WjCryptLib.git
+[submodule "ThirdParty/Utf-Cpp/utf-cpp"]
+	path = ThirdParty/Utf-Cpp/utf-cpp
+	url = https://github.com/ww898/utf-cpp.git
