@@ -1,5 +1,4 @@
 #pragma once
-#include "Atom/String/StringView.h"
 #include "Atom/String/StringConverter.h"
 
 namespace Atom

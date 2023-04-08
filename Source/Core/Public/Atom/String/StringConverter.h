@@ -1,7 +1,7 @@
 #pragma once
 #include "Atom/TTI.h"
 
-#include "Atom/String/String.h"
+#include "Atom/String/Selected.h"
 
 namespace Atom
 {

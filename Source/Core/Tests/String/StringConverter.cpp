@@ -8,7 +8,7 @@ TEST_CASE("Atom.String.StringConverter")
 {
     String str = TEXT("Hello.");
     const String& strRef = str;
-    
+
     StringConverter<String> converter;
     String newStr = converter.Convert(strRef);
 }
