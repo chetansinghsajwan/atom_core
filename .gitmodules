@@ -13,3 +13,6 @@
 [submodule "ThirdParty/Utf-Cpp/utf-cpp"]
 	path = ThirdParty/Utf-Cpp/utf-cpp
 	url = https://github.com/ww898/utf-cpp.git
+[submodule "ThirdParty/LibAssert/libassert"]
+	path = ThirdParty/LibAssert/libassert
+	url = https://github.com/jeremy-rifkin/libassert.git
