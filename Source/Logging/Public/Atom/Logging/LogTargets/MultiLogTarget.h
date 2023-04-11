@@ -547,7 +547,7 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         bool _RemoveTarget(LogTargetPtr target)
         {
-            ATOM_DEBUG_EXPECTS(target != nullptr);
+            ATOM_DEBUG_ASSERT(target != nullptr);
 
             for (auto it = _targets.begin(); it != _targets.end(); it++)
             {

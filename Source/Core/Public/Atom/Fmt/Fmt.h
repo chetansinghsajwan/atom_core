@@ -72,7 +72,7 @@ namespace Atom::Fmt
     String Format(FormatString<TArgs...> in_fmt, TArgs&&... in_args)
     {
         String out;
-        StringWrapper outWrapper = out;
+        StringWrapper outWrapper { out };
         FormatTo(outWrapper, in_fmt, FORWARD(in_args)...);
 
         return out;

@@ -58,8 +58,8 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         void ProcessBytes(const void* in_data, usize in_dataSize)
         {
-            ATOM_DEBUG_EXPECTS(in_data != nullptr);
-            ATOM_DEBUG_EXPECTS(in_dataSize > 0);
+            ATOM_DEBUG_ASSERT(in_data != nullptr);
+            ATOM_DEBUG_ASSERT(in_dataSize > 0);
 
             // Max size of input allowed at once.
             static constexpr usize maxInput = NumLimits<uint32_t>::max();

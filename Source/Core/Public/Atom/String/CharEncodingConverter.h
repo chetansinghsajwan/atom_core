@@ -172,9 +172,10 @@ namespace Atom
         template <RConstIterable<TFromChar> TIn, RBackInsertable<TToChar> TOut>
         constexpr void Convert(const TIn& in, TOut& out)
         {
-            for (auto it = in.begin(); it != in.end(); it++)
+            auto end = in.end();
+            for (auto it = in.begin(); it != end; it++)
             {
-                TImpl::ConvertChar(it, in.end(), out);
+                TImpl::ConvertChar(it, end, out);
             }
         }
 
@@ -182,7 +183,8 @@ namespace Atom
         constexpr TToString Convert(const TIn& in)
         {
             TToString out;
-            Convert(in, out);
+            BasicStringWrapper<TToCharEncoding> outWrapper{ out };
+            Convert(in, outWrapper);
 
             return out;
         }

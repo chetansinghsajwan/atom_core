@@ -24,8 +24,61 @@ namespace Atom
         using TChar = BasicChar<TEncoding>;
         using TString = BasicString<TEncoding>;
 
-        constexpr BasicStringWrapper(TString& in) noexcept:
+        using TConstIterator = typename TString::const_iterator;
+        using TIterator = typename TString::iterator;
+
+    public:
+        constexpr BasicStringWrapper(TString in) noexcept:
             str{ in } { }
+
+    //// -------------------------------------------------------------------------------------------
+    //// RConstIterable [BEGIN]
+    //// -------------------------------------------------------------------------------------------
+
+    public:
+        constexpr TConstIterator ConstBegin() const noexcept
+        {
+            return str.cbegin();
+        }
+
+        constexpr TConstIterator ConstEnd() const noexcept
+        {
+            return str.cend();
+        }
+
+        constexpr TConstIterator Begin() const noexcept
+        {
+            return str.cbegin();
+        }
+
+        constexpr TConstIterator End() const noexcept
+        {
+            return str.cend();
+        }
+
+        constexpr TConstIterator cbegin() const noexcept
+        {
+            return str.cbegin();
+        }
+
+        constexpr TConstIterator cend() const noexcept
+        {
+            return str.cend();
+        }
+
+        constexpr TConstIterator begin() const noexcept
+        {
+            return str.cbegin();
+        }
+
+        constexpr TConstIterator end() const noexcept
+        {
+            return str.cend();
+        }
+
+    //// -------------------------------------------------------------------------------------------
+    //// RConstIterable [END]
+    //// -------------------------------------------------------------------------------------------
 
         constexpr void InsertBack(TChar in) noexcept
         {
@@ -47,6 +100,6 @@ namespace Atom
             str.insert(str.end(), in.Begin(), in.End());
         }
 
-        TString& str;
+        TString str;
     };
 }

@@ -10,6 +10,7 @@ namespace Atom
 
     using String = UTF16String;
     using StringWrapper = BasicStringWrapper<UTF16CharEncoding>;
+    using StringViewWrapper = BasicStringViewWrapper<UTF16CharEncoding>;
 
     using StringView = UTF16StringView;
 }
