@@ -3,6 +3,8 @@
 #include "Atom/Memory.h"
 #include "Atom/Exceptions.h"
 #include "Atom/TTI.h"
+#include "Atom/String.h"
+
 #include "Atom/Invokable/Invokable.h"
 
 namespace Atom

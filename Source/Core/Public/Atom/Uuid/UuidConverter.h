@@ -27,12 +27,6 @@ namespace Atom
         }
     }
 
-    template <typename TElement, typename TBackInsertable>
-    concept RBackInsertable = requires(TBackInsertable insertable)
-    {
-        insertable.InsertBack(TElement());
-    };
-
     class UuidConverter
     {
         static constexpr Uuid FromString(StringView in_str) noexcept
@@ -83,7 +77,7 @@ namespace Atom
         }
 
         static constexpr void ToString(const Uuid& in_uuid, 
-            RBackInsertable<Char> auto& out_str) noexcept
+            ROutputWriter<Char> auto out_str) noexcept
         {
             for (usize i = 0, index = 0; i < 36; ++i)
             {
@@ -93,28 +87,17 @@ namespace Atom
                     continue;
                 }
 
-                out_str.InsertBack(s_uuidChars[in_uuid.bytes[index] >> 4 & 0x0f]);
-                out_str.InsertBack(s_uuidChars[in_uuid.bytes[index] & 0x0f]);
+                out_str += s_uuidChars[in_uuid.bytes[index] >> 4 & 0x0f];
+                out_str += s_uuidChars[in_uuid.bytes[index] & 0x0f];
                 index++;
             }
         }
 
         static constexpr String ToString(const Uuid& in_uuid) noexcept
         {
-            struct Wrapper
-            {
-                constexpr void InsertBack(Char ch)
-                {
-                    str.push_back(ch);
-                }
-
-                String& str;
-            };
-
-            String outStr{ 36 };
-            Wrapper wrapper{ outStr };
-            ToString(in_uuid, wrapper);
-            return outStr;
+            String out{ 36 };
+            ToString(in_uuid, out);
+            return out;
         }
 
     protected:

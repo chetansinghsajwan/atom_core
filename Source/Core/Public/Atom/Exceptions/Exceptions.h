@@ -1,23 +1,21 @@
 #pragma once
 #include "Atom/Core.h"
-#include "Atom/String.h"
 
 namespace Atom
 {
     class Exception
     {
     public:
-        Exception(String msg) noexcept:
-            m_msg{ msg } { }
+        /// ----------------------------------------------------------------------------------------
+        /// @TODO Resolve circular dependencies.
+        /// ----------------------------------------------------------------------------------------
+        Exception(const char16* msg) noexcept { }
 
     public:
-        StringView GetMsg() noexcept
+        const char16* GetMsg() noexcept
         {
-            return m_msg;
+            return u"";
         }
-
-    protected:
-        String m_msg;
     };
 
     using RuntimeException = Exception;

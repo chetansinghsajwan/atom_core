@@ -31,3 +31,13 @@ target_link_libraries(Atom.Core.Tests PUBLIC Atom.Core)
 target_link_libraries(Atom.Core.Tests PUBLIC Catch2::Catch2WithMain)
 
 add_test(Atom.Core.Tests Atom.Core.Tests)
+
+
+# --------------------------------------------------------------------------------------------------
+# Atom.Core.Tests
+# --------------------------------------------------------------------------------------------------
+
+add_executable(Atom.Core.Sandbox Sandbox.cpp)
+set_target_properties(Atom.Core.Sandbox PROPERTIES CXX_STANDARD "20")
+
+target_link_libraries(Atom.Core.Sandbox PUBLIC Atom.Core)

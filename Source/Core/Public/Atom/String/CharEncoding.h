@@ -5,14 +5,7 @@
 namespace Atom
 {
     using CharEncoding = UTF16CharEncoding;
-
     using Char = UTF16Char;
-
-    using String = UTF16String;
-    using StringWrapper = BasicStringWrapper<UTF16CharEncoding>;
-    using StringViewWrapper = BasicStringViewWrapper<UTF16CharEncoding>;
-
-    using StringView = UTF16StringView;
 }
 
 #define TEXT(lit) UTF16(lit)

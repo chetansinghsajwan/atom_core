@@ -1,81 +1,123 @@
 #pragma once
-// #include "Atom/Exceptions.h"
+#include "Atom/Exceptions.h"
 
 #include "Atom/Containers/ArrayIterator.h"
 
 namespace Atom
 {
-    template <typename TElement>
+    template <typename T>
     class ArrayView
     {
     public:
-        constexpr ArrayView(const TElement* in_begin, const TElement* in_end) noexcept:
+        using TIterator = ArrayIterator<const T>;
+
+    //// -------------------------------------------------------------------------------------------
+    //// Constructors, Operators and Destructor.
+    //// -------------------------------------------------------------------------------------------
+
+    public:
+        constexpr ArrayView() noexcept:
+            m_arr{ nullptr }, m_count{ 0 } { }
+
+        constexpr ArrayView(const T* in_begin, const T* in_end) noexcept:
             m_arr{ in_begin }, m_count{ usize(in_end - in_begin) }
         {
-            // TODO: Resolve circular dependencies.
-            // ATOM_DEBUG_ASSERT(in_end > in_begin, "Invalid values.");
+            ATOM_DEBUG_ASSERT(in_begin != nullptr);
+            ATOM_DEBUG_ASSERT(in_end != nullptr);
+            ATOM_DEBUG_ASSERT(in_begin <= in_end);
         }
 
-        constexpr ArrayView(const TElement* in_arr, usize in_count) noexcept:
-            m_arr{ in_arr }, m_count{ in_count } { }
+        constexpr ArrayView(const T* in_arr, usize in_count) noexcept:
+            m_arr{ in_arr }, m_count{ in_count }
+        {
+            ATOM_DEBUG_ASSERT(in_arr != nullptr);
+        }
+
+        template <RInputIterator<T> TInput>
+        constexpr bool operator == (TInput in) const noexcept
+        {
+            usize i = 0;
+            for (const T& element : in)
+            {
+                if (i == Count())
+                {
+                    return false;
+                    break;
+                }
+
+                if (element != m_arr[i])
+                {
+                    return false;
+                }
+
+                i++;
+            }
+
+            return true;
+        }
+
+        constexpr bool operator == (const ArrayView& in) const noexcept
+        {
+            if (Count() != in.Count())
+                return false;
+
+            for (usize i = 0; i < Count(); i++)
+            {
+                if (m_arr[i] != in.m_arr[i])
+                    return false;
+            }
+
+            return true;
+        }
 
     //// -------------------------------------------------------------------------------------------
     //// Iteration.
     //// -------------------------------------------------------------------------------------------
 
     public:
-    /// --------------------------------------------------------------------------------------------
-    /// Get {ConstIterator} to the beginning of the array.
-    /// 
-    /// @{
+        /// ----------------------------------------------------------------------------------------
+        /// Get Iterator.
+        /// ----------------------------------------------------------------------------------------
+        constexpr TIterator Iterator() const noexcept
+        {
+            return TIterator{ m_arr, m_count };
+        }
 
-        constexpr ArrayIterator<const TElement> ConstBegin() const noexcept
+    //// -------------------------------------------------------------------------------------------
+    //// Access
+    //// -------------------------------------------------------------------------------------------
+
+    public:
+        /// ----------------------------------------------------------------------------------------
+        /// Get pointer to underlying array.
+        /// ----------------------------------------------------------------------------------------
+        constexpr const T* Data() const noexcept
         {
             return m_arr;
         }
 
-        constexpr ArrayIterator<const TElement> Begin() const noexcept
+        /// ----------------------------------------------------------------------------------------
+        /// Get count of elements.
+        /// ----------------------------------------------------------------------------------------
+        constexpr usize Count() const noexcept
         {
-            return ConstBegin();
+            return m_count;
         }
 
-        constexpr ArrayIterator<const TElement> begin() const noexcept
+        /// ----------------------------------------------------------------------------------------
+        /// Is range empty.
+        /// ----------------------------------------------------------------------------------------
+        constexpr bool IsEmpty() const noexcept
         {
-            return ConstBegin();
+            return Count() == 0;
         }
-
-    /// @}
-    /// --------------------------------------------------------------------------------------------
-
-    /// --------------------------------------------------------------------------------------------
-    /// Get {ConstIterator} to the end of the array.
-    /// 
-    /// @{
-
-        constexpr ArrayIterator<const TElement> ConstEnd() const noexcept
-        {
-            return m_arr + m_count;
-        }
-
-        constexpr ArrayIterator<const TElement> End() const noexcept
-        {
-            return ConstEnd();
-        }
-
-        constexpr ArrayIterator<const TElement> end() const noexcept
-        {
-            return ConstEnd();
-        }
-
-    /// @}
-    /// --------------------------------------------------------------------------------------------
 
     //// -------------------------------------------------------------------------------------------
     //// Fields.
     //// -------------------------------------------------------------------------------------------
 
     protected:
-        const TElement* m_arr;
+        const T* m_arr;
         usize m_count;
     };
 }

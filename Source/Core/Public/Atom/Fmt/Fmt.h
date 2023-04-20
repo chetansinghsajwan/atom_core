@@ -5,16 +5,58 @@
 
 namespace Atom::Fmt
 {
+    using FMT_StringView = _TStringView;
+
+    template <typename... TArgs>
+    using FMT_FormatString = _TFormatString<TArgs...>;
+    using FMT_RuntimeFormatString = _TRuntimeFormatString;
+
+    /// --------------------------------------------------------------------------------------------
+    /// 
+    /// --------------------------------------------------------------------------------------------
+    struct FMT_StringViewConverter
+    {
+        constexpr StringView FromFMT(FMT_StringView strv) noexcept
+        {
+            return StringView{ strv.data(), strv.size() };
+        }
+
+        constexpr FMT_StringView ToFMT(StringView strv) noexcept
+        {
+            return FMT_StringView{ strv.Data(), strv.Count() };
+        }
+
+        constexpr StringView ToFMT(RInputIterator<Char> auto in) noexcept
+        {
+            return StringView{ in.begin(), in.end() };
+        }
+    };
+
+    /// --------------------------------------------------------------------------------------------
+    /// Wrapper over {StringView} to represent format string. This is done to avoid compile 
+    /// time checks.
+    /// --------------------------------------------------------------------------------------------
+    struct RuntimeFormatString
+    {
+        StringView str;
+    };
+
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
     template <RFormattable... TArgs>
     using FormatString = _TFormatString<TArgs...>;
-
-    /// --------------------------------------------------------------------------------------------
-    /// 
-    /// --------------------------------------------------------------------------------------------
-    using RuntimeFormatString = _TRuntimeFormatString;
+//     struct FormatString
+//     {
+//         template <typename T>
+//         consteval FormatString(const T& strv) noexcept { }
+//             _fmt{ FMT_StringViewConverter().ToFMT(strv) } { }
+// 
+//         FormatString(RuntimeFormatString str) noexcept { }
+//             _fmt{ FMT_RuntimeFormatString{ FMT_StringViewConverter().ToFMT(str.str) } } { }
+// 
+//         _TFormatString<TArgs...> _fmt;
+//     };
 
     /// --------------------------------------------------------------------------------------------
     /// 
@@ -27,31 +69,32 @@ namespace Atom::Fmt
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
-    template <RBackInsertable<Char> TBackInsertable, RFormattable... TArgs>
-    void FormatTo(TBackInsertable& out, FormatString<TArgs...> in_fmt, TArgs&&... in_args)
+    template <ROutputWriter<Char> TOutput, RFormattable... TArgs>
+    void FormatTo(TOutput out, FormatString<TArgs...> in_fmt, TArgs&&... in_args)
     {
-        struct OutputIterator
+        struct _OutputIteratorWrapper
         {
-            OutputIterator& operator ++ (int)
+            _OutputIteratorWrapper& operator ++ (int)
             {
                 return *this;
             }
 
-            OutputIterator& operator * ()
+            _OutputIteratorWrapper& operator * ()
             {
                 return *this;
             }
 
-            OutputIterator& operator = (Char ch)
+            _OutputIteratorWrapper& operator = (Char ch)
             {
-                out->InsertBack(ch);
+                *out+= ch;
                 return *this;
             }
 
-            TBackInsertable* out;
+            TOutput* out;
         };
 
-        fmt::detail::iterator_buffer<OutputIterator, Char> buf{ OutputIterator{ &out } };
+        fmt::detail::iterator_buffer<_OutputIteratorWrapper, Char> buf{
+            _OutputIteratorWrapper{ &out } };
 
         try
         {
@@ -72,8 +115,7 @@ namespace Atom::Fmt
     String Format(FormatString<TArgs...> in_fmt, TArgs&&... in_args)
     {
         String out;
-        StringWrapper outWrapper { out };
-        FormatTo(outWrapper, in_fmt, FORWARD(in_args)...);
+        FormatTo(out, in_fmt, FORWARD(in_args)...);
 
         return out;
     }

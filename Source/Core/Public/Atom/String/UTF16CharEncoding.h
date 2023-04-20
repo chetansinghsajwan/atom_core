@@ -8,8 +8,8 @@ namespace Atom
 {
     struct UTF16CharEncoding
     {
-        using TChar = char16_t;
-        using TUnit = char16_t;
+        using TChar = char16;
+        using TUnit = char16;
 
         static constexpr TChar Null = UTF16('\0');
         static constexpr bool IsMultiUnitEncoding = true;

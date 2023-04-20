@@ -9,18 +9,26 @@ namespace Atom::Private
     template < >
     struct CharEncodingConversionImpl<UTF16CharEncoding, UTF8CharEncoding>
     {
-        template <RConstIterable<UTF16Char> TIn, RBackInsertable<UTF8Char> TOut>
-        static constexpr void ConvertChar(TIn& in, TIn& in_end, TOut& out)
+        template <RInputIterator<UTF16Char> TInput, ROutputWriter<UTF8Char> TOutput>
+        static constexpr void ConvertChar(TInput in, TOutput out)
         {
+            static constexpr UTF8StringView msg = UTF8(
+                "UTF16 -> UTF8 char encoding conversion not implemented yet.");
+
+            out += msg;
         }
     };
 
     template < >
     struct CharEncodingConversionImpl<UTF16CharEncoding, UTF32CharEncoding>
     {
-        template <RConstIterable<UTF16Char> TIn, RBackInsertable<UTF32Char> TOut>
-        static constexpr void ConvertChar(TIn& in, TIn& in_end, TOut& out)
+        template <RInputIterator<UTF16Char> TInput, ROutputWriter<UTF32Char> TOutput>
+        static constexpr void ConvertChar(TInput in, TOutput out)
         {
+            static constexpr UTF32StringView msg = UTF32(
+                "UTF16 -> UTF32 char encoding conversion not implemented yet.");
+
+            out += msg;
         }
     };
 }

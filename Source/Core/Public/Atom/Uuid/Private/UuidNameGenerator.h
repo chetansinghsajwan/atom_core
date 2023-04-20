@@ -30,9 +30,11 @@ namespace Atom::Private
 
         void m_ProcessChars(StringView str)
         {
-            for (uint32_t c : str)
+            for (uint32_t c : str.Iterator())
             {
                 m_hashGenerator.ProcessByte(static_cast<byte>(c & 0xFF));
+
+                // TODO: Check this
                 // if constexpr (!TTI::IsSame<Char, char>)
                 // {
                 //     m_hashGenerator.ProcessByte(static_cast<byte>((c >> 8) & 0xFF));

@@ -1,105 +1,67 @@
 #pragma once
 #include <string>
+#include <functional>
 
-#include "Atom/Containers.h"
+#include "Atom/Containers/DynamicArray.h"
 
 #include "Atom/String/BasicChar.h"
 
 namespace Atom
 {
-    template <typename T>
-    using DefaultAllocator = ::std::allocator<T>;
-
     template <typename TEncoding, typename TAllocator = DefaultAllocator<BasicChar<TEncoding>>>
-    using BasicString = ::std::basic_string
-    <
-        BasicChar<TEncoding>,
-        ::std::char_traits<BasicChar<TEncoding>>,
-        TAllocator
-    >;
-
-    template <typename TEncoding>
-    struct BasicStringWrapper
+    class BasicString: public DynamicArray<BasicChar<TEncoding>, TAllocator>
     {
+        using TBase = DynamicArray<BasicChar<TEncoding>, TAllocator>;
+        using STD_TString = ::std::basic_string<BasicChar<TEncoding>>;
+
+    public:
         using TChar = BasicChar<TEncoding>;
-        using TString = BasicString<TEncoding>;
-
-        using TConstIterator = typename TString::const_iterator;
-        using TIterator = typename TString::iterator;
+        using TIterator = typename TBase::TIterator;
 
     public:
-        constexpr BasicStringWrapper(TString in) noexcept:
-            str{ in } { }
+        constexpr BasicString() noexcept:
+            TBase() { }
 
-    //// -------------------------------------------------------------------------------------------
-    //// RConstIterable [BEGIN]
-    //// -------------------------------------------------------------------------------------------
+        constexpr BasicString(const TChar* str) noexcept:
+            TBase() { }
 
-    public:
-        constexpr TConstIterator ConstBegin() const noexcept
+        template <usize N>
+        constexpr BasicString(const TChar(&str)[N]) noexcept:
+            TBase() { }
+
+        template <RInputIterator<TChar> TInput>
+        constexpr BasicString(TInput in) noexcept:
+            TBase(MOVE(in)) { }
+
+        constexpr BasicString(const STD_TString& in) noexcept:
+            TBase(in.data(), in.size()) { }
+
+        template <usize N>
+        constexpr bool operator == (const TChar(&str)[N]) const noexcept
         {
-            return str.cbegin();
+            return true;
         }
 
-        constexpr TConstIterator ConstEnd() const noexcept
+        template <RInputIterable<TChar> TInputIterable>
+        constexpr bool operator == (const TInputIterable& in) const noexcept
         {
-            return str.cend();
+            return true;
         }
+    };
+}
 
-        constexpr TConstIterator Begin() const noexcept
+namespace std
+{
+    template <typename TEncoding, typename TAllocator>
+    struct hash<Atom::BasicString<TEncoding, TAllocator>>
+    {
+        using TChar = Atom::BasicChar<TEncoding>;
+        using TString = Atom::BasicString<TEncoding, TAllocator>;
+
+        size_t operator () (const TString& str) const noexcept
         {
-            return str.cbegin();
+            basic_string_view<TChar> std_str{ str.Data(), str.Count() };
+            return hash<basic_string_view<TChar>>()(std_str);
         }
-
-        constexpr TConstIterator End() const noexcept
-        {
-            return str.cend();
-        }
-
-        constexpr TConstIterator cbegin() const noexcept
-        {
-            return str.cbegin();
-        }
-
-        constexpr TConstIterator cend() const noexcept
-        {
-            return str.cend();
-        }
-
-        constexpr TConstIterator begin() const noexcept
-        {
-            return str.cbegin();
-        }
-
-        constexpr TConstIterator end() const noexcept
-        {
-            return str.cend();
-        }
-
-    //// -------------------------------------------------------------------------------------------
-    //// RConstIterable [END]
-    //// -------------------------------------------------------------------------------------------
-
-        constexpr void InsertBack(TChar in) noexcept
-        {
-            str.push_back(in);
-        }
-
-        constexpr void InsertBack(const RConstIterable<TChar> auto& in) noexcept
-        {
-            str.insert(str.end(), in.Begin(), in.End());
-        }
-
-        constexpr void operator += (TChar in)
-        {
-            str.push_back(in);
-        }
-
-        constexpr void operator += (const RConstIterable<TChar> auto& in) noexcept
-        {
-            str.insert(str.end(), in.Begin(), in.End());
-        }
-
-        TString str;
     };
 }

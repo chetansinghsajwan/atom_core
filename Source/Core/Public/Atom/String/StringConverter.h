@@ -1,7 +1,7 @@
 #pragma once
 #include "Atom/TTI.h"
 
-#include "Atom/String/Selected.h"
+#include "Atom/String/String.h"
 
 namespace Atom
 {
@@ -23,7 +23,7 @@ namespace Atom
         { converter.Convert(declval(T)) }
             -> RSameAs<String>;
 
-        { converter.Convert(declval(T), declval(BackInsertableTestImpl<Char>&)) }
+        { converter.Convert(declval(T), declval(Internal::BackInsertableMock<Char>&)) }
             -> RSameAs<void>;
     };
 
@@ -59,9 +59,9 @@ namespace Atom
             return String{ str };
         }
 
-        constexpr void Convert(const String& str, RBackInsertable<Char> auto& out) noexcept
+        constexpr void Convert(const String& str, ROutputWriter<Char> auto out) noexcept
         {
-            out.InsertBack(str);
+            out += str;
         }
     };
 }

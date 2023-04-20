@@ -4,93 +4,129 @@
 namespace Atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// Ensures {TConstIterator} is {ConstIterator} for element type {TElement}.
+    /// {OneWayIterator} is {ForwardIterator} as in {std}.
+    /// {TwoWayIterator} is {BidirectionalIterator} as in {std}.
+    /// {DirectIterator} is {RandomAccessIterator} as in {std}.
     /// --------------------------------------------------------------------------------------------
-    template <typename TConstIterator, typename TElement>
-    concept RConstIterator = requires(const TConstIterator cit, TConstIterator it)
-    {
-        { cit.operator * () } -> RSameAs<const TElement&>;
-        { cit.operator -> () } -> RSameAs<const TElement*>;
 
-        { ++it } -> RSameAs<TConstIterator&>;
-        { it++ } -> RSameAs<TConstIterator>;
+    /// --------------------------------------------------------------------------------------------
+    /// Ensures {TIterator} is {OneWayIterator} for type {T}.
+    /// --------------------------------------------------------------------------------------------
+    template <typename TIterator, typename T>
+    concept ROneWayIterator = requires(TIterator iterator, const TIterator constIterator)
+    {
+        requires RCopyConstructible<TIterator>;
+        requires RMoveConstructible<TIterator>;
+        requires RCopyAssignable<TIterator>;
+        requires RMoveAssignable<TIterator>;
+
+        { iterator.Get() } -> RConvertibleTo<const T&>;
+        { iterator.Next() } -> RSameAs<bool>;
+        { constIterator.HasNext() } -> RSameAs<bool>;
+    };
+
+    template <typename TInputIterator, typename T>
+    concept RInputIterator = ROneWayIterator<TInputIterator, T>;
+
+    /// --------------------------------------------------------------------------------------------
+    /// Ensures {TIterator} is {TwoWayIterator} for type {T}.
+    /// --------------------------------------------------------------------------------------------
+    template <typename TIterator, typename T>
+    concept RTwoWayIterator = requires(TIterator iterator, const TIterator constIterator)
+    {
+        requires ROneWayIterator<TIterator, T>;
+
+        { iterator.Prev() } -> RSameAs<bool>;
+        { constIterator.HasPrev() } -> RSameAs<bool>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures {TIterator} is {Iterator} for element type {TElement}.
+    /// Ensures {TIterator} is {DirectIterator} for type {T}.
     /// --------------------------------------------------------------------------------------------
-    template <typename TIterator, typename TElement>
-    concept RIterator = requires(TIterator it)
+    template <typename TIterator, typename T>
+    concept RDirectIterator = requires(TIterator iterator, const TIterator constIterator)
     {
-        requires RConstIterator<TIterator, TElement>;
+        requires RTwoWayIterator<TIterator, T>;
 
-        { it.operator * () } -> RSameAs<TElement&>;
-        { it.operator -> () } -> RSameAs<TElement*>;
+        { iterator.Next((usize)0) } -> RSameAs<bool>;
+        { iterator.Prev((usize)0) } -> RSameAs<bool>;
 
-        { ++it } -> RSameAs<TIterator&>;
-        { it++ } -> RSameAs<TIterator>;
+        { constIterator.Range() } -> RConvertibleTo<usize>;
+    };
+}
+
+namespace Atom::Internal
+{
+    /// --------------------------------------------------------------------------------------------
+    /// Type to test if a type implementing {ROneWayIterator} is accepted when defining concepts.
+    /// --------------------------------------------------------------------------------------------
+    template <typename T>
+    struct OneWayIteratorMock
+    {
+        T& Get();
+
+        bool Next();
+        bool HasNext() const;
     };
 
+    static_assert(ROneWayIterator<OneWayIteratorMock<int>, int>,
+        "OneWayIteratorMock does not meet ROneWayIterator requirements.");
+
+    template <typename T>
+    using InputIteratorMock = OneWayIteratorMock<T>;
+
     /// --------------------------------------------------------------------------------------------
-    /// Type to test if {RConstIterator} is accepted during defining concepts.
+    /// Type to test if a type implementing {RTwoWayIterator} is accepted when defining concepts.
     /// --------------------------------------------------------------------------------------------
-    template <typename TElement>
-    struct ConstIteratorTestImpl
+    template <typename T>
+    struct TwoWayIteratorMock: OneWayIteratorMock<T>
     {
-        const TElement& operator * () const noexcept
-        {
-            return (const TElement&)0;
-        }
-
-        const TElement* operator -> () const noexcept
-        {
-            return (const TElement*)0;
-        }
-
-        ConstIteratorTestImpl<TElement>& operator ++ () noexcept
-        {
-            return *this;
-        }
-
-        ConstIteratorTestImpl<TElement> operator ++ (int) noexcept
-        {
-            return *this;
-        }
+        bool Prev();
+        bool HasPrev() const;
     };
 
-    static_assert(RConstIterator<ConstIteratorTestImpl<int>, int>,
-        "ConstIteratorTestImpl does not meet RConstIterator requirements.");
+    static_assert(RTwoWayIterator<TwoWayIteratorMock<int>, int>,
+        "TwoWayIteratorMock does not meet RTwoWayIterator requirements.");
 
     /// --------------------------------------------------------------------------------------------
-    /// Type to test if {RIterator} is accepted during defining concepts.
+    /// Type to test if a type implementing {RDirectIterator} is accepted when defining concepts.
     /// --------------------------------------------------------------------------------------------
-    template <typename TElement>
-    struct IteratorTestImpl: public ConstIteratorTestImpl<TElement>
+    template <typename T>
+    struct DirectIteratorMock: TwoWayIteratorMock<T>
     {
-        using ConstIteratorTestImpl<TElement>::operator *;
-        using ConstIteratorTestImpl<TElement>::operator ->;
+        using OneWayIteratorMock<T>::Next;
+        bool Next(usize steps);
 
-        TElement& operator * () noexcept
-        {
-            return (TElement&)0;
-        }
+        using TwoWayIteratorMock<T>::Prev;
+        bool Prev(usize steps);
 
-        TElement* operator -> () noexcept
-        {
-            return (TElement*)0;
-        }
-
-        IteratorTestImpl<TElement>& operator ++ () noexcept
-        {
-            return *this;
-        };
-
-        IteratorTestImpl<TElement> operator ++ (int) noexcept
-        {
-            return *this;
-        };
+        usize Range() const;
     };
 
-    static_assert(RIterator<IteratorTestImpl<int>, int>,
-        "IteratorTestImpl does not meet RIterator requirements.");
+    static_assert(RDirectIterator<DirectIteratorMock<int>, int>,
+        "DirectIteratorMock does not meet RDirectIterator requirements.");
+}
+
+namespace Atom
+{
+    template <typename TOutputWriter, typename T>
+    concept ROutputWriter = requires(TOutputWriter out)
+    {
+        { out += declval(const T&) };
+        { out += declval(T&&) };
+
+        { out += Internal::InputIteratorMock<T>() };
+    };
+}
+
+namespace Atom::Internal
+{
+    template <typename T>
+    struct OutputWriterMock
+    {
+        void operator += (const T& in);
+        void operator += (T&& in);
+
+        void operator += (RInputIterator<T> auto in);
+    };
 }

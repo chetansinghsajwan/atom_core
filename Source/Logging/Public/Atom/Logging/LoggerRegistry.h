@@ -17,9 +17,8 @@ namespace Atom::Logging
     /// --------------------------------------------------------------------------------------------
     class LoggerRegistry
     {
-        using Container = UnorderedMap<String, LoggerPtr>;
-        using Iterator = Container::iterator;
-        using ConstIterator = Container::const_iterator;
+        using TContainer = UnorderedMap<String, LoggerPtr>;
+        using TIterator = typename TContainer::const_iterator;
 
     public:
         LoggerRegistry() noexcept
@@ -34,7 +33,7 @@ namespace Atom::Logging
         /// @PARAM[IN] in_logger Logger to register.
         /// 
         /// @THROWS NullPointerException Asserts {in_logger != nullptr}.
-        /// @THROWS InvalidArgumentException Asserts {!key.empty()}, {key = in_logger->Name()}.
+        /// @THROWS InvalidArgumentException Asserts {!key.IsEmpty()}, {key = in_logger->Name()}.
         /// @THROWS InvalidOperationException Asserts {!HasLogger(key)}, {key = in_logger->Name()}.
         /// 
         /// @EXCEPTION_SAFETY VeryStrong
@@ -46,13 +45,13 @@ namespace Atom::Logging
 
             StringView key = in_logger->Name();
 
-            ATOM_ASSERT_THROW(!key.empty(), InvalidArgumentException(
+            ATOM_ASSERT_THROW(!key.IsEmpty(), InvalidArgumentException(
                 TEXT("Cannot register in_logger with NULL key.")));
 
             ATOM_ASSERT_THROW(m_HasLogger(key) == false, InvalidOperationException(
                 TEXT("Logger for key{{key}} is already registered.")));
 
-            m_RegisterLogger(in_logger, String(key));
+            m_RegisterLogger(in_logger, String(key.Iterator()));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -66,7 +65,7 @@ namespace Atom::Logging
         /// @PARAM[IN] in_key String used as key to register logger.
         /// 
         /// @THROWS NullPointerException Asserts {in_logger != nullptr}.
-        /// @THROWS InvalidArgumentException Asserts {!in_key.empty()}.
+        /// @THROWS InvalidArgumentException Asserts {!in_key.IsEmpty()}.
         /// @THROWS InvalidOperationException Asserts {!HasLogger(in_key)}.
         /// 
         /// @EXCEPTION_SAFETY VeryStrong
@@ -76,13 +75,13 @@ namespace Atom::Logging
             ATOM_ASSERT_THROW(in_logger != nullptr, NullPointerException(
                 TEXT("Cannot register NULL Logger.")));
 
-            ATOM_ASSERT_THROW(!in_key.empty(), InvalidArgumentException(
+            ATOM_ASSERT_THROW(!in_key.IsEmpty(), InvalidArgumentException(
                 TEXT("Cannot register in_logger with NULL key.")));
 
             ATOM_ASSERT_THROW(m_HasLogger(in_key) == false, InvalidOperationException(
                 TEXT("Logger for key{{key}} is already registered.")));
 
-            m_RegisterLogger(in_logger, String(in_key));
+            m_RegisterLogger(in_logger, String(in_key.Iterator()));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -95,7 +94,7 @@ namespace Atom::Logging
             ATOM_ASSERT_THROW(in_logger != nullptr, NullPointerException(
                 TEXT("Cannot register NULL Logger.")));
 
-            ATOM_ASSERT_THROW(!in_key.empty(), InvalidArgumentException(
+            ATOM_ASSERT_THROW(!in_key.IsEmpty(), InvalidArgumentException(
                 TEXT("Cannot register in_logger with NULL key.")));
 
             ATOM_ASSERT_THROW(m_HasLogger(in_key) == false, InvalidOperationException(
@@ -109,7 +108,7 @@ namespace Atom::Logging
         /// registered, then unregisters it and registers this.
         /// 
         /// @THROWS NullPointerException Asserts {logger != nullptr}.
-        /// @THROWS InvalidArgumentException Asserts {!key.empty()}, {key = logger->Name()}.
+        /// @THROWS InvalidArgumentException Asserts {!key.IsEmpty()}, {key = logger->Name()}.
         /// 
         /// @EXCEPTION_SAFETY VeryStrong
         /// ----------------------------------------------------------------------------------------
@@ -120,10 +119,10 @@ namespace Atom::Logging
 
             StringView key = in_logger->Name();
 
-            ATOM_ASSERT_THROW(!key.empty(), InvalidArgumentException(
+            ATOM_ASSERT_THROW(!key.IsEmpty(), InvalidArgumentException(
                 TEXT("Cannot register logger with NULL key.")));
 
-            m_ForceRegisterLogger(in_logger, String(key));
+            m_ForceRegisterLogger(in_logger, String(key.Iterator()));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -134,7 +133,7 @@ namespace Atom::Logging
         /// @PARAM[IN] key String used as key to register logger.
         /// 
         /// @THROWS NullPointerException Asserts {in_logger != nullptr}.
-        /// @THROWS InvalidArgumentException Asserts {!key.empty()}.
+        /// @THROWS InvalidArgumentException Asserts {!key.IsEmpty()}.
         /// 
         /// @EXCEPTION_SAFETY VeryStrong
         /// ----------------------------------------------------------------------------------------
@@ -143,10 +142,10 @@ namespace Atom::Logging
             ATOM_ASSERT_THROW(in_logger != nullptr, NullPointerException(
                 TEXT("Cannot register NULL Logger.")));
 
-            ATOM_ASSERT_THROW(!key.empty(), InvalidArgumentException(
+            ATOM_ASSERT_THROW(!key.IsEmpty(), InvalidArgumentException(
                 TEXT("Cannot register logger with NULL key.")));
 
-            m_ForceRegisterLogger(in_logger, String(key));
+            m_ForceRegisterLogger(in_logger, String(key.Iterator()));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -159,7 +158,7 @@ namespace Atom::Logging
             ATOM_ASSERT_THROW(in_logger != nullptr, NullPointerException(
                 TEXT("Cannot register NULL Logger.")));
 
-            ATOM_ASSERT_THROW(!in_key.empty(), InvalidArgumentException(
+            ATOM_ASSERT_THROW(!in_key.IsEmpty(), InvalidArgumentException(
                 TEXT("Cannot register logger with NULL key.")));
 
             m_ForceRegisterLogger(in_logger, MOVE(in_key));
@@ -176,13 +175,13 @@ namespace Atom::Logging
                 return false;
 
             StringView key = in_logger->Name();
-            if (key.empty())
+            if (key.IsEmpty())
                 return false;
 
             if (m_HasLogger(key))
                 return false;
 
-            m_RegisterLogger(in_logger, String(key));
+            m_RegisterLogger(in_logger, String(key.Iterator()));
             return true;
         }
 
@@ -197,13 +196,13 @@ namespace Atom::Logging
             if (in_logger == nullptr)
                 return false;
 
-            if (in_key.empty())
+            if (in_key.IsEmpty())
                 return false;
 
             if (m_HasLogger(in_key))
                 return false;
 
-            m_RegisterLogger(in_logger, String(in_key));
+            m_RegisterLogger(in_logger, String(in_key.Iterator()));
             return true;
         }
 
@@ -218,7 +217,7 @@ namespace Atom::Logging
             if (in_logger == nullptr)
                 return false;
 
-            if (in_key.empty())
+            if (in_key.IsEmpty())
                 return false;
 
             if (m_HasLogger(in_key))
@@ -231,13 +230,13 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Unregisters the logger registered with key {in_key}.
         /// 
-        /// @THROWS InvalidArgumentException Asserts {!in_key.empty()}.
+        /// @THROWS InvalidArgumentException Asserts {!in_key.IsEmpty()}.
         /// 
         /// @EXCEPTION_SAFETY VeryStrong
         /// ----------------------------------------------------------------------------------------
         bool UnregisterLogger(StringView in_key)
         {
-            ATOM_ASSERT_THROW(!in_key.empty(), InvalidArgumentException(
+            ATOM_ASSERT_THROW(!in_key.IsEmpty(), InvalidArgumentException(
                 TEXT("Cannot access logger with NULL key.")));
 
             return m_UnregisterLogger(in_key) != nullptr;
@@ -257,13 +256,13 @@ namespace Atom::Logging
         /// @PARAM[IN] in_key Key used to register the logger.
         /// @RETURNS Logger registered with key {in_key}. If no logger was registered returns nullptr.
         /// 
-        /// @THROWS InvalidArgumentException Asserts {!in_key.empty()}.
+        /// @THROWS InvalidArgumentException Asserts {!in_key.IsEmpty()}.
         /// 
         /// @EXCEPTION_SAFETY VeryStrong
         /// ----------------------------------------------------------------------------------------
         LoggerPtr UnregisterAndGetLogger(StringView in_key)
         {
-            ATOM_ASSERT_THROW(!in_key.empty(), InvalidArgumentException(
+            ATOM_ASSERT_THROW(!in_key.IsEmpty(), InvalidArgumentException(
                 TEXT("Cannot access logger with NULL key.")));
 
             return m_UnregisterLogger(in_key);
@@ -333,33 +332,33 @@ namespace Atom::Logging
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// @RETURNS ConstIterator to first Key-Logger pair.
+        /// @RETURNS TIterator to first Key-Logger pair.
         /// ----------------------------------------------------------------------------------------
-        ConstIterator begin() const noexcept
+        TIterator begin() const noexcept
         {
             return m_loggers.begin();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// @RETURNS ConstIterator to last Key-Logger pair. 
+        /// @RETURNS TIterator to last Key-Logger pair. 
         /// ----------------------------------------------------------------------------------------
-        ConstIterator end() const noexcept
+        TIterator end() const noexcept
         {
             return m_loggers.cend();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// @RETURNS ConstIterator to first Key-Logger pair.
+        /// @RETURNS TIterator to first Key-Logger pair.
         /// ----------------------------------------------------------------------------------------
-        ConstIterator cbegin() const noexcept
+        TIterator cbegin() const noexcept
         {
             return m_loggers.cbegin();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// @RETURNS ConstIterator to last Key-Logger pair.
+        /// @RETURNS TIterator to last Key-Logger pair.
         /// ----------------------------------------------------------------------------------------
-        ConstIterator cend() const noexcept
+        TIterator cend() const noexcept
         {
             return m_loggers.cend();
         }
@@ -384,7 +383,7 @@ namespace Atom::Logging
         void m_RegisterLogger(LoggerPtr in_logger, String in_key)
         {
             ATOM_DEBUG_ASSERT(in_logger != nullptr, "msg");
-            ATOM_DEBUG_ASSERT(!in_key.empty());
+            ATOM_DEBUG_ASSERT(!in_key.IsEmpty());
 
             bool result = m_loggers.insert({ MOVE(in_key), MOVE(in_logger) }).second;
             ATOM_DEBUG_ASSERT(result);
@@ -397,7 +396,7 @@ namespace Atom::Logging
         void m_ForceRegisterLogger(LoggerPtr in_logger, String in_key)
         {
             ATOM_DEBUG_ASSERT(in_logger != nullptr);
-            ATOM_DEBUG_ASSERT(!in_key.empty());
+            ATOM_DEBUG_ASSERT(!in_key.IsEmpty());
 
             m_loggers.insert_or_assign(MOVE(in_key), MOVE(in_logger));
         }
@@ -438,7 +437,7 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        ConstIterator m_FindEntry(StringView in_key) const noexcept
+        TIterator m_FindEntry(StringView in_key) const noexcept
         {
             auto it = m_loggers.cbegin();
             for (; it != m_loggers.cend(); it++)
@@ -453,7 +452,7 @@ namespace Atom::Logging
         }
 
     protected:
-        Container m_loggers;
+        TContainer m_loggers;
         LoggerPtr m_defaultLogger;
     };
 

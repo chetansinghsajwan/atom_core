@@ -63,7 +63,7 @@ namespace Atom::Logging
                 file = _stderr;
             }
 
-            ::fwrite(formattedMsg.data(), sizeof(char), formattedMsg.size(), file);
+            ::fwrite(formattedMsg.Data(), sizeof(char), formattedMsg.Count(), file);
         }
 
         /// ----------------------------------------------------------------------------------------

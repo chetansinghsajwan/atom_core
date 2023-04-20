@@ -103,7 +103,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         void Dispatch(TArgs... args)
         {
-            for (auto& listener : _listeners)
+            for (auto& listener : _listeners.Iterator())
             {
                 listener(args...);
             }
@@ -112,30 +112,26 @@ namespace Atom
     protected:
         SEventKey _AddListener(InvokableBox<void(TArgs...)>&& invokable)
         {
-            _listeners.push_back(MOVE(invokable));
-            return SEventKey(_listeners.back().GetInvokableType());
+            SEventKey key = invokable.GetInvokableType();
+
+            _listeners.InsertBack(MOVE(invokable));
+            return key;
         }
 
         usize _RemoveListener(SEventKey key) noexcept
         {
-            for (auto it = _listeners.begin(); it != _listeners.end(); it++)
-            {
-                if (it->GetInvokableType() == key.GetType())
+            return _listeners.Remove([&](auto& listener)
                 {
-                    _listeners.erase(it);
-                    return 1;
-                }
-            }
-
-            return 0;
+                    return listener.GetInvokableType() == key.GetType();
+                });
         }
 
         usize _CountListeners(SEventKey key) noexcept
         {
             usize count = 0;
-            for (auto it = _listeners.begin(); it != _listeners.end(); it++)
+            for (auto& listener : _listeners)
             {
-                if (it->GetInvokableType() == key.GetType())
+                if (listener.GetInvokableType() == key.GetType())
                 {
                     count++;
                 }

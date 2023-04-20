@@ -4,7 +4,7 @@
 namespace Atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// Insertable: Represents a type that allows inserting elements of type {Element} into it.
+    /// {Insertable} represents a type that allows inserting elements of type {Element} into it.
     /// --------------------------------------------------------------------------------------------
 
     /// --------------------------------------------------------------------------------------------
@@ -14,11 +14,11 @@ namespace Atom
     concept RInsertable = requires(TInsertable insertable, TElement element)
     {
         insertable.Insert(element);
-        insertable.Insert(ConstIterableTestImpl<TElement>());
+        insertable.Insert(Internal::InputIteratorMock<TElement>());
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// FrontInsertable: Represents a type that allows inserting elements of type {Element} 
+    /// {FrontInsertable} represents a type that allows inserting elements of type {Element} 
     /// into front of container.
     /// --------------------------------------------------------------------------------------------
 
@@ -29,49 +29,66 @@ namespace Atom
     concept RFrontInsertable = requires(TFrontInsertable insertable, TElement element)
     {
         insertable.InsertFront(element);
-        insertable.InsertFront(ConstIterableTestImpl<TElement>());
+        insertable.InsertFront(Internal::InputIteratorMock<TElement>());
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// FrontInsertable: Represents a type that allows inserting elements of type {Element} 
+    /// {FrontInsertable} represents a type that allows inserting elements of type {Element} 
     /// into back of container.
     /// --------------------------------------------------------------------------------------------
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures {TInsertable} is {BackInsertable} for type {TElement}.
     /// --------------------------------------------------------------------------------------------
-    template <typename TBackInsertable, typename TElement>
-    concept RBackInsertable = requires(TBackInsertable insertable, TElement element)
+    template <typename TInsertable, typename TElement>
+    concept RBackInsertable = requires(TInsertable insertable, TElement element)
     {
         insertable.InsertBack(element);
-        insertable.InsertBack(ConstIterableTestImpl<TElement>());
+        insertable.InsertBack(Internal::InputIteratorMock<TElement>());
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// IndexInsertable: Represents a type that allows inserting elements of type {Element} 
+    /// {KeyInsertable} represents a type that allows inserting elements of type {Element} 
+    /// at specified index of container.
+    /// --------------------------------------------------------------------------------------------
+
+    /// --------------------------------------------------------------------------------------------
+    /// Ensures {TInsertable} is {KeyInsertable} for type {TElement}.
+    /// --------------------------------------------------------------------------------------------
+    template <typename TInsertable, typename TKey, typename TElement>
+    concept RKeyInsertable = requires(TInsertable insertable, TKey key, TElement element)
+    {
+        insertable.Insert(key, element);
+        insertable.Insert(key, Internal::InputIteratorMock<TElement>());
+    };
+
+    /// --------------------------------------------------------------------------------------------
+    /// {IndexInsertable} represents a type that allows inserting elements of type {Element} 
     /// at specified index of container.
     /// --------------------------------------------------------------------------------------------
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures {TInsertable} is {IndexInsertable} for type {TElement}.
     /// --------------------------------------------------------------------------------------------
-    template <typename TIndexInsertable, typename TElement>
-    concept RIndexInsertable = requires(TIndexInsertable insertable, TElement element)
-    {
-        insertable.InsertAt(0, element);
-        insertable.InsertAt(0, ConstIterableTestImpl<TElement>());
-    };
+    template <typename TInsertable, typename TElement>
+    concept RIndexInsertable = RKeyInsertable<TInsertable, usize, TElement>;
+}
 
+namespace Atom::Internal
+{
     /// --------------------------------------------------------------------------------------------
-    /// Type to test if RBackInsertable is accepted during defining concepts.
+    /// Type to test if a type implementing {RBackInsertable} is accepted when defining concepts.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    struct BackInsertableTestImpl
+    struct BackInsertableMock
     {
-        constexpr void InsertBack(const T&) noexcept { }
-        constexpr void InsertBack(const RConstIterable<T> auto& iterable) noexcept { }
+        void InsertBack(const T&);
+        void InsertBack(T&&);
+
+        template <RInputIterator<T> TInput>
+        void InsertBack(TInput in);
     };
 
-    static_assert(RBackInsertable<BackInsertableTestImpl<int>, int>,
-        "BackInsertableTestImpl does not satisfy RBackInsertable requirements.");
+    static_assert(RBackInsertable<BackInsertableMock<int>, int>,
+        "BackInsertableMock does not satisfy RBackInsertable requirements.");
 }

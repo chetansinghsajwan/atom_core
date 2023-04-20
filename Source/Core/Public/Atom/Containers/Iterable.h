@@ -4,97 +4,77 @@
 namespace Atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// ConstIterable: Represents a type over which you can iterate without changing the elements.
+    /// {OneWayIterable} is a type which provides {OneWayIterator}.
+    /// {TwoWayIterable} is a type which provides {TwoWayIterator}.
+    /// {DirectIterable} is a type which provides {DirectIterator}.
     /// --------------------------------------------------------------------------------------------
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures {TConstIterable} is {ConstIterable} for element type {TElement}.
+    /// Ensures {TIterable} is {OneWayIterable} for type {T}.
     /// --------------------------------------------------------------------------------------------
-    template <typename TConstIterable, typename TElement>
-    concept RConstIterable = requires(const TConstIterable iterable)
+    template <typename TIterable, typename T>
+    concept ROneWayIterable = requires(TIterable iterable)
     {
-        requires RConstIterator<typename TConstIterable::TConstIterator, TElement>;
+        { iterable.Iterator() } -> ROneWayIterator<T>;
+    };
 
-        { iterable.ConstBegin() } -> RSameAs<typename TConstIterable::TConstIterator>;
-        { iterable.ConstEnd() }   -> RSameAs<typename TConstIterable::TConstIterator>;
+    template <typename TIterable, typename T>
+    concept RInputIterable = ROneWayIterable<TIterable, T>;
 
-        { iterable.Begin() }      -> RSameAs<typename TConstIterable::TConstIterator>;
-        { iterable.End() }        -> RSameAs<typename TConstIterable::TConstIterator>;
-
-        { iterable.cbegin() }     -> RSameAs<typename TConstIterable::TConstIterator>;
-        { iterable.cend() }       -> RSameAs<typename TConstIterable::TConstIterator>;
-
-        { iterable.begin() }      -> RSameAs<typename TConstIterable::TConstIterator>;
-        { iterable.end() }        -> RSameAs<typename TConstIterable::TConstIterator>;
+    /// --------------------------------------------------------------------------------------------
+    /// Ensures {TIterable} is {TwoWayIterable} for type {T}.
+    /// --------------------------------------------------------------------------------------------
+    template <typename TIterable, typename T>
+    concept RTwoWayIterable = requires(TIterable iterable)
+    {
+        { iterable.Iterator() } -> RTwoWayIterator<T>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Iterable: Represents a type over which you can iterate and change elements.
+    /// Ensures {TIterable} is {DirectIterable} for type {T}.
     /// --------------------------------------------------------------------------------------------
-
-    /// --------------------------------------------------------------------------------------------
-    /// Ensures {TIterable} is {Iterable}.
-    /// --------------------------------------------------------------------------------------------
-    template <typename TIterable, typename TElement>
-    concept RIterable = requires(TIterable iterable)
+    template <typename TIterable, typename T>
+    concept RDirectIterable = requires(TIterable iterable)
     {
-        requires RConstIterable<TIterable, TElement>;
+        { iterable.Iterator() } -> RDirectIterator<T>;
+    };
+}
 
-        requires RIterator<typename TIterable::TIterator, TElement>;
-
-        { iterable.Begin() } -> RSameAs<typename TIterable::TIterator>;
-        { iterable.End() }   -> RSameAs<typename TIterable::TIterator>;
-
-        { iterable.begin() } -> RSameAs<typename TIterable::TIterator>;
-        { iterable.end() }   -> RSameAs<typename TIterable::TIterator>;
+namespace Atom::Internal
+{
+    /// --------------------------------------------------------------------------------------------
+    /// Type to test if a type implementing {ROneWayIterable} is accepted when defining concepts.
+    /// --------------------------------------------------------------------------------------------
+    template <typename T>
+    struct OneWayIterableMock
+    {
+        OneWayIteratorMock<T> Iterator();
     };
 
+    static_assert(ROneWayIterable<OneWayIterableMock<int>, int>,
+        "OneWayIterableMock does not meet ROneWayIterable requirements.");
+
     /// --------------------------------------------------------------------------------------------
-    /// Type to check if {RConstIterable} is accepted during defining concepts.
+    /// Type to test if a type implementing {RTwoWayIterable} is accepted when defining concepts.
     /// --------------------------------------------------------------------------------------------
-    template <typename TElement>
-    struct ConstIterableTestImpl
+    template <typename T>
+    struct TwoWayIterableMock: OneWayIterableMock<T>
     {
-        using TConstIterator = ConstIteratorTestImpl<TElement>;
-
-        TConstIterator ConstBegin() const noexcept { return {}; };
-        TConstIterator ConstEnd() const noexcept { return {}; };
-
-        TConstIterator Begin() const noexcept { return {}; };
-        TConstIterator End() const noexcept { return {}; };
-
-        TConstIterator cbegin() const noexcept { return {}; };
-        TConstIterator cend() const noexcept { return {}; };
-
-        TConstIterator begin() const noexcept { return {}; };
-        TConstIterator end() const noexcept { return {}; };
+        TwoWayIteratorMock<T> Iterator();
     };
 
-    static_assert(RConstIterable<ConstIterableTestImpl<int>, int>,
-        "ConstIterableTestImpl does not meet RConstIterable requirements.");
+    static_assert(RTwoWayIterable<TwoWayIterableMock<int>, int>,
+        "TwoWayIterableMock does not meet RTwoWayIterable requirements.");
 
     /// --------------------------------------------------------------------------------------------
-    /// Type to check if {RIterable} is accepted during defining concepts.
+    /// Type to test if a type implementing {RDirectIterable} is accepted when defining concepts.
     /// --------------------------------------------------------------------------------------------
-    template <typename TElement>
-    struct IterableTestImpl: public ConstIterableTestImpl<TElement>
+    template <typename T>
+    struct DirectIterableMock: TwoWayIterableMock<T>
     {
-        using TConstIterator = ConstIteratorTestImpl<TElement>;
-        using TIterator = IteratorTestImpl<TElement>;
-
-        using ConstIterableTestImpl<TElement>::Begin;
-        using ConstIterableTestImpl<TElement>::begin;
-
-        using ConstIterableTestImpl<TElement>::End;
-        using ConstIterableTestImpl<TElement>::end;
-
-        constexpr TIterator Begin() noexcept { return {}; };
-        constexpr TIterator End() noexcept { return {}; };
-
-        constexpr TIterator begin() noexcept { return {}; };
-        constexpr TIterator end() noexcept { return {}; };
+        DirectIteratorMock<T> Iterator();
     };
 
-    static_assert(RIterable<IterableTestImpl<int>, int>,
-        "IterableTestImpl does not meet RIterable requirements.");
+    static_assert(RDirectIterable<DirectIterableMock<int>, int>,
+        "DirectIterableMock does not meet RDirectIterable requirements.");
 }

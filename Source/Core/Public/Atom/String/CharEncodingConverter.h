@@ -2,6 +2,8 @@
 #include "Atom/Core.h"
 #include "Atom/Containers.h"
 
+#include "Atom/String/BasicChar.h"
+
 namespace Atom::Private
 {
     /// --------------------------------------------------------------------------------------------
@@ -11,6 +13,8 @@ namespace Atom::Private
     template <typename TFromCharEncoding, typename TToCharEncoding>
     struct CharEncodingConversionImpl
     {
+        CharEncodingConversionImpl() = delete;
+
         void ConvertChar();
     };
 }
@@ -31,8 +35,8 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <typename TConverter, typename TFromCharEncoding, typename TToCharEncoding>
     concept RCharEncodingConverter = requires(TConverter converter,
-        ConstIterableTestImpl<BasicChar<TFromCharEncoding>> in,
-        BackInsertableTestImpl<BasicChar<TToCharEncoding>> out)
+        Internal::InputIteratorMock<BasicChar<TFromCharEncoding>> in,
+        Internal::OutputWriterMock<BasicChar<TToCharEncoding>> out)
     {
         requires RDefaultConstructible<TConverter>;
 
@@ -56,7 +60,7 @@ namespace Atom
     /// Converts data from {TFromCharEncoding} character encoding to {TToCharEncoding} on demand.
     /// This doesn't process the whole string, only the requested part.
     /// --------------------------------------------------------------------------------------------
-    template <typename TFromCharEncoding, typename TToCharEncoding, typename TInputIt>
+    template <typename TFromCharEncoding, typename TToCharEncoding, typename TInput>
     class CharEncodingLazyConverter;
 
     /// --------------------------------------------------------------------------------------------
@@ -64,15 +68,15 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <typename TConverter, typename TFromCharEncoding, typename TToCharEncoding>
     concept RCharEncodingLazyConverter = requires(TConverter converter,
-        ConstIterableTestImpl<BasicChar<TFromCharEncoding>> in)
+        Internal::InputIteratorMock<BasicChar<TFromCharEncoding>> in)
     {
-        requires RConstructible<TConverter, decltype(in), decltype(in)>;
+        requires RConstructible<TConverter, decltype(in)>;
 
         { converter.Next() }
             -> RSameAs<bool>;
 
         { converter.Get() }
-            -> RSameAs<BasicChar<TToCharEncoding>>;
+            -> RConvertibleTo<BasicChar<TToCharEncoding>>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -81,7 +85,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <typename TFromCharEncoding, typename TToCharEncoding>
     concept RCharEncodingLazyConvertible = RCharEncodingLazyConverter<
-        CharEncodingLazyConverter<TFromCharEncoding, TToCharEncoding, ConstIterableTestImpl<BasicChar<TFromCharEncoding>>>,
+        CharEncodingLazyConverter<TFromCharEncoding, TToCharEncoding, Internal::InputIteratorMock<BasicChar<TFromCharEncoding>>>,
         TFromCharEncoding, TToCharEncoding>;
 
     /// --------------------------------------------------------------------------------------------
@@ -97,8 +101,8 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Writes input to output as is.
         /// ----------------------------------------------------------------------------------------
-        template <RConstIterable<TChar> TIn, RBackInsertable<TChar> TOut>
-        constexpr void Convert(const TIn& in, TOut& out)
+        template <RInputIterator<TChar> TInput, ROutputWriter<TChar> TOutput>
+        constexpr void Convert(TInput in, TOutput out)
         {
             for (auto ch : in) out += ch;
         }
@@ -106,8 +110,8 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Writes input to output as is.
         /// ----------------------------------------------------------------------------------------
-        template <RConstIterable<TChar> TIn>
-        constexpr TString Convert(const TIn& in)
+        template <RInputIterator<TChar> TInput>
+        constexpr TString Convert(TInput in)
         {
             TString out;
             Convert(in, out);
@@ -115,11 +119,11 @@ namespace Atom
             return out;
         }
 
-        template <RConstIterable<TChar> TIn>
-        constexpr auto LazyConvert(const TIn& in)
+        template <RInputIterator<TChar> TInput>
+        constexpr auto LazyConvert(TInput in)
         {
             using TLazyConverter = CharEncodingLazyConverter<
-                TCharEncoding, TCharEncoding, decltype(TIn.begin())>;
+                TCharEncoding, TCharEncoding, decltype(TInput.begin())>;
 
             return TLazyConverter{ in.begin(), in.end() };
         }
@@ -128,29 +132,33 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// {CharEncodingLazyConverter} specialization for same character encodings.
     /// --------------------------------------------------------------------------------------------
-    template <typename TCharEncoding, typename TInputIt>
-    class CharEncodingLazyConverter<TCharEncoding, TCharEncoding, TInputIt>
+    template <typename TCharEncoding, typename TInput>
+    class CharEncodingLazyConverter<TCharEncoding, TCharEncoding, TInput>
     {
         using TChar = BasicChar<TCharEncoding>;
 
     public:
-        constexpr CharEncodingLazyConverter(TInputIt&& in_begin, TInputIt&& in_end) noexcept:
-            _inputIt{ in_begin }, _inputEnd{ in_end } {}
+        constexpr CharEncodingLazyConverter(TInput&& input) noexcept:
+            _input{ input } { }
 
+    public:
         constexpr TChar Get() noexcept
         {
-            return *_inputIt;
+            return _input.Get();
         }
 
         constexpr bool Next()
         {
-            auto tmp = _inputIt++;
-            return tmp != _inputEnd;
+            return _input.Next();
+        }
+
+        constexpr bool HasNext() const noexcept
+        {
+            return _input.HasNext();
         }
 
     protected:
-        TInputIt _inputIt;
-        TInputIt _inputEnd;
+        TInput _input;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -169,33 +177,32 @@ namespace Atom
         using TToString = BasicString<TToCharEncoding>;
         using TImpl = Private::CharEncodingConversionImpl<TFromCharEncoding, TToCharEncoding>;
 
-        template <RConstIterable<TFromChar> TIn, RBackInsertable<TToChar> TOut>
-        constexpr void Convert(const TIn& in, TOut& out)
+        template <RInputIterator<TFromChar> TInput, ROutputWriter<TToChar> TOutput>
+        constexpr void Convert(TInput in, TOutput out)
         {
             auto end = in.end();
             for (auto it = in.begin(); it != end; it++)
             {
-                TImpl::ConvertChar(it, end, out);
+                TImpl::ConvertChar(it, out);
             }
         }
 
-        template <RConstIterable<TFromChar> TIn>
-        constexpr TToString Convert(const TIn& in)
+        template <RInputIterator<TFromChar> TInput>
+        constexpr TToString Convert(TInput in)
         {
             TToString out;
-            BasicStringWrapper<TToCharEncoding> outWrapper{ out };
-            Convert(in, outWrapper);
+            Convert(in, out);
 
             return out;
         }
 
-        template <RConstIterable<TFromChar> TIn>
-        constexpr auto LazyConvert(const TIn& in)
+        template <RInputIterator<TFromChar> TInput>
+        constexpr auto LazyConvert(TInput in)
         {
             using TLazyConverter = CharEncodingLazyConverter<
-                TFromCharEncoding, TToCharEncoding, decltype(TIn.begin())>;
+                TFromCharEncoding, TToCharEncoding, TInput>;
 
-            return TLazyConverter{ in.begin(), in.end() };
+            return TLazyConverter{ in };
         }
     };
 
@@ -206,9 +213,10 @@ namespace Atom
     /// 
     /// @TODO Fix output buffer size.
     /// --------------------------------------------------------------------------------------------
-    template <typename TFromCharEncoding, typename TToCharEncoding, typename TInputIt>
+    template <typename TFromCharEncoding, typename TToCharEncoding, RInputIterator<
+        BasicChar<TFromCharEncoding>> TInput>
     requires RConstructible<Private::CharEncodingConversionImpl<TFromCharEncoding, TToCharEncoding>>
-    struct CharEncodingLazyConverter<TFromCharEncoding, TToCharEncoding, TInputIt>
+    struct CharEncodingLazyConverter<TFromCharEncoding, TToCharEncoding, TInput>
     {
         using TThis = CharEncodingLazyConverter;
         using TFromChar = typename TFromCharEncoding::TChar;
@@ -216,14 +224,13 @@ namespace Atom
         using TImpl = Private::CharEncodingConversionImpl<TFromCharEncoding, TToCharEncoding>;
 
     public:
-        constexpr CharEncodingLazyConverter(TInputIt&& in_begin, TInputIt&& in_end) noexcept:
-            _inputIt{ in_begin }, _inputEnd{ in_end },
-            _out{ 0 }, _outIndex{ -1 }
+        constexpr CharEncodingLazyConverter(TInput&& input) noexcept:
+            _input{ fwd(input) }, _out{ 0 }, _outIndex{ -1 }
         {
             _ProcessNextChar();
         }
 
-        constexpr TToChar Get() noexcept
+        constexpr TToChar& Get() noexcept
         {
             return _out[_outIndex];
         }
@@ -236,7 +243,12 @@ namespace Atom
             }
 
             _outIndex--;
-            return _inputIt != _inputEnd;
+            return _input.HasNext();
+        }
+
+        constexpr bool HasNext() const noexcept
+        {
+            return _outIndex > 0 || _input.HasNext();
         }
 
     protected:
@@ -253,14 +265,13 @@ namespace Atom
                 uint8& outIndex;
             };
 
-            TImpl::Convert(_inputIt, _inputEnd, Output{ _out, _outIndex });
+            TImpl::ConvertChar(_input, Output{ _out, _outIndex });
         }
 
     protected:
         TToChar _out[4];
         uint8 _outIndex;
 
-        TInputIt _inputIt;
-        TInputIt _inputEnd;
+        TInput _input;
     };
 };

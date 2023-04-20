@@ -1,77 +1,41 @@
 #pragma once
 #include <string_view>
 
-#include "Atom/Containers.h"
+#include "Atom/Containers/ArrayView.h"
 
 #include "Atom/String/BasicChar.h"
 
 namespace Atom
 {
     template <typename TEncoding>
-    using BasicStringView = ::std::basic_string_view<BasicChar<TEncoding>>;
-
-    template <typename TEncoding>
-    struct BasicStringViewWrapper
+    class BasicStringView: public ArrayView<BasicChar<TEncoding>>
     {
+        using TBase = ArrayView<BasicChar<TEncoding>>;
+        using STD_TStringView = ::std::basic_string_view<BasicChar<TEncoding>>;
+
+    public:
         using TChar = BasicChar<TEncoding>;
-        using TStringView = BasicStringView<TEncoding>;
-
-        using TConstIterator = typename TStringView::const_iterator;
-        using TIterator = typename TStringView::iterator;
+        using TIterator = typename TBase::TIterator;
 
     public:
-        constexpr BasicStringViewWrapper(TStringView in) noexcept:
-            str{ in } { }
+        constexpr BasicStringView() noexcept:
+            TBase() { }
 
-    //// -------------------------------------------------------------------------------------------
-    //// RConstIterable [BEGIN]
-    //// -------------------------------------------------------------------------------------------
+        constexpr BasicStringView(const TChar* str, usize len) noexcept:
+            TBase(str, len) { }
 
-    public:
-        constexpr TConstIterator ConstBegin() const noexcept
-        {
-            return str.cbegin();
-        }
+        template <usize N>
+        constexpr BasicStringView(const TChar(&str)[N]) noexcept:
+            TBase(str, N) { }
 
-        constexpr TConstIterator ConstEnd() const noexcept
-        {
-            return str.cend();
-        }
+        template <RInputIterator<TChar> TInput>
+        constexpr BasicStringView(TInput in) noexcept:
+            TBase(MOVE(in)) { }
 
-        constexpr TConstIterator Begin() const noexcept
-        {
-            return str.cbegin();
-        }
+        constexpr BasicStringView(const BasicString<TEncoding>& in) noexcept:
+            TBase(in.Data(), in.Count()) { }
 
-        constexpr TConstIterator End() const noexcept
-        {
-            return str.cend();
-        }
-
-        constexpr TConstIterator cbegin() const noexcept
-        {
-            return str.cbegin();
-        }
-
-        constexpr TConstIterator cend() const noexcept
-        {
-            return str.cend();
-        }
-
-        constexpr TConstIterator begin() const noexcept
-        {
-            return str.cbegin();
-        }
-
-        constexpr TConstIterator end() const noexcept
-        {
-            return str.cend();
-        }
-
-    //// -------------------------------------------------------------------------------------------
-    //// RConstIterable [END]
-    //// -------------------------------------------------------------------------------------------
-
-        TStringView str;
+        constexpr BasicStringView(const STD_TStringView& in) noexcept:
+            TBase(in.data(), in.size()) { }
     };
 }

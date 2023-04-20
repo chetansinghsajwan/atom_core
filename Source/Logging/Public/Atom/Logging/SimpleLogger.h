@@ -55,20 +55,8 @@ namespace Atom::Logging::Internal
         /// @PARAM[IN] name Name of this logger.
         /// @PARAM[IN] targets LogTarget objects to add.
         /// ----------------------------------------------------------------------------------------
-        SimpleLoggerTemplate(String name, const RConstIterable<LogTargetPtr> auto& targets)
-            noexcept: _name(MOVE(name)), targets(targets) { }
-
-        /// ----------------------------------------------------------------------------------------
-        /// Constructs and adds LogTarget objects.
-        /// Constructs {this->targets(begin, end)}.
-        /// 
-        /// @PARAM[IN] name Name of this logger.
-        /// @PARAM[IN] begin RConstIterator to beginning of range to add.
-        /// @PARAM[IN] end RConstIterator to end of range to add.
-        /// ----------------------------------------------------------------------------------------
-        SimpleLoggerTemplate(String name, RConstIterator<LogTargetPtr> auto begin,
-            RConstIterator<LogTargetPtr> auto end) noexcept:
-            _name(MOVE(name)), targets(begin, end) { }
+        SimpleLoggerTemplate(String name, RInputIterator<LogTargetPtr> auto targets) noexcept:
+            _name(MOVE(name)), targets(targets) { }
 
     public:
         /// ----------------------------------------------------------------------------------------

@@ -11,21 +11,21 @@ namespace Atom::Fmt
 	using _TFormatParseContext = ::fmt::basic_format_parse_context<Char>;
 	using _TFormatParseContextIterator = typename _TFormatParseContext::iterator;
 
-	using _TFormatContextOut = fmt::detail::buffer_appender<Char>;
+	using _TFormatContextOut = ::fmt::detail::buffer_appender<Char>;
 	using _TFormatContext = ::fmt::basic_format_context<_TFormatContextOut, Char>;
 
 	template <typename... TArgs>
-	using _TFormatString = fmt::basic_format_string<Char, fmt::type_identity_t<TArgs>...>;
-	using _TRuntimeFormatString = fmt::runtime_format_string<Char>;
-	using _TStringView = fmt::basic_string_view<Char>;
+	using _TFormatString = ::fmt::basic_format_string<Char, fmt::type_identity_t<TArgs>...>;
+	using _TRuntimeFormatString = ::fmt::runtime_format_string<Char>;
+	using _TStringView = ::fmt::basic_string_view<Char>;
 
-	using _TFormatArg = fmt::basic_format_arg<_TFormatContext>;
-	using _TFormatArgs = fmt::basic_format_args<_TFormatContext>;
+	using _TFormatArg = ::fmt::basic_format_arg<_TFormatContext>;
+	using _TFormatArgs = ::fmt::basic_format_args<_TFormatContext>;
 
 	template <typename T>
-	using _TFormatter = fmt::formatter<T, Char>;
+	using _TFormatter = ::fmt::formatter<T, Char>;
 
-	using _TFormatError = fmt::format_error;
+	using _TFormatError = ::fmt::format_error;
 
 	/// --------------------------------------------------------------------------------------------
 	/// Exception thrown during formatting error.
@@ -34,11 +34,16 @@ namespace Atom::Fmt
 	{
 	public:
 		FormatException(String msg) noexcept:
-			Exception(msg) { }
+			Exception(msg.Data()) { }
 
+		/// ----------------------------------------------------------------------------------------
+		/// @TODO Fix this ugly code.
+		/// ----------------------------------------------------------------------------------------
 		FormatException(const _TFormatError& in_fmt_err) noexcept:
-			// TODO: Requires encoding conversion.
-			Exception(TEXT("Unkown fmt::format_error exception.")) { }
+			Exception(TEXT("Not implemented.")) { }
+		// FormatException(const _TFormatError& in_fmt_err) noexcept:
+		// 	Exception(CharEncodingConverter<UTF8CharEncoding, CharEncoding>()
+		// 		.Convert(UTF8StringView{ (const char8*)in_fmt_err.what() }.Iterator()).Data()) { }
 	};
 
 	/// --------------------------------------------------------------------------------------------
@@ -71,13 +76,13 @@ namespace Atom::Fmt
 
 		FormatArg GetArg(StringView name) const
 		{
-			_TStringView fmt_name = { name.data(), name.size() };
+			_TStringView fmt_name = { name.Data(), name.Count() };
 			return FormatArg{ m_fmt_args.get(fmt_name) };
 		}
 
 		int GetArgID(StringView name) const
 		{
-			_TStringView fmt_name = { name.data(), name.size() };
+			_TStringView fmt_name = { name.Data(), name.Count() };
 			return m_fmt_args.get_id(fmt_name);
 		}
 
@@ -100,7 +105,7 @@ namespace Atom::Fmt
 
 		void AdvanceTo(ArrayIterator<const Char> it) noexcept
 		{
-			fmt_ctx.advance_to(it);
+			fmt_ctx.advance_to(it.begin());
 		}
 
 		_TFormatParseContext& fmt_ctx;
@@ -121,13 +126,14 @@ namespace Atom::Fmt
 			fmt_ctx.advance_to(MOVE(out));
 		}
 
-		void Write(const RConstIterable<Char> auto& chars)
+		void Write(RInputIterator<Char> auto chars)
 		{
 			auto out = fmt_ctx.out();
 			for (Char ch : chars)
 			{
 				*out++ = ch;
 			}
+
 			fmt_ctx.advance_to(MOVE(out));
 		}
 
@@ -188,7 +194,7 @@ namespace Atom::Fmt
 		{
 			_TFormatContext& fmt_ctx = ctx.fmt_ctx;
 
-			_TStringView fmt_str{ str.data(), str.size() };
+			_TStringView fmt_str{ str.Data(), str.Count() };
 			fmt_ctx.advance_to(fmt_formatter.format(fmt_str, fmt_ctx));
 		}
 
@@ -231,12 +237,6 @@ namespace Atom::Fmt
 		static constexpr bool Enable = true;
 	};
 
-	template < >
-	struct _TFormatterFilter<StringView>
-	{
-		static constexpr bool Enable = false;
-	};
-
 	template <usize N>
 	struct _TFormatterFilter<Char[N]>
 	{
@@ -245,7 +245,7 @@ namespace Atom::Fmt
 }
 
 namespace fmt
-{	
+{
 	/// --------------------------------------------------------------------------------------------
 	/// @INTERNAL
 	/// 
