@@ -1,41 +1,33 @@
 #pragma once
-#include <string_view>
-
 #include "Atom/Containers/ArrayView.h"
-
-#include "Atom/String/BasicChar.h"
+#include "BasicStringView.decl.h"
 
 namespace Atom
 {
     template <typename TEncoding>
-    class BasicStringView: public ArrayView<BasicChar<TEncoding>>
-    {
-        using TBase = ArrayView<BasicChar<TEncoding>>;
-        using STD_TStringView = ::std::basic_string_view<BasicChar<TEncoding>>;
+    constexpr BasicStringView<TEncoding>::BasicStringView() noexcept:
+        TBase() { }
 
-    public:
-        using TChar = BasicChar<TEncoding>;
-        using TIterator = typename TBase::TIterator;
+    template <typename TEncoding>
+    constexpr BasicStringView<TEncoding>::BasicStringView(const TChar* str, usize len) noexcept:
+        TBase(str, len) { }
 
-    public:
-        constexpr BasicStringView() noexcept:
-            TBase() { }
+    template <typename TEncoding>
+    template <usize N>
+    constexpr BasicStringView<TEncoding>::BasicStringView(const TChar(&str)[N]) noexcept:
+        TBase(str, N) { }
 
-        constexpr BasicStringView(const TChar* str, usize len) noexcept:
-            TBase(str, len) { }
+    template <typename TEncoding>
+    template <RInputIterator<BasicChar<TEncoding>> TInput>
+    constexpr BasicStringView<TEncoding>::BasicStringView(TInput in) noexcept:
+        TBase(MOVE(in)) { }
 
-        template <usize N>
-        constexpr BasicStringView(const TChar(&str)[N]) noexcept:
-            TBase(str, N) { }
+    template <typename TEncoding>
+    template <typename TAllocator>
+    constexpr BasicStringView<TEncoding>::BasicStringView(const BasicString<TEncoding, TAllocator>& in) noexcept:
+        TBase(in.Data(), in.Count()) { }
 
-        template <RInputIterator<TChar> TInput>
-        constexpr BasicStringView(TInput in) noexcept:
-            TBase(MOVE(in)) { }
-
-        constexpr BasicStringView(const BasicString<TEncoding>& in) noexcept:
-            TBase(in.Data(), in.Count()) { }
-
-        constexpr BasicStringView(const STD_TStringView& in) noexcept:
-            TBase(in.data(), in.size()) { }
-    };
+    template <typename TEncoding>
+    constexpr BasicStringView<TEncoding>::BasicStringView(const STD_TStringView& in) noexcept:
+        TBase(in.data(), in.size()) { }
 }

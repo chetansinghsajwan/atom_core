@@ -1,25 +1,15 @@
 #pragma once
-#include "Atom/Core.h"
+#include "Atom/String/String.h"
+#include "Atom/String/StringView.h"
+#include "Exceptions.decl.h"
 
 namespace Atom
 {
-    class Exception
+    inline Exception::Exception(String in_msg) noexcept:
+        m_msg(MOVE(in_msg)) { }
+
+    inline StringView Exception::GetMsg() const noexcept
     {
-    public:
-        /// ----------------------------------------------------------------------------------------
-        /// @TODO Resolve circular dependencies.
-        /// ----------------------------------------------------------------------------------------
-        Exception(const char16* msg) noexcept { }
-
-    public:
-        const char16* GetMsg() noexcept
-        {
-            return u"";
-        }
-    };
-
-    using RuntimeException = Exception;
-    using InvalidOperationException = Exception;
-    using InvalidArgumentException = Exception;
-    using NullPointerException = Exception;
+        return m_msg;
+    }
 }

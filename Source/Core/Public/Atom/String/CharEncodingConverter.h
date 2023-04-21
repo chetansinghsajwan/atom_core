@@ -3,6 +3,7 @@
 #include "Atom/Containers.h"
 
 #include "Atom/String/BasicChar.h"
+#include "Atom/String/BasicString.h"
 
 namespace Atom::Private
 {
