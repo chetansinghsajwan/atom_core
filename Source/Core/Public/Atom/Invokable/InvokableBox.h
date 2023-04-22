@@ -16,8 +16,7 @@ namespace Atom
         template <typename TResult, typename... TArgs>
         struct Invoker
         {
-            template <typename TInvokable>
-            requires RInvokable<TInvokable, TResult(TArgs...)>::Value
+            template <RInvokable<TResult(TArgs...)> TInvokable>
             void Set()
             {
                 m_impl = [](void* obj, TResult& result, TArgs&&... args)
@@ -42,8 +41,7 @@ namespace Atom
         template <typename... TArgs>
         struct Invoker <void, TArgs...>
         {
-            template <typename TInvokable>
-            requires RInvokable<TInvokable, void(TArgs...)>::Value
+            template <RInvokable<void(TArgs...)> TInvokable>
             void Set()
             {
                 m_impl = [](void* obj, TArgs&&... args)
@@ -109,9 +107,8 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <typename TInvokable>
-        requires (RInvokable<TInvokable, TResult(TArgs...)>::Value &&
-            !TTI::IsBaseOf<Private::InvokableBoxIdentifier, TInvokable>)
+        template <RInvokable<TResult(TArgs...)> TInvokable>
+        requires RNotDerivedFrom<TInvokable, Private::InvokableBoxIdentifier>
         InvokableBox(TInvokable&& invokable):
             ObjectBox(FORWARD(invokable))
         {
@@ -121,9 +118,8 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <typename TInvokable>
-        requires (RInvokable<TInvokable, TResult(TArgs...)>::Value &&
-            !TTI::IsBaseOf<Private::InvokableBoxIdentifier, TInvokable>)
+        template <RInvokable<TResult(TArgs...)> TInvokable>
+        requires RNotDerivedFrom<TInvokable, Private::InvokableBoxIdentifier>
         InvokableBox& operator = (TInvokable&& invokable)
         {
             ObjectBox::operator = (FORWARD(invokable));
@@ -205,8 +201,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <typename TInvokable>
-        requires RInvokable<TInvokable, TResult(TArgs...)>::Value
+        template <RInvokable<TResult(TArgs...)> TInvokable>
         void m_SetInvoker()
         {
             m_invoker.template Set<TInvokable>();

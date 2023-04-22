@@ -29,11 +29,12 @@ namespace Atom
     template <typename... TArgs>
     struct IEvent
     {
+        using TSignature = void(TArgs...);
+
         /// ----------------------------------------------------------------------------------------
         /// Calls Subscribe(FORWARD(listener));
         /// ----------------------------------------------------------------------------------------
-        template <typename TInvokable>
-            requires RInvokable<TInvokable, void(TArgs...)>::Value
+        template <RInvokable<TSignature> TInvokable>
         SEventKey operator += (TInvokable&& listener) noexcept
         {
             return Subscribe(FORWARD(listener));
@@ -50,11 +51,10 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Calls Subscribe(FORWARD(listener)) on {Source}.
         /// ----------------------------------------------------------------------------------------
-        template <typename TInvokable>
-            requires RInvokable<TInvokable, void(TArgs...)>::Value
+        template <RInvokable<TSignature> TInvokable>
         SEventKey Subscribe(TInvokable&& listener) noexcept
         {
-            return Subscribe(InvokableBox<void(TArgs...)>(FORWARD(listener)));
+            return Subscribe(InvokableBox<TSignature>(FORWARD(listener)));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -75,7 +75,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <typename... TArgs>
     class EventSource: public IEvent<TArgs...>
-    {
+    {        
     public:
         constexpr EventSource() noexcept { }
 

@@ -4,69 +4,42 @@
 
 namespace Atom
 {
-    namespace PrivateInvokable
+    namespace Private
     {
-        template <typename TInvokable, typename TResult, typename... TArgs>
-        concept RInvokable = requires(TInvokable invokable, TArgs... args)
-        {
-            requires std::invocable<TInvokable, TArgs...>;
+        template <typename TInvokable, typename... TSignature>
+        struct IsInvokableImpl;
 
-            { invokable(FORWARD(args)...) } -> TTI::RSameAs<TResult>;
+        template <typename TInvokable, typename TResult, typename... TArgs>
+        struct IsInvokableImpl<TInvokable, TResult(TArgs...)>
+        {
+            static constexpr bool Value = ::std::is_invocable_r_v<
+                TResult, TInvokable, TArgs...>;
+        };
+
+        /// @TODO Add impl for const invocable.
+        template <typename TInvokable, typename TResult, typename... TArgs>
+        struct IsInvokableImpl<TInvokable, TResult(TArgs...) const>
+        {
+            static constexpr bool Value = ::std::is_invocable_r_v<
+                TResult, TInvokable, TArgs...>;
         };
 
         template <typename TInvokable, typename TResult, typename... TArgs>
-        concept RInvokableConst = requires(const TInvokable invokable, TArgs... args)
+        struct IsInvokableImpl<TInvokable, TResult(TArgs...) noexcept>
         {
-            requires std::invocable<TInvokable, TArgs...>;
-
-            { invokable(FORWARD(args)...) } -> TTI::RSameAs<TResult>;
+            static constexpr bool Value = ::std::is_nothrow_invocable_r_v<
+                TResult, TInvokable, TArgs...>;
         };
 
+        /// @TODO Add impl for const invocable.
         template <typename TInvokable, typename TResult, typename... TArgs>
-        concept RInvokableNoexcept = requires(TInvokable invokable, TArgs... args)
+        struct IsInvokableImpl<TInvokable, TResult(TArgs...) const noexcept>
         {
-            requires std::invocable<TInvokable, TArgs...>;
-
-            { invokable(FORWARD(args)...) } noexcept -> TTI::RSameAs<TResult>;
-        };
-
-        template <typename TInvokable, typename TResult, typename... TArgs>
-        concept RInvokableConstNoexcept = requires(const TInvokable invokable, TArgs... args)
-        {
-            requires std::invocable<TInvokable, TArgs...>;
-
-            { invokable(FORWARD(args)...) } noexcept -> TTI::RSameAs<TResult>;
+            static constexpr bool Value = ::std::is_nothrow_invocable_r_v<
+                TResult, TInvokable, TArgs...>;
         };
     }
 
-    template <typename TInvokable, typename TResult, typename... TArgs>
-    struct RInvokable;
-
-    template <typename TInvokable, typename TResult, typename... TArgs>
-    struct RInvokable <TInvokable, TResult(TArgs...)>
-    {
-        static constinit const bool Value = PrivateInvokable::RInvokable<
-            TInvokable, TResult, TArgs...>;
-    };
-
-    template <typename TInvokable, typename TResult, typename... TArgs>
-    struct RInvokable <TInvokable, TResult(TArgs...) const>
-    {
-        static constinit const bool Value = PrivateInvokable::RInvokableConst<
-            TInvokable, TResult, TArgs...>;
-    };
-
-    template <typename TInvokable, typename TResult, typename... TArgs>
-    struct RInvokable <TInvokable, TResult(TArgs...) noexcept>
-    {
-        static constinit const bool Value = PrivateInvokable::RInvokableNoexcept<
-            TInvokable, TResult, TArgs...>;
-    };
-
-    template <typename TInvokable, typename TResult, typename... TArgs>
-    struct RInvokable <TInvokable, TResult(TArgs...) const noexcept>
-    {
-        static constinit const bool Value = PrivateInvokable::RInvokableConstNoexcept<
-            TInvokable, TResult, TArgs...>;
-    };
+    template <typename TInvokable, typename... TSignature>
+    concept RInvokable = Private::IsInvokableImpl<TInvokable, TSignature...>::Value;
 }

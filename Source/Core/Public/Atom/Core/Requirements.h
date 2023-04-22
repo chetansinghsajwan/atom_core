@@ -27,10 +27,13 @@ namespace Atom
     /// Ensures {TDerived} is derived from {TBase}.
     /// --------------------------------------------------------------------------------------------
     template <typename TDerived, typename TBase>
-    concept RDerivedFrom = requires
-    {
-        requires std::derived_from<TDerived, TBase>;
-    };
+    concept RDerivedFrom = ::std::derived_from<::std::remove_cvref_t<TDerived>, ::std::remove_cvref_t<TBase>>;
+
+    /// --------------------------------------------------------------------------------------------
+    /// Ensures {TDerived} not is derived from {TBase}.
+    /// --------------------------------------------------------------------------------------------
+    template <typename TDerived, typename TBase>
+    concept RNotDerivedFrom = (!RDerivedFrom<TDerived, TBase>);
 
 //// -----------------------------------------------------------------------------------------------
 //// Object concepts 
