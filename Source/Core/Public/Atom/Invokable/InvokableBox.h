@@ -72,7 +72,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <typename TResult, typename... TArgs>
     class InvokableBox <TResult(TArgs...)>:
-        public ObjectBox<50, DefaultMemAllocator>,
+        public ObjectBox<true, true, true, 50, DefaultMemAllocator>,
         public Private::InvokableBoxIdentifier
     {
     public:

@@ -7,8 +7,16 @@ namespace Atom
 {
     namespace TTI
     {
+        namespace Private
+        {
+            struct Empty { };
+        }
+
         template <bool Condition, typename TTrue, typename TFalse>
         using TConditional = std::conditional_t<Condition, TTrue, TFalse>;
+
+        template <bool Condition, typename T>
+        using TConditionalField = TConditional<Condition, T, Private::Empty>;
 
         template <typename TBase, typename TDerived>
         constexpr bool IsBaseOf = std::is_base_of_v<TBase, std::decay_t<TDerived>>;
@@ -50,3 +58,9 @@ namespace Atom
         using TRemoveCVRef = std::remove_cvref_t<T>;
     }
 }
+
+#define ATOM_ATTR_NO_UNIQUE_ADDRESS \
+    [no_unique_address]
+
+#define ATOM_CONDITIONAL_FIELD(Condition, T) \
+    [ATOM_ATTR_NO_UNIQUE_ADDRESS] ::Atom::TTI::TConditionalField<(Condition), T>

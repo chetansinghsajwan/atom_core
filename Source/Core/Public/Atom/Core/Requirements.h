@@ -14,6 +14,12 @@ namespace Atom
     template <typename T1, typename T2>
     concept RSameAs = std::same_as<T1, T2>;
 
+    template <bool V>
+    concept RTrue = (V == true);
+
+    template <bool V>
+    concept RFalse = (V == false);
+
     /// --------------------------------------------------------------------------------------------
     /// Ensures {TFrom} is {Convertible} to {TTo}.
     /// --------------------------------------------------------------------------------------------

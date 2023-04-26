@@ -1,11 +1,8 @@
-// #include "Atom/Containers/ArrayIterator.h"
-#include "Atom/Exceptions.h" 
+#include <iostream>
 
 using namespace Atom;
 
 int main()
 {
-    ArrayIterator<int> it;
-
     return 0;
 }

@@ -82,6 +82,13 @@ namespace Atom
     }
 
     template <typename T>
+    constexpr T& MOVE(T& lhs, T& rhs) noexcept
+    {
+        lhs = std::move(rhs);
+        return lhs;
+    }
+
+    template <typename T>
     void SWAP(T& lhs, T& rhs)
     {
         T tmp = MOVE(lhs);
