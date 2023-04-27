@@ -15,5 +15,5 @@ namespace Atom
     }
 
     template <typename... TSign>
-    using InvokablePtr = Private::InvokablePtrImpl<TSign...>::Type;
+    using InvokablePtr = typename Private::InvokablePtrImpl<TSign...>::Type;
 }

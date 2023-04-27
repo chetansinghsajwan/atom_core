@@ -25,8 +25,8 @@ namespace Atom
         { constIterator.HasNext() } -> RSameAs<bool>;
     };
 
-    template <typename TInputIterator, typename T>
-    concept RInputIterator = ROneWayIterator<TInputIterator, T>;
+    template <typename TIterator, typename T>
+    concept RInputIterator = ROneWayIterator<TIterator, T>;
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures {TIterator} is {TwoWayIterator} for type {T}.

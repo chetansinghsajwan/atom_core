@@ -287,7 +287,7 @@ namespace Atom::Logging::Private
         /// ----------------------------------------------------------------------------------------
         usize HasTargets(InitializerList<LogTargetPtr> targets) const noexcept
         {
-            return HasTargets(ArrayIterator(targets));
+            return HasTargets(ArrayIterator<const LogTargetPtr>(targets));
         }
 
         /// ----------------------------------------------------------------------------------------

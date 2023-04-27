@@ -65,7 +65,7 @@ namespace Atom
     }
 
     template <typename T>
-    constexpr ArrayView<T>::TIterator ArrayView<T>::Iterator() const noexcept
+    constexpr typename ArrayView<T>::TIterator ArrayView<T>::Iterator() const noexcept
     {
         return TIterator{ m_arr, m_count };
     }

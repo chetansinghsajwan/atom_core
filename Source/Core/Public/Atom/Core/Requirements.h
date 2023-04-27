@@ -51,7 +51,8 @@ namespace Atom
     template <typename T, typename... TArgs>
     concept RConstructible = requires(TArgs&&... args)
     {
-        new T(FORWARD(args)...);
+        // TODO: Note: Clang produces recursive template instantiation error.
+        { T(FORWARD(args)...) };
     };
 
     /// --------------------------------------------------------------------------------------------

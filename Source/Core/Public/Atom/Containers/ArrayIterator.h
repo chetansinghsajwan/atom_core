@@ -24,6 +24,10 @@ namespace Atom
     }
 
     template <typename T>
+    constexpr ArrayIterator<T>::ArrayIterator(InitializerList<T> list) noexcept:
+        ArrayIterator(list.begin(), list.end()) { }
+
+    template <typename T>
     constexpr T& ArrayIterator<T>::Get() noexcept
     {
         return *_it;
