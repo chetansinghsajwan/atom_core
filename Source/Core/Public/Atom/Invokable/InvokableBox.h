@@ -1,6 +1,5 @@
 #pragma once
-#include "Atom/Core.h"
-#include "Atom/Memory.h"
+#include "Atom/Memory/ObjectBox.h"
 #include "Atom/Exceptions.h"
 #include "Atom/TTI.h"
 #include "Atom/String.h"

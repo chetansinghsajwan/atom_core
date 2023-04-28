@@ -21,7 +21,7 @@ namespace Atom::Logging::Private
     class MultiLogTargetTemplate: public LogTarget
     {
         using TContainer = DynamicArray<LogTargetPtr>;
-        using TIterator = typename TContainer::TIterator;
+        using TIterator = typename TContainer::TConstIterator;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -56,7 +56,7 @@ namespace Atom::Logging::Private
         /// ----------------------------------------------------------------------------------------
         MultiLogTargetTemplate(InitializerList<LogTargetPtr> targets)
         {
-            _AddTargets(ArrayIterator(targets));
+            _AddTargets(ArrayIterator<const LogTargetPtr>(targets));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -170,7 +170,7 @@ namespace Atom::Logging::Private
         /// ----------------------------------------------------------------------------------------
         usize AddTargets(InitializerList<LogTargetPtr> targets)
         {
-            AddTargets(ArrayIterator(targets));
+            return AddTargets(ArrayIterator<const LogTargetPtr>(targets));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -231,7 +231,7 @@ namespace Atom::Logging::Private
         /// ----------------------------------------------------------------------------------------
         usize RemoveTargets(InitializerList<LogTargetPtr> targets)
         {
-            return RemoveTargets(ArrayIterator(targets));
+            return RemoveTargets(ArrayIterator<const LogTargetPtr>(targets));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -311,7 +311,7 @@ namespace Atom::Logging::Private
         usize Count() const noexcept
         {
             LockGuard guard(_lock);
-            return _targets.size();
+            return _targets.Count();
         }
 
     //// -------------------------------------------------------------------------------------------

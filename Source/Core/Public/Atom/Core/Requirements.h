@@ -20,6 +20,9 @@ namespace Atom
     template <bool V>
     concept RFalse = (V == false);
 
+    template <typename T>
+    concept RConst = ::std::is_const_v<T>;
+
     /// --------------------------------------------------------------------------------------------
     /// Ensures {TFrom} is {Convertible} to {TTo}.
     /// --------------------------------------------------------------------------------------------
@@ -49,10 +52,9 @@ namespace Atom
     /// Ensures {T} is {Constructible} using {args...}.
     /// --------------------------------------------------------------------------------------------
     template <typename T, typename... TArgs>
-    concept RConstructible = requires(TArgs&&... args)
+    concept RConstructible = requires(T t, TArgs&&... args)
     {
-        // TODO: Note: Clang produces recursive template instantiation error.
-        { T(FORWARD(args)...) };
+        T(FORWARD(args)...);
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -182,14 +184,4 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <class T>
     concept Regular = RSemiRegular<T> && REqualityComparable<T>;
-
-//// -----------------------------------------------------------------------------------------------
-//// Invocation
-//// -----------------------------------------------------------------------------------------------
-
-    /// --------------------------------------------------------------------------------------------
-    /// 
-    /// --------------------------------------------------------------------------------------------
-    template <typename T, typename TRet, typename... TArgs>
-    concept RInvocable = ::std::is_invocable_r_v<TRet, T, TArgs...>;
 }

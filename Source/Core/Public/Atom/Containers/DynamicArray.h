@@ -1,6 +1,6 @@
 #pragma once
-#include "Atom/Containers/ArrayIterator.h"
 #include "DynamicArray.decl.h"
+#include "Atom/Containers/ArrayIterator.h"
 
 namespace Atom
 {
@@ -8,12 +8,13 @@ namespace Atom
     constexpr DynamicArray<T, TAllocator>::DynamicArray() noexcept:
         _vector{ } { }
 
-    template <typename T, typename TAllocator>
-    template <RInputIterator<T> TInput>
-    constexpr DynamicArray<T, TAllocator>::DynamicArray(TInput in)
-    {
-        InsertBack(MOVE(in));
-    }
+    // template <typename T, typename TAllocator>
+    // template <RInputIterator<T> TInput>
+    // constexpr DynamicArray<T, TAllocator>::DynamicArray(TInput in):
+    //     DynamicArray()
+    // {
+    //     InsertBack(MOVE(in));
+    // }
 
     template <typename T, typename TAllocator>
     constexpr DynamicArray<T, TAllocator>::DynamicArray(const STD_TVector& vec) noexcept:
@@ -24,23 +25,23 @@ namespace Atom
         _vector{ MOVE(vec) } { }
 
     template <typename T, typename TAllocator>
-    constexpr typename DynamicArray<T, TAllocator>::TIterator DynamicArray<T, TAllocator>::
-        operator += (const T& in)
+    constexpr auto DynamicArray<T, TAllocator>::operator += (const T& in)
+        -> typename DynamicArray<T, TAllocator>::TIterator
     {
         return InsertBack(in);
     }
 
     template <typename T, typename TAllocator>
-    constexpr typename DynamicArray<T, TAllocator>::TIterator DynamicArray<T, TAllocator>::
-        operator += (T&& in)
+    constexpr auto DynamicArray<T, TAllocator>::operator += (T&& in)
+        -> typename DynamicArray<T, TAllocator>::TIterator
     {
         return InsertBack(MOVE(in));
     }
 
     template <typename T, typename TAllocator>
     template <RInputIterator<T> TInput>
-    constexpr typename DynamicArray<T, TAllocator>::TIterator DynamicArray<T, TAllocator>::
-        operator += (TInput in)
+    constexpr auto DynamicArray<T, TAllocator>::operator += (TInput in)
+        -> typename DynamicArray<T, TAllocator>::TIterator
     {
         return InsertBack(MOVE(in));
     }
@@ -49,39 +50,50 @@ namespace Atom
     constexpr DynamicArray<T, TAllocator>::~DynamicArray() { }
 
     template <typename T, typename TAllocator>
-    constexpr T* DynamicArray<T, TAllocator>::Data() noexcept
+    constexpr auto DynamicArray<T, TAllocator>::Data() noexcept
+        -> T*
     {
         return _vector.data();
     }
 
     template <typename T, typename TAllocator>
-    constexpr const T* DynamicArray<T, TAllocator>::Data() const noexcept
+    constexpr auto DynamicArray<T, TAllocator>::Data() const noexcept
+        -> const T* 
     {
         return _vector.data();
     }
 
     template <typename T, typename TAllocator>
-    constexpr usize DynamicArray<T, TAllocator>::Count() const noexcept
+    constexpr auto DynamicArray<T, TAllocator>::Count() const noexcept
+        -> usize
     {
         return _vector.size();
     }
 
     template <typename T, typename TAllocator>
-    constexpr bool DynamicArray<T, TAllocator>::IsEmpty() const noexcept
+    constexpr auto DynamicArray<T, TAllocator>::IsEmpty() const noexcept
+        -> bool
     {
         return Count() == 0;
     }
 
     template <typename T, typename TAllocator>
-    constexpr typename DynamicArray<T, TAllocator>::TIterator DynamicArray<T, TAllocator>::
-        Iterator() noexcept
+    constexpr auto DynamicArray<T, TAllocator>::Iterator() noexcept
+        -> typename DynamicArray<T, TAllocator>::TIterator
     {
         return TIterator(_vector.data(), _vector.size());
     }
 
     template <typename T, typename TAllocator>
-    constexpr typename DynamicArray<T, TAllocator>::TIterator DynamicArray<T, TAllocator>::
-        Insert(TIterator pos, const T& in)
+    constexpr auto DynamicArray<T, TAllocator>::Iterator() const noexcept
+        -> typename DynamicArray<T, TAllocator>::TConstIterator
+    {
+        return TConstIterator(_vector.data(), _vector.size());
+    }
+
+    template <typename T, typename TAllocator>
+    constexpr auto DynamicArray<T, TAllocator>::Insert(TIterator pos, const T& in)
+        -> typename DynamicArray<T, TAllocator>::TIterator
     {
         usize index = _vector.data() - pos.begin();
         auto out = _vector.insert(_vector.begin() + index, in);
@@ -89,8 +101,8 @@ namespace Atom
     }
 
     template <typename T, typename TAllocator>
-    constexpr typename DynamicArray<T, TAllocator>::TIterator DynamicArray<T, TAllocator>::
-        Insert(TIterator pos, T&& in)
+    constexpr auto DynamicArray<T, TAllocator>::Insert(TIterator pos, T&& in)
+        -> typename DynamicArray<T, TAllocator>::TIterator
     {
         usize index = _vector.data() - pos.begin();
         auto out = _vector.insert(_vector.begin() + index, MOVE(in));
@@ -99,37 +111,37 @@ namespace Atom
 
     template <typename T, typename TAllocator>
     template <RInputIterator<T> TInput>
-    constexpr typename DynamicArray<T, TAllocator>::TIterator DynamicArray<T, TAllocator>::
-        Insert(TIterator pos, TInput in)
+    constexpr auto DynamicArray<T, TAllocator>::Insert(TIterator pos, TInput in)
+        -> typename DynamicArray<T, TAllocator>::TIterator
     {
         return TIterator{ };
     }
 
     template <typename T, typename TAllocator>
-    constexpr typename DynamicArray<T, TAllocator>::TIterator DynamicArray<T, TAllocator>::
-        InsertFront(const T& in)
+    constexpr auto DynamicArray<T, TAllocator>::InsertFront(const T& in)
+        -> typename DynamicArray<T, TAllocator>::TIterator
     {
         return Insert(Iterator(), in);
     }
 
     template <typename T, typename TAllocator>
-    constexpr typename DynamicArray<T, TAllocator>::TIterator DynamicArray<T, TAllocator>::
-        InsertFront(T&& in)
+    constexpr auto DynamicArray<T, TAllocator>::InsertFront(T&& in)
+        -> typename DynamicArray<T, TAllocator>::TIterator
     {
         return Insert(Iterator(), MOVE(in));
     }
 
     template <typename T, typename TAllocator>
     template <RInputIterator<T> TInput>
-    constexpr typename DynamicArray<T, TAllocator>::TIterator DynamicArray<T, TAllocator>::
-        InsertFront(TInput in)
+    constexpr auto DynamicArray<T, TAllocator>::InsertFront(TInput in)
+        -> typename DynamicArray<T, TAllocator>::TIterator
     {
         return Insert(Iterator(), MOVE(in));
     }
 
     template <typename T, typename TAllocator>
-    constexpr typename DynamicArray<T, TAllocator>::TIterator DynamicArray<T, TAllocator>::
-        InsertBack(const T& in)
+    constexpr auto DynamicArray<T, TAllocator>::InsertBack(const T& in)
+        -> typename DynamicArray<T, TAllocator>::TIterator
     {
         auto it = Iterator();
         it.Next(Count());
@@ -137,8 +149,8 @@ namespace Atom
     }
 
     template <typename T, typename TAllocator>
-    constexpr typename DynamicArray<T, TAllocator>::TIterator DynamicArray<T, TAllocator>::
-        InsertBack(T&& in)
+    constexpr auto DynamicArray<T, TAllocator>::InsertBack(T&& in)
+        -> typename DynamicArray<T, TAllocator>::TIterator
     {
         auto it = Iterator();
         it.Next(Count());
@@ -147,8 +159,8 @@ namespace Atom
 
     template <typename T, typename TAllocator>
     template <RInputIterator<T> TInput>
-    constexpr typename DynamicArray<T, TAllocator>::TIterator DynamicArray<T, TAllocator>::
-        InsertBack(TInput in)
+    constexpr auto DynamicArray<T, TAllocator>::InsertBack(TInput in)
+        -> typename DynamicArray<T, TAllocator>::TIterator
     {
         auto it = Iterator();
         it.Next(Count());
@@ -157,7 +169,8 @@ namespace Atom
 
     template <typename T, typename TAllocator>
     template <RInputIterator<T> TInput>
-    constexpr usize DynamicArray<T, TAllocator>::Remove(TInput in)
+    constexpr auto DynamicArray<T, TAllocator>::Remove(TInput in)
+        -> usize
     {
         usize count = 0;
 
@@ -177,8 +190,9 @@ namespace Atom
     }
 
     template <typename T, typename TAllocator>
-    template <RInvocable<bool, const T&> TFilter>
-    constexpr usize DynamicArray<T, TAllocator>::Remove(TFilter&& filter)
+    template <RInvokable<bool(const T&)> TFilter>
+    auto DynamicArray<T, TAllocator>::RemoveIf(TFilter&& filter)
+        -> usize
     {
         usize count = 0;
 
@@ -192,5 +206,50 @@ namespace Atom
         }
 
         return count;
+    }
+
+    template <typename T, typename TAllocator>
+    constexpr auto DynamicArray<T, TAllocator>::Remove(TIterator it)
+        -> bool
+    {
+        auto std_it = _vector.begin() + (it.begin() - _vector.data());
+        return _vector.erase(std_it) != _vector.end();
+    }
+
+    template <typename T, typename TAllocator>
+    constexpr auto DynamicArray<T, TAllocator>::Remove(const T& in)
+        -> bool
+    {
+        for (auto it = Iterator(); it.HasNext(); it.Next())
+        {
+            if (it.Get() == in)
+            {
+                return Remove(it);
+            }
+        }
+
+        return false;
+    }
+
+    template <typename T, typename TAllocator>
+    constexpr auto DynamicArray<T, TAllocator>::Contains(const T& in) const noexcept
+        -> bool
+    {
+        for (auto it = Iterator(); it.HasNext(); it.Next())
+        {
+            if (it.Get() == in)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    template <typename T, typename TAllocator>
+    constexpr auto DynamicArray<T, TAllocator>::Reserve(usize size)
+        -> void
+    {
+        _vector.reserve(size);
     }
 }

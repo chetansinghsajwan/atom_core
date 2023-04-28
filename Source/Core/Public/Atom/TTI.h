@@ -55,12 +55,13 @@ namespace Atom
         constexpr bool IsNotSame = !IsSame<T1, T2>;
 
         template <typename T>
+        using TRemoveConst = std::remove_const_t<T>;
+
+        template <typename T>
         using TRemoveCVRef = std::remove_cvref_t<T>;
     }
 }
 
-#define ATOM_ATTR_NO_UNIQUE_ADDRESS \
-    [no_unique_address]
-
 #define ATOM_CONDITIONAL_FIELD(Condition, T) \
-    [ATOM_ATTR_NO_UNIQUE_ADDRESS] ::Atom::TTI::TConditionalField<(Condition), T>
+    [[no_unique_address]] ::Atom::TTI::TConditionalField<(Condition), T>
+

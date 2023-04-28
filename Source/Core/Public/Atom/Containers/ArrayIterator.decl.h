@@ -1,6 +1,7 @@
 #pragma once
 #include "Atom/Containers/InitializerList.h"
 #include "Atom/Containers/Iterator.h"
+#include "Atom/TTI.h"
 
 namespace Atom
 {
@@ -26,7 +27,8 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr ArrayIterator(InitializerList<T> list) noexcept;
+        constexpr ArrayIterator(InitializerList<TTI::TRemoveConst<T>> list) noexcept:
+            ArrayIterator(list.begin(), list.end()) { }
 
     public:
         /// ----------------------------------------------------------------------------------------

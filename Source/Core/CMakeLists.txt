@@ -32,7 +32,6 @@ target_link_libraries(Atom.Core.Tests PUBLIC Catch2::Catch2WithMain)
 
 add_test(Atom.Core.Tests Atom.Core.Tests)
 
-
 # --------------------------------------------------------------------------------------------------
 # Atom.Core.Sandbox
 # --------------------------------------------------------------------------------------------------

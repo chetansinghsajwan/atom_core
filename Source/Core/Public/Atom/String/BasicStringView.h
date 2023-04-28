@@ -1,6 +1,7 @@
 #pragma once
-#include "Atom/Containers/ArrayView.h"
 #include "BasicStringView.decl.h"
+#include "Atom/Containers/ArrayView.h"
+#include "BasicString.h"
 
 namespace Atom
 {

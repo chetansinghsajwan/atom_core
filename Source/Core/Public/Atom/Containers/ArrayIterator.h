@@ -1,6 +1,6 @@
 #pragma once
-#include "ArrayIterator.decl.h"
 #include "Atom/Exceptions.h"
+#include "ArrayIterator.decl.h"
 
 namespace Atom
 {
@@ -23,9 +23,9 @@ namespace Atom
         ATOM_DEBUG_ASSERT(begin <= end);
     }
 
-    template <typename T>
-    constexpr ArrayIterator<T>::ArrayIterator(InitializerList<T> list) noexcept:
-        ArrayIterator(list.begin(), list.end()) { }
+    // template <typename T>
+    // constexpr ArrayIterator<T>::ArrayIterator(InitializerList<T> list) noexcept:
+    //     ArrayIterator(list.begin(), list.end()) { }
 
     template <typename T>
     constexpr T& ArrayIterator<T>::Get() noexcept

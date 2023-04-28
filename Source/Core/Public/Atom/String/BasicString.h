@@ -1,7 +1,6 @@
 #pragma once
-#include "Atom/Containers/DynamicArray.h"
-
 #include "BasicString.decl.h"
+#include "Atom/Containers/DynamicArray.h"
 
 namespace Atom
 {
@@ -14,14 +13,14 @@ namespace Atom
         TBase() { }
 
     template <typename TEncoding, typename TAllocator>
-    template <usize N>
-    constexpr BasicString<TEncoding, TAllocator>::BasicString(const TChar(&str)[N]) noexcept:
-        TBase() { }
+    template <usize Count>
+    constexpr BasicString<TEncoding, TAllocator>::BasicString(const TChar(&str)[Count]) noexcept:
+        TBase(ArrayIterator<const TChar>(str, Count)) { }
 
-    template <typename TEncoding, typename TAllocator>
-    template <RInputIterator<BasicChar<TEncoding>> TInput>
-    constexpr BasicString<TEncoding, TAllocator>::BasicString(TInput in) noexcept:
-        TBase(MOVE(in)) { }
+    // template <typename TEncoding, typename TAllocator>
+    // template <RInputIterator<BasicChar<TEncoding>> TInput>
+    // constexpr BasicString<TEncoding, TAllocator>::BasicString(TInput in) noexcept:
+    //     TBase(MOVE(in)) { }
 
     template <typename TEncoding, typename TAllocator>
     constexpr BasicString<TEncoding, TAllocator>::BasicString(const STD_TString& in) noexcept:
@@ -42,6 +41,10 @@ namespace Atom
     {
         return true;
     }
+
+    template <typename TEncoding, typename TAllocator>
+    constexpr BasicString<TEncoding, TAllocator>::
+        ~BasicString() { }
 }
 
 namespace std

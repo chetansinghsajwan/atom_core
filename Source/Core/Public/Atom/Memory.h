@@ -8,3 +8,4 @@
 #include "Atom/Memory/SharedPtr.h"
 #include "Atom/Memory/UniquePtr.h"
 #include "Atom/Memory/ObjectBox.h"
+#include "Atom/Memory/MemAllocator.h"

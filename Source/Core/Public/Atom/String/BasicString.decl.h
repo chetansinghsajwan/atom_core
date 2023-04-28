@@ -38,8 +38,8 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <RInputIterator<BasicChar<TEncoding>> TInput>
-        constexpr BasicString(TInput in) noexcept;
+        // template <RInputIterator<BasicChar<TEncoding>> TInput>
+        // constexpr BasicString(TInput in) noexcept;
 
         /// ----------------------------------------------------------------------------------------
         /// 
@@ -57,5 +57,10 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <RInputIterable<BasicChar<TEncoding>> TInputIterable>
         constexpr bool operator == (const TInputIterable& in) const noexcept;
+
+        /// ----------------------------------------------------------------------------------------
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        constexpr ~BasicString();
     };
 }

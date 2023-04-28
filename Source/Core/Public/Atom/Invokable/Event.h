@@ -60,7 +60,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        virtual SEventKey Subscribe(InvokableBox<void(TArgs...)>&& invokable) noexcept = 0;
+        virtual SEventKey Subscribe(InvokableBox<TSignature>&& invokable) noexcept = 0;
 
         /// ----------------------------------------------------------------------------------------
         /// Calls Unsubscribe(key) on {Source}.
@@ -120,7 +120,7 @@ namespace Atom
 
         usize _RemoveListener(SEventKey key) noexcept
         {
-            return _listeners.Remove([&](auto& listener)
+            return _listeners.RemoveIf([&](const auto& listener)
                 {
                     return listener.GetInvokableType() == key.GetType();
                 });
@@ -141,9 +141,11 @@ namespace Atom
         }
 
     protected:
+        using TListener = InvokableBox<void(TArgs...)>;
+    
         /// ----------------------------------------------------------------------------------------
         /// List of event listeners.
         /// ----------------------------------------------------------------------------------------
-        DynamicArray<InvokableBox<void(TArgs...)>> _listeners;
+        DynamicArray<TListener> _listeners;
     };
 }

@@ -1,7 +1,7 @@
 #pragma once
+#include "Exceptions.decl.h"
 #include "Atom/String/String.h"
 #include "Atom/String/StringView.h"
-#include "Exceptions.decl.h"
 
 namespace Atom
 {

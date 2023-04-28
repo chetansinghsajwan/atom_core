@@ -3,6 +3,7 @@
 
 #include "Atom/Containers/ArrayView.decl.h"
 #include "Atom/String/BasicChar.h"
+#include "Atom/String/BasicString.decl.h"
 
 namespace Atom
 {
