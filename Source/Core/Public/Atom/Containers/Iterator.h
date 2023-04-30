@@ -15,14 +15,16 @@ namespace Atom
     template <typename TIterator, typename T>
     concept ROneWayIterator = requires(TIterator iterator, const TIterator constIterator)
     {
+        { iterator.Get() } -> RConvertibleTo<const T&>;
+        { iterator.Next() } -> RSameAs<bool>;
+        { constIterator.HasNext() } -> RSameAs<bool>;
+
+        // FIX: Putting these constraints first makes recursive instantiations at various parts in 
+        // GCC and Clang, works fine in MSVC.
         requires RCopyConstructible<TIterator>;
         requires RMoveConstructible<TIterator>;
         requires RCopyAssignable<TIterator>;
         requires RMoveAssignable<TIterator>;
-
-        { iterator.Get() } -> RConvertibleTo<const T&>;
-        { iterator.Next() } -> RSameAs<bool>;
-        { constIterator.HasNext() } -> RSameAs<bool>;
     };
 
     template <typename TIterator, typename T>

@@ -49,7 +49,7 @@ namespace Atom
     template < >
     struct StringConverter<String>
     {
-        constexpr String Convert(String&& str) noexcept
+        constexpr String cConvert(String&& str) noexcept
         {
             return MOVE(str);
         }

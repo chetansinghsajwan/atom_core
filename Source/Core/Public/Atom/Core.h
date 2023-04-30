@@ -1,8 +1,6 @@
 #pragma once
 #include <iostream>
 
-#pragma GCC diagnostic ignored "-Wundefined-inline"
-
 //// -----------------------------------------------------------------------------------------------
 //// Platform
 //// -----------------------------------------------------------------------------------------------
@@ -13,6 +11,40 @@
 
 #if defined(__unix__)
     #define ATOM_PLATFORM_LINUX
+#endif
+
+//// -----------------------------------------------------------------------------------------------
+//// COMPILER
+//// -----------------------------------------------------------------------------------------------
+
+#if defined(_MSC_VER)
+    #define ATOM_COMPILER_MSVC
+    #define ATOM_COMPILER_MSVC_VER _MSC_VER
+    #define ATOM_COMPILER_MSVC_FULL_VER _MSC_FULL_VER
+    #define ATOM_COMPILER_MSVC_VER_MAJOR (ATOM_COMPILER_MSVC_VER / 100)
+    #define ATOM_COMPILER_MSVC_VER_MINOR (ATOM_COMPILER_MSVC_VER % 100)
+    #define ATOM_COMPILER_MSVC_VER_PATCH (ATOM_COMPILER_MSVC_VER)
+    #define ATOM_COMPILER_MSVC_VER_BUILD _MSC_BUILD
+
+#endif
+
+#if defined(__GNUC__)
+    #define ATOM_COMPILER_GCC
+    #define ATOM_COMPILER_GCC_VER_MAJOR __GNUC__
+    #define ATOM_COMPILER_GCC_VER_MINOR __GNUC_MINOR__
+    #define ATOM_COMPILER_GCC_VER_PATCH __GNUC_PATCHLEVEL__
+    #define ATOM_COMPILER_GCC_VER (ATOM_COMPILER_GCC_VER_MAJOR * 100) + ATOM_COMPILER_GCC_VER_MINOR
+    #define ATOM_COMPILER_GCC_FULL_VER (ATOM_COMPILER_GCC_VER * 100) + ATOM_COMPILER_GCC_VER_PATCH
+
+#endif
+
+#if defined(__clang__)
+    #define ATOM_COMPILER_CLANG
+    #define ATOM_COMPILER_CLANG_VER_MAJOR __clang_major__
+    #define ATOM_COMPILER_CLANG_VER_MINOR __clang_minor__
+    #define ATOM_COMPILER_CLANG_VER_PATCH __clang_patchlevel__
+    #define ATOM_COMPILER_CLANG_FULL_VER __clang_version__
+
 #endif
 
 //// -----------------------------------------------------------------------------------------------

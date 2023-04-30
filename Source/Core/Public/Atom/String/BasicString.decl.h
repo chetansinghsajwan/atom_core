@@ -32,14 +32,15 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <usize N>
-        constexpr BasicString(const TChar(&str)[N]) noexcept;
+        template <usize count>
+        constexpr BasicString(const TChar(&str)[count]) noexcept;
 
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        // template <RInputIterator<BasicChar<TEncoding>> TInput>
-        // constexpr BasicString(TInput in) noexcept;
+        template <typename TInput>
+        requires RInputIterator<TInput, BasicChar<TEncoding>>
+        constexpr BasicString(TInput in) noexcept;
 
         /// ----------------------------------------------------------------------------------------
         /// 
@@ -49,8 +50,8 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <usize N>
-        constexpr bool operator == (const TChar(&str)[N]) const noexcept;
+        template <usize count>
+        constexpr bool operator == (const TChar(&str)[count]) const noexcept;
 
         /// ----------------------------------------------------------------------------------------
         /// 

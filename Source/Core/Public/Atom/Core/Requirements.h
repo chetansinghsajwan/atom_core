@@ -44,6 +44,18 @@ namespace Atom
     template <typename TDerived, typename TBase>
     concept RNotDerivedFrom = (!RDerivedFrom<TDerived, TBase>);
 
+    /// --------------------------------------------------------------------------------------------
+    /// Ensures {TDerived} is same as or derived from {TBase}.
+    /// --------------------------------------------------------------------------------------------
+    template <typename TDerived, typename TBase>
+    concept RSameOrDerivedFrom = RSameAs<TDerived, TBase> || RDerivedFrom<TDerived, TBase>;
+
+    /// --------------------------------------------------------------------------------------------
+    /// Ensures {TDerived} is not same as or derived from {TBase}.
+    /// --------------------------------------------------------------------------------------------
+    template <typename TDerived, typename TBase>
+    concept RNotSameOrDerivedFrom = !RSameOrDerivedFrom<TDerived, TBase>;
+
 //// -----------------------------------------------------------------------------------------------
 //// Object concepts 
 //// -----------------------------------------------------------------------------------------------
@@ -52,7 +64,7 @@ namespace Atom
     /// Ensures {T} is {Constructible} using {args...}.
     /// --------------------------------------------------------------------------------------------
     template <typename T, typename... TArgs>
-    concept RConstructible = requires(T t, TArgs&&... args)
+    concept RConstructible = requires(TArgs&&... args)
     {
         T(FORWARD(args)...);
     };

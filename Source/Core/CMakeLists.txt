@@ -17,6 +17,13 @@ target_link_libraries(Atom.Core PUBLIC fmt)
 target_link_libraries(Atom.Core PUBLIC utf-cpp)
 target_link_libraries(Atom.Core PUBLIC assert)
 
+# Library for stacktrace generation for {assert} ("dl" on Linux/OSx, "dbghelp" on Windows)
+if (WIN32)
+    target_link_libraries(Atom.Core PRIVATE dbghelp)
+elseif(UNIX)
+    target_link_libraries(Atom.Core PUBLIC dl)
+endif()
+
 # --------------------------------------------------------------------------------------------------
 # Atom.Core.Tests
 # --------------------------------------------------------------------------------------------------

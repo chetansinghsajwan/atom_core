@@ -17,10 +17,11 @@ namespace Atom
     constexpr BasicString<TEncoding, TAllocator>::BasicString(const TChar(&str)[Count]) noexcept:
         TBase(ArrayIterator<const TChar>(str, Count)) { }
 
-    // template <typename TEncoding, typename TAllocator>
-    // template <RInputIterator<BasicChar<TEncoding>> TInput>
-    // constexpr BasicString<TEncoding, TAllocator>::BasicString(TInput in) noexcept:
-    //     TBase(MOVE(in)) { }
+    template <typename TEncoding, typename TAllocator>
+    template <typename TInput>
+    requires RInputIterator<TInput, BasicChar<TEncoding>>
+    constexpr BasicString<TEncoding, TAllocator>::BasicString(TInput in) noexcept:
+        TBase(MOVE(in)) { }
 
     template <typename TEncoding, typename TAllocator>
     constexpr BasicString<TEncoding, TAllocator>::BasicString(const STD_TString& in) noexcept:

@@ -47,8 +47,9 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        // template <RInputIterator<T> TInput>
-        // constexpr DynamicArray(TInput in);
+        template <typename TInput>
+        requires RInputIterator<TInput, T>
+        constexpr DynamicArray(TInput in);
 
         /// ----------------------------------------------------------------------------------------
         /// 

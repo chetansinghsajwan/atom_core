@@ -8,13 +8,14 @@ namespace Atom
     constexpr DynamicArray<T, TAllocator>::DynamicArray() noexcept:
         _vector{ } { }
 
-    // template <typename T, typename TAllocator>
-    // template <RInputIterator<T> TInput>
-    // constexpr DynamicArray<T, TAllocator>::DynamicArray(TInput in):
-    //     DynamicArray()
-    // {
-    //     InsertBack(MOVE(in));
-    // }
+    template <typename T, typename TAllocator>
+    template <typename TInput>
+    requires RInputIterator<TInput, T>
+    constexpr DynamicArray<T, TAllocator>::DynamicArray(TInput in):
+        DynamicArray()
+    {
+        InsertBack(MOVE(in));
+    }
 
     template <typename T, typename TAllocator>
     constexpr DynamicArray<T, TAllocator>::DynamicArray(const STD_TVector& vec) noexcept:
