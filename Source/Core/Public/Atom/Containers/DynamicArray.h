@@ -153,9 +153,11 @@ namespace Atom
     constexpr auto DynamicArray<T, TAllocator>::InsertBack(T&& in)
         -> typename DynamicArray<T, TAllocator>::TIterator
     {
-        auto it = Iterator();
-        it.Next(Count());
-        return Insert(it, MOVE(in));
+        // auto it = Iterator();
+        // it.Next(Count());
+        // return Insert(it, MOVE(in));
+        _vector.push_back(MOVE(in));
+        return TIterator();
     }
 
     template <typename T, typename TAllocator>

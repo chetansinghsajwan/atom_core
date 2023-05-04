@@ -55,6 +55,17 @@ namespace Atom
 
         { constIterator.Range() } -> RConvertibleTo<usize>;
     };
+
+    /// --------------------------------------------------------------------------------------------
+    /// Ensures {TIterator} is {ArrayIterator} for type {T}.
+    /// --------------------------------------------------------------------------------------------
+    template <typename TIterator, typename T>
+    concept RArrayIterator = requires(TIterator iterator, const TIterator constIterator)
+    {
+        requires RDirectIterator<TIterator, T>;
+
+        { iterator.Data() } -> RSameAs<T*>;
+    };
 }
 
 namespace Atom::Internal
@@ -107,6 +118,24 @@ namespace Atom::Internal
 
     static_assert(RDirectIterator<DirectIteratorMock<int>, int>,
         "DirectIteratorMock does not meet RDirectIterator requirements.");
+
+    /// --------------------------------------------------------------------------------------------
+    /// Type to test if a type implementing {RArrayIterator} is accepted when defining concepts.
+    /// --------------------------------------------------------------------------------------------
+    template <typename T>
+    struct ArrayIteratorMock: DirectIteratorMock<T>
+    {
+        using OneWayIteratorMock<T>::Next;
+        using TwoWayIteratorMock<T>::Prev;
+        using DirectIteratorMock<T>::Next;
+        using DirectIteratorMock<T>::Prev;
+        using DirectIteratorMock<T>::Range;
+
+        T* Data();
+    };
+
+    static_assert(RArrayIterator<ArrayIteratorMock<int>, int>,
+        "ArrayIteratorMock does not meet RArrayIterator requirements.");
 }
 
 namespace Atom

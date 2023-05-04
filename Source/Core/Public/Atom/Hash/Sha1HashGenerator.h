@@ -1,29 +1,19 @@
 #pragma once
-
 extern "C"
 {
-    #include "WjCryptLib_Md5.h"
+#include "WjCryptLib_Sha1.h"
 }
 
-#include "Atom/Core.h"
-#include "Atom/Exceptions.h"
+#include "Sha1Hash.h"
 #include "Atom/Math.h"
-#include "Atom/Containers/StaticArray.h"
+#include "Atom/Exceptions.h"
 
 namespace Atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// Md5 Hash output.
+    /// Sha1 Hash Generator.
     /// --------------------------------------------------------------------------------------------
-    struct Md5Hash
-    {
-        StaticArray<byte, 16> bytes;
-    };
-
-    /// --------------------------------------------------------------------------------------------
-    /// Md5 Hash Generator.
-    /// --------------------------------------------------------------------------------------------
-    class Md5HashGenerator
+    class Sha1HashGenerator
     {
     public:
         /// ----------------------------------------------------------------------------------------
@@ -31,18 +21,51 @@ namespace Atom
         /// 
         /// Same as calling Reset.
         /// ----------------------------------------------------------------------------------------
-        Md5HashGenerator() noexcept
+        Sha1HashGenerator() noexcept
         {
             Reset();
         }
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// Resets the {Md5HashGenerator} to its initial state.
+        /// Resets the {Sha1HashGenerator} to its initial state.
         /// ----------------------------------------------------------------------------------------
         void Reset() noexcept
         {
-            Md5Initialise(&m_context);
+            Sha1Initialise(&m_context);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        template <typename TInput, usize BufSize = 50>
+        requires RInputIterator<TInput, byte>
+        Sha1HashGenerator& ProcessBytes(TInput in)
+        {
+            if constexpr (RArrayIterator<TInput, byte>)
+            {
+                // TODO: Fix this.
+                // return ProcessBytes(in.Data(), in.NextRange());
+                return ProcessBytes(in.Data(), in.Range());
+            }
+
+            static_assert(BufSize <= NumLimits<uint32_t>::max() && BufSize > 10,
+                "Keep {BufSize} smaller than or equal to max of {uint32_t}");
+
+            usize count = 0;
+            StaticArray<byte, BufSize> buf;
+
+            for (byte b : in)
+            {
+                buf[count++] = b;
+                if (count == BufSize || !in.HasNext())
+                {
+                    Sha1Update(&m_context, buf.data(), count);
+                    count = 0;
+                }
+            }
+
+            return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -57,7 +80,7 @@ namespace Atom
         /// @THROWS AssertionException Expects {in_data != nullptr}.
         /// @THROWS AssertionException Expects {in_dataSize > 0}.
         /// ----------------------------------------------------------------------------------------
-        void ProcessBytes(const void* in_data, usize in_dataSize)
+        Sha1HashGenerator& ProcessBytes(const void* in_data, usize in_dataSize)
         {
             ATOM_DEBUG_ASSERT(in_data != nullptr);
             ATOM_DEBUG_ASSERT(in_dataSize > 0);
@@ -70,7 +93,7 @@ namespace Atom
             static constexpr usize maxInput = NumLimits<uint32_t>::max();
             for (usize processed = 0; processed < in_dataSize; processed += maxInput)
             {
-                Md5Update(&m_context, (byte*)in_data + processed,
+                Sha1Update(&m_context, (byte*)in_data + processed,
                     Math::Min(maxInput, in_dataSize - processed));
             }
 
@@ -82,28 +105,28 @@ namespace Atom
         /// 
         /// @PARAM[IN] in_data Data to process.
         /// ----------------------------------------------------------------------------------------
-        void ProcessByte(byte in_data)
+        Sha1HashGenerator& ProcessByte(byte in_data)
         {
-            Md5Update(&m_context, &in_data, 1);
+            Sha1Update(&m_context, &in_data, 1);
+            return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Generates Md5 Hash.
+        /// Generates Sha1 Hash.
         /// 
-        /// @RETURNS {Md5Hash} object.
+        /// @RETURNS {Sha1Hash} object.
         /// ----------------------------------------------------------------------------------------
-        Md5Hash Generate() noexcept
+        Sha1Hash Generate() noexcept
         {
-            Md5Hash hash;
-            Md5Finalise(&m_context, (MD5_HASH*)hash.bytes.data());
-
+            Sha1Hash hash;
+            Sha1Finalise(&m_context, (SHA1_HASH*)hash.bytes.data());
             return hash;
         }
 
     private:
         /// ----------------------------------------------------------------------------------------
-        /// Underlying Md5 implementation.
+        /// Underlying Sha1 implementation.
         /// ----------------------------------------------------------------------------------------
-        Md5Context m_context;
+        Sha1Context m_context;
     };
 }

@@ -3,6 +3,7 @@
 #include <numeric>
 
 #include "Atom/Core.h"
+#include "Atom/String/String.h"
 
 namespace Atom
 {
@@ -24,8 +25,68 @@ namespace Atom::Math
     }
 
     template <typename TInt>
-    constexpr TInt Clamp(const TInt& lhs, const TInt& rhs)
+    constexpr TInt Clamp(const TInt& value, const TInt& lhs, const TInt& rhs)
+    {
+        if (value < lhs) return lhs;
+        if (value > rhs) return rhs;
+
+        return value;
+    }
+
+    // TODO: Implement with template args
+    template <typename TInt>
+    constexpr TInt Min(const TInt& lhs, const TInt& rhs)
     {
         return lhs < rhs ? lhs : rhs;
+    }
+
+    // TODO: Implement with template args
+    template <typename TInt>
+    constexpr TInt Max(const TInt& lhs, const TInt& rhs)
+    {
+        return lhs > rhs ? lhs : rhs;
+    }
+
+    constexpr byte CharToHex(Char ch) noexcept
+    {
+        if (ch >= TEXT('0') && ch <= TEXT('9'))
+            return byte(ch - TEXT('0'));
+        if (ch >= TEXT('a') && ch <= TEXT('f'))
+            return byte(10 + ch - TEXT('a'));
+        if (ch >= TEXT('A') && ch <= TEXT('F'))
+            return byte(10 + ch - TEXT('A'));
+
+        return -1;
+    }
+
+    constexpr void HexToChar(byte hex, ROutputWriter<Char> auto&& out) noexcept
+    {
+        for (uint8 j = sizeof(byte) * 8; j > 0; j -= 4)
+        {
+            byte digit = (hex >> (j - 4)) & 0xF;
+
+            if (digit < 10)
+            {
+                out += TEXT('0') + digit;
+            }
+            else
+            {
+                out += TEXT('a') + digit - 10;
+            }
+        }
+    }
+
+    constexpr String HexToChar(byte hex) noexcept
+    {
+        String out;
+        HexToChar(hex, out);
+        return out;
+    }
+
+    constexpr bool IsHex(Char ch) noexcept
+    {
+        return (ch >= TEXT('0') && ch <= TEXT('9')) ||
+            (ch >= TEXT('a') && ch <= TEXT('f')) ||
+            (ch >= TEXT('A') && ch <= TEXT('F'));
     }
 }

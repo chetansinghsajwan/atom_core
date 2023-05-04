@@ -5,6 +5,6 @@
 
 namespace Atom
 {
-    template <typename TElement, usize Size>
-    using StaticArray = ::std::array<TElement, Size>;
+    template <typename T, usize Size>
+    using StaticArray = ::std::array<T, Size>;
 }

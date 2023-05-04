@@ -65,6 +65,12 @@ namespace Atom
     }
 
     template <typename T>
+    constexpr const T& ArrayView<T>::operator [] (usize index) const noexcept
+    {
+        return m_arr[index];
+    }
+
+    template <typename T>
     constexpr typename ArrayView<T>::TIterator ArrayView<T>::Iterator() const noexcept
     {
         return TIterator{ m_arr, m_count };

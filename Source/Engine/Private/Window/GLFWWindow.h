@@ -17,16 +17,16 @@ namespace Atom::Engine
     public:
         static constexpr GLFW_SWindowCoords ToGLFW(SWindowCoords coords)
         {
-            coords.x = Math::Clamp<int>(coords.x, NumLimits<int>::max());
-            coords.y = Math::Clamp<int>(coords.y, NumLimits<int>::max());
+            coords.x = Math::Clamp<int>(coords.x, NumLimits<int>::min(), NumLimits<int>::max());
+            coords.y = Math::Clamp<int>(coords.y, NumLimits<int>::min(), NumLimits<int>::max());
 
             return { (int)coords.x, (int)coords.y };
         };
 
         static constexpr SWindowCoords FromGLFW(GLFW_SWindowCoords coords)
         {
-            coords.x = Math::Clamp<int>(coords.x, NumLimits<int>::max());
-            coords.y = Math::Clamp<int>(coords.y, NumLimits<int>::max());
+            coords.x = Math::Clamp<int>(coords.x, NumLimits<int>::min(), NumLimits<int>::max());
+            coords.y = Math::Clamp<int>(coords.y, NumLimits<int>::min(), NumLimits<int>::max());
 
             return { (int)coords.x, (int)coords.y };
         };
