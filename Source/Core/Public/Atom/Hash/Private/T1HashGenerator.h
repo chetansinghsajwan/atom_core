@@ -90,7 +90,7 @@ namespace Atom::Private
             for (usize processed = 0; processed < dataSize; processed += maxInput)
             {
                 _impl.Update((byte*)data + processed,
-                    Math::Min(maxInput, dataSize - processed));
+                    (uint32_t)Math::Min(maxInput, dataSize - processed));
             }
 
             return *this;

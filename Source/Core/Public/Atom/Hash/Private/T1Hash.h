@@ -19,6 +19,7 @@ namespace Atom::Private
         StaticArray<byte, size> bytes;
     };
 
+    // FIX: Compilation error in MSVC, checkout /Zc:externConstexpr
     template <usize size>
     constexpr const T1Hash<size> T1Hash<size>::Null = T1Hash<size>{ 0 };
 }

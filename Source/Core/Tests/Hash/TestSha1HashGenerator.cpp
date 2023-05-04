@@ -1,6 +1,9 @@
 #include "catch2/catch_all.hpp"
 
 #include "Atom/Hash/Sha1Hash.h"
+#include "Atom/Hash/Sha1HashGenerator.h"
+#include "Atom/Hash/Sha1HashParser.h"
+#include "Atom/Hash/Sha1HashStringifier.h"
 
 using namespace Atom;
 
@@ -10,16 +13,14 @@ TEST_CASE("Atom::Hash::Sha1Hash")
     {
         Sha1Hash hash1 =
         {
-            0xd, 0xa, 0x3, 0x9, 0xa, 0x3, 0xe, 0xe, 0x5, 0xe, 0x6, 0xb, 0x4,
-            0xb, 0x0, 0xd, 0x3, 0x2, 0x5, 0x5, 0xb, 0xf, 0xe, 0xf, 0x9, 0x5,
-            0x6, 0x0,0x1, 0x8, 0x9, 0x0, 0xa, 0xf, 0xd, 0x8, 0x0, 0x7, 0x0, 0x9
+            0xda, 0x39, 0xa3, 0xee, 0x5e, 0x6b, 0x4b, 0x0d, 0x32, 0x55,
+            0xbf, 0xef, 0x95, 0x60, 0x18, 0x90, 0xaf, 0xd8, 0x07, 0x09
         };
 
         Sha1Hash hash2 =
         {
-            0xa, 0xa, 0x3, 0x9, 0xa, 0x3, 0xe, 0xe, 0x5, 0xe, 0x6, 0xb, 0x4,
-            0xb, 0x0, 0xd, 0x3, 0x2, 0x5, 0x5, 0xb, 0xf, 0xe, 0xf, 0x9, 0x5,
-            0x6, 0x0,0x1, 0x8, 0x9, 0x0, 0xa, 0xf, 0xd, 0x8, 0x0, 0x7, 0x0, 0x9
+            0xaa, 0x39, 0xa3, 0xee, 0x5e, 0x6b, 0x4b, 0x0d, 0x32, 0x55,
+            0xbf, 0xef, 0x95, 0x60, 0x18, 0x90, 0xaf, 0xd8, 0x07, 0x09
         };
 
         CHECK(hash1 == hash1);
@@ -29,14 +30,14 @@ TEST_CASE("Atom::Hash::Sha1Hash")
     SECTION("Null Hash")
     {
         Sha1Hash hash;
-        Sha1Hash nullHash = null;
+        Sha1Hash nullHash = Sha1Hash::Null;
 
-        CHECK(hash == null);
+        CHECK(hash == Sha1Hash::Null);
         CHECK(hash == nullHash);
 
-        hash = null;
+        hash = Sha1Hash::Null;
 
-        CHECK(hash == null);
+        CHECK(hash == Sha1Hash::Null);
     }
 }
 
@@ -45,13 +46,12 @@ TEST_CASE("Atom::Hash::Sha1HashParser")
     SECTION("String to Hash")
     {
         Sha1Hash hash = Sha1HashParser()
-            .Parse("da39a3ee5e6b4b0d3255bfef95601890afd80709");
+            .Parse(TEXT("da39a3ee5e6b4b0d3255bfef95601890afd80709"));
 
         Sha1Hash expected =
         {
-            0xd, 0xa, 0x3, 0x9, 0xa, 0x3, 0xe, 0xe, 0x5, 0xe, 0x6, 0xb, 0x4,
-            0xb, 0x0, 0xd, 0x3, 0x2, 0x5, 0x5, 0xb, 0xf, 0xe, 0xf, 0x9, 0x5,
-            0x6, 0x0,0x1, 0x8, 0x9, 0x0, 0xa, 0xf, 0xd, 0x8, 0x0, 0x7, 0x0, 0x9
+            0xda, 0x39, 0xa3, 0xee, 0x5e, 0x6b, 0x4b, 0x0d, 0x32, 0x55,
+            0xbf, 0xef, 0x95, 0x60, 0x18, 0x90, 0xaf, 0xd8, 0x07, 0x09
         };
 
         CHECK(hash == expected);
@@ -59,10 +59,11 @@ TEST_CASE("Atom::Hash::Sha1HashParser")
 
     SECTION("Invalid Hash")
     {
-        Sha1Hash hash = Sha1HashParser()
-            .Parse("da3");
-
-        CHECK(hash == Sha1Hash);
+        //! Won't Compile
+        // Sha1Hash hash = Sha1HashParser()
+        //     .Parse(TEXT("da3"));
+        // 
+        // CHECK(hash == Sha1Hash);
     }
 }
 
@@ -74,11 +75,11 @@ TEST_CASE("Atom::Hash::Sha1HashGenerator")
         const char input[] = "";
 
         Sha1Hash hash = Sha1HashGenerator()
-            .ProcessBytes(input, sizeof(input));
-            .GenerateHash();
+            .ProcessBytes(input, sizeof(input))
+            .Generate();
 
         Sha1Hash expected = Sha1HashParser()
-            .Parse("da39a3ee5e6b4b0d3255bfef95601890afd80709");
+            .Parse(TEXT("da39a3ee5e6b4b0d3255bfef95601890afd80709"));
 
         CHECK(hash == expected);
     }
@@ -89,11 +90,11 @@ TEST_CASE("Atom::Hash::Sha1HashGenerator")
         const char input[] = "The quick brown fox jumps over the lazy dog";
 
         Sha1Hash hash = Sha1HashGenerator()
-            .ProcessBytes(input, sizeof(input));
-            .GenerateHash();
+            .ProcessBytes(input, sizeof(input))
+            .Generate();
 
         Sha1Hash expected = Sha1HashParser()
-            .Parse("2fd4e1c67a2d28fced849ee1bb76e7391b93eb12");
+            .Parse(TEXT("2fd4e1c67a2d28fced849ee1bb76e7391b93eb12"));
 
         CHECK(hash == expected);
     }
@@ -110,11 +111,11 @@ TEST_CASE("Atom::Hash::Sha1HashGenerator")
             "id facilisis sapien ultrices. Suspendisse potenti.";
 
         Sha1Hash hash = Sha1HashGenerator()
-            .ProcessBytes(input, sizeof(input));
-            .GenerateHash();
+            .ProcessBytes(input, sizeof(input))
+            .Generate();
 
         Sha1Hash expected = Sha1HashParser()
-            .Parse("ca84c2dfaeed174dd7aa2939b3729c7ee8d56eb2");
+            .Parse(TEXT("ca84c2dfaeed174dd7aa2939b3729c7ee8d56eb2"));
 
         CHECK(hash == expected);
     }

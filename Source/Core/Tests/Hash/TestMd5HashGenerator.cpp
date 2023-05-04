@@ -1,6 +1,7 @@
 #include "catch2/catch_all.hpp"
 
 #include "Atom/Hash/Md5Hash.h"
+#include "Atom/Hash/Md5HashGenerator.h"
 
 using namespace Atom;
 

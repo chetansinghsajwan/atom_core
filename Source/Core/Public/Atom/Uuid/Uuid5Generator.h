@@ -1,8 +1,7 @@
 #pragma once
-#include "Atom/Hash.h"
-
 #include "Atom/Uuid/Uuid.h"
 #include "Atom/Uuid/Private/UuidNameGenerator.h"
+#include "Atom/Hash/Sha1HashGenerator.h"
 
 namespace Atom
 {
