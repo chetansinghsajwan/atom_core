@@ -60,20 +60,14 @@ namespace Atom::Math
 
     constexpr StaticString<2> HexToChar(byte hex) noexcept
     {
-        constexpr auto impl = [](byte hex) constexpr -> Char
-        {
-            if (hex < 10)
-                return TEXT('0') + hex;
-
-            return TEXT('a') + (hex - 10);
-        };
+        constexpr const Char chars[] = TEXT("0123456789abcdef");
 
         byte high = hex >> 4;
         byte low = hex & 0b00001111;
-        return { impl(high), impl(low) };
+        return { chars[high], chars[low] };
     }
 
-    constexpr bool IsHex(Char ch) noexcept
+    constexpr bool IsHexChar(Char ch) noexcept
     {
         return (ch >= TEXT('0') && ch <= TEXT('9')) ||
             (ch >= TEXT('a') && ch <= TEXT('f')) ||

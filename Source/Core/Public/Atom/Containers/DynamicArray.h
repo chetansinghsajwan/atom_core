@@ -48,6 +48,14 @@ namespace Atom
     }
 
     template <typename T, typename TAllocator>
+    template <RInputIterable<T> TInput>
+    constexpr auto DynamicArray<T, TAllocator>::operator += (TInput in)
+        -> typename DynamicArray<T, TAllocator>::TIterator
+    {
+        return InsertBack(in.Iterator());
+    }
+
+    template <typename T, typename TAllocator>
     constexpr DynamicArray<T, TAllocator>::~DynamicArray() { }
 
     template <typename T, typename TAllocator>
@@ -165,9 +173,16 @@ namespace Atom
     constexpr auto DynamicArray<T, TAllocator>::InsertBack(TInput in)
         -> typename DynamicArray<T, TAllocator>::TIterator
     {
-        auto it = Iterator();
-        it.Next(Count());
-        return Insert(it, MOVE(in));
+        // auto it = Iterator();
+        // it.Next(Count());
+        // return Insert(it, MOVE(in));
+
+        for (const T& e : in)
+        {
+            _vector.push_back(e);
+        }
+
+        return TIterator();
     }
 
     template <typename T, typename TAllocator>

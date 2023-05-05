@@ -12,7 +12,7 @@ namespace Atom
     class BasicUuidRandomGenerator
     {
     public:
-        explicit BasicUuidRandomGenerator(uint32_t seed = 0) noexcept:
+        explicit BasicUuidRandomGenerator(uint32 seed = 0) noexcept:
             m_generator{ seed } { }
 
     public:
@@ -21,7 +21,7 @@ namespace Atom
             Uuid uuid;
             for (usize i = 0; i < 16; i += 4)
             {
-                *reinterpret_cast<uint32_t*>(uuid.bytes.Data() + i) = m_distribution(m_generator);
+                *(uint32*)(uuid.bytes.Data() + i) = m_distribution(m_generator);
             }
 
             // Variant must be 10xxxxxx
@@ -36,7 +36,7 @@ namespace Atom
         }
 
     private:
-        UniformIntDistribution<uint32_t>  m_distribution;
+        UniformIntDistribution<uint32> m_distribution;
         TUniformRandomNumberGenerator m_generator;
     };
 
