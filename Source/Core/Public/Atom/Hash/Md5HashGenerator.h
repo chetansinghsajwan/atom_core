@@ -23,7 +23,7 @@ namespace Atom::Private
 
         void Calculate(Md5Hash& hash)
         {
-            Md5Finalise(&m_context, (MD5_HASH*)hash.bytes.data());
+            Md5Finalise(&m_context, (MD5_HASH*)hash.bytes.Data());
         }
 
         Md5Context m_context;

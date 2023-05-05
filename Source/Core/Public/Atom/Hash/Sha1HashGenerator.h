@@ -23,7 +23,7 @@ namespace Atom::Private
 
         void Calculate(Sha1Hash& hash)
         {
-            Sha1Finalise(&m_context, (SHA1_HASH*)hash.bytes.data());
+            Sha1Finalise(&m_context, (SHA1_HASH*)hash.bytes.Data());
         }
 
         Sha1Context m_context;

@@ -1,9 +1,8 @@
 #pragma once
-#include <cmath>
 #include <numeric>
 
 #include "Atom/Core.h"
-#include "Atom/String/String.h"
+#include "Atom/String/StaticString.h"
 
 namespace Atom
 {
@@ -59,28 +58,19 @@ namespace Atom::Math
         return -1;
     }
 
-    constexpr void HexToChar(byte hex, ROutputWriter<Char> auto&& out) noexcept
+    constexpr StaticString<2> HexToChar(byte hex) noexcept
     {
-        for (uint8 j = sizeof(byte) * 8; j > 0; j -= 4)
+        constexpr auto impl = [](byte hex) constexpr -> Char
         {
-            byte digit = (hex >> (j - 4)) & 0xF;
+            if (hex < 10)
+                return TEXT('0') + hex;
 
-            if (digit < 10)
-            {
-                out += TEXT('0') + digit;
-            }
-            else
-            {
-                out += TEXT('a') + digit - 10;
-            }
-        }
-    }
+            return TEXT('a') + (hex - 10);
+        };
 
-    constexpr String HexToChar(byte hex) noexcept
-    {
-        String out;
-        HexToChar(hex, out);
-        return out;
+        byte high = hex >> 4;
+        byte low = hex & 0b00001111;
+        return { impl(high), impl(low) };
     }
 
     constexpr bool IsHex(Char ch) noexcept

@@ -1,10 +1,7 @@
 #pragma once
 #include <string>
-#include <functional>
-
-#include "Atom/Containers/DynamicArray.decl.h"
-
 #include "Atom/String/BasicChar.h"
+#include "Atom/Containers/DynamicArray.decl.h"
 
 namespace Atom
 {

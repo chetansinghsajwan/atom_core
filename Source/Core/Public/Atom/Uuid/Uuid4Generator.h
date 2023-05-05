@@ -21,7 +21,7 @@ namespace Atom
             Uuid uuid;
             for (usize i = 0; i < 16; i += 4)
             {
-                *reinterpret_cast<uint32_t*>(uuid.bytes.data() + i) = m_distribution(m_generator);
+                *reinterpret_cast<uint32_t*>(uuid.bytes.Data() + i) = m_distribution(m_generator);
             }
 
             // Variant must be 10xxxxxx
