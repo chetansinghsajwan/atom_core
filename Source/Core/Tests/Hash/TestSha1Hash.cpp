@@ -32,12 +32,12 @@ TEST_CASE("Atom::Hash::Sha1Hash")
         Sha1Hash hash;
         Sha1Hash nullHash = Sha1Hash::Null;
 
-        CHECK(hash == Sha1Hash::Null);
-        CHECK(hash == nullHash);
+        CHECK(nullHash == Sha1Hash::Null);
 
         hash = Sha1Hash::Null;
 
         CHECK(hash == Sha1Hash::Null);
+        CHECK(hash == nullHash);
     }
 }
 
@@ -67,6 +67,22 @@ TEST_CASE("Atom::Hash::Sha1HashParser")
     }
 }
 
+TEST_CASE("Atom::Hash::Sha1HashStringifier")
+{
+    Sha1Hash hash =
+    {
+        0xda, 0x39, 0xa3, 0xee, 0x5e, 0x6b, 0x4b, 0x0d, 0x32, 0x55,
+        0xbf, 0xef, 0x95, 0x60, 0x18, 0x90, 0xaf, 0xd8, 0x07, 0x09
+    };
+
+    String str = Sha1HashStringifier()
+        .ToString(hash);
+
+    StringView expected = TEXT("da39a3ee5e6b4b0d3255bfef95601890afd80709");
+
+    CHECK(str == expected);
+}
+
 TEST_CASE("Atom::Hash::Sha1HashGenerator")
 {
     // Tests if the SHA-1 hash of an empty input string is correct.
@@ -75,7 +91,6 @@ TEST_CASE("Atom::Hash::Sha1HashGenerator")
         const char input[] = "";
 
         Sha1Hash hash = Sha1HashGenerator()
-            .ProcessBytes(input, sizeof(input))
             .Generate();
 
         Sha1Hash expected = Sha1HashParser()
@@ -90,7 +105,7 @@ TEST_CASE("Atom::Hash::Sha1HashGenerator")
         const char input[] = "The quick brown fox jumps over the lazy dog";
 
         Sha1Hash hash = Sha1HashGenerator()
-            .ProcessBytes(input, sizeof(input))
+            .ProcessBytes(input, sizeof(input) - 1)
             .Generate();
 
         Sha1Hash expected = Sha1HashParser()
@@ -102,20 +117,20 @@ TEST_CASE("Atom::Hash::Sha1HashGenerator")
     // Tests if the SHA-1 hash of a multi-block input string is correct.
     SECTION("TestMultiBlockInput")
     {
-        const char input[] = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. "
-            "Sed eget mi at justo ultrices faucibus a sed nulla. Integer vitae lacus vehicula, "
-            "fringilla elit in, venenatis ipsum. Nullam vel odio lobortis, venenatis ex eget, "
-            "pellentesque nibh. In hac habitasse platea dictumst. Vestibulum ante ipsum primis "
-            "in faucibus orci luctus et ultrices posuere cubilia curae; Ut non dolor a libero "
-            "interdum tincidunt. Quisque sed pharetra nulla. Proin lacinia neque eu nisl congue, "
-            "id facilisis sapien ultrices. Suspendisse potenti.";
+        const char input[] = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+            "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
+            "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris "
+            "nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in "
+            "reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. "
+            "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia "
+            "deserunt mollit anim id est laborum.";
 
         Sha1Hash hash = Sha1HashGenerator()
-            .ProcessBytes(input, sizeof(input))
+            .ProcessBytes(input, sizeof(input) - 1)
             .Generate();
 
         Sha1Hash expected = Sha1HashParser()
-            .Parse(TEXT("ca84c2dfaeed174dd7aa2939b3729c7ee8d56eb2"));
+            .Parse(TEXT("cd36b370758a259b34845084a6cc38473cb95e27"));
 
         CHECK(hash == expected);
     }
