@@ -1,6 +1,6 @@
 #pragma once
 #include "Atom/Containers/InitializerList.h"
-#include "Atom/Containers/Iterator.h"
+#include "Atom/Containers/Iterators.h"
 #include "Atom/TTI.h"
 
 namespace Atom
