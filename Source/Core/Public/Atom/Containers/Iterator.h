@@ -3,13 +3,11 @@
 
 namespace Atom
 {
-    /// --------------------------------------------------------------------------------------------
     /// {OneWayIterator} is {ForwardIterator} as in {std}.
     /// {TwoWayIterator} is {BidirectionalIterator} as in {std}.
     /// {DirectIterator} is {RandomAccessIterator} as in {std}.
     /// --------------------------------------------------------------------------------------------
 
-    /// --------------------------------------------------------------------------------------------
     /// Ensures {TIterator} is {OneWayIterator} for type {T}.
     /// --------------------------------------------------------------------------------------------
     template <typename TIterator, typename T>
@@ -30,7 +28,6 @@ namespace Atom
     template <typename TIterator, typename T>
     concept RInputIterator = ROneWayIterator<TIterator, T>;
 
-    /// --------------------------------------------------------------------------------------------
     /// Ensures {TIterator} is {TwoWayIterator} for type {T}.
     /// --------------------------------------------------------------------------------------------
     template <typename TIterator, typename T>
@@ -42,7 +39,6 @@ namespace Atom
         { constIterator.HasPrev() } -> RSameAs<bool>;
     };
 
-    /// --------------------------------------------------------------------------------------------
     /// Ensures {TIterator} is {DirectIterator} for type {T}.
     /// --------------------------------------------------------------------------------------------
     template <typename TIterator, typename T>
@@ -56,7 +52,6 @@ namespace Atom
         { constIterator.Range() } -> RConvertibleTo<usize>;
     };
 
-    /// --------------------------------------------------------------------------------------------
     /// Ensures {TIterator} is {ArrayIterator} for type {T}.
     /// --------------------------------------------------------------------------------------------
     template <typename TIterator, typename T>
@@ -70,7 +65,6 @@ namespace Atom
 
 namespace Atom::Internal
 {
-    /// --------------------------------------------------------------------------------------------
     /// Type to test if a type implementing {ROneWayIterator} is accepted when defining concepts.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
@@ -88,7 +82,6 @@ namespace Atom::Internal
     template <typename T>
     using InputIteratorMock = OneWayIteratorMock<T>;
 
-    /// --------------------------------------------------------------------------------------------
     /// Type to test if a type implementing {RTwoWayIterator} is accepted when defining concepts.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
@@ -101,7 +94,6 @@ namespace Atom::Internal
     static_assert(RTwoWayIterator<TwoWayIteratorMock<int>, int>,
         "TwoWayIteratorMock does not meet RTwoWayIterator requirements.");
 
-    /// --------------------------------------------------------------------------------------------
     /// Type to test if a type implementing {RDirectIterator} is accepted when defining concepts.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
@@ -119,7 +111,6 @@ namespace Atom::Internal
     static_assert(RDirectIterator<DirectIteratorMock<int>, int>,
         "DirectIteratorMock does not meet RDirectIterator requirements.");
 
-    /// --------------------------------------------------------------------------------------------
     /// Type to test if a type implementing {RArrayIterator} is accepted when defining concepts.
     /// --------------------------------------------------------------------------------------------
     template <typename T>

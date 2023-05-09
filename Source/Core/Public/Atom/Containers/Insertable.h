@@ -3,11 +3,9 @@
 
 namespace Atom
 {
-    /// --------------------------------------------------------------------------------------------
     /// {Insertable} represents a type that allows inserting objs of type {Element} into it.
     /// --------------------------------------------------------------------------------------------
 
-    /// --------------------------------------------------------------------------------------------
     /// Ensures {TInsertable} is {Insertable} for type {T}.
     /// --------------------------------------------------------------------------------------------
     template <typename TInsertable, typename T>
@@ -17,12 +15,10 @@ namespace Atom
         insertable.Insert(Internal::InputIteratorMock<T>());
     };
 
-    /// --------------------------------------------------------------------------------------------
     /// {FrontInsertable} represents a type that allows inserting objs of type {Element} 
     /// into front of container.
     /// --------------------------------------------------------------------------------------------
 
-    /// --------------------------------------------------------------------------------------------
     /// Ensures {TInsertable} is {FrontInsertable} for type {T}.
     /// --------------------------------------------------------------------------------------------
     template <typename TFrontInsertable, typename T>
@@ -32,12 +28,10 @@ namespace Atom
         insertable.InsertFront(Internal::InputIteratorMock<T>());
     };
 
-    /// --------------------------------------------------------------------------------------------
     /// {FrontInsertable} represents a type that allows inserting objs of type {Element} 
     /// into back of container.
     /// --------------------------------------------------------------------------------------------
 
-    /// --------------------------------------------------------------------------------------------
     /// Ensures {TInsertable} is {BackInsertable} for type {T}.
     /// --------------------------------------------------------------------------------------------
     template <typename TInsertable, typename T>
@@ -47,12 +41,10 @@ namespace Atom
         insertable.InsertBack(Internal::InputIteratorMock<T>());
     };
 
-    /// --------------------------------------------------------------------------------------------
     /// {KeyInsertable} represents a type that allows inserting objs of type {Element} 
     /// at specified index of container.
     /// --------------------------------------------------------------------------------------------
 
-    /// --------------------------------------------------------------------------------------------
     /// Ensures {TInsertable} is {KeyInsertable} for type {T}.
     /// --------------------------------------------------------------------------------------------
     template <typename TInsertable, typename TKey, typename T>
@@ -62,12 +54,10 @@ namespace Atom
         insertable.Insert(key, Internal::InputIteratorMock<T>());
     };
 
-    /// --------------------------------------------------------------------------------------------
     /// {IndexInsertable} represents a type that allows inserting objs of type {Element} 
     /// at specified index of container.
     /// --------------------------------------------------------------------------------------------
 
-    /// --------------------------------------------------------------------------------------------
     /// Ensures {TInsertable} is {IndexInsertable} for type {T}.
     /// --------------------------------------------------------------------------------------------
     template <typename TInsertable, typename T>
@@ -76,7 +66,6 @@ namespace Atom
 
 namespace Atom::Internal
 {
-    /// --------------------------------------------------------------------------------------------
     /// Type to test if a type implementing {RBackInsertable} is accepted when defining concepts.
     /// --------------------------------------------------------------------------------------------
     template <typename T>

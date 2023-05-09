@@ -27,7 +27,6 @@ namespace Atom::Fmt
 
 	using _TFormatError = ::fmt::format_error;
 
-	/// --------------------------------------------------------------------------------------------
 	/// Exception thrown during formatting error.
 	/// --------------------------------------------------------------------------------------------
 	class FormatException: public Exception
@@ -36,7 +35,6 @@ namespace Atom::Fmt
 		FormatException(String msg) noexcept:
 			Exception(msg.Data()) { }
 
-		/// ----------------------------------------------------------------------------------------
 		/// @TODO Fix this ugly code.
 		/// ----------------------------------------------------------------------------------------
 		FormatException(const _TFormatError& in_fmt_err) noexcept:
@@ -46,7 +44,6 @@ namespace Atom::Fmt
 		// 		.Convert(UTF8StringView{ (const char8*)in_fmt_err.what() }.Iterator()).Data()) { }
 	};
 
-	/// --------------------------------------------------------------------------------------------
 	/// A single format argument.
 	/// --------------------------------------------------------------------------------------------
 	class FormatArg
@@ -59,9 +56,8 @@ namespace Atom::Fmt
 		_TFormatArg m_fmt_arg;
 	};
 
-	/// --------------------------------------------------------------------------------------------
 	/// List of format arguments.
-	/// --------------------------------------------------------------------------------------------    
+	/// -------------------------------------------------------------------------------------------- 
 	class FormatArgs
 	{
 	public:
@@ -90,7 +86,6 @@ namespace Atom::Fmt
 		_TFormatArgs m_fmt_args;
 	};
 
-	/// --------------------------------------------------------------------------------------------
 	/// Context to parse format string.
 	/// --------------------------------------------------------------------------------------------
 	struct FormatParseContext
@@ -111,7 +106,6 @@ namespace Atom::Fmt
 		_TFormatParseContext& fmt_ctx;
 	};
 
-	/// --------------------------------------------------------------------------------------------
 	/// Context to write formatted string.
 	/// --------------------------------------------------------------------------------------------
 	struct FormatContext
@@ -140,7 +134,6 @@ namespace Atom::Fmt
 		_TFormatContext& fmt_ctx;
 	};
 
-	/// --------------------------------------------------------------------------------------------
 	/// Parses and writes string representation for types according to the specified format 
 	/// specifiers.
 	/// --------------------------------------------------------------------------------------------
@@ -150,7 +143,6 @@ namespace Atom::Fmt
 	template <typename T>
 	using Formatter = FormatterImpl<TTI::TRemoveCVRef<T>>;
 
-	/// --------------------------------------------------------------------------------------------
 	/// Ensures {TFormatter} is {Formatter} for type {T}.
 	/// --------------------------------------------------------------------------------------------
 	template <typename TFormatter, typename T>
@@ -160,12 +152,10 @@ namespace Atom::Fmt
 		formatter.Format(declval(T), declval(FormatContext&));
 	};
 
-	/// --------------------------------------------------------------------------------------------
 	/// Formattable refers to a type for which exists a valid {Formatter<T>} specialization which 
 	/// satisfies {RFormatter<Formatter<T>, T>} requirement.
 	/// --------------------------------------------------------------------------------------------
 
-	/// --------------------------------------------------------------------------------------------
 	/// Ensures {T} is {Formattable}.
 	/// --------------------------------------------------------------------------------------------
 	template <typename T>
@@ -174,7 +164,6 @@ namespace Atom::Fmt
 
 namespace Atom::Fmt
 {
-	/// -----------------------------------------------------------------------------------------------
 	/// {Formatter} specialization for {StringView}.
 	/// 
 	/// @INTERNAL
@@ -203,7 +192,6 @@ namespace Atom::Fmt
 
 	static_assert(RFormattable<StringView>, "StringView is not formattable.");
 
-	/// -----------------------------------------------------------------------------------------------
 	/// {Formatter} specialization for {Char} array.
 	/// -----------------------------------------------------------------------------------------------
 	template <usize N>
@@ -216,7 +204,6 @@ namespace Atom::Fmt
 		}
 	};
 
-	/// -----------------------------------------------------------------------------------------------
 	/// {Formatter} specialization for types which satisfy {RStringViewConvertible} requirement.
 	/// -----------------------------------------------------------------------------------------------
 	template <RStringViewConvertible T>
@@ -246,7 +233,6 @@ namespace Atom::Fmt
 
 namespace fmt
 {
-	/// --------------------------------------------------------------------------------------------
 	/// @INTERNAL
 	/// 
 	/// {fmt::formatter} specialization for all types that implement {Atom::Fmt::Formatter}.
@@ -273,7 +259,6 @@ namespace fmt
 			return fmt_ctx.out();
 		}
 
-		/// ----------------------------------------------------------------------------------------
 		/// This contains actual implementation.
 		/// ----------------------------------------------------------------------------------------
 		Atom::Fmt::Formatter<T> formatter;

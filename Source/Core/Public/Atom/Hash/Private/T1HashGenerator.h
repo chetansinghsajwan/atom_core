@@ -5,14 +5,12 @@
 
 namespace Atom::Private
 {
-    /// --------------------------------------------------------------------------------------------
     /// T1Hash Generator.
     /// --------------------------------------------------------------------------------------------
     template <typename T1Hash, typename TImpl>
     class T1HashGenerator
     {
     public:
-        /// ----------------------------------------------------------------------------------------
         /// DefaultConstructor.
         /// 
         /// Same as calling Reset.
@@ -23,7 +21,6 @@ namespace Atom::Private
         }
 
     public:
-        /// ----------------------------------------------------------------------------------------
         /// Resets the {T1HashGenerator} to its initial state.
         /// ----------------------------------------------------------------------------------------
         void Reset() noexcept
@@ -31,7 +28,6 @@ namespace Atom::Private
             _impl.Initialize();
         }
 
-        /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
         template <typename TInput, usize BufSize = 50>
@@ -64,7 +60,6 @@ namespace Atom::Private
             return *this;
         }
 
-        /// ----------------------------------------------------------------------------------------
         /// Processes data. This can be called infinite times.
         /// 
         /// @PARAM[IN] data Ptr to the input data.
@@ -96,7 +91,6 @@ namespace Atom::Private
             return *this;
         }
 
-        /// ----------------------------------------------------------------------------------------
         /// Processes single byte. This can be called infinite times.
         /// 
         /// @PARAM[IN] data Data to process.
@@ -107,7 +101,6 @@ namespace Atom::Private
             return *this;
         }
 
-        /// ----------------------------------------------------------------------------------------
         /// Generates T1Hash.
         /// 
         /// @RETURNS {T1Hash} object.
@@ -120,7 +113,6 @@ namespace Atom::Private
         }
 
     private:
-        /// ----------------------------------------------------------------------------------------
         /// Underlying T1HashGenerator implementation.
         /// ----------------------------------------------------------------------------------------
         TImpl _impl;

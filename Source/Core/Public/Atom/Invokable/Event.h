@@ -4,7 +4,6 @@
 
 namespace Atom
 {
-    /// --------------------------------------------------------------------------------------------
     /// SEventKey is used to identify events registered for this key.
     /// --------------------------------------------------------------------------------------------
     struct SEventKey
@@ -23,7 +22,6 @@ namespace Atom
         const TypeInfo& _typeInfo;
     };
 
-    /// --------------------------------------------------------------------------------------------
     /// {Event} is just a frontend to {EventSource} to prevent users from dispatching events.
     /// --------------------------------------------------------------------------------------------
     template <typename... TArgs>
@@ -31,7 +29,6 @@ namespace Atom
     {
         using TSignature = void(TArgs...);
 
-        /// ----------------------------------------------------------------------------------------
         /// Calls Subscribe(FORWARD(listener));
         /// ----------------------------------------------------------------------------------------
         template <RInvokable<TSignature> TInvokable>
@@ -40,7 +37,6 @@ namespace Atom
             return Subscribe(FORWARD(listener));
         }
 
-        /// ----------------------------------------------------------------------------------------
         /// Calls Unsubscribe(key);
         /// ----------------------------------------------------------------------------------------
         bool operator -= (SEventKey key) noexcept
@@ -48,7 +44,6 @@ namespace Atom
             return Unsubscribe(key);
         }
 
-        /// ----------------------------------------------------------------------------------------
         /// Calls Subscribe(FORWARD(listener)) on {Source}.
         /// ----------------------------------------------------------------------------------------
         template <RInvokable<TSignature> TInvokable>
@@ -57,18 +52,15 @@ namespace Atom
             return Subscribe(InvokableBox<TSignature>(FORWARD(listener)));
         }
 
-        /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
         virtual SEventKey Subscribe(InvokableBox<TSignature>&& invokable) noexcept = 0;
 
-        /// ----------------------------------------------------------------------------------------
         /// Calls Unsubscribe(key) on {Source}.
         /// ----------------------------------------------------------------------------------------
         virtual usize Unsubscribe(SEventKey key) noexcept = 0;
     };
 
-    /// --------------------------------------------------------------------------------------------
     /// EventSource is used to manage listeners and dispatch event.
     /// 
     /// @TODO Add async dispatching.
@@ -80,7 +72,6 @@ namespace Atom
         constexpr EventSource() noexcept { }
 
     public:
-        /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
         virtual SEventKey Subscribe(InvokableBox<void(TArgs...)>&& invokable) noexcept override final
@@ -88,7 +79,6 @@ namespace Atom
             return _AddListener(FORWARD(invokable));
         }
 
-        /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
         virtual usize Unsubscribe(SEventKey key) noexcept override final
@@ -96,7 +86,6 @@ namespace Atom
             return _RemoveListener(key);
         }
 
-        /// ----------------------------------------------------------------------------------------
         /// Dispatches the events. Calls each event listener(invokables) with given args.
         /// 
         /// @TODO Add detailed documentation on argument passing.
@@ -110,6 +99,8 @@ namespace Atom
         }
 
     protected:
+        /// 
+        /// ----------------------------------------------------------------------------------------
         SEventKey _AddListener(InvokableBox<void(TArgs...)>&& invokable)
         {
             SEventKey key = invokable.GetInvokableType();
@@ -118,6 +109,8 @@ namespace Atom
             return key;
         }
 
+        /// 
+        /// ----------------------------------------------------------------------------------------
         usize _RemoveListener(SEventKey key) noexcept
         {
             return _listeners.RemoveIf([&](const auto& listener)
@@ -126,6 +119,8 @@ namespace Atom
                 });
         }
 
+        /// 
+        /// ----------------------------------------------------------------------------------------
         usize _CountListeners(SEventKey key) noexcept
         {
             usize count = 0;
@@ -143,7 +138,6 @@ namespace Atom
     protected:
         using TListener = InvokableBox<void(TArgs...)>;
     
-        /// ----------------------------------------------------------------------------------------
         /// List of event listeners.
         /// ----------------------------------------------------------------------------------------
         DynamicArray<TListener> _listeners;

@@ -11,7 +11,7 @@ namespace Atom
     namespace Private
     {
         struct InvokableBoxIdentifier { };
-        
+
         template <typename TResult, typename... TArgs>
         struct Invoker
         {
@@ -59,34 +59,29 @@ namespace Atom
             void (*m_impl) (void* invokable, TArgs&&... args);
         };
     }
-    
-    /// --------------------------------------------------------------------------------------------
+
     /// InvokableBox declaration.
     /// --------------------------------------------------------------------------------------------
     template <typename>
     class InvokableBox;
 
-    /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
     template <typename TResult, typename... TArgs>
-    class InvokableBox <TResult(TArgs...)>:
+    class InvokableBox <TResult(TArgs...)> :
         public ObjectBox<true, true, true, 50, DefaultMemAllocator>,
         public Private::InvokableBoxIdentifier
     {
     public:
-        /// ----------------------------------------------------------------------------------------
         /// DefaultConstructor.
         /// ----------------------------------------------------------------------------------------
         constexpr InvokableBox() noexcept { }
 
-        /// ----------------------------------------------------------------------------------------
         /// NullConstructor.
         /// ----------------------------------------------------------------------------------------
-        InvokableBox(NullType null) noexcept:
+        InvokableBox(NullType null) noexcept :
             ObjectBox(null) { }
 
-        /// ----------------------------------------------------------------------------------------
         /// NullAssignmentOperator.
         /// ----------------------------------------------------------------------------------------
         InvokableBox& operator = (NullType null)
@@ -95,7 +90,6 @@ namespace Atom
             return *this;
         }
 
-        /// ----------------------------------------------------------------------------------------
         /// NullEqualityOperator.
         /// ----------------------------------------------------------------------------------------
         bool operator == (NullType null) const noexcept
@@ -103,22 +97,20 @@ namespace Atom
             return ObjectBox::operator == (null);
         }
 
-        /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
         template <RInvokable<TResult(TArgs...)> TInvokable>
-        requires RNotDerivedFrom<TInvokable, Private::InvokableBoxIdentifier>
-        InvokableBox(TInvokable&& invokable):
+            requires RNotDerivedFrom<TInvokable, Private::InvokableBoxIdentifier>
+        InvokableBox(TInvokable&& invokable) :
             ObjectBox(FORWARD(invokable))
         {
             m_SetInvoker<TInvokable>();
         }
 
-        /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
         template <RInvokable<TResult(TArgs...)> TInvokable>
-        requires RNotDerivedFrom<TInvokable, Private::InvokableBoxIdentifier>
+            requires RNotDerivedFrom<TInvokable, Private::InvokableBoxIdentifier>
         InvokableBox& operator = (TInvokable&& invokable)
         {
             ObjectBox::operator = (FORWARD(invokable));
@@ -126,13 +118,11 @@ namespace Atom
             return *this;
         }
 
-        /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        InvokableBox(const InvokableBox& other):
+        InvokableBox(const InvokableBox& other) :
             ObjectBox(other) { }
 
-        /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
         InvokableBox& operator = (const InvokableBox& other)
@@ -141,13 +131,11 @@ namespace Atom
             return *this;
         }
 
-        /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        InvokableBox(InvokableBox&& other):
+        InvokableBox(InvokableBox&& other) :
             ObjectBox(MOVE(other)) { }
 
-        /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
         InvokableBox& operator = (InvokableBox&& other)
@@ -156,13 +144,11 @@ namespace Atom
             return *this;
         }
 
-        /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
         ~InvokableBox() { }
 
     public:
-        /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
         TResult Invoke(TArgs&&... args)
@@ -173,7 +159,6 @@ namespace Atom
             return m_invoker.Invoke(ObjectBox::_GetObject(), FORWARD(args)...);
         }
 
-        /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
         TResult operator () (TArgs&&... args)
@@ -197,7 +182,6 @@ namespace Atom
         }
 
     protected:
-        /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
         template <RInvokable<TResult(TArgs...)> TInvokable>

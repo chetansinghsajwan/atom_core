@@ -3,13 +3,11 @@
 
 namespace Atom
 {
-    /// --------------------------------------------------------------------------------------------
     /// {OneWayIterable} is a type which provides {OneWayIterator}.
     /// {TwoWayIterable} is a type which provides {TwoWayIterator}.
     /// {DirectIterable} is a type which provides {DirectIterator}.
     /// --------------------------------------------------------------------------------------------
 
-    /// --------------------------------------------------------------------------------------------
     /// Ensures {TIterable} is {OneWayIterable} for type {T}.
     /// --------------------------------------------------------------------------------------------
     template <typename TIterable, typename T>
@@ -21,7 +19,6 @@ namespace Atom
     template <typename TIterable, typename T>
     concept RInputIterable = ROneWayIterable<TIterable, T>;
 
-    /// --------------------------------------------------------------------------------------------
     /// Ensures {TIterable} is {TwoWayIterable} for type {T}.
     /// --------------------------------------------------------------------------------------------
     template <typename TIterable, typename T>
@@ -30,7 +27,6 @@ namespace Atom
         { iterable.Iterator() } -> RTwoWayIterator<T>;
     };
 
-    /// --------------------------------------------------------------------------------------------
     /// Ensures {TIterable} is {DirectIterable} for type {T}.
     /// --------------------------------------------------------------------------------------------
     template <typename TIterable, typename T>
@@ -42,7 +38,6 @@ namespace Atom
 
 namespace Atom::Internal
 {
-    /// --------------------------------------------------------------------------------------------
     /// Type to test if a type implementing {ROneWayIterable} is accepted when defining concepts.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
@@ -54,7 +49,6 @@ namespace Atom::Internal
     static_assert(ROneWayIterable<OneWayIterableMock<int>, int>,
         "OneWayIterableMock does not meet ROneWayIterable requirements.");
 
-    /// --------------------------------------------------------------------------------------------
     /// Type to test if a type implementing {RTwoWayIterable} is accepted when defining concepts.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
@@ -66,7 +60,6 @@ namespace Atom::Internal
     static_assert(RTwoWayIterable<TwoWayIterableMock<int>, int>,
         "TwoWayIterableMock does not meet RTwoWayIterable requirements.");
 
-    /// --------------------------------------------------------------------------------------------
     /// Type to test if a type implementing {RDirectIterable} is accepted when defining concepts.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
