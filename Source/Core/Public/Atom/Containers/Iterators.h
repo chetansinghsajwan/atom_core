@@ -11,11 +11,11 @@ namespace Atom
     /// Ensures {TIterator} is {OneWayIterator} for type {T}.
     /// --------------------------------------------------------------------------------------------
     template <typename TIterator, typename T>
-    concept ROneWayIterator = requires(TIterator iterator, const TIterator constIterator)
+    concept ROneWayIterator = requires(TIterator it, const TIterator cit)
     {
-        { iterator.Get() } -> RConvertibleTo<const T&>;
-        { iterator.Next() } -> RSameAs<bool>;
-        { constIterator.HasNext() } -> RSameAs<bool>;
+        { it.Get() } -> RConvertibleTo<const T&>;
+        { it.Next() } -> RSameAs<bool>;
+        { cit.HasNext() } -> RSameAs<bool>;
 
         // FIX: Putting these constraints first makes recursive instantiations at various parts in 
         // GCC and Clang, works fine in MSVC.
@@ -31,35 +31,35 @@ namespace Atom
     /// Ensures {TIterator} is {TwoWayIterator} for type {T}.
     /// --------------------------------------------------------------------------------------------
     template <typename TIterator, typename T>
-    concept RTwoWayIterator = requires(TIterator iterator, const TIterator constIterator)
+    concept RTwoWayIterator = requires(TIterator it, const TIterator cit)
     {
         requires ROneWayIterator<TIterator, T>;
 
-        { iterator.Prev() } -> RSameAs<bool>;
-        { constIterator.HasPrev() } -> RSameAs<bool>;
+        { it.Prev() } -> RSameAs<bool>;
+        { cit.HasPrev() } -> RSameAs<bool>;
     };
 
     /// Ensures {TIterator} is {DirectIterator} for type {T}.
     /// --------------------------------------------------------------------------------------------
     template <typename TIterator, typename T>
-    concept RDirectIterator = requires(TIterator iterator, const TIterator constIterator)
+    concept RDirectIterator = requires(TIterator it, const TIterator cit, usize steps)
     {
         requires RTwoWayIterator<TIterator, T>;
 
-        { iterator.Next((usize)0) } -> RSameAs<bool>;
-        { iterator.Prev((usize)0) } -> RSameAs<bool>;
+        { it.Next(steps) } -> RSameAs<bool>;
+        { it.Prev(steps) } -> RSameAs<bool>;
 
-        { constIterator.Range() } -> RConvertibleTo<usize>;
+        { cit.Range() } -> RConvertibleTo<usize>;
     };
 
     /// Ensures {TIterator} is {ArrayIterator} for type {T}.
     /// --------------------------------------------------------------------------------------------
     template <typename TIterator, typename T>
-    concept RArrayIterator = requires(TIterator iterator, const TIterator constIterator)
+    concept RArrayIterator = requires(TIterator it, const TIterator cit)
     {
         requires RDirectIterator<TIterator, T>;
 
-        { iterator.Data() } -> RSameAs<T*>;
+        { it.Data() } -> RSameAs<T*>;
     };
 }
 
@@ -116,12 +116,6 @@ namespace Atom::Internal
     template <typename T>
     struct ArrayIteratorMock: DirectIteratorMock<T>
     {
-        using OneWayIteratorMock<T>::Next;
-        using TwoWayIteratorMock<T>::Prev;
-        using DirectIteratorMock<T>::Next;
-        using DirectIteratorMock<T>::Prev;
-        using DirectIteratorMock<T>::Range;
-
         T* Data();
     };
 
