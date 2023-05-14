@@ -2,6 +2,8 @@
 #include <concepts>
 #include <type_traits>
 
+#include "Primitives.h"
+
 namespace Atom
 {
 //// Basic Concepts
@@ -146,10 +148,10 @@ namespace Atom
     {
         requires REqualityComparableWith<T1, T2>;
 
-    { t1 < t2 }  -> RConvertibleTo<bool>;
-    { t1 > t2 }  -> RConvertibleTo<bool>;
-    { t1 <= t2 } -> RConvertibleTo<bool>;
-    { t1 >= t2 } -> RConvertibleTo<bool>;
+        { t1 < t2 }  -> RConvertibleTo<bool>;
+        { t1 > t2 }  -> RConvertibleTo<bool>;
+        { t1 <= t2 } -> RConvertibleTo<bool>;
+        { t1 >= t2 } -> RConvertibleTo<bool>;
     };
 
     /// Ensures {T} is {Comparable}.
