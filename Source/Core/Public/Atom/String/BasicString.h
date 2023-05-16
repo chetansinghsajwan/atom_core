@@ -19,7 +19,7 @@ namespace Atom
 
     template <typename TEncoding, typename TAllocator>
     template <typename TInput>
-    requires RFwdIt<TInput, BasicChar<TEncoding>>
+    requires RFwdIt<TInput, const BasicChar<TEncoding>>
     constexpr BasicString<TEncoding, TAllocator>::BasicString(TInput in) noexcept:
         TBase(MOVE(in)) { }
 
@@ -37,7 +37,7 @@ namespace Atom
 
     template <typename TEncoding, typename TAllocator>
     template <typename TRange>
-    requires RFwdRange<TRange, BasicChar<TEncoding>>
+    requires RFwdRange<TRange, const BasicChar<TEncoding>>
     constexpr bool BasicString<TEncoding, TAllocator>::
         operator == (const TRange& in) const noexcept
     {

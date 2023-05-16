@@ -43,7 +43,7 @@ namespace Atom
         /// 
         /// ----------------------------------------------------------------------------------------
         template <typename TIt>
-        requires RFwdIt<TIt, T>
+        requires RFwdIt<TIt, const T>
         constexpr DynamicArray(TIt it);
 
         /// 
@@ -64,13 +64,15 @@ namespace Atom
 
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <RFwdIt<T> TIt>
+        template <typename TIt>
+        requires RFwdIt<TIt, const T>
         constexpr TIterator operator += (TIt it);
 
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <RFwdRange<T> TIt>
-        constexpr TIterator operator += (TIt it);
+        template <typename TRange>
+        requires RFwdRange<TRange, const T>
+        constexpr TIterator operator += (const TRange& it);
 
         /// 
         /// ----------------------------------------------------------------------------------------
@@ -163,7 +165,8 @@ namespace Atom
 
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <RFwdIt<T> TIt>
+        template <typename TIt>
+        requires RFwdIt<TIt, const T>
         constexpr TIterator InsertBack(TIt it);
 
     //// Remove

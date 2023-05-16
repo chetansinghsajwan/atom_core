@@ -14,7 +14,7 @@ namespace Atom
             return Parse(ArrayIterator<const Char>(in, size - 1));
         }
 
-        constexpr Uuid Parse(RFwdIt<Char> auto in) const noexcept
+        constexpr Uuid Parse(RFwdIt<const Char> auto in) const noexcept
         {
             if constexpr (RFwdJumpIt<decltype(in), Char>)
             {

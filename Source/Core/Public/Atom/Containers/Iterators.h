@@ -8,7 +8,7 @@ namespace Atom::Private
     template <typename TIt, typename T>
     concept RItBase = requires(TIt it)
     {
-        { it.Get() } -> RConvertibleTo<const T&>;
+        { it.Get() } -> RConvertibleTo<T&>;
 
         // TODO: Fix this requirement.
         // { for (T& el : it) { } }

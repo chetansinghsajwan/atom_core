@@ -36,7 +36,7 @@ namespace Atom
         /// 
         /// ----------------------------------------------------------------------------------------
         template <typename TInput>
-        requires RFwdIt<TInput, BasicChar<TEncoding>>
+        requires RFwdIt<TInput, const BasicChar<TEncoding>>
         constexpr BasicString(TInput in) noexcept;
 
         /// ----------------------------------------------------------------------------------------
@@ -54,7 +54,7 @@ namespace Atom
         /// 
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
-        requires RFwdRange<TRange, BasicChar<TEncoding>>
+        requires RFwdRange<TRange, const BasicChar<TEncoding>>
         constexpr bool operator == (const TRange& in) const noexcept;
 
         /// ----------------------------------------------------------------------------------------
