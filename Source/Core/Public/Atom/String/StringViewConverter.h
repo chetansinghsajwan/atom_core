@@ -57,7 +57,7 @@ namespace Atom
             return converter.Convert();
         }
 
-        constexpr void Convert(const T& in, ROutputWriter<Char> auto out) noexcept
+        constexpr void Convert(const T& in, ROutput<Char> auto out) noexcept
         {
             StringView strView = converter.Convert(in);
             out.InsertBack(in);

@@ -9,8 +9,9 @@ namespace Atom::Private
     template < >
     struct CharEncodingConversionImpl<UTF16CharEncoding, UTF8CharEncoding>
     {
-        template <RFwdIt<UTF16Char> TInput, ROutputWriter<UTF8Char> TOutput>
-        static constexpr void ConvertChar(TInput in, TOutput out)
+        template <typename TIn, typename TOut>
+        requires RFwdIt<TIn, UTF16Char> && ROutput<TOut, UTF8Char>
+        static constexpr void ConvertChar(TIn in, TOut out)
         {
             static constexpr UTF8StringView msg = UTF8(
                 "UTF16 -> UTF8 char encoding conversion not implemented yet.");
@@ -22,8 +23,9 @@ namespace Atom::Private
     template < >
     struct CharEncodingConversionImpl<UTF16CharEncoding, UTF32CharEncoding>
     {
-        template <RFwdIt<UTF16Char> TInput, ROutputWriter<UTF32Char> TOutput>
-        static constexpr void ConvertChar(TInput in, TOutput out)
+        template <typename TIn, typename TOut>
+        requires RFwdIt<TIn, UTF16Char> && ROutput<TOut, UTF32Char>
+        static constexpr void ConvertChar(TIn in, TOut out)
         {
             static constexpr UTF32StringView msg = UTF32(
                 "UTF16 -> UTF32 char encoding conversion not implemented yet.");

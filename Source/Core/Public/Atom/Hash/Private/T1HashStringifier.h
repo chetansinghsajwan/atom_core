@@ -15,7 +15,7 @@ namespace Atom::Private
             return str;
         };
 
-        constexpr void WriteString(const T1Hash& hash, ROutputWriter<Char> auto&& out) noexcept
+        constexpr void WriteString(const T1Hash& hash, ROutput<Char> auto&& out) noexcept
         {
             for (byte b : hash.bytes.Iterator())
             {
@@ -39,7 +39,7 @@ namespace Atom
                 .ToString(hash);
         }
 
-        constexpr void Convert(const T1Hash& hash, ROutputWriter<Char> auto&& out) noexcept
+        constexpr void Convert(const T1Hash& hash, ROutput<Char> auto&& out) noexcept
         {
             return Private::T1HashStringifier<T1Hash>()
                 .WriteString(hash, out);

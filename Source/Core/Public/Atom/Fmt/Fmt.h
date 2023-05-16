@@ -64,32 +64,32 @@ namespace Atom::Fmt
 
     /// 
     /// --------------------------------------------------------------------------------------------
-    template <ROutputWriter<Char> TOutput, RFormattable... TArgs>
-    void FormatTo(TOutput out, FormatString<TArgs...> in_fmt, TArgs&&... in_args)
+    template <typename TOut, RFormattable... TArgs>
+    requires ROutput<TOut, Char>
+    void FormatTo(TOut out, FormatString<TArgs...> in_fmt, TArgs&&... in_args)
     {
-        struct _OutputIteratorWrapper
+        struct OutItWrap
         {
-            _OutputIteratorWrapper& operator ++ (int)
+            OutItWrap& operator ++ (int)
             {
                 return *this;
             }
 
-            _OutputIteratorWrapper& operator * ()
+            OutItWrap& operator * ()
             {
                 return *this;
             }
 
-            _OutputIteratorWrapper& operator = (Char ch)
+            OutItWrap& operator = (Char ch)
             {
                 *out+= ch;
                 return *this;
             }
 
-            TOutput* out;
+            TOut* out;
         };
 
-        fmt::detail::iterator_buffer<_OutputIteratorWrapper, Char> buf{
-            _OutputIteratorWrapper{ &out } };
+        fmt::detail::iterator_buffer<OutItWrap, Char> buf{ OutItWrap{ &out } };
 
         try
         {

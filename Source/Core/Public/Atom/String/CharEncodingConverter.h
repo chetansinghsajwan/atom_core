@@ -102,8 +102,8 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Writes input to output as is.
         /// ----------------------------------------------------------------------------------------
-        template <RFwdIt<TChar> TInput, ROutputWriter<TChar> TOutput>
-        constexpr void Convert(TInput in, TOutput out)
+        template <RFwdIt<TChar> TInput, ROutput<TChar> TOut>
+        constexpr void Convert(TInput in, TOut out)
         {
             for (auto ch : in) out += ch;
         }
@@ -178,8 +178,8 @@ namespace Atom
         using TToString = BasicString<TToCharEncoding>;
         using TImpl = Private::CharEncodingConversionImpl<TFromCharEncoding, TToCharEncoding>;
 
-        template <RFwdIt<TFromChar> TInput, ROutputWriter<TToChar> TOutput>
-        constexpr void Convert(TInput in, TOutput out)
+        template <RFwdIt<TFromChar> TInput, ROutput<TToChar> TOut>
+        constexpr void Convert(TInput in, TOut out)
         {
             auto end = in.end();
             for (auto it = in.begin(); it != end; it++)

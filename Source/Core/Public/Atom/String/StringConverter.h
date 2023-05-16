@@ -59,7 +59,7 @@ namespace Atom
             return String{ str };
         }
 
-        constexpr void Convert(const String& str, ROutputWriter<Char> auto out) noexcept
+        constexpr void Convert(const String& str, ROutput<Char> auto out) noexcept
         {
             out += str;
         }

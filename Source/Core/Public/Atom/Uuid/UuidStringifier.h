@@ -8,7 +8,7 @@ namespace Atom
     struct UuidStringifier
     {
         constexpr void WriteString(const Uuid& uuid,
-            ROutputWriter<Char> auto&& out) const noexcept
+            ROutput<Char> auto&& out) const noexcept
         {
             out += Math::HexToChar(uuid.bytes[0]);
             out += Math::HexToChar(uuid.bytes[1]);
