@@ -36,7 +36,7 @@ namespace Atom
         /// 
         /// ----------------------------------------------------------------------------------------
         template <typename TInput>
-        requires RInputIterator<TInput, BasicChar<TEncoding>>
+        requires RFwdIt<TInput, BasicChar<TEncoding>>
         constexpr BasicString(TInput in) noexcept;
 
         /// ----------------------------------------------------------------------------------------
@@ -53,8 +53,9 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <RInputIterable<BasicChar<TEncoding>> TInputIterable>
-        constexpr bool operator == (const TInputIterable& in) const noexcept;
+        template <typename TRange>
+        requires RFwdRange<TRange, BasicChar<TEncoding>>
+        constexpr bool operator == (const TRange& in) const noexcept;
 
         /// ----------------------------------------------------------------------------------------
         /// 

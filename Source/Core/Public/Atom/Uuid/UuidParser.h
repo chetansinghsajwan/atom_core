@@ -14,11 +14,11 @@ namespace Atom
             return Parse(ArrayIterator<const Char>(in, size - 1));
         }
 
-        constexpr Uuid Parse(RInputIterator<Char> auto in) const noexcept
+        constexpr Uuid Parse(RFwdIt<Char> auto in) const noexcept
         {
-            if constexpr (RDirectIterator<decltype(in), Char>)
+            if constexpr (RFwdJumpIt<decltype(in), Char>)
             {
-                return _ParseDirect(MOVE(in));
+                return _ParseFwdJump(MOVE(in));
             }
 
             Uuid uuid;
@@ -64,9 +64,9 @@ namespace Atom
         }
 
     private:
-        constexpr Uuid _ParseDirect(RDirectIterator<Char> auto in) const noexcept
+        constexpr Uuid _ParseFwdJump(RFwdJumpIt<Char> auto in) const noexcept
         {
-            if (in.Range() != 36)
+            if (in.NextRange() != 36)
             {
                 return Uuid::Null;
             }

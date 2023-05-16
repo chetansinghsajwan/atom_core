@@ -41,9 +41,9 @@ namespace Atom
 
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <typename TInput>
-        requires RInputIterator<TInput, T>
-        constexpr DynamicArray(TInput in);
+        template <typename TIt>
+        requires RFwdIt<TIt, T>
+        constexpr DynamicArray(TIt it);
 
         /// 
         /// ----------------------------------------------------------------------------------------
@@ -63,13 +63,13 @@ namespace Atom
 
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <RInputIterator<T> TInput>
-        constexpr TIterator operator += (TInput in);
+        template <RFwdIt<T> TIt>
+        constexpr TIterator operator += (TIt it);
 
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <RInputIterable<T> TInput>
-        constexpr TIterator operator += (TInput in);
+        template <RFwdRange<T> TIt>
+        constexpr TIterator operator += (TIt it);
 
         /// 
         /// ----------------------------------------------------------------------------------------
@@ -136,8 +136,8 @@ namespace Atom
         /// 
         /// @RETURNS {TIterator} to inserted element.
         /// ----------------------------------------------------------------------------------------
-        template <RInputIterator<T> TInput>
-        constexpr TIterator Insert(TIterator pos, TInput in);
+        template <RFwdIt<T> TIt>
+        constexpr TIterator Insert(TIterator pos, TIt it);
 
         /// Insert element {in} by copy at front.
         /// ----------------------------------------------------------------------------------------
@@ -149,8 +149,8 @@ namespace Atom
 
         /// Insert element range {in} at front.
         /// ----------------------------------------------------------------------------------------
-        template <RInputIterator<T> TInput>
-        constexpr TIterator InsertFront(TInput in);
+        template <RFwdIt<T> TIt>
+        constexpr TIterator InsertFront(TIt it);
 
         /// 
         /// ----------------------------------------------------------------------------------------
@@ -162,8 +162,8 @@ namespace Atom
 
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <RInputIterator<T> TInput>
-        constexpr TIterator InsertBack(TInput in);
+        template <RFwdIt<T> TIt>
+        constexpr TIterator InsertBack(TIt it);
 
     //// Remove
     //// -------------------------------------------------------------------------------------------
@@ -171,8 +171,8 @@ namespace Atom
     public:
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <RInputIterator<T> TInput>
-        constexpr usize Remove(TInput in);
+        template <RFwdIt<T> TIt>
+        constexpr usize Remove(TIt it);
 
         /// 
         /// ----------------------------------------------------------------------------------------

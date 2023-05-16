@@ -27,7 +27,7 @@ namespace Atom
 
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <RInputIterator<T> TInput>
+        template <RFwdIt<T> TInput>
         constexpr bool operator == (TInput in) const noexcept;
 
         /// 

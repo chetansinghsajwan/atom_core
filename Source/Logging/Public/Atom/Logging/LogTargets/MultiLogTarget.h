@@ -18,7 +18,7 @@ namespace Atom::Logging::Private
     /// @THREAD_SAFETY SAFE
     /// --------------------------------------------------------------------------------------------
     template <RLockable TLockable>
-    class MultiLogTargetTemplate: public LogTarget
+    class MultiLogTargetTemplate : public LogTarget
     {
         using TContainer = DynamicArray<LogTargetPtr>;
         using TIterator = typename TContainer::TConstIterator;
@@ -50,9 +50,9 @@ namespace Atom::Logging::Private
         /// @PARAM[IN] targets InitializerList of LogTarget objects to add.
         ///     If {targets} contains null objects, this doesn't adds them.
         /// 
-        /// @EXCEPTION_SAFETY @COPY_FROM _AddTargets(RInputIterator<LogTargetPtr> auto targets)
+        /// @EXCEPTION_SAFETY @COPY_FROM _AddTargets(RFwdIt<LogTargetPtr> auto targets)
         /// 
-        /// @TIME_COMPLEXITY @COPY_FROM _AddTargets(RInputIterator<LogTargetPtr> auto targets)
+        /// @TIME_COMPLEXITY @COPY_FROM _AddTargets(RFwdIt<LogTargetPtr> auto targets)
         /// ----------------------------------------------------------------------------------------
         MultiLogTargetTemplate(InitializerList<LogTargetPtr> targets)
         {
@@ -62,14 +62,14 @@ namespace Atom::Logging::Private
         /// ----------------------------------------------------------------------------------------
         /// Constructs with LogTarget objects.
         /// 
-        /// @PARAM[IN] target RInputIterator of LogTarget objects to add.
+        /// @PARAM[IN] target RFwdIt of LogTarget objects to add.
         ///     If {targets} contains null objects, this doesn't adds them.
         /// 
-        /// @EXCEPTION_SAFETY @COPY_FROM _AddTargets(RInputIterator<LogTargetPtr> auto it)
+        /// @EXCEPTION_SAFETY @COPY_FROM _AddTargets(RFwdIt<LogTargetPtr> auto it)
         /// 
-        /// @TIME_COMPLEXITY @COPY_FROM _AddTargets(RInputIterator<LogTargetPtr> auto it)
+        /// @TIME_COMPLEXITY @COPY_FROM _AddTargets(RFwdIt<LogTargetPtr> auto it)
         /// ----------------------------------------------------------------------------------------
-        MultiLogTargetTemplate(RInputIterator<LogTargetPtr> auto targets)
+        MultiLogTargetTemplate(RFwdIt<LogTargetPtr> auto targets)
         {
             _AddTargets(MOVE(targets));
         }
@@ -140,13 +140,13 @@ namespace Atom::Logging::Private
         ///     If {targets} contains null objects, this doesn't adds them.
         /// @RETURNS Count of LogTarget objects added.
         /// 
-        /// @EXCEPTION_SAFETY @COPY_FROM _AddTargets(RInputIterator<LogTargetPtr> auto it)
+        /// @EXCEPTION_SAFETY @COPY_FROM _AddTargets(RFwdIt<LogTargetPtr> auto it)
         /// 
-        /// @TIME_COMPLEXITY @COPY_FROM _AddTargets(RInputIterator<LogTargetPtr> auto it)
+        /// @TIME_COMPLEXITY @COPY_FROM _AddTargets(RFwdIt<LogTargetPtr> auto it)
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        usize AddTargets(RInputIterator<LogTargetPtr> auto targets)
+        usize AddTargets(RFwdIt<LogTargetPtr> auto targets)
         {
             if (!targets.HasNext())
                 return 0;
@@ -162,9 +162,9 @@ namespace Atom::Logging::Private
         ///     If {targets} contains null objects, this doesn't adds them.
         /// @RETURNS Count of LogTarget objects added.
         /// 
-        /// @EXCEPTION_SAFETY @COPY_FROM _AddTargets(RInputIterator<LogTargetPtr> auto it)
+        /// @EXCEPTION_SAFETY @COPY_FROM _AddTargets(RFwdIt<LogTargetPtr> auto it)
         /// 
-        /// @TIME_COMPLEXITY @COPY_FROM _AddTargets(RInputIterator<LogTargetPtr> auto it)
+        /// @TIME_COMPLEXITY @COPY_FROM _AddTargets(RFwdIt<LogTargetPtr> auto it)
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
@@ -201,13 +201,13 @@ namespace Atom::Logging::Private
         ///     If {targets} contains null objects, this doesn't searches them.
         /// @RETURNS Count of LogTarget objects removed.
         /// 
-        /// @EXCEPTION_SAFETY @COPY_FROM _RemoveTargets(RInputIterator<LogTargetPtr> auto it)
+        /// @EXCEPTION_SAFETY @COPY_FROM _RemoveTargets(RFwdIt<LogTargetPtr> auto it)
         /// 
-        /// @TIME_COMPLEXITY @COPY_FROM _RemoveTargets(RInputIterator<LogTargetPtr> auto it)
+        /// @TIME_COMPLEXITY @COPY_FROM _RemoveTargets(RFwdIt<LogTargetPtr> auto it)
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        usize RemoveTargets(RInputIterator<LogTargetPtr> auto targets)
+        usize RemoveTargets(RFwdIt<LogTargetPtr> auto targets)
         {
             if (!targets.HasNext())
                 return 0;
@@ -223,9 +223,9 @@ namespace Atom::Logging::Private
         ///     If {targets} contains null objects, this doesn't searches them.
         /// @RETURNS Count of LogTarget objects removed.
         /// 
-        /// @EXCEPTION_SAFETY @COPY_FROM _RemoveTargets(RInputIterator<LogTargetPtr> auto it)
+        /// @EXCEPTION_SAFETY @COPY_FROM _RemoveTargets(RFwdIt<LogTargetPtr> auto it)
         /// 
-        /// @TIME_COMPLEXITY @COPY_FROM _RemoveTargets(RInputIterator<LogTargetPtr> auto it)
+        /// @TIME_COMPLEXITY @COPY_FROM _RemoveTargets(RFwdIt<LogTargetPtr> auto it)
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
@@ -265,7 +265,7 @@ namespace Atom::Logging::Private
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        usize HasTargets(RInputIterator<LogTargetPtr> auto targets) const noexcept
+        usize HasTargets(RFwdIt<LogTargetPtr> auto targets) const noexcept
         {
             if (!targets.HasNext())
                 return 0;
@@ -366,13 +366,13 @@ namespace Atom::Logging::Private
         ///     If {targets} contains null objects, this doesn't adds them.
         /// @RETURNS Count of LogTarget objects added.
         /// 
-        /// @EXCEPTION_SAFETY @COPY_FROM ${TContainer}::InsertBack(RInputIterator<LogTargetPtr> targets)
+        /// @EXCEPTION_SAFETY @COPY_FROM ${TContainer}::InsertBack(RFwdIt<LogTargetPtr> targets)
         ///  
-        /// @TIME_COMPLEXITY @COPY_FROM ${TContainer}::InsertBack(RInputIterator<LogTargetPtr> targets)
+        /// @TIME_COMPLEXITY @COPY_FROM ${TContainer}::InsertBack(RFwdIt<LogTargetPtr> targets)
         /// 
         /// @THREAD_SAFETY NONE
         /// ----------------------------------------------------------------------------------------
-        usize _AddTargets(RInputIterator<LogTargetPtr> auto targets)
+        usize _AddTargets(RFwdIt<LogTargetPtr> auto targets)
         {
             return _targets.InsertBack(targets,
                 [](const LogTargetPtr& target)
@@ -402,8 +402,8 @@ namespace Atom::Logging::Private
         /// ----------------------------------------------------------------------------------------
         /// Removes LogTarget objects.
         /// 
-        /// @PARAM[IN] it RInputIterator to beginning of the range to remove.
-        /// @PARAM[IN] end RInputIterator to end of the range to remove.
+        /// @PARAM[IN] it RFwdIt to beginning of the range to remove.
+        /// @PARAM[IN] end RFwdIt to end of the range to remove.
         ///     If range {[it, end]} contains null objects, this doesn't searches them.
         /// @RETURNS Count of LogTarget objects removed.
         /// 
@@ -411,12 +411,12 @@ namespace Atom::Logging::Private
         /// 
         /// @TIME_COMPLEXITY @COPY_FROM ${TContainer}::Remove(LogTarget& target)
         /// ----------------------------------------------------------------------------------------
-        usize _RemoveTargets(RInputIterator<LogTargetPtr> auto targets)
+        usize _RemoveTargets(RFwdIt<LogTargetPtr> auto targets)
         {
             return _targets.Remove(targets, [](const LogTargetPtr& target)
-            {
-                return target != nullptr;
-            });
+                {
+                    return target != nullptr;
+                });
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -440,8 +440,8 @@ namespace Atom::Logging::Private
         /// ----------------------------------------------------------------------------------------
         /// Search LogTarget objects.
         /// 
-        /// @PARAM[IN] it RInputIterator to beginning of range to search for.
-        /// @PARAM[IN] end RInputIterator to end of range to search for.
+        /// @PARAM[IN] it RFwdIt to beginning of range to search for.
+        /// @PARAM[IN] end RFwdIt to end of range to search for.
         ///     If range {[it, end]} contains null objects, this doesn't searches them.
         /// @RETURNS Count of LogTarget objects found.
         /// 
@@ -449,7 +449,7 @@ namespace Atom::Logging::Private
         /// 
         /// @TIME_COMPLEXITY Exponential
         /// ----------------------------------------------------------------------------------------
-        usize _HasTargets(RInputIterator<LogTargetPtr> auto targets)
+        usize _HasTargets(RFwdIt<LogTargetPtr> auto targets)
         {
             return _targets.Contains(targets);
         }
@@ -482,6 +482,15 @@ namespace Atom::Logging
     using MultiLogTargetST = Private::MultiLogTargetTemplate<NullLockable>;
     using MultiLogTargetMT = Private::MultiLogTargetTemplate<SimpleMutex>;
 
-    static_assert(ROneWayIterable<MultiLogTargetST, LogTargetPtr>);
-    static_assert(ROneWayIterable<MultiLogTargetMT, LogTargetPtr>);
+//     static_assert(RFwdRange<MultiLogTargetST, LogTargetPtr>,
+//         "MultiLogTargetST does not satisfy RFwdRange range requirements.");
+// 
+//     static_assert(RMultiPassRange<MultiLogTargetST, LogTargetPtr>,
+//         "MultiLogTargetST does not satisfy RMultiPassRange range requirements.");
+// 
+//     static_assert(RFwdRange<MultiLogTargetMT, LogTargetPtr>,
+//         "MultiLogTargetMT does not satisfy RFwdRange range requirements.");
+// 
+//     static_assert(RMultiPassRange<MultiLogTargetMT, LogTargetPtr>,
+//         "MultiLogTargetMT does not satisfy RMultiPassRange range requirements.");
 }

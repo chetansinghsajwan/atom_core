@@ -31,10 +31,10 @@ namespace Atom::Private
         /// 
         /// ----------------------------------------------------------------------------------------
         template <typename TInput, usize BufSize = 50>
-        requires RInputIterator<TInput, byte>
+        requires RFwdIt<TInput, byte>
         T1HashGenerator& ProcessBytes(TInput in)
         {
-            if constexpr (RArrayIterator<TInput, byte>)
+            if constexpr (RArrayIt<TInput, byte>)
             {
                 // TODO: Fix this.
                 // return ProcessBytes(in.Data(), in.NextRange());

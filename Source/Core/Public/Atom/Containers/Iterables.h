@@ -1,73 +1,196 @@
 #pragma once
 #include "Atom/Containers/Iterators.h"
 
+namespace Atom::Private
+{
+    template <typename TRange, typename T>
+    concept RRangeBase = true;
+//     concept RRangeBase = requires(TRange range)
+//     {
+//         { typename TRange::TIterator };
+// 
+//         { range.Iterator() } -> RSameAs<typename TRange::TIterator>;
+//     };
+}
+
 namespace Atom
 {
-    /// {OneWayIterable} is a type which provides {OneWayIterator}.
-    /// {TwoWayIterable} is a type which provides {TwoWayIterator}.
-    /// {DirectIterable} is a type which provides {DirectIterator}.
+    /// Ensures {TRange} is {FwdRange}.
     /// --------------------------------------------------------------------------------------------
-
-    /// Ensures {TIterable} is {OneWayIterable} for type {T}.
-    /// --------------------------------------------------------------------------------------------
-    template <typename TIterable, typename T>
-    concept ROneWayIterable = requires(TIterable iterable)
+    template <typename TRange, typename T>
+    concept RFwdRange = requires(TRange range)
     {
-        { iterable.Iterator() } -> ROneWayIterator<T>;
+        requires Private::RRangeBase<TRange, T>;
+        requires RFwdIt<typename TRange::TIterator, T>;
     };
 
-    template <typename TIterable, typename T>
-    concept RInputIterable = ROneWayIterable<TIterable, T>;
-
-    /// Ensures {TIterable} is {TwoWayIterable} for type {T}.
+    /// Ensures {TRange} is {BwdRange}.
     /// --------------------------------------------------------------------------------------------
-    template <typename TIterable, typename T>
-    concept RTwoWayIterable = requires(TIterable iterable)
+    template <typename TRange, typename T>
+    concept RBwdRange = requires(TRange range)
     {
-        { iterable.Iterator() } -> RTwoWayIterator<T>;
+        requires Private::RRangeBase<TRange, T>;
+        requires RBwdIt<typename TRange::TIterator, T>;
     };
 
-    /// Ensures {TIterable} is {DirectIterable} for type {T}.
+    /// Ensures {TRange} is {FwdJumpRange}.
     /// --------------------------------------------------------------------------------------------
-    template <typename TIterable, typename T>
-    concept RDirectIterable = requires(TIterable iterable)
+    template <typename TRange, typename T>
+    concept RFwdJumpRange = requires(TRange range)
     {
-        { iterable.Iterator() } -> RDirectIterator<T>;
+        requires Private::RRangeBase<TRange, T>;
+        requires RFwdJumpIt<typename TRange::TIterator, T>;
+    };
+
+    /// Ensures {TRange} is {BwdJumpRange}.
+    /// --------------------------------------------------------------------------------------------
+    template <typename TRange, typename T>
+    concept RBwdJumpRange = requires(TRange range)
+    {
+        requires Private::RRangeBase<TRange, T>;
+        requires RBwdJumpIt<typename TRange::TIterator, T>;
+    };
+
+    /// Ensures {TRange} is {TwoWayRange}.
+    /// --------------------------------------------------------------------------------------------
+    template <typename TRange, typename T>
+    concept RTwoWayRange = requires(TRange range)
+    {
+        requires Private::RRangeBase<TRange, T>;
+        requires RTwoWayIt<typename TRange::TIterator, T>;
+    };
+
+    /// Ensures {TRange} is {TwoWayJumpRange}.
+    /// --------------------------------------------------------------------------------------------
+    template <typename TRange, typename T>
+    concept RTwoWayJumpRange = requires(TRange range)
+    {
+        requires Private::RRangeBase<TRange, T>;
+        requires RTwoWayJumpIt<typename TRange::TIterator, T>;
+    };
+
+    /// Ensures {TRange} is {ArrayRange}.
+    /// --------------------------------------------------------------------------------------------
+    template <typename TRange, typename T>
+    concept RArrayRange = requires(TRange range)
+    {
+        requires Private::RRangeBase<TRange, T>;
+        requires RArrayIt<typename TRange::TIterator, T>;
+    };
+
+    /// Ensures {TRange} is {MultiPassRange}.
+    /// --------------------------------------------------------------------------------------------
+    template <typename TRange, typename T>
+    concept RMultiPassRange = requires(TRange range)
+    {
+        requires Private::RRangeBase<TRange, T>;
+        requires RMultiPassIt<typename TRange::TIterator, T>;
     };
 }
 
 namespace Atom::Internal
 {
-    /// Type to test if a type implementing {ROneWayIterable} is accepted when defining concepts.
+    /// Type to test if type implementing RFwdRange is accepted when defining concepts.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    struct OneWayIterableMock
+    struct FwdRangeMock
     {
-        OneWayIteratorMock<T> Iterator();
+        using TIterator = FwdItMock<T>;
+
+        TIterator Iterator();
     };
 
-    static_assert(ROneWayIterable<OneWayIterableMock<int>, int>,
-        "OneWayIterableMock does not meet ROneWayIterable requirements.");
+    static_assert(RFwdRange<FwdRangeMock<int>, int>,
+        "FwdRangeMock does not meet RFwdRange requirements.");
 
-    /// Type to test if a type implementing {RTwoWayIterable} is accepted when defining concepts.
+    /// Type to test if type implementing RBwdRange is accepted when defining concepts.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    struct TwoWayIterableMock: OneWayIterableMock<T>
+    struct BwdRangeMock
     {
-        TwoWayIteratorMock<T> Iterator();
+        using TIterator = BwdItMock<T>;
+
+        TIterator Iterator();
     };
 
-    static_assert(RTwoWayIterable<TwoWayIterableMock<int>, int>,
-        "TwoWayIterableMock does not meet RTwoWayIterable requirements.");
+    static_assert(RBwdRange<BwdRangeMock<int>, int>,
+        "BwdRangeMock does not meet RBwdRange requirements.");
 
-    /// Type to test if a type implementing {RDirectIterable} is accepted when defining concepts.
+    /// Type to test if type implementing RFwdJumpRange is accepted when defining concepts.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    struct DirectIterableMock: TwoWayIterableMock<T>
+    struct FwdJumpRangeMock
     {
-        DirectIteratorMock<T> Iterator();
+        using TIterator = FwdJumpItMock<T>;
+
+        TIterator Iterator();
     };
 
-    static_assert(RDirectIterable<DirectIterableMock<int>, int>,
-        "DirectIterableMock does not meet RDirectIterable requirements.");
+    static_assert(RFwdJumpRange<FwdJumpRangeMock<int>, int>,
+        "FwdJumpRangeMock does not meet RFwdJumpRange requirements.");
+
+    /// Type to test if type implementing RBwdJumpRange is accepted when defining concepts.
+    /// --------------------------------------------------------------------------------------------
+    template <typename T>
+    struct BwdJumpRangeMock
+    {
+        using TIterator = BwdJumpItMock<T>;
+
+        TIterator Iterator();
+    };
+
+    static_assert(RBwdJumpRange<BwdJumpRangeMock<int>, int>,
+        "BwdJumpRangeMock does not meet RBwdJumpRange requirements.");
+
+    /// Type to test if type implementing RTwoWayRange is accepted when defining concepts.
+    /// --------------------------------------------------------------------------------------------
+    template <typename T>
+    struct TwoWayRangeMock
+    {
+        using TIterator = TwoWayItMock<T>;
+
+        TIterator Iterator();
+    };
+
+    static_assert(RTwoWayRange<TwoWayRangeMock<int>, int>,
+        "TwoWayRangeMock does not meet RTwoWayRange requirements.");
+
+    /// Type to test if type implementing RTwoWayJumpRange is accepted when defining concepts.
+    /// --------------------------------------------------------------------------------------------
+    template <typename T>
+    struct TwoWayJumpRangeMock
+    {
+        using TIterator = TwoWayJumpItMock<T>;
+
+        TIterator Iterator();
+    };
+
+    static_assert(RTwoWayJumpRange<TwoWayJumpRangeMock<int>, int>,
+        "TwoWayJumpRangeMock does not meet RTwoWayJumpRange requirements.");
+
+    /// Type to test if type implementing RArrayRange is accepted when defining concepts.
+    /// --------------------------------------------------------------------------------------------
+    template <typename T>
+    struct ArrayRangeMock
+    {
+        using TIterator = ArrayItMock<T>;
+
+        TIterator Iterator();
+    };
+
+    static_assert(RArrayRange<ArrayRangeMock<int>, int>,
+        "ArrayRangeMock does not meet RArrayRange requirements.");
+
+//     /// Type to test if type implementing RMultiPassRange is accepted when defining concepts.
+//     /// --------------------------------------------------------------------------------------------
+//     template <typename T>
+//     struct MultiPassRangeMock
+//     {
+//         using TIterator = MultiPassItMock<T>;
+// 
+//         TIterator Iterator();
+//     };
+// 
+//     static_assert(RMultiPassRange<MultiPassRangeMock<int>, int>,
+//         "MultiPassRangeMock does not meet RMultiPassRange requirements.");
 }

@@ -120,7 +120,7 @@ namespace Atom::Fmt
 			fmt_ctx.advance_to(MOVE(out));
 		}
 
-		void Write(RInputIterator<Char> auto chars)
+		void Write(RFwdIt<Char> auto chars)
 		{
 			auto out = fmt_ctx.out();
 			for (Char ch : chars)

@@ -10,7 +10,7 @@ namespace Atom
 
     template <typename T, typename TAllocator>
     template <typename TInput>
-    requires RInputIterator<TInput, T>
+    requires RFwdIt<TInput, T>
     constexpr DynamicArray<T, TAllocator>::DynamicArray(TInput in):
         DynamicArray()
     {
@@ -40,7 +40,7 @@ namespace Atom
     }
 
     template <typename T, typename TAllocator>
-    template <RInputIterator<T> TInput>
+    template <RFwdIt<T> TInput>
     constexpr auto DynamicArray<T, TAllocator>::operator += (TInput in)
         -> typename DynamicArray<T, TAllocator>::TIterator
     {
@@ -48,7 +48,7 @@ namespace Atom
     }
 
     template <typename T, typename TAllocator>
-    template <RInputIterable<T> TInput>
+    template <RFwdRange<T> TInput>
     constexpr auto DynamicArray<T, TAllocator>::operator += (TInput in)
         -> typename DynamicArray<T, TAllocator>::TIterator
     {
@@ -119,7 +119,7 @@ namespace Atom
     }
 
     template <typename T, typename TAllocator>
-    template <RInputIterator<T> TInput>
+    template <RFwdIt<T> TInput>
     constexpr auto DynamicArray<T, TAllocator>::Insert(TIterator pos, TInput in)
         -> typename DynamicArray<T, TAllocator>::TIterator
     {
@@ -141,7 +141,7 @@ namespace Atom
     }
 
     template <typename T, typename TAllocator>
-    template <RInputIterator<T> TInput>
+    template <RFwdIt<T> TInput>
     constexpr auto DynamicArray<T, TAllocator>::InsertFront(TInput in)
         -> typename DynamicArray<T, TAllocator>::TIterator
     {
@@ -169,7 +169,7 @@ namespace Atom
     }
 
     template <typename T, typename TAllocator>
-    template <RInputIterator<T> TInput>
+    template <RFwdIt<T> TInput>
     constexpr auto DynamicArray<T, TAllocator>::InsertBack(TInput in)
         -> typename DynamicArray<T, TAllocator>::TIterator
     {
@@ -186,7 +186,7 @@ namespace Atom
     }
 
     template <typename T, typename TAllocator>
-    template <RInputIterator<T> TInput>
+    template <RFwdIt<T> TInput>
     constexpr auto DynamicArray<T, TAllocator>::Remove(TInput in)
         -> usize
     {

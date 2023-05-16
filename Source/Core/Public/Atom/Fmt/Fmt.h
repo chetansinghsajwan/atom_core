@@ -25,7 +25,7 @@ namespace Atom::Fmt
             return FMT_StringView{ strv.Data(), strv.Count() };
         }
 
-        constexpr StringView ToFMT(RInputIterator<Char> auto in) noexcept
+        constexpr StringView ToFMT(RFwdIt<Char> auto in) noexcept
         {
             return StringView{ in.begin(), in.end() };
         }

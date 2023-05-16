@@ -1,74 +1,114 @@
 #pragma once
 #include "Atom/Core.h"
 
-namespace Atom
+namespace Atom::Private
 {
-    /// {OneWayIterator} is {ForwardIterator} as in {std}.
-    /// {TwoWayIterator} is {BidirectionalIterator} as in {std}.
-    /// {DirectIterator} is {RandomAccessIterator} as in {std}.
+    /// 
     /// --------------------------------------------------------------------------------------------
-
-    /// Ensures {TIterator} is {OneWayIterator} for type {T}.
-    /// --------------------------------------------------------------------------------------------
-    template <typename TIterator, typename T>
-    concept ROneWayIterator = requires(TIterator it, const TIterator cit)
+    template <typename TIt, typename T>
+    concept RItBase = requires(TIt it)
     {
         { it.Get() } -> RConvertibleTo<const T&>;
-        { it.Next() } -> RSameAs<bool>;
-        { cit.HasNext() } -> RSameAs<bool>;
 
-        // FIX: Putting these constraints first makes recursive instantiations at various parts in 
-        // GCC and Clang, works fine in MSVC.
-        requires RCopyConstructible<TIterator>;
-        requires RMoveConstructible<TIterator>;
-        requires RCopyAssignable<TIterator>;
-        requires RMoveAssignable<TIterator>;
+        // TODO: Fix this requirement.
+        // { for (T& el : it) { } }
+    };
+}
+
+namespace Atom
+{
+    /// Ensures {TIt} is {FwdIt} of type {T}.
+    /// --------------------------------------------------------------------------------------------
+    template <typename TIt, typename T>
+    concept RFwdIt = requires(TIt it, const TIt cit)
+    {
+        requires Private::RItBase<TIt, T>;
+
+        { it.Next() }     -> RConvertibleTo<bool>;
+        { cit.HasNext() } -> RConvertibleTo<bool>;
     };
 
-    template <typename TIterator, typename T>
-    concept RInputIterator = ROneWayIterator<TIterator, T>;
-
-    /// Ensures {TIterator} is {TwoWayIterator} for type {T}.
+    /// Ensures {TIt} is {BwdIt} of type {T}.
     /// --------------------------------------------------------------------------------------------
-    template <typename TIterator, typename T>
-    concept RTwoWayIterator = requires(TIterator it, const TIterator cit)
+    template <typename TIt, typename T>
+    concept RBwdIt = requires(TIt it, const TIt cit)
     {
-        requires ROneWayIterator<TIterator, T>;
+        requires Private::RItBase<TIt, T>;
 
-        { it.Prev() } -> RSameAs<bool>;
-        { cit.HasPrev() } -> RSameAs<bool>;
+        { it.Prev() }     -> RConvertibleTo<bool>;
+        { cit.HasPrev() } -> RConvertibleTo<bool>;
     };
 
-    /// Ensures {TIterator} is {DirectIterator} for type {T}.
+    /// 
     /// --------------------------------------------------------------------------------------------
-    template <typename TIterator, typename T>
-    concept RDirectIterator = requires(TIterator it, const TIterator cit, usize steps)
+    template <typename TIt, typename T>
+    concept RFwdJumpIt = requires(TIt it, usize steps)
     {
-        requires RTwoWayIterator<TIterator, T>;
+        requires RFwdIt<TIt, T>;
 
-        { it.Next(steps) } -> RSameAs<bool>;
-        { it.Prev(steps) } -> RSameAs<bool>;
-
-        { cit.Range() } -> RConvertibleTo<usize>;
+        { it.Next(steps) } -> RConvertibleTo<bool>;
+        { it.NextRange() } -> RConvertibleTo<usize>;
     };
 
-    /// Ensures {TIterator} is {ArrayIterator} for type {T}.
+    /// 
     /// --------------------------------------------------------------------------------------------
-    template <typename TIterator, typename T>
-    concept RArrayIterator = requires(TIterator it, const TIterator cit)
+    template <typename TIt, typename T>
+    concept RBwdJumpIt = requires(TIt it, usize steps)
     {
-        requires RDirectIterator<TIterator, T>;
+        requires RBwdIt<TIt, T>;
 
-        { it.Data() } -> RSameAs<T*>;
+        { it.Prev(steps) } -> RConvertibleTo<bool>;
+        { it.PrevRange() } -> RConvertibleTo<usize>;
+    };
+
+    /// Ensures {TIt} is {TwoWayIt} of type {T}.
+    /// --------------------------------------------------------------------------------------------
+    template <typename TIt, typename T>
+    concept RTwoWayIt = requires
+    {
+        requires RFwdIt<TIt, T>;
+        requires RBwdIt<TIt, T>;
+    };
+
+    /// Ensures {TIt} is {TwoWayIt} of type {T}.
+    /// --------------------------------------------------------------------------------------------
+    template <typename TIt, typename T>
+    concept RTwoWayJumpIt = requires
+    {
+        requires RTwoWayIt<TIt, T>;
+
+        requires RFwdJumpIt<TIt, T>;
+        requires RBwdJumpIt<TIt, T>;
+    };
+
+    /// Ensures {TIt} is {ArrayIt} of type {T}.
+    /// --------------------------------------------------------------------------------------------
+    template <typename TIt, typename T>
+    concept RArrayIt = requires(TIt it, const TIt cit)
+    {
+        requires RTwoWayJumpIt<TIt, T>;
+
+        { it.Data() } -> RConvertibleTo<T*>;
+    };
+
+    /// Ensures {TIt} is {MultiPassIt} of type {T}.
+    /// --------------------------------------------------------------------------------------------
+    template <typename TIt, typename T>
+    concept RMultiPassIt = requires
+    {
+        requires RCopyable<TIt>;
+        requires RMoveable<TIt>;
+
+        requires RFwdIt<TIt, T> || RBwdIt<TIt, T>;
     };
 }
 
 namespace Atom::Internal
 {
-    /// Type to test if a type implementing {ROneWayIterator} is accepted when defining concepts.
+    /// Type to test if a type implementing {RFwdIt} is accepted when defining concepts.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    struct OneWayIteratorMock
+    struct FwdItMock
     {
         T& Get();
 
@@ -76,51 +116,83 @@ namespace Atom::Internal
         bool HasNext() const;
     };
 
-    static_assert(ROneWayIterator<OneWayIteratorMock<int>, int>,
-        "OneWayIteratorMock does not meet ROneWayIterator requirements.");
+    static_assert(RFwdIt<FwdItMock<int>, int>,
+        "FwdItMock does not meet RFwdIt requirements.");
 
-    template <typename T>
-    using InputIteratorMock = OneWayIteratorMock<T>;
-
-    /// Type to test if a type implementing {RTwoWayIterator} is accepted when defining concepts.
+    /// Type to test if a type implementing {RBwdIt} is accepted when defining concepts.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    struct TwoWayIteratorMock: OneWayIteratorMock<T>
+    struct BwdItMock
     {
+        T& Get();
+
         bool Prev();
         bool HasPrev() const;
     };
 
-    static_assert(RTwoWayIterator<TwoWayIteratorMock<int>, int>,
-        "TwoWayIteratorMock does not meet RTwoWayIterator requirements.");
+    static_assert(RBwdIt<BwdItMock<int>, int>,
+        "BwdItMock does not meet RBwdIt requirements.");
 
-    /// Type to test if a type implementing {RDirectIterator} is accepted when defining concepts.
+    /// Type to test if a type implementing {RFwdJumpIt} is accepted when defining concepts.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    struct DirectIteratorMock: TwoWayIteratorMock<T>
+    struct FwdJumpItMock: FwdItMock<T>
     {
-        using OneWayIteratorMock<T>::Next;
+        using FwdItMock<T>::Next;
+
         bool Next(usize steps);
-
-        using TwoWayIteratorMock<T>::Prev;
-        bool Prev(usize steps);
-
-        usize Range() const;
+        usize NextRange() const;
     };
 
-    static_assert(RDirectIterator<DirectIteratorMock<int>, int>,
-        "DirectIteratorMock does not meet RDirectIterator requirements.");
+    static_assert(RFwdJumpIt<FwdJumpItMock<int>, int>,
+        "FwdJumpItMock does not meet RFwdJumpIt requirements.");
 
-    /// Type to test if a type implementing {RArrayIterator} is accepted when defining concepts.
+    /// Type to test if a type implementing {RBwdJumpIt} is accepted when defining concepts.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    struct ArrayIteratorMock: DirectIteratorMock<T>
+    struct BwdJumpItMock: BwdItMock<T>
+    {
+        using BwdItMock<T>::Prev;
+
+        bool Prev(usize steps);
+        usize PrevRange() const;
+    };
+
+    static_assert(RBwdJumpIt<BwdJumpItMock<int>, int>,
+        "BwdJumpItMock does not meet RBwdJumpIt requirements.");
+
+    /// Type to test if a type implementing {RTwoWayIt} is accepted when defining concepts.
+    /// --------------------------------------------------------------------------------------------
+    template <typename T>
+    struct TwoWayItMock: FwdItMock<T>, BwdItMock<T>
+    {
+        T& Get();
+    };
+
+    static_assert(RTwoWayIt<TwoWayItMock<int>, int>,
+        "TwoWayItMock does not meet RTwoWayIt requirements.");
+
+    /// Type to test if a type implementing {RTwoWayJumpIt} is accepted when defining concepts.
+    /// --------------------------------------------------------------------------------------------
+    template <typename T>
+    struct TwoWayJumpItMock: FwdJumpItMock<T>, BwdJumpItMock<T>
+    {
+        T& Get();
+    };
+
+    static_assert(RTwoWayJumpIt<TwoWayJumpItMock<int>, int>,
+        "TwoWayJumpItMock does not meet RTwoWayJumpIt requirements.");
+
+    /// Type to test if a type implementing {RArrayIt} is accepted when defining concepts.
+    /// --------------------------------------------------------------------------------------------
+    template <typename T>
+    struct ArrayItMock: TwoWayJumpItMock<T>
     {
         T* Data();
     };
 
-    static_assert(RArrayIterator<ArrayIteratorMock<int>, int>,
-        "ArrayIteratorMock does not meet RArrayIterator requirements.");
+    static_assert(RArrayIt<ArrayItMock<int>, int>,
+        "ArrayItMock does not meet RArrayIt requirements.");
 }
 
 namespace Atom
@@ -131,7 +203,7 @@ namespace Atom
         { out += declval(const T&) };
         { out += declval(T&&) };
 
-        { out += Internal::InputIteratorMock<T>() };
+        { out += Internal::FwdItMock<T>() };
     };
 }
 
@@ -143,6 +215,6 @@ namespace Atom::Internal
         void operator += (const T& in);
         void operator += (T&& in);
 
-        void operator += (RInputIterator<T> auto in);
+        void operator += (RFwdIt<T> auto in);
     };
 }

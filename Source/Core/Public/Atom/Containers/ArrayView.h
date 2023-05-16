@@ -26,7 +26,7 @@ namespace Atom
     }
 
     template <typename T>
-    template <RInputIterator<T> TInput>
+    template <RFwdIt<T> TInput>
     constexpr bool ArrayView<T>::operator == (TInput in) const noexcept
     {
         usize i = 0;
