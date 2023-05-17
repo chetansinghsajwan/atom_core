@@ -36,7 +36,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <typename TConverter, typename TFromCharEncoding, typename TToCharEncoding>
     concept RCharEncodingConverter = requires(TConverter converter,
-        Internal::FwdItMock<BasicChar<TFromCharEncoding>> in,
+        Internal::FwdIterMock<BasicChar<TFromCharEncoding>> in,
         Internal::OutputWriterMock<BasicChar<TToCharEncoding>> out)
     {
         requires RDefaultConstructible<TConverter>;
@@ -69,7 +69,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <typename TConverter, typename TFromCharEncoding, typename TToCharEncoding>
     concept RCharEncodingLazyConverter = requires(TConverter converter,
-        Internal::FwdItMock<BasicChar<TFromCharEncoding>> in)
+        Internal::FwdIterMock<BasicChar<TFromCharEncoding>> in)
     {
         requires RConstructible<TConverter, decltype(in)>;
 
@@ -86,7 +86,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <typename TFromCharEncoding, typename TToCharEncoding>
     concept RCharEncodingLazyConvertible = RCharEncodingLazyConverter<
-        CharEncodingLazyConverter<TFromCharEncoding, TToCharEncoding, Internal::FwdItMock<BasicChar<TFromCharEncoding>>>,
+        CharEncodingLazyConverter<TFromCharEncoding, TToCharEncoding, Internal::FwdIterMock<BasicChar<TFromCharEncoding>>>,
         TFromCharEncoding, TToCharEncoding>;
 
     /// --------------------------------------------------------------------------------------------
@@ -102,7 +102,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Writes input to output as is.
         /// ----------------------------------------------------------------------------------------
-        template <RFwdIt<TChar> TInput, ROutput<TChar> TOut>
+        template <RFwdIter<TChar> TInput, ROutput<TChar> TOut>
         constexpr void Convert(TInput in, TOut out)
         {
             for (auto ch : in) out += ch;
@@ -111,7 +111,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Writes input to output as is.
         /// ----------------------------------------------------------------------------------------
-        template <RFwdIt<TChar> TInput>
+        template <RFwdIter<TChar> TInput>
         constexpr TString Convert(TInput in)
         {
             TString out;
@@ -120,7 +120,7 @@ namespace Atom
             return out;
         }
 
-        template <RFwdIt<TChar> TInput>
+        template <RFwdIter<TChar> TInput>
         constexpr auto LazyConvert(TInput in)
         {
             using TLazyConverter = CharEncodingLazyConverter<
@@ -178,7 +178,7 @@ namespace Atom
         using TToString = BasicString<TToCharEncoding>;
         using TImpl = Private::CharEncodingConversionImpl<TFromCharEncoding, TToCharEncoding>;
 
-        template <RFwdIt<TFromChar> TInput, ROutput<TToChar> TOut>
+        template <RFwdIter<TFromChar> TInput, ROutput<TToChar> TOut>
         constexpr void Convert(TInput in, TOut out)
         {
             auto end = in.end();
@@ -188,7 +188,7 @@ namespace Atom
             }
         }
 
-        template <RFwdIt<TFromChar> TInput>
+        template <RFwdIter<TFromChar> TInput>
         constexpr TToString Convert(TInput in)
         {
             TToString out;
@@ -197,7 +197,7 @@ namespace Atom
             return out;
         }
 
-        template <RFwdIt<TFromChar> TInput>
+        template <RFwdIter<TFromChar> TInput>
         constexpr auto LazyConvert(TInput in)
         {
             using TLazyConverter = CharEncodingLazyConverter<
@@ -214,7 +214,7 @@ namespace Atom
     /// 
     /// @TODO Fix output buffer size.
     /// --------------------------------------------------------------------------------------------
-    template <typename TFromCharEncoding, typename TToCharEncoding, RFwdIt<
+    template <typename TFromCharEncoding, typename TToCharEncoding, RFwdIter<
         BasicChar<TFromCharEncoding>> TInput>
     requires RConstructible<Private::CharEncodingConversionImpl<TFromCharEncoding, TToCharEncoding>>
     struct CharEncodingLazyConverter<TFromCharEncoding, TToCharEncoding, TInput>

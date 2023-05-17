@@ -15,7 +15,7 @@ namespace Atom
     template <typename T, typename TAllocator = DefaultAllocator<T>>
     class DynamicArray
     {
-        using STD_TVector = ::std::vector<T>;
+        using _TVector = ::std::vector<T>;
 
     //// Aliases
     //// -------------------------------------------------------------------------------------------
@@ -42,17 +42,17 @@ namespace Atom
 
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <typename TIt>
-        requires RFwdIt<TIt, const T>
-        constexpr DynamicArray(TIt it);
+        template <typename TIter>
+        requires RFwdIter<TIter, const T>
+        constexpr DynamicArray(TIter it);
 
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr DynamicArray(const STD_TVector& vec) noexcept;
+        constexpr DynamicArray(const _TVector& vec) noexcept;
 
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr DynamicArray(STD_TVector&& vec) noexcept;
+        constexpr DynamicArray(_TVector&& vec) noexcept;
 
         /// 
         /// ----------------------------------------------------------------------------------------
@@ -64,9 +64,9 @@ namespace Atom
 
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <typename TIt>
-        requires RFwdIt<TIt, const T>
-        constexpr TIterator operator += (TIt it);
+        template <typename TIter>
+        requires RFwdIter<TIter, const T>
+        constexpr TIterator operator += (TIter it);
 
         /// 
         /// ----------------------------------------------------------------------------------------
@@ -139,8 +139,8 @@ namespace Atom
         /// 
         /// @RETURNS {TIterator} to inserted element.
         /// ----------------------------------------------------------------------------------------
-        template <RFwdIt<T> TIt>
-        constexpr TIterator Insert(TIterator pos, TIt it);
+        template <RFwdIter<T> TIter>
+        constexpr TIterator Insert(TIterator pos, TIter it);
 
         /// Insert element {in} by copy at front.
         /// ----------------------------------------------------------------------------------------
@@ -152,8 +152,8 @@ namespace Atom
 
         /// Insert element range {in} at front.
         /// ----------------------------------------------------------------------------------------
-        template <RFwdIt<T> TIt>
-        constexpr TIterator InsertFront(TIt it);
+        template <RFwdIter<T> TIter>
+        constexpr TIterator InsertFront(TIter it);
 
         /// 
         /// ----------------------------------------------------------------------------------------
@@ -165,9 +165,9 @@ namespace Atom
 
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <typename TIt>
-        requires RFwdIt<TIt, const T>
-        constexpr TIterator InsertBack(TIt it);
+        template <typename TIter>
+        requires RFwdIter<TIter, const T>
+        constexpr TIterator InsertBack(TIter it);
 
     //// Remove
     //// -------------------------------------------------------------------------------------------
@@ -175,8 +175,8 @@ namespace Atom
     public:
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <RFwdIt<T> TIt>
-        constexpr usize Remove(TIt it);
+        template <RFwdIter<T> TIter>
+        constexpr usize Remove(TIter it);
 
         /// 
         /// ----------------------------------------------------------------------------------------
@@ -211,6 +211,6 @@ namespace Atom
     //// -------------------------------------------------------------------------------------------
 
     private:
-        STD_TVector _vector;
+        _TVector _vector;
     };
 }

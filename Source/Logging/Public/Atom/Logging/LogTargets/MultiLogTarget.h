@@ -50,9 +50,9 @@ namespace Atom::Logging::Private
         /// @PARAM[IN] targets InitializerList of LogTarget objects to add.
         ///     If {targets} contains null objects, this doesn't adds them.
         /// 
-        /// @EXCEPTION_SAFETY @COPY_FROM _AddTargets(RFwdIt<LogTargetPtr> auto targets)
+        /// @EXCEPTION_SAFETY @COPY_FROM _AddTargets(RFwdIter<LogTargetPtr> auto targets)
         /// 
-        /// @TIME_COMPLEXITY @COPY_FROM _AddTargets(RFwdIt<LogTargetPtr> auto targets)
+        /// @TIME_COMPLEXITY @COPY_FROM _AddTargets(RFwdIter<LogTargetPtr> auto targets)
         /// ----------------------------------------------------------------------------------------
         MultiLogTargetTemplate(InitializerList<LogTargetPtr> targets)
         {
@@ -62,14 +62,14 @@ namespace Atom::Logging::Private
         /// ----------------------------------------------------------------------------------------
         /// Constructs with LogTarget objects.
         /// 
-        /// @PARAM[IN] target RFwdIt of LogTarget objects to add.
+        /// @PARAM[IN] target RFwdIter of LogTarget objects to add.
         ///     If {targets} contains null objects, this doesn't adds them.
         /// 
-        /// @EXCEPTION_SAFETY @COPY_FROM _AddTargets(RFwdIt<LogTargetPtr> auto it)
+        /// @EXCEPTION_SAFETY @COPY_FROM _AddTargets(RFwdIter<LogTargetPtr> auto it)
         /// 
-        /// @TIME_COMPLEXITY @COPY_FROM _AddTargets(RFwdIt<LogTargetPtr> auto it)
+        /// @TIME_COMPLEXITY @COPY_FROM _AddTargets(RFwdIter<LogTargetPtr> auto it)
         /// ----------------------------------------------------------------------------------------
-        MultiLogTargetTemplate(RFwdIt<LogTargetPtr> auto targets)
+        MultiLogTargetTemplate(RFwdIter<LogTargetPtr> auto targets)
         {
             _AddTargets(MOVE(targets));
         }
@@ -140,13 +140,13 @@ namespace Atom::Logging::Private
         ///     If {targets} contains null objects, this doesn't adds them.
         /// @RETURNS Count of LogTarget objects added.
         /// 
-        /// @EXCEPTION_SAFETY @COPY_FROM _AddTargets(RFwdIt<LogTargetPtr> auto it)
+        /// @EXCEPTION_SAFETY @COPY_FROM _AddTargets(RFwdIter<LogTargetPtr> auto it)
         /// 
-        /// @TIME_COMPLEXITY @COPY_FROM _AddTargets(RFwdIt<LogTargetPtr> auto it)
+        /// @TIME_COMPLEXITY @COPY_FROM _AddTargets(RFwdIter<LogTargetPtr> auto it)
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        usize AddTargets(RFwdIt<LogTargetPtr> auto targets)
+        usize AddTargets(RFwdIter<LogTargetPtr> auto targets)
         {
             if (!targets.HasNext())
                 return 0;
@@ -162,9 +162,9 @@ namespace Atom::Logging::Private
         ///     If {targets} contains null objects, this doesn't adds them.
         /// @RETURNS Count of LogTarget objects added.
         /// 
-        /// @EXCEPTION_SAFETY @COPY_FROM _AddTargets(RFwdIt<LogTargetPtr> auto it)
+        /// @EXCEPTION_SAFETY @COPY_FROM _AddTargets(RFwdIter<LogTargetPtr> auto it)
         /// 
-        /// @TIME_COMPLEXITY @COPY_FROM _AddTargets(RFwdIt<LogTargetPtr> auto it)
+        /// @TIME_COMPLEXITY @COPY_FROM _AddTargets(RFwdIter<LogTargetPtr> auto it)
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
@@ -201,13 +201,13 @@ namespace Atom::Logging::Private
         ///     If {targets} contains null objects, this doesn't searches them.
         /// @RETURNS Count of LogTarget objects removed.
         /// 
-        /// @EXCEPTION_SAFETY @COPY_FROM _RemoveTargets(RFwdIt<LogTargetPtr> auto it)
+        /// @EXCEPTION_SAFETY @COPY_FROM _RemoveTargets(RFwdIter<LogTargetPtr> auto it)
         /// 
-        /// @TIME_COMPLEXITY @COPY_FROM _RemoveTargets(RFwdIt<LogTargetPtr> auto it)
+        /// @TIME_COMPLEXITY @COPY_FROM _RemoveTargets(RFwdIter<LogTargetPtr> auto it)
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        usize RemoveTargets(RFwdIt<LogTargetPtr> auto targets)
+        usize RemoveTargets(RFwdIter<LogTargetPtr> auto targets)
         {
             if (!targets.HasNext())
                 return 0;
@@ -223,9 +223,9 @@ namespace Atom::Logging::Private
         ///     If {targets} contains null objects, this doesn't searches them.
         /// @RETURNS Count of LogTarget objects removed.
         /// 
-        /// @EXCEPTION_SAFETY @COPY_FROM _RemoveTargets(RFwdIt<LogTargetPtr> auto it)
+        /// @EXCEPTION_SAFETY @COPY_FROM _RemoveTargets(RFwdIter<LogTargetPtr> auto it)
         /// 
-        /// @TIME_COMPLEXITY @COPY_FROM _RemoveTargets(RFwdIt<LogTargetPtr> auto it)
+        /// @TIME_COMPLEXITY @COPY_FROM _RemoveTargets(RFwdIter<LogTargetPtr> auto it)
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
@@ -265,7 +265,7 @@ namespace Atom::Logging::Private
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        usize HasTargets(RFwdIt<LogTargetPtr> auto targets) const noexcept
+        usize HasTargets(RFwdIter<LogTargetPtr> auto targets) const noexcept
         {
             if (!targets.HasNext())
                 return 0;
@@ -366,13 +366,13 @@ namespace Atom::Logging::Private
         ///     If {targets} contains null objects, this doesn't adds them.
         /// @RETURNS Count of LogTarget objects added.
         /// 
-        /// @EXCEPTION_SAFETY @COPY_FROM ${TContainer}::InsertBack(RFwdIt<LogTargetPtr> targets)
+        /// @EXCEPTION_SAFETY @COPY_FROM ${TContainer}::InsertBack(RFwdIter<LogTargetPtr> targets)
         ///  
-        /// @TIME_COMPLEXITY @COPY_FROM ${TContainer}::InsertBack(RFwdIt<LogTargetPtr> targets)
+        /// @TIME_COMPLEXITY @COPY_FROM ${TContainer}::InsertBack(RFwdIter<LogTargetPtr> targets)
         /// 
         /// @THREAD_SAFETY NONE
         /// ----------------------------------------------------------------------------------------
-        usize _AddTargets(RFwdIt<LogTargetPtr> auto targets)
+        usize _AddTargets(RFwdIter<LogTargetPtr> auto targets)
         {
             return _targets.InsertBack(targets,
                 [](const LogTargetPtr& target)
@@ -402,8 +402,8 @@ namespace Atom::Logging::Private
         /// ----------------------------------------------------------------------------------------
         /// Removes LogTarget objects.
         /// 
-        /// @PARAM[IN] it RFwdIt to beginning of the range to remove.
-        /// @PARAM[IN] end RFwdIt to end of the range to remove.
+        /// @PARAM[IN] it RFwdIter to beginning of the range to remove.
+        /// @PARAM[IN] end RFwdIter to end of the range to remove.
         ///     If range {[it, end]} contains null objects, this doesn't searches them.
         /// @RETURNS Count of LogTarget objects removed.
         /// 
@@ -411,7 +411,7 @@ namespace Atom::Logging::Private
         /// 
         /// @TIME_COMPLEXITY @COPY_FROM ${TContainer}::Remove(LogTarget& target)
         /// ----------------------------------------------------------------------------------------
-        usize _RemoveTargets(RFwdIt<LogTargetPtr> auto targets)
+        usize _RemoveTargets(RFwdIter<LogTargetPtr> auto targets)
         {
             return _targets.Remove(targets, [](const LogTargetPtr& target)
                 {
@@ -440,8 +440,8 @@ namespace Atom::Logging::Private
         /// ----------------------------------------------------------------------------------------
         /// Search LogTarget objects.
         /// 
-        /// @PARAM[IN] it RFwdIt to beginning of range to search for.
-        /// @PARAM[IN] end RFwdIt to end of range to search for.
+        /// @PARAM[IN] it RFwdIter to beginning of range to search for.
+        /// @PARAM[IN] end RFwdIter to end of range to search for.
         ///     If range {[it, end]} contains null objects, this doesn't searches them.
         /// @RETURNS Count of LogTarget objects found.
         /// 
@@ -449,7 +449,7 @@ namespace Atom::Logging::Private
         /// 
         /// @TIME_COMPLEXITY Exponential
         /// ----------------------------------------------------------------------------------------
-        usize _HasTargets(RFwdIt<LogTargetPtr> auto targets)
+        usize _HasTargets(RFwdIter<LogTargetPtr> auto targets)
         {
             return _targets.Contains(targets);
         }

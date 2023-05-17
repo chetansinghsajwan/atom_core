@@ -9,9 +9,9 @@ namespace Atom
         _vector{ } { }
 
     template <typename T, typename TAllocator>
-    template <typename TIt>
-    requires RFwdIt<TIt, const T>
-    constexpr DynamicArray<T, TAllocator>::DynamicArray(TIt it):
+    template <typename TIter>
+    requires RFwdIter<TIter, const T>
+    constexpr DynamicArray<T, TAllocator>::DynamicArray(TIter it):
         DynamicArray()
     {
         InsertBack(MOVE(it));
@@ -40,9 +40,9 @@ namespace Atom
     }
 
     template <typename T, typename TAllocator>
-    template <typename TIt>
-    requires RFwdIt<TIt, const T>
-    constexpr auto DynamicArray<T, TAllocator>::operator += (TIt it)
+    template <typename TIter>
+    requires RFwdIter<TIter, const T>
+    constexpr auto DynamicArray<T, TAllocator>::operator += (TIter it)
         -> typename DynamicArray<T, TAllocator>::TIterator
     {
         return InsertBack(MOVE(it));
@@ -121,8 +121,8 @@ namespace Atom
     }
 
     template <typename T, typename TAllocator>
-    template <RFwdIt<T> TIt>
-    constexpr auto DynamicArray<T, TAllocator>::Insert(TIterator pos, TIt it)
+    template <RFwdIter<T> TIter>
+    constexpr auto DynamicArray<T, TAllocator>::Insert(TIterator pos, TIter it)
         -> typename DynamicArray<T, TAllocator>::TIterator
     {
         return TIterator{ };
@@ -143,8 +143,8 @@ namespace Atom
     }
 
     template <typename T, typename TAllocator>
-    template <RFwdIt<T> TIt>
-    constexpr auto DynamicArray<T, TAllocator>::InsertFront(TIt it)
+    template <RFwdIter<T> TIter>
+    constexpr auto DynamicArray<T, TAllocator>::InsertFront(TIter it)
         -> typename DynamicArray<T, TAllocator>::TIterator
     {
         return Insert(Iterator(), MOVE(it));
@@ -171,9 +171,9 @@ namespace Atom
     }
 
     template <typename T, typename TAllocator>
-    template <typename TIt>
-    requires RFwdIt<TIt, const T>
-    constexpr auto DynamicArray<T, TAllocator>::InsertBack(TIt it)
+    template <typename TIter>
+    requires RFwdIter<TIter, const T>
+    constexpr auto DynamicArray<T, TAllocator>::InsertBack(TIter it)
         -> typename DynamicArray<T, TAllocator>::TIterator
     {
         // auto it = Iterator();
@@ -189,8 +189,8 @@ namespace Atom
     }
 
     template <typename T, typename TAllocator>
-    template <RFwdIt<T> TIt>
-    constexpr auto DynamicArray<T, TAllocator>::Remove(TIt it)
+    template <RFwdIter<T> TIter>
+    constexpr auto DynamicArray<T, TAllocator>::Remove(TIter it)
         -> usize
     {
         usize count = 0;

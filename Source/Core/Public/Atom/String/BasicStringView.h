@@ -19,7 +19,7 @@ namespace Atom
         TBase(str, N) { }
 
     template <typename TEncoding>
-    template <RFwdIt<BasicChar<TEncoding>> TInput>
+    template <RFwdIter<BasicChar<TEncoding>> TInput>
     constexpr BasicStringView<TEncoding>::BasicStringView(TInput in) noexcept:
         TBase(MOVE(in)) { }
 

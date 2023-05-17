@@ -48,7 +48,7 @@ namespace Atom::Private
         /// 
         /// ----------------------------------------------------------------------------------------
         template <typename TInput>
-        requires RFwdIt<TInput, Char>
+        requires RFwdIter<TInput, Char>
         constexpr T1Hash Parse(TInput in) const noexcept
         {
             T1Hash hash;
@@ -95,7 +95,7 @@ namespace Atom::Private
         /// 
         /// ----------------------------------------------------------------------------------------
         template <typename TInput>
-        requires RFwdJumpIt<TInput, Char>
+        requires RFwdJumpIter<TInput, Char>
         constexpr T1Hash Parse(TInput in) const noexcept
         {
             if (in.NextRange() != _Size * 2)

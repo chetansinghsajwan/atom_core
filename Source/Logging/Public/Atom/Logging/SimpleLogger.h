@@ -55,7 +55,7 @@ namespace Atom::Logging::Internal
         /// @PARAM[IN] name Name of this logger.
         /// @PARAM[IN] targets LogTarget objects to add.
         /// ----------------------------------------------------------------------------------------
-        SimpleLoggerTemplate(String name, RFwdIt<LogTargetPtr> auto targets) noexcept:
+        SimpleLoggerTemplate(String name, RFwdIter<LogTargetPtr> auto targets) noexcept:
             _name(MOVE(name)), targets(targets) { }
 
     public:

@@ -9,6 +9,6 @@ namespace Atom::Internal
         void operator += (const T& in);
         void operator += (T&& in);
 
-        void operator += (RFwdIt<T> auto in);
+        void operator += (RFwdIter<T> auto in);
     };
 }

@@ -21,7 +21,7 @@ namespace Atom
     concept RFwdRange = requires(TRange range)
     {
         requires Private::RRangeBase<TRange, T>;
-        requires RFwdIt<typename TRange::TIterator, T>;
+        requires RFwdIter<typename TRange::TIterator, T>;
     };
 
     /// Ensures {TRange} is {BwdRange}.
@@ -30,7 +30,7 @@ namespace Atom
     concept RBwdRange = requires(TRange range)
     {
         requires Private::RRangeBase<TRange, T>;
-        requires RBwdIt<typename TRange::TIterator, T>;
+        requires RBwdIter<typename TRange::TIterator, T>;
     };
 
     /// Ensures {TRange} is {FwdJumpRange}.
@@ -39,7 +39,7 @@ namespace Atom
     concept RFwdJumpRange = requires(TRange range)
     {
         requires Private::RRangeBase<TRange, T>;
-        requires RFwdJumpIt<typename TRange::TIterator, T>;
+        requires RFwdJumpIter<typename TRange::TIterator, T>;
     };
 
     /// Ensures {TRange} is {BwdJumpRange}.
@@ -48,7 +48,7 @@ namespace Atom
     concept RBwdJumpRange = requires(TRange range)
     {
         requires Private::RRangeBase<TRange, T>;
-        requires RBwdJumpIt<typename TRange::TIterator, T>;
+        requires RBwdJumpIter<typename TRange::TIterator, T>;
     };
 
     /// Ensures {TRange} is {TwoWayRange}.
@@ -57,7 +57,7 @@ namespace Atom
     concept RTwoWayRange = requires(TRange range)
     {
         requires Private::RRangeBase<TRange, T>;
-        requires RTwoWayIt<typename TRange::TIterator, T>;
+        requires RTwoWayIter<typename TRange::TIterator, T>;
     };
 
     /// Ensures {TRange} is {TwoWayJumpRange}.
@@ -66,7 +66,7 @@ namespace Atom
     concept RTwoWayJumpRange = requires(TRange range)
     {
         requires Private::RRangeBase<TRange, T>;
-        requires RTwoWayJumpIt<typename TRange::TIterator, T>;
+        requires RTwoWayJumpIter<typename TRange::TIterator, T>;
     };
 
     /// Ensures {TRange} is {ArrayRange}.
@@ -75,7 +75,7 @@ namespace Atom
     concept RArrayRange = requires(TRange range)
     {
         requires Private::RRangeBase<TRange, T>;
-        requires RArrayIt<typename TRange::TIterator, T>;
+        requires RArrayIter<typename TRange::TIterator, T>;
     };
 
     /// Ensures {TRange} is {MultiPassRange}.
@@ -84,6 +84,6 @@ namespace Atom
     concept RMultiPassRange = requires(TRange range)
     {
         requires Private::RRangeBase<TRange, T>;
-        requires RMultiPassIt<typename TRange::TIterator, T>;
+        requires RMultiPassIter<typename TRange::TIterator, T>;
     };
 }

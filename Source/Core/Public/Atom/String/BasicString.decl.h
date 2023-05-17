@@ -36,7 +36,7 @@ namespace Atom
         /// 
         /// ----------------------------------------------------------------------------------------
         template <typename TInput>
-        requires RFwdIt<TInput, const BasicChar<TEncoding>>
+        requires RFwdIter<TInput, const BasicChar<TEncoding>>
         constexpr BasicString(TInput in) noexcept;
 
         /// ----------------------------------------------------------------------------------------

@@ -25,7 +25,7 @@ namespace Atom
         template <usize N>
         constexpr BasicStringView(const TChar(&str)[N]) noexcept;
 
-        template <RFwdIt<BasicChar<TEncoding>> TInput>
+        template <RFwdIter<BasicChar<TEncoding>> TInput>
         constexpr BasicStringView(TInput in) noexcept;
 
         template <typename TAllocator>

@@ -13,7 +13,7 @@ namespace Atom
     concept RInsertable = requires(TInsertable insertable, T obj)
     {
         insertable.Insert(obj);
-        insertable.Insert(Internal::FwdItMock<T>());
+        insertable.Insert(Internal::FwdIterMock<T>());
     };
 
     /// {FrontInsertable} represents a type that allows inserting objs of type {Element} 
@@ -26,7 +26,7 @@ namespace Atom
     concept RFrontInsertable = requires(TFrontInsertable insertable, T obj)
     {
         insertable.InsertFront(obj);
-        insertable.InsertFront(Internal::FwdItMock<T>());
+        insertable.InsertFront(Internal::FwdIterMock<T>());
     };
 
     /// {FrontInsertable} represents a type that allows inserting objs of type {Element} 
@@ -39,7 +39,7 @@ namespace Atom
     concept RBackInsertable = requires(TInsertable insertable, T obj)
     {
         insertable.InsertBack(obj);
-        insertable.InsertBack(Internal::FwdItMock<T>());
+        insertable.InsertBack(Internal::FwdIterMock<T>());
     };
 
     /// {KeyInsertable} represents a type that allows inserting objs of type {Element} 
@@ -52,7 +52,7 @@ namespace Atom
     concept RKeyInsertable = requires(TInsertable insertable, TKey key, T obj)
     {
         insertable.Insert(key, obj);
-        insertable.Insert(key, Internal::FwdItMock<T>());
+        insertable.Insert(key, Internal::FwdIterMock<T>());
     };
 
     /// {IndexInsertable} represents a type that allows inserting objs of type {Element} 
@@ -75,7 +75,7 @@ namespace Atom::Internal
         void InsertBack(const T&);
         void InsertBack(T&&);
 
-        template <RFwdIt<T> TInput>
+        template <RFwdIter<T> TInput>
         void InsertBack(TInput in);
     };
 

@@ -26,7 +26,7 @@ namespace Atom
     }
 
     template <typename T>
-    template <RFwdIt<T> TInput>
+    template <RFwdIter<T> TInput>
     constexpr bool ArrayView<T>::operator == (TInput in) const noexcept
     {
         usize i = 0;

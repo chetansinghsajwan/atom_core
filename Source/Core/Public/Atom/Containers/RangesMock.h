@@ -9,7 +9,7 @@ namespace Atom::Internal
     template <typename T>
     struct FwdRangeMock
     {
-        using TIterator = FwdItMock<T>;
+        using TIterator = FwdIterMock<T>;
 
         TIterator Iterator();
     };
@@ -22,7 +22,7 @@ namespace Atom::Internal
     template <typename T>
     struct BwdRangeMock
     {
-        using TIterator = BwdItMock<T>;
+        using TIterator = BwdIterMock<T>;
 
         TIterator Iterator();
     };
@@ -35,7 +35,7 @@ namespace Atom::Internal
     template <typename T>
     struct FwdJumpRangeMock
     {
-        using TIterator = FwdJumpItMock<T>;
+        using TIterator = FwdJumpIterMock<T>;
 
         TIterator Iterator();
     };
@@ -48,7 +48,7 @@ namespace Atom::Internal
     template <typename T>
     struct BwdJumpRangeMock
     {
-        using TIterator = BwdJumpItMock<T>;
+        using TIterator = BwdJumpIterMock<T>;
 
         TIterator Iterator();
     };
@@ -61,7 +61,7 @@ namespace Atom::Internal
     template <typename T>
     struct TwoWayRangeMock
     {
-        using TIterator = TwoWayItMock<T>;
+        using TIterator = TwoWayIterMock<T>;
 
         TIterator Iterator();
     };
@@ -74,7 +74,7 @@ namespace Atom::Internal
     template <typename T>
     struct TwoWayJumpRangeMock
     {
-        using TIterator = TwoWayJumpItMock<T>;
+        using TIterator = TwoWayJumpIterMock<T>;
 
         TIterator Iterator();
     };
@@ -87,7 +87,7 @@ namespace Atom::Internal
     template <typename T>
     struct ArrayRangeMock
     {
-        using TIterator = ArrayItMock<T>;
+        using TIterator = ArrayIterMock<T>;
 
         TIterator Iterator();
     };
@@ -100,7 +100,7 @@ namespace Atom::Internal
     template <typename T>
     struct MultiPassRangeMock
     {
-        using TIterator = MultiPassItMock<T>;
+        using TIterator = MultiPassIterMock<T>;
 
         TIterator Iterator();
     };

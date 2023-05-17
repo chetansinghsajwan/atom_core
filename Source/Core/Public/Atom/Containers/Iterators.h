@@ -5,8 +5,8 @@ namespace Atom::Private
 {
     /// 
     /// --------------------------------------------------------------------------------------------
-    template <typename TIt, typename T>
-    concept RItBase = requires(TIt it)
+    template <typename TIter, typename T>
+    concept RIterBase = requires(TIter it)
     {
         { it.Get() } -> RConvertibleTo<T&>;
 
@@ -17,23 +17,23 @@ namespace Atom::Private
 
 namespace Atom
 {
-    /// Ensures {TIt} is {FwdIt} of type {T}.
+    /// Ensures {TIter} is {FwdIter} of type {T}.
     /// --------------------------------------------------------------------------------------------
-    template <typename TIt, typename T>
-    concept RFwdIt = requires(TIt it, const TIt cit)
+    template <typename TIter, typename T>
+    concept RFwdIter = requires(TIter it, const TIter cit)
     {
-        requires Private::RItBase<TIt, T>;
+        requires Private::RIterBase<TIter, T>;
 
         { it.Next() }     -> RConvertibleTo<bool>;
         { cit.HasNext() } -> RConvertibleTo<bool>;
     };
 
-    /// Ensures {TIt} is {BwdIt} of type {T}.
+    /// Ensures {TIter} is {BwdIter} of type {T}.
     /// --------------------------------------------------------------------------------------------
-    template <typename TIt, typename T>
-    concept RBwdIt = requires(TIt it, const TIt cit)
+    template <typename TIter, typename T>
+    concept RBwdIter = requires(TIter it, const TIter cit)
     {
-        requires Private::RItBase<TIt, T>;
+        requires Private::RIterBase<TIter, T>;
 
         { it.Prev() }     -> RConvertibleTo<bool>;
         { cit.HasPrev() } -> RConvertibleTo<bool>;
@@ -41,10 +41,10 @@ namespace Atom
 
     /// 
     /// --------------------------------------------------------------------------------------------
-    template <typename TIt, typename T>
-    concept RFwdJumpIt = requires(TIt it, usize steps)
+    template <typename TIter, typename T>
+    concept RFwdJumpIter = requires(TIter it, usize steps)
     {
-        requires RFwdIt<TIt, T>;
+        requires RFwdIter<TIter, T>;
 
         { it.Next(steps) } -> RConvertibleTo<bool>;
         { it.NextRange() } -> RConvertibleTo<usize>;
@@ -52,53 +52,53 @@ namespace Atom
 
     /// 
     /// --------------------------------------------------------------------------------------------
-    template <typename TIt, typename T>
-    concept RBwdJumpIt = requires(TIt it, usize steps)
+    template <typename TIter, typename T>
+    concept RBwdJumpIter = requires(TIter it, usize steps)
     {
-        requires RBwdIt<TIt, T>;
+        requires RBwdIter<TIter, T>;
 
         { it.Prev(steps) } -> RConvertibleTo<bool>;
         { it.PrevRange() } -> RConvertibleTo<usize>;
     };
 
-    /// Ensures {TIt} is {TwoWayIt} of type {T}.
+    /// Ensures {TIter} is {TwoWayIter} of type {T}.
     /// --------------------------------------------------------------------------------------------
-    template <typename TIt, typename T>
-    concept RTwoWayIt = requires
+    template <typename TIter, typename T>
+    concept RTwoWayIter = requires
     {
-        requires RFwdIt<TIt, T>;
-        requires RBwdIt<TIt, T>;
+        requires RFwdIter<TIter, T>;
+        requires RBwdIter<TIter, T>;
     };
 
-    /// Ensures {TIt} is {TwoWayIt} of type {T}.
+    /// Ensures {TIter} is {TwoWayIter} of type {T}.
     /// --------------------------------------------------------------------------------------------
-    template <typename TIt, typename T>
-    concept RTwoWayJumpIt = requires
+    template <typename TIter, typename T>
+    concept RTwoWayJumpIter = requires
     {
-        requires RTwoWayIt<TIt, T>;
+        requires RTwoWayIter<TIter, T>;
 
-        requires RFwdJumpIt<TIt, T>;
-        requires RBwdJumpIt<TIt, T>;
+        requires RFwdJumpIter<TIter, T>;
+        requires RBwdJumpIter<TIter, T>;
     };
 
-    /// Ensures {TIt} is {ArrayIt} of type {T}.
+    /// Ensures {TIter} is {ArrayIt} of type {T}.
     /// --------------------------------------------------------------------------------------------
-    template <typename TIt, typename T>
-    concept RArrayIt = requires(TIt it, const TIt cit)
+    template <typename TIter, typename T>
+    concept RArrayIter = requires(TIter it, const TIter cit)
     {
-        requires RTwoWayJumpIt<TIt, T>;
+        requires RTwoWayJumpIter<TIter, T>;
 
         { it.Data() } -> RConvertibleTo<T*>;
     };
 
-    /// Ensures {TIt} is {MultiPassIt} of type {T}.
+    /// Ensures {TIter} is {MultiPassIter} of type {T}.
     /// --------------------------------------------------------------------------------------------
-    template <typename TIt, typename T>
-    concept RMultiPassIt = requires
+    template <typename TIter, typename T>
+    concept RMultiPassIter = requires
     {
-        requires RCopyable<TIt>;
-        requires RMoveable<TIt>;
+        requires RCopyable<TIter>;
+        requires RMoveable<TIter>;
 
-        requires RFwdIt<TIt, T> || RBwdIt<TIt, T>;
+        requires RFwdIter<TIter, T> || RBwdIter<TIter, T>;
     };
 }

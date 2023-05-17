@@ -19,7 +19,7 @@ namespace Atom
 
     template <typename TEncoding, typename TAllocator>
     template <typename TInput>
-    requires RFwdIt<TInput, const BasicChar<TEncoding>>
+    requires RFwdIter<TInput, const BasicChar<TEncoding>>
     constexpr BasicString<TEncoding, TAllocator>::BasicString(TInput in) noexcept:
         TBase(MOVE(in)) { }
 

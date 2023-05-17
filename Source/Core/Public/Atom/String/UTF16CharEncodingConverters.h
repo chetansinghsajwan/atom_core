@@ -10,7 +10,7 @@ namespace Atom::Private
     struct CharEncodingConversionImpl<UTF16CharEncoding, UTF8CharEncoding>
     {
         template <typename TIn, typename TOut>
-        requires RFwdIt<TIn, UTF16Char> && ROutput<TOut, UTF8Char>
+        requires RFwdIter<TIn, UTF16Char> && ROutput<TOut, UTF8Char>
         static constexpr void ConvertChar(TIn in, TOut out)
         {
             static constexpr UTF8StringView msg = UTF8(
@@ -24,7 +24,7 @@ namespace Atom::Private
     struct CharEncodingConversionImpl<UTF16CharEncoding, UTF32CharEncoding>
     {
         template <typename TIn, typename TOut>
-        requires RFwdIt<TIn, UTF16Char> && ROutput<TOut, UTF32Char>
+        requires RFwdIter<TIn, UTF16Char> && ROutput<TOut, UTF32Char>
         static constexpr void ConvertChar(TIn in, TOut out)
         {
             static constexpr UTF32StringView msg = UTF32(
