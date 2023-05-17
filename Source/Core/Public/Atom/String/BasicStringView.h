@@ -19,11 +19,6 @@ namespace Atom
         TBase(str, N) { }
 
     template <typename TEncoding>
-    template <RFwdIter<BasicChar<TEncoding>> TInput>
-    constexpr BasicStringView<TEncoding>::BasicStringView(TInput in) noexcept:
-        TBase(MOVE(in)) { }
-
-    template <typename TEncoding>
     template <typename TAllocator>
     constexpr BasicStringView<TEncoding>::BasicStringView(const BasicString<TEncoding, TAllocator>& in) noexcept:
         TBase(in.Data(), in.Count()) { }

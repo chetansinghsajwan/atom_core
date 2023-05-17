@@ -1,5 +1,6 @@
 #pragma once
-#include "Atom/Containers/ArrayIterator.decl.h"
+#include "Atom/Containers/ArrayIterator.h"
+#include "Ranges.h"
 
 namespace Atom
 {
@@ -7,7 +8,9 @@ namespace Atom
     class ArrayView
     {
     public:
-        using TIterator = ArrayIterator<const T>;
+        using TIter = ArrayIterator<const T>;
+        using TConstIter = ArrayIterator<const T>;
+        using TEnd = TIter;
 
     //// Constructors, Operators and Destructor.
     //// -------------------------------------------------------------------------------------------
@@ -27,8 +30,9 @@ namespace Atom
 
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <RFwdIter<T> TInput>
-        constexpr bool operator == (TInput in) const noexcept;
+        template <typename TRange>
+        requires RFwdRange<TRange, const T>
+        constexpr bool operator == (const TRange& range) const noexcept;
 
         /// 
         /// ----------------------------------------------------------------------------------------
@@ -42,9 +46,33 @@ namespace Atom
     //// -------------------------------------------------------------------------------------------
 
     public:
-        /// Get Iterator.
+        /// Iterator to the first element.
         /// ----------------------------------------------------------------------------------------
-        constexpr TIterator Iterator() const noexcept;
+        constexpr TIter Begin() const noexcept
+        {
+            return TIter{ m_arr };
+        }
+
+        /// Iterator to the last element.
+        /// ----------------------------------------------------------------------------------------
+        constexpr TIter End() const noexcept
+        {
+            return TIter{ m_arr + m_count };
+        }
+
+        /// Iterator to the first element.
+        /// ----------------------------------------------------------------------------------------
+        constexpr TIter begin() const noexcept
+        {
+            return TIter{ m_arr };
+        }
+
+        /// Iterator to the last element.
+        /// ----------------------------------------------------------------------------------------
+        constexpr TIter end() const noexcept
+        {
+            return TIter{ m_arr + m_count };
+        }
 
     //// Access
     //// -------------------------------------------------------------------------------------------

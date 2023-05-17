@@ -47,20 +47,20 @@ namespace Atom::Private
 
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <typename TInput>
-        requires RFwdIter<TInput, Char>
-        constexpr T1Hash Parse(TInput in) const noexcept
+        template <typename TRange>
+        requires RFwdRange<TRange, const Char>
+        constexpr T1Hash Parse(const TRange& range) const noexcept
         {
             T1Hash hash;
             usize i = 0;
-            while (in.HasNext())
+            while (range.HasNext())
             {
                 if (i > 20)
                 {
                     return T1Hash::Null;
                 }
 
-                byte hex1 = Math::CharToHex(in.Get());
+                byte hex1 = Math::CharToHex(range.Get());
                 if (hex1 == -1)
                 {
                     return T1Hash::Null;
@@ -69,17 +69,17 @@ namespace Atom::Private
                 // Left shift 4 bits to make space for next 4 bits.
                 hex1 = hex1 << 4;
 
-                if (!in.Next())
+                if (!range.Next())
                 {
                     return T1Hash::Null;
                 }
 
-                byte hex2 = Math::CharToHex(in.Get());
+                byte hex2 = Math::CharToHex(range.Get());
                 if (hex2 == -1)
                 {
                     return T1Hash::Null;
                 }
-                in.Next();
+                range.Next();
 
                 hash.bytes[i++] = hex1 + hex2;
             }
@@ -94,11 +94,11 @@ namespace Atom::Private
 
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <typename TInput>
-        requires RFwdJumpIter<TInput, Char>
-        constexpr T1Hash Parse(TInput in) const noexcept
+        template <typename TRange>
+        requires RFwdJumpRange<TRange, const Char>
+        constexpr T1Hash Parse(const TRange& range) const noexcept
         {
-            if (in.NextRange() != _Size * 2)
+            if (range.Size() != _Size * 2)
             {
                 return T1Hash::Null;
             }
@@ -106,7 +106,7 @@ namespace Atom::Private
             T1Hash hash;
             for (usize i = 0; i < 20; i++)
             {
-                byte hex1 = Math::CharToHex(in.Get());
+                byte hex1 = Math::CharToHex(range.Get());
                 if (hex1 == -1)
                 {
                     return T1Hash::Null;
@@ -114,14 +114,14 @@ namespace Atom::Private
 
                 // Left shift 4 bits to make space for next 4 bits.
                 hex1 = hex1 << 4;
-                in.Next();
+                range.Next();
 
-                byte hex2 = Math::CharToHex(in.Get());
+                byte hex2 = Math::CharToHex(range.Get());
                 if (hex2 == -1)
                 {
                     return T1Hash::Null;
                 }
-                in.Next();
+                range.Next();
 
                 hash.bytes[i] = hex1 + hex2;
             }

@@ -30,15 +30,13 @@ namespace Atom::Private
 
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <typename TInput, usize BufSize = 50>
-        requires RFwdIter<TInput, byte>
-        T1HashGenerator& ProcessBytes(TInput in)
+        template <typename TRange, usize BufSize = 50>
+        requires RFwdRange<TRange, byte>
+        T1HashGenerator& ProcessBytes(TRange bytes)
         {
-            if constexpr (RArrayIter<TInput, byte>)
+            if constexpr (RArrayRange<TRange, byte>)
             {
-                // TODO: Fix this.
-                // return ProcessBytes(in.Data(), in.NextRange());
-                return ProcessBytes(in.Data(), in.Range());
+                return ProcessBytes(bytes.Data(), bytes.Size());
             }
 
             static_assert(BufSize <= NumLimits<uint32_t>::max() && BufSize > 10,
@@ -47,10 +45,11 @@ namespace Atom::Private
             usize count = 0;
             StaticArray<byte, BufSize> buf;
 
-            for (byte b : in)
+            auto end = bytes.End();
+            for (auto it = bytes.Begin(); it != end; it++)
             {
-                buf[count++] = b;
-                if (count == BufSize || !in.HasNext())
+                buf[count++] = *it;
+                if (count == BufSize || it == end)
                 {
                     _impl.Update(buf.data(), count);
                     count = 0;

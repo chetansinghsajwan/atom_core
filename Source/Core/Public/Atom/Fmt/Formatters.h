@@ -100,7 +100,7 @@ namespace Atom::Fmt
 
 		void AdvanceTo(ArrayIterator<const Char> it) noexcept
 		{
-			fmt_ctx.advance_to(it.begin());
+			fmt_ctx.advance_to(&*it);
 		}
 
 		_TFormatParseContext& fmt_ctx;
@@ -120,7 +120,9 @@ namespace Atom::Fmt
 			fmt_ctx.advance_to(MOVE(out));
 		}
 
-		void Write(RFwdIter<Char> auto chars)
+		template <typename TRange>
+		requires RFwdRange<TRange, const Char>
+		void Write(const TRange& chars)
 		{
 			auto out = fmt_ctx.out();
 			for (Char ch : chars)

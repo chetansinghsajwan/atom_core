@@ -26,11 +26,12 @@ namespace Atom
     }
 
     template <typename T>
-    template <RFwdIter<T> TInput>
-    constexpr bool ArrayView<T>::operator == (TInput in) const noexcept
+    template <typename TRange>
+    requires RFwdRange<TRange, const T>
+    constexpr bool ArrayView<T>::operator == (const TRange& range) const noexcept
     {
         usize i = 0;
-        for (const T& element : in)
+        for (const T& element : range)
         {
             if (i == Count())
             {
@@ -68,12 +69,6 @@ namespace Atom
     constexpr const T& ArrayView<T>::operator [] (usize index) const noexcept
     {
         return m_arr[index];
-    }
-
-    template <typename T>
-    constexpr typename ArrayView<T>::TIterator ArrayView<T>::Iterator() const noexcept
-    {
-        return TIterator{ m_arr, m_count };
     }
 
     template <typename T>

@@ -9,6 +9,8 @@ namespace Atom::Internal
         void operator += (const T& in);
         void operator += (T&& in);
 
-        void operator += (RFwdIter<T> auto in);
+        template <typename TRange>
+        requires RFwdRange<TRange, const T>
+        void operator += (const TRange& range);
     };
 }

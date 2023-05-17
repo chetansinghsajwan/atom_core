@@ -3,15 +3,19 @@
 
 namespace Atom::Private
 {
-    /// 
+    /// Common requirements for every iterator type.
     /// --------------------------------------------------------------------------------------------
-    template <typename TIter, typename T>
-    concept RIterBase = requires(TIter it)
+    template <typename TIter, typename TEnd, typename T>
+    concept RIterBase = requires(TIter it, TEnd end)
     {
-        { it.Get() } -> RConvertibleTo<T&>;
+        requires RCopyable<TIter>;
+        requires RMoveable<TIter>;
 
-        // TODO: Fix this requirement.
-        // { for (T& el : it) { } }
+        requires RCopyable<TEnd>;
+        requires RMoveable<TEnd>;
+
+        { *it } -> RConvertibleTo<T&>;
+        { it == end } -> RConvertibleTo<bool>;
     };
 }
 
@@ -19,86 +23,86 @@ namespace Atom
 {
     /// Ensures {TIter} is {FwdIter} of type {T}.
     /// --------------------------------------------------------------------------------------------
-    template <typename TIter, typename T>
-    concept RFwdIter = requires(TIter it, const TIter cit)
+    template <typename TIter, typename TEnd, typename T>
+    concept RFwdIter = requires(TIter it)
     {
-        requires Private::RIterBase<TIter, T>;
+        requires Private::RIterBase<TIter, TEnd, T>;
 
-        { it.Next() }     -> RConvertibleTo<bool>;
-        { cit.HasNext() } -> RConvertibleTo<bool>;
+        { it++ } -> RConvertibleTo<TIter&>;
     };
 
     /// Ensures {TIter} is {BwdIter} of type {T}.
     /// --------------------------------------------------------------------------------------------
-    template <typename TIter, typename T>
-    concept RBwdIter = requires(TIter it, const TIter cit)
+    template <typename TIter, typename TEnd, typename T>
+    concept RBwdIter = requires(TIter it)
     {
-        requires Private::RIterBase<TIter, T>;
+        requires Private::RIterBase<TIter, TEnd, T>;
 
-        { it.Prev() }     -> RConvertibleTo<bool>;
-        { cit.HasPrev() } -> RConvertibleTo<bool>;
+        { it-- } -> RConvertibleTo<TIter&>;
     };
 
-    /// 
+    /// Ensures {TIter} is {FwdJumpIt} of type {T}.
     /// --------------------------------------------------------------------------------------------
-    template <typename TIter, typename T>
+    template <typename TIter, typename TEnd, typename T>
     concept RFwdJumpIter = requires(TIter it, usize steps)
     {
-        requires RFwdIter<TIter, T>;
+        requires RFwdIter<TIter, TEnd, T>;
 
-        { it.Next(steps) } -> RConvertibleTo<bool>;
-        { it.NextRange() } -> RConvertibleTo<usize>;
+        { it + steps } -> RConvertibleTo<TIter>;
+        { it - it } -> RConvertibleTo<usize>;
     };
 
-    /// 
+    /// Ensures {TIter} is {BwdJumpIt} of type {T}.
     /// --------------------------------------------------------------------------------------------
-    template <typename TIter, typename T>
+    template <typename TIter, typename TEnd, typename T>
     concept RBwdJumpIter = requires(TIter it, usize steps)
     {
-        requires RBwdIter<TIter, T>;
+        requires RBwdIter<TIter, TEnd, T>;
 
-        { it.Prev(steps) } -> RConvertibleTo<bool>;
-        { it.PrevRange() } -> RConvertibleTo<usize>;
+        { it - steps } -> RConvertibleTo<TIter>;
+        { it - it } -> RConvertibleTo<usize>;
     };
 
     /// Ensures {TIter} is {TwoWayIter} of type {T}.
     /// --------------------------------------------------------------------------------------------
-    template <typename TIter, typename T>
+    template <typename TIter, typename TEnd, typename T>
     concept RTwoWayIter = requires
     {
-        requires RFwdIter<TIter, T>;
-        requires RBwdIter<TIter, T>;
+        requires RFwdIter<TIter, TEnd, T>;
+        requires RBwdIter<TIter, TEnd, T>;
     };
 
     /// Ensures {TIter} is {TwoWayIter} of type {T}.
     /// --------------------------------------------------------------------------------------------
-    template <typename TIter, typename T>
+    template <typename TIter, typename TEnd, typename T>
     concept RTwoWayJumpIter = requires
     {
-        requires RTwoWayIter<TIter, T>;
+        requires RTwoWayIter<TIter, TEnd, T>;
 
-        requires RFwdJumpIter<TIter, T>;
-        requires RBwdJumpIter<TIter, T>;
+        requires RFwdJumpIter<TIter, TEnd, T>;
+        requires RBwdJumpIter<TIter, TEnd, T>;
     };
 
-    /// Ensures {TIter} is {ArrayIt} of type {T}.
-    /// --------------------------------------------------------------------------------------------
-    template <typename TIter, typename T>
-    concept RArrayIter = requires(TIter it, const TIter cit)
-    {
-        requires RTwoWayJumpIter<TIter, T>;
-
-        { it.Data() } -> RConvertibleTo<T*>;
-    };
+    struct MultiPassIterTag { };
 
     /// Ensures {TIter} is {MultiPassIter} of type {T}.
     /// --------------------------------------------------------------------------------------------
-    template <typename TIter, typename T>
+    template <typename TIter, typename TEnd, typename T>
     concept RMultiPassIter = requires
     {
-        requires RCopyable<TIter>;
-        requires RMoveable<TIter>;
+        requires RDerivedFrom<TIter, MultiPassIterTag>;
+        requires RFwdIter<TIter, TEnd, T> || RBwdIter<TIter, TEnd, T>;
+    };
 
-        requires RFwdIter<TIter, T> || RBwdIter<TIter, T>;
+    struct ArrayIterTag : MultiPassIterTag { };
+
+    /// Ensures {TIter} is {ArrayIt} of type {T}.
+    /// --------------------------------------------------------------------------------------------
+    template <typename TIter, typename TEnd, typename T>
+    concept RArrayIter = requires(TIter it)
+    {
+        requires RDerivedFrom<TIter, ArrayIterTag>;
+        requires RTwoWayJumpIter<TIter, TEnd, T>;
+        requires RMultiPassIter<TIter, TEnd, T>;
     };
 }

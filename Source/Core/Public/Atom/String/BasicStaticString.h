@@ -11,7 +11,7 @@ namespace Atom
 
     public:
         using TChar = BasicChar<TEncoding>;
-        using TIterator = typename TBase::TIterator;
-        using TConstIterator = typename TBase::TConstIterator;
+        using TIter = typename TBase::TIter;
+        using TConstIter = typename TBase::TConstIter;
     };
 }

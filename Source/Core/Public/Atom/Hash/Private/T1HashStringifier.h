@@ -17,7 +17,7 @@ namespace Atom::Private
 
         constexpr void WriteString(const T1Hash& hash, ROutput<Char> auto&& out) noexcept
         {
-            for (byte b : hash.bytes.Iterator())
+            for (byte b : hash.bytes)
             {
                 StaticString<2> chars = Math::HexToChar(b);
                 out += chars[0];

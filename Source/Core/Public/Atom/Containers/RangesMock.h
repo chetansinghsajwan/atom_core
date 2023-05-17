@@ -2,109 +2,76 @@
 #include "Ranges.h"
 #include "IteratorsMock.h"
 
+namespace Atom::Private
+{
+    /// Type to test if type implementing RFwdRange is accepted when defining concepts.
+    /// --------------------------------------------------------------------------------------------
+    template <typename TInIter, typename TIterEnd>
+    struct RangeBaseMock
+    {
+        using TIter = TInIter;
+        using TEnd = TIterEnd;
+
+        TIter Begin();
+        TIterEnd End();
+
+        TIter begin();
+        TIterEnd end();
+    };
+}
+
 namespace Atom::Internal
 {
     /// Type to test if type implementing RFwdRange is accepted when defining concepts.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    struct FwdRangeMock
+    struct FwdRangeMock: Private::RangeBaseMock<FwdIterMock<T>, NullPtr>
     {
-        using TIterator = FwdIterMock<T>;
-
-        TIterator Iterator();
+        using TImpl = Private::RangeBaseMock<FwdIterMock<T>, NullPtr>;
+        
+        using TIter = typename TImpl::TIter;
+        using TEnd = typename TImpl::TEnd;
     };
 
     static_assert(RFwdRange<FwdRangeMock<int>, int>,
-        "FwdRangeMock does not meet RFwdRange requirements.");
+        "FwdRangeMock<int> does not meet RFwdRange<int> requirements.");
+
+    static_assert(RFwdRange<FwdRangeMock<const int>, const int>,
+        "FwdRangeMock<const int> does not meet RFwdRange<const int> requirements.");
 
     /// Type to test if type implementing RBwdRange is accepted when defining concepts.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    struct BwdRangeMock
+    struct BwdRangeMock: Private::RangeBaseMock<BwdIterMock<T>, NullPtr>
     {
-        using TIterator = BwdIterMock<T>;
-
-        TIterator Iterator();
+        using TImpl = Private::RangeBaseMock<BwdIterMock<T>, NullPtr>;
+        
+        using TIter = typename TImpl::TIter;
+        using TEnd = typename TImpl::TEnd;
     };
 
     static_assert(RBwdRange<BwdRangeMock<int>, int>,
-        "BwdRangeMock does not meet RBwdRange requirements.");
+        "BwdRangeMock<int> does not meet RBwdRange<int> requirements.");
 
-    /// Type to test if type implementing RFwdJumpRange is accepted when defining concepts.
+    static_assert(RBwdRange<BwdRangeMock<const int>, const int>,
+        "BwdRangeMock<const int> does not meet RBwdRange<const int> requirements.");
+
+    /// Type to test if type implementing RFwdRange is accepted when defining concepts.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    struct FwdJumpRangeMock
+    struct FwdJumpRangeMock: Private::RangeBaseMock<FwdJumpIterMock<T>, NullPtr>
     {
-        using TIterator = FwdJumpIterMock<T>;
-
-        TIterator Iterator();
+        using TImpl = Private::RangeBaseMock<FwdJumpIterMock<T>, NullPtr>;
+        
+        using TIter = typename TImpl::TIter;
+        using TEnd = typename TImpl::TEnd;
     };
 
     static_assert(RFwdJumpRange<FwdJumpRangeMock<int>, int>,
-        "FwdJumpRangeMock does not meet RFwdJumpRange requirements.");
+        "FwdJumpRangeMock<int> does not meet RFwdJumpRange<int> requirements.");
 
-    /// Type to test if type implementing RBwdJumpRange is accepted when defining concepts.
-    /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    struct BwdJumpRangeMock
-    {
-        using TIterator = BwdJumpIterMock<T>;
+    static_assert(RFwdJumpRange<FwdJumpRangeMock<const int>, const int>,
+        "FwdJumpRangeMock<const int> does not meet RFwdJumpRange<const int> requirements.");
 
-        TIterator Iterator();
-    };
-
-    static_assert(RBwdJumpRange<BwdJumpRangeMock<int>, int>,
-        "BwdJumpRangeMock does not meet RBwdJumpRange requirements.");
-
-    /// Type to test if type implementing RTwoWayRange is accepted when defining concepts.
-    /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    struct TwoWayRangeMock
-    {
-        using TIterator = TwoWayIterMock<T>;
-
-        TIterator Iterator();
-    };
-
-    static_assert(RTwoWayRange<TwoWayRangeMock<int>, int>,
-        "TwoWayRangeMock does not meet RTwoWayRange requirements.");
-
-    /// Type to test if type implementing RTwoWayJumpRange is accepted when defining concepts.
-    /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    struct TwoWayJumpRangeMock
-    {
-        using TIterator = TwoWayJumpIterMock<T>;
-
-        TIterator Iterator();
-    };
-
-    static_assert(RTwoWayJumpRange<TwoWayJumpRangeMock<int>, int>,
-        "TwoWayJumpRangeMock does not meet RTwoWayJumpRange requirements.");
-
-    /// Type to test if type implementing RArrayRange is accepted when defining concepts.
-    /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    struct ArrayRangeMock
-    {
-        using TIterator = ArrayIterMock<T>;
-
-        TIterator Iterator();
-    };
-
-    static_assert(RArrayRange<ArrayRangeMock<int>, int>,
-        "ArrayRangeMock does not meet RArrayRange requirements.");
-
-    /// Type to test if type implementing RMultiPassRange is accepted when defining concepts.
-    /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    struct MultiPassRangeMock
-    {
-        using TIterator = MultiPassIterMock<T>;
-
-        TIterator Iterator();
-    };
-
-    static_assert(RMultiPassRange<MultiPassRangeMock<int>, int>,
-        "MultiPassRangeMock does not meet RMultiPassRange requirements.");
+    // TODO: Implementing remaining mock objects.
 }

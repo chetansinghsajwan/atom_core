@@ -9,55 +9,48 @@ namespace Atom
     class BasicString: public DynamicArray<BasicChar<TEncoding>, TAllocator>
     {
         using TBase = DynamicArray<BasicChar<TEncoding>, TAllocator>;
-        using STD_TString = ::std::basic_string<BasicChar<TEncoding>>;
+        using _TString = ::std::basic_string<BasicChar<TEncoding>>;
 
     public:
         using TChar = BasicChar<TEncoding>;
-        using TIterator = typename TBase::TIterator;
+        using TIter = typename TBase::TIter;
+        using TEnd = typename TBase::TEnd;
 
     public:
-        /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
         constexpr BasicString() noexcept;
 
-        /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
         constexpr BasicString(const TChar* str) noexcept;
 
-        /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
         template <usize count>
         constexpr BasicString(const TChar(&str)[count]) noexcept;
 
-        /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <typename TInput>
-        requires RFwdIter<TInput, const BasicChar<TEncoding>>
-        constexpr BasicString(TInput in) noexcept;
+        template <typename TRange>
+        requires RFwdRange<TRange, const BasicChar<TEncoding>>
+        constexpr BasicString(const TRange& range) noexcept;
 
-        /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr BasicString(const STD_TString& in) noexcept;
+        constexpr BasicString(const _TString& in) noexcept;
 
-        /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
         template <usize count>
         constexpr bool operator == (const TChar(&str)[count]) const noexcept;
 
-        /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
         requires RFwdRange<TRange, const BasicChar<TEncoding>>
         constexpr bool operator == (const TRange& in) const noexcept;
 
-        /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
         constexpr ~BasicString();

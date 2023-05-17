@@ -24,11 +24,6 @@ namespace Atom::Fmt
         {
             return FMT_StringView{ strv.Data(), strv.Count() };
         }
-
-        constexpr StringView ToFMT(RFwdIter<Char> auto in) noexcept
-        {
-            return StringView{ in.begin(), in.end() };
-        }
     };
 
     /// Wrapper over {StringView} to represent format string. This is done to avoid compile 
@@ -66,7 +61,7 @@ namespace Atom::Fmt
     /// --------------------------------------------------------------------------------------------
     template <typename TOut, RFormattable... TArgs>
     requires ROutput<TOut, Char>
-    void FormatTo(TOut out, FormatString<TArgs...> in_fmt, TArgs&&... in_args)
+    void FormatTo(TOut out, FormatString<TArgs...> fmt, TArgs&&... args)
     {
         struct OutItWrap
         {
@@ -93,8 +88,8 @@ namespace Atom::Fmt
 
         try
         {
-            fmt::detail::vformat_to<Char>(buf, in_fmt,
-                fmt::make_format_args<fmt::buffer_context<Char>>(FORWARD(in_args)...),
+            fmt::detail::vformat_to<Char>(buf, fmt,
+                fmt::make_format_args<fmt::buffer_context<Char>>(FORWARD(args)...),
                 fmt::detail::locale_ref{});
         }
         catch (const _TFormatError& err)
@@ -106,10 +101,10 @@ namespace Atom::Fmt
     /// 
     /// --------------------------------------------------------------------------------------------
     template <RFormattable... TArgs>
-    String Format(FormatString<TArgs...> in_fmt, TArgs&&... in_args)
+    String Format(FormatString<TArgs...> fmt, TArgs&&... args)
     {
         String out;
-        FormatTo(out, in_fmt, FORWARD(in_args)...);
+        FormatTo(out, fmt, FORWARD(args)...);
 
         return out;
     }

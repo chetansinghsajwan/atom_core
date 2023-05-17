@@ -8,13 +8,12 @@ namespace Atom::Internal
     template <typename T>
     struct FwdIterMock
     {
-        T& Get();
-
-        bool Next();
-        bool HasNext() const;
+        T& operator * ();
+        bool operator == (NullPtr end);
+        FwdIterMock& operator ++ (int);
     };
 
-    static_assert(RFwdIter<FwdIterMock<int>, int>,
+    static_assert(RFwdIter<FwdIterMock<int>, NullPtr, int>,
         "FwdIterMock does not meet RFwdIter requirements.");
 
     /// Type to test if a type implementing {RBwdIter} is accepted when defining concepts.
@@ -22,13 +21,12 @@ namespace Atom::Internal
     template <typename T>
     struct BwdIterMock
     {
-        T& Get();
-
-        bool Prev();
-        bool HasPrev() const;
+        T& operator * ();
+        bool operator == (NullPtr end);
+        BwdIterMock& operator -- (int);
     };
 
-    static_assert(RBwdIter<BwdIterMock<int>, int>,
+    static_assert(RBwdIter<BwdIterMock<int>, NullPtr, int>,
         "BwdIterMock does not meet RBwdIter requirements.");
 
     /// Type to test if a type implementing {RFwdJumpIter} is accepted when defining concepts.
@@ -36,13 +34,11 @@ namespace Atom::Internal
     template <typename T>
     struct FwdJumpIterMock: FwdIterMock<T>
     {
-        using FwdIterMock<T>::Next;
-
-        bool Next(usize steps);
-        usize NextRange() const;
+        FwdJumpIterMock operator + (usize steps);
+        usize operator - (const FwdJumpIterMock& that);
     };
 
-    static_assert(RFwdJumpIter<FwdJumpIterMock<int>, int>,
+    static_assert(RFwdJumpIter<FwdJumpIterMock<int>, NullPtr, int>,
         "FwdJumpIterMock does not meet RFwdJumpIter requirements.");
 
     /// Type to test if a type implementing {RBwdJumpIter} is accepted when defining concepts.
@@ -50,13 +46,11 @@ namespace Atom::Internal
     template <typename T>
     struct BwdJumpIterMock: BwdIterMock<T>
     {
-        using BwdIterMock<T>::Prev;
-
-        bool Prev(usize steps);
-        usize PrevRange() const;
+        BwdJumpIterMock operator - (usize steps);
+        usize operator - (const BwdJumpIterMock& that);
     };
 
-    static_assert(RBwdJumpIter<BwdJumpIterMock<int>, int>,
+    static_assert(RBwdJumpIter<BwdJumpIterMock<int>, NullPtr, int>,
         "BwdJumpIterMock does not meet RBwdJumpIter requirements.");
 
     /// Type to test if a type implementing {RTwoWayIter} is accepted when defining concepts.
@@ -64,10 +58,11 @@ namespace Atom::Internal
     template <typename T>
     struct TwoWayIterMock: FwdIterMock<T>, BwdIterMock<T>
     {
-        T& Get();
+        T& operator * ();
+        bool operator == (NullPtr end);
     };
 
-    static_assert(RTwoWayIter<TwoWayIterMock<int>, int>,
+    static_assert(RTwoWayIter<TwoWayIterMock<int>, NullPtr, int>,
         "TwoWayIterMock does not meet RTwoWayIter requirements.");
 
     /// Type to test if a type implementing {RTwoWayJumpIter} is accepted when defining concepts.
@@ -75,28 +70,31 @@ namespace Atom::Internal
     template <typename T>
     struct TwoWayJumpIterMock: FwdJumpIterMock<T>, BwdJumpIterMock<T>
     {
-        T& Get();
+        T& operator * ();
+        bool operator == (NullPtr end);
+        TwoWayJumpIterMock operator + (usize steps);
+        TwoWayJumpIterMock operator - (usize steps);
+        usize operator - (const TwoWayJumpIterMock& that);
     };
 
-    static_assert(RTwoWayJumpIter<TwoWayJumpIterMock<int>, int>,
+    static_assert(RTwoWayJumpIter<TwoWayJumpIterMock<int>, NullPtr, int>,
         "TwoWayJumpIterMock does not meet RTwoWayJumpIter requirements.");
-
-    /// Type to test if a type implementing {RArrayIter} is accepted when defining concepts.
-    /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    struct ArrayIterMock: TwoWayJumpIterMock<T>
-    {
-        T* Data();
-    };
-
-    static_assert(RArrayIter<ArrayIterMock<int>, int>,
-        "ArrayIterMock does not meet RArrayIter requirements.");
 
     /// Type to test if a type implementing {RMultiPassIter} is accepted when defining concepts.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    struct MultiPassIterMock: FwdIterMock<T> { };
+    struct MultiPassIterMock: FwdIterMock<T>,
+        public MultiPassIterTag { };
 
-    static_assert(RMultiPassIter<MultiPassIterMock<int>, int>,
+    static_assert(RMultiPassIter<MultiPassIterMock<int>, NullPtr, int>,
         "MultiPassIterMock does not meet RMultiPassIter requirements.");
+
+    /// Type to test if a type implementing {RArrayIter} is accepted when defining concepts.
+    /// --------------------------------------------------------------------------------------------
+    template <typename T>
+    struct ArrayIterMock: TwoWayJumpIterMock<T>,
+        public ArrayIterTag { };
+
+    static_assert(RArrayIter<ArrayIterMock<int>, NullPtr, int>,
+        "ArrayIterMock does not meet RArrayIter requirements.");
 }

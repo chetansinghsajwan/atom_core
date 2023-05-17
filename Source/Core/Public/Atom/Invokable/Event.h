@@ -92,7 +92,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         void Dispatch(TArgs... args)
         {
-            for (auto& listener : _listeners.Iterator())
+            for (auto& listener : _listeners)
             {
                 listener(args...);
             }

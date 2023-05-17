@@ -9,22 +9,24 @@ namespace Atom
     {
         template <usize size>
         requires (size == 37)
-        constexpr Uuid Parse(const Char(&in)[size]) const noexcept
+        constexpr Uuid Parse(const Char(&arr)[size]) const noexcept
         {
-            return Parse(ArrayIterator<const Char>(in, size - 1));
+            return Parse(ArrayView<Char>(arr, size - 1));
         }
 
-        constexpr Uuid Parse(RFwdIter<const Char> auto in) const noexcept
+        template <typename TRange>
+        requires RFwdRange<TRange, const Char>
+        constexpr Uuid Parse(const TRange& range) const noexcept
         {
-            if constexpr (RFwdJumpIter<decltype(in), Char>)
+            if constexpr (RFwdJumpRange<decltype(range), Char>)
             {
-                return _ParseFwdJump(MOVE(in));
+                return _ParseFwdJump(MOVE(range));
             }
 
             Uuid uuid;
             usize i = 0;
             byte high = -1;
-            for (Char ch : in)
+            for (Char ch : range)
             {
                 if (i > 36)
                 {
@@ -64,9 +66,11 @@ namespace Atom
         }
 
     private:
-        constexpr Uuid _ParseFwdJump(RFwdJumpIter<Char> auto in) const noexcept
+        template <typename TRange>
+        requires RFwdJumpRange<TRange, const Char>
+        constexpr Uuid _ParseFwdJump(const TRange& range) const noexcept
         {
-            if (in.NextRange() != 36)
+            if (range.Size() != 36)
             {
                 return Uuid::Null;
             }
@@ -74,7 +78,7 @@ namespace Atom
             Uuid uuid;
             usize i = 0;
             byte high = -1;
-            for (Char ch : in)
+            for (Char ch : range)
             {
                 if (i == 8 || i == 13 || i == 18 || i == 23)
                 {

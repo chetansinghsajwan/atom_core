@@ -15,7 +15,7 @@ namespace Atom
 
     public:
         using TChar = BasicChar<TEncoding>;
-        using TIterator = typename TBase::TIterator;
+        using TIter = typename TBase::TIter;
 
     public:
         constexpr BasicStringView() noexcept;
@@ -24,9 +24,6 @@ namespace Atom
 
         template <usize N>
         constexpr BasicStringView(const TChar(&str)[N]) noexcept;
-
-        template <RFwdIter<BasicChar<TEncoding>> TInput>
-        constexpr BasicStringView(TInput in) noexcept;
 
         template <typename TAllocator>
         constexpr BasicStringView(const BasicString<TEncoding, TAllocator>& in) noexcept;

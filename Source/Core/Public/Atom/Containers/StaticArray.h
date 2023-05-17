@@ -9,8 +9,9 @@ namespace Atom
     class StaticArray
     {
     public:
-        using TIterator = ArrayIterator<T>;
-        using TConstIterator = ArrayIterator<const T>;
+        using TIter = ArrayIterator<T>;
+        using TConstIter = ArrayIterator<const T>;
+        using TEnd = TIter;
 
     public:
         /// 
@@ -73,23 +74,72 @@ namespace Atom
     public:
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr TIterator Iterator() noexcept
+        constexpr TIter Begin() noexcept
         {
-            return TIterator{ arr, Size };
+            return TIter{ arr };
         }
 
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr TConstIterator Iterator() const noexcept
+        constexpr TIter End() noexcept
         {
-            return TConstIterator{ arr, Size };
+            return TIter{ arr + Size };
         }
 
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr TConstIterator ConstIterator() const noexcept
+        constexpr TConstIter Begin() const noexcept
         {
-            return TConstIterator{ arr, Size };
+            return ConstBegin();
+        }
+
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        constexpr TConstIter End() const noexcept
+        {
+            return ConstEnd();
+        }
+
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        constexpr TConstIter ConstBegin() const noexcept
+        {
+            return TIter{ arr };
+        }
+
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        constexpr TConstIter ConstEnd() const noexcept
+        {
+            return TIter{ arr + Size};
+        }
+
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        constexpr TIter begin() noexcept
+        {
+            return TIter{ arr };
+        }
+
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        constexpr TIter end() noexcept
+        {
+            return TIter{ arr + Size };
+        }
+
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        constexpr TConstIter begin() const noexcept
+        {
+            return ConstBegin();
+        }
+
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        constexpr TConstIter end() const noexcept
+        {
+            return ConstEnd();
         }
 
     public:

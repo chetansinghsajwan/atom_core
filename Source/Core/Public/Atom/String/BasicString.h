@@ -18,19 +18,19 @@ namespace Atom
         TBase(ArrayIterator<const TChar>(str, Count)) { }
 
     template <typename TEncoding, typename TAllocator>
-    template <typename TInput>
-    requires RFwdIter<TInput, const BasicChar<TEncoding>>
-    constexpr BasicString<TEncoding, TAllocator>::BasicString(TInput in) noexcept:
-        TBase(MOVE(in)) { }
+    template <typename TRange>
+    requires RFwdRange<TRange, const BasicChar<TEncoding>>
+    constexpr BasicString<TEncoding, TAllocator>::BasicString(const TRange& range) noexcept:
+        TBase(MOVE(range)) { }
 
     template <typename TEncoding, typename TAllocator>
-    constexpr BasicString<TEncoding, TAllocator>::BasicString(const STD_TString& in) noexcept:
+    constexpr BasicString<TEncoding, TAllocator>::BasicString(const _TString& in) noexcept:
         TBase(in.data(), in.size()) { }
 
     template <typename TEncoding, typename TAllocator>
-    template <usize N>
+    template <usize count>
     constexpr bool BasicString<TEncoding, TAllocator>::
-        operator == (const BasicChar<TEncoding>(&str)[N]) const noexcept
+        operator == (const BasicChar<TEncoding>(&str)[count]) const noexcept
     {
         return true;
     }

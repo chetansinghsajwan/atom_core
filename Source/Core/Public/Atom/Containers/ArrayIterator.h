@@ -1,105 +1,154 @@
 #pragma once
-#include "Atom/Exceptions.h"
-#include "ArrayIterator.decl.h"
+#include "Atom/Containers/InitializerList.h"
+#include "Atom/Containers/Iterators.h"
 
 namespace Atom
 {
+    /// ArrayIterator iterates over raw array.
+    /// --------------------------------------------------------------------------------------------
     template <typename T>
-    constexpr ArrayIterator<T>::ArrayIterator() noexcept { }
-
-    template <typename T>
-    constexpr ArrayIterator<T>::ArrayIterator(T* begin, usize length) noexcept:
-        _begin{ begin }, _it{ begin }, _end{ begin + length }
+    class ArrayIterator: public ArrayIterator<const T>
     {
-        ATOM_DEBUG_ASSERT(begin != nullptr);
-    }
+        using TBase = ArrayIterator<const T>;
+        
+    public:
+        using TBase::ArrayIterator;
 
+    public:
+        constexpr T& operator * () noexcept
+        {
+            return *(T*)this->_it;
+        }
+
+    public:
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        constexpr ArrayIterator operator + (usize steps) const noexcept
+        {
+            return ArrayIterator(this->_it + steps);
+        }
+
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        constexpr ArrayIterator operator - (usize steps) const noexcept
+        {
+            return ArrayIterator(this->_it - steps);
+        }
+
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        constexpr usize operator - (const ArrayIterator& that) const noexcept
+        {
+            return this->_it - that._it;
+        }
+    };
+
+    /// ArrayIterator iterates over const raw array.
+    /// --------------------------------------------------------------------------------------------
     template <typename T>
-    constexpr ArrayIterator<T>::ArrayIterator(T* begin, T* end) noexcept:
-        _begin{ begin }, _it{ begin }, _end{ end }
+    class ArrayIterator<const T>:
+        public ArrayIterTag
     {
-        ATOM_DEBUG_ASSERT(begin != nullptr);
-        ATOM_DEBUG_ASSERT(end != nullptr);
-        ATOM_DEBUG_ASSERT(begin <= end);
-    }
+    public:
+        /// DefaultConstructor.
+        /// ----------------------------------------------------------------------------------------
+        constexpr ArrayIterator() noexcept:
+            _it{ nullptr } { }
 
-    // template <typename T>
-    // constexpr ArrayIterator<T>::ArrayIterator(InitializerList<T> list) noexcept:
-    //     ArrayIterator(list.begin(), list.end()) { }
+        /// NullConstructor.
+        /// ----------------------------------------------------------------------------------------
+        constexpr ArrayIterator(NullPtr) noexcept:
+            _it{ nullptr } { }
 
-    template <typename T>
-    constexpr T& ArrayIterator<T>::Get() noexcept
-    {
-        return *_it;
-    }
+        /// Constructor.
+        /// ----------------------------------------------------------------------------------------
+        constexpr ArrayIterator(const T* it) noexcept:
+            _it{ it } { }
 
-    template <typename T>
-    constexpr bool ArrayIterator<T>::Next() noexcept
-    {
-        _it++;
-        return HasNext();
-    }
+    public:
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        constexpr const T& operator * () const noexcept
+        {
+            return *_it;
+        }
 
-    template <typename T>
-    constexpr bool ArrayIterator<T>::HasNext() const noexcept
-    {
-        return _it <= _end;
-    }
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        constexpr bool operator == (const ArrayIterator& that) noexcept
+        {
+            return this->_it == that._it;
+        }
 
-    template <typename T>
-    constexpr bool ArrayIterator<T>::Prev() noexcept
-    {
-        _it--;
-        return HasPrev();
-    }
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        constexpr bool operator != (const ArrayIterator& that) noexcept
+        {
+            return this->_it != that._it;
+        }
 
-    template <typename T>
-    constexpr bool ArrayIterator<T>::HasPrev() const noexcept
-    {
-        return _it >= _begin;
-    }
+        /// NOTE: We will be shifting to cpp2
+        /// ----------------------------------------------------------------------------------------
+        constexpr ArrayIterator& operator ++ () noexcept
+        {
+            _it++;
+            return *this;
+        }
 
-    template <typename T>
-    constexpr bool ArrayIterator<T>::Next(usize steps) noexcept
-    {
-        _it += steps;
-        return HasNext();
-    }
+        /// NOTE: We will be shifting to cpp2
+        /// ----------------------------------------------------------------------------------------
+        constexpr ArrayIterator& operator ++ (int) noexcept
+        {
+            _it++;
+            return *this;
+        }
 
-    template <typename T>
-    constexpr bool ArrayIterator<T>::Prev(usize steps) noexcept
-    {
-        _it -= steps;
-        return HasPrev();
-    }
+        /// NOTE: We will be shifting to cpp2
+        /// ----------------------------------------------------------------------------------------
+        constexpr ArrayIterator& operator -- () noexcept
+        {
+            _it--;
+            return *this;
+        }
 
-    template <typename T>
-    constexpr usize ArrayIterator<T>::NextRange() const noexcept
-    {
-        return _end - _it;
-    }
+        /// NOTE: We will be shifting to cpp2
+        /// ----------------------------------------------------------------------------------------
+        constexpr ArrayIterator& operator -- (int) noexcept
+        {
+            _it--;
+            return *this;
+        }
 
-    template <typename T>
-    constexpr usize ArrayIterator<T>::PrevRange() const noexcept
-    {
-        return _it - _begin;
-    }
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        constexpr ArrayIterator operator + (usize steps) const noexcept
+        {
+            return ArrayIterator(_it + steps);
+        }
 
-    template <typename T>
-    constexpr usize ArrayIterator<T>::Range() const noexcept
-    {
-        return _end - _begin;
-    }
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        constexpr ArrayIterator operator - (usize steps) const noexcept
+        {
+            return ArrayIterator(_it - steps);
+        }
 
-    template <typename T>
-    constexpr auto ArrayIterator<T>::begin() noexcept
-    {
-        return _it;
-    }
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        constexpr usize operator - (const ArrayIterator& that) const noexcept
+        {
+            return this->_it - that._it;
+        }
 
-    template <typename T>
-    constexpr auto ArrayIterator<T>::end() noexcept
-    {
-        return _end;
-    }
+    protected:
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        const T* _it;
+    };
+
+    static_assert(RArrayIter<ArrayIterator<int>, ArrayIterator<int>, int>,
+        "ArrayIterator<int> does not satisfy RArrayIterator<int> requirements.");
+
+    static_assert(RArrayIter<ArrayIterator<const int>, ArrayIterator<const int>, const int>,
+        "ArrayIterator<const int> does not satisfy RArrayIterator<const int> requirements.");
 }

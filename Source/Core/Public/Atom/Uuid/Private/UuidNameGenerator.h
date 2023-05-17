@@ -30,7 +30,7 @@ namespace Atom::Private
 
         void m_ProcessChars(StringView str)
         {
-            for (uint32_t c : str.Iterator())
+            for (uint32_t c : str)
             {
                 m_hashGenerator.ProcessByte(static_cast<byte>(c & 0xFF));
 
