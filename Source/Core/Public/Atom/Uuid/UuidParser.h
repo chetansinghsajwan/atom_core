@@ -18,46 +18,51 @@ namespace Atom
         requires RFwdRange<TRange, const Char>
         constexpr Uuid Parse(const TRange& range) const noexcept
         {
-            if constexpr (RFwdJumpRange<decltype(range), Char>)
+            // Faster implementation.
+            if constexpr (RFwdJumpRange<TRange, Char>)
             {
-                return _ParseFwdJump(MOVE(range));
+                return _ParseFwdJump(range);
             }
 
-            Uuid uuid;
-            usize i = 0;
-            byte high = -1;
-            for (Char ch : range)
+            Uuid uuid;                  // output result
+            usize i = 0;                // index of byte to write
+            usize j = 0;                // index of char to read
+            auto it = range.begin();    // input range begin
+            auto end = range.end();     // input range end
+            while (i < 16)
             {
-                if (i > 36)
-                {
+                if (it == end)
                     return Uuid::Null;
-                }
 
-                if (i == 8 || i == 13 || i == 18 || i == 23)
+                if (j == 8 || j == 13 || j == 18 || j == 23)
                 {
-                    if (ch != TEXT('-'))
+                    if (*it != TEXT('-'))
                     {
                         return Uuid::Null;
                     }
-                }
 
-                byte low = Math::CharToHex(ch);
-                if (low == -1)
-                {
-                    return Uuid::Null;
-                }
-
-                if (high == -1)
-                {
-                    high = low;
+                    j++; it++;
                     continue;
                 }
 
-                uuid.bytes[i / 2] = (high << 4) | low;
-                high = -1;
+                byte high = Math::CharToHex(*it);
+                if (high == byte(-1))
+                    return Uuid::Null;
+
+                j++; it++;
+                if (it == end)
+                    return Uuid::Null;
+
+                byte low = Math::CharToHex(*it);
+                if (low == byte(-1))
+                    return Uuid::Null;
+
+                uuid.bytes[i++] = (high << 4) | low;
+
+                j++; it++;
             }
 
-            if (i < 36)
+            if (it != end)
             {
                 return Uuid::Null;
             }
@@ -70,38 +75,41 @@ namespace Atom
         requires RFwdJumpRange<TRange, const Char>
         constexpr Uuid _ParseFwdJump(const TRange& range) const noexcept
         {
-            if (range.Size() != 36)
-            {
-                return Uuid::Null;
-            }
+            Uuid uuid;                  // output result
+            usize i = 0;                // index of byte to write
+            usize j = 0;                // index of char to read
+            auto it = range.begin();    // input range begin
+            auto end = range.end();     // input range end
 
-            Uuid uuid;
-            usize i = 0;
-            byte high = -1;
-            for (Char ch : range)
+            if (it - end != 36)
+                return Uuid::Null;
+
+            while (i < 16)
             {
-                if (i == 8 || i == 13 || i == 18 || i == 23)
+                if (j == 8 || j == 13 || j == 18 || j == 23)
                 {
-                    if (ch != TEXT('-'))
+                    if (*it != TEXT('-'))
                     {
                         return Uuid::Null;
                     }
-                }
 
-                byte low = Math::CharToHex(ch);
-                if (low == (byte)-1)
-                {
-                    return Uuid::Null;
-                }
-
-                if (high == (byte)-1)
-                {
-                    high = low;
+                    j++; it++;
                     continue;
                 }
 
-                uuid.bytes[i / 2] = (high << 4) | (low & 0b00001111);
-                high = -1;
+                byte high = Math::CharToHex(*it);
+                if (high == byte(-1))
+                    return Uuid::Null;
+
+                j++; it++;
+
+                byte low = Math::CharToHex(*it);
+                if (low == byte(-1))
+                    return Uuid::Null;
+
+                uuid.bytes[i++] = (high << 4) | low;
+
+                j++; it++;
             }
 
             return uuid;
