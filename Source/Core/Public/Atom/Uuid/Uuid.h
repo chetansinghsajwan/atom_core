@@ -38,5 +38,5 @@ namespace Atom
         StaticArray<byte, 16> bytes;
     };
 
-    constexpr Uuid Uuid::Null = Uuid{ 0 };
+    constexpr inline const Uuid Uuid::Null = Uuid{ 0 };
 }

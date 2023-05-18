@@ -9,10 +9,8 @@ namespace Atom
     template <typename T>
     class ArrayIterator: public ArrayIterator<const T>
     {
-        using TBase = ArrayIterator<const T>;
-        
     public:
-        using TBase::ArrayIterator;
+        using ArrayIterator<const T>::ArrayIterator;
 
     public:
         constexpr T& operator * () noexcept
