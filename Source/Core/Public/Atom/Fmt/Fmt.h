@@ -109,3 +109,6 @@ namespace Atom::Fmt
         return out;
     }
 }
+
+#define ATOM_STR_FMT(fmt, ...) \
+    ::Atom::Fmt::Format(TEXT(fmt), __VA_ARGS__)
