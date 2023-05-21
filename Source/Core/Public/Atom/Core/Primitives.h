@@ -76,5 +76,6 @@ namespace Atom
 #define FORWARD(...) std::forward<decltype(__VA_ARGS__)>(__VA_ARGS__)
 
 #define ATOM_FUNCTION __func__
+#define ATOM_ATTR_NORETURN [[noreturn]]
 
 #define declval(T) ::std::declval<T>()
