@@ -1,4 +1,5 @@
 #pragma once
+#include "Atom/String/BasicSChar.h"
 #include "Atom/String/BasicString.h"
 #include "Atom/String/BasicStringView.h"
 
