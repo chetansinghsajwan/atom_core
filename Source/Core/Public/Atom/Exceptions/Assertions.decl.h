@@ -84,7 +84,3 @@ namespace Atom::Internal
 /// Represents b{Post Condition Assertions}.
 /// ------------------------------------------------------------------------------------------------
 #define ATOM_DEBUG_ENSURES(assertion) ATOM_DEBUG_ASSERT(assertion)
-
-// TODO: Replace their references
-#define ATOM_ASSERT_THROW(...)
-#define ATOM_DEBUG_ASSERT_THROW(...)

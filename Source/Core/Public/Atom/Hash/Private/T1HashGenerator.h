@@ -72,8 +72,8 @@ namespace Atom::Private
         /// ----------------------------------------------------------------------------------------
         T1HashGenerator& ProcessBytes(const void* data, usize dataSize)
         {
-            ATOM_DEBUG_ASSERT(data != nullptr);
-            ATOM_DEBUG_ASSERT(dataSize > 0);
+            ATOM_DEBUG_EXPECTS(data != nullptr);
+            ATOM_DEBUG_EXPECTS(dataSize > 0);
 
             // The implementation accepts size of data in uint32 but we accept in usize,
             // which could be bigger than uint32, so we pass the data to the implementation 

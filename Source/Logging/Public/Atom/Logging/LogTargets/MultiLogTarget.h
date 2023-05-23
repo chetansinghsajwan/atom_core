@@ -373,7 +373,7 @@ namespace Atom::Logging::Private
         /// ----------------------------------------------------------------------------------------
         bool _AddTarget(LogTargetPtr target)
         {
-            ATOM_DEBUG_ASSERT(target != nullptr);
+            ATOM_DEBUG_EXPECTS(target != nullptr);
 
             return _targets.InsertBack(MOVE(target)) != _targets.End();
         }
@@ -415,7 +415,7 @@ namespace Atom::Logging::Private
         /// ----------------------------------------------------------------------------------------
         bool _RemoveTarget(LogTargetPtr in_target)
         {
-            ATOM_DEBUG_ASSERT(in_target != nullptr);
+            ATOM_DEBUG_EXPECTS(in_target != nullptr);
 
             return _targets.Remove(in_target);
         }
@@ -455,7 +455,7 @@ namespace Atom::Logging::Private
         /// ----------------------------------------------------------------------------------------
         bool _HasTarget(const LogTargetPtr& target) const noexcept
         {
-            ATOM_DEBUG_ASSERT(target != nullptr);
+            ATOM_DEBUG_EXPECTS(target != nullptr);
 
             return _targets.Contains(target);
         }

@@ -153,8 +153,8 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         TResult Invoke(TArgs&&... args)
         {
-            ATOM_ASSERT_THROW(ObjectBox::_HasObject(), NullPointerException(
-                TEXT("InvokableTarget is null.")));
+            ATOM_ASSERT(ObjectBox::_HasObject()) << NullPointerException(
+                TEXT("InvokableTarget is null."));
 
             return m_invoker.Invoke(ObjectBox::_GetObject(), FORWARD(args)...);
         }

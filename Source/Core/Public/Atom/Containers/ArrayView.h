@@ -13,16 +13,16 @@ namespace Atom
     constexpr ArrayView<T>::ArrayView(const T* in_begin, const T* in_end) noexcept:
         m_arr{ in_begin }, m_count{ usize(in_end - in_begin) }
     {
-        ATOM_DEBUG_ASSERT(in_begin != nullptr);
-        ATOM_DEBUG_ASSERT(in_end != nullptr);
-        ATOM_DEBUG_ASSERT(in_begin <= in_end);
+        ATOM_DEBUG_EXPECTS(in_begin != nullptr);
+        ATOM_DEBUG_EXPECTS(in_end != nullptr);
+        ATOM_DEBUG_EXPECTS(in_begin <= in_end);
     }
 
     template <typename T>
     constexpr ArrayView<T>::ArrayView(const T* in_arr, usize in_count) noexcept:
         m_arr{ in_arr }, m_count{ in_count }
     {
-        ATOM_DEBUG_ASSERT(in_arr != nullptr);
+        ATOM_DEBUG_EXPECTS(in_arr != nullptr);
     }
 
     template <typename T>
