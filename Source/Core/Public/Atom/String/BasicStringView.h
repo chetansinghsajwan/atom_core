@@ -10,6 +10,16 @@ namespace Atom
         TBase() { }
 
     template <typename TEncoding>
+    constexpr BasicStringView<TEncoding>::BasicStringView(const TChar* str) noexcept
+    {
+        usize len = 0;
+        while (str[len] != TEncoding::Null) len++;
+
+        this->m_arr = str;
+        this->m_count = len;
+    }
+
+    template <typename TEncoding>
     constexpr BasicStringView<TEncoding>::BasicStringView(const TChar* str, usize len) noexcept:
         TBase(str, len) { }
 

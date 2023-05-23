@@ -20,6 +20,8 @@ namespace Atom
     public:
         constexpr BasicStringView() noexcept;
 
+        constexpr BasicStringView(const TChar* str) noexcept;
+
         constexpr BasicStringView(const TChar* str, usize len) noexcept;
 
         template <usize N>
