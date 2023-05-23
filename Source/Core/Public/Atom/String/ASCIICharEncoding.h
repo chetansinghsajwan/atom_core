@@ -1,7 +1,5 @@
 #pragma once
 #include "Atom/String/BasicChar.h"
-#include "Atom/String/BasicString.h"
-#include "Atom/String/BasicStringView.h"
 
 #define ASCII(lit) lit
 
@@ -18,11 +16,4 @@ namespace Atom
     using ASCIIChar = BasicChar<ASCIICharEncoding>;
     using ASCIIUnit = ASCIIChar;
     using ASCIIPoint = uint32;
-
-    template <typename TAllocator>
-    using ASCIIBasicString = BasicString<ASCIICharEncoding, TAllocator>;
-
-    using ASCIIString = BasicString<ASCIICharEncoding>;
-
-    using ASCIIStringView = BasicStringView<ASCIICharEncoding>;
 }

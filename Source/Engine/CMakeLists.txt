@@ -8,7 +8,7 @@ file(GLOB_RECURSE SOURCES "Private/**.cpp"
 add_library(Atom.Engine STATIC ${SOURCES})
 target_include_directories(Atom.Engine PRIVATE "Private/")
 target_include_directories(Atom.Engine PUBLIC "Public/")
-set_target_properties(Atom.Engine PROPERTIES CXX_STANDARD "20")
+set_target_properties(Atom.Engine PROPERTIES CXX_STANDARD "23")
 
 target_compile_definitions(Atom.Engine PRIVATE ATOM_EXPORT)
 

@@ -1,7 +1,5 @@
 #pragma once
 #include "Atom/String/BasicChar.h"
-#include "Atom/String/BasicString.h"
-#include "Atom/String/BasicStringView.h"
 
 #define UTF16(lit) u##lit
 
@@ -34,11 +32,4 @@ namespace Atom
     using UTF16Char = BasicChar<UTF16CharEncoding>;
     using UTF16Unit = UTF16Char;
     using UTF16Point = uint32;
-
-    template <typename TAllocator>
-    using UTF16BasicString = BasicString<UTF16CharEncoding, TAllocator>;
-
-    using UTF16String = BasicString<UTF16CharEncoding>;
-
-    using UTF16StringView = BasicStringView<UTF16CharEncoding>;
 }
