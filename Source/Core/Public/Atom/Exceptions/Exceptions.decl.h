@@ -15,16 +15,7 @@ namespace Atom
     {
         using TImpl = std::source_location;
 
-        static consteval ExceptionSource Current(TImpl src = TImpl::current()) noexcept
-        {
-            return ExceptionSource
-            {
-                .line = src.line(),
-                .column = src.column(),
-                .fileName = src.file_name(),
-                .funcName = src.function_name()
-            };
-        }
+        static constexpr ExceptionSource Current(TImpl src = TImpl::current()) noexcept;
 
         uint32 line;
         uint32 column;
@@ -114,7 +105,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     struct OutOfRangeException: Exception
     {
-        using Exception::Exception;;
+        using Exception::Exception;
 
         usize pos;
         usize begin;
@@ -127,31 +118,17 @@ namespace Atom::Ex::Internal
     class Thrower
     {
     public:
-        constexpr Thrower(ExceptionSource src = ExceptionSource::Current()) noexcept :
-            src{ src }, stackTrace{ } { }
+        Thrower(ExceptionSource src = ExceptionSource::Current()) noexcept;
 
-        Thrower& RecordStack(StackTrace stackTrace = StackTrace::current())
-        {
-            this->stackTrace = MOVE(stackTrace);
-            return *this;
-        }
+        Thrower& RecordStack(StackTrace stackTrace = StackTrace::current());
 
-        Thrower& RecordSource(ExceptionSource src = ExceptionSource::Current())
-        {
-            this->src = MOVE(src);
-            return *this;
-        }
+        Thrower& RecordSource(ExceptionSource src = ExceptionSource::Current());
 
         template <typename TEx>
         requires RDerivedFrom<TEx, Exception>
-        void operator << (TEx&& ex)
-        {
-            ex.src = MOVE(src);
-            ex.stackTrace = MOVE(stackTrace);
+        void operator << (TEx&& ex);
 
-            throw ex;
-        }
-
+    protected:
         ExceptionSource src;
         StackTrace stackTrace;
     };
