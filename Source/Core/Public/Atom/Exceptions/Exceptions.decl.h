@@ -118,7 +118,8 @@ namespace Atom::Ex::Internal
     class Thrower
     {
     public:
-        Thrower(ExceptionSource src = ExceptionSource::Current()) noexcept;
+        Thrower(ExceptionSource src = ExceptionSource::Current(),
+            StackTrace stackTrace = StackTrace::current()) noexcept;
 
         Thrower& RecordStack(StackTrace stackTrace = StackTrace::current());
 
@@ -126,6 +127,7 @@ namespace Atom::Ex::Internal
 
         template <typename TEx>
         requires RDerivedFrom<TEx, Exception>
+        ATOM_ATTR_NORETURN
         void operator << (TEx&& ex);
 
     protected:

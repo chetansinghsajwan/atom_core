@@ -382,7 +382,7 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         void m_RegisterLogger(LoggerPtr logger, String key)
         {
-            ATOM_DEBUG_ASSERT(logger != nullptr, "msg");
+            ATOM_DEBUG_ASSERT(logger != nullptr);
             ATOM_DEBUG_ASSERT(!key.IsEmpty());
 
             bool result = m_loggers.insert({ MOVE(key), MOVE(logger) }).second;

@@ -25,8 +25,8 @@ namespace Atom
 
 namespace Atom::Ex::Internal
 {
-    inline Thrower::Thrower(ExceptionSource src) noexcept:
-        src{ src }, stackTrace{ } { }
+    inline Thrower::Thrower(ExceptionSource src, StackTrace stackTrace) noexcept:
+        src{ MOVE(src) }, stackTrace{ MOVE(stackTrace) } { }
 
     inline Thrower& Thrower::RecordStack(StackTrace stackTrace)
     {
