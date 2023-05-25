@@ -423,6 +423,6 @@ namespace Atom
         TMemAlloc _memAllocator;
 
     private:
-        static constexpr ObjHelper<T> _objHelper;
+        static constexpr ObjHelper<T> _objHelper = ObjHelper<T>();
     };
 }

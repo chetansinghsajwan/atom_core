@@ -113,7 +113,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     struct IndexOutOfRangeException: OutOfRangeException
     {
-        using OutOfRangeException::OutOfRangeException;
+        IndexOutOfRangeException(String msg, usize index, usize begin, usize end);
 
         usize index;
         usize begin;

@@ -21,6 +21,10 @@ namespace Atom
         msg(MOVE(msg)) { }
 
     inline Exception::~Exception() { }
+
+    inline IndexOutOfRangeException::IndexOutOfRangeException(
+        String msg, usize index, usize begin, usize end):
+        OutOfRangeException(MOVE(msg)), index{ index }, begin{ begin }, end{ end } { }
 }
 
 namespace Atom::Ex::Internal

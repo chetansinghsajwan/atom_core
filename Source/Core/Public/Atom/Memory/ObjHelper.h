@@ -12,30 +12,30 @@ namespace Atom
         static constexpr bool _IsTriviallyDestructible = 
             std::is_trivially_destructible_v<T>;
 
-        constexpr void ConstructAt(T* obj, auto&&... args) const noexcept
+        constexpr void ConstructAt(T* obj, auto&&... args) const
         {
             new (obj) T(FORWARD(args)...);
         }
 
-        constexpr void MoveRange(const T* src, usize size, T* dest) const noexcept
+        constexpr void MoveRange(T* src, usize size, T* dest) const
         {
         }
 
-        constexpr void MoveFwd(const T* src, usize count, usize steps) const noexcept
+        constexpr void MoveFwd(T* src, usize count, usize steps) const
         {
             if constexpr (_IsTriviallyMoveConstructible)
             {
-                MemHelper().CopyFwd(src, count * sizeof(T), steps);
+                MemHelper().CopySafe(src, count * sizeof(T), steps);
                 return;
             }
 
             for (usize i = count; i > 0; i--)
             {
-                src[i - 1 + count] = MOVE(src[i - 1]);
+                new (src + i - 1 + count) T(MOVE(src[i - 1]));
             }
         }
 
-        constexpr void DestructAt(T* obj)
+        constexpr void DestructAt(T* obj) const
         {
             if constexpr (_IsTriviallyDestructible)
                 return;
@@ -43,7 +43,7 @@ namespace Atom
             obj->T::~T();
         }
 
-        constexpr void DestructRange(T* arr, usize count)
+        constexpr void DestructRange(T* arr, usize count) const
         {
             if constexpr (_IsTriviallyDestructible)
                 return;
@@ -54,7 +54,7 @@ namespace Atom
             }
         }
 
-        constexpr void RotateAntiClock(const T* src, usize mid, usize end) const noexcept
+        constexpr void RotateAntiClock(const T* src, usize mid, usize end) const
         {
             if constexpr (_IsTriviallyMoveConstructible)
             {

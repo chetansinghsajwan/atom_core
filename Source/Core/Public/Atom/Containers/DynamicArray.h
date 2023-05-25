@@ -2,7 +2,6 @@
 #include "DynamicArray.decl.h"
 #include "Atom/Containers/ArrayIterator.h"
 #include "Atom/Exceptions.h"
-#include "Atom/Fmt/Fmt.h"
 #include "Atom/Math/Core.h"
 
 namespace Atom
@@ -408,7 +407,9 @@ namespace Atom
     constexpr bool DynamicArray<T, TAllocator>::_ValidateIter(
         TConstIter it) const noexcept
     {
-        return it.debugId == _iterValidDebugId;
+        // TODO: Implement this.
+        // return it.debugId == _iterValidDebugId;
+        return true;
     }
 
     template <typename T, typename TAllocator>
@@ -510,7 +511,7 @@ namespace Atom
 
     template <typename T, typename TAllocator>
     template <typename TRange>
-    static constexpr auto DynamicArray<T, TAllocator>::_CanGetRangeSize()
+    constexpr auto DynamicArray<T, TAllocator>::_CanGetRangeSize()
         noexcept -> bool
     {
         return RMultiPassRange<TRange, T>;
@@ -518,7 +519,7 @@ namespace Atom
 
     template <typename T, typename TAllocator>
     template <typename TRange>
-    static constexpr usize DynamicArray<T, TAllocator>::_GetRangeSize(
+    constexpr usize DynamicArray<T, TAllocator>::_GetRangeSize(
         const TRange& range) noexcept
     {
         if constexpr (RFwdJumpRange<TRange, T>)

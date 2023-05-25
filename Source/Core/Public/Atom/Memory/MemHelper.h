@@ -1,5 +1,8 @@
 #pragma once
-#include "Atom/Exceptions/Assertions.decl.h"
+#include <cstring>
+#include <algorithm>
+// TODO: Resolve circular dependencies.
+// #include "Atom/Exceptions/Assertions.h"
 
 namespace Atom
 {
@@ -20,8 +23,14 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr void Set(void* dest, usize count, byte val) const noexcept
         {
-            ATOM_DEBUG_EXPECTS(dest != nullptr);
-            ATOM_DEBUG_EXPECTS(count > 0);
+            // ATOM_DEBUG_EXPECTS(dest != nullptr);
+            // ATOM_DEBUG_EXPECTS(count > 0);
+
+            if (std::is_constant_evaluated())
+            {
+                std::fill((byte*)dest, (byte*)dest + count, val);
+                return;
+            }
 
             std::memset(dest, val, count);
         }
@@ -31,9 +40,16 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr void SetExplicit(void* dest, usize count, byte val) const noexcept
         {
-        #pragma optimize("", off)
-            Set(dest, count, val);
-        #pragma optimize("", on)
+            if (std::is_constant_evaluated())
+            {
+                std::fill((byte*)dest, (byte*)dest + count, val);
+                return;
+            }
+
+        // TODO: Fix this implementation.
+        // #pragma optimize("", off)
+        //     Set(dest, count, val);
+        // #pragma optimize("", on)
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -56,12 +72,18 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr void Copy(const void* src, usize count, void* dest) const noexcept
         {
-            ATOM_DEBUG_EXPECTS(src != nullptr);
-            ATOM_DEBUG_EXPECTS(dest != nullptr);
-            ATOM_DEBUG_EXPECTS(count > 0);
+            // ATOM_DEBUG_EXPECTS(src != nullptr);
+            // ATOM_DEBUG_EXPECTS(dest != nullptr);
+            // ATOM_DEBUG_EXPECTS(count > 0);
 
             // Check memory overlap.
-            ATOM_DEBUG_EXPECTS((byte*)src - (byte*)dest > count);
+            // ATOM_DEBUG_EXPECTS((byte*)src - (byte*)dest > count);
+
+            if (std::is_constant_evaluated())
+            {
+                // TODO: Implement this.
+                return;
+            }
 
             std::memcpy(dest, src, count);
         }
@@ -72,9 +94,15 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr void CopySafe(const void* src, usize count, void* dest) const noexcept
         {
-            ATOM_DEBUG_EXPECTS(src != nullptr);
-            ATOM_DEBUG_EXPECTS(dest != nullptr);
-            ATOM_DEBUG_EXPECTS(count > 0);
+            // ATOM_DEBUG_EXPECTS(src != nullptr);
+            // ATOM_DEBUG_EXPECTS(dest != nullptr);
+            // ATOM_DEBUG_EXPECTS(count > 0);
+
+            if (std::is_constant_evaluated())
+            {
+                // TODO: Implement this.
+                return;
+            }
 
             std::memmove(dest, src, count);
         }
