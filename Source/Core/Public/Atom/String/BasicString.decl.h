@@ -5,7 +5,7 @@
 
 namespace Atom
 {
-    template <typename TEncoding, typename TAllocator = DefaultAllocator<BasicChar<TEncoding>>>
+    template <typename TEncoding, typename TAllocator = DefaultMemAllocator>
     class BasicString: public DynamicArray<BasicChar<TEncoding>, TAllocator>
     {
         using TBase = DynamicArray<BasicChar<TEncoding>, TAllocator>;

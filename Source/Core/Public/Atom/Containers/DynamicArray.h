@@ -78,6 +78,13 @@ namespace Atom
     }
 
     template <typename T, typename TAllocator>
+    constexpr auto DynamicArray<T, TAllocator>::Capacity() const noexcept
+        -> usize
+    {
+        return _capacity;
+    }
+
+    template <typename T, typename TAllocator>
     constexpr auto DynamicArray<T, TAllocator>::IsEmpty() const noexcept
         -> bool
     {
@@ -93,7 +100,7 @@ namespace Atom
         ATOM_DEBUG_EXPECTS(_ValidateIter(pos)) << TEXT("Invalid iter.");
 
         isize index = _FetchIndex(pos);
-        ATOM_ASSERT(_ValidateIndexForInsertAt(index)) << IndexOutOfRangeException(
+        ATOM_ASSERT(_ValidateIndexForInsert(index)) << IndexOutOfRangeException(
             TEXT("{pos} is out of range."), index, 0, _count);
 
         return Begin() + _InsertAt(index, FORWARD(el));
@@ -108,7 +115,7 @@ namespace Atom
         ATOM_DEBUG_EXPECTS(_ValidateIter(pos)) << TEXT("Invalid iter.");
 
         isize index = _FetchIndex(pos);
-        ATOM_ASSERT(_ValidateIndexForInsertAt(index)) << IndexOutOfRangeException(
+        ATOM_ASSERT(_ValidateIndexForInsert(index)) << IndexOutOfRangeException(
             TEXT("{pos} is out of range."), index, 0, _count);
 
         if constexpr (_CanGetRangeSize<TRange>())
@@ -401,7 +408,14 @@ namespace Atom
     constexpr bool DynamicArray<T, TAllocator>::_ValidateIter(
         TConstIter it) const noexcept
     {
-        return it.debugId != _iterValidDebugId;
+        return it.debugId == _iterValidDebugId;
+    }
+
+    template <typename T, typename TAllocator>
+    constexpr void DynamicArray<T, TAllocator>::_UpdateIterDebugId()
+        noexcept
+    {
+        _iterValidDebugId++;
     }
 
     template <typename T, typename TAllocator>
@@ -412,7 +426,7 @@ namespace Atom
     }
 
     template <typename T, typename TAllocator>
-    constexpr auto DynamicArray<T, TAllocator>::_ValidateIndexForInsertAt(
+    constexpr auto DynamicArray<T, TAllocator>::_ValidateIndexForInsert(
         isize index) const noexcept -> bool
     {
         return index >= 0 && index <= _count;
@@ -422,18 +436,14 @@ namespace Atom
     constexpr auto DynamicArray<T, TAllocator>::_FetchIndex(
         TConstIter pos) const noexcept -> isize
     {
-        isize index = Data() - &*pos;
-
-        if (index < 0) return nullpos;
-        if (index > _count) return nullpos;
-        return index;
+        return &*pos - Data();
     }
 
     template <typename T, typename TAllocator>
     constexpr usize DynamicArray<T, TAllocator>::_CalcCapGrowth(
         usize required) const noexcept
     {
-        return Math::Max(_count + required, _capacity * 2);
+        return Math::Max(Count() + required, Capacity() * 2);
     }
 
     template <typename T, typename TAllocator>
@@ -441,129 +451,61 @@ namespace Atom
         usize count)
     {
         // We have enough capacity.
-        if (_capacity - _count >= count)
+        if (Capacity() - Count() >= count)
             return;
 
-        DynamicArray<T> tmp(_CalcCapGrowth(count));
-        _MoveRange(_arr, tmp._arr, _count);
-        SWAP(_count, tmp._count);
-        SWAP(_iterValidDebugId, tmp._iterValidDebugId);
+        usize newCap = _CalcCapGrowth(count);
+        // TODO: Remove this cast.
+        T* newArr = (T*)_memAllocator.Alloc(newCap);
 
-        _Swap(tmp);
+        _objHelper.MoveRange(_arr, _count, newArr);
+        _memAllocator.Dealloc(_arr);
+        _arr = newArr;
+        _capacity = newCap;
+
+        _UpdateIterDebugId();
     }
 
     template <typename T, typename TAllocator>
     constexpr void DynamicArray<T, TAllocator>::_ConstructAt(
         usize index, auto&&... args)
     {
-        new (_arr + index) T(FORWARD(args)...);
+        _objHelper.ConstructAt(Data() + index, FORWARD(args)...);
     }
 
     template <typename T, typename TAllocator>
     constexpr void DynamicArray<T, TAllocator>::_DestructAt(
         usize index)
     {
-        if constexpr (std::is_trivially_destructible_v<T>)
-            return;
-
-        (Data() + index)->T::~T();
+        _objHelper.DestructAt(Data() + index);
     }
 
     template <typename T, typename TAllocator>
     constexpr void DynamicArray<T, TAllocator>::_DestructRange(
         usize begin, usize end)
     {
-        if constexpr (std::is_trivially_destructible_v<T>)
-            return;
-
-        for (usize i = begin; i < end; i++)
-        {
-            (Data() + i)->T::~T();
-        }
+        _objHelper.DestructRange(Data() + begin, end - begin);
     }
-
-    struct MemHelper
-    {
-        constexpr void Copy(const void* src, void* dest, usize size) const noexcept
-        {
-        }
-
-        constexpr void CopyFwd(const void* src, usize steps, usize size) const noexcept
-        {
-        }
-    };
-
-    template <typename T>
-    struct ObjHelper
-    {
-        constexpr void Move(const T* src, T* dest, usize size) const noexcept
-        {
-        }
-
-        constexpr void MoveFwd(const T* src, usize steps, usize size) const noexcept
-        {
-            if constexpr (std::is_trivially_move_constructible_v<T>)
-            {
-                MemHelper().CopyFwd(Data() + index, count, Count() - index);
-                return;
-            }
-
-            T* arr = Data();
-            for (usize i = _count; i > index; i--)
-            {
-                arr[i - 1 + count] = MOVE(arr[i - 1]);
-            }
-        }
-    };
 
     template <typename T, typename TAllocator>
     constexpr void DynamicArray<T, TAllocator>::_MoveRangeFront(
         usize index, usize count)
     {
-        ATOM_DEBUG_EXPECTS(count > 0);
-
-        ObjHelper<T>().MoveFwd(Data() + index, Count() - index, count);
-
-        if constexpr (std::is_trivially_move_constructible_v<T>)
-        {
-            MemHelper().CopyFwd(Data() + index, count, Count() - index);
-            return;
-        }
-
-        T* arr = Data();
-        for (usize i = _count; i > index; i--)
-        {
-            arr[i - 1 + count] = MOVE(arr[i - 1]);
-        }
+        _objHelper.MoveFwd(Data() + index, Count() - 1 - index, count);
     }
 
     template <typename T, typename TAllocator>
     constexpr void DynamicArray<T, TAllocator>::_MoveRangeBack(
         usize index, usize count)
     {
-        if constexpr (std::is_trivially_move_constructible_v<T>)
-        {
-            for (usize i = count * sizeof(T); i > 0; i--)
-            {
-            }
-
-            return;
-        }
-
-        T* arr = Data();
-        for (usize i = _count - 1; i > index; i--)
-        {
-            arr[i + count] = MOVE(arr[i]);
-        }
+        _objHelper.MoveBwd(Data() + index, Count() - 1 - index, count);
     }
 
     template <typename T, typename TAllocator>
     constexpr void DynamicArray<T, TAllocator>::_RotateRangeBack(
         usize index, usize count)
     {
-        // TODO: Refactor this.
-        // NOTE: Keep std implementation, MSVC uses vectorization for this.
-        std::rotate(Data() + index, Data() + index + count, Data() + _count - 1);
+        _objHelper.Rotate(Data() + index, Count() - 1 - index, count);
     }
 
     template <typename T, typename TAllocator>
@@ -581,7 +523,10 @@ namespace Atom
     {
         if constexpr (RFwdJumpRange<TRange, T>)
         {
-            return range.Size();
+            return range.End() - range.Begin();
+
+            // TODO: Implement this.
+            // return range.Size();
         }
 
         usize size = 0;

@@ -1,19 +1,16 @@
 #pragma once
-#include <vector>
-
 #include "Ranges.h"
 #include "Range.h"
 #include "Output.h"
 #include "Insertable.h"
 #include "ArrayIterator.h"
 #include "Atom/Invokable/Invokable.h"
+#include "Atom/Memory/ObjHelper.h"
+#include "Atom/Memory/DefaultMemAllocator.h"
 
 namespace Atom
 {
-    template <typename T>
-    using DefaultAllocator = ::std::allocator<T>;
-
-    template <typename T, typename TMemAlloc = DefaultAllocator<T>>
+    template <typename T, typename TMemAlloc = DefaultMemAllocator>
     class DynamicArray
     {
     //// -------------------------------------------------------------------------------------------
@@ -97,12 +94,17 @@ namespace Atom
         constexpr const T* Data() const noexcept;
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        /// Count of elements.
         /// ----------------------------------------------------------------------------------------
         constexpr usize Count() const noexcept;
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        /// Count of elements we have space for.
+        /// ----------------------------------------------------------------------------------------
+        constexpr usize Capacity() const noexcept;
+
+        /// ----------------------------------------------------------------------------------------
+        /// Is array empty.
         /// ----------------------------------------------------------------------------------------
         constexpr bool IsEmpty() const noexcept;
 
@@ -319,10 +321,7 @@ namespace Atom
         template <typename TOtherIter, typename TOtherIterEnd>
         constexpr usize _InsertBackUncounted(TOtherIter begin, TOtherIterEnd end);
 
-        template <typename TOtherIter>
-        constexpr usize _Rotate(usize index);
-
-        constexpr bool _ValidateIndexForInsertAt(isize index) const noexcept;
+        constexpr bool _ValidateIndexForInsert(isize index) const noexcept;
 
     //// -------------------------------------------------------------------------------------------
     //// Remove
@@ -393,6 +392,7 @@ namespace Atom
 
     protected:
         constexpr bool _ValidateIter(TConstIter it) const noexcept;
+        constexpr void _UpdateIterDebugId() noexcept;
         constexpr bool _ValidateIndex(isize index) const noexcept;
         constexpr isize _FetchIndex(TConstIter pos) const noexcept;
         constexpr usize _CalcCapGrowth(usize required) const noexcept;
@@ -421,5 +421,8 @@ namespace Atom
         usize _capacity;
         usize _iterValidDebugId;
         TMemAlloc _memAllocator;
+
+    private:
+        static constexpr ObjHelper<T> _objHelper;
     };
 }
