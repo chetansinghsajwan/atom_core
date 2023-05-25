@@ -106,8 +106,16 @@ namespace Atom
     struct OutOfRangeException: Exception
     {
         using Exception::Exception;
+    };
 
-        usize pos;
+    /// --------------------------------------------------------------------------------------------
+    /// Exception represents an out of range access, where range is representable using indices.
+    /// --------------------------------------------------------------------------------------------
+    struct IndexOutOfRangeException: OutOfRangeException
+    {
+        using OutOfRangeException::OutOfRangeException;
+
+        usize index;
         usize begin;
         usize end;
     };

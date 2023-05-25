@@ -4,7 +4,7 @@
 #include "Atom/TTI.h"
 #include "Atom/Invokable/InvokablePtr.h"
 
-#include "MemAllocator.h"
+#include "DefaultMemAllocator.h"
 
 namespace Atom
 {

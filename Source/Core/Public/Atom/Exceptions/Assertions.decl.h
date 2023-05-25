@@ -45,6 +45,17 @@ namespace Atom::Internal
             Thrower::operator << (FORWARD(ex));
         }
 
+        template <typename TArg>
+        requires RNotDerivedFrom<TArg, Exception>
+        ATOM_ATTR_NORETURN
+        void operator << (TArg&& arg)
+        {
+            done = true;
+
+            throw 0;
+            // Thrower::operator<< AssertException(FORWARD(arg), assertExpr);
+        }
+
         bool done = false;
         StringView assertExpr;
     };
