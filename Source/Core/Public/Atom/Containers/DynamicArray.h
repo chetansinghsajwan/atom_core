@@ -423,7 +423,7 @@ namespace Atom
     constexpr auto DynamicArray<T, TAllocator>::_ValidateIndex(
         isize index) const noexcept -> bool
     {
-        return index >= 0 && index <= _count - 1;
+        return index >= 0 && (usize)index <= _count - 1;
     }
 
     template <typename T, typename TAllocator>
