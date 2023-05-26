@@ -22,7 +22,6 @@ add_subdirectory(ThirdParty/Catch2/Catch2)
 add_subdirectory(ThirdParty/GLFW/glfw)
 add_subdirectory(ThirdParty/WjCryptLib)
 add_subdirectory(ThirdParty/Utf-Cpp)
-add_subdirectory(ThirdParty/LibAssert/libassert)
 
 # --------------------------------------------------------------------------------------------------
 # Sources
