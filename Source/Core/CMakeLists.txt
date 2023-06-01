@@ -32,9 +32,9 @@ add_test(Atom.Core.Tests Atom.Core.Tests)
 # Atom.Core.Sandbox
 # --------------------------------------------------------------------------------------------------
 
-add_executable(Atom.Core.Sandbox)
-target_sources(Atom.Core.Sandbox PRIVATE
-    FILE_SET modules TYPE CXX_MODULES FILES
-    "Sandbox.cpp")
+add_executable(Atom.Core.Sandbox "Sandbox.cpp")
+# target_sources(Atom.Core.Sandbox PRIVATE
+#     FILE_SET modules TYPE CXX_MODULES FILES
+#     "Sandbox.cpp")
 
 target_link_libraries(Atom.Core.Sandbox PUBLIC Atom.Core)

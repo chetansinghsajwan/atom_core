@@ -4,7 +4,7 @@
 
 #include "Atom/String/String.decl.h"
 #include "Atom/String/StringView.decl.h"
-#include "Atom/String/ASCIIStringView.decl.h"
+#include "Atom/String/AsciiStringView.decl.h"
 
 namespace Atom
 {
@@ -19,8 +19,8 @@ namespace Atom
 
         uint32 line;
         uint32 column;
-        ASCIIStringView fileName;
-        ASCIIStringView funcName;
+        AsciiStringView fileName;
+        AsciiStringView funcName;
     };
 
     /// --------------------------------------------------------------------------------------------

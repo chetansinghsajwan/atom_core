@@ -1,39 +1,4 @@
 #pragma once
 #include "BasicStringView.decl.h"
+#include "_StringImpl.h"
 #include "Atom/Containers/ArrayView.h"
-#include "BasicString.h"
-
-namespace Atom
-{
-    template <typename TEncoding>
-    constexpr BasicStringView<TEncoding>::BasicStringView() noexcept:
-        TBase() { }
-
-    template <typename TEncoding>
-    constexpr BasicStringView<TEncoding>::BasicStringView(const TChar* str) noexcept
-    {
-        usize len = 0;
-        while (str[len] != TEncoding::Null) len++;
-
-        this->m_arr = str;
-        this->m_count = len;
-    }
-
-    template <typename TEncoding>
-    constexpr BasicStringView<TEncoding>::BasicStringView(const TChar* str, usize len) noexcept:
-        TBase(str, len) { }
-
-    template <typename TEncoding>
-    template <usize N>
-    constexpr BasicStringView<TEncoding>::BasicStringView(const TChar(&str)[N]) noexcept:
-        TBase(str, N) { }
-
-    template <typename TEncoding>
-    template <typename TAllocator>
-    constexpr BasicStringView<TEncoding>::BasicStringView(const BasicString<TEncoding, TAllocator>& in) noexcept:
-        TBase(in.Data(), in.Count()) { }
-
-    template <typename TEncoding>
-    constexpr BasicStringView<TEncoding>::BasicStringView(const STD_TStringView& in) noexcept:
-        TBase(in.data(), in.size()) { }
-}

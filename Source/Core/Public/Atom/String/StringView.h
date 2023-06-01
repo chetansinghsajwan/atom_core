@@ -1,3 +1,4 @@
 #pragma once
-#include "BasicStringView.h"
 #include "StringView.decl.h"
+#include "BasicStringView.h"
+#include "DefaultEncoding.h"
