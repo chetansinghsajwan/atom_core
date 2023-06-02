@@ -73,5 +73,5 @@ namespace Atom
         }
     };
 
-    static_assert(RStringArgFormattable<Logging::ELogLevel>, "ELogLevel is not formattable.");
+    static_assert(RStrFmtArgFmtable<Logging::ELogLevel>, "ELogLevel is not formattable.");
 }

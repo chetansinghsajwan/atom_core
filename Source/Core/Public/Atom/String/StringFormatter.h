@@ -6,56 +6,56 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
-    struct _FmtStringViewConverter
+    struct _FmtStrViewCnvter
     {
-        constexpr StringView FromFmt(_FmtStringView strv) noexcept
+        constexpr StrView FromFmt(_FmtStrView strv) noexcept
         {
-            return StringView{ strv.data(), strv.size() };
+            return StrView{ strv.data(), strv.size() };
         }
 
-        constexpr _FmtStringView ToFmt(StringView strv) noexcept
+        constexpr _FmtStrView ToFmt(StrView strv) noexcept
         {
-            return _FmtStringView{ strv.Data(), strv.Count() };
+            return _FmtStrView{ strv.Data(), strv.Count() };
         }
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Wrapper over {StringView} to represent format string. This is done to avoid compile 
+    /// Wrapper over {StrView} to represent format string. This is done to avoid compile 
     /// time checks.
     /// --------------------------------------------------------------------------------------------
-    struct RuntimeFormatString
+    struct RunFmtStr
     {
-        StringView str;
+        StrView str;
     };
 
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
-    template <RStringArgFormattable... TArgs>
-    using FormatString = _FmtFormatString<TArgs...>;
-//     struct FormatString
+    template <RStrFmtArgFmtable... TArgs>
+    using FmtStr = _FmtFmtStr<TArgs...>;
+//     struct FmtStr
 //     {
 //         template <typename T>
-//         consteval FormatString(const T& strv) noexcept { }
-//             _fmt{ _FmtStringViewConverter().ToFmt(strv) } { }
+//         consteval FmtStr(const T& strv) noexcept { }
+//             _fmt{ _FmtStrViewCnvter().ToFmt(strv) } { }
 // 
-//         FormatString(RuntimeFormatString str) noexcept { }
-//             _fmt{ _FmtRuntimeFormatString{ _FmtStringViewConverter().ToFmt(str.str) } } { }
+//         FmtStr(RunFmtStr str) noexcept { }
+//             _fmt{ _FmtRunFmtStr{ _FmtStrViewCnvter().ToFmt(str.str) } } { }
 // 
-//         _FmtFormatString<TArgs...> _fmt;
+//         _FmtFmtStr<TArgs...> _fmt;
 //     };
 
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
-    struct StringFormatter
+    struct StrFmter
     {
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <typename TOut, RStringArgFormattable... TArgs>
+        template <typename TOut, RStrFmtArgFmtable... TArgs>
         requires ROutput<TOut, Char>
-        void FormatTo(TOut out, FormatString<TArgs...> fmt, TArgs&&... args)
+        void FmtTo(TOut out, FmtStr<TArgs...> fmt, TArgs&&... args)
         {
             struct _OutIterWrap
             {
@@ -86,20 +86,20 @@ namespace Atom
                     fmt::make_format_args<fmt::buffer_context<Char>>(FORWARD(args)...),
                     fmt::detail::locale_ref{});
             }
-            catch (const _FmtFormatError& err)
+            catch (const _FmtFmtEx& err)
             {
-                throw StringFormatException(err);
+                throw StrFmtEx(err);
             }
         }
 
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <RStringArgFormattable... TArgs>
-        String Format(FormatString<TArgs...> fmt, TArgs&&... args)
+        template <RStrFmtArgFmtable... TArgs>
+        Str Fmt(FmtStr<TArgs...> fmt, TArgs&&... args)
         {
-            String out;
-            FormatTo(out, fmt, FORWARD(args)...);
+            Str out;
+            FmtTo(out, fmt, FORWARD(args)...);
 
             return out;
         }
@@ -107,4 +107,4 @@ namespace Atom
 }
 
 #define ATOM_STR_FMT(fmt, ...) \
-    ::Atom::StringFormatter(TEXT(fmt), __VA_ARGS__)
+    ::Atom::StrFmter(TEXT(fmt), __VA_ARGS__)

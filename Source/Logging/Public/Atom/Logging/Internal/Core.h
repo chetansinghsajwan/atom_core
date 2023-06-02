@@ -9,7 +9,7 @@ namespace Atom
 //// -----------------------------------------------------------------------------------------------
 
     template <typename... TArgs>
-    using LogString = FormatString<TArgs...>;
+    using LogString = FmtStr<TArgs...>;
 
     template <typename T>
     concept RLogArg = requires(T arg)
