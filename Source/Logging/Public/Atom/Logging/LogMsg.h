@@ -1,11 +1,10 @@
 #pragma once
-#include "fmt/chrono.h" // TODO: Remove this
+#include "Internal/Core.h"
 
 #include "Atom/Chrono.h"
 #include "Atom/String.h"
-#include "Atom/Fmt.h"
 
-#include "Atom/Logging/Internal/Core.h"
+#include "fmt/chrono.h" // TODO: Remove this
 
 namespace Atom::Logging
 {
@@ -74,5 +73,5 @@ namespace Atom
         }
     };
 
-    static_assert(Fmt::RFormattable<Logging::ELogLevel>, "ELogLevel is not formattable.");
+    static_assert(RStringArgFormattable<Logging::ELogLevel>, "ELogLevel is not formattable.");
 }

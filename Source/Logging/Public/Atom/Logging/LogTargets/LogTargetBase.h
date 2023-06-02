@@ -1,6 +1,4 @@
 #pragma once
-#include "Atom/Fmt.h"
-
 #include "Atom/Logging/LogTarget.h"
 
 namespace Atom::Logging::Internal
@@ -39,10 +37,10 @@ namespace Atom::Logging::Internal
             if (CheckLogLevel(in_logMsg.lvl))
             {
                 // TODO: Add chrono support for Atom.Fmt.
-                // String result = Fmt::Format(TEXT("[{}] [{}] {}: {}\n"),
+                // String result = StringFormatter().Format(TEXT("[{}] [{}] {}: {}\n"),
                 //     in_logMsg.time, in_logMsg.lvl, in_logMsg.loggerName, in_logMsg.msg);
 
-                String result = Fmt::Format(TEXT("[{}] {}: {}\n"),
+                String result = StringFormatter().Format(TEXT("[{}] {}: {}\n"),
                     in_logMsg.lvl, in_logMsg.loggerName, in_logMsg.msg);
 
                 m_hasWritten = true;

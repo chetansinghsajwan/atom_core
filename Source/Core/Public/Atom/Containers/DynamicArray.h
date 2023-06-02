@@ -30,14 +30,14 @@ namespace Atom
     }
 
     template <typename T, typename TAllocator>
-    constexpr auto DynamicArray<T, TAllocator>::operator += (const T& in)
+    constexpr auto DynamicArray<T, TAllocator>::operator +=(const T& in)
         -> typename DynamicArray<T, TAllocator>::TIter
     {
         return InsertBack(in);
     }
 
     template <typename T, typename TAllocator>
-    constexpr auto DynamicArray<T, TAllocator>::operator += (T&& in)
+    constexpr auto DynamicArray<T, TAllocator>::operator +=(T&& in)
         -> typename DynamicArray<T, TAllocator>::TIter
     {
         return InsertBack(MOVE(in));
@@ -46,7 +46,7 @@ namespace Atom
     template <typename T, typename TAllocator>
     template <typename TRange>
     requires RFwdRange<TRange, const T>
-    constexpr auto DynamicArray<T, TAllocator>::operator += (const TRange& range)
+    constexpr auto DynamicArray<T, TAllocator>::operator +=(const TRange& range)
         -> typename DynamicArray<T, TAllocator>::TIter
     {
         return InsertBack(range);
