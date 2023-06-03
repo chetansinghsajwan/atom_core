@@ -22,15 +22,6 @@ namespace Atom::TTI
     template <typename TBase, typename TDerived>
     constexpr bool IsNotBaseOf = !IsBaseOf<TBase, TDerived>;
 
-    template <typename TFrom, typename TTo>
-    concept RConvertible = std::convertible_to<TFrom, TTo>;
-
-    template <typename TLeft, typename TRight>
-    concept RSameAs = std::same_as<TLeft, TRight>;
-
-    template <typename TLeft, typename TRight>
-    concept RNotSameAs = !std::same_as<TLeft, TRight>;
-
     template <bool Requirements>
     using TEnableIf = std::enable_if_t<Requirements>;
 
