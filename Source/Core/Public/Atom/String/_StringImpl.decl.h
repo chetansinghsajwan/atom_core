@@ -12,14 +12,7 @@ namespace Atom
 
         using TChar                = BasicChar<TEncoding>;
         using TIter                = typename _TContainer::TIter;
-        using TEnd                = typename _TContainer::TEnd;
-        // using TIterEnd             = typename _TContainer::TIterEnd;
-        // using TConstIter           = typename _TContainer::TConstIter;
-        // using TConstIterEnd        = typename _TContainer::TConstIterEnd;
-        // using TRevIter             = typename _TContainer::TRevIter;
-        // using TRevIterEnd          = typename _TContainer::TRevIterEnd;
-        // using TConstRevIter        = typename _TContainer::TConstRevIter;
-        // using TConstRevIterEnd     = typename _TContainer::TConstRevIterEnd;
+        using TIterEnd             = typename _TContainer::TIterEnd;
 
         using TRune                = BasicRune<TEncoding>;
         // using TRuneIter            = typename _TContainer::TRuneIter;
@@ -44,7 +37,7 @@ namespace Atom
         /// 
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
-        requires RFwdRange<TRange, const TChar>
+        requires RRange<TRange, TChar>
         constexpr bool operator ==(const TRange& range) const noexcept
         {
             return true;
@@ -54,7 +47,7 @@ namespace Atom
         /// 
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
-        requires RFwdRange<TRange, const TChar>
+        requires RRange<TRange, TChar>
         constexpr bool operator !=(const TRange& range) const noexcept
         {
             return !(*this == range);

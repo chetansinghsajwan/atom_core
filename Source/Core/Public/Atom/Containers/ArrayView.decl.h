@@ -1,6 +1,5 @@
 #pragma once
 #include "Atom/Containers/ArrayIterator.h"
-#include "Ranges.h"
 
 namespace Atom
 {
@@ -8,9 +7,9 @@ namespace Atom
     class ArrayView
     {
     public:
+        using TElem = T;
         using TIter = ArrayIterator<const T>;
-        using TConstIter = ArrayIterator<const T>;
-        using TEnd = TIter;
+        using TIterEnd = TIter;
 
     //// -------------------------------------------------------------------------------------------
     //// Constructors, Operators and Destructor.
@@ -36,7 +35,7 @@ namespace Atom
         /// 
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
-        requires RArrayRange<TRange, const T>
+        requires RArrRange<TRange, T>
         constexpr ArrayView(const TRange& range) noexcept:
             ArrayView(&*range.begin(), &*range.end()) { }
 
@@ -44,7 +43,7 @@ namespace Atom
         /// 
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
-        requires RFwdRange<TRange, const T>
+        requires RRange<TRange, T>
         constexpr bool operator == (const TRange& range) const noexcept;
 
         /// ----------------------------------------------------------------------------------------
@@ -65,7 +64,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Iterator to the first element.
         /// ----------------------------------------------------------------------------------------
-        constexpr TIter Begin() const noexcept
+        constexpr TIter Iter() const noexcept
         {
             return TIter{ m_arr };
         }
@@ -73,7 +72,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Iterator to the last element.
         /// ----------------------------------------------------------------------------------------
-        constexpr TIter End() const noexcept
+        constexpr TIter IterEnd() const noexcept
         {
             return TIter{ m_arr + m_count };
         }
@@ -83,7 +82,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr TIter begin() const noexcept
         {
-            return TIter{ m_arr };
+            return Iter();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -91,7 +90,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr TIter end() const noexcept
         {
-            return TIter{ m_arr + m_count };
+            return IterEnd();
         }
 
     //// -------------------------------------------------------------------------------------------

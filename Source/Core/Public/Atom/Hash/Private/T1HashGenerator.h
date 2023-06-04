@@ -31,10 +31,10 @@ namespace Atom::Private
         /// 
         /// ----------------------------------------------------------------------------------------
         template <typename TRange, usize BufSize = 50>
-        requires RFwdRange<TRange, byte>
+        requires RRange<TRange, byte>
         T1HashGenerator& ProcessBytes(TRange bytes)
         {
-            if constexpr (RArrayRange<TRange, byte>)
+            if constexpr (RArrRange<TRange, byte>)
             {
                 return ProcessBytes(bytes.Data(), bytes.Size());
             }

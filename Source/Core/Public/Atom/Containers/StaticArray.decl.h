@@ -10,9 +10,11 @@ namespace Atom
     class StaticArray
     {
     public:
-        using TIter = ArrayIterator<T>;
-        using TConstIter = ArrayIterator<const T>;
-        using TEnd = TIter;
+        using TElem = T;
+        using TIter = ArrayIterator<const T>;
+        using TIterEnd = TIter;
+        using TMutIter = ArrayIterator<T>;
+        using TMutIterEnd = TMutIter;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -83,81 +85,65 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr TIter Begin() noexcept
+        constexpr TIter Iter() const noexcept
         {
-            return TIter{ _arr };
+            return TMutIter{ _arr };
         }
 
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr TIter End() noexcept
+        constexpr TIter IterEnd() const noexcept
         {
-            return TIter{ _arr + Size };
+            return TMutIter{ _arr + Size};
         }
 
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr TConstIter Begin() const noexcept
+        constexpr TMutIter MutIter() noexcept
         {
-            return ConstBegin();
+            return TMutIter{ _arr };
         }
 
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr TConstIter End() const noexcept
+        constexpr TMutIter MutIterEnd() noexcept
         {
-            return ConstEnd();
+            return TMutIter{ _arr + Size };
         }
 
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr TConstIter ConstBegin() const noexcept
+        constexpr TIter begin() const noexcept
         {
-            return TIter{ _arr };
+            return Iter();
         }
 
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr TConstIter ConstEnd() const noexcept
+        constexpr TIter end() const noexcept
         {
-            return TIter{ _arr + Size};
+            return IterEnd();
         }
 
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr TIter begin() noexcept
+        constexpr TMutIter begin() noexcept
         {
-            return TIter{ _arr };
+            return MutIter();
         }
 
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr TIter end() noexcept
+        constexpr TMutIter end() noexcept
         {
-            return TIter{ _arr + Size };
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// 
-        /// ----------------------------------------------------------------------------------------
-        constexpr TConstIter begin() const noexcept
-        {
-            return ConstBegin();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// 
-        /// ----------------------------------------------------------------------------------------
-        constexpr TConstIter end() const noexcept
-        {
-            return ConstEnd();
+            return MutIterEnd();
         }
 
     public:

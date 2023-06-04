@@ -15,11 +15,11 @@ namespace Atom
         }
 
         template <typename TRange>
-        requires RFwdRange<TRange, const Char>
+        requires RRange<TRange, Char>
         constexpr Uuid Parse(const TRange& range) const noexcept
         {
             // Faster implementation.
-            if constexpr (RFwdJumpRange<TRange, Char>)
+            if constexpr (RJumpRange<TRange, Char>)
             {
                 return _ParseFwdJump(range);
             }
@@ -72,7 +72,7 @@ namespace Atom
 
     private:
         template <typename TRange>
-        requires RFwdJumpRange<TRange, const Char>
+        requires RJumpRange<TRange, Char>
         constexpr Uuid _ParseFwdJump(const TRange& range) const noexcept
         {
             Uuid uuid;                  // output result

@@ -1,0 +1,195 @@
+#pragma once
+#include "IterReq.h"
+
+namespace Atom
+{
+    /// --------------------------------------------------------------------------------------------
+    /// Basic range requirements.
+    /// --------------------------------------------------------------------------------------------
+    template <typename TRange, typename T>
+    concept _RRangeBase = requires(const TRange& range)
+    {
+        typename TRange::TElem;
+        typename TRange::TIter;
+        typename TRange::TIterEnd;
+
+        { range.Iter() } -> RSameAs<typename TRange::TIter>;
+        { range.IterEnd() } -> RSameAs<typename TRange::TIterEnd>;
+    };
+
+    /// --------------------------------------------------------------------------------------------
+    /// Basic mut range requirements.
+    /// --------------------------------------------------------------------------------------------
+    template <typename TRange, typename T>
+    concept _RMutRangeBase = requires(TRange& range)
+    {
+        typename TRange::TElem;
+        typename TRange::TMutIter;
+        typename TRange::TMutIterEnd;
+
+        { range.MutIter() } -> RSameAs<typename TRange::TMutIter>;
+        { range.MutIterEnd() } -> RSameAs<typename TRange::TMutIterEnd>;
+
+        requires RConvertibleTo<typename TRange::TMutIter, typename TRange::TIter>;
+    };
+
+    /// --------------------------------------------------------------------------------------------
+    /// Ensures {TRange} is {Range}.
+    /// --------------------------------------------------------------------------------------------
+    template <typename TRange, typename T>
+    concept RRange = requires
+    {
+        requires _RRangeBase<TRange, T>;
+        requires RIter<typename TRange::TIter, typename TRange::TIterEnd, T>;
+    };
+
+    /// --------------------------------------------------------------------------------------------
+    /// Ensures {TRange} is {FwdRange}.
+    /// --------------------------------------------------------------------------------------------
+    template <typename TRange, typename T>
+    concept RFwdRange = requires
+    {
+        requires _RRangeBase<TRange, T>;
+        requires RFwdIter<typename TRange::TIter, typename TRange::TIterEnd, T>;
+    };
+
+    /// --------------------------------------------------------------------------------------------
+    /// Ensures {TRange} is {MutFwdRange}.
+    /// --------------------------------------------------------------------------------------------
+    template <typename TRange, typename T>
+    concept RMutFwdRange = requires
+    {
+        requires _RMutRangeBase<TRange, T>;
+        requires RFwdRange<TRange, T>;
+        requires RMutFwdIter<typename TRange::TMutIter, typename TRange::TMutIterEnd, T>;
+    };
+
+    /// --------------------------------------------------------------------------------------------
+    /// Ensures {TRange} is {BidiRange}.
+    /// --------------------------------------------------------------------------------------------
+    template <typename TRange, typename T>
+    concept RBidiRange = requires
+    {
+        requires _RRangeBase<TRange, T>;
+        requires RBidiIter<typename TRange::TIter, typename TRange::TIterEnd, T>;
+    };
+
+    /// --------------------------------------------------------------------------------------------
+    /// Ensures {TRange} is {MutBidiRange}.
+    /// --------------------------------------------------------------------------------------------
+    template <typename TRange, typename T>
+    concept RMutBidiRange = requires
+    {
+        requires _RMutRangeBase<TRange, T>;
+        requires RBidiRange<TRange, T>;
+        requires RMutBidiIter<typename TRange::TMutIter, typename TRange::TMutIterEnd, T>;
+    };
+
+    /// --------------------------------------------------------------------------------------------
+    /// Ensures {TRange} is {JumpRange}.
+    /// --------------------------------------------------------------------------------------------
+    template <typename TRange, typename T>
+    concept RJumpRange = requires
+    {
+        requires _RRangeBase<TRange, T>;
+        requires RJumpIter<typename TRange::TIter, typename TRange::TIterEnd, T>;
+    };
+
+    /// --------------------------------------------------------------------------------------------
+    /// Ensures {TRange} is {MutJumpRange}.
+    /// --------------------------------------------------------------------------------------------
+    template <typename TRange, typename T>
+    concept RMutJumpRange = requires
+    {
+        requires _RMutRangeBase<TRange, T>;
+        requires RJumpRange<TRange, T>;
+        requires RMutJumpIter<typename TRange::TMutIter, typename TRange::TMutIterEnd, T>;
+    };
+
+    /// --------------------------------------------------------------------------------------------
+    /// Ensures {TRange} is {ArrRange}.
+    /// --------------------------------------------------------------------------------------------
+    template <typename TRange, typename T>
+    concept RArrRange = requires
+    {
+        requires _RRangeBase<TRange, T>;
+        requires RArrIter<typename TRange::TIter, typename TRange::TIterEnd, T>;
+    };
+
+    /// --------------------------------------------------------------------------------------------
+    /// Ensures {TRange} is {MutArrRange}.
+    /// --------------------------------------------------------------------------------------------
+    template <typename TRange, typename T>
+    concept RMutArrRange = requires
+    {
+        requires _RMutRangeBase<TRange, T>;
+        requires RArrRange<TRange, T>;
+        requires RMutArrIter<typename TRange::TMutIter, typename TRange::TMutIterEnd, T>;
+    };
+
+    /// --------------------------------------------------------------------------------------------
+    /// Ensures {TRange} is {RevRange}.
+    /// --------------------------------------------------------------------------------------------
+    template <typename TRange, typename T>
+    concept RRevRange = requires
+    {
+        requires RBidiRange<TRange, T>;
+    };
+
+    /// --------------------------------------------------------------------------------------------
+    /// Ensures {TRange} is {MutRevRange}.
+    /// --------------------------------------------------------------------------------------------
+    template <typename TRange, typename T>
+    concept RMutRevRange = requires
+    {
+        requires RMutBidiRange<TRange, T>;
+    };
+
+    /// --------------------------------------------------------------------------------------------
+    /// Ensures {TRange} is {CommonRange}.
+    /// --------------------------------------------------------------------------------------------
+    template <typename TRange, typename T>
+    concept RCommonRange = requires
+    {
+        requires _RRangeBase<TRange, T>;
+        requires RSameAs<typename TRange::TIter, typename TRange::TIter>;
+    };
+
+    /// --------------------------------------------------------------------------------------------
+    /// Ensures {TRange} is {MutCommonRange}.
+    /// --------------------------------------------------------------------------------------------
+    template <typename TRange, typename T>
+    concept RMutCommonRange = requires
+    {
+        requires _RRangeBase<TRange, T>;
+        requires RSameAs<typename TRange::TMutIter, typename TRange::TMutIterEnd>;
+    };
+}
+
+template <typename TRange>
+requires ::Atom::RFwdRange<TRange, typename TRange::TElem>
+constexpr auto begin(TRange&& range) noexcept
+{
+    if constexpr (::Atom::RConst<TRange>)
+    {
+        return range.Iter();
+    }
+    else
+    {
+        return range.MutIter();
+    }
+}
+
+template <typename TRange>
+requires ::Atom::RFwdRange<TRange, typename TRange::TElem>
+constexpr auto end(TRange&& range) noexcept
+{
+    if constexpr (::Atom::RConst<TRange>)
+    {
+        return range.IterEnd();
+    }
+    else
+    {
+        return range.MutIterEnd();
+    }
+}

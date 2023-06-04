@@ -14,6 +14,6 @@ namespace Atom
     template <typename T>
     concept RLogArg = requires(T arg)
     {
-        requires TTI::RConvertible<T, StringView>;
+        requires RConvertibleTo<T, StringView>;
     };
 }

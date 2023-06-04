@@ -20,8 +20,12 @@ namespace Atom::Logging::Private
     template <RLockable TLockable>
     class MultiLogTargetTemplate : public LogTarget
     {
-        using TContainer = DynamicArray<LogTargetPtr>;
-        using TIter = typename TContainer::TConstIter;
+        using _TContainer = DynamicArray<LogTargetPtr>;
+
+    public:
+        using TElem = LogTargetPtr;
+        using TIter = typename _TContainer::TIter;
+        using TIterEnd = typename _TContainer::TIterEnd;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -62,7 +66,7 @@ namespace Atom::Logging::Private
         /// ----------------------------------------------------------------------------------------
         /// Constructs with LogTarget objects.
         /// 
-        /// @PARAM[IN] target RFwdRange of LogTarget objects to add.
+        /// @PARAM[IN] target RRange of LogTarget objects to add.
         ///     If {targets} contains null objects, this doesn't adds them.
         /// 
         /// @EXCEPTION_SAFETY @COPY_FROM _AddTargets(range).
@@ -70,7 +74,7 @@ namespace Atom::Logging::Private
         /// @TIME_COMPLEXITY @COPY_FROM _AddTargets(range).
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
-        requires RFwdRange<TRange, const LogTargetPtr>
+        requires RRange<TRange, LogTargetPtr>
         MultiLogTargetTemplate(const TRange& targets)
         {
             _AddTargets(MOVE(targets));
@@ -149,10 +153,10 @@ namespace Atom::Logging::Private
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
-        requires RFwdRange<TRange, const LogTargetPtr>
+        requires RRange<TRange, LogTargetPtr>
         usize AddTargets(const TRange& targets)
         {
-            if (!targets.Begin() == targets.End())
+            if (!targets.Iter() == targets.IterEnd())
                 return 0;
 
             LockGuard guard(_lock);
@@ -212,10 +216,10 @@ namespace Atom::Logging::Private
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
-        requires RFwdRange<TRange, const LogTargetPtr>
+        requires RRange<TRange, LogTargetPtr>
         usize RemoveTargets(const TRange& targets)
         {
-            if (!targets.Begin() == targets.End())
+            if (!targets.Iter() == targets.IterEnd())
                 return 0;
 
             LockGuard guard(_lock);
@@ -272,10 +276,10 @@ namespace Atom::Logging::Private
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
-        requires RFwdRange<TRange, const LogTargetPtr>
+        requires RRange<TRange, LogTargetPtr>
         usize HasTargets(const TRange& targets) const noexcept
         {
-            if (!targets.Begin() == targets.End())
+            if (!targets.Iter() == targets.IterEnd())
                 return 0;
 
             LockGuard guard(_lock);
@@ -334,9 +338,9 @@ namespace Atom::Logging::Private
         /// 
         /// @TODO Make ThreadSafe.
         /// ----------------------------------------------------------------------------------------
-        TIter Begin() const noexcept
+        TIter Iter() const noexcept
         {
-            return _targets.Begin();
+            return _targets.Iter();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -346,9 +350,9 @@ namespace Atom::Logging::Private
         /// 
         /// @TODO Make ThreadSafe.
         /// ----------------------------------------------------------------------------------------
-        TIter End() const noexcept
+        TIter IterEnd() const noexcept
         {
-            return _targets.End();
+            return _targets.IterEnd();
         }
 
     //// -------------------------------------------------------------------------------------------
@@ -365,9 +369,9 @@ namespace Atom::Logging::Private
         /// @PARAM[IN] target {LogTarget} object to add.
         ///     If {target} is null, this doesn't adds it.
         /// 
-        /// @EXCEPTION_SAFETY @COPY_FROM ${TContainer}::InsertBack(LogTarget& target)
+        /// @EXCEPTION_SAFETY @COPY_FROM ${_TContainer}::InsertBack(LogTarget& target)
         /// 
-        /// @TIME_COMPLEXITY @COPY_FROM ${TContainer}::InsertBack(LogTarget& target)
+        /// @TIME_COMPLEXITY @COPY_FROM ${_TContainer}::InsertBack(LogTarget& target)
         /// 
         /// @THREAD_SAFETY NONE
         /// ----------------------------------------------------------------------------------------
@@ -375,7 +379,7 @@ namespace Atom::Logging::Private
         {
             ATOM_DEBUG_EXPECTS(target != nullptr);
 
-            return _targets.InsertBack(MOVE(target)) != _targets.End();
+            return _targets.InsertBack(MOVE(target)) != _targets.IterEnd();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -385,14 +389,14 @@ namespace Atom::Logging::Private
         ///     If {targets} contains null objects, this doesn't adds them.
         /// @RETURNS Count of LogTarget objects added.
         /// 
-        /// @EXCEPTION_SAFETY @COPY_FROM ${TContainer}::InsertBack(RFwdRange<LogTargetPtr> targets)
+        /// @EXCEPTION_SAFETY @COPY_FROM ${_TContainer}::InsertBack(RRange<LogTargetPtr> targets)
         ///  
-        /// @TIME_COMPLEXITY @COPY_FROM ${TContainer}::InsertBack(RFwdRange<LogTargetPtr> targets)
+        /// @TIME_COMPLEXITY @COPY_FROM ${_TContainer}::InsertBack(RRange<LogTargetPtr> targets)
         /// 
         /// @THREAD_SAFETY NONE
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
-        requires RFwdRange<TRange, const LogTargetPtr>
+        requires RRange<TRange, LogTargetPtr>
         usize _AddTargets(const TRange& targets)
         {
             return _targets.InsertBack(targets,
@@ -409,9 +413,9 @@ namespace Atom::Logging::Private
         ///     If {target} is null, this doesn't searches it.
         /// @RETURNS {true} if found and removed, else {false}.
         /// 
-        /// @EXCEPTION_SAFETY @COPY_FROM ${TContainer}::Remove(LogTarget& target)
+        /// @EXCEPTION_SAFETY @COPY_FROM ${_TContainer}::Remove(LogTarget& target)
         /// 
-        /// @TIME_COMPLEXITY @COPY_FROM ${TContainer}::Remove(LogTarget& target)
+        /// @TIME_COMPLEXITY @COPY_FROM ${_TContainer}::Remove(LogTarget& target)
         /// ----------------------------------------------------------------------------------------
         bool _RemoveTarget(LogTargetPtr in_target)
         {
@@ -423,17 +427,17 @@ namespace Atom::Logging::Private
         /// ----------------------------------------------------------------------------------------
         /// Removes LogTarget objects.
         /// 
-        /// @PARAM[IN] it RFwdRange to beginning of the range to remove.
-        /// @PARAM[IN] end RFwdRange to end of the range to remove.
+        /// @PARAM[IN] it RRange to beginning of the range to remove.
+        /// @PARAM[IN] end RRange to end of the range to remove.
         ///     If range {[it, end]} contains null objects, this doesn't searches them.
         /// @RETURNS Count of LogTarget objects removed.
         /// 
-        /// @EXCEPTION_SAFETY @COPY_FROM ${TContainer}::Remove(LogTarget& target)
+        /// @EXCEPTION_SAFETY @COPY_FROM ${_TContainer}::Remove(LogTarget& target)
         /// 
-        /// @TIME_COMPLEXITY @COPY_FROM ${TContainer}::Remove(LogTarget& target)
+        /// @TIME_COMPLEXITY @COPY_FROM ${_TContainer}::Remove(LogTarget& target)
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
-        requires RFwdRange<TRange, const LogTargetPtr>
+        requires RRange<TRange, LogTargetPtr>
         usize _RemoveTargets(const TRange& targets)
         {
             return _targets.Remove(targets, [](const LogTargetPtr& target)
@@ -463,8 +467,8 @@ namespace Atom::Logging::Private
         /// ----------------------------------------------------------------------------------------
         /// Search LogTarget objects.
         /// 
-        /// @PARAM[IN] it RFwdRange to beginning of range to search for.
-        /// @PARAM[IN] end RFwdRange to end of range to search for.
+        /// @PARAM[IN] it RRange to beginning of range to search for.
+        /// @PARAM[IN] end RRange to end of range to search for.
         ///     If range {[it, end]} contains null objects, this doesn't searches them.
         /// @RETURNS Count of LogTarget objects found.
         /// 
@@ -473,7 +477,7 @@ namespace Atom::Logging::Private
         /// @TIME_COMPLEXITY Exponential
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
-        requires RFwdRange<TRange, const LogTargetPtr>
+        requires RRange<TRange, LogTargetPtr>
         usize _HasTargets(const TRange& targets)
         {
             return _targets.Contains(targets);
@@ -482,7 +486,7 @@ namespace Atom::Logging::Private
         /// ----------------------------------------------------------------------------------------
         /// Reserves memory for {capacity} LogTarget objects.
         /// 
-        /// @EXCEPTION_SAFETY @COPY_FROM ${TContainer}::Reserve(usize capacity).
+        /// @EXCEPTION_SAFETY @COPY_FROM ${_TContainer}::Reserve(usize capacity).
         /// ----------------------------------------------------------------------------------------
         void _Reserve(usize capacity)
         {
@@ -491,9 +495,9 @@ namespace Atom::Logging::Private
 
     protected:
         /// ----------------------------------------------------------------------------------------
-        /// TContainer to store LogTarget objects.
+        /// _TContainer to store LogTarget objects.
         /// ----------------------------------------------------------------------------------------
-        TContainer _targets;
+        _TContainer _targets;
 
         /// ----------------------------------------------------------------------------------------
         /// Lockable object for thread safety.
@@ -507,15 +511,9 @@ namespace Atom::Logging
     using MultiLogTargetST = Private::MultiLogTargetTemplate<NullLockable>;
     using MultiLogTargetMT = Private::MultiLogTargetTemplate<SimpleMutex>;
 
-//     static_assert(RFwdRange<MultiLogTargetST, LogTargetPtr>,
-//         "MultiLogTargetST does not satisfy RFwdRange range requirements.");
-// 
-//     static_assert(RMultiPassRange<MultiLogTargetST, LogTargetPtr>,
-//         "MultiLogTargetST does not satisfy RMultiPassRange range requirements.");
-// 
-//     static_assert(RFwdRange<MultiLogTargetMT, LogTargetPtr>,
-//         "MultiLogTargetMT does not satisfy RFwdRange range requirements.");
-// 
-//     static_assert(RMultiPassRange<MultiLogTargetMT, LogTargetPtr>,
-//         "MultiLogTargetMT does not satisfy RMultiPassRange range requirements.");
+    static_assert(RFwdRange<MultiLogTargetST, LogTargetPtr>,
+        "{MultiLogTargetST} does not meet {RFwdRange} requirements.");
+
+    static_assert(RFwdRange<MultiLogTargetMT, LogTargetPtr>,
+        "{MultiLogTargetMT} does not meet {RFwdRange} requirements.");
 }

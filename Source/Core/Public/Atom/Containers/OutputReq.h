@@ -1,6 +1,6 @@
 #pragma once
-#include "Ranges.h"
-#include "RangesMock.h"
+#include "RangeReq.h"
+#include "RangeReqMock.h"
 
 namespace Atom
 {
@@ -10,6 +10,6 @@ namespace Atom
         { out += declval(const T&) };
         { out += declval(T&&) };
 
-        { out += Internal::FwdRangeMock<const T>() };
+        { out += RangeReqMock<T>() };
     };
 }

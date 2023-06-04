@@ -7,7 +7,7 @@ namespace Atom::Text
     /// --------------------------------------------------------------------------------------------
     export template <typename TConverter, typename TInEncoding, typename TOutEncoding>
     concept RCharEncodingConverter = requires(TConverter converter,
-        Internal::FwdRangeMock<BasicChar<TInEncoding>> in,
+        Internal::RangeMock<BasicChar<TInEncoding>> in,
         Internal::OutputMock<BasicChar<TOutEncoding>> out)
     {
         requires RDefaultConstructible<TConverter>;
@@ -49,7 +49,7 @@ namespace Atom::Text
         /// 
         /// ----------------------------------------------------------------------------------------
         template <typename TInput, typename TOut>
-        requires RFwdRange<TInput, TInChar> && ROutput<TOut, TOutChar>
+        requires RRange<TInput, TInChar> && ROutput<TOut, TOutChar>
         constexpr void ConvertTo(const TInput& in, TOut out)
         {
             auto end = in.end();
@@ -74,7 +74,7 @@ namespace Atom::Text
         /// Writes input to output as is.
         /// ----------------------------------------------------------------------------------------
         template <typename TInput, typename TOut>
-        requires RFwdRange<TInput, const TChar> && ROutput<TOut, TChar>
+        requires RRange<TInput, const TChar> && ROutput<TOut, TChar>
         constexpr void Convert(TInput&& in, TOut& out)
         {
             out += FORWARD(in);

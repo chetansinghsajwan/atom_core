@@ -1,5 +1,5 @@
 #pragma once
-#include "Ranges.h"
+#include "RangeReq.h"
 
 namespace Atom
 {
@@ -9,7 +9,6 @@ namespace Atom
     public:
         using TIter = TInIter;
         using TIterEnd = TInIterEnd;
-        using TEnd = TInIterEnd;
 
     public:
         constexpr Range(TIter begin, TIterEnd end) noexcept:

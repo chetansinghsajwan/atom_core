@@ -84,7 +84,7 @@ namespace Atom
 		}
 
 		template <typename TRange>
-		requires RFwdRange<TRange, const Char>
+		requires RRange<TRange, Char>
 		void Write(const TRange& chars)
 		{
 			auto out = _fmtCtx.out();

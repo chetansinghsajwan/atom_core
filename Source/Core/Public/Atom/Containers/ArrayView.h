@@ -27,7 +27,7 @@ namespace Atom
 
     template <typename T>
     template <typename TRange>
-    requires RFwdRange<TRange, const T>
+    requires RRange<TRange, T>
     constexpr bool ArrayView<T>::operator == (const TRange& range) const noexcept
     {
         usize i = 0;

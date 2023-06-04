@@ -48,7 +48,7 @@ namespace Atom::Private
         /// 
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
-        requires RFwdRange<TRange, const Char>
+        requires RRange<TRange, Char>
         constexpr T1Hash Parse(const TRange& range) const noexcept
         {
             T1Hash hash;
@@ -95,7 +95,7 @@ namespace Atom::Private
         /// 
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
-        requires RFwdJumpRange<TRange, const Char>
+        requires RJumpRange<TRange, Char>
         constexpr T1Hash Parse(const TRange& range) const noexcept
         {
             if (range.Size() != _Size * 2)

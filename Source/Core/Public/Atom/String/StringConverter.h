@@ -1,5 +1,6 @@
 #pragma once
 #include "Atom/TTI.h"
+#include "Atom/Containers/OutputReqMock.h"
 
 #include "Atom/String/String.h"
 
@@ -18,12 +19,12 @@ namespace Atom
     /// @TPARAM[IN] T Object type to convert to stirng.
     /// --------------------------------------------------------------------------------------------
     template <typename TStringConverter, typename T>
-    concept RStringConverter = requires(TStringConverter converter)
+    concept RStringConverter = requires(TStringConverter converter, T obj, OutputReqMock<Char> out)
     {
-        { converter.Convert(declval(T)) }
+        { converter.Convert(obj) }
             -> RSameAs<String>;
 
-        { converter.Convert(declval(T), declval(Internal::BackInsertableMock<Char>&)) }
+        { converter.Convert(obj, out) }
             -> RSameAs<void>;
     };
 
