@@ -60,7 +60,7 @@ namespace Atom
 			return StrView{ _fmtCtx.begin(), _fmtCtx.end() };
 		}
 
-		void AdvanceTo(ArrayIterator<const Char> it) noexcept
+		void AdvanceTo(ArrIter<Char> it) noexcept
 		{
 			_fmtCtx.advance_to(&*it);
 		}

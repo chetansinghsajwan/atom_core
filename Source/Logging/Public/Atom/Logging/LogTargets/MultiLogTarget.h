@@ -60,7 +60,7 @@ namespace Atom::Logging::Private
         /// ----------------------------------------------------------------------------------------
         MultiLogTargetTemplate(InitializerList<LogTargetPtr> targets)
         {
-            _AddTargets(ArrayIterator<const LogTargetPtr>(targets));
+            _AddTargets(ArrIter<LogTargetPtr>(targets));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -178,7 +178,7 @@ namespace Atom::Logging::Private
         /// ----------------------------------------------------------------------------------------
         usize AddTargets(InitializerList<LogTargetPtr> targets)
         {
-            return AddTargets(ArrayIterator<const LogTargetPtr>(targets));
+            return AddTargets(ArrIter<LogTargetPtr>(targets));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -241,7 +241,7 @@ namespace Atom::Logging::Private
         /// ----------------------------------------------------------------------------------------
         usize RemoveTargets(InitializerList<LogTargetPtr> targets)
         {
-            return RemoveTargets(ArrayIterator<const LogTargetPtr>(targets));
+            return RemoveTargets(ArrIter<LogTargetPtr>(targets));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -299,7 +299,7 @@ namespace Atom::Logging::Private
         /// ----------------------------------------------------------------------------------------
         usize HasTargets(InitializerList<LogTargetPtr> targets) const noexcept
         {
-            return HasTargets(ArrayIterator<const LogTargetPtr>(targets));
+            return HasTargets(ArrIter<LogTargetPtr>(targets));
         }
 
         /// ----------------------------------------------------------------------------------------

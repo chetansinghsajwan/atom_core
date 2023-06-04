@@ -1,5 +1,5 @@
 #pragma once
-#include "Atom/Containers/ArrayIterator.h"
+#include "ArrIter.h"
 
 namespace Atom
 {
@@ -8,7 +8,7 @@ namespace Atom
     {
     public:
         using TElem = T;
-        using TIter = ArrayIterator<const T>;
+        using TIter = ArrIter<T>;
         using TIterEnd = TIter;
 
     //// -------------------------------------------------------------------------------------------

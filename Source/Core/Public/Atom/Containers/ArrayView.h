@@ -1,7 +1,6 @@
 #pragma once
-#include "Atom/Exceptions.h"
-#include "Atom/Containers/ArrayIterator.h"
 #include "ArrayView.decl.h"
+#include "Atom/Exceptions.h"
 
 namespace Atom
 {

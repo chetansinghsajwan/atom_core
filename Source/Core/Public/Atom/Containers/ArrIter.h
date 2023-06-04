@@ -5,72 +5,28 @@
 namespace Atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// ArrayIterator iterates over raw array.
+    /// ArrIter iterates over const raw array.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    class ArrayIterator: public ArrayIterator<const T>
-    {
-    public:
-        using ArrayIterator<const T>::ArrayIterator;
-
-    public:
-        using ArrayIterator<const T>::operator*;
-
-        constexpr T& operator *() noexcept
-        {
-            return *(T*)this->_it;
-        }
-
-    public:
-        /// ----------------------------------------------------------------------------------------
-        /// 
-        /// ----------------------------------------------------------------------------------------
-        constexpr ArrayIterator operator +(usize steps) const noexcept
-        {
-            return ArrayIterator(this->_it + steps);
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// 
-        /// ----------------------------------------------------------------------------------------
-        constexpr ArrayIterator operator -(usize steps) const noexcept
-        {
-            return ArrayIterator(this->_it - steps);
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// 
-        /// ----------------------------------------------------------------------------------------
-        constexpr isize operator -(const ArrayIterator& that) const noexcept
-        {
-            return this->_it - that._it;
-        }
-    };
-
-    /// --------------------------------------------------------------------------------------------
-    /// ArrayIterator iterates over const raw array.
-    /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    class ArrayIterator<const T>:
-        public ArrIterTag
+    class ArrIter: public ArrIterTag
     {
     public:
         /// ----------------------------------------------------------------------------------------
         /// DefaultConstructor.
         /// ----------------------------------------------------------------------------------------
-        constexpr ArrayIterator() noexcept:
+        constexpr ArrIter() noexcept:
             _it{ nullptr } { }
 
         /// ----------------------------------------------------------------------------------------
         /// NullConstructor.
         /// ----------------------------------------------------------------------------------------
-        constexpr ArrayIterator(NullPtr) noexcept:
+        constexpr ArrIter(NullPtr) noexcept:
             _it{ nullptr } { }
 
         /// ----------------------------------------------------------------------------------------
         /// Constructor.
         /// ----------------------------------------------------------------------------------------
-        constexpr ArrayIterator(const T* it) noexcept:
+        constexpr ArrIter(const T* it) noexcept:
             _it{ it } { }
 
     public:
@@ -85,7 +41,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr bool operator ==(const ArrayIterator& that) const noexcept
+        constexpr bool operator ==(const ArrIter& that) const noexcept
         {
             return this->_it == that._it;
         }
@@ -93,7 +49,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr bool operator !=(const ArrayIterator& that) const noexcept
+        constexpr bool operator !=(const ArrIter& that) const noexcept
         {
             return this->_it != that._it;
         }
@@ -101,7 +57,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr ArrayIterator& operator ++(int) noexcept
+        constexpr ArrIter& operator ++(int) noexcept
         {
             _it++;
             return *this;
@@ -110,7 +66,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// @TODO[Cpp2RemoveOper].
         /// ----------------------------------------------------------------------------------------
-        constexpr ArrayIterator& operator ++() noexcept
+        constexpr ArrIter& operator ++() noexcept
         {
             _it++;
             return *this;
@@ -119,7 +75,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr ArrayIterator& operator --(int) noexcept
+        constexpr ArrIter& operator --(int) noexcept
         {
             _it--;
             return *this;
@@ -128,7 +84,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr ArrayIterator& operator +=(usize steps) noexcept
+        constexpr ArrIter& operator +=(usize steps) noexcept
         {
             _it =+ steps;
             return *this;
@@ -137,7 +93,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr ArrayIterator& operator -=(usize steps) noexcept
+        constexpr ArrIter& operator -=(usize steps) noexcept
         {
             _it =- steps;
             return *this;
@@ -146,23 +102,23 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr ArrayIterator operator +(usize steps) const noexcept
+        constexpr ArrIter operator +(usize steps) const noexcept
         {
-            return ArrayIterator(_it + steps);
+            return ArrIter(_it + steps);
         }
 
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr ArrayIterator operator -(usize steps) const noexcept
+        constexpr ArrIter operator -(usize steps) const noexcept
         {
-            return ArrayIterator(_it - steps);
+            return ArrIter(_it - steps);
         }
 
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr isize operator -(const ArrayIterator& that) const noexcept
+        constexpr isize operator -(const ArrIter& that) const noexcept
         {
             return this->_it - that._it;
         }
@@ -174,9 +130,52 @@ namespace Atom
         const T* _it;
     };
 
-    static_assert(RArrIter<ArrayIterator<const int>, ArrayIterator<const int>, int>,
-        "ArrayIterator<const int> does not satisfy RArrayIterator<const int> requirements.");
+    static_assert(RArrIter<ArrIter<int>, ArrIter<int>, int>,
+        "{ArrIter} does not satisfy {RArrIter} requirements.");
 
-    static_assert(RMutArrIter<ArrayIterator<int>, ArrayIterator<int>, int>,
-        "ArrayIterator<int> does not satisfy RArrayIterator<int> requirements.");
+    /// --------------------------------------------------------------------------------------------
+    /// MutArrIter iterates over raw array.
+    /// --------------------------------------------------------------------------------------------
+    template <typename T>
+    class MutArrIter: public ArrIter<T>
+    {
+    public:
+        using ArrIter<T>::ArrIter;
+
+    public:
+        using ArrIter<T>::operator*;
+
+        constexpr T& operator *() noexcept
+        {
+            return *(T*)this->_it;
+        }
+
+    public:
+        /// ----------------------------------------------------------------------------------------
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        constexpr MutArrIter operator +(usize steps) const noexcept
+        {
+            return MutArrIter(this->_it + steps);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        constexpr MutArrIter operator -(usize steps) const noexcept
+        {
+            return MutArrIter(this->_it - steps);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        constexpr isize operator -(const MutArrIter& that) const noexcept
+        {
+            return this->_it - that._it;
+        }
+    };
+
+    static_assert(RMutArrIter<MutArrIter<int>, MutArrIter<int>, int>,
+        "{MutArrIter} does not satisfy {RArrIter} requirements.");
 }

@@ -3,7 +3,7 @@
 #include "OutputReq.h"
 #include "InsertableReq.h"
 #include "Range.h"
-#include "ArrayIterator.h"
+#include "ArrIter.h"
 #include "Atom/Invokable/Invokable.h"
 #include "Atom/Memory/ObjHelper.h"
 #include "Atom/Memory/DefaultMemAllocator.h"
@@ -19,9 +19,9 @@ namespace Atom
 
     public:
         using TElem = T;
-        using TIter = ArrayIterator<const T>;
+        using TIter = ArrIter<T>;
         using TIterEnd = TIter;
-        using TMutIter = ArrayIterator<T>;
+        using TMutIter = MutArrIter<T>;
         using TMutIterEnd = TMutIter;
 
     //// -------------------------------------------------------------------------------------------

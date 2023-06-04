@@ -1,6 +1,5 @@
 #pragma once
 #include "DynamicArray.decl.h"
-#include "Atom/Containers/ArrayIterator.h"
 #include "Atom/Exceptions.h"
 #include "Atom/Math/Core.h"
 
