@@ -1,5 +1,6 @@
 #pragma once
 #include "IterReq.h"
+#include "Atom/TTI.h"
 
 namespace Atom
 {
@@ -164,32 +165,35 @@ namespace Atom
         requires _RRangeBase<TRange, T>;
         requires RSameAs<typename TRange::TMutIter, typename TRange::TMutIterEnd>;
     };
-}
 
-template <typename TRange>
-requires ::Atom::RFwdRange<TRange, typename TRange::TElem>
-constexpr auto begin(TRange&& range) noexcept
-{
-    if constexpr (::Atom::RConst<TRange>)
+    /// --------------------------------------------------------------------------------------------
+    /// @TODO: Refactor this.
+    /// --------------------------------------------------------------------------------------------
+    template <typename TRange>
+    requires RRange<TTI::TRemoveCVRef<TRange>, typename TTI::TRemoveCVRef<TRange>::TElem>
+    constexpr auto begin(TRange&& range) noexcept
     {
-        return range.Iter();
+        if constexpr (RMutFwdRange<TTI::TRemoveCVRef<TRange>, typename TTI::TRemoveCVRef<TRange>::TElem>)
+        {
+            return range.MutIter();
+        }
+        else
+        {
+            return range.Iter();
+        }
     }
-    else
-    {
-        return range.MutIter();
-    }
-}
 
-template <typename TRange>
-requires ::Atom::RFwdRange<TRange, typename TRange::TElem>
-constexpr auto end(TRange&& range) noexcept
-{
-    if constexpr (::Atom::RConst<TRange>)
+    template <typename TRange>
+    requires RRange<TTI::TRemoveCVRef<TRange>, typename TTI::TRemoveCVRef<TRange>::TElem>
+    constexpr auto end(TRange&& range) noexcept
     {
-        return range.IterEnd();
-    }
-    else
-    {
-        return range.MutIterEnd();
+        if constexpr (RMutFwdRange<TTI::TRemoveCVRef<TRange>, typename TTI::TRemoveCVRef<TRange>::TElem>)
+        {
+            return range.MutIterEnd();
+        }
+        else
+        {
+            return range.IterEnd();
+        }
     }
 }
