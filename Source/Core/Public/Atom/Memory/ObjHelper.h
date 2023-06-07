@@ -25,7 +25,7 @@ namespace Atom
         {
             if constexpr (_IsTriviallyMoveConstructible)
             {
-                MemHelper().CopySafe(src, count * sizeof(T), steps);
+                MemHelper().CopySafe(src, count * sizeof(T), src + steps);
                 return;
             }
 

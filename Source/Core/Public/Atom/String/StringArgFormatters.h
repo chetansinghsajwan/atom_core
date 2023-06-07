@@ -1,12 +1,12 @@
 #pragma once
+#include "fmt/format.h"
+
 #include "String.h"
 #include "StringViewConverter.h"
 #include "StringConverter.h"
 
 #include "Atom/Exceptions.h"
 #include "Atom/TTI.h"
-
-#include "fmt/format.h"
 
 namespace Atom
 {
@@ -36,7 +36,7 @@ namespace Atom
 	{
 	public:
 		StrFmtEx(String msg) noexcept:
-			Exception(msg.Data()) { }
+			Exception(MOVE(msg)) { }
 
 		/// @TODO Fix this ugly code.
 		/// ----------------------------------------------------------------------------------------
@@ -57,7 +57,7 @@ namespace Atom
 
 		StrView GetRange() noexcept
 		{
-			return StrView{ _fmtCtx.begin(), _fmtCtx.end() };
+			return StrView{ Range(_fmtCtx.begin(), _fmtCtx.end()) };
 		}
 
 		void AdvanceTo(ArrIter<Char> it) noexcept

@@ -12,8 +12,9 @@ namespace Atom
         {
             .line = src.line(),
             .column = src.column(),
-            .fileName = src.file_name(),
-            .funcName = src.function_name()
+            // TODO: Fix this usage.
+            .fileName = Range(src.file_name(), usize(0)),
+            .funcName = Range(src.function_name(), usize(0))
         };
     }
 

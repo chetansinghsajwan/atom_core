@@ -1,7 +1,7 @@
 #pragma once
 #include <type_traits>
 
-#include "Atom/Core.h"
+#include "Atom/Core/Compiler.h"
 
 namespace Atom::TTI
 {

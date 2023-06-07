@@ -24,8 +24,8 @@ namespace Atom
         using TElem = typename _TIter::TElem;
         using TMutIter = _TIter;
         using TMutIterEnd = _TIterEnd;
-        using TIter = IterWrapForMutIter<_TIter>;
-        using TIterEnd = IterEndWrapForMutIterEnd<_TIterEnd>;
+        using TIter = _TIter;
+        using TIterEnd = _TIterEnd;
 
     public:
         constexpr Range(TIter iter, TIterEnd end) noexcept:
@@ -94,7 +94,7 @@ namespace Atom
         constexpr Range(const T* arr, const T* end) noexcept:
             _TBase{ arr, end } { }
 
-        constexpr Range(const T* arr, usize count, usize count2 = 0) noexcept:
+        constexpr Range(const T* arr, usize count) noexcept:
             _TBase{ arr, arr + count } { }
 
         template <usize count>

@@ -1,8 +1,9 @@
 #pragma once
+#include "Primitives.h"
+#include "Atom/TTI.h"
+
 #include <concepts>
 #include <type_traits>
-
-#include "Primitives.h"
 
 namespace Atom
 {
@@ -15,6 +16,12 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <typename T1, typename T2>
     concept RSameAs = std::same_as<T1, T2>;
+
+    /// --------------------------------------------------------------------------------------------
+    /// Ensures unqualified type of {T1} is same as unqualified type of {T2}.
+    /// --------------------------------------------------------------------------------------------
+    template <typename T1, typename T2>
+    concept RSameAsUnqualified = std::same_as<TTI::TRemoveCVRef<T1>, TTI::TRemoveCVRef<T2>>;
 
     template <bool V>
     concept RTrue = (V == true);

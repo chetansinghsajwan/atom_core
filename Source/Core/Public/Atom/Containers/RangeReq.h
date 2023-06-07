@@ -173,27 +173,66 @@ namespace Atom
     requires RRange<TTI::TRemoveCVRef<TRange>, typename TTI::TRemoveCVRef<TRange>::TElem>
     constexpr auto begin(TRange&& range) noexcept
     {
-        if constexpr (RMutFwdRange<TTI::TRemoveCVRef<TRange>, typename TTI::TRemoveCVRef<TRange>::TElem>)
-        {
-            return range.MutIter();
-        }
-        else
+        // if constexpr (!RConst<TRange> && RMutFwdRange<TTI::TRemoveCVRef<TRange>, 
+        //     typename TTI::TRemoveCVRef<TRange>::TElem>)
+        // {
+        //     return range.MutIter();
+        // }
+        // else
         {
             return range.Iter();
         }
     }
 
+    /// --------------------------------------------------------------------------------------------
+    /// @TODO: Refactor this.
+    /// --------------------------------------------------------------------------------------------
     template <typename TRange>
     requires RRange<TTI::TRemoveCVRef<TRange>, typename TTI::TRemoveCVRef<TRange>::TElem>
     constexpr auto end(TRange&& range) noexcept
     {
-        if constexpr (RMutFwdRange<TTI::TRemoveCVRef<TRange>, typename TTI::TRemoveCVRef<TRange>::TElem>)
-        {
-            return range.MutIterEnd();
-        }
-        else
+        // if constexpr (!RConst<TRange> && RMutFwdRange<TTI::TRemoveCVRef<TRange>, 
+        //     typename TTI::TRemoveCVRef<TRange>::TElem>)
+        // {
+        //     return range.MutIterEnd();
+        // }
+        // else
         {
             return range.IterEnd();
         }
+    }
+
+    /// --------------------------------------------------------------------------------------------
+    /// 
+    /// --------------------------------------------------------------------------------------------
+    template <typename T1Range, typename T2Range>
+    requires 
+        RRange<T1Range, typename T1Range::TElem> &&
+        RRange<T2Range, typename T2Range::TElem>
+    constexpr bool operator ==(const T1Range& range1, const T2Range& range2) noexcept
+    {
+        return _Compare(range1, range2) == 0;
+    }
+
+    /// --------------------------------------------------------------------------------------------
+    /// 
+    /// --------------------------------------------------------------------------------------------
+    template <typename T1Range, typename T2Range>
+    requires 
+        RRange<T1Range, typename T1Range::TElem> &&
+        RRange<T2Range, typename T2Range::TElem>
+    constexpr bool operator !=(const T1Range& range1, const T2Range& range2) noexcept
+    {
+        return !(range1 == range2);
+    }
+
+    /// --------------------------------------------------------------------------------------------
+    /// 
+    /// --------------------------------------------------------------------------------------------
+    template <typename T1Range, typename T2Range>
+    constexpr int8 _Compare(const T1Range& range1, const T2Range& range2) noexcept
+    {
+        // TODO: Implement this.
+        return 0;
     }
 }

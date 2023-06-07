@@ -11,7 +11,7 @@ namespace Atom
         requires (size == 37)
         constexpr Uuid Parse(const Char(&arr)[size]) const noexcept
         {
-            return Parse(ArrayView<Char>(arr, size - 1));
+            return Parse(ArrayView<Char>(Range(arr, arr + size - 1)));
         }
 
         template <typename TRange>
@@ -27,8 +27,8 @@ namespace Atom
             Uuid uuid;                  // output result
             usize i = 0;                // index of byte to write
             usize j = 0;                // index of char to read
-            auto it = range.begin();    // input range begin
-            auto end = range.end();     // input range end
+            auto it = range.Iter();    // input range begin
+            auto end = range.IterEnd();     // input range end
             while (i < 16)
             {
                 if (it == end)
@@ -78,8 +78,8 @@ namespace Atom
             Uuid uuid;                  // output result
             usize i = 0;                // index of byte to write
             usize j = 0;                // index of char to read
-            auto it = range.begin();    // input range begin
-            auto end = range.end();     // input range end
+            auto it = range.Iter();    // input range begin
+            auto end = range.IterEnd();     // input range end
 
             if (it - end != 36)
                 return Uuid::Null;

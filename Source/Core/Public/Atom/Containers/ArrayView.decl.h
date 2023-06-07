@@ -1,124 +1,86 @@
 #pragma once
-#include "ArrIter.h"
+#include "_ConstArrImplHelper.decl.h"
 
 namespace Atom
 {
     template <typename T>
-    class ArrayView
+    struct _ArrViewImplBase
     {
     public:
         using TElem = T;
-        using TIter = ArrIter<T>;
-        using TIterEnd = TIter;
 
-    //// -------------------------------------------------------------------------------------------
-    //// Constructors, Operators and Destructor.
-    //// -------------------------------------------------------------------------------------------
+    public:
+        constexpr _ArrViewImplBase() noexcept = default;
+
+        constexpr _ArrViewImplBase(NullPtr) noexcept:
+            _arr{ nullptr }, _count{ 0 } { }
+
+        constexpr _ArrViewImplBase(const T* arr, usize count) noexcept:
+            _arr{ arr }, _count{ count } { }
+
+    public:
+        constexpr auto _Data() const noexcept
+            -> const T*
+        {
+            return _arr;
+        }
+
+        constexpr auto _Count() const noexcept
+            -> usize
+        {
+            return _count;
+        }
+
+    protected:
+        const T* _arr;
+        usize _count;
+    };
+
+    /// --------------------------------------------------------------------------------------------
+    /// 
+    /// --------------------------------------------------------------------------------------------
+    template <typename T>
+    class ArrayView: public _ConstArrImplHelper<_ArrViewImplBase<T>>
+    {
+        prim using _TBase = _ConstArrImplHelper<_ArrViewImplBase<T>>;
+        prim using _ImplBase = _ArrViewImplBase<T>;
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// 
+        /// DefCtor.
         /// ----------------------------------------------------------------------------------------
-        constexpr ArrayView() noexcept;
+        constexpr ArrayView() noexcept = default;
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        /// NullCtor.
         /// ----------------------------------------------------------------------------------------
-        constexpr ArrayView(const T* in_begin, const T* in_end) noexcept;
+        constexpr ArrayView(NullPtr) noexcept:
+            _TBase{_ImplBase{ nullptr }} { }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        /// NullOper.
         /// ----------------------------------------------------------------------------------------
-        constexpr ArrayView(const T* in_arr, usize in_count) noexcept;
+        constexpr ArrayView& operator =(NullPtr) noexcept
+        {
+            *this = ArrayView(nullptr);
+        }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        /// ParamCtor.
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
         requires RArrRange<TRange, T>
         constexpr ArrayView(const TRange& range) noexcept:
-            ArrayView(&*range.begin(), &*range.end()) { }
+            _TBase{_ImplBase{ range.Data(), range.Count() }} { }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        /// ParamOper.
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
-        requires RRange<TRange, T>
-        constexpr bool operator == (const TRange& range) const noexcept;
-
-        /// ----------------------------------------------------------------------------------------
-        /// 
-        /// ----------------------------------------------------------------------------------------
-        constexpr bool operator == (const ArrayView& in) const noexcept;
-
-        /// ----------------------------------------------------------------------------------------
-        /// 
-        /// ----------------------------------------------------------------------------------------
-        constexpr const T& operator [] (usize index) const noexcept;
-
-    //// -------------------------------------------------------------------------------------------
-    //// Iteration.
-    //// -------------------------------------------------------------------------------------------
-
-    public:
-        /// ----------------------------------------------------------------------------------------
-        /// Iterator to the first element.
-        /// ----------------------------------------------------------------------------------------
-        constexpr TIter Iter() const noexcept
+        requires RArrRange<TRange, T>
+        constexpr ArrayView& operator =(const TRange& range) noexcept
         {
-            return TIter{ m_arr };
+            *this = ArrayView{ range.Data(), range.Count() };
         }
-
-        /// ----------------------------------------------------------------------------------------
-        /// Iterator to the last element.
-        /// ----------------------------------------------------------------------------------------
-        constexpr TIter IterEnd() const noexcept
-        {
-            return TIter{ m_arr + m_count };
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// Iterator to the first element.
-        /// ----------------------------------------------------------------------------------------
-        constexpr TIter begin() const noexcept
-        {
-            return Iter();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// Iterator to the last element.
-        /// ----------------------------------------------------------------------------------------
-        constexpr TIter end() const noexcept
-        {
-            return IterEnd();
-        }
-
-    //// -------------------------------------------------------------------------------------------
-    //// Access
-    //// -------------------------------------------------------------------------------------------
-
-    public:
-        /// ----------------------------------------------------------------------------------------
-        /// Get pointer to underlying array.
-        /// ----------------------------------------------------------------------------------------
-        constexpr const T* Data() const noexcept;
-
-        /// ----------------------------------------------------------------------------------------
-        /// Get count of elements.
-        /// ----------------------------------------------------------------------------------------
-        constexpr usize Count() const noexcept;
-
-        /// ----------------------------------------------------------------------------------------
-        /// Is range empty.
-        /// ----------------------------------------------------------------------------------------
-        constexpr bool IsEmpty() const noexcept;
-
-    //// -------------------------------------------------------------------------------------------
-    //// Fields.
-    //// -------------------------------------------------------------------------------------------
-
-    protected:
-        const T* m_arr;
-        usize m_count;
     };
 }

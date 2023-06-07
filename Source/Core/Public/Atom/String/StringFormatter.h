@@ -10,7 +10,7 @@ namespace Atom
     {
         constexpr StrView FromFmt(_FmtStrView strv) noexcept
         {
-            return StrView{ strv.data(), strv.size() };
+            return StrView{ Range(strv.data(), strv.size()) };
         }
 
         constexpr _FmtStrView ToFmt(StrView strv) noexcept

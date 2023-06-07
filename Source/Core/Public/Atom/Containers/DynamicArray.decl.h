@@ -1,359 +1,184 @@
 #pragma once
-#include "RangeReq.h"
-#include "OutputReq.h"
-#include "InsertableReq.h"
-#include "Range.h"
-#include "ArrIter.h"
-#include "Atom/Invokable/Invokable.h"
-#include "Atom/Memory/ObjHelper.h"
+#include "_DynArrImplHelper.decl.h"
 #include "Atom/Memory/DefaultMemAllocator.h"
+#include "Atom/Invokable/Invokable.h"
+// #include "Atom/Math/Core.h"
 
 namespace Atom
 {
-    template <typename T, typename TMemAlloc = DefaultMemAllocator>
-    class DynamicArray
+    template <typename T, typename TAlloc>
+    class _DynArrImplBase
     {
-    //// -------------------------------------------------------------------------------------------
-    //// Aliases
-    //// -------------------------------------------------------------------------------------------
+        pubm using TElem = T;
 
-    public:
-        using TElem = T;
-        using TIter = ArrIter<T>;
-        using TIterEnd = TIter;
-        using TMutIter = MutArrIter<T>;
-        using TMutIterEnd = TMutIter;
+        pubm cexpr _DynArrImplBase() noex = default;
 
-    //// -------------------------------------------------------------------------------------------
-    //// Constructors, Operators and Destructor
-    //// -------------------------------------------------------------------------------------------
+        pubm cexpr _DynArrImplBase(NullPtr) noex:
+            _arr{ nullptr }, _count{ 0 }, _capacity{ 0 }, _alloc{ } { }
 
-    public:
-        /// ----------------------------------------------------------------------------------------
-        /// DefaultConstructor.
-        /// ----------------------------------------------------------------------------------------
-        constexpr DynamicArray() noexcept;
-
-        /// ----------------------------------------------------------------------------------------
-        /// CopyConstructor.
-        /// ----------------------------------------------------------------------------------------
-        constexpr DynamicArray(const DynamicArray& in);
-
-        /// ----------------------------------------------------------------------------------------
-        /// MoveConstructor.
-        /// ----------------------------------------------------------------------------------------
-        constexpr DynamicArray(DynamicArray&& in) noexcept;
-
-        /// ----------------------------------------------------------------------------------------
-        /// ParameterizedConstructor.
-        /// ----------------------------------------------------------------------------------------
-        template <typename TRange>
-        requires RRange<TRange, T>
-        constexpr DynamicArray(const TRange& it);
-
-        /// ----------------------------------------------------------------------------------------
-        /// Calls InsertBack().
-        /// ----------------------------------------------------------------------------------------
-        constexpr TMutIter operator +=(const T& in);
-
-        /// ----------------------------------------------------------------------------------------
-        /// Calls InsertBack().
-        /// ----------------------------------------------------------------------------------------
-        constexpr TMutIter operator +=(T&& in);
-
-        /// ----------------------------------------------------------------------------------------
-        /// Calls InsertBack().
-        /// ----------------------------------------------------------------------------------------
-        template <typename TRange>
-        requires RRange<TRange, T>
-        constexpr TMutIter operator +=(const TRange& it);
-
-        /// ----------------------------------------------------------------------------------------
-        /// Destructor.
-        /// ----------------------------------------------------------------------------------------
-        constexpr ~DynamicArray();
-
-    //// -------------------------------------------------------------------------------------------
-    //// Access
-    //// -------------------------------------------------------------------------------------------
-
-    public:
-        /// ----------------------------------------------------------------------------------------
-        /// 
-        /// ----------------------------------------------------------------------------------------
-        constexpr T* Data() noexcept;
-
-        /// ----------------------------------------------------------------------------------------
-        /// 
-        /// ----------------------------------------------------------------------------------------
-        constexpr const T* Data() const noexcept;
-
-        /// ----------------------------------------------------------------------------------------
-        /// Count of elements.
-        /// ----------------------------------------------------------------------------------------
-        constexpr usize Count() const noexcept;
-
-        /// ----------------------------------------------------------------------------------------
-        /// Count of elements we have space for.
-        /// ----------------------------------------------------------------------------------------
-        constexpr usize Capacity() const noexcept;
-
-        /// ----------------------------------------------------------------------------------------
-        /// Is array empty.
-        /// ----------------------------------------------------------------------------------------
-        constexpr bool IsEmpty() const noexcept;
-
-    //// -------------------------------------------------------------------------------------------
-    //// Iter
-    //// -------------------------------------------------------------------------------------------
-
-    public:
-        /// ----------------------------------------------------------------------------------------
-        /// {TIter} to first element.
-        /// ----------------------------------------------------------------------------------------
-        constexpr TIter Iter() const noexcept
+        prom cexpr const T* _Data() const noex
         {
-            return TIter{ _arr };
+            return _arr;
         }
 
-        /// ----------------------------------------------------------------------------------------
-        /// {TIter} to last element.
-        /// ----------------------------------------------------------------------------------------
-        constexpr TIter IterEnd() const noexcept
+        prom cexpr T* _Data() noex
         {
-            return TIter{ _arr + _count };
+            return _arr;
         }
 
-        /// ----------------------------------------------------------------------------------------
-        /// {TMutIter} to first element.
-        /// ----------------------------------------------------------------------------------------
-        constexpr TMutIter MutIter() noexcept
+        prom cexpr void _Data(T* arr) noex
         {
-            return TMutIter{ _arr };
+            _arr = arr;
         }
 
-        /// ----------------------------------------------------------------------------------------
-        /// {TMutIterEnd} to last element.
-        /// ----------------------------------------------------------------------------------------
-        constexpr TMutIterEnd MutIterEnd() noexcept
+        prom cexpr usize _Count() const noex
         {
-            return TMutIterEnd{ _arr + _count + 1};
+            return _count;
         }
 
-        /// ----------------------------------------------------------------------------------------
-        /// {TIter} to first element.
-        /// ----------------------------------------------------------------------------------------
-        constexpr TIter begin() const noexcept { return Iter(); }
+        prom cexpr void _Count(usize count) noex
+        {
+            _count = count;
+        }
 
-        /// ----------------------------------------------------------------------------------------
-        /// {TIter} to last element.
-        /// ----------------------------------------------------------------------------------------
-        constexpr TIter end() const noexcept { return IterEnd(); }
+        prom cexpr usize _Capacity() const noex
+        {
+            return _capacity;
+        }
 
-        /// ----------------------------------------------------------------------------------------
-        /// {TMutIter} to first element.
-        /// ----------------------------------------------------------------------------------------
-        constexpr TMutIter begin() noexcept { return MutIter(); }
+        prom cexpr void _Capacity(usize cap) noex
+        {
+            _capacity = cap;
+        }
 
-        /// ----------------------------------------------------------------------------------------
-        /// {TMutIter} to last element.
-        /// ----------------------------------------------------------------------------------------
-        constexpr TMutIter end() noexcept { return MutIterEnd(); }
+        prom cexpr T* _AllocMem(usize size)
+        {
+            return (T*)_alloc.Alloc(size);
+        }
 
-    //// -------------------------------------------------------------------------------------------
-    //// Insert
-    //// -------------------------------------------------------------------------------------------
+        prom cexpr void _DeallocMem(T* mem)
+        {
+            return _alloc.Dealloc(mem);
+        }
 
-    public:
-        /// ----------------------------------------------------------------------------------------
-        /// Insert element {el} by forward at {pos} pos.
-        /// 
-        /// @PARAM pos: Position to insert element at.
-        /// @PARAM el: Element to insert.
-        /// 
-        /// @RETURNS {TMutIter} to the inserted element.
-        /// ----------------------------------------------------------------------------------------
-        template <typename U>
-        requires RSameAs<TTI::TRemoveCVRef<U>, T>
-        constexpr TMutIter InsertAt(TMutIter pos, U&& el);
+        prom cexpr usize _CalcCapGrowth(usize required) const noex
+        {
+            // return Math::Max(_Count() + required, _Capacity() * 2);
+            return required;
+        }
 
-        /// ----------------------------------------------------------------------------------------
-        /// Insert element range {range} at {pos} pos.
-        /// 
-        /// @PARAM pos: Position to insert element at.
-        /// @PARAM range: Element range to insert.
-        /// 
-        /// @RETURNS {TMutIter} to the first element of inserted range.
-        /// ----------------------------------------------------------------------------------------
-        template <typename TRange>
-        requires RRange<TRange, T>
-        constexpr TMutIter InsertAt(TMutIter pos, const TRange& range);
+        prom cexpr void _Swap(_DynArrImplBase& that) noex
+        {
+            _DynArrImplBase tmp = that;
+            *this = that;
+            that = tmp;
+        }
 
-        /// ----------------------------------------------------------------------------------------
-        /// Insert element {el} by forward at front.
-        /// 
-        /// @PARAM el: Element to insert.
-        /// 
-        /// @RETURNS {TMutIter} to the inserted element.
-        /// ----------------------------------------------------------------------------------------
-        template <typename U>
-        requires RSameAs<TTI::TRemoveCVRef<U>, T>
-        constexpr TMutIter InsertFront(U&& el);
+        prom cexpr void _Move(_DynArrImplBase& that) noex
+        {
+            *this = that;
+            that = _DynArrImplBase(nullptr);
+        }
 
-        /// ----------------------------------------------------------------------------------------
-        /// Insert element range {range} at front.
-        /// 
-        /// @PARAM el: Element range to insert.
-        /// 
-        /// @RETURNS {TMutIter} to the first element of inserted range.
-        /// ----------------------------------------------------------------------------------------
-        template <typename TRange>
-        requires RRange<TRange, T>
-        constexpr TMutIter InsertFront(const TRange& range);
-
-        /// ----------------------------------------------------------------------------------------
-        /// Insert element {el} by forward at back.
-        /// 
-        /// @PARAM el: Element to insert.
-        /// 
-        /// @RETURNS {TMutIter} to the inserted element.
-        /// ----------------------------------------------------------------------------------------
-        template <typename U>
-        requires RSameAs<TTI::TRemoveCVRef<U>, T>
-        constexpr TMutIter InsertBack(U&& el);
-
-        /// ----------------------------------------------------------------------------------------
-        /// Insert element range {range} at back.
-        /// 
-        /// @PARAM range: Element range to insert.
-        /// 
-        /// @RETURNS {TMutIter} to the first element of inserted range.
-        /// ----------------------------------------------------------------------------------------
-        template <typename TRange>
-        requires RRange<TRange, T>
-        constexpr TMutIter InsertBack(const TRange& range);
-
-    private:
-        template <typename U>
-        constexpr usize _InsertAt(usize index, U&& el);
-
-        template <typename TOtherIter>
-        constexpr usize _InsertAtCounted(usize index, TOtherIter it, usize count);
-
-        template <typename TOtherIter, typename TOtherIterEnd>
-        constexpr usize _InsertAtUncounted(usize index, TOtherIter begin, TOtherIterEnd end);
-
-        template <typename U>
-        constexpr usize _InsertBack(U&& el);
-
-        template <typename TOtherIter>
-        constexpr usize _InsertBackCounted(TOtherIter it, usize count);
-
-        template <typename TOtherIter, typename TOtherIterEnd>
-        constexpr usize _InsertBackUncounted(TOtherIter begin, TOtherIterEnd end);
-
-        constexpr bool _ValidateIndexForInsert(isize index) const noexcept;
-
-    //// -------------------------------------------------------------------------------------------
-    //// Remove
-    //// -------------------------------------------------------------------------------------------
-
-    public:
-        /// ----------------------------------------------------------------------------------------
-        /// Removes element at pos{pos}.
-        /// 
-        /// @PARAM pos: Position to remove element at.
-        /// 
-        /// @RETURNS {TMutIter} to the next element.
-        /// ----------------------------------------------------------------------------------------
-        constexpr TMutIter RemoveAt(TIter pos);
-
-        /// ----------------------------------------------------------------------------------------
-        /// Removes element at range{range}.
-        /// 
-        /// @PARAM range: Range to remove element at.
-        /// 
-        /// @RETURNS {TMutIter} to the next element.
-        /// ----------------------------------------------------------------------------------------
-        constexpr TMutIter RemoveRange(Range<TIter, TIterEnd> range);
-
-    private:
-        constexpr usize _RemoveAt(usize index);
-
-        constexpr usize _RemoveRange(usize begin, usize count);
-
-    public:
-        /// ----------------------------------------------------------------------------------------
-        /// 
-        /// ----------------------------------------------------------------------------------------
-        template <typename TRange>
-        requires RRange<TRange, T>
-        constexpr usize Remove(const TRange& it);
-
-        /// ----------------------------------------------------------------------------------------
-        /// 
-        /// ----------------------------------------------------------------------------------------
-        template <RInvokable<bool(const T&)> TFilter>
-        usize RemoveIf(TFilter&& filter);
-
-        /// ----------------------------------------------------------------------------------------
-        /// 
-        /// ----------------------------------------------------------------------------------------
-        constexpr bool Remove(const T& in);
-
-    //// -------------------------------------------------------------------------------------------
-    //// Search
-    //// -------------------------------------------------------------------------------------------
-
-    public:
-        /// ----------------------------------------------------------------------------------------
-        /// 
-        /// ----------------------------------------------------------------------------------------
-        constexpr bool Contains(const T& in) const noexcept;
-
-    //// -------------------------------------------------------------------------------------------
-    //// Memory
-    //// -------------------------------------------------------------------------------------------
-
-    public:
-        /// ----------------------------------------------------------------------------------------
-        /// 
-        /// ----------------------------------------------------------------------------------------
-        constexpr void Reserve(usize size);
-
-    protected:
-        constexpr bool _ValidateIter(TIter it) const noexcept;
-        constexpr void _UpdateIterDebugId() noexcept;
-        constexpr bool _ValidateIndex(isize index) const noexcept;
-        constexpr isize _FetchIndex(TIter pos) const noexcept;
-        constexpr usize _CalcCapGrowth(usize required) const noexcept;
-        constexpr void _EnsureCapFor(usize count);
-
-        constexpr void _ConstructAt(usize index, auto&&... args);
-        constexpr void _DestructAt(usize index);
-        constexpr void _DestructRange(usize begin, usize end);
-        constexpr void _MoveRangeFront(usize index, usize count);
-        constexpr void _MoveRangeBack(usize index, usize count);
-        constexpr void _RotateRangeBack(usize index, usize count);
-
-        template <typename TRange>
-        static constexpr bool _CanGetRangeSize() noexcept;
-
-        template <typename TRange>
-        static constexpr usize _GetRangeSize(const TRange& range) noexcept;
-
-    //// -------------------------------------------------------------------------------------------
-    //// Fields
-    //// -------------------------------------------------------------------------------------------
-
-    protected:
-        T* _arr;
-        usize _count;
-        usize _capacity;
-        usize _iterValidDebugId;
-        TMemAlloc _memAllocator;
-
-    private:
-        static constexpr ObjHelper<T> _objHelper = ObjHelper<T>();
+        pubm T* _arr;
+        pubm usize _count;
+        pubm usize _capacity;
+        pubm TAlloc _alloc;
     };
+
+    template <typename T, typename TAlloc = DefaultMemAllocator>
+    class DynArr: pub _DynArrImplHelper<_DynArrImplBase<T, TAlloc>>
+    {
+        using _Impl = _DynArrImplHelper<_DynArrImplBase<T, TAlloc>>;
+        using _ImplBase = _DynArrImplBase<T, TAlloc>;
+
+        /// ----------------------------------------------------------------------------------------
+        /// DefCtor.
+        /// ----------------------------------------------------------------------------------------
+        pubm cexpr DynArr() noex = default;
+
+        /// ----------------------------------------------------------------------------------------
+        /// NullCtor.
+        /// ----------------------------------------------------------------------------------------
+        pubm cexpr DynArr(NullPtr) noex:
+            _Impl{_ImplBase{ nullptr }} { }
+
+        /// ----------------------------------------------------------------------------------------
+        /// ParamCtor.
+        /// ----------------------------------------------------------------------------------------
+        pubm template <typename TRange>
+        requires RRange<TRange, T>
+        cexpr DynArr(const TRange& range) noex:
+            _Impl{_ImplBase{ nullptr }}
+        {
+            this->InsertBack(range);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// CopyCtor.
+        /// ----------------------------------------------------------------------------------------
+        pubm cexpr DynArr(const DynArr& that) noex:
+            _Impl{_ImplBase{ nullptr }}
+        {
+            this->InsertBack(that);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// CopyOper.
+        /// ----------------------------------------------------------------------------------------
+        pubm cexpr DynArr& operator =(const DynArr& that) noex
+        {
+            this->Clear();
+            this->InsertBack(that);
+            return *this;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// MoveCtor.
+        /// ----------------------------------------------------------------------------------------
+        pubm cexpr DynArr(DynArr&& that) noex:
+            _Impl{_ImplBase{ MOVE(that) }} { }
+
+        /// ----------------------------------------------------------------------------------------
+        /// MoveOper.
+        /// ----------------------------------------------------------------------------------------
+        pubm cexpr DynArr& operator =(DynArr&& that) noex
+        {
+            DynArr tmp = MOVE(that);
+            this->_Swap(tmp);
+            return *this;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// Dtor.
+        /// ----------------------------------------------------------------------------------------
+        pubm cexpr ~DynArr() noex
+        {
+            this->Clear();
+            this->Release();
+        }
+    };
+
+    template <typename T, typename TAlloc = DefaultMemAllocator>
+    using DynamicArray = DynArr<T, TAlloc>;
+
+    /// --------------------------------------------------------------------------------------------
+    /// @TOOD: Move to Removeable section.
+    /// --------------------------------------------------------------------------------------------
+    template <typename T, typename TPred>
+    requires RInvokable<TPred, bool(const T& el)>
+    usize UfcsRemoveIf(DynArr<T>& range, TPred&& pred)
+    {
+        usize count = 0;
+        for (auto it = range.Iter(); it != range.IterEnd(); it++)
+        {
+            if (pred(*it))
+            {
+                it = range.RemoveAt(it);
+                count++;
+            }
+        };
+
+        return count;
+    }
 }

@@ -8,6 +8,6 @@ namespace Atom
     using BasicBufString = _StringImpl
     <
         TEncoding,
-        BufArray<BasicChar<TEncoding>, BufSize, TAlloc>
+        BufArr<BasicChar<TEncoding>, BufSize, TAlloc>
     >;
 }
