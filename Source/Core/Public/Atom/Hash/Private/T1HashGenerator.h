@@ -43,7 +43,7 @@ namespace Atom::Private
                 "Keep {BufSize} smaller than or equal to max of {uint32_t}");
 
             usize count = 0;
-            StaticArray<byte, BufSize> buf;
+            StaArr<byte, BufSize> buf;
 
             auto end = bytes.End();
             for (auto it = bytes.Begin(); it != end; it++)

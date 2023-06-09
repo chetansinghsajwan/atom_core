@@ -20,7 +20,7 @@ namespace Atom::Logging::Private
     template <RLockable TLockable>
     class MultiLogTargetTemplate : public LogTarget
     {
-        using _TContainer = DynamicArray<LogTargetPtr>;
+        using _TContainer = DynArr<LogTargetPtr>;
 
     public:
         using TElem = LogTargetPtr;

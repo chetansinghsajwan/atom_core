@@ -5,7 +5,7 @@
 namespace Atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// ArrIter iterates over const raw array.
+    /// ArrIter iterates over const raw arr.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
     class ArrIter: public ArrIterTag
@@ -137,7 +137,7 @@ namespace Atom
         "{ArrIter} does not satisfy {RArrIter} requirements.");
 
     /// --------------------------------------------------------------------------------------------
-    /// MutArrIter iterates over raw array.
+    /// MutArrIter iterates over raw arr.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
     class MutArrIter: public ArrIter<T>

@@ -35,7 +35,7 @@ namespace Atom
         constexpr bool operator == (const Uuid& other) const noexcept = default;
         constexpr bool operator != (const Uuid& other) const noexcept = default;
 
-        StaticArray<byte, 16> bytes;
+        StaArr<byte, 16> bytes;
     };
 
     constexpr inline const Uuid Uuid::Null = Uuid{ 0 };

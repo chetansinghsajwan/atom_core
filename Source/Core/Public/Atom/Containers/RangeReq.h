@@ -171,7 +171,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
     requires RRange<TTI::TRemoveCVRef<TRange>, typename TTI::TRemoveCVRef<TRange>::TElem>
-    constexpr auto begin(TRange&& range) noexcept
+    constexpr auto begin(const TRange& range) noexcept
     {
         // if constexpr (!RConst<TRange> && RMutFwdRange<TTI::TRemoveCVRef<TRange>, 
         //     typename TTI::TRemoveCVRef<TRange>::TElem>)
@@ -184,12 +184,19 @@ namespace Atom
         }
     }
 
+    template <typename TRange>
+    requires RMutFwdRange<TRange, typename TRange::TElem>
+    constexpr auto begin(TRange& range) noexcept
+    {
+        return range.MutIter();
+    }
+
     /// --------------------------------------------------------------------------------------------
     /// @TODO: Refactor this.
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
     requires RRange<TTI::TRemoveCVRef<TRange>, typename TTI::TRemoveCVRef<TRange>::TElem>
-    constexpr auto end(TRange&& range) noexcept
+    constexpr auto end(const TRange& range) noexcept
     {
         // if constexpr (!RConst<TRange> && RMutFwdRange<TTI::TRemoveCVRef<TRange>, 
         //     typename TTI::TRemoveCVRef<TRange>::TElem>)
@@ -200,6 +207,13 @@ namespace Atom
         {
             return range.IterEnd();
         }
+    }
+
+    template <typename TRange>
+    requires RMutFwdRange<TRange, typename TRange::TElem>
+    constexpr auto end(TRange&& range) noexcept
+    {
+        return range.MutIterEnd();
     }
 
     /// --------------------------------------------------------------------------------------------

@@ -40,7 +40,7 @@ namespace Atom
     /// 
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    class ArrayView: public _ConstArrImplHelper<_ArrViewImplBase<T>>
+    class ArrView: public _ConstArrImplHelper<_ArrViewImplBase<T>>
     {
         prim using _TBase = _ConstArrImplHelper<_ArrViewImplBase<T>>;
         prim using _ImplBase = _ArrViewImplBase<T>;
@@ -49,20 +49,20 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// DefCtor.
         /// ----------------------------------------------------------------------------------------
-        constexpr ArrayView() noexcept = default;
+        constexpr ArrView() noexcept = default;
 
         /// ----------------------------------------------------------------------------------------
         /// NullCtor.
         /// ----------------------------------------------------------------------------------------
-        constexpr ArrayView(NullPtr) noexcept:
+        constexpr ArrView(NullPtr) noexcept:
             _TBase{_ImplBase{ nullptr }} { }
 
         /// ----------------------------------------------------------------------------------------
         /// NullOper.
         /// ----------------------------------------------------------------------------------------
-        constexpr ArrayView& operator =(NullPtr) noexcept
+        constexpr ArrView& operator =(NullPtr) noexcept
         {
-            *this = ArrayView(nullptr);
+            *this = ArrView(nullptr);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -70,7 +70,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
         requires RArrRange<TRange, T>
-        constexpr ArrayView(const TRange& range) noexcept:
+        constexpr ArrView(const TRange& range) noexcept:
             _TBase{_ImplBase{ range.Data(), range.Count() }} { }
 
         /// ----------------------------------------------------------------------------------------
@@ -78,9 +78,9 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
         requires RArrRange<TRange, T>
-        constexpr ArrayView& operator =(const TRange& range) noexcept
+        constexpr ArrView& operator =(const TRange& range) noexcept
         {
-            *this = ArrayView{ range.Data(), range.Count() };
+            *this = ArrView{ range.Data(), range.Count() };
         }
     };
 }

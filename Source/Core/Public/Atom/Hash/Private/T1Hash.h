@@ -1,5 +1,5 @@
 #pragma once
-#include "Atom/Containers/StaticArray.h"
+#include "Atom/Containers/StaArr.h"
 
 namespace Atom::Private
 {
@@ -15,7 +15,7 @@ namespace Atom::Private
         constexpr bool operator == (const T1Hash& other) const noexcept = default;
         constexpr bool operator != (const T1Hash& other) const noexcept = default;
 
-        StaticArray<byte, size> bytes;
+        StaArr<byte, size> bytes;
     };
 
     // FIX: Compilation error in MSVC, checkout /Zc:externConstexpr

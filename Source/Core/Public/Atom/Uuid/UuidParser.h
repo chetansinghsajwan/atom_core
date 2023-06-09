@@ -11,7 +11,7 @@ namespace Atom
         requires (size == 37)
         constexpr Uuid Parse(const Char(&arr)[size]) const noexcept
         {
-            return Parse(ArrayView<Char>(Range(arr, arr + size - 1)));
+            return Parse(ArrView<Char>(Range(arr, arr + size - 1)));
         }
 
         template <typename TRange>

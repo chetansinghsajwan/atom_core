@@ -1,6 +1,6 @@
 #pragma once
 #include "_StringImpl.decl.h"
-#include "Atom/Containers/BufArray.decl.h"
+#include "Atom/Containers/BufArr.decl.h"
 
 namespace Atom
 {

@@ -140,6 +140,6 @@ namespace Atom
     
         /// List of event listeners.
         /// ----------------------------------------------------------------------------------------
-        DynamicArray<TListener> _listeners;
+        DynArr<TListener> _listeners;
     };
 }

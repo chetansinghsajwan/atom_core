@@ -166,7 +166,7 @@ namespace Atom
 	static_assert(RStrFmtArgFmtable<StrView>, "StrView is not formattable.");
 
 	/// -----------------------------------------------------------------------------------------------
-	/// {StrFmtArgFmter} specialization for {Char} array.
+	/// {StrFmtArgFmter} specialization for {Char} arr.
 	/// -----------------------------------------------------------------------------------------------
 	template <usize N>
 	struct StrFmtArgFmterImpl<Char[N]>: StrFmtArgFmter<StrView>

@@ -1,6 +1,6 @@
 #pragma once
 #include "_StringImpl.decl.h"
-#include "Atom/Containers/DynamicArray.decl.h"
+#include "Atom/Containers/DynArr.decl.h"
 
 namespace Atom
 {
@@ -8,6 +8,6 @@ namespace Atom
     using BasicDynamicString = _StringImpl
     <
         TEncoding,
-        DynamicArray<BasicChar<TEncoding>, TAlloc>
+        DynArr<BasicChar<TEncoding>, TAlloc>
     >;
 }

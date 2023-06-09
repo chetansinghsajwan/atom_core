@@ -1,5 +1,5 @@
 #pragma once
-#include "DynamicArray.decl.h"
+#include "DynArr.decl.h"
 
 namespace Atom
 {

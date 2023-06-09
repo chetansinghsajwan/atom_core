@@ -1,6 +1,6 @@
 #pragma once
 #include "_StringImpl.decl.h"
-#include "Atom/Containers/ArrayView.decl.h"
+#include "Atom/Containers/ArrView.decl.h"
 
 namespace Atom
 {
@@ -8,6 +8,6 @@ namespace Atom
     using BasicStringView = _StringImpl
     <
         TEncoding,
-        ArrayView<BasicChar<TEncoding>>
+        ArrView<BasicChar<TEncoding>>
     >;
 }

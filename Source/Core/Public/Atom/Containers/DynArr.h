@@ -1,3 +1,3 @@
 #pragma once
-#include "DynamicArray.decl.h"
+#include "DynArr.decl.h"
 #include "_DynArrImplHelper.h"

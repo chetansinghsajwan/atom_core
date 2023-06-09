@@ -159,9 +159,6 @@ namespace Atom
         }
     };
 
-    template <typename T, typename TAlloc = DefaultMemAllocator>
-    using DynamicArray = DynArr<T, TAlloc>;
-
     /// --------------------------------------------------------------------------------------------
     /// @TOOD: Move to Removeable section.
     /// --------------------------------------------------------------------------------------------
