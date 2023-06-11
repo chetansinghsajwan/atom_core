@@ -2,7 +2,7 @@
 #include "Atom/Memory/ObjectBox.h"
 #include "Atom/Exceptions.h"
 #include "Atom/TTI.h"
-#include "Atom/String.h"
+#include "Atom/Str.h"
 
 #include "Atom/Invokable/Invokable.h"
 

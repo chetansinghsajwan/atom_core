@@ -29,7 +29,7 @@ namespace Atom
         -> const TElem&
     {
         ATOM_DEBUG_EXPECTS(!IsEmpty()) << OutOfRangeException(
-            String(Range(ATOM_TEXT("Arr is empty."))));
+            Str(Range(ATOM_TEXT("Arr is empty."))));
 
         return _Data()[0];
     }

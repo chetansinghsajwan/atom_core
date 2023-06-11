@@ -1,5 +1,5 @@
 #pragma once
-#include "Atom/String.h"
+#include "Atom/Str.h"
 #include "Atom/TTI.h"
 
 #include "Atom/Uuid/Uuid.h"
@@ -14,7 +14,7 @@ namespace Atom::Private
             m_nsUuid(in_nsUuid) { }
 
     public:
-        Uuid Generate(StringView name)
+        Uuid Generate(StrView name)
         {
             m_Reset();
             m_ProcessChars(name);
@@ -28,7 +28,7 @@ namespace Atom::Private
             m_hashGenerator.ProcessBytes(m_nsUuid.bytes.Data(), 16);
         }
 
-        void m_ProcessChars(StringView str)
+        void m_ProcessChars(StrView str)
         {
             for (uint32_t c : str)
             {

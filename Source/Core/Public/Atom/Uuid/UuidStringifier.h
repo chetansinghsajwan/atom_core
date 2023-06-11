@@ -1,13 +1,13 @@
 #pragma once
 #include "Atom/Uuid/Uuid.h"
-#include "Atom/String/String.h"
+#include "Atom/Str/Str.h"
 #include "Atom/Math.h"
 
 namespace Atom
 {
     struct UuidStringifier
     {
-        constexpr void WriteString(const Uuid& uuid,
+        constexpr void WriteStr(const Uuid& uuid,
             ROutput<Char> auto&& out) const noexcept
         {
             out += Math::HexToChar(uuid.bytes[0]);
@@ -32,10 +32,10 @@ namespace Atom
             out += Math::HexToChar(uuid.bytes[15]);
         }
 
-        constexpr String ToString(const Uuid& uuid) const noexcept
+        constexpr Str ToStr(const Uuid& uuid) const noexcept
         {
-            String out;
-            WriteString(uuid, out);
+            Str out;
+            WriteStr(uuid, out);
             return out;
         }
     };

@@ -1,10 +1,10 @@
-#include "Atom/String/StringView.h"
+#include "Atom/Str/StrView.h"
 
 using namespace Atom;
 
 struct Console
 {
-    void Out(StringView str)
+    void Out(StrView str)
     {
         std::wcout << std::wstring_view((const wchar_t*)str.Data(), str.Count()) << std::endl;
     }

@@ -2,9 +2,9 @@
 #include <source_location>
 #include <stacktrace>
 
-#include "Atom/String/String.decl.h"
-#include "Atom/String/StringView.decl.h"
-#include "Atom/String/AsciiStringView.decl.h"
+#include "Atom/Str/Str.decl.h"
+#include "Atom/Str/StrView.decl.h"
+#include "Atom/Str/AsciiStrView.decl.h"
 
 namespace Atom
 {
@@ -19,8 +19,8 @@ namespace Atom
 
         uint32 line;
         uint32 column;
-        AsciiStringView fileName;
-        AsciiStringView funcName;
+        AsciiStrView fileName;
+        AsciiStrView funcName;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -39,7 +39,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Basic constructor with msg.
         /// ----------------------------------------------------------------------------------------
-        Exception(String msg) noexcept;
+        Exception(Str msg) noexcept;
 
         /// ----------------------------------------------------------------------------------------
         /// VirtualDestructor.
@@ -50,12 +50,12 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Name of the exception.
         /// ----------------------------------------------------------------------------------------
-        StringView exName;
+        StrView exName;
 
         /// ----------------------------------------------------------------------------------------
         /// Message explaining what went wrong.
         /// ----------------------------------------------------------------------------------------
-        String msg;
+        Str msg;
 
         /// ----------------------------------------------------------------------------------------
         /// Origin of the exception.
@@ -113,7 +113,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     struct IndexOutOfRangeException: OutOfRangeException
     {
-        IndexOutOfRangeException(String msg, usize index, usize begin, usize end);
+        IndexOutOfRangeException(Str msg, usize index, usize begin, usize end);
 
         usize index;
         usize begin;

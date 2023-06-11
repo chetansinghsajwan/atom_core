@@ -4,7 +4,7 @@
 #include "Internal/Core.h"
 
 #include "Atom/Chrono.h"
-#include "Atom/String.h"
+#include "Atom/Str.h"
 
 
 namespace Atom::Logging
@@ -31,12 +31,12 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Message of the log.
         /// ----------------------------------------------------------------------------------------
-        StringView msg;
+        StrView msg;
 
         /// ----------------------------------------------------------------------------------------
         /// Name of the logger through which this message was logged.
         /// ----------------------------------------------------------------------------------------
-        StringView loggerName;
+        StrView loggerName;
 
         /// ----------------------------------------------------------------------------------------
         /// Level of this message.
@@ -56,9 +56,9 @@ namespace Atom::Logging
 namespace Atom
 {
     template < >
-    struct StringViewConverter<Logging::ELogLevel>
+    struct StrViewConverter<Logging::ELogLevel>
     {
-        constexpr StringView Convert(Logging::ELogLevel in_lvl) noexcept
+        constexpr StrView Convert(Logging::ELogLevel in_lvl) noexcept
         {
             switch (in_lvl)
             {

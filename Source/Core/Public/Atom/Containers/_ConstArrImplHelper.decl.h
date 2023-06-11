@@ -143,7 +143,7 @@ namespace Atom
         constexpr auto _ValidateIndexForAccess(isize index) const noexcept
             -> bool
         {
-            return index > 0 && index < _Count();
+            return index > 0 && index < (isize)_Count();
         }
 
         prom using _TImpl::_Data;

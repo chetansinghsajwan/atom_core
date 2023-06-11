@@ -7,7 +7,7 @@ namespace Atom::Logging
     class LoggerFactory
     {
     public:
-        LoggerPtr CreateLogger(String name) noexcept
+        LoggerPtr CreateLogger(Str name) noexcept
         {
             return MAKE_LOGGER<SimpleLoggerST>(MOVE(name));
         }

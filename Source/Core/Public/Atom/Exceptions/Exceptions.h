@@ -1,8 +1,8 @@
 #pragma once
 #include "Exceptions.decl.h"
-#include "Atom/String/String.h"
-#include "Atom/String/StringView.h"
-#include "Atom/String/AsciiStringView.h"
+#include "Atom/Str/Str.h"
+#include "Atom/Str/StrView.h"
+#include "Atom/Str/AsciiStrView.h"
 
 namespace Atom
 {
@@ -18,13 +18,13 @@ namespace Atom
         };
     }
 
-    inline Exception::Exception(String msg) noexcept:
+    inline Exception::Exception(Str msg) noexcept:
         msg(MOVE(msg)) { }
 
     inline Exception::~Exception() { }
 
     inline IndexOutOfRangeException::IndexOutOfRangeException(
-        String msg, usize index, usize begin, usize end):
+        Str msg, usize index, usize begin, usize end):
         OutOfRangeException(MOVE(msg)), index{ index }, begin{ begin }, end{ end } { }
 }
 

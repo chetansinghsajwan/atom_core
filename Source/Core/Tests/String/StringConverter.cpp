@@ -1,14 +1,14 @@
 #include "catch2/catch_all.hpp"
 
-#include "Atom/String/StringConverter.h"
+#include "Atom/Str/StrConverter.h"
 
 using namespace Atom;
 
-TEST_CASE("Atom.String.StringConverter")
+TEST_CASE("Atom.Str.StrConverter")
 {
-    String str = TEXT("Hello.");
-    const String& strRef = str;
+    Str str = TEXT("Hello.");
+    const Str& strRef = str;
 
-    StringConverter<String> converter;
-    String newStr = converter.Convert(strRef);
+    StrConverter<Str> converter;
+    Str newStr = converter.Convert(strRef);
 }

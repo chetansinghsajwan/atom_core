@@ -9,6 +9,6 @@ namespace Atom::Text
     class EncodingException: public Exception
     {
     public:
-        EncodingException(String msg) noexcept;
+        EncodingException(Str msg) noexcept;
     };
 }

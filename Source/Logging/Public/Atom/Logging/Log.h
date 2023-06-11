@@ -26,7 +26,7 @@ namespace Atom::Logging
     /// Calls Log on GET_ROOT_LOGGER().
     /// ----------------------------------------------------------------------------------------
     template <RLogArg... TArgs>
-    inline void LOG(ELogLevel in_lvl, LogString<TArgs...> in_msg, TArgs&&... in_args)
+    inline void LOG(ELogLevel in_lvl, LogStr<TArgs...> in_msg, TArgs&&... in_args)
     {
         GET_ROOT_LOGGER()->Log(in_lvl, in_msg, FORWARD(in_args)...);
     }
@@ -35,7 +35,7 @@ namespace Atom::Logging
     /// Calls LOG(ELogLevel::Trace, in_msg, FORWARD(in_args)...).
     /// --------------------------------------------------------------------------------------------
     template <RLogArg... TArgs>
-    inline void LOG_TRACE(LogString<TArgs...> in_msg, TArgs&&... in_args)
+    inline void LOG_TRACE(LogStr<TArgs...> in_msg, TArgs&&... in_args)
     {
         LOG(ELogLevel::Trace, in_msg, FORWARD(in_args)...);
     }
@@ -44,7 +44,7 @@ namespace Atom::Logging
     /// Calls LOG(ELogLevel::Debug, in_msg, FORWARD(in_args)...).
     /// --------------------------------------------------------------------------------------------
     template <RLogArg... TArgs>
-    inline void LOG_DEBUG(LogString<TArgs...> in_msg, TArgs&&... in_args)
+    inline void LOG_DEBUG(LogStr<TArgs...> in_msg, TArgs&&... in_args)
     {
         LOG(ELogLevel::Debug, in_msg, FORWARD(in_args)...);
     }
@@ -53,7 +53,7 @@ namespace Atom::Logging
     /// Calls LOG(ELogLevel::Info, in_msg, FORWARD(in_args)...).
     /// --------------------------------------------------------------------------------------------
     template <RLogArg... TArgs>
-    inline void LOG_INFO(LogString<TArgs...> in_msg, TArgs&&... in_args)
+    inline void LOG_INFO(LogStr<TArgs...> in_msg, TArgs&&... in_args)
     {
         LOG(ELogLevel::Info, in_msg, FORWARD(in_args)...);
     }
@@ -62,7 +62,7 @@ namespace Atom::Logging
     /// Calls LOG(ELogLevel::Warn, in_msg, FORWARD(in_args)...).
     /// --------------------------------------------------------------------------------------------
     template <RLogArg... TArgs>
-    inline void LOG_WARN(LogString<TArgs...> in_msg, TArgs&&... in_args)
+    inline void LOG_WARN(LogStr<TArgs...> in_msg, TArgs&&... in_args)
     {
         LOG(ELogLevel::Warn, in_msg, FORWARD(in_args)...);
     }
@@ -71,7 +71,7 @@ namespace Atom::Logging
     /// Calls LOG(ELogLevel::Error, in_msg, FORWARD(in_args)...).
     /// --------------------------------------------------------------------------------------------
     template <RLogArg... TArgs>
-    inline void LOG_ERROR(LogString<TArgs...> in_msg, TArgs&&... in_args)
+    inline void LOG_ERROR(LogStr<TArgs...> in_msg, TArgs&&... in_args)
     {
         LOG(ELogLevel::Error, in_msg, FORWARD(in_args)...);
     }
@@ -80,7 +80,7 @@ namespace Atom::Logging
     /// Calls LOG(ELogLevel::Fatal, in_msg, FORWARD(in_args)...).
     /// --------------------------------------------------------------------------------------------
     template <RLogArg... TArgs>
-    inline void LOG_FATAL(LogString<TArgs...> in_msg, TArgs&&... in_args)
+    inline void LOG_FATAL(LogStr<TArgs...> in_msg, TArgs&&... in_args)
     {
         LOG(ELogLevel::Fatal, in_msg, FORWARD(in_args)...);
     }
@@ -122,7 +122,7 @@ namespace Atom::Logging
     /// @TODO Check the overhead of this function when it should not log anything.
     /// --------------------------------------------------------------------------------------------
     template <ELogLevel in_lvl, RLogArg... TArgs>
-    inline void STATIC_LOG(LogString<TArgs...> in_msg, TArgs&&... in_args)
+    inline void STATIC_LOG(LogStr<TArgs...> in_msg, TArgs&&... in_args)
     {
         if constexpr (STATIC_CHECK_LOG_LEVEL<in_lvl>())
         {
@@ -134,7 +134,7 @@ namespace Atom::Logging
     /// Calls STATIC_LOG<ELogLevel::Trace>(in_msg, FORWARD(in_args)...).
     /// --------------------------------------------------------------------------------------------
     template <RLogArg... TArgs>
-    inline void STATIC_LOG_TRACE(LogString<TArgs...> in_msg, TArgs&&... in_args)
+    inline void STATIC_LOG_TRACE(LogStr<TArgs...> in_msg, TArgs&&... in_args)
     {
         STATIC_LOG<ELogLevel::Trace>(in_msg, FORWARD(in_args)...);
     }
@@ -143,7 +143,7 @@ namespace Atom::Logging
     /// Calls STATIC_LOG<ELogLevel::Debug>(in_msg, FORWARD(in_args)...).
     /// --------------------------------------------------------------------------------------------
     template <RLogArg... TArgs>
-    inline void STATIC_LOG_DEBUG(LogString<TArgs...> in_msg, TArgs&&... in_args)
+    inline void STATIC_LOG_DEBUG(LogStr<TArgs...> in_msg, TArgs&&... in_args)
     {
         STATIC_LOG<ELogLevel::Debug>(in_msg, FORWARD(in_args)...);
     }
@@ -152,7 +152,7 @@ namespace Atom::Logging
     /// Calls STATIC_LOG<ELogLevel::Info>(in_msg, FORWARD(in_args)...).
     /// --------------------------------------------------------------------------------------------
     template <RLogArg... TArgs>
-    inline void STATIC_LOG_INFO(LogString<TArgs...> in_msg, TArgs&&... in_args)
+    inline void STATIC_LOG_INFO(LogStr<TArgs...> in_msg, TArgs&&... in_args)
     {
         STATIC_LOG<ELogLevel::Info>(in_msg, FORWARD(in_args)...);
     }
@@ -161,7 +161,7 @@ namespace Atom::Logging
     /// Calls STATIC_LOG<ELogLevel::Warn>(in_msg, FORWARD(in_args)...).
     /// --------------------------------------------------------------------------------------------
     template <RLogArg... TArgs>
-    inline void STATIC_LOG_WARN(LogString<TArgs...> in_msg, TArgs&&... in_args)
+    inline void STATIC_LOG_WARN(LogStr<TArgs...> in_msg, TArgs&&... in_args)
     {
         STATIC_LOG<ELogLevel::Warn>(in_msg, FORWARD(in_args)...);
     }
@@ -170,7 +170,7 @@ namespace Atom::Logging
     /// Calls STATIC_LOG<ELogLevel::Error>(in_msg, FORWARD(in_args)...).
     /// --------------------------------------------------------------------------------------------
     template <RLogArg... TArgs>
-    inline void STATIC_LOG_ERROR(LogString<TArgs...> in_msg, TArgs&&... in_args)
+    inline void STATIC_LOG_ERROR(LogStr<TArgs...> in_msg, TArgs&&... in_args)
     {
         STATIC_LOG<ELogLevel::Error>(in_msg, FORWARD(in_args)...);
     }
@@ -179,7 +179,7 @@ namespace Atom::Logging
     /// Calls STATIC_LOG<ELogLevel::Fatal>(in_msg, FORWARD(in_args)...).
     /// --------------------------------------------------------------------------------------------
     template <RLogArg... TArgs>
-    inline void STATIC_LOG_FATAL(LogString<TArgs...> in_msg, TArgs&&... in_args)
+    inline void STATIC_LOG_FATAL(LogStr<TArgs...> in_msg, TArgs&&... in_args)
     {
         STATIC_LOG<ELogLevel::Fatal>(in_msg, FORWARD(in_args)...);
     }

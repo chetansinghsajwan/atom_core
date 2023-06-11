@@ -43,7 +43,7 @@ TEST_CASE("Atom::Hash::Md5Hash")
 
 TEST_CASE("Atom::Hash::Md5HashParser")
 {
-    SECTION("String to Hash")
+    SECTION("Str to Hash")
     {
         Md5Hash hash = Md5HashParser()
             .Parse(TEXT("da39a3ee5e6b4b0d3255bfef95601890"));
@@ -75,10 +75,10 @@ TEST_CASE("Atom::Hash::Md5HashStringifier")
         0x32, 0x55, 0xbf, 0xef, 0x95, 0x60, 0x18, 0x90
     };
 
-    String str = Md5HashStringifier()
-        .ToString(hash);
+    Str str = Md5HashStringifier()
+        .ToStr(hash);
 
-    StringView expected = TEXT("da39a3ee5e6b4b0d3255bfef95601890");
+    StrView expected = TEXT("da39a3ee5e6b4b0d3255bfef95601890");
 
     CHECK(str == expected);
 }

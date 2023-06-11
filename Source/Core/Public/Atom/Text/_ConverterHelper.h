@@ -13,7 +13,7 @@ namespace Atom::Text
         requires RDefaultConstructible<TConverter>;
 
         { converter.Convert(in) }
-            -> RSameAs<BasicString<TOutEncoding>>;
+            -> RSameAs<BasicStr<TOutEncoding>>;
 
         { converter.Convert(in, out) }
             -> RSameAs<void>;
@@ -43,7 +43,7 @@ namespace Atom::Text
     {
         using TInChar = typename TInEncoding::TChar;
         using TOutChar = typename TOutEncoding::TChar;
-        using TOutString = Internal::String<TOutEncoding>;
+        using TOutStr = Internal::Str<TOutEncoding>;
 
         /// ----------------------------------------------------------------------------------------
         /// 
@@ -67,7 +67,7 @@ namespace Atom::Text
     struct _CharEncodingConverterHelper<TImpl, TEncoding, TEncoding>
     {
         using TChar = BasicChar<TCharEncoding>;
-        using TString = BasicString<TCharEncoding>;
+        using TStr = BasicStr<TCharEncoding>;
 
     public:
         /// ----------------------------------------------------------------------------------------

@@ -26,7 +26,7 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Name of the NullLogger.
         /// ----------------------------------------------------------------------------------------
-        static constexpr StringView s_name = TEXT("NullLogger");
+        static constexpr StrView s_name = TEXT("NullLogger");
 
     //// -------------------------------------------------------------------------------------------
     //// NonStatic Members
@@ -42,7 +42,7 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Returns name of the NullLogger.
         /// ----------------------------------------------------------------------------------------
-        constexpr virtual StringView Name() const noexcept override
+        constexpr virtual StrView Name() const noexcept override
         {
             return s_name;
         }

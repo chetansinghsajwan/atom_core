@@ -1,25 +1,25 @@
 #pragma once
 #include "Atom/Hash/Private/T1Hash.h"
-#include "Atom/String/String.h"
-#include "Atom/String/StringConverter.h"
+#include "Atom/Str/Str.h"
+#include "Atom/Str/StrConverter.h"
 
 namespace Atom::Private
 {
     template <typename T1Hash>
     struct T1HashStringifier
     {
-        constexpr String ToString(const T1Hash& hash) noexcept
+        constexpr Str ToStr(const T1Hash& hash) noexcept
         {
-            String str;
-            WriteString(hash, str);
+            Str str;
+            WriteStr(hash, str);
             return str;
         };
 
-        constexpr void WriteString(const T1Hash& hash, ROutput<Char> auto&& out) noexcept
+        constexpr void WriteStr(const T1Hash& hash, ROutput<Char> auto&& out) noexcept
         {
             for (byte b : hash.bytes)
             {
-                StaticString<2> chars = Math::HexToChar(b);
+                StaticStr<2> chars = Math::HexToChar(b);
                 out += chars[0];
                 out += chars[1];
             }
@@ -31,18 +31,18 @@ namespace Atom
 {
     template <typename T1Hash>
     requires RDefaultConstructible<Private::T1HashStringifier<T1Hash>>
-    struct StringConverter<T1Hash>
+    struct StrConverter<T1Hash>
     {
-        constexpr String Convert(const T1Hash& hash) noexcept
+        constexpr Str Convert(const T1Hash& hash) noexcept
         {
             return Private::T1HashStringifier<T1Hash>()
-                .ToString(hash);
+                .ToStr(hash);
         }
 
         constexpr void Convert(const T1Hash& hash, ROutput<Char> auto&& out) noexcept
         {
             return Private::T1HashStringifier<T1Hash>()
-                .WriteString(hash, out);
+                .WriteStr(hash, out);
         }
     };
 }

@@ -43,7 +43,7 @@ TEST_CASE("Atom::Hash::Sha1Hash")
 
 TEST_CASE("Atom::Hash::Sha1HashParser")
 {
-    SECTION("String to Hash")
+    SECTION("Str to Hash")
     {
         Sha1Hash hash = Sha1HashParser()
             .Parse(TEXT("da39a3ee5e6b4b0d3255bfef95601890afd80709"));
@@ -75,10 +75,10 @@ TEST_CASE("Atom::Hash::Sha1HashStringifier")
         0xbf, 0xef, 0x95, 0x60, 0x18, 0x90, 0xaf, 0xd8, 0x07, 0x09
     };
 
-    String str = Sha1HashStringifier()
-        .ToString(hash);
+    Str str = Sha1HashStringifier()
+        .ToStr(hash);
 
-    StringView expected = TEXT("da39a3ee5e6b4b0d3255bfef95601890afd80709");
+    StrView expected = TEXT("da39a3ee5e6b4b0d3255bfef95601890afd80709");
 
     CHECK(str == expected);
 }

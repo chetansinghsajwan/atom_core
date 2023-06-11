@@ -37,10 +37,10 @@ namespace Atom::Logging::Internal
             if (CheckLogLevel(in_logMsg.lvl))
             {
                 // TODO: Add chrono support for Atom.Fmt.
-                // String result = StrFmter().Fmt(TEXT("[{}] [{}] {}: {}\n"),
+                // Str result = StrFmter().Fmt(TEXT("[{}] [{}] {}: {}\n"),
                 //     in_logMsg.time, in_logMsg.lvl, in_logMsg.loggerName, in_logMsg.msg);
 
-                String result = StrFmter().Fmt(TEXT("[{}] {}: {}\n"),
+                Str result = StrFmter().Fmt(TEXT("[{}] {}: {}\n"),
                     in_logMsg.lvl, in_logMsg.loggerName, in_logMsg.msg);
 
                 m_hasWritten = true;
@@ -143,7 +143,7 @@ namespace Atom::Logging::Internal
         /// @PARAM[IN] in_logMsg Log message object passed for logging.
         /// @PARAM[IN] in_formattedMsg Formatted message generated from {in_logMsg}.
         /// ----------------------------------------------------------------------------------------
-        virtual void m_Write(const LogMsg& in_logMsg, StringView in_formattedMsg) = 0;
+        virtual void m_Write(const LogMsg& in_logMsg, StrView in_formattedMsg) = 0;
 
         /// ----------------------------------------------------------------------------------------
         /// Flush implementation.

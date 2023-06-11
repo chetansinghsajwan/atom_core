@@ -7,7 +7,7 @@ namespace Atom::Engine
 {
     struct SWindowProps
     {
-        String windowName;
+        Str windowName;
         SWindowCoords windowSize;
     };
 

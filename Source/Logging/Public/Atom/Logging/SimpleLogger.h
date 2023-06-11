@@ -25,7 +25,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @PARAM[IN] name Name of this logger.
         /// ----------------------------------------------------------------------------------------
-        explicit SimpleLoggerTemplate(String name) noexcept:
+        explicit SimpleLoggerTemplate(Str name) noexcept:
             _name(MOVE(name)), targets() { }
 
         /// ----------------------------------------------------------------------------------------
@@ -35,7 +35,7 @@ namespace Atom::Logging::Internal
         /// @PARAM[IN] name Name of this logger.
         /// @PARAM[IN] target LogTarget object to add.
         /// ----------------------------------------------------------------------------------------
-        SimpleLoggerTemplate(String name, LogTargetPtr target) noexcept:
+        SimpleLoggerTemplate(Str name, LogTargetPtr target) noexcept:
             _name(MOVE(name)), targets(target) { }
 
         /// ----------------------------------------------------------------------------------------
@@ -45,7 +45,7 @@ namespace Atom::Logging::Internal
         /// @PARAM[IN] name Name of this logger.
         /// @PARAM[IN] targets LogTarget objects to add.
         /// ----------------------------------------------------------------------------------------
-        SimpleLoggerTemplate(String name, InitializerList<LogTargetPtr> targets) noexcept:
+        SimpleLoggerTemplate(Str name, InitializerList<LogTargetPtr> targets) noexcept:
             _name(MOVE(name)), targets(targets) { }
 
         /// ----------------------------------------------------------------------------------------
@@ -57,7 +57,7 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
         requires RRange<TRange, LogTargetPtr>
-        SimpleLoggerTemplate(String name, const TRange& targets) noexcept:
+        SimpleLoggerTemplate(Str name, const TRange& targets) noexcept:
             _name(MOVE(name)), targets(targets) { }
 
     public:
@@ -66,7 +66,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        StringView Name() const noexcept override final
+        StrView Name() const noexcept override final
         {
             return _name;
         }
@@ -163,7 +163,7 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         /// Name of this logger.
         /// ----------------------------------------------------------------------------------------
-        const String _name;
+        const Str _name;
 
         /// ----------------------------------------------------------------------------------------
         /// ELogLevel used to filter logs.

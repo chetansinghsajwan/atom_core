@@ -10,13 +10,13 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Get the name of the logger.
         /// ----------------------------------------------------------------------------------------
-        virtual StringView Name() const noexcept = 0;
+        virtual StrView Name() const noexcept = 0;
 
         /// ----------------------------------------------------------------------------------------
         /// Calls Log(ELogLevel::Trace, in_msg, FORWARD(in_args)...).
         /// ----------------------------------------------------------------------------------------
         template <RLogArg... TArgs>
-        void LogTrace(LogString<TArgs...> in_msg, TArgs&&... in_args)
+        void LogTrace(LogStr<TArgs...> in_msg, TArgs&&... in_args)
         {
             Log(ELogLevel::Trace, in_msg, FORWARD(in_args)...);
         }
@@ -25,7 +25,7 @@ namespace Atom::Logging
         /// Calls Log(ELogLevel::Debug, in_msg, FORWARD(in_args)...).
         /// ----------------------------------------------------------------------------------------
         template <RLogArg... TArgs>
-        void LogDebug(LogString<TArgs...> in_msg, TArgs&&... in_args)
+        void LogDebug(LogStr<TArgs...> in_msg, TArgs&&... in_args)
         {
             Log(ELogLevel::Debug, in_msg, FORWARD(in_args)...);
         }
@@ -34,7 +34,7 @@ namespace Atom::Logging
         /// Calls Log(ELogLevel::Info, in_msg, FORWARD(in_args)...).
         /// ----------------------------------------------------------------------------------------
         template <RLogArg... TArgs>
-        void LogInfo(LogString<TArgs...> in_msg, TArgs&&... in_args)
+        void LogInfo(LogStr<TArgs...> in_msg, TArgs&&... in_args)
         {
             Log(ELogLevel::Info, in_msg, FORWARD(in_args)...);
         }
@@ -43,7 +43,7 @@ namespace Atom::Logging
         /// Calls Log(ELogLevel::Warn, in_msg, FORWARD(in_args)...).
         /// ----------------------------------------------------------------------------------------
         template <RLogArg... TArgs>
-        void LogWarn(LogString<TArgs...> in_msg, TArgs&&... in_args)
+        void LogWarn(LogStr<TArgs...> in_msg, TArgs&&... in_args)
         {
             Log(ELogLevel::Warn, in_msg, FORWARD(in_args)...);
         }
@@ -52,7 +52,7 @@ namespace Atom::Logging
         /// Calls Log(ELogLevel::Error, in_msg, FORWARD(in_args)...).
         /// ----------------------------------------------------------------------------------------
         template <RLogArg... TArgs>
-        void LogError(LogString<TArgs...> in_msg, TArgs&&... in_args)
+        void LogError(LogStr<TArgs...> in_msg, TArgs&&... in_args)
         {
             Log(ELogLevel::Error, in_msg, FORWARD(in_args)...);
         }
@@ -61,7 +61,7 @@ namespace Atom::Logging
         /// Calls Log(ELogLevel::Fatal, in_msg, FORWARD(in_args)...).
         /// ----------------------------------------------------------------------------------------
         template <RLogArg... TArgs>
-        void LogFatal(LogString<TArgs...> in_msg, TArgs&&... in_args)
+        void LogFatal(LogStr<TArgs...> in_msg, TArgs&&... in_args)
         {
             Log(ELogLevel::Fatal, in_msg, FORWARD(in_args)...);
         }
@@ -75,11 +75,11 @@ namespace Atom::Logging
         /// @PARAM[IN] in_args... Arguments used with {in_msg} to construct the formatted message.
         /// ----------------------------------------------------------------------------------------
         template <RLogArg... TArgs>
-        void Log(ELogLevel in_lvl, LogString<TArgs...> in_msg, TArgs&&... in_args)
+        void Log(ELogLevel in_lvl, LogStr<TArgs...> in_msg, TArgs&&... in_args)
         {
             if (CheckLogLevel(in_lvl))
             {
-                String formattedMsg = StrFmter().Fmt(in_msg, FORWARD(in_args)...);
+                Str formattedMsg = StrFmter().Fmt(in_msg, FORWARD(in_args)...);
                 LogMsg logMsg
                 {
                     .msg = formattedMsg,

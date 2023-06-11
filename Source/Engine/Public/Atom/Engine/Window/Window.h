@@ -1,6 +1,6 @@
 #pragma once
 #include "Atom/Core.h"
-#include "Atom/String.h"
+#include "Atom/Str.h"
 #include "Atom/Memory.h"
 #include "Atom/Invokable.h"
 #include "Atom/Math.h"

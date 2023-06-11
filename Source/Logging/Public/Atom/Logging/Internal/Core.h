@@ -1,19 +1,19 @@
 #pragma once
 #include "Atom/TTI.h"
-#include "Atom/String.h"
+#include "Atom/Str.h"
 
 namespace Atom
 {
 //// -----------------------------------------------------------------------------------------------
-//// LogString Requirements
+//// LogStr Requirements
 //// -----------------------------------------------------------------------------------------------
 
     template <typename... TArgs>
-    using LogString = FmtStr<TArgs...>;
+    using LogStr = FmtStr<TArgs...>;
 
     template <typename T>
     concept RLogArg = requires(T arg)
     {
-        requires RConvertibleTo<T, StringView>;
+        requires RConvertibleTo<T, StrView>;
     };
 }
