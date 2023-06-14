@@ -1,6 +1,6 @@
 #pragma once
 #include "_ArrImplHelper.decl.h"
-#include "Atom/Memory/ObjHelper.h"
+// #include "Atom/Memory/ObjHelper.h"
 
 namespace Atom
 {
@@ -210,7 +210,5 @@ namespace Atom
         prom using _TBase::_Capacity;
         prom using _TBase::_AllocMem;
         prom using _TBase::_DeallocMem;
-
-        prim static cexpr ObjHelper<TElem> _objHelper;
     };
 }

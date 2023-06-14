@@ -1,6 +1,7 @@
 #pragma once
 #include "_DynArrImplHelper.decl.h"
 #include "_ArrImplHelper.h"
+#include "Atom/Memory/ObjHelper.h"
 #include "Atom/Math/Core.h"
 
 namespace Atom
@@ -343,35 +344,35 @@ namespace Atom
     cexpr void _DynArrImplHelper<TImpl>::_ConstructAt(
         usize index, auto&&... args)
     {
-        _objHelper.ConstructAt(_Data() + index, FORWARD(args)...);
+        ObjHelper<TElem>().ConstructAt(_Data() + index, FORWARD(args)...);
     }
 
     template <typename TImpl>
     cexpr void _DynArrImplHelper<TImpl>::_DestructAt(
         usize index)
     {
-        _objHelper.DestructAt(_Data() + index);
+        ObjHelper<TElem>().DestructAt(_Data() + index);
     }
 
     template <typename TImpl>
     cexpr void _DynArrImplHelper<TImpl>::_DestructRange(
         usize begin, usize end)
     {
-        _objHelper.DestructRange(_Data() + begin, end - begin);
+        ObjHelper<TElem>().DestructRange(_Data() + begin, end - begin);
     }
 
     template <typename TImpl>
     cexpr void _DynArrImplHelper<TImpl>::_MoveRangeFront(
         usize index, usize count)
     {
-        _objHelper.MoveFwd(_Data() + index, _Count() - 1 - index, count);
+        ObjHelper<TElem>().MoveFwd(_Data() + index, _Count() - 1 - index, count);
     }
 
     template <typename TImpl>
     cexpr void _DynArrImplHelper<TImpl>::_MoveRangeBack(
         usize index, usize count)
     {
-        _objHelper.MoveBwd(_Data() + index, _Count() - 1 - index, count);
+        ObjHelper<TElem>().MoveBwd(_Data() + index, _Count() - 1 - index, count);
     }
 
     template <typename TImpl>
@@ -385,7 +386,7 @@ namespace Atom
     cexpr void _DynArrImplHelper<TImpl>::_RotateRangeBack(
         usize index, usize count)
     {
-        _objHelper.Rotate(_Data() + index, _Count() - 1 - index, count);
+        ObjHelper<TElem>().Rotate(_Data() + index, _Count() - 1 - index, count);
     }
 
     template <typename TImpl>

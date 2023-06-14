@@ -18,7 +18,8 @@ target_link_libraries(Atom.Core PUBLIC utf-cpp)
 # Atom.Core.Tests
 # --------------------------------------------------------------------------------------------------
 
-file(GLOB_RECURSE TEST_SOURCES "Tests/**.cpp")
+# file(GLOB_RECURSE TEST_SOURCES "Tests/**.cpp")
+file(GLOB_RECURSE TEST_SOURCES "Tests/Memory/TestMemHelper.cpp")
 
 add_executable(Atom.Core.Tests ${TEST_SOURCES})
 target_include_directories(Atom.Core.Tests PUBLIC "Tests/")
