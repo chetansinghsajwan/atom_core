@@ -1,7 +1,7 @@
 #include "catch2/catch_all.hpp"
 
 #include "Atom/Uuid/Uuid3Generator.h"
-#include "Atom/Uuid/UuidUtils.h"
+#include "Atom/Uuid/UuidHelper.h"
 
 using namespace Atom;
 
@@ -14,6 +14,6 @@ TEST_CASE("Atom::Uuid::Uuid3Generator")
     CHECK(uuid1 != Uuid::Null);
     CHECK(uuid1 == uuid2);
 
-    CHECK(UuidUtils::GetVersion(uuid1) == EUuidVersion::V3);
-    CHECK(UuidUtils::GetVersion(uuid2) == EUuidVersion::V3);
+    CHECK(UuidHelper().GetVersion(uuid1) == EUuidVersion::V3);
+    CHECK(UuidHelper().GetVersion(uuid2) == EUuidVersion::V3);
 }

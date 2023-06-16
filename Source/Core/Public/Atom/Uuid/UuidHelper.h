@@ -3,10 +3,9 @@
 
 namespace Atom
 {
-    class UuidUtils
+    struct UuidHelper
     {
-    public:
-        static constexpr EUuidVariant GetVariant(const Uuid& uuid) noexcept
+        constexpr EUuidVariant GetVariant(const Uuid& uuid) const noexcept
         {
             if ((uuid.bytes[8] & 0x80) == 0x00)
                 return EUuidVariant::NCS;
@@ -18,7 +17,7 @@ namespace Atom
             return EUuidVariant::Reserved;
         }
 
-        static constexpr EUuidVersion GetVersion(const Uuid& uuid) noexcept
+        constexpr EUuidVersion GetVersion(const Uuid& uuid) const noexcept
         {
             if ((uuid.bytes[6] & 0xF0) == 0x10)
                 return EUuidVersion::V1;
