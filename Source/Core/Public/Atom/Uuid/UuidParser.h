@@ -5,35 +5,60 @@
 
 namespace Atom
 {
-    struct UuidParser
+    struct RangeHelper
     {
-        template <usize size>
-        requires (size == 37)
-        constexpr Uuid Parse(const Char(&arr)[size]) const noexcept
+        template <typename TRange>
+        requires RRange<TRange, typename TRange::TElem>
+        constexpr bool CanGetRangeCount() const noexcept
         {
-            return Parse(ArrView<Char>(Range(arr, arr + size - 1)));
+            return RFwdRange<TRange, typename TRange::TElem>;
         }
 
+        template <typename TRange>
+        requires RRange<TRange, typename TRange::TElem>
+        constexpr usize GetRangeCount(const TRange& range) const noexcept
+        {
+            if constexpr (RJumpRange<TRange, typename TRange::TElem>)
+            {
+                return range.IterEnd() - range.Iter();
+            }
+
+            usize count = 0;
+            for (auto& el : range) count++;
+            return count;
+        }
+    };
+
+    struct UuidParser
+    {
         template <typename TRange>
         requires RRange<TRange, Char>
         constexpr Uuid Parse(const TRange& range) const noexcept
         {
-            // Faster implementation.
-            if constexpr (RJumpRange<TRange, Char>)
+            RangeHelper helper;
+            if constexpr (helper.CanGetRangeCount<TRange>())
             {
-                return _ParseFwdJump(range);
+                return _ParseCounted(range.Iter(), helper.GetRangeCount(range));
             }
+            else
+            {
+                return _ParseUncounted(range.Iter(), range.IterEnd());
+            }
+        }
 
-            Uuid uuid;                  // output result
-            usize i = 0;                // index of byte to write
-            usize j = 0;                // index of char to read
-            auto it = range.Iter();    // input range begin
-            auto end = range.IterEnd();     // input range end
+    private:
+        template <typename TIter>
+        constexpr Uuid _ParseCounted(TIter it, usize itCount) const noexcept
+        {
+            if (itCount != 36)
+                return Uuid::Null;
+
+            Uuid uuid;          // output result
+            usize i = 0;        // index of byte to write
+            usize j = 0;        // index of char to read
+
             while (i < 16)
             {
-                if (it == end)
-                    return Uuid::Null;
-
                 if (j == 8 || j == 13 || j == 18 || j == 23)
                 {
                     if (*it != TEXT('-'))
@@ -50,8 +75,6 @@ namespace Atom
                     return Uuid::Null;
 
                 j++; it++;
-                if (it == end)
-                    return Uuid::Null;
 
                 byte low = Math::CharToHex(*it);
                 if (low == byte(-1))
@@ -60,32 +83,23 @@ namespace Atom
                 uuid.bytes[i++] = (high << 4) | low;
 
                 j++; it++;
-            }
-
-            if (it != end)
-            {
-                return Uuid::Null;
             }
 
             return uuid;
         }
 
-    private:
-        template <typename TRange>
-        requires RJumpRange<TRange, Char>
-        constexpr Uuid _ParseFwdJump(const TRange& range) const noexcept
+        template <typename TIter, typename TIterEnd>
+        constexpr Uuid _ParseUncounted(TIter it, TIterEnd itEnd) const noexcept
         {
-            Uuid uuid;                  // output result
-            usize i = 0;                // index of byte to write
-            usize j = 0;                // index of char to read
-            auto it = range.Iter();    // input range begin
-            auto end = range.IterEnd();     // input range end
-
-            if (it - end != 36)
-                return Uuid::Null;
+            Uuid uuid;                          // output result
+            usize i = 0;                        // index of byte to write
+            usize j = 0;                        // index of char to read
 
             while (i < 16)
             {
+                if (it == itEnd)
+                    return Uuid::Null;
+
                 if (j == 8 || j == 13 || j == 18 || j == 23)
                 {
                     if (*it != TEXT('-'))
@@ -102,6 +116,8 @@ namespace Atom
                     return Uuid::Null;
 
                 j++; it++;
+                if (it == itEnd)
+                    return Uuid::Null;
 
                 byte low = Math::CharToHex(*it);
                 if (low == byte(-1))
@@ -110,6 +126,11 @@ namespace Atom
                 uuid.bytes[i++] = (high << 4) | low;
 
                 j++; it++;
+            }
+
+            if (it != itEnd)
+            {
+                return Uuid::Null;
             }
 
             return uuid;
