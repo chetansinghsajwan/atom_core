@@ -1,7 +1,7 @@
 #pragma once
 #include "RangeReq.h"
 #include "ArrIter.h"
-#include "InitializerList.h"
+#include "InitList.h"
 
 namespace Atom
 {
@@ -135,14 +135,14 @@ namespace Atom
     /// 
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    struct Range<InitializerList<T>, void>: Range<const T*, const T*>
+    struct Range<InitList<T>, void>: Range<const T*, const T*>
     {
         using _TBase = Range<ArrIter<T>, ArrIter<T>>;
 
-        constexpr Range(const InitializerList<T>& init) noexcept:
+        constexpr Range(const InitList<T>& init) noexcept:
             _TBase{ init.begin(), init.end() } { }
     };
 
     template <typename T>
-    Range(const InitializerList<T>& init) -> Range<InitializerList<T>>;
+    Range(const InitList<T>& init) -> Range<InitList<T>>;
 }

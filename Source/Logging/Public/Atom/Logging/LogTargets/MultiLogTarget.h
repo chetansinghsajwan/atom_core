@@ -51,14 +51,14 @@ namespace Atom::Logging::Private
         /// ----------------------------------------------------------------------------------------
         /// Constructs and adds LogTarget objects.
         /// 
-        /// @PARAM[IN] targets InitializerList of LogTarget objects to add.
+        /// @PARAM[IN] targets InitList of LogTarget objects to add.
         ///     If {targets} contains null objects, this doesn't adds them.
         /// 
         /// @EXCEPTION_SAFETY @COPY_FROM _AddTargets(targets)
         /// 
         /// @TIME_COMPLEXITY @COPY_FROM _AddTargets(targets)
         /// ----------------------------------------------------------------------------------------
-        MultiLogTargetTemplate(InitializerList<LogTargetPtr> targets)
+        MultiLogTargetTemplate(InitList<LogTargetPtr> targets)
         {
             _AddTargets(ArrIter<LogTargetPtr>(targets));
         }
@@ -176,7 +176,7 @@ namespace Atom::Logging::Private
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        usize AddTargets(InitializerList<LogTargetPtr> targets)
+        usize AddTargets(InitList<LogTargetPtr> targets)
         {
             return AddTargets(ArrIter<LogTargetPtr>(targets));
         }
@@ -239,7 +239,7 @@ namespace Atom::Logging::Private
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        usize RemoveTargets(InitializerList<LogTargetPtr> targets)
+        usize RemoveTargets(InitList<LogTargetPtr> targets)
         {
             return RemoveTargets(ArrIter<LogTargetPtr>(targets));
         }
@@ -297,7 +297,7 @@ namespace Atom::Logging::Private
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        usize HasTargets(InitializerList<LogTargetPtr> targets) const noexcept
+        usize HasTargets(InitList<LogTargetPtr> targets) const noexcept
         {
             return HasTargets(ArrIter<LogTargetPtr>(targets));
         }
