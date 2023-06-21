@@ -1,8 +1,8 @@
 #pragma once
 #include "Uuid.h"
 
-#include "Atom/Containers/RangeHelper.h"
-#include "Atom/Str/Str.h"
+#include "Atom/Range.h"
+#include "Atom/Str.h"
 #include "Atom/Math.h"
 
 namespace Atom

@@ -1,6 +1,7 @@
 #pragma once
 #include "RangeReq.h"
 #include "ArrIter.h"
+#include "InitializerList.h"
 
 namespace Atom
 {

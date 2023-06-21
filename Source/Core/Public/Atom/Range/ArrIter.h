@@ -1,6 +1,5 @@
 #pragma once
-#include "Atom/Containers/InitializerList.h"
-#include "Atom/Containers/IterReq.h"
+#include "IterReq.h"
 
 namespace Atom
 {

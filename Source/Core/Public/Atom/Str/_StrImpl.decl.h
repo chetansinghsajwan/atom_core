@@ -1,7 +1,7 @@
 #pragma once
+#include "Atom/Range.h"
 #include "Atom/Text/BasicChar.h"
 #include "Atom/Text/BasicRune.h"
-#include "Atom/Containers/Range.h"
 
 namespace Atom
 {

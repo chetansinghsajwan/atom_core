@@ -1,6 +1,5 @@
 #pragma once
-#include "RangeReq.h"
-#include "RangeReqMock.h"
+#include "Atom/Range.h"
 
 namespace Atom
 {
