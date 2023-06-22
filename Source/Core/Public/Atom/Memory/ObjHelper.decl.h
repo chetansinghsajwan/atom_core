@@ -1,8 +1,12 @@
 #pragma once
 #include "MemHelper.decl.h"
+#include "Atom/Range.h"
 
 namespace Atom
 {
+    template <class TRange, class T>
+    concept RMutRange = RMutFwdRange<TRange, T>;
+
     template <typename T>
     struct ObjHelper
     {
@@ -12,56 +16,71 @@ namespace Atom
         static constexpr bool _IsTriviallyDestructible = 
             std::is_trivially_destructible_v<T>;
 
+        static constexpr bool _IsNoexDestructible = 
+            std::is_nothrow_destructible_v<T>;
+
         constexpr void ConstructAt(T* obj, auto&&... args) const
         {
             new (obj) T(FORWARD(args)...);
         }
 
-        constexpr void MoveRange(T* src, usize size, T* dest) const
+        template <typename T1Range, typename T2Range>
+        requires RMutRange<T1Range, T> && RMutRange<T2Range, T>
+        constexpr void FwdMoveRangeTo(T1Range&& range1, T2Range&& range2) const
+        {
+            return _FwdMove(range1, range2);
+        }
+
+        template <typename T1Range, typename T2Range>
+        requires RMutRange<T1Range, T> && RMutRange<T2Range, T>
+        constexpr void BwdMoveRangeTo(T1Range&& range1, T2Range&& range2) const
+        {
+            return _BwdMove(range1, range2);
+        }
+
+        template <typename T1Range, typename T2Range>
+        requires RMutRange<T1Range, T> && RMutRange<T2Range, T>
+        constexpr void FwdRotateRange(T1Range&& range1, usize offset) const
         {
         }
 
-        constexpr void MoveFwd(T* src, usize count, usize steps) const
+        template <typename T1Range, typename T2Range>
+        requires RMutRange<T1Range, T> && RMutRange<T2Range, T>
+        constexpr void BwdRotateRange(T1Range&& range1, usize offset) const
         {
-            if constexpr (_IsTriviallyMoveConstructible)
-            {
-                MemHelper().CopyFwd((MemPtr)src, count * sizeof(T), steps);
-                return;
-            }
-
-            for (usize i = count; i > 0; i--)
-            {
-                new (src + i - 1 + count) T(MOVE(src[i - 1]));
-            }
         }
 
-        constexpr void DestructAt(T* obj) const
+        template <typename T1Range, typename T2Range>
+        requires RMutRange<T1Range, T> && RMutRange<T2Range, T>
+        constexpr void RotateRangeBy(T1Range&& range1, usize offset) const
+        {
+        }
+
+        template <typename TPtr>
+        // requires RPtr<TPtr, T>
+        constexpr void DestructAt(TPtr&& obj) const noexcept(_IsNoexDestructible)
         {
             if constexpr (_IsTriviallyDestructible)
                 return;
 
-            obj->T::~T();
+            std::destroy_at(obj);
         }
 
-        constexpr void DestructRange(T* arr, usize count) const
+        template <typename TRange>
+        requires RMutRange<TRange, T>
+        constexpr void DestructRange(TRange&& range) const noexcept(_IsNoexDestructible)
         {
             if constexpr (_IsTriviallyDestructible)
                 return;
 
-            for (usize i = 0; i < count; i++)
-            {
-                (arr + i)->T::~T();
-            }
+            // std::destroy(range.Iter(), range.IterEnd());
         }
 
-        constexpr void RotateAntiClock(const T* src, usize mid, usize end) const
+    private:
+        template <typename T1Range>
+        constexpr void _FwdMove(T1Range&& range1, auto range2) const
         {
-            if constexpr (_IsTriviallyMoveConstructible)
-            {
-                // TODO: Refactor this.
-                // NOTE: Keep std implementation, MSVC uses vectorization for this.
-                std::rotate(src, src + mid, src + end);
-            }
+            // std::move(range1.Iter(), range1.IterEnd(), range2);
         }
     };
 }

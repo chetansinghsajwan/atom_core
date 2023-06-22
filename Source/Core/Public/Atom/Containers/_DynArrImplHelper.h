@@ -358,21 +358,25 @@ namespace Atom
     cexpr void _DynArrImplHelper<TImpl>::_DestructRange(
         usize begin, usize end)
     {
-        ObjHelper<TElem>().DestructRange(_Data() + begin, end - begin);
+        ObjHelper<TElem>().DestructRange(Range(_Data() + begin, end - begin));
     }
 
     template <typename TImpl>
     cexpr void _DynArrImplHelper<TImpl>::_MoveRangeFront(
         usize index, usize count)
     {
-        ObjHelper<TElem>().MoveFwd(_Data() + index, _Count() - 1 - index, count);
+        ObjHelper<TElem>().FwdMoveRangeTo(
+            Range(_Data() + index, _Count() - 1 - index), 
+            Range(_Data() + count, _Data() + _Count()));
     }
 
     template <typename TImpl>
     cexpr void _DynArrImplHelper<TImpl>::_MoveRangeBack(
         usize index, usize count)
     {
-        ObjHelper<TElem>().MoveBwd(_Data() + index, _Count() - 1 - index, count);
+        ObjHelper<TElem>().BwdMoveRangeTo(
+            Range(_Data() + index, _Count() - 1 - index), 
+            Range(_Data() + count, _Data() + _Count()));
     }
 
     template <typename TImpl>
