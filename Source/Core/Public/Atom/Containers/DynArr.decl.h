@@ -107,7 +107,7 @@ namespace Atom
         /// ParamCtor.
         /// ----------------------------------------------------------------------------------------
         pubm template <typename TRange>
-        requires RRange<TRange, T>
+        requires RRangeOf<TRange, T>
         cexpr DynArr(const TRange& range) noex:
             _Impl{_ImplBase{ nullptr }}
         {

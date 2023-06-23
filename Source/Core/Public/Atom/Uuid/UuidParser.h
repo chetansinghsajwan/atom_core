@@ -10,7 +10,7 @@ namespace Atom
     struct UuidParser
     {
         template <typename TRange>
-        requires RRange<TRange, Char>
+        requires RRangeOf<TRange, Char>
         constexpr Uuid Parse(const TRange& range) const noexcept
         {
             RangeHelper helper;

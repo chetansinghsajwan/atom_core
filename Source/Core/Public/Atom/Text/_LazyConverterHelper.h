@@ -8,8 +8,8 @@ namespace Atom::Text
     template <typename TConverter, typename TInEncoding, typename TOutEncoding>
     concept RCharEncodingLazyConverter = requires
     {
-        requires RRange<TConverter, BasicChar<TOutEncoding>>;
-        requires RMultiPassRange<TConverter, BasicChar<TOutEncoding>>;
+        requires RRangeOf<TConverter, BasicChar<TOutEncoding>>;
+        requires RMultiPassRangeOf<TConverter, BasicChar<TOutEncoding>>;
     }
 
     /// --------------------------------------------------------------------------------------------

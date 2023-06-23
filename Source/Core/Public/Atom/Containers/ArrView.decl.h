@@ -69,7 +69,7 @@ namespace Atom
         /// ParamCtor.
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
-        requires RArrRange<TRange, T>
+        requires RArrRangeOf<TRange, T>
         constexpr ArrView(const TRange& range) noexcept:
             _TBase{_ImplBase{ range.Data(), range.Count() }} { }
 
@@ -77,7 +77,7 @@ namespace Atom
         /// ParamOper.
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
-        requires RArrRange<TRange, T>
+        requires RArrRangeOf<TRange, T>
         constexpr ArrView& operator =(const TRange& range) noexcept
         {
             *this = ArrView{ range.Data(), range.Count() };

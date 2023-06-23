@@ -11,7 +11,7 @@ namespace Atom
         void operator +=(U&& el);
 
         template <typename TRange>
-        requires RRange<TRange, T>
+        requires RRangeOf<TRange, T>
         void operator +=(const TRange& range);
     };
 }

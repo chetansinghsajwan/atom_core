@@ -49,7 +49,7 @@ namespace Atom::Text
         /// 
         /// ----------------------------------------------------------------------------------------
         template <typename TInput, typename TOut>
-        requires RRange<TInput, TInChar> && ROutput<TOut, TOutChar>
+        requires RRangeOf<TInput, TInChar> && ROutput<TOut, TOutChar>
         constexpr void ConvertTo(const TInput& in, TOut out)
         {
             auto end = in.end();
@@ -74,7 +74,7 @@ namespace Atom::Text
         /// Writes input to output as is.
         /// ----------------------------------------------------------------------------------------
         template <typename TInput, typename TOut>
-        requires RRange<TInput, const TChar> && ROutput<TOut, TChar>
+        requires RRangeOf<TInput, const TChar> && ROutput<TOut, TChar>
         constexpr void Convert(TInput&& in, TOut& out)
         {
             out += FORWARD(in);

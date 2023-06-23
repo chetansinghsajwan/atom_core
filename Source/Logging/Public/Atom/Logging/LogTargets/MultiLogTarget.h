@@ -74,7 +74,7 @@ namespace Atom::Logging::Private
         /// @TIME_COMPLEXITY @COPY_FROM _AddTargets(range).
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
-        requires RRange<TRange, LogTargetPtr>
+        requires RRangeOf<TRange, LogTargetPtr>
         MultiLogTargetTemplate(const TRange& targets)
         {
             _AddTargets(MOVE(targets));
@@ -153,7 +153,7 @@ namespace Atom::Logging::Private
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
-        requires RRange<TRange, LogTargetPtr>
+        requires RRangeOf<TRange, LogTargetPtr>
         usize AddTargets(const TRange& targets)
         {
             if (!targets.Iter() == targets.IterEnd())
@@ -216,7 +216,7 @@ namespace Atom::Logging::Private
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
-        requires RRange<TRange, LogTargetPtr>
+        requires RRangeOf<TRange, LogTargetPtr>
         usize RemoveTargets(const TRange& targets)
         {
             if (!targets.Iter() == targets.IterEnd())
@@ -276,7 +276,7 @@ namespace Atom::Logging::Private
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
-        requires RRange<TRange, LogTargetPtr>
+        requires RRangeOf<TRange, LogTargetPtr>
         usize HasTargets(const TRange& targets) const noexcept
         {
             if (!targets.Iter() == targets.IterEnd())
@@ -389,14 +389,14 @@ namespace Atom::Logging::Private
         ///     If {targets} contains null objects, this doesn't adds them.
         /// @RETURNS Count of LogTarget objects added.
         /// 
-        /// @EXCEPTION_SAFETY @COPY_FROM ${_TContainer}::InsertBack(RRange<LogTargetPtr> targets)
+        /// @EXCEPTION_SAFETY @COPY_FROM ${_TContainer}::InsertBack(RRangeOf<LogTargetPtr> targets)
         ///  
-        /// @TIME_COMPLEXITY @COPY_FROM ${_TContainer}::InsertBack(RRange<LogTargetPtr> targets)
+        /// @TIME_COMPLEXITY @COPY_FROM ${_TContainer}::InsertBack(RRangeOf<LogTargetPtr> targets)
         /// 
         /// @THREAD_SAFETY NONE
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
-        requires RRange<TRange, LogTargetPtr>
+        requires RRangeOf<TRange, LogTargetPtr>
         usize _AddTargets(const TRange& targets)
         {
             return _targets.InsertBack(targets,
@@ -437,7 +437,7 @@ namespace Atom::Logging::Private
         /// @TIME_COMPLEXITY @COPY_FROM ${_TContainer}::Remove(LogTarget& target)
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
-        requires RRange<TRange, LogTargetPtr>
+        requires RRangeOf<TRange, LogTargetPtr>
         usize _RemoveTargets(const TRange& targets)
         {
             return _targets.Remove(targets, [](const LogTargetPtr& target)
@@ -477,7 +477,7 @@ namespace Atom::Logging::Private
         /// @TIME_COMPLEXITY Exponential
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
-        requires RRange<TRange, LogTargetPtr>
+        requires RRangeOf<TRange, LogTargetPtr>
         usize _HasTargets(const TRange& targets)
         {
             return _targets.Contains(targets);
@@ -511,9 +511,9 @@ namespace Atom::Logging
     using MultiLogTargetST = Private::MultiLogTargetTemplate<NullLockable>;
     using MultiLogTargetMT = Private::MultiLogTargetTemplate<SimpleMutex>;
 
-    static_assert(RFwdRange<MultiLogTargetST, LogTargetPtr>,
+    static_assert(RFwdRangeOf<MultiLogTargetST, LogTargetPtr>,
         "{MultiLogTargetST} does not meet {RFwdRange} requirements.");
 
-    static_assert(RFwdRange<MultiLogTargetMT, LogTargetPtr>,
+    static_assert(RFwdRangeOf<MultiLogTargetMT, LogTargetPtr>,
         "{MultiLogTargetMT} does not meet {RFwdRange} requirements.");
 }

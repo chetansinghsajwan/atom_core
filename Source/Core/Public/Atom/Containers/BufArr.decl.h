@@ -79,7 +79,7 @@ namespace Atom
         /// ParamCtor for Range.
         /// ----------------------------------------------------------------------------------------
         pubm template <typename TRange>
-        requires RRange<TRange, T>
+        requires RRangeOf<TRange, T>
         cexpr BufArr(TRange&& range) noex:
             _TBase{ nullptr }
         {
@@ -90,7 +90,7 @@ namespace Atom
         /// ParamOper for Range.
         /// ----------------------------------------------------------------------------------------
         pubm template <typename TRange>
-        requires RRange<TRange, T>
+        requires RRangeOf<TRange, T>
         cexpr BufArr& operator =(TRange&& range) noex
         {
             Clear();

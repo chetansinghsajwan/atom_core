@@ -7,10 +7,10 @@ namespace Atom
     /// @TODO: Refactor this.
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
-    requires RRange<TTI::TRemoveCVRef<TRange>, typename TTI::TRemoveCVRef<TRange>::TElem>
+    requires RRangeOf<TTI::TRemoveCVRef<TRange>, typename TTI::TRemoveCVRef<TRange>::TElem>
     constexpr auto begin(const TRange& range) noexcept
     {
-        // if constexpr (!RConst<TRange> && RMutFwdRange<TTI::TRemoveCVRef<TRange>, 
+        // if constexpr (!RConst<TRange> && RMutFwdRangeOf<TTI::TRemoveCVRef<TRange>, 
         //     typename TTI::TRemoveCVRef<TRange>::TElem>)
         // {
         //     return range.MutIter();
@@ -22,7 +22,7 @@ namespace Atom
     }
 
     template <typename TRange>
-    requires RMutFwdRange<TRange, typename TRange::TElem>
+    requires RMutFwdRangeOf<TRange, typename TRange::TElem>
     constexpr auto begin(TRange& range) noexcept
     {
         return range.MutIter();
@@ -32,10 +32,10 @@ namespace Atom
     /// @TODO: Refactor this.
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
-    requires RRange<TTI::TRemoveCVRef<TRange>, typename TTI::TRemoveCVRef<TRange>::TElem>
+    requires RRangeOf<TTI::TRemoveCVRef<TRange>, typename TTI::TRemoveCVRef<TRange>::TElem>
     constexpr auto end(const TRange& range) noexcept
     {
-        // if constexpr (!RConst<TRange> && RMutFwdRange<TTI::TRemoveCVRef<TRange>, 
+        // if constexpr (!RConst<TRange> && RMutFwdRangeOf<TTI::TRemoveCVRef<TRange>, 
         //     typename TTI::TRemoveCVRef<TRange>::TElem>)
         // {
         //     return range.MutIterEnd();
@@ -47,7 +47,7 @@ namespace Atom
     }
 
     template <typename TRange>
-    requires RMutFwdRange<TRange, typename TRange::TElem>
+    requires RMutFwdRangeOf<TRange, typename TRange::TElem>
     constexpr auto end(TRange&& range) noexcept
     {
         return range.MutIterEnd();
@@ -58,8 +58,8 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <typename TRange1, typename TRange2>
     requires 
-        RRange<TRange1, typename TRange1::TElem> &&
-        RRange<TRange2, typename TRange2::TElem>
+        RRangeOf<TRange1, typename TRange1::TElem> &&
+        RRangeOf<TRange2, typename TRange2::TElem>
     constexpr bool operator ==(const TRange1& range1, const TRange2& range2) noexcept
     {
         return _Compare(range1, range2) == 0;
@@ -70,8 +70,8 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <typename TRange1, typename TRange2>
     requires 
-        RRange<TRange1, typename TRange1::TElem> &&
-        RRange<TRange2, typename TRange2::TElem>
+        RRangeOf<TRange1, typename TRange1::TElem> &&
+        RRangeOf<TRange2, typename TRange2::TElem>
     constexpr bool operator !=(const TRange1& range1, const TRange2& range2) noexcept
     {
         return !(range1 == range2);

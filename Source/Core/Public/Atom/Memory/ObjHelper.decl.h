@@ -22,33 +22,33 @@ namespace Atom
         }
 
         template <typename T1Range, typename T2Range>
-        requires RMutRange<T1Range, T> && RMutRange<T2Range, T>
+        requires RMutRangeOf<T1Range, T> && RMutRangeOf<T2Range, T>
         constexpr void FwdMoveRangeTo(T1Range&& range1, T2Range&& range2) const
         {
             return _FwdMove(range1, range2);
         }
 
         template <typename T1Range, typename T2Range>
-        requires RMutRange<T1Range, T> && RMutRange<T2Range, T>
+        requires RMutRangeOf<T1Range, T> && RMutRangeOf<T2Range, T>
         constexpr void BwdMoveRangeTo(T1Range&& range1, T2Range&& range2) const
         {
             return _BwdMove(range1, range2);
         }
 
         template <typename T1Range, typename T2Range>
-        requires RMutRange<T1Range, T> && RMutRange<T2Range, T>
+        requires RMutRangeOf<T1Range, T> && RMutRangeOf<T2Range, T>
         constexpr void FwdRotateRange(T1Range&& range1, usize offset) const
         {
         }
 
         template <typename T1Range, typename T2Range>
-        requires RMutRange<T1Range, T> && RMutRange<T2Range, T>
+        requires RMutRangeOf<T1Range, T> && RMutRangeOf<T2Range, T>
         constexpr void BwdRotateRange(T1Range&& range1, usize offset) const
         {
         }
 
         template <typename T1Range, typename T2Range>
-        requires RMutRange<T1Range, T> && RMutRange<T2Range, T>
+        requires RMutRangeOf<T1Range, T> && RMutRangeOf<T2Range, T>
         constexpr void RotateRangeBy(T1Range&& range1, usize offset) const
         {
         }
@@ -64,7 +64,7 @@ namespace Atom
         }
 
         template <typename TRange>
-        requires RMutRange<TRange, T>
+        requires RMutRangeOf<TRange, T>
         constexpr void DestructRange(TRange&& range) const noexcept(_IsNoexDestructible)
         {
             if constexpr (_IsTriviallyDestructible)

@@ -15,7 +15,7 @@ namespace Atom
         void Insert(U&& el);
 
         template <typename TRange>
-        requires RRange<TRange, T>
+        requires RRangeOf<TRange, T>
         void Insert(const TRange& range);
     };
 
@@ -33,7 +33,7 @@ namespace Atom
         void InsertFront(U&& el);
 
         template <typename TRange>
-        requires RRange<TRange, T>
+        requires RRangeOf<TRange, T>
         void InsertFront(const TRange& range);
     };
 
@@ -51,7 +51,7 @@ namespace Atom
         void InsertBack(U&& el);
 
         template <typename TRange>
-        requires RRange<TRange, T>
+        requires RRangeOf<TRange, T>
         void InsertBack(const TRange& range);
     };
 
@@ -69,7 +69,7 @@ namespace Atom
         void Insert(TKey key, U&& el);
 
         template <typename TRange>
-        requires RRange<TRange, T>
+        requires RRangeOf<TRange, T>
         void Insert(TKey key, const TRange& range);
     };
 

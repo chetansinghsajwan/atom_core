@@ -43,7 +43,7 @@ namespace Atom
         /// @RETURNS {TMutIter} to the first element of inserted range.
         /// ----------------------------------------------------------------------------------------
         pubm template <typename TRange, typename = TTI::TEnableIf<
-            RRange<TRange, TElem>>>
+            RRangeOf<TRange, TElem>>>
         cexpr TMutIter InsertAt(TIter pos, const TRange& range);
 
         /// ----------------------------------------------------------------------------------------
@@ -65,7 +65,7 @@ namespace Atom
         /// @RETURNS {TMutIter} to the first element of inserted range.
         /// ----------------------------------------------------------------------------------------
         pubm template <typename TRange, typename = TTI::TEnableIf<
-            RRange<TRange, TElem>>>
+            RRangeOf<TRange, TElem>>>
         cexpr TMutIter InsertFront(const TRange& range);
 
         /// ----------------------------------------------------------------------------------------
@@ -87,7 +87,7 @@ namespace Atom
         /// @RETURNS {TMutIter} to the first element of inserted range.
         /// ----------------------------------------------------------------------------------------
         pubm template <typename TRange, typename = TTI::TEnableIf<
-            RRange<TRange, TElem>>>
+            RRangeOf<TRange, TElem>>>
         cexpr TMutIter InsertBack(const TRange& range);
 
         /// ----------------------------------------------------------------------------------------
@@ -101,7 +101,7 @@ namespace Atom
         /// Calls {InsertBack(...)}.
         /// ----------------------------------------------------------------------------------------
         pubm template <typename TRange, typename = TTI::TEnableIf<
-            RRange<TRange, TElem>>>
+            RRangeOf<TRange, TElem>>>
         cexpr TMutIter operator +=(const TRange& range);
 
         // TODO: Refactor this. Should we use U here to denote other typename?

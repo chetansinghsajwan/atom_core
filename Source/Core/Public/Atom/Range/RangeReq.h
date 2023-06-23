@@ -1,6 +1,5 @@
 #pragma once
 #include "IterReq.h"
-#include "Atom/TTI.h"
 
 namespace Atom
 {
@@ -8,7 +7,7 @@ namespace Atom
     /// Basic range requirements.
     /// --------------------------------------------------------------------------------------------
     template <typename TRange, typename T>
-    concept _RRangeBase = requires(const TRange& range)
+    concept _RRangeOf = requires(const TRange& range)
     {
         typename TRange::TElem;
         typename TRange::TIter;
@@ -22,9 +21,10 @@ namespace Atom
     /// Basic mut range requirements.
     /// --------------------------------------------------------------------------------------------
     template <typename TRange, typename T>
-    concept _RMutRangeBase = requires(TRange& range)
+    concept _RMutRangeOf = requires(TRange& range)
     {
-        typename TRange::TElem;
+        requires _RRangeOf<TRange, T>;
+
         typename TRange::TMutIter;
         typename TRange::TMutIterEnd;
 
@@ -35,145 +35,140 @@ namespace Atom
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures {TRange} is {Range}.
+    /// Ensures {TRange} is {Range} of type {T}.
     /// --------------------------------------------------------------------------------------------
     template <typename TRange, typename T>
-    concept RRange = requires
+    concept RRangeOf = requires
     {
-        requires _RRangeBase<TRange, T>;
+        requires _RRangeOf<TRange, T>;
         requires RIter<typename TRange::TIter, typename TRange::TIterEnd, T>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures {TRange} is {MutRange}.
+    /// Ensures {TRange} is {MutRange} of type {T}.
     /// --------------------------------------------------------------------------------------------
     template <typename TRange, typename T>
-    concept RMutRange = requires
+    concept RMutRangeOf = requires
     {
-        requires _RMutRangeBase<TRange, T>;
-        requires RRange<TRange, T>;
+        requires _RMutRangeOf<TRange, T>;
         requires RMutIter<typename TRange::TIter, typename TRange::TIterEnd, T>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures {TRange} is {FwdRange}.
+    /// Ensures {TRange} is {FwdRange} of type {T}.
     /// --------------------------------------------------------------------------------------------
     template <typename TRange, typename T>
-    concept RFwdRange = requires
+    concept RFwdRangeOf = requires
     {
-        requires _RRangeBase<TRange, T>;
+        requires _RRangeOf<TRange, T>;
         requires RFwdIter<typename TRange::TIter, typename TRange::TIterEnd, T>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures {TRange} is {MutFwdRange}.
+    /// Ensures {TRange} is {MutFwdRange} of type {T}.
     /// --------------------------------------------------------------------------------------------
     template <typename TRange, typename T>
-    concept RMutFwdRange = requires
+    concept RMutFwdRangeOf = requires
     {
-        requires _RMutRangeBase<TRange, T>;
-        requires RFwdRange<TRange, T>;
+        requires _RMutRangeOf<TRange, T>;
         requires RMutFwdIter<typename TRange::TMutIter, typename TRange::TMutIterEnd, T>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures {TRange} is {BidiRange}.
+    /// Ensures {TRange} is {BidiRange} of type {T}.
     /// --------------------------------------------------------------------------------------------
     template <typename TRange, typename T>
-    concept RBidiRange = requires
+    concept RBidiRangeOf = requires
     {
-        requires _RRangeBase<TRange, T>;
+        requires _RRangeOf<TRange, T>;
         requires RBidiIter<typename TRange::TIter, typename TRange::TIterEnd, T>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures {TRange} is {MutBidiRange}.
+    /// Ensures {TRange} is {MutBidiRange} of type {T}.
     /// --------------------------------------------------------------------------------------------
     template <typename TRange, typename T>
-    concept RMutBidiRange = requires
+    concept RMutBidiRangeOf = requires
     {
-        requires _RMutRangeBase<TRange, T>;
-        requires RBidiRange<TRange, T>;
+        requires _RMutRangeOf<TRange, T>;
         requires RMutBidiIter<typename TRange::TMutIter, typename TRange::TMutIterEnd, T>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures {TRange} is {JumpRange}.
+    /// Ensures {TRange} is {JumpRange} of type {T}.
     /// --------------------------------------------------------------------------------------------
     template <typename TRange, typename T>
-    concept RJumpRange = requires
+    concept RJumpRangeOf = requires
     {
-        requires _RRangeBase<TRange, T>;
+        requires _RRangeOf<TRange, T>;
         requires RJumpIter<typename TRange::TIter, typename TRange::TIterEnd, T>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures {TRange} is {MutJumpRange}.
+    /// Ensures {TRange} is {MutJumpRange} of type {T}.
     /// --------------------------------------------------------------------------------------------
     template <typename TRange, typename T>
-    concept RMutJumpRange = requires
+    concept RMutJumpRangeOf = requires
     {
-        requires _RMutRangeBase<TRange, T>;
-        requires RJumpRange<TRange, T>;
+        requires _RMutRangeOf<TRange, T>;
         requires RMutJumpIter<typename TRange::TMutIter, typename TRange::TMutIterEnd, T>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures {TRange} is {ArrRange}.
+    /// Ensures {TRange} is {ArrRange} of type {T}.
     /// --------------------------------------------------------------------------------------------
     template <typename TRange, typename T>
-    concept RArrRange = requires
+    concept RArrRangeOf = requires
     {
-        requires _RRangeBase<TRange, T>;
+        requires _RRangeOf<TRange, T>;
         requires RArrIter<typename TRange::TIter, typename TRange::TIterEnd, T>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures {TRange} is {MutArrRange}.
+    /// Ensures {TRange} is {MutArrRange} of type {T}.
     /// --------------------------------------------------------------------------------------------
     template <typename TRange, typename T>
-    concept RMutArrRange = requires
+    concept RMutArrRangeOf = requires
     {
-        requires _RMutRangeBase<TRange, T>;
-        requires RArrRange<TRange, T>;
+        requires _RMutRangeOf<TRange, T>;
         requires RMutArrIter<typename TRange::TMutIter, typename TRange::TMutIterEnd, T>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures {TRange} is {RevRange}.
+    /// Ensures {TRange} is {RevRange} of type {T}.
     /// --------------------------------------------------------------------------------------------
     template <typename TRange, typename T>
-    concept RRevRange = requires
+    concept RRevRangeOf = requires
     {
-        requires RBidiRange<TRange, T>;
+        requires RBidiRangeOf<TRange, T>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures {TRange} is {MutRevRange}.
+    /// Ensures {TRange} is {MutRevRange} of type {T}.
     /// --------------------------------------------------------------------------------------------
     template <typename TRange, typename T>
-    concept RMutRevRange = requires
+    concept RMutRevRangeOf = requires
     {
-        requires RMutBidiRange<TRange, T>;
+        requires RMutBidiRangeOf<TRange, T>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures {TRange} is {CommonRange}.
+    /// Ensures {TRange} is {CommonRange} of type {T}.
     /// --------------------------------------------------------------------------------------------
     template <typename TRange, typename T>
-    concept RCommonRange = requires
+    concept RCommonRangeOf = requires
     {
-        requires _RRangeBase<TRange, T>;
+        requires _RRangeOf<TRange, T>;
         requires RSameAs<typename TRange::TIter, typename TRange::TIter>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures {TRange} is {MutCommonRange}.
+    /// Ensures {TRange} is {MutCommonRange} of type {T}.
     /// --------------------------------------------------------------------------------------------
     template <typename TRange, typename T>
-    concept RMutCommonRange = requires
+    concept RMutCommonRangeOf = requires
     {
-        requires _RRangeBase<TRange, T>;
+        requires _RRangeOf<TRange, T>;
         requires RSameAs<typename TRange::TMutIter, typename TRange::TMutIterEnd>;
     };
 }

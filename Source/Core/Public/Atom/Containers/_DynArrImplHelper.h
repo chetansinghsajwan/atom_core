@@ -398,7 +398,7 @@ namespace Atom
     cexpr auto _DynArrImplHelper<TImpl>::_CanGetRangeSize()
         noex -> bool
     {
-        return RFwdRange<TRange, TElem>;
+        return RFwdRangeOf<TRange, TElem>;
     }
 
     template <typename TImpl>
@@ -406,7 +406,7 @@ namespace Atom
     cexpr usize _DynArrImplHelper<TImpl>::_GetRangeSize(
         const TRange& range) noex
     {
-        if cexpr (RJumpRange<TRange, TElem>)
+        if cexpr (RJumpRangeOf<TRange, TElem>)
         {
             return range.IterEnd() - range.Iter();
 
