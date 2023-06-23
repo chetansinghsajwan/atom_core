@@ -34,36 +34,6 @@ namespace Atom::Logging::Private
         MultiLogTargetTemplate() noexcept { }
 
         /// ----------------------------------------------------------------------------------------
-        /// Constructs and adds LogTarget object.
-        /// 
-        /// @PARAM[IN] target {LogTarget} object to add.
-        ///     If {target} is null, this doesn't adds it.
-        /// 
-        /// @EXCEPTION_SAFETY @COPY_FROM _AddTarget(LogTargetPtr target).
-        /// 
-        /// @TIME_COMPLEXITY @COPY_FROM _AddTarget(LogTargetPtr target).
-        /// ----------------------------------------------------------------------------------------
-        MultiLogTargetTemplate(LogTargetPtr target)
-        {
-            _AddTarget(target);
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// Constructs and adds LogTarget objects.
-        /// 
-        /// @PARAM[IN] targets InitList of LogTarget objects to add.
-        ///     If {targets} contains null objects, this doesn't adds them.
-        /// 
-        /// @EXCEPTION_SAFETY @COPY_FROM _AddTargets(targets)
-        /// 
-        /// @TIME_COMPLEXITY @COPY_FROM _AddTargets(targets)
-        /// ----------------------------------------------------------------------------------------
-        MultiLogTargetTemplate(InitList<LogTargetPtr> targets)
-        {
-            _AddTargets(ArrIter<LogTargetPtr>(targets));
-        }
-
-        /// ----------------------------------------------------------------------------------------
         /// Constructs with LogTarget objects.
         /// 
         /// @PARAM[IN] target RRange of LogTarget objects to add.
@@ -164,24 +134,6 @@ namespace Atom::Logging::Private
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Adds LogTarget objects.
-        /// 
-        /// @PARAM[IN] targets LogTarget objects to add.
-        ///     If {targets} contains null objects, this doesn't adds them.
-        /// @RETURNS Count of LogTarget objects added.
-        /// 
-        /// @EXCEPTION_SAFETY @COPY_FROM _AddTargets(range).
-        /// 
-        /// @TIME_COMPLEXITY @COPY_FROM _AddTargets(range).
-        /// 
-        /// @THREAD_SAFETY SAFE
-        /// ----------------------------------------------------------------------------------------
-        usize AddTargets(InitList<LogTargetPtr> targets)
-        {
-            return AddTargets(ArrIter<LogTargetPtr>(targets));
-        }
-
-        /// ----------------------------------------------------------------------------------------
         /// Removes LogTarget object if found.
         /// 
         /// @PARAM[IN] target LogTarget object to remove.
@@ -227,24 +179,6 @@ namespace Atom::Logging::Private
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Removes LogTarget objects if found.
-        /// 
-        /// @PARAM[IN] targets LogTarget objects to remove.
-        ///     If {targets} contains null objects, this doesn't searches them.
-        /// @RETURNS Count of LogTarget objects removed.
-        /// 
-        /// @EXCEPTION_SAFETY @COPY_FROM _RemoveTargets(const TRange& range)
-        /// 
-        /// @TIME_COMPLEXITY @COPY_FROM _RemoveTargets(const TRange& range)
-        /// 
-        /// @THREAD_SAFETY SAFE
-        /// ----------------------------------------------------------------------------------------
-        usize RemoveTargets(InitList<LogTargetPtr> targets)
-        {
-            return RemoveTargets(ArrIter<LogTargetPtr>(targets));
-        }
-
-        /// ----------------------------------------------------------------------------------------
         /// Checks if this has LogTarget object.
         /// 
         /// @PARAM[IN] target LogTarget object to search for.
@@ -284,22 +218,6 @@ namespace Atom::Logging::Private
 
             LockGuard guard(_lock);
             return _HasTargets(targets);
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// Checks if this has LogTarget objects.
-        /// 
-        /// @PARAM[IN] target LogTarget objects to search for.
-        ///     If {targets} contains null objects, this doesn't searches them.
-        /// @RETURNS Count of LogTarget objects found.
-        /// 
-        /// @TIME_COMPLEXITY @COPY_FROM _HasTarget(LogTargetPtr target)
-        /// 
-        /// @THREAD_SAFETY SAFE
-        /// ----------------------------------------------------------------------------------------
-        usize HasTargets(InitList<LogTargetPtr> targets) const noexcept
-        {
-            return HasTargets(ArrIter<LogTargetPtr>(targets));
         }
 
         /// ----------------------------------------------------------------------------------------
