@@ -21,13 +21,17 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
-    template <typename _TMutIter, typename _TMutIterEnd, typename T>
+    template <typename _TIter, typename _TIterEnd, typename T>
     struct _MutRangeReqMock
     {
         using TElem = T;
-        using TMutIter = _TMutIter;
-        using TMutIterEnd = _TMutIterEnd;
+        using TIter = _TIter;
+        using TIterEnd = _TIterEnd;
+        using TMutIter = _TIter;
+        using TMutIterEnd = _TIterEnd;
 
+        TIter Iter() const;
+        TIterEnd IterEnd() const;
         TMutIter MutIter();
         TMutIterEnd MutIterEnd();
     };
@@ -43,10 +47,20 @@ namespace Atom
         "{RangeReqMock} does not meet {RRange} requirements.");
 
     /// --------------------------------------------------------------------------------------------
+    /// {RMutRange} mock object.
+    /// --------------------------------------------------------------------------------------------
+    template <typename T>
+    struct MutRangeReqMock :
+        _MutRangeReqMock<MutIterReqMock<T>, IterEndReqMock, T> { };
+
+    static_assert(RMutRange<MutRangeReqMock<int>, int>,
+        "{MutRangeReqMock} does not meet {RMutRange} requirements.");
+
+    /// --------------------------------------------------------------------------------------------
     /// {RFwdRange} mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    struct FwdRangeReqMock : MultiPassIterTag,
+    struct FwdRangeReqMock :
         _RangeReqMock<FwdIterReqMock<T>, IterEndReqMock, T> { };
 
     static_assert(RFwdRange<FwdRangeReqMock<int>, int>,
@@ -56,7 +70,7 @@ namespace Atom
     /// {RMutFwdRange} mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    struct MutFwdRangeReqMock : FwdRangeReqMock<T>,
+    struct MutFwdRangeReqMock :
         _MutRangeReqMock<MutFwdIterReqMock<T>, IterEndReqMock, T> { };
 
     static_assert(RFwdRange<FwdRangeReqMock<int>, int>,
@@ -66,7 +80,7 @@ namespace Atom
     /// {RBidiRange} mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    struct BidiRangeReqMock : MultiPassIterTag,
+    struct BidiRangeReqMock :
         _RangeReqMock<BidiIterReqMock<T>, IterEndReqMock, T> { };
 
     static_assert(RBidiRange<BidiRangeReqMock<int>, int>,
@@ -76,7 +90,7 @@ namespace Atom
     /// {RMutBidiRange} mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    struct MutBidiRangeReqMock : BidiRangeReqMock<T>,
+    struct MutBidiRangeReqMock :
         _MutRangeReqMock<MutBidiIterReqMock<T>, IterEndReqMock, T> { };
 
     static_assert(RBidiRange<BidiRangeReqMock<int>, int>,
@@ -86,7 +100,7 @@ namespace Atom
     /// {RJumpRange} mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    struct JumpRangeReqMock : MultiPassIterTag,
+    struct JumpRangeReqMock :
         _RangeReqMock<JumpIterReqMock<T>, IterEndReqMock, T> { };
 
     static_assert(RJumpRange<JumpRangeReqMock<int>, int>,
@@ -96,7 +110,7 @@ namespace Atom
     /// {RMutJumpRange} mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    struct MutJumpRangeReqMock : JumpRangeReqMock<T>,
+    struct MutJumpRangeReqMock :
         _MutRangeReqMock<MutJumpIterReqMock<T>, IterEndReqMock, T> { };
 
     static_assert(RJumpRange<JumpRangeReqMock<int>, int>,
@@ -106,7 +120,7 @@ namespace Atom
     /// {RArrRange} mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    struct ArrRangeReqMock : MultiPassIterTag,
+    struct ArrRangeReqMock :
         _RangeReqMock<ArrIterReqMock<T>, IterEndReqMock, T> { };
 
     static_assert(RArrRange<ArrRangeReqMock<int>, int>,
@@ -116,7 +130,7 @@ namespace Atom
     /// {RMutArrRange} mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    struct MutArrRangeReqMock : ArrRangeReqMock<T>,
+    struct MutArrRangeReqMock :
         _MutRangeReqMock<MutArrIterReqMock<T>, IterEndReqMock, T> { };
 
     static_assert(RArrRange<ArrRangeReqMock<int>, int>,
@@ -136,7 +150,7 @@ namespace Atom
     /// {RMutCommonRange} mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    struct MutCommonRangeReqMock : CommonRangeReqMock<T>,
+    struct MutCommonRangeReqMock :
         _MutRangeReqMock<MutFwdIterReqMock<T>, MutFwdIterReqMock<T>, T> { };
 
     static_assert(RCommonRange<CommonRangeReqMock<int>, int>,

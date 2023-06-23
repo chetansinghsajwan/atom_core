@@ -4,9 +4,6 @@
 
 namespace Atom
 {
-    template <class TRange, class T>
-    concept RMutRange = RMutFwdRange<TRange, T>;
-
     template <typename T>
     struct ObjHelper
     {

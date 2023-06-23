@@ -45,6 +45,17 @@ namespace Atom
     };
 
     /// --------------------------------------------------------------------------------------------
+    /// Ensures {TRange} is {MutRange}.
+    /// --------------------------------------------------------------------------------------------
+    template <typename TRange, typename T>
+    concept RMutRange = requires
+    {
+        requires _RMutRangeBase<TRange, T>;
+        requires RRange<TRange, T>;
+        requires RMutIter<typename TRange::TIter, typename TRange::TIterEnd, T>;
+    };
+
+    /// --------------------------------------------------------------------------------------------
     /// Ensures {TRange} is {FwdRange}.
     /// --------------------------------------------------------------------------------------------
     template <typename TRange, typename T>

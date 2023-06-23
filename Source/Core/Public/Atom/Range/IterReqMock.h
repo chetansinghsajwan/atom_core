@@ -29,6 +29,24 @@ namespace Atom
         "{IterReqMock} does not meet {RIter} requirements.");
 
     /// --------------------------------------------------------------------------------------------
+    /// {RMutIter} mock object.
+    /// --------------------------------------------------------------------------------------------
+    template <typename T>
+    struct MutIterReqMock
+    {
+        T& operator *();
+        const T& operator *() const;
+
+        bool operator ==(IterEndReqMock end) const;
+        bool operator !=(IterEndReqMock end) const;
+
+        MutIterReqMock& operator ++(int);
+    };
+
+    static_assert(RMutIter<MutIterReqMock<int>, IterEndReqMock, int>,
+        "{MutIterReqMock} does not meet {RMutIter} requirements.");
+
+    /// --------------------------------------------------------------------------------------------
     /// {RFwdIter} mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename T>

@@ -48,6 +48,16 @@ namespace Atom
         { it++ } -> RConvertibleTo<TIter&>;
     };
 
+    /// --------------------------------------------------------------------------------------------
+    /// Ensures {TIter} is {MutIter} of type {T} with end {TIterEnd}.
+    /// --------------------------------------------------------------------------------------------
+    template <typename TIter, typename TIterEnd, typename T>
+    concept RMutIter = requires(TIter it)
+    {
+        requires RIter<TIter, TIterEnd, T>;
+        requires _RMutIter<TIter, TIterEnd, T>;
+    };
+
     struct MultiPassIterTag { };
 
     /// --------------------------------------------------------------------------------------------
