@@ -160,7 +160,7 @@ namespace Atom
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// @TOOD: Move to Removeable section.
+    /// @TODO: Move to Removable section.
     /// --------------------------------------------------------------------------------------------
     template <typename T, typename TPred>
     requires RInvokable<TPred, bool(const T& el)>

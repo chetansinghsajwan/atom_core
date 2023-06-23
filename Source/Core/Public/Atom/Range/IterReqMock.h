@@ -24,6 +24,8 @@ namespace Atom
     template <typename T>
     struct IterReqMock
     {
+        using TElem = T;
+
         const T& operator *() const;
 
         bool operator ==(IterEndReqMock end) const;
@@ -32,7 +34,7 @@ namespace Atom
         IterReqMock& operator ++(int);
     };
 
-    ATOM_STATIC_ASSERT_ITER_REQ(RIterOf, IterReqMock, IterEndReqMock);
+    ATOM_STATIC_ASSERT_ITER_REQ(RIterPairOf, IterReqMock, IterEndReqMock);
 
     /// --------------------------------------------------------------------------------------------
     /// {RMutIter} mock object.
@@ -40,6 +42,8 @@ namespace Atom
     template <typename T>
     struct MutIterReqMock
     {
+        using TElem = T;
+
         T& operator *();
         const T& operator *() const;
 
@@ -49,7 +53,7 @@ namespace Atom
         MutIterReqMock& operator ++(int);
     };
 
-    ATOM_STATIC_ASSERT_ITER_REQ(RMutIterOf, MutIterReqMock, IterEndReqMock);
+    ATOM_STATIC_ASSERT_ITER_REQ(RMutIterPairOf, MutIterReqMock, IterEndReqMock);
 
     /// --------------------------------------------------------------------------------------------
     /// {RFwdIter} mock object.
@@ -57,6 +61,8 @@ namespace Atom
     template <typename T>
     struct FwdIterReqMock : MultiPassIterTag
     {
+        using TElem = T;
+
         const T& operator *() const;
 
         bool operator ==(IterEndReqMock end) const;
@@ -65,7 +71,7 @@ namespace Atom
         FwdIterReqMock& operator ++(int);
     };
 
-    ATOM_STATIC_ASSERT_ITER_REQ(RFwdIterOf, FwdIterReqMock, IterEndReqMock);
+    ATOM_STATIC_ASSERT_ITER_REQ(RFwdIterPairOf, FwdIterReqMock, IterEndReqMock);
 
     /// --------------------------------------------------------------------------------------------
     /// {RMutFwdIter} mock object.
@@ -73,6 +79,8 @@ namespace Atom
     template <typename T>
     struct MutFwdIterReqMock : MultiPassIterTag
     {
+        using TElem = T;
+
         T& operator *();
         const T& operator *() const;
 
@@ -82,7 +90,7 @@ namespace Atom
         MutFwdIterReqMock& operator ++(int);
     };
 
-    ATOM_STATIC_ASSERT_ITER_REQ(RMutFwdIterOf, MutFwdIterReqMock, IterEndReqMock);
+    ATOM_STATIC_ASSERT_ITER_REQ(RMutFwdIterPairOf, MutFwdIterReqMock, IterEndReqMock);
 
     /// --------------------------------------------------------------------------------------------
     /// {RBidiIter} mock object.
@@ -90,6 +98,8 @@ namespace Atom
     template <typename T>
     struct BidiIterReqMock : MultiPassIterTag
     {
+        using TElem = T;
+
         const T& operator *() const;
 
         bool operator ==(IterEndReqMock end) const;
@@ -99,7 +109,7 @@ namespace Atom
         BidiIterReqMock& operator --(int);
     };
 
-    ATOM_STATIC_ASSERT_ITER_REQ(RBidiIterOf, BidiIterReqMock, IterEndReqMock);
+    ATOM_STATIC_ASSERT_ITER_REQ(RBidiIterPairOf, BidiIterReqMock, IterEndReqMock);
 
     /// --------------------------------------------------------------------------------------------
     /// {RMutBidiIter} mock object.
@@ -107,6 +117,8 @@ namespace Atom
     template <typename T>
     struct MutBidiIterReqMock : MultiPassIterTag
     {
+        using TElem = T;
+
         T& operator *();
         const T& operator *() const;
 
@@ -117,7 +129,7 @@ namespace Atom
         MutBidiIterReqMock& operator --(int);
     };
 
-    ATOM_STATIC_ASSERT_ITER_REQ(RMutBidiIterOf, MutBidiIterReqMock, IterEndReqMock);
+    ATOM_STATIC_ASSERT_ITER_REQ(RMutBidiIterPairOf, MutBidiIterReqMock, IterEndReqMock);
 
     /// --------------------------------------------------------------------------------------------
     /// {RJumpIter} mock object.
@@ -125,6 +137,8 @@ namespace Atom
     template <typename T>
     struct JumpIterReqMock : MultiPassIterTag
     {
+        using TElem = T;
+
         const T& operator *() const;
 
         bool operator ==(IterEndReqMock end) const;
@@ -142,7 +156,7 @@ namespace Atom
         isize operator -(const JumpIterReqMock& that) const;
     };
 
-    ATOM_STATIC_ASSERT_ITER_REQ(RJumpIterOf, JumpIterReqMock, IterEndReqMock);
+    ATOM_STATIC_ASSERT_ITER_REQ(RJumpIterPairOf, JumpIterReqMock, IterEndReqMock);
 
     /// --------------------------------------------------------------------------------------------
     /// {RMutJumpIter} mock object.
@@ -150,6 +164,8 @@ namespace Atom
     template <typename T>
     struct MutJumpIterReqMock : MultiPassIterTag
     {
+        using TElem = T;
+
         T& operator *();
         const T& operator *() const;
 
@@ -168,7 +184,7 @@ namespace Atom
         isize operator -(const MutJumpIterReqMock& that) const;
     };
 
-    ATOM_STATIC_ASSERT_ITER_REQ(RMutJumpIterOf, MutJumpIterReqMock, IterEndReqMock);
+    ATOM_STATIC_ASSERT_ITER_REQ(RMutJumpIterPairOf, MutJumpIterReqMock, IterEndReqMock);
 
     /// --------------------------------------------------------------------------------------------
     /// {RArrIter} mock object.
@@ -176,6 +192,8 @@ namespace Atom
     template <typename T>
     struct ArrIterReqMock : ArrIterTag
     {
+        using TElem = T;
+
         T& operator *();
         const T& operator *() const;
 
@@ -194,7 +212,7 @@ namespace Atom
         isize operator -(const ArrIterReqMock& that) const;
     };
 
-    ATOM_STATIC_ASSERT_ITER_REQ(RArrIterOf, ArrIterReqMock, IterEndReqMock);
+    ATOM_STATIC_ASSERT_ITER_REQ(RArrIterPairOf, ArrIterReqMock, IterEndReqMock);
 
     /// --------------------------------------------------------------------------------------------
     /// {RMutArrIter} mock object.
@@ -202,6 +220,8 @@ namespace Atom
     template <typename T>
     struct MutArrIterReqMock : ArrIterTag
     {
+        using TElem = T;
+
         T& operator *();
         const T& operator *() const;
 
@@ -220,5 +240,5 @@ namespace Atom
         isize operator -(const MutArrIterReqMock& that) const;
     };
 
-    ATOM_STATIC_ASSERT_ITER_REQ(RMutArrIterOf, MutArrIterReqMock, IterEndReqMock);
+    ATOM_STATIC_ASSERT_ITER_REQ(RMutArrIterPairOf, MutArrIterReqMock, IterEndReqMock);
 }

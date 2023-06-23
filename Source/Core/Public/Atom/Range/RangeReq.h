@@ -61,7 +61,7 @@ namespace Atom
     concept RRangeOf = requires
     {
         requires _RRangeOf<TRange, T>;
-        requires RIterOf<typename TRange::TIter, typename TRange::TIterEnd, T>;
+        requires RIterPairOf<typename TRange::TIter, typename TRange::TIterEnd, T>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -71,7 +71,7 @@ namespace Atom
     concept RMutRangeOf = requires
     {
         requires _RMutRangeOf<TRange, T>;
-        requires RMutIterOf<typename TRange::TIter, typename TRange::TIterEnd, T>;
+        requires RMutIterPairOf<typename TRange::TIter, typename TRange::TIterEnd, T>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -81,7 +81,7 @@ namespace Atom
     concept RFwdRangeOf = requires
     {
         requires _RRangeOf<TRange, T>;
-        requires RFwdIterOf<typename TRange::TIter, typename TRange::TIterEnd, T>;
+        requires RFwdIterPairOf<typename TRange::TIter, typename TRange::TIterEnd, T>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -91,7 +91,7 @@ namespace Atom
     concept RMutFwdRangeOf = requires
     {
         requires _RMutRangeOf<TRange, T>;
-        requires RMutFwdIterOf<typename TRange::TMutIter, typename TRange::TMutIterEnd, T>;
+        requires RMutFwdIterPairOf<typename TRange::TMutIter, typename TRange::TMutIterEnd, T>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -101,7 +101,7 @@ namespace Atom
     concept RBidiRangeOf = requires
     {
         requires _RRangeOf<TRange, T>;
-        requires RBidiIterOf<typename TRange::TIter, typename TRange::TIterEnd, T>;
+        requires RBidiIterPairOf<typename TRange::TIter, typename TRange::TIterEnd, T>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -111,7 +111,7 @@ namespace Atom
     concept RMutBidiRangeOf = requires
     {
         requires _RMutRangeOf<TRange, T>;
-        requires RMutBidiIterOf<typename TRange::TMutIter, typename TRange::TMutIterEnd, T>;
+        requires RMutBidiIterPairOf<typename TRange::TMutIter, typename TRange::TMutIterEnd, T>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -121,7 +121,7 @@ namespace Atom
     concept RJumpRangeOf = requires
     {
         requires _RRangeOf<TRange, T>;
-        requires RJumpIterOf<typename TRange::TIter, typename TRange::TIterEnd, T>;
+        requires RJumpIterPairOf<typename TRange::TIter, typename TRange::TIterEnd, T>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -131,7 +131,7 @@ namespace Atom
     concept RMutJumpRangeOf = requires
     {
         requires _RMutRangeOf<TRange, T>;
-        requires RMutJumpIterOf<typename TRange::TMutIter, typename TRange::TMutIterEnd, T>;
+        requires RMutJumpIterPairOf<typename TRange::TMutIter, typename TRange::TMutIterEnd, T>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -141,7 +141,7 @@ namespace Atom
     concept RArrRangeOf = requires
     {
         requires _RRangeOf<TRange, T>;
-        requires RArrIterOf<typename TRange::TIter, typename TRange::TIterEnd, T>;
+        requires RArrIterPairOf<typename TRange::TIter, typename TRange::TIterEnd, T>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -151,7 +151,7 @@ namespace Atom
     concept RMutArrRangeOf = requires
     {
         requires _RMutRangeOf<TRange, T>;
-        requires RMutArrIterOf<typename TRange::TMutIter, typename TRange::TMutIterEnd, T>;
+        requires RMutArrIterPairOf<typename TRange::TMutIter, typename TRange::TMutIterEnd, T>;
     };
 
     /// --------------------------------------------------------------------------------------------

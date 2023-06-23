@@ -3,31 +3,52 @@
 
 namespace Atom
 {
+//// -----------------------------------------------------------------------------------------------
+#pragma region _Helpers
+
     /// --------------------------------------------------------------------------------------------
-    /// Common requirements for every iterator type.
+    /// 
     /// --------------------------------------------------------------------------------------------
-    template <typename TIter, typename TIterEnd, typename T>
-    concept _RIterOf = requires(const TIter cit, const TIterEnd cend)
+    template <typename TIter>
+    concept _RIter = requires(const TIter cit)
     {
-        // requires typename TIter::TElem;
+        typename TIter::TElem;
 
         requires RCopyable<TIter>;
         requires RMoveable<TIter>;
 
-        requires RCopyable<TIterEnd>;
-        requires RMoveable<TIterEnd>;
-
-        { *cit } -> RConvertibleTo<const T&>;
-        { cit == cend } -> RConvertibleTo<bool>;
+        { *cit } -> RConvertibleTo<const typename TIter::TElem&>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures {TIter} is {MutIter} of type {T} with end {TIterEnd}.
+    /// 
     /// --------------------------------------------------------------------------------------------
-    template <typename TIter, typename TIterEnd, typename T>
-    concept _RMutIterOf = requires(TIter it)
+    template <typename TIter, typename T>
+    concept _RIterOf = requires
     {
-        { *it } -> RConvertibleTo<T&>;
+        requires _RIter<TIter>;
+        requires RSameAs<typename TIter::TElem, T>;
+    };
+
+    /// --------------------------------------------------------------------------------------------
+    /// 
+    /// --------------------------------------------------------------------------------------------
+    template <typename TIter>
+    concept _RMutIter = requires(TIter it)
+    {
+        requires _RIter<TIter>;
+
+        { *it } -> RConvertibleTo<typename TIter::TElem&>;
+    };
+
+    /// --------------------------------------------------------------------------------------------
+    /// 
+    /// --------------------------------------------------------------------------------------------
+    template <typename TIter, typename T>
+    concept _RMutIterOf = requires
+    {
+        requires _RMutIter<TIter>;
+        requires RSameAs<typename TIter::TElem, T>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -39,77 +60,217 @@ namespace Atom
         requires RDerivedFrom<TIter, TTag>;
     };
 
-    /// --------------------------------------------------------------------------------------------
-    /// Ensures {TIter} is {Iter} of type {T} with end {TIterEnd}.
-    /// --------------------------------------------------------------------------------------------
-    template <typename TIter, typename TIterEnd, typename T>
-    concept RIterOf = requires(TIter it)
+    struct MultiPassIterTag { };
+
+    struct ArrIterTag : MultiPassIterTag { };
+
+#pragma endregion
+//// -----------------------------------------------------------------------------------------------
+
+//// -----------------------------------------------------------------------------------------------
+#pragma region Iter
+
+    template <typename TIter, typename TIterEnd>
+    concept RIterEnd = requires(TIter it, TIterEnd itEnd)
     {
-        requires _RIterOf<TIter, TIterEnd, T>;
+        requires RCopyable<TIterEnd>;
+        requires RMoveable<TIterEnd>;
+
+        { it == itEnd };
+    };
+
+    template <typename TIter>
+    concept RIter = requires(TIter it)
+    {
+        requires _RIter<TIter>;
 
         { it++ } -> RConvertibleTo<TIter&>;
     };
 
-    /// --------------------------------------------------------------------------------------------
-    /// Ensures {TIter} is {MutIter} of type {T} with end {TIterEnd}.
-    /// --------------------------------------------------------------------------------------------
-    template <typename TIter, typename TIterEnd, typename T>
-    concept RMutIterOf = requires(TIter it)
+    template <typename TIter>
+    concept RMutIter = requires
     {
-        requires RIterOf<TIter, TIterEnd, T>;
-        requires _RMutIterOf<TIter, TIterEnd, T>;
+        requires _RMutIter<TIter>;
+        requires RIter<TIter>;
     };
 
-    struct MultiPassIterTag { };
+    template <typename TIter, typename T>
+    concept RIterOf = requires
+    {
+        requires _RIterOf<TIter, T>;
+        requires RIter<TIter>;
+    };
 
-    /// --------------------------------------------------------------------------------------------
-    /// Ensures {TIter} is {FwdIter} of type {T} with end {TIterEnd}.
-    /// --------------------------------------------------------------------------------------------
+    template <typename TIter, typename T>
+    concept RMutIterOf = requires
+    {
+        requires _RMutIterOf<TIter, T>;
+        requires RMutIter<TIter>;
+    };
+
+    template <typename TIter, typename TIterEnd>
+    concept RIterPair = requires
+    {
+        requires RIter<TIter>;
+        requires RIterEnd<TIter, TIterEnd>;
+    };
+
+    template <typename TIter, typename TIterEnd>
+    concept RMutIterPair = requires
+    {
+        requires RMutIter<TIter>;
+        requires RIterEnd<TIter, TIterEnd>;
+    };
+
     template <typename TIter, typename TIterEnd, typename T>
-    concept RFwdIterOf = requires
+    concept RIterPairOf = requires
+    {
+        requires RIterOf<TIter, T>;
+        requires RIterEnd<TIter, TIterEnd>;
+    };
+
+    template <typename TIter, typename TIterEnd, typename T>
+    concept RMutIterPairOf = requires
+    {
+        requires RMutIterOf<TIter, T>;
+        requires RIterEnd<TIter, TIterEnd>;
+    };
+
+#pragma endregion
+//// -----------------------------------------------------------------------------------------------
+
+//// -----------------------------------------------------------------------------------------------
+#pragma region FwdIter
+
+    template <typename TIter>
+    concept RFwdIter = requires
     {
         requires _RIterTag<TIter, MultiPassIterTag>;
-        requires RIterOf<TIter, TIterEnd, T>;
+        requires RIter<TIter>;
     };
 
-    /// --------------------------------------------------------------------------------------------
-    /// Ensures {TIter} is {MutFwdIter} of type {T} with end {TIterEnd}.
-    /// --------------------------------------------------------------------------------------------
-    template <typename TIter, typename TIterEnd, typename T>
+    template <typename TIter>
+    concept RMutFwdIter = requires
+    {
+        requires _RMutIter<TIter>;
+        requires RFwdIter<TIter>;
+    };
+
+    template <typename TIter, typename T>
+    concept RFwdIterOf = requires
+    {
+        requires _RIterOf<TIter, T>;
+        requires RFwdIter<TIter>;
+    };
+
+    template <typename TIter, typename T>
     concept RMutFwdIterOf = requires
     {
-        requires RFwdIterOf<TIter, TIterEnd, T>;
-        requires _RMutIterOf<TIter, TIterEnd, T>;
+        requires _RMutIterOf<TIter, T>;
+        requires RMutFwdIter<TIter>;
     };
 
-    /// --------------------------------------------------------------------------------------------
-    /// Ensures {TIter} is {BidiIter} of type {T} with end {TIterEnd}.
-    /// --------------------------------------------------------------------------------------------
-    template <typename TIter, typename TIterEnd, typename T>
-    concept RBidiIterOf = requires(TIter it)
+    template <typename TIter, typename TIterEnd>
+    concept RFwdIterPair = requires
     {
-        requires RFwdIterOf<TIter, TIterEnd, T>;
+        requires RFwdIter<TIter>;
+        requires RIterEnd<TIter, TIterEnd>;
+    };
+
+    template <typename TIter, typename TIterEnd>
+    concept RMutFwdIterPair = requires
+    {
+        requires RMutFwdIter<TIter>;
+        requires RIterEnd<TIter, TIterEnd>;
+    };
+
+    template <typename TIter, typename TIterEnd, typename T>
+    concept RFwdIterPairOf = requires
+    {
+        requires RFwdIterOf<TIter, T>;
+        requires RIterEnd<TIter, TIterEnd>;
+    };
+
+    template <typename TIter, typename TIterEnd, typename T>
+    concept RMutFwdIterPairOf = requires
+    {
+        requires RMutFwdIterOf<TIter, T>;
+        requires RIterEnd<TIter, TIterEnd>;
+    };
+
+#pragma endregion
+//// -----------------------------------------------------------------------------------------------
+
+//// -----------------------------------------------------------------------------------------------
+#pragma region BidiIter
+
+    template <typename TIter>
+    concept RBidiIter = requires(TIter it)
+    {
+        requires RFwdIter<TIter>;
 
         { it-- } -> RConvertibleTo<TIter&>;
     };
 
-    /// --------------------------------------------------------------------------------------------
-    /// Ensures {TIter} is {MutBidiIter} of type {T} with end {TIterEnd}.
-    /// --------------------------------------------------------------------------------------------
-    template <typename TIter, typename TIterEnd, typename T>
-    concept RMutBidiIterOf = requires
+    template <typename TIter>
+    concept RMutBidiIter = requires
     {
-        requires RBidiIterOf<TIter, TIterEnd, T>;
-        requires _RMutIterOf<TIter, TIterEnd, T>;
+        requires _RMutIter<TIter>;
+        requires RBidiIter<TIter>;
     };
 
-    /// --------------------------------------------------------------------------------------------
-    /// Ensures {TIter} is {JumpIter} of type {T} with end {TIterEnd}.
-    /// --------------------------------------------------------------------------------------------
-    template <typename TIter, typename TIterEnd, typename T>
-    concept RJumpIterOf = requires(TIter it, const TIter cit, usize steps)
+    template <typename TIter, typename T>
+    concept RBidiIterOf = requires
     {
-        requires RBidiIterOf<TIter, TIterEnd, T>;
+        requires _RIterOf<TIter, T>;
+        requires RBidiIter<TIter>;
+    };
+
+    template <typename TIter, typename T>
+    concept RMutBidiIterOf = requires
+    {
+        requires _RMutIterOf<TIter, T>;
+        requires RMutBidiIter<TIter>;
+    };
+
+    template <typename TIter, typename TIterEnd>
+    concept RBidiIterPair = requires
+    {
+        requires RBidiIter<TIter>;
+        requires RIterEnd<TIter, TIterEnd>;
+    };
+
+    template <typename TIter, typename TIterEnd>
+    concept RMutBidiIterPair = requires
+    {
+        requires RMutBidiIter<TIter>;
+        requires RIterEnd<TIter, TIterEnd>;
+    };
+
+    template <typename TIter, typename TIterEnd, typename T>
+    concept RBidiIterPairOf = requires
+    {
+        requires RBidiIterOf<TIter, T>;
+        requires RIterEnd<TIter, TIterEnd>;
+    };
+
+    template <typename TIter, typename TIterEnd, typename T>
+    concept RMutBidiIterPairOf = requires
+    {
+        requires RMutBidiIterOf<TIter, T>;
+        requires RIterEnd<TIter, TIterEnd>;
+    };
+
+#pragma endregion
+//// -----------------------------------------------------------------------------------------------
+
+//// -----------------------------------------------------------------------------------------------
+#pragma region JumpIter
+
+    template <typename TIter>
+    concept RJumpIter = requires(TIter it, const TIter cit, usize steps)
+    {
+        requires RBidiIter<TIter>;
 
         { cit + steps } -> RConvertibleTo<TIter>;
         { cit - steps } -> RConvertibleTo<TIter>;
@@ -120,35 +281,117 @@ namespace Atom
         { cit - cit } -> RConvertibleTo<isize>;
     };
 
-    /// --------------------------------------------------------------------------------------------
-    /// Ensures {TIter} is {MutJumpIter} of type {T} with end {TIterEnd}.
-    /// --------------------------------------------------------------------------------------------
-    template <typename TIter, typename TIterEnd, typename T>
+    template <typename TIter>
+    concept RMutJumpIter = requires
+    {
+        requires _RMutIter<TIter>;
+        requires RJumpIter<TIter>;
+    };
+
+    template <typename TIter, typename T>
+    concept RJumpIterOf = requires
+    {
+        requires _RIterOf<TIter, T>;
+        requires RJumpIter<TIter>;
+    };
+
+    template <typename TIter, typename T>
     concept RMutJumpIterOf = requires
     {
-        requires RJumpIterOf<TIter, TIterEnd, T>;
-        requires _RMutIterOf<TIter, TIterEnd, T>;
+        requires _RMutIterOf<TIter, T>;
+        requires RMutJumpIter<TIter>;
     };
 
-    struct ArrIterTag : MultiPassIterTag { };
+    template <typename TIter, typename TIterEnd>
+    concept RJumpIterPair = requires
+    {
+        requires RJumpIter<TIter>;
+        requires RIterEnd<TIter, TIterEnd>;
+    };
 
-    /// --------------------------------------------------------------------------------------------
-    /// Ensures {TIter} is {ArrIter} of type {T} with end {TIterEnd}.
-    /// --------------------------------------------------------------------------------------------
+    template <typename TIter, typename TIterEnd>
+    concept RMutJumpIterPair = requires
+    {
+        requires RMutJumpIter<TIter>;
+        requires RIterEnd<TIter, TIterEnd>;
+    };
+
     template <typename TIter, typename TIterEnd, typename T>
+    concept RJumpIterPairOf = requires
+    {
+        requires RJumpIterOf<TIter, T>;
+        requires RIterEnd<TIter, TIterEnd>;
+    };
+
+    template <typename TIter, typename TIterEnd, typename T>
+    concept RMutJumpIterPairOf = requires
+    {
+        requires RMutJumpIterOf<TIter, T>;
+        requires RIterEnd<TIter, TIterEnd>;
+    };
+
+#pragma endregion
+//// -----------------------------------------------------------------------------------------------
+
+//// -----------------------------------------------------------------------------------------------
+#pragma region ArrIter
+
+    template <typename TIter>
+    concept RArrIter = requires
+    {
+        requires _RIterTag<TIter, ArrIterTag>;
+        requires RJumpIter<TIter>;
+    };
+
+    template <typename TIter>
+    concept RMutArrIter = requires
+    {
+        requires _RMutIter<TIter>;
+        requires RArrIter<TIter>;
+    };
+
+    template <typename TIter, typename T>
     concept RArrIterOf = requires
     {
-        requires _RIterTag<TIter, ArrIterTag>;
-        requires RJumpIterOf<TIter, TIterEnd, T>;
+        requires _RIterOf<TIter, T>;
+        requires RArrIter<TIter>;
     };
 
-    /// --------------------------------------------------------------------------------------------
-    /// Ensures {TIter} is {MutArrIter} of type {T} with end {TIterEnd}.
-    /// --------------------------------------------------------------------------------------------
-    template <typename TIter, typename TIterEnd, typename T>
+    template <typename TIter, typename T>
     concept RMutArrIterOf = requires
     {
-        requires _RIterTag<TIter, ArrIterTag>;
-        requires RMutJumpIterOf<TIter, TIterEnd, T>;
+        requires _RMutIterOf<TIter, T>;
+        requires RMutArrIter<TIter>;
     };
+
+    template <typename TIter, typename TIterEnd>
+    concept RArrIterPair = requires
+    {
+        requires RArrIter<TIter>;
+        requires RIterEnd<TIter, TIterEnd>;
+    };
+
+    template <typename TIter, typename TIterEnd>
+    concept RMutArrIterPair = requires
+    {
+        requires RMutArrIter<TIter>;
+        requires RIterEnd<TIter, TIterEnd>;
+    };
+
+    template <typename TIter, typename TIterEnd, typename T>
+    concept RArrIterPairOf = requires
+    {
+        requires RArrIterOf<TIter, T>;
+        requires RIterEnd<TIter, TIterEnd>;
+    };
+
+    template <typename TIter, typename TIterEnd, typename T>
+    concept RMutArrIterPairOf = requires
+    {
+        requires RMutArrIterOf<TIter, T>;
+        requires RIterEnd<TIter, TIterEnd>;
+    };
+
+#pragma endregion
+//// -----------------------------------------------------------------------------------------------
 }

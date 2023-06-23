@@ -132,7 +132,7 @@ namespace Atom
         const T* _it;
     };
 
-    ATOM_STATIC_ASSERT_ITER_REQ(RArrIterOf, ArrIter, ArrIter<int>);
+    ATOM_STATIC_ASSERT_ITER_REQ(RArrIterPairOf, ArrIter, ArrIter<int>);
 
     /// --------------------------------------------------------------------------------------------
     /// MutArrIter iterates over raw arr.
@@ -177,5 +177,5 @@ namespace Atom
         }
     };
 
-    ATOM_STATIC_ASSERT_ITER_REQ(RMutArrIterOf, MutArrIter, MutArrIter<int>);
+    ATOM_STATIC_ASSERT_ITER_REQ(RMutArrIterPairOf, MutArrIter, MutArrIter<int>);
 }

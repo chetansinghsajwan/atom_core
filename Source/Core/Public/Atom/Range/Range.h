@@ -15,7 +15,7 @@ namespace Atom
     /// 
     /// --------------------------------------------------------------------------------------------
     template <typename _TIter, typename _TIterEnd>
-    requires RIterOf<_TIter, _TIterEnd, typename _TIter::TElem>
+    requires RIterPairOf<_TIter, _TIterEnd, typename _TIter::TElem>
     struct Range<_TIter, _TIterEnd>
     {
     public:
@@ -34,37 +34,37 @@ namespace Atom
 
     public:
         constexpr TIter Iter() const noexcept
-        requires RIterOf<TIter, TIterEnd, TElem>
+        requires RIterPairOf<TIter, TIterEnd, TElem>
         {
             return TIter{ _iter };
         }
 
         constexpr TIterEnd IterEnd() const noexcept
-        requires RIterOf<TIter, TIterEnd, TElem>
+        requires RIterPairOf<TIter, TIterEnd, TElem>
         {
             return TIterEnd{ _end };
         }
 
         constexpr TMutIter MutIter() noexcept
-        requires RMutFwdIterOf<TMutIter, TMutIterEnd, TElem>
+        requires RMutFwdIterPairOf<TMutIter, TMutIterEnd, TElem>
         {
             return _iter;
         }
 
         constexpr TMutIterEnd MutIterEnd() noexcept
-        requires RMutFwdIterOf<TMutIter, TMutIterEnd, TElem>
+        requires RMutFwdIterPairOf<TMutIter, TMutIterEnd, TElem>
         {
             return _end;
         }
 
         constexpr usize Count() const noexcept
-        requires RJumpIterOf<TIter, TIterEnd, TElem>
+        requires RJumpIterPairOf<TIter, TIterEnd, TElem>
         {
             return _end - _iter;
         }
 
         constexpr const TElem* Data() const noexcept
-        requires RArrIterOf<TIter, TIterEnd, TElem>
+        requires RArrIterPairOf<TIter, TIterEnd, TElem>
         {
             return &*_iter;
         }
@@ -81,7 +81,7 @@ namespace Atom
     };
 
     template <typename TIter, typename TIterEnd>
-    requires RIterOf<TIter, TIterEnd, typename TIter::TElem>
+    requires RIterPairOf<TIter, TIterEnd, typename TIter::TElem>
     Range(TIter iter, TIterEnd end) -> Range<TIter, TIterEnd>;
 
     /// --------------------------------------------------------------------------------------------
