@@ -5,3 +5,4 @@
 #include "Range/RangeReq.h"
 #include "Range/RangeReqMock.h"
 #include "Range/RangeHelper.h"
+#include "Range/RangeExtensions.h"
