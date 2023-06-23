@@ -132,8 +132,7 @@ namespace Atom
         const T* _it;
     };
 
-    static_assert(RArrIter<ArrIter<int>, ArrIter<int>, int>,
-        "{ArrIter} does not satisfy {RArrIter} requirements.");
+    ATOM_STATIC_ASSERT_ITER_REQ(RArrIterOf, ArrIter, ArrIter<int>);
 
     /// --------------------------------------------------------------------------------------------
     /// MutArrIter iterates over raw arr.
@@ -178,6 +177,5 @@ namespace Atom
         }
     };
 
-    static_assert(RMutArrIter<MutArrIter<int>, MutArrIter<int>, int>,
-        "{MutArrIter} does not satisfy {RArrIter} requirements.");
+    ATOM_STATIC_ASSERT_ITER_REQ(RMutArrIterOf, MutArrIter, MutArrIter<int>);
 }

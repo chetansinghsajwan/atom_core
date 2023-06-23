@@ -6,8 +6,8 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// Basic range requirements.
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange, typename T>
-    concept _RRangeOf = requires(const TRange& range)
+    template <typename TRange>
+    concept _RRange = requires(const TRange& range)
     {
         typename TRange::TElem;
         typename TRange::TIter;
@@ -18,10 +18,20 @@ namespace Atom
     };
 
     /// --------------------------------------------------------------------------------------------
+    /// Basic range requirements.
+    /// --------------------------------------------------------------------------------------------
+    template <typename TRange, typename T>
+    concept _RRangeOf = requires(const TRange& range)
+    {
+        requires _RRange<TRange>;
+        // requires RSameAs<typename TRange::TElem, T>;
+    };
+
+    /// --------------------------------------------------------------------------------------------
     /// Basic mut range requirements.
     /// --------------------------------------------------------------------------------------------
     template <typename TRange, typename T>
-    concept _RMutRangeOf = requires(TRange& range)
+    concept _RMutRange = requires(TRange& range)
     {
         requires _RRangeOf<TRange, T>;
 
@@ -35,13 +45,23 @@ namespace Atom
     };
 
     /// --------------------------------------------------------------------------------------------
+    /// Basic mut range requirements.
+    /// --------------------------------------------------------------------------------------------
+    template <typename TRange, typename T>
+    concept _RMutRangeOf = requires(TRange& range)
+    {
+        requires _RMutRange<TRange, T>;
+        requires RSameAs<typename TRange::TElem, T>;
+    };
+
+    /// --------------------------------------------------------------------------------------------
     /// Ensures {TRange} is {Range} of type {T}.
     /// --------------------------------------------------------------------------------------------
     template <typename TRange, typename T>
     concept RRangeOf = requires
     {
         requires _RRangeOf<TRange, T>;
-        requires RIter<typename TRange::TIter, typename TRange::TIterEnd, T>;
+        requires RIterOf<typename TRange::TIter, typename TRange::TIterEnd, T>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -51,7 +71,7 @@ namespace Atom
     concept RMutRangeOf = requires
     {
         requires _RMutRangeOf<TRange, T>;
-        requires RMutIter<typename TRange::TIter, typename TRange::TIterEnd, T>;
+        requires RMutIterOf<typename TRange::TIter, typename TRange::TIterEnd, T>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -61,7 +81,7 @@ namespace Atom
     concept RFwdRangeOf = requires
     {
         requires _RRangeOf<TRange, T>;
-        requires RFwdIter<typename TRange::TIter, typename TRange::TIterEnd, T>;
+        requires RFwdIterOf<typename TRange::TIter, typename TRange::TIterEnd, T>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -71,7 +91,7 @@ namespace Atom
     concept RMutFwdRangeOf = requires
     {
         requires _RMutRangeOf<TRange, T>;
-        requires RMutFwdIter<typename TRange::TMutIter, typename TRange::TMutIterEnd, T>;
+        requires RMutFwdIterOf<typename TRange::TMutIter, typename TRange::TMutIterEnd, T>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -81,7 +101,7 @@ namespace Atom
     concept RBidiRangeOf = requires
     {
         requires _RRangeOf<TRange, T>;
-        requires RBidiIter<typename TRange::TIter, typename TRange::TIterEnd, T>;
+        requires RBidiIterOf<typename TRange::TIter, typename TRange::TIterEnd, T>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -91,7 +111,7 @@ namespace Atom
     concept RMutBidiRangeOf = requires
     {
         requires _RMutRangeOf<TRange, T>;
-        requires RMutBidiIter<typename TRange::TMutIter, typename TRange::TMutIterEnd, T>;
+        requires RMutBidiIterOf<typename TRange::TMutIter, typename TRange::TMutIterEnd, T>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -101,7 +121,7 @@ namespace Atom
     concept RJumpRangeOf = requires
     {
         requires _RRangeOf<TRange, T>;
-        requires RJumpIter<typename TRange::TIter, typename TRange::TIterEnd, T>;
+        requires RJumpIterOf<typename TRange::TIter, typename TRange::TIterEnd, T>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -111,7 +131,7 @@ namespace Atom
     concept RMutJumpRangeOf = requires
     {
         requires _RMutRangeOf<TRange, T>;
-        requires RMutJumpIter<typename TRange::TMutIter, typename TRange::TMutIterEnd, T>;
+        requires RMutJumpIterOf<typename TRange::TMutIter, typename TRange::TMutIterEnd, T>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -121,7 +141,7 @@ namespace Atom
     concept RArrRangeOf = requires
     {
         requires _RRangeOf<TRange, T>;
-        requires RArrIter<typename TRange::TIter, typename TRange::TIterEnd, T>;
+        requires RArrIterOf<typename TRange::TIter, typename TRange::TIterEnd, T>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -131,7 +151,7 @@ namespace Atom
     concept RMutArrRangeOf = requires
     {
         requires _RMutRangeOf<TRange, T>;
-        requires RMutArrIter<typename TRange::TMutIter, typename TRange::TMutIterEnd, T>;
+        requires RMutArrIterOf<typename TRange::TMutIter, typename TRange::TMutIterEnd, T>;
     };
 
     /// --------------------------------------------------------------------------------------------

@@ -15,7 +15,7 @@ namespace Atom
     /// 
     /// --------------------------------------------------------------------------------------------
     template <typename _TIter, typename _TIterEnd>
-    requires RIter<_TIter, _TIterEnd, typename _TIter::TElem>
+    requires RIterOf<_TIter, _TIterEnd, typename _TIter::TElem>
     struct Range<_TIter, _TIterEnd>
     {
     public:
@@ -34,43 +34,43 @@ namespace Atom
 
     public:
         constexpr TIter Iter() const noexcept
-        requires RIter<TIter, TIterEnd, TElem>
+        requires RIterOf<TIter, TIterEnd, TElem>
         {
             return TIter{ _iter };
         }
 
         constexpr TIterEnd IterEnd() const noexcept
-        requires RIter<TIter, TIterEnd, TElem>
+        requires RIterOf<TIter, TIterEnd, TElem>
         {
             return TIterEnd{ _end };
         }
 
         constexpr TMutIter MutIter() noexcept
-        requires RMutFwdIter<TMutIter, TMutIterEnd, TElem>
+        requires RMutFwdIterOf<TMutIter, TMutIterEnd, TElem>
         {
             return _iter;
         }
 
         constexpr TMutIterEnd MutIterEnd() noexcept
-        requires RMutFwdIter<TMutIter, TMutIterEnd, TElem>
+        requires RMutFwdIterOf<TMutIter, TMutIterEnd, TElem>
         {
             return _end;
         }
 
         constexpr usize Count() const noexcept
-        requires RJumpIter<TIter, TIterEnd, TElem>
+        requires RJumpIterOf<TIter, TIterEnd, TElem>
         {
             return _end - _iter;
         }
 
         constexpr const TElem* Data() const noexcept
-        requires RArrIter<TIter, TIterEnd, TElem>
+        requires RArrIterOf<TIter, TIterEnd, TElem>
         {
             return &*_iter;
         }
 
         constexpr TElem* Data() noexcept
-        requires RMutArrIter<TMutIter, TMutIterEnd, TElem>
+        requires RMutArrIterOf<TMutIter, TMutIterEnd, TElem>
         {
             return &*_iter;
         }
@@ -81,7 +81,7 @@ namespace Atom
     };
 
     template <typename TIter, typename TIterEnd>
-    requires RIter<TIter, TIterEnd, typename TIter::TElem>
+    requires RIterOf<TIter, TIterEnd, typename TIter::TElem>
     Range(TIter iter, TIterEnd end) -> Range<TIter, TIterEnd>;
 
     /// --------------------------------------------------------------------------------------------
@@ -135,12 +135,12 @@ namespace Atom
     /// 
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    struct Range<InitList<T>, void>: Range<const T*, const T*>
+    struct Range<InitList<T>>: Range<const T*, const T*>
     {
-        using _TBase = Range<ArrIter<T>, ArrIter<T>>;
+        using Base = Range<const T*, const T*>;
 
         constexpr Range(const InitList<T>& init) noexcept:
-            _TBase{ init.begin(), init.end() } { }
+            Base{ init.begin(), init.end() } { }
     };
 
     template <typename T>

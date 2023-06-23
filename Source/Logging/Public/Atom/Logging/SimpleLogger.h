@@ -29,26 +29,6 @@ namespace Atom::Logging::Internal
             _name(MOVE(name)), targets() { }
 
         /// ----------------------------------------------------------------------------------------
-        /// Constructs and adds LogTarget object.
-        /// Constructs {this->targets(target)}.
-        /// 
-        /// @PARAM[IN] name Name of this logger.
-        /// @PARAM[IN] target LogTarget object to add.
-        /// ----------------------------------------------------------------------------------------
-        SimpleLoggerTemplate(Str name, LogTargetPtr target) noexcept:
-            _name(MOVE(name)), targets(target) { }
-
-        /// ----------------------------------------------------------------------------------------
-        /// Constructs and adds LogTarget objects.
-        /// Constructs {this->targets(targets)}.
-        /// 
-        /// @PARAM[IN] name Name of this logger.
-        /// @PARAM[IN] targets LogTarget objects to add.
-        /// ----------------------------------------------------------------------------------------
-        SimpleLoggerTemplate(Str name, InitList<LogTargetPtr> targets) noexcept:
-            _name(MOVE(name)), targets(targets) { }
-
-        /// ----------------------------------------------------------------------------------------
         /// Constructs and adds LogTarget objects.
         /// Constructs {this->targets(targets)}.
         /// 

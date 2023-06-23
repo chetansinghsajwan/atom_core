@@ -1,4 +1,5 @@
 #include <iostream>
+#include "Atom/Range.h"
 #include "Atom/Engine.h"
 #include "Atom/Logging/SimpleLogger.h"
 #include "Atom/Logging/LogTargets/ConsoleLogTarget.h"
@@ -14,7 +15,7 @@ namespace Atom::Engine
     extern Application* CreateApplication()
     {
         SharedPtr<ConsoleLogTarget> target = MakeShared<ConsoleLogTarget>();
-        SimpleLoggerST logger(TEXT("Test"), target);
+        SimpleLoggerST logger(TEXT("Test"), Range{ target });
         logger.SetLogLevel(ELogLevel::Debug);
 
         logger.LogWarn(TEXT("Just a warning"));

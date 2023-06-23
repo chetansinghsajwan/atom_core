@@ -317,11 +317,17 @@ namespace Atom::Logging::Private
         requires RRangeOf<TRange, LogTargetPtr>
         usize _AddTargets(const TRange& targets)
         {
-            return _targets.InsertBack(targets,
-                [](const LogTargetPtr& target)
+            usize count = 0;
+            for (LogTargetPtr target : targets)
+            {
+                if (target != nullptr)
                 {
-                    return target != nullptr;
-                }).Range();
+                    _targets.InsertBack(MOVE(target));
+                    count++;
+                }
+            }
+
+            return count;
         }
 
         /// ----------------------------------------------------------------------------------------

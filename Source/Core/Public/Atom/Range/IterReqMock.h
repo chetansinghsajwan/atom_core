@@ -32,7 +32,7 @@ namespace Atom
         IterReqMock& operator ++(int);
     };
 
-    ATOM_STATIC_ASSERT_ITER_REQ(RIter, IterReqMock, IterEndReqMock);
+    ATOM_STATIC_ASSERT_ITER_REQ(RIterOf, IterReqMock, IterEndReqMock);
 
     /// --------------------------------------------------------------------------------------------
     /// {RMutIter} mock object.
@@ -49,7 +49,7 @@ namespace Atom
         MutIterReqMock& operator ++(int);
     };
 
-    ATOM_STATIC_ASSERT_ITER_REQ(RMutIter, MutIterReqMock, IterEndReqMock);
+    ATOM_STATIC_ASSERT_ITER_REQ(RMutIterOf, MutIterReqMock, IterEndReqMock);
 
     /// --------------------------------------------------------------------------------------------
     /// {RFwdIter} mock object.
@@ -65,7 +65,7 @@ namespace Atom
         FwdIterReqMock& operator ++(int);
     };
 
-    ATOM_STATIC_ASSERT_ITER_REQ(RFwdIter, FwdIterReqMock, IterEndReqMock);
+    ATOM_STATIC_ASSERT_ITER_REQ(RFwdIterOf, FwdIterReqMock, IterEndReqMock);
 
     /// --------------------------------------------------------------------------------------------
     /// {RMutFwdIter} mock object.
@@ -82,7 +82,7 @@ namespace Atom
         MutFwdIterReqMock& operator ++(int);
     };
 
-    ATOM_STATIC_ASSERT_ITER_REQ(RMutFwdIter, MutFwdIterReqMock, IterEndReqMock);
+    ATOM_STATIC_ASSERT_ITER_REQ(RMutFwdIterOf, MutFwdIterReqMock, IterEndReqMock);
 
     /// --------------------------------------------------------------------------------------------
     /// {RBidiIter} mock object.
@@ -99,7 +99,7 @@ namespace Atom
         BidiIterReqMock& operator --(int);
     };
 
-    ATOM_STATIC_ASSERT_ITER_REQ(RBidiIter, BidiIterReqMock, IterEndReqMock);
+    ATOM_STATIC_ASSERT_ITER_REQ(RBidiIterOf, BidiIterReqMock, IterEndReqMock);
 
     /// --------------------------------------------------------------------------------------------
     /// {RMutBidiIter} mock object.
@@ -117,7 +117,7 @@ namespace Atom
         MutBidiIterReqMock& operator --(int);
     };
 
-    ATOM_STATIC_ASSERT_ITER_REQ(RMutBidiIter, MutBidiIterReqMock, IterEndReqMock);
+    ATOM_STATIC_ASSERT_ITER_REQ(RMutBidiIterOf, MutBidiIterReqMock, IterEndReqMock);
 
     /// --------------------------------------------------------------------------------------------
     /// {RJumpIter} mock object.
@@ -142,7 +142,7 @@ namespace Atom
         isize operator -(const JumpIterReqMock& that) const;
     };
 
-    ATOM_STATIC_ASSERT_ITER_REQ(RJumpIter, JumpIterReqMock, IterEndReqMock);
+    ATOM_STATIC_ASSERT_ITER_REQ(RJumpIterOf, JumpIterReqMock, IterEndReqMock);
 
     /// --------------------------------------------------------------------------------------------
     /// {RMutJumpIter} mock object.
@@ -168,7 +168,7 @@ namespace Atom
         isize operator -(const MutJumpIterReqMock& that) const;
     };
 
-    ATOM_STATIC_ASSERT_ITER_REQ(RMutJumpIter, MutJumpIterReqMock, IterEndReqMock);
+    ATOM_STATIC_ASSERT_ITER_REQ(RMutJumpIterOf, MutJumpIterReqMock, IterEndReqMock);
 
     /// --------------------------------------------------------------------------------------------
     /// {RArrIter} mock object.
@@ -194,7 +194,7 @@ namespace Atom
         isize operator -(const ArrIterReqMock& that) const;
     };
 
-    ATOM_STATIC_ASSERT_ITER_REQ(RArrIter, ArrIterReqMock, IterEndReqMock);
+    ATOM_STATIC_ASSERT_ITER_REQ(RArrIterOf, ArrIterReqMock, IterEndReqMock);
 
     /// --------------------------------------------------------------------------------------------
     /// {RMutArrIter} mock object.
@@ -220,5 +220,5 @@ namespace Atom
         isize operator -(const MutArrIterReqMock& that) const;
     };
 
-    ATOM_STATIC_ASSERT_ITER_REQ(RMutArrIter, MutArrIterReqMock, IterEndReqMock);
+    ATOM_STATIC_ASSERT_ITER_REQ(RMutArrIterOf, MutArrIterReqMock, IterEndReqMock);
 }
