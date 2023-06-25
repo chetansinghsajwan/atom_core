@@ -1,12 +1,5 @@
 #pragma once
-#include "IterReq.h"
-
-/// ------------------------------------------------------------------------------------------------
-/// Macro to check if iter {iter} satisfies iter req {req} with end {iterEnd}.
-/// ------------------------------------------------------------------------------------------------
-#define ATOM_STATIC_ASSERT_ITER_REQ(req, iter, iterEnd) \
-    static_assert(req<iter<int>, iterEnd, int>, \
-        "{" #iter ", " #iterEnd "} does not satisfy {" #req "} requirements.");
+#include "IterReqAssertions.h"
 
 /// ------------------------------------------------------------------------------------------------
 /// @TODO[Cpp2PostfixOper]: Remove postfix {++} and {--} operators.
@@ -34,7 +27,7 @@ namespace Atom
         IterReqMock& operator ++(int);
     };
 
-    ATOM_STATIC_ASSERT_ITER_REQ(RIterPairOf, IterReqMock, IterEndReqMock);
+    ATOM_SATISFIES_ITER_PAIR(IterReqMock<int>, IterEndReqMock);
 
     /// --------------------------------------------------------------------------------------------
     /// {RMutIter} mock object.
@@ -53,7 +46,7 @@ namespace Atom
         MutIterReqMock& operator ++(int);
     };
 
-    ATOM_STATIC_ASSERT_ITER_REQ(RMutIterPairOf, MutIterReqMock, IterEndReqMock);
+    ATOM_SATISFIES_MUT_ITER_PAIR(MutIterReqMock<int>, IterEndReqMock);
 
     /// --------------------------------------------------------------------------------------------
     /// {RFwdIter} mock object.
@@ -71,7 +64,7 @@ namespace Atom
         FwdIterReqMock& operator ++(int);
     };
 
-    ATOM_STATIC_ASSERT_ITER_REQ(RFwdIterPairOf, FwdIterReqMock, IterEndReqMock);
+    ATOM_SATISFIES_FWD_ITER_PAIR(FwdIterReqMock<int>, IterEndReqMock);
 
     /// --------------------------------------------------------------------------------------------
     /// {RMutFwdIter} mock object.
@@ -90,7 +83,7 @@ namespace Atom
         MutFwdIterReqMock& operator ++(int);
     };
 
-    ATOM_STATIC_ASSERT_ITER_REQ(RMutFwdIterPairOf, MutFwdIterReqMock, IterEndReqMock);
+    ATOM_SATISFIES_MUT_FWD_ITER_PAIR(MutFwdIterReqMock<int>, IterEndReqMock);
 
     /// --------------------------------------------------------------------------------------------
     /// {RBidiIter} mock object.
@@ -109,7 +102,7 @@ namespace Atom
         BidiIterReqMock& operator --(int);
     };
 
-    ATOM_STATIC_ASSERT_ITER_REQ(RBidiIterPairOf, BidiIterReqMock, IterEndReqMock);
+    ATOM_SATISFIES_BIDI_ITER_PAIR(BidiIterReqMock<int>, IterEndReqMock);
 
     /// --------------------------------------------------------------------------------------------
     /// {RMutBidiIter} mock object.
@@ -129,7 +122,7 @@ namespace Atom
         MutBidiIterReqMock& operator --(int);
     };
 
-    ATOM_STATIC_ASSERT_ITER_REQ(RMutBidiIterPairOf, MutBidiIterReqMock, IterEndReqMock);
+    ATOM_SATISFIES_MUT_BIDI_ITER_PAIR(MutBidiIterReqMock<int>, IterEndReqMock);
 
     /// --------------------------------------------------------------------------------------------
     /// {RJumpIter} mock object.
@@ -156,7 +149,7 @@ namespace Atom
         isize operator -(const JumpIterReqMock& that) const;
     };
 
-    ATOM_STATIC_ASSERT_ITER_REQ(RJumpIterPairOf, JumpIterReqMock, IterEndReqMock);
+    ATOM_SATISFIES_JUMP_ITER_PAIR(JumpIterReqMock<int>, IterEndReqMock);
 
     /// --------------------------------------------------------------------------------------------
     /// {RMutJumpIter} mock object.
@@ -184,7 +177,7 @@ namespace Atom
         isize operator -(const MutJumpIterReqMock& that) const;
     };
 
-    ATOM_STATIC_ASSERT_ITER_REQ(RMutJumpIterPairOf, MutJumpIterReqMock, IterEndReqMock);
+    ATOM_SATISFIES_MUT_JUMP_ITER_PAIR(MutJumpIterReqMock<int>, IterEndReqMock);
 
     /// --------------------------------------------------------------------------------------------
     /// {RArrIter} mock object.
@@ -212,7 +205,7 @@ namespace Atom
         isize operator -(const ArrIterReqMock& that) const;
     };
 
-    ATOM_STATIC_ASSERT_ITER_REQ(RArrIterPairOf, ArrIterReqMock, IterEndReqMock);
+    ATOM_SATISFIES_ARR_ITER_PAIR(ArrIterReqMock<int>, IterEndReqMock);
 
     /// --------------------------------------------------------------------------------------------
     /// {RMutArrIter} mock object.
@@ -240,5 +233,5 @@ namespace Atom
         isize operator -(const MutArrIterReqMock& that) const;
     };
 
-    ATOM_STATIC_ASSERT_ITER_REQ(RMutArrIterPairOf, MutArrIterReqMock, IterEndReqMock);
+    ATOM_SATISFIES_MUT_ARR_ITER_PAIR(MutArrIterReqMock<int>, IterEndReqMock);
 }

@@ -27,7 +27,7 @@ namespace Atom
     concept _RIterOf = requires
     {
         requires _RIter<TIter>;
-        requires RSameAs<typename TIter::TElem, T>;
+        requires RConvertibleTo<typename TIter::TElem, T>;
     };
 
     /// --------------------------------------------------------------------------------------------

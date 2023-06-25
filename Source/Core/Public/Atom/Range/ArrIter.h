@@ -1,5 +1,5 @@
 #pragma once
-#include "IterReq.h"
+#include "IterReqAssertions.h"
 
 namespace Atom
 {
@@ -132,7 +132,7 @@ namespace Atom
         const T* _it;
     };
 
-    ATOM_STATIC_ASSERT_ITER_REQ(RArrIterPairOf, ArrIter, ArrIter<int>);
+    ATOM_SATISFIES_ARR_ITER_TEMP(ArrIter);
 
     /// --------------------------------------------------------------------------------------------
     /// MutArrIter iterates over raw arr.
@@ -177,5 +177,5 @@ namespace Atom
         }
     };
 
-    ATOM_STATIC_ASSERT_ITER_REQ(RMutArrIterPairOf, MutArrIter, MutArrIter<int>);
+    ATOM_SATISFIES_MUT_ARR_ITER_TEMP(ArrIter);
 }
