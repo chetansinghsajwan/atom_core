@@ -1,5 +1,6 @@
 #pragma once
 #include "RangeReq.h"
+#include "RangeComparer.h"
 
 namespace Atom
 {
@@ -50,7 +51,7 @@ namespace Atom
     requires RRange<TRange1> && RRange<TRange2>
     constexpr bool operator ==(const TRange1& range1, const TRange2& range2) noexcept
     {
-        return _Compare(range1, range2) == 0;
+        return RangeComparer().AreEqual(range1, range2);
     }
 
     /// --------------------------------------------------------------------------------------------
@@ -60,16 +61,6 @@ namespace Atom
     requires RRange<TRange1> && RRange<TRange2>
     constexpr bool operator !=(const TRange1& range1, const TRange2& range2) noexcept
     {
-        return !(range1 == range2);
-    }
-
-    /// --------------------------------------------------------------------------------------------
-    /// 
-    /// --------------------------------------------------------------------------------------------
-    template <typename TRange1, typename TRange2>
-    constexpr int8 _Compare(const TRange1& range1, const TRange2& range2) noexcept
-    {
-        // TODO: Implement this.
-        return 0;
+        return !RangeComparer().AreEqual(range1, range2);
     }
 }
