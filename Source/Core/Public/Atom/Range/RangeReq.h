@@ -24,7 +24,7 @@ namespace Atom
     concept _RRangeOf = requires(const TRange& range)
     {
         requires _RRange<TRange>;
-        // requires RSameAs<typename TRange::TElem, T>;
+        requires RConvertibleTo<typename TRange::TElem, T>;
     };
 
     /// --------------------------------------------------------------------------------------------
