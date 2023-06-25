@@ -1,13 +1,6 @@
 #pragma once
-#include "RangeReq.h"
+#include "RangeReqChecks.h"
 #include "IterReqMock.h"
-
-/// ------------------------------------------------------------------------------------------------
-/// Macro to check if range {range} satisfies range req {req}.
-/// ------------------------------------------------------------------------------------------------
-#define ATOM_STATIC_ASSERT_RANGE_REQ(req, range) \
-    static_assert(req<range<int>, int>, \
-        "{" #range "} does not satisfy {" #req "} requirements.");
 
 namespace Atom
 {
@@ -50,7 +43,7 @@ namespace Atom
     struct RangeReqMock :
         _RangeReqMock<IterReqMock<T>, IterEndReqMock, T> { };
 
-    ATOM_STATIC_ASSERT_RANGE_REQ(RRangeOf, RangeReqMock);
+    ATOM_SATISFIES_RANGE_TEMP(RangeReqMock);
 
     /// --------------------------------------------------------------------------------------------
     /// {RMutRange} mock object.
@@ -59,7 +52,7 @@ namespace Atom
     struct MutRangeReqMock :
         _MutRangeReqMock<MutIterReqMock<T>, IterEndReqMock, T> { };
 
-    ATOM_STATIC_ASSERT_RANGE_REQ(RMutRangeOf, MutRangeReqMock);
+    ATOM_SATISFIES_MUT_RANGE_TEMP(MutRangeReqMock);
 
     /// --------------------------------------------------------------------------------------------
     /// {RFwdRange} mock object.
@@ -68,7 +61,7 @@ namespace Atom
     struct FwdRangeReqMock :
         _RangeReqMock<FwdIterReqMock<T>, IterEndReqMock, T> { };
 
-    ATOM_STATIC_ASSERT_RANGE_REQ(RFwdRangeOf, FwdRangeReqMock);
+    ATOM_SATISFIES_FWD_RANGE_TEMP(FwdRangeReqMock);
 
     /// --------------------------------------------------------------------------------------------
     /// {RMutFwdRange} mock object.
@@ -77,7 +70,7 @@ namespace Atom
     struct MutFwdRangeReqMock :
         _MutRangeReqMock<MutFwdIterReqMock<T>, IterEndReqMock, T> { };
 
-    ATOM_STATIC_ASSERT_RANGE_REQ(RMutFwdRangeOf, MutFwdRangeReqMock);
+    ATOM_SATISFIES_MUT_FWD_RANGE_TEMP(MutFwdRangeReqMock);
 
     /// --------------------------------------------------------------------------------------------
     /// {RBidiRange} mock object.
@@ -86,7 +79,7 @@ namespace Atom
     struct BidiRangeReqMock :
         _RangeReqMock<BidiIterReqMock<T>, IterEndReqMock, T> { };
 
-    ATOM_STATIC_ASSERT_RANGE_REQ(RBidiRangeOf, BidiRangeReqMock);
+    ATOM_SATISFIES_BIDI_RANGE_TEMP(BidiRangeReqMock);
 
     /// --------------------------------------------------------------------------------------------
     /// {RMutBidiRange} mock object.
@@ -95,7 +88,7 @@ namespace Atom
     struct MutBidiRangeReqMock :
         _MutRangeReqMock<MutBidiIterReqMock<T>, IterEndReqMock, T> { };
 
-    ATOM_STATIC_ASSERT_RANGE_REQ(RMutBidiRangeOf, MutBidiRangeReqMock);
+    ATOM_SATISFIES_MUT_BIDI_RANGE_TEMP(MutBidiRangeReqMock);
 
     /// --------------------------------------------------------------------------------------------
     /// {RJumpRange} mock object.
@@ -104,7 +97,7 @@ namespace Atom
     struct JumpRangeReqMock :
         _RangeReqMock<JumpIterReqMock<T>, IterEndReqMock, T> { };
 
-    ATOM_STATIC_ASSERT_RANGE_REQ(RJumpRangeOf, JumpRangeReqMock);
+    ATOM_SATISFIES_JUMP_RANGE_TEMP(JumpRangeReqMock);
 
     /// --------------------------------------------------------------------------------------------
     /// {RMutJumpRange} mock object.
@@ -113,7 +106,7 @@ namespace Atom
     struct MutJumpRangeReqMock :
         _MutRangeReqMock<MutJumpIterReqMock<T>, IterEndReqMock, T> { };
 
-    ATOM_STATIC_ASSERT_RANGE_REQ(RMutJumpRangeOf, MutJumpRangeReqMock);
+    ATOM_SATISFIES_MUT_JUMP_RANGE_TEMP(MutJumpRangeReqMock);
 
     /// --------------------------------------------------------------------------------------------
     /// {RArrRange} mock object.
@@ -122,7 +115,7 @@ namespace Atom
     struct ArrRangeReqMock :
         _RangeReqMock<ArrIterReqMock<T>, IterEndReqMock, T> { };
 
-    ATOM_STATIC_ASSERT_RANGE_REQ(RArrRangeOf, ArrRangeReqMock);
+    ATOM_SATISFIES_ARR_RANGE_TEMP(ArrRangeReqMock);
 
     /// --------------------------------------------------------------------------------------------
     /// {RMutArrRange} mock object.
@@ -131,7 +124,7 @@ namespace Atom
     struct MutArrRangeReqMock :
         _MutRangeReqMock<MutArrIterReqMock<T>, IterEndReqMock, T> { };
 
-    ATOM_STATIC_ASSERT_RANGE_REQ(RMutArrRangeOf, MutArrRangeReqMock);
+    ATOM_SATISFIES_MUT_ARR_RANGE_TEMP(MutArrRangeReqMock);
 
     /// --------------------------------------------------------------------------------------------
     /// {RCommonRange} mock object.
@@ -140,7 +133,7 @@ namespace Atom
     struct CommonRangeReqMock : 
         _RangeReqMock<IterReqMock<T>, IterReqMock<T>, T> { };
 
-    ATOM_STATIC_ASSERT_RANGE_REQ(RCommonRangeOf, CommonRangeReqMock);
+    ATOM_SATISFIES_COMMON_RANGE_TEMP(CommonRangeReqMock);
 
     /// --------------------------------------------------------------------------------------------
     /// {RMutCommonRange} mock object.
@@ -149,5 +142,5 @@ namespace Atom
     struct MutCommonRangeReqMock :
         _MutRangeReqMock<MutFwdIterReqMock<T>, MutFwdIterReqMock<T>, T> { };
 
-    ATOM_STATIC_ASSERT_RANGE_REQ(RMutCommonRangeOf, MutCommonRangeReqMock);
+    ATOM_SATISFIES_MUT_COMMON_RANGE_TEMP(MutCommonRangeReqMock);
 }
