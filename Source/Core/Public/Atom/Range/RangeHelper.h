@@ -6,17 +6,17 @@ namespace Atom
     struct RangeHelper
     {
         template <typename TRange>
-        requires RRangeOf<TRange, typename TRange::TElem>
+        requires RRange<TRange>
         constexpr bool CanGetRangeCount() const noexcept
         {
-            return RFwdRangeOf<TRange, typename TRange::TElem>;
+            return RFwdRange<TRange>;
         }
 
         template <typename TRange>
-        requires RRangeOf<TRange, typename TRange::TElem>
+        requires RRange<TRange>
         constexpr usize GetRangeCount(const TRange& range) const noexcept
         {
-            if constexpr (RJumpRangeOf<TRange, typename TRange::TElem>)
+            if constexpr (RJumpRange<TRange>)
             {
                 return range.IterEnd() - range.Iter();
             }

@@ -83,7 +83,8 @@ namespace Atom
     concept RMutRange = requires
     {
         requires _RMutRange<TRange>;
-        requires RMutIterPair<typename TRange::TIter, typename TRange::TIterEnd>;
+        requires RIterPair<typename TRange::TIter, typename TRange::TIterEnd>;
+        requires RMutIterPair<typename TRange::TMutIter, typename TRange::TMutIterEnd>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -93,7 +94,8 @@ namespace Atom
     concept RMutRangeOf = requires
     {
         requires _RMutRangeOf<TRange, T>;
-        requires RMutIterPairOf<typename TRange::TIter, typename TRange::TIterEnd, T>;
+        requires RIterPairOf<typename TRange::TIter, typename TRange::TIterEnd, T>;
+        requires RMutIterPairOf<typename TRange::TMutIter, typename TRange::TMutIterEnd, T>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -123,6 +125,7 @@ namespace Atom
     concept RMutFwdRange = requires
     {
         requires _RMutRange<TRange>;
+        requires RFwdIterPair<typename TRange::TIter, typename TRange::TIterEnd>;
         requires RMutFwdIterPair<typename TRange::TMutIter, typename TRange::TMutIterEnd>;
     };
 
@@ -133,6 +136,7 @@ namespace Atom
     concept RMutFwdRangeOf = requires
     {
         requires _RMutRangeOf<TRange, T>;
+        requires RFwdIterPairOf<typename TRange::TIter, typename TRange::TIterEnd, T>;
         requires RMutFwdIterPairOf<typename TRange::TMutIter, typename TRange::TMutIterEnd, T>;
     };
 
@@ -163,6 +167,7 @@ namespace Atom
     concept RMutBidiRange = requires
     {
         requires _RMutRange<TRange>;
+        requires RBidiIterPair<typename TRange::TIter, typename TRange::TIterEnd>;
         requires RMutBidiIterPair<typename TRange::TMutIter, typename TRange::TMutIterEnd>;
     };
 
@@ -173,6 +178,7 @@ namespace Atom
     concept RMutBidiRangeOf = requires
     {
         requires _RMutRangeOf<TRange, T>;
+        requires RBidiIterPairOf<typename TRange::TIter, typename TRange::TIterEnd, T>;
         requires RMutBidiIterPairOf<typename TRange::TMutIter, typename TRange::TMutIterEnd, T>;
     };
 
@@ -203,6 +209,7 @@ namespace Atom
     concept RMutJumpRange = requires
     {
         requires _RMutRange<TRange>;
+        requires RJumpIterPair<typename TRange::TIter, typename TRange::TIterEnd>;
         requires RMutJumpIterPair<typename TRange::TMutIter, typename TRange::TMutIterEnd>;
     };
 
@@ -213,6 +220,7 @@ namespace Atom
     concept RMutJumpRangeOf = requires
     {
         requires _RMutRangeOf<TRange, T>;
+        requires RJumpIterPairOf<typename TRange::TIter, typename TRange::TIterEnd, T>;
         requires RMutJumpIterPairOf<typename TRange::TMutIter, typename TRange::TMutIterEnd, T>;
     };
 
@@ -243,6 +251,7 @@ namespace Atom
     concept RMutArrRange = requires
     {
         requires _RMutRange<TRange>;
+        requires RArrIterPair<typename TRange::TIter, typename TRange::TIterEnd>;
         requires RMutArrIterPair<typename TRange::TMutIter, typename TRange::TMutIterEnd>;
     };
 
@@ -253,6 +262,7 @@ namespace Atom
     concept RMutArrRangeOf = requires
     {
         requires _RMutRangeOf<TRange, T>;
+        requires RArrIterPairOf<typename TRange::TIter, typename TRange::TIterEnd, T>;
         requires RMutArrIterPairOf<typename TRange::TMutIter, typename TRange::TMutIterEnd, T>;
     };
 
