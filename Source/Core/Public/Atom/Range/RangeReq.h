@@ -290,7 +290,7 @@ namespace Atom
     template <typename TRange>
     concept RMutRevRange = requires
     {
-        requires RMutBidiRangeOf<TRange>;
+        requires RMutBidiRange<TRange>;
     };
 
     /// --------------------------------------------------------------------------------------------

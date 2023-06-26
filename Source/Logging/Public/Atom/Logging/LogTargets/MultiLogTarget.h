@@ -341,11 +341,20 @@ namespace Atom::Logging::Private
         /// 
         /// @TIME_COMPLEXITY @COPY_FROM ${_TContainer}::Remove(LogTarget& target)
         /// ----------------------------------------------------------------------------------------
-        bool _RemoveTarget(LogTargetPtr in_target)
+        bool _RemoveTarget(LogTargetPtr target)
         {
-            ATOM_DEBUG_EXPECTS(in_target != nullptr);
+            ATOM_DEBUG_EXPECTS(target != nullptr);
 
-            return _targets.Remove(in_target);
+            for (auto it = _targets.Iter(); it != _targets.IterEnd(); it++)
+            {
+                if (*it == target)
+                {
+                    _targets.RemoveAt(it);
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -364,10 +373,24 @@ namespace Atom::Logging::Private
         requires RRangeOf<TRange, LogTargetPtr>
         usize _RemoveTargets(const TRange& targets)
         {
-            return _targets.Remove(targets, [](const LogTargetPtr& target)
+            usize count = 0;
+            for (auto target : targets)
+            {
+                if (target == nullptr)
+                    continue;
+
+                for (auto it = _targets.Iter(); it != _targets.IterEnd(); it++)
                 {
-                    return target != nullptr;
-                });
+                    if (*it == target)
+                    {
+                        _targets.RemoveAt(it);
+                        count++;
+                        break;
+                    }
+                }
+            }
+
+            return count;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -385,7 +408,7 @@ namespace Atom::Logging::Private
         {
             ATOM_DEBUG_EXPECTS(target != nullptr);
 
-            return _targets.Contains(target);
+            return RangeFinder().Contains(_targets, target);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -404,7 +427,7 @@ namespace Atom::Logging::Private
         requires RRangeOf<TRange, LogTargetPtr>
         usize _HasTargets(const TRange& targets)
         {
-            return _targets.Contains(targets);
+            return RangeFinder().Contains(_targets, targets);
         }
 
         /// ----------------------------------------------------------------------------------------

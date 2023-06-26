@@ -15,7 +15,7 @@ namespace Atom
     /// 
     /// --------------------------------------------------------------------------------------------
     template <typename _TIter, typename _TIterEnd>
-    requires RIterPairOf<_TIter, _TIterEnd, typename _TIter::TElem>
+    requires RIterPair<_TIter, _TIterEnd>
     struct Range<_TIter, _TIterEnd>
     {
     public:
@@ -34,43 +34,43 @@ namespace Atom
 
     public:
         constexpr TIter Iter() const noexcept
-        requires RIterPairOf<TIter, TIterEnd, TElem>
+        requires RIterPair<TIter, TIterEnd>
         {
             return TIter{ _iter };
         }
 
         constexpr TIterEnd IterEnd() const noexcept
-        requires RIterPairOf<TIter, TIterEnd, TElem>
+        requires RIterPair<TIter, TIterEnd>
         {
             return TIterEnd{ _end };
         }
 
         constexpr TMutIter MutIter() noexcept
-        requires RMutFwdIterPairOf<TMutIter, TMutIterEnd, TElem>
+        requires RMutFwdIterPair<TMutIter, TMutIterEnd>
         {
             return _iter;
         }
 
         constexpr TMutIterEnd MutIterEnd() noexcept
-        requires RMutFwdIterPairOf<TMutIter, TMutIterEnd, TElem>
+        requires RMutFwdIterPair<TMutIter, TMutIterEnd>
         {
             return _end;
         }
 
         constexpr usize Count() const noexcept
-        requires RJumpIterPairOf<TIter, TIterEnd, TElem>
+        requires RJumpIterPair<TIter, TIterEnd>
         {
             return _end - _iter;
         }
 
         constexpr const TElem* Data() const noexcept
-        requires RArrIterPairOf<TIter, TIterEnd, TElem>
+        requires RArrIterPair<TIter, TIterEnd>
         {
             return &*_iter;
         }
 
         constexpr TElem* Data() noexcept
-        requires RMutArrIterOf<TMutIter, TMutIterEnd, TElem>
+        requires RMutArrIterPair<TIter, TIterEnd>
         {
             return &*_iter;
         }
@@ -81,7 +81,7 @@ namespace Atom
     };
 
     template <typename TIter, typename TIterEnd>
-    requires RIterPairOf<TIter, TIterEnd, typename TIter::TElem>
+    requires RIterPair<TIter, TIterEnd>
     Range(TIter iter, TIterEnd end) -> Range<TIter, TIterEnd>;
 
     /// --------------------------------------------------------------------------------------------

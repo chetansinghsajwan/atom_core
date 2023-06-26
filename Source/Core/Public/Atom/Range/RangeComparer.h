@@ -1,4 +1,5 @@
 #pragma once
+#include "_StdIter.h"
 #include "RangeReq.h"
 
 #include <algorithm>
@@ -16,8 +17,12 @@ namespace Atom
             RSameAs<typename TRange1::TElem, typename TRange2::TElem>
         int8 AreEqual(const TRange1& range1, const TRange2& range2)
         {
-            return std::equal(range1.Iter(), range1.IterEnd(),
-                range2.Iter(), range2.IterEnd());
+            _StdIterWrapForAtom stdIter1{ range1.Iter() };
+            _StdIterWrapForAtom stdIterEnd1{ range1.IterEnd() };
+            _StdIterWrapForAtom stdIter2{ range2.Iter() };
+            _StdIterWrapForAtom stdIterEnd2{ range2.IterEnd() };
+
+            return std::equal(stdIter1, stdIterEnd1, stdIter2, stdIterEnd2);
         }
     };
 }

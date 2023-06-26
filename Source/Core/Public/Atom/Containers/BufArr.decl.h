@@ -133,8 +133,8 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// TempMoveCtor.
         /// ----------------------------------------------------------------------------------------
-        pubm template <usize bufSize>
-        cexpr BufArr(BufArr<TElem, bufSize, TAlloc>&& that) noex:
+        pubm template <usize thatBufSize>
+        cexpr BufArr(BufArr<TElem, thatBufSize, TAlloc>&& that) noex:
             _TBase{ nullptr }
         {
             _Move(MOVE(that));
@@ -161,8 +161,8 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// TempMoveOper.
         /// ----------------------------------------------------------------------------------------
-        pubm template <usize bufSize>
-        cexpr BufArr& operator =(BufArr<TElem, bufSize, TAlloc>&& that) noex
+        pubm template <usize thatBufSize>
+        cexpr BufArr& operator =(BufArr<TElem, thatBufSize, TAlloc>&& that) noex
         {
             Clear();
             _Move(MOVE(that));
@@ -195,8 +195,8 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// @EXPECTS Empty().
         /// ----------------------------------------------------------------------------------------
-        prom template <usize bufSize>
-        void _Move(BufArr<TElem, bufSize, TAlloc>&& that)
+        prom template <usize thatBufSize>
+        void _Move(BufArr<TElem, thatBufSize, TAlloc>&& that)
         {
             if (that._Data() == that._StackBuf())
             {

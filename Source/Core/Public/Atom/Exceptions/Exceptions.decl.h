@@ -1,6 +1,6 @@
 #pragma once
 #include <source_location>
-#include <stacktrace>
+// #include <stacktrace>
 
 #include "Atom/Str/Str.decl.h"
 #include "Atom/Str/StrView.decl.h"
@@ -26,9 +26,16 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// A record of stack frames.
     /// 
-    /// TODO: Implement this.
+    /// @FIX: GCC doesn't has stacktrace.
     /// --------------------------------------------------------------------------------------------
-    using StackTrace = std::stacktrace;
+    // using StackTrace = std::stacktrace;
+    struct StackTrace
+    {
+        static constexpr StackTrace current() noexcept
+        {
+            return StackTrace{ };
+        }
+    };
 
     /// --------------------------------------------------------------------------------------------
     /// Base class for all exceptions.

@@ -10,7 +10,7 @@ struct Console
     }
 };
 
-static Console Console;
+static Console console;
 
 int main()
 {

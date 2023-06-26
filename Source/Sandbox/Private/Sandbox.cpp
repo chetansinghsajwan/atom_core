@@ -15,7 +15,7 @@ namespace Atom::Engine
     extern Application* CreateApplication()
     {
         SharedPtr<ConsoleLogTarget> target = MakeShared<ConsoleLogTarget>();
-        SimpleLoggerST logger(TEXT("Test"), Range{ target });
+        SimpleLoggerST logger(TEXT("Test"), Range{{ target }});
         logger.SetLogLevel(ELogLevel::Debug);
 
         logger.LogWarn(TEXT("Just a warning"));
