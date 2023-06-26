@@ -21,7 +21,7 @@ namespace Atom
     inline Exception::Exception(Str msg) noexcept:
         msg(MOVE(msg)) { }
 
-    inline Exception::~Exception() { }
+    inline Exception::~Exception() noexcept { }
 
     inline IndexOutOfRangeException::IndexOutOfRangeException(
         Str msg, usize index, usize begin, usize end):
