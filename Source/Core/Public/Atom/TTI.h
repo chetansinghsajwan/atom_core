@@ -13,6 +13,9 @@ namespace Atom::TTI
     template <bool Condition, typename TTrue, typename TFalse>
     using TConditional = std::conditional_t<Condition, TTrue, TFalse>;
 
+    template <bool Condition, typename TFalse, typename TTrue>
+    using TNotConditional = std::conditional_t<Condition, TFalse, TTrue>;
+
     template <bool Condition, typename T>
     using TConditionalField = TConditional<Condition, T, Private::Empty>;
 
@@ -22,8 +25,8 @@ namespace Atom::TTI
     template <typename TBase, typename TDerived>
     constexpr bool IsNotBaseOf = !IsBaseOf<TBase, TDerived>;
 
-    template <bool Requirements>
-    using TEnableIf = std::enable_if_t<Requirements>;
+    template <bool Requirements, typename T = void>
+    using TEnableIf = std::enable_if_t<Requirements, T>;
 
     template <typename T>
     constexpr bool IsCopyConstructible = std::is_copy_constructible_v<T>;

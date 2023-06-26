@@ -1,16 +1,40 @@
 #pragma once
 #include "RangeReq.h"
+#include "Atom/TTI.h"
 
 #define ATOM_NOEX_IF(...)
 
 namespace Atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// @FIX: We support only ArrIter for now, so this works. Add support for other iter categories.
+    /// 
     /// --------------------------------------------------------------------------------------------
     template <typename TIter>
-    using _StdIterCatForAtom = std::contiguous_iterator_tag;
+    using _StdIterCatForAtom = TTI::TEnableIf
+    <
+        RIter<TIter>,
+        TTI::TNotConditional
+        <
+            RFwdIter<TIter>, std::input_iterator_tag,
+            TTI::TNotConditional
+            <
+                RBidiIter<TIter>, std::forward_iterator_tag,
+                TTI::TNotConditional
+                <
+                    RJumpIter<TIter>, std::bidirectional_iterator_tag,
+                    TTI::TNotConditional
+                    <
+                        RArrIter<TIter>, std::random_access_iterator_tag,
+                        std::contiguous_iterator_tag
+                    >
+                >
+            >
+        >
+    >;
 
+    /// --------------------------------------------------------------------------------------------
+    /// 
+    /// --------------------------------------------------------------------------------------------
     template <typename TIter>
     class _StdIterWrapForAtom
     {
