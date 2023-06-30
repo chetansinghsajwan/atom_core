@@ -113,7 +113,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         usize _RemoveListener(SEventKey key) noexcept
         {
-            return UfcsRemoveIf(_listeners, [&](const auto& listener)
+            return RangeModifier().RemoveIf(_listeners, [&](const auto& listener)
                 {
                     return listener.GetInvokableType() == key.GetType();
                 });

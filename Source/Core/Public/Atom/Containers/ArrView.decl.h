@@ -42,8 +42,8 @@ namespace Atom
     template <typename T>
     class ArrView: public _ConstArrImplHelper<_ArrViewImplBase<T>>
     {
-        prim using _TBase = _ConstArrImplHelper<_ArrViewImplBase<T>>;
-        prim using _ImplBase = _ArrViewImplBase<T>;
+        using Base = _ConstArrImplHelper<_ArrViewImplBase<T>>;
+        using BaseImpl = _ArrViewImplBase<T>;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -55,7 +55,7 @@ namespace Atom
         /// NullCtor.
         /// ----------------------------------------------------------------------------------------
         constexpr ArrView(NullPtr) noexcept:
-            _TBase{_ImplBase{ nullptr }} { }
+            Base{BaseImpl{ nullptr }} { }
 
         /// ----------------------------------------------------------------------------------------
         /// NullOper.
@@ -71,7 +71,7 @@ namespace Atom
         template <typename TRange>
         requires RArrRangeOf<TRange, T>
         constexpr ArrView(const TRange& range) noexcept:
-            _TBase{_ImplBase{ range.Data(), range.Count() }} { }
+            Base{BaseImpl{ range.Data(), range.Count() }} { }
 
         /// ----------------------------------------------------------------------------------------
         /// ParamOper.

@@ -2,114 +2,118 @@
 #include "_DynArrImplHelper.decl.h"
 #include "Atom/Memory/DefaultMemAllocator.h"
 #include "Atom/Invokable/Invokable.h"
-// #include "Atom/Math/Core.h"
 
 namespace Atom
 {
     template <typename T, typename TAlloc>
     class _DynArrImplBase
     {
-        pubm using TElem = T;
+    public:
+        using TElem = T;
 
-        pubm cexpr _DynArrImplBase() noex = default;
+    public:
+        constexpr _DynArrImplBase() noexcept = default;
 
-        pubm cexpr _DynArrImplBase(NullPtr) noex:
+        constexpr _DynArrImplBase(NullPtr) noexcept:
             _arr{ nullptr }, _count{ 0 }, _capacity{ 0 }, _alloc{ } { }
 
-        prom cexpr const T* _Data() const noex
+    protected:
+        constexpr const T* _Data() const noexcept
         {
             return _arr;
         }
 
-        prom cexpr T* _Data() noex
+        constexpr T* _Data() noexcept
         {
             return _arr;
         }
 
-        prom cexpr void _Data(T* arr) noex
+        constexpr void _Data(T* arr) noexcept
         {
             _arr = arr;
         }
 
-        prom cexpr usize _Count() const noex
+        constexpr usize _Count() const noexcept
         {
             return _count;
         }
 
-        prom cexpr void _Count(usize count) noex
+        constexpr void _Count(usize count) noexcept
         {
             _count = count;
         }
 
-        prom cexpr usize _Capacity() const noex
+        constexpr usize _Capacity() const noexcept
         {
             return _capacity;
         }
 
-        prom cexpr void _Capacity(usize cap) noex
+        constexpr void _Capacity(usize cap) noexcept
         {
             _capacity = cap;
         }
 
-        prom cexpr T* _AllocMem(usize size)
+        constexpr T* _AllocMem(usize size)
         {
             return (T*)_alloc.Alloc(size);
         }
 
-        prom cexpr void _DeallocMem(T* mem)
+        constexpr void _DeallocMem(T* mem)
         {
             return _alloc.Dealloc(mem);
         }
 
-        prom cexpr usize _CalcCapGrowth(usize required) const noex
+        constexpr usize _CalcCapGrowth(usize required) const noexcept
         {
             // return Math::Max(_Count() + required, _Capacity() * 2);
             return required;
         }
 
-        prom cexpr void _Swap(_DynArrImplBase& that) noex
+        constexpr void _Swap(_DynArrImplBase& that) noexcept
         {
             _DynArrImplBase tmp = that;
             *this = that;
             that = tmp;
         }
 
-        prom cexpr void _Move(_DynArrImplBase& that) noex
+        constexpr void _Move(_DynArrImplBase& that) noexcept
         {
             *this = that;
             that = _DynArrImplBase(nullptr);
         }
 
-        pubm T* _arr;
-        pubm usize _count;
-        pubm usize _capacity;
-        pubm TAlloc _alloc;
+    protected:
+        T* _arr;
+        usize _count;
+        usize _capacity;
+        TAlloc _alloc;
     };
 
     template <typename T, typename TAlloc = DefaultMemAllocator>
-    class DynArr: pub _DynArrImplHelper<_DynArrImplBase<T, TAlloc>>
+    class DynArr: public _DynArrImplHelper<_DynArrImplBase<T, TAlloc>>
     {
-        using _Impl = _DynArrImplHelper<_DynArrImplBase<T, TAlloc>>;
-        using _ImplBase = _DynArrImplBase<T, TAlloc>;
+        using Base = _DynArrImplHelper<_DynArrImplBase<T, TAlloc>>;
+        using BaseImpl = _DynArrImplBase<T, TAlloc>;
 
+    public:
         /// ----------------------------------------------------------------------------------------
         /// DefCtor.
         /// ----------------------------------------------------------------------------------------
-        pubm cexpr DynArr() noex = default;
+        constexpr DynArr() noexcept = default;
 
         /// ----------------------------------------------------------------------------------------
         /// NullCtor.
         /// ----------------------------------------------------------------------------------------
-        pubm cexpr DynArr(NullPtr) noex:
-            _Impl{_ImplBase{ nullptr }} { }
+        constexpr DynArr(NullPtr) noexcept:
+            Base{BaseImpl{ nullptr }} { }
 
         /// ----------------------------------------------------------------------------------------
         /// ParamCtor.
         /// ----------------------------------------------------------------------------------------
-        pubm template <typename TRange>
+        template <typename TRange>
         requires RRangeOf<TRange, T>
-        cexpr DynArr(const TRange& range) noex:
-            _Impl{_ImplBase{ nullptr }}
+        constexpr DynArr(const TRange& range) noexcept:
+            Base{BaseImpl{ nullptr }}
         {
             this->InsertBack(range);
         }
@@ -117,8 +121,8 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// CopyCtor.
         /// ----------------------------------------------------------------------------------------
-        pubm cexpr DynArr(const DynArr& that) noex:
-            _Impl{_ImplBase{ nullptr }}
+        constexpr DynArr(const DynArr& that) noexcept:
+            Base{BaseImpl{ nullptr }}
         {
             this->InsertBack(that);
         }
@@ -126,7 +130,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// CopyOper.
         /// ----------------------------------------------------------------------------------------
-        pubm cexpr DynArr& operator =(const DynArr& that) noex
+        constexpr DynArr& operator =(const DynArr& that) noexcept
         {
             this->Clear();
             this->InsertBack(that);
@@ -136,13 +140,13 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// MoveCtor.
         /// ----------------------------------------------------------------------------------------
-        pubm cexpr DynArr(DynArr&& that) noex:
-            _Impl{_ImplBase{ MOVE(that) }} { }
+        constexpr DynArr(DynArr&& that) noexcept:
+            Base{BaseImpl{ MOVE(that) }} { }
 
         /// ----------------------------------------------------------------------------------------
         /// MoveOper.
         /// ----------------------------------------------------------------------------------------
-        pubm cexpr DynArr& operator =(DynArr&& that) noex
+        constexpr DynArr& operator =(DynArr&& that) noexcept
         {
             DynArr tmp = MOVE(that);
             this->_Swap(tmp);
@@ -152,30 +156,10 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Dtor.
         /// ----------------------------------------------------------------------------------------
-        pubm cexpr ~DynArr() noex
+        constexpr ~DynArr() noexcept
         {
             this->Clear();
             this->Release();
         }
     };
-
-    /// --------------------------------------------------------------------------------------------
-    /// @TODO: Move to Removable section.
-    /// --------------------------------------------------------------------------------------------
-    template <typename T, typename TPred>
-    requires RInvokable<TPred, bool(const T& el)>
-    usize UfcsRemoveIf(DynArr<T>& range, TPred&& pred)
-    {
-        usize count = 0;
-        for (auto it = range.Iter(); it != range.IterEnd(); it++)
-        {
-            if (pred(*it))
-            {
-                it = range.RemoveAt(it);
-                count++;
-            }
-        };
-
-        return count;
-    }
 }

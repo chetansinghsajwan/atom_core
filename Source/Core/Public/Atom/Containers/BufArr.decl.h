@@ -4,72 +4,81 @@
 namespace Atom
 {
     template <typename T, usize BufSize, typename TAlloc>
-    class _BufArrImplBase : pro _DynArrImplBase<T, TAlloc>
+    class _BufArrImplBase : protected _DynArrImplBase<T, TAlloc>
     {
-        prim using _TBase = _DynArrImplBase<T, TAlloc>;
-        prom using TElem = T;
+    private:
+        using Base = _DynArrImplBase<T, TAlloc>;
 
-        prom using _TBase::_TBase;
+    public:
+        using TElem = T;
 
-        prom cexpr auto _StackBuf() const -> const T*
+    public:
+        using Base::Base;
+
+    protected:
+        constexpr auto _StackBuf() const -> const T*
         {
             return _stackBuf;
         }
 
-        prom cexpr auto _AllocMem(usize size) -> T*
+        constexpr auto _AllocMem(usize size) -> T*
         {
             if (BufSize <= size)
             {
                 return _stackBuf;
             }
 
-            return _TBase::_AllocMem(size);
+            return Base::_AllocMem(size);
         }
 
-        prom cexpr auto _DeallocMem(T* mem) -> void
+        constexpr auto _DeallocMem(T* mem) -> void
         {
             if (mem == _stackBuf)
             {
                 return;
             }
 
-            return _TBase::_DeallocMem(mem);
+            return Base::_DeallocMem(mem);
         }
 
-        prom cexpr auto _CalcCapGrowth(usize required) const noex -> usize
+        constexpr auto _CalcCapGrowth(usize required) const noexcept -> usize
         {
             // return Math::Max(_Count() + required, _Capacity() * 2);
             return required;
         }
 
-        prom using _TBase::_Count;
-        prom using _TBase::_Capacity;
+        using Base::_Count;
+        using Base::_Capacity;
 
-        prom T _stackBuf[BufSize];
+    protected:
+        T _stackBuf[BufSize];
     };
 
     template <typename T, usize bufSize, typename TAlloc>
-    class BufArr: pub _DynArrImplHelper<_BufArrImplBase<T, bufSize, TAlloc>>
+    class BufArr: public _DynArrImplHelper<_BufArrImplBase<T, bufSize, TAlloc>>
     {
-        prim using _TBase = _DynArrImplHelper<_BufArrImplBase<T, bufSize, TAlloc>>;
-        prim using _ImplBase = _BufArrImplBase<T, bufSize, TAlloc>;
-        pubm using TElem = typename _TBase::TElem;
+        using Base = _DynArrImplHelper<_BufArrImplBase<T, bufSize, TAlloc>>;
+        using BaseImpl = _BufArrImplBase<T, bufSize, TAlloc>;
 
+    public:
+        using TElem = typename Base::TElem;
+
+    public:
         /// ----------------------------------------------------------------------------------------
         /// DefCtor.
         /// ----------------------------------------------------------------------------------------
-        pubm cexpr BufArr() noex = default;
+        constexpr BufArr() noexcept = default;
 
         /// ----------------------------------------------------------------------------------------
         /// NullCtor.
         /// ----------------------------------------------------------------------------------------
-        pubm cexpr BufArr(NullPtr) noex:
-            _TBase{ nullptr } { }
+        constexpr BufArr(NullPtr) noexcept:
+            Base{ nullptr } { }
 
         /// ----------------------------------------------------------------------------------------
         /// NullOper.
         /// ----------------------------------------------------------------------------------------
-        pubm cexpr BufArr& operator =(NullPtr) noex
+        constexpr BufArr& operator =(NullPtr) noexcept
         {
             Clear();
             Release();
@@ -78,10 +87,10 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// ParamCtor for Range.
         /// ----------------------------------------------------------------------------------------
-        pubm template <typename TRange>
+        template <typename TRange>
         requires RRangeOf<TRange, T>
-        cexpr BufArr(TRange&& range) noex:
-            _TBase{ nullptr }
+        constexpr BufArr(TRange&& range) noexcept:
+            Base{ nullptr }
         {
             InsertBack(range);
         }
@@ -89,9 +98,9 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// ParamOper for Range.
         /// ----------------------------------------------------------------------------------------
-        pubm template <typename TRange>
+        template <typename TRange>
         requires RRangeOf<TRange, T>
-        cexpr BufArr& operator =(TRange&& range) noex
+        constexpr BufArr& operator =(TRange&& range) noexcept
         {
             Clear();
             InsertBack(range);
@@ -103,8 +112,8 @@ namespace Atom
         /// @TODO: Check if we need this ctor to satisfy std::is_copy_constructible and 
         ///     RCopyConstructible.
         /// ----------------------------------------------------------------------------------------
-        pubm cexpr BufArr(const BufArr& that) noex:
-            _TBase{ nullptr }
+        constexpr BufArr(const BufArr& that) noexcept:
+            Base{ nullptr }
         {
             // InsertBack(that);
         }
@@ -114,7 +123,7 @@ namespace Atom
         /// 
         /// @TODO: Same as CopyCtor.
         /// ----------------------------------------------------------------------------------------
-        pubm cexpr BufArr& operator =(const BufArr& that) noex
+        constexpr BufArr& operator =(const BufArr& that) noexcept
         {
             Clear();
             InsertBack(that);
@@ -124,8 +133,8 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// MoveCtor.
         /// ----------------------------------------------------------------------------------------
-        pubm cexpr BufArr(BufArr&& that) noex:
-            _TBase{ nullptr }
+        constexpr BufArr(BufArr&& that) noexcept:
+            Base{ nullptr }
         {
             _Move(MOVE(that));
         }
@@ -133,9 +142,9 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// TempMoveCtor.
         /// ----------------------------------------------------------------------------------------
-        pubm template <usize thatBufSize>
-        cexpr BufArr(BufArr<TElem, thatBufSize, TAlloc>&& that) noex:
-            _TBase{ nullptr }
+        template <usize thatBufSize>
+        constexpr BufArr(BufArr<TElem, thatBufSize, TAlloc>&& that) noexcept:
+            Base{ nullptr }
         {
             _Move(MOVE(that));
         }
@@ -143,16 +152,16 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// MoveCtor for DynArr.
         /// ----------------------------------------------------------------------------------------
-        cexpr BufArr(DynArr<TElem, TAlloc>&& that) noex:
-            _TBase{ nullptr }
+        constexpr BufArr(DynArr<TElem, TAlloc>&& that) noexcept:
+            Base{ nullptr }
         {
-            _ImplBase::_Move(that);
+            BaseImpl::_Move(that);
         }
 
         /// ----------------------------------------------------------------------------------------
         /// MoveOper.
         /// ----------------------------------------------------------------------------------------
-        pubm cexpr BufArr& operator =(BufArr&& that) noex
+        constexpr BufArr& operator =(BufArr&& that) noexcept
         {
             Clear();
             _Move(MOVE(that));
@@ -161,8 +170,8 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// TempMoveOper.
         /// ----------------------------------------------------------------------------------------
-        pubm template <usize thatBufSize>
-        cexpr BufArr& operator =(BufArr<TElem, thatBufSize, TAlloc>&& that) noex
+        template <usize thatBufSize>
+        constexpr BufArr& operator =(BufArr<TElem, thatBufSize, TAlloc>&& that) noexcept
         {
             Clear();
             _Move(MOVE(that));
@@ -171,31 +180,33 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// MoveOper for DynArr.
         /// ----------------------------------------------------------------------------------------
-        pubm cexpr BufArr& operator =(DynArr<TElem, TAlloc>&& that) noex
+        constexpr BufArr& operator =(DynArr<TElem, TAlloc>&& that) noexcept
         {
             Clear();
             Release();
 
-            _ImplBase::_Move(that);
+            BaseImpl::_Move(that);
         }
 
         /// ----------------------------------------------------------------------------------------
         /// Dtor.
         /// ----------------------------------------------------------------------------------------
-        pubm cexpr ~BufArr() noex
+        constexpr ~BufArr() noexcept
         {
             Clear();
             Release();
         }
 
-        pubm using _TBase::Clear;
-        pubm using _TBase::Release;
-        pubm using _TBase::InsertBack;
+    public:
+        using Base::Clear;
+        using Base::Release;
+        using Base::InsertBack;
 
+    protected:
         /// ----------------------------------------------------------------------------------------
         /// @EXPECTS Empty().
         /// ----------------------------------------------------------------------------------------
-        prom template <usize thatBufSize>
+        template <usize thatBufSize>
         void _Move(BufArr<TElem, thatBufSize, TAlloc>&& that)
         {
             if (that._Data() == that._StackBuf())
@@ -208,7 +219,7 @@ namespace Atom
             _DynArrImplBase<TElem, TAlloc>::_Move(that);
         }
 
-        prom using _TBase::_EnsureCapFor;
-        prom using _TBase::_Data;
+        using Base::_EnsureCapFor;
+        using Base::_Data;
     };
 }

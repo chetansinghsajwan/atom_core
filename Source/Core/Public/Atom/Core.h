@@ -26,18 +26,3 @@
     #error "AtomEngine only supports Windows and Linux platform for now."
 
 #endif
-
-//// -----------------------------------------------------------------------------------------------
-//// Just trying these. New short keywords.
-//// -----------------------------------------------------------------------------------------------
-
-#define pub public
-#define pro protected
-#define pri private
-#define pubm pub:
-#define prom pro:
-#define prim pri:
-#define cexpr constexpr
-#define ceval consteval
-#define cinit constinit
-#define noex noexcept

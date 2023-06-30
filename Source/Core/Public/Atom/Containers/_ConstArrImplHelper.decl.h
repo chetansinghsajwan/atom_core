@@ -144,7 +144,7 @@ namespace Atom
             return index > 0 && index < (isize)_Count();
         }
 
-        prom using _TImpl::_Data;
-        prom using _TImpl::_Count;
+        using _TImpl::_Data;
+        using _TImpl::_Count;
     };
 }

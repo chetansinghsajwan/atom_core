@@ -4,10 +4,11 @@
 namespace Atom
 {
     template <typename T>
-    class ArrLit: pub ArrView<T>
+    class ArrLit: public ArrView<T>
     {
-        pubm template <usize size>
-        ceval ArrLit(T(&arr)[size]) noexcept:
+    public:
+        template <usize size>
+        consteval ArrLit(T(&arr)[size]) noexcept:
             ArrView{ arr, size } { }
     };
 }

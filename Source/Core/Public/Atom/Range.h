@@ -8,5 +8,6 @@
 #include "Range/RangeReqMocks.h"
 #include "Range/RangeHelper.h"
 #include "Range/RangeComparer.h"
+#include "Range/RangeModifier.h"
 #include "Range/RangeFinder.h"
 #include "Range/RangeExtensions.h"
