@@ -344,28 +344,28 @@ namespace Atom
     cexpr void _DynArrImplHelper<TImpl>::_ConstructAt(
         usize index, auto&&... args)
     {
-        ObjHelper<TElem>().ConstructAt(_Data() + index, FORWARD(args)...);
+        ObjHelper().Construct(_Data() + index, FORWARD(args)...);
     }
 
     template <typename TImpl>
     cexpr void _DynArrImplHelper<TImpl>::_DestructAt(
         usize index)
     {
-        ObjHelper<TElem>().DestructAt(_Data() + index);
+        ObjHelper().Destruct(_Data() + index);
     }
 
     template <typename TImpl>
     cexpr void _DynArrImplHelper<TImpl>::_DestructRange(
-        usize begin, usize end)
+        usize index, usize count)
     {
-        ObjHelper<TElem>().DestructRange(Range(_Data() + begin, end - begin));
+        RangeHelper().Destruct(Range(_Data() + index, count - index));
     }
 
     template <typename TImpl>
     cexpr void _DynArrImplHelper<TImpl>::_MoveRangeFront(
         usize index, usize count)
     {
-        ObjHelper<TElem>().FwdMoveRangeTo(
+        RangeHelper().FwdMoveTo(
             Range(_Data() + index, _Count() - 1 - index), 
             Range(_Data() + count, _Data() + _Count()));
     }
@@ -374,23 +374,30 @@ namespace Atom
     cexpr void _DynArrImplHelper<TImpl>::_MoveRangeBack(
         usize index, usize count)
     {
-        ObjHelper<TElem>().BwdMoveRangeTo(
+        RangeHelper().BwdMoveTo
+        (
             Range(_Data() + index, _Count() - 1 - index), 
-            Range(_Data() + count, _Data() + _Count()));
+            Range(_Data() + count, _Data() + _Count())
+        );
     }
 
     template <typename TImpl>
     cexpr void _DynArrImplHelper<TImpl>::_MoveRangeTo(
         usize index, TElem* dest)
     {
-        // TODO: Implement this.
+        RangeHelper().FwdMoveTo
+        (
+            Range(_Data() + index, _Data() + _Count()),
+            Range(dest, _Count())
+        );
     }
 
     template <typename TImpl>
     cexpr void _DynArrImplHelper<TImpl>::_RotateRangeBack(
         usize index, usize count)
     {
-        ObjHelper<TElem>().Rotate(_Data() + index, _Count() - 1 - index, count);
+        RangeHelper().RotateBwd(
+            Range(_Data() + index, _Count() - 1 - index), count);
     }
 
     template <typename TImpl>
@@ -398,7 +405,7 @@ namespace Atom
     cexpr auto _DynArrImplHelper<TImpl>::_CanGetRangeSize()
         noex -> bool
     {
-        return RFwdRangeOf<TRange, TElem>;
+        return RangeHelper().CanGetCount<TRange>();
     }
 
     template <typename TImpl>
@@ -406,17 +413,6 @@ namespace Atom
     cexpr usize _DynArrImplHelper<TImpl>::_GetRangeSize(
         const TRange& range) noex
     {
-        if cexpr (RJumpRangeOf<TRange, TElem>)
-        {
-            return range.IterEnd() - range.Iter();
-
-            // TODO: Implement this.
-            // return range.Size();
-        }
-
-        usize size = 0;
-        for (auto&& el : range) size++;
-
-        return size;
+        return RangeHelper().GetCount(range);
     }
 }

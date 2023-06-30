@@ -6,12 +6,6 @@
 
 namespace Atom
 {
-    template <typename T1, typename T2>
-    concept RSwappableWith = RAssignable<T1, T2> && RAssignable<T2, T1>;
-
-    template <typename T>
-    concept RSwappable = RSwappableWith<T, T>;
-
     struct RangeHelper
     {
         /// ----------------------------------------------------------------------------------------
