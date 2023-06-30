@@ -193,13 +193,13 @@ namespace Atom
             return count;
         }
 
-        template <class TIter, class TIterEnd>
-        constexpr void _Fill(TIter iter, TIterEnd iterEnd, const class TIter::TElem& val) const
+        template <class TIter, class TIterEnd, typename T>
+        constexpr void _Fill(TIter iter, TIterEnd iterEnd, T&& val) const
         {
             _StdIterWrapForAtom stdIter{ iter };
             _StdIterWrapForAtom stdIterEnd{ iterEnd };
 
-            std::fill(stdIter, stdIterEnd, val);
+            std::fill(stdIter, stdIterEnd, FORWARD(val));
         }
 
         template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
