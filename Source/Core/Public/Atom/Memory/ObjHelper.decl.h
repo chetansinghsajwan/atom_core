@@ -1,6 +1,5 @@
 #pragma once
 #include "MemHelper.decl.h"
-#include "Atom/Range.h"
 
 namespace Atom
 {
@@ -9,13 +8,17 @@ namespace Atom
         template <typename TPtr>
         constexpr void Construct(TPtr&& mem, auto&&... args) const
         {
+            ATOM_DEBUG_EXPECTS(mem != nullptr);
+
             std::construct_at(mem, FORWARD(args)...);
         }
 
         template <typename TPtr>
-        constexpr void Destruct(TPtr&& obj) const
+        constexpr void Destruct(TPtr&& mem) const
         {
-            std::destroy_at(obj);
+            ATOM_DEBUG_EXPECTS(mem != nullptr);
+
+            std::destroy_at(mem);
         }
     };
 }

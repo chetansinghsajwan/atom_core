@@ -1,27 +1,29 @@
 #pragma once
 #include "_ArrImplHelper.decl.h"
-// #include "Atom/Memory/ObjHelper.h"
 
 namespace Atom
 {
     template <typename TImpl>
-    class _DynArrImplHelper: pub _ArrImplHelper<TImpl>
+    class _DynArrImplHelper: public _ArrImplHelper<TImpl>
     {
     //// -------------------------------------------------------------------------------------------
     //// Aliases
     //// -------------------------------------------------------------------------------------------
 
-        prim using _TBase = _ArrImplHelper<TImpl>;
-        pubm using TElem = typename _TBase::TElem;
-        pubm using TIter = typename _TBase::TIter;
-        pubm using TIterEnd = typename _TBase::TIterEnd;
-        pubm using TMutIter = typename _TBase::TMutIter;
-        pubm using TMutIterEnd = typename _TBase::TMutIterEnd;
+        using Base = _ArrImplHelper<TImpl>;
+
+    public:
+        using TElem = typename Base::TElem;
+        using TIter = typename Base::TIter;
+        using TIterEnd = typename Base::TIterEnd;
+        using TMutIter = typename Base::TMutIter;
+        using TMutIterEnd = typename Base::TMutIterEnd;
 
     //// -------------------------------------------------------------------------------------------
     //// Insert
     //// -------------------------------------------------------------------------------------------
 
+    public:
         /// ----------------------------------------------------------------------------------------
         /// Insert element {el} by forward at {pos} pos.
         /// 
@@ -30,9 +32,9 @@ namespace Atom
         /// 
         /// @RETURNS {TMutIter} to the inserted element.
         /// ----------------------------------------------------------------------------------------
-        pubm template <typename U, typename = TTI::TEnableIf<
-            RSameAsUnqualified<U, TElem>>>
-        cexpr TMutIter InsertAt(TIter pos, U&& el);
+        template <typename T2, typename = TTI::TEnableIf<
+            RSameAsUnqualified<T2, TElem>>>
+        constexpr TMutIter InsertAt(TIter pos, T2&& el);
 
         /// ----------------------------------------------------------------------------------------
         /// Insert element range {range} at {pos} pos.
@@ -42,9 +44,9 @@ namespace Atom
         /// 
         /// @RETURNS {TMutIter} to the first element of inserted range.
         /// ----------------------------------------------------------------------------------------
-        pubm template <typename TRange, typename = TTI::TEnableIf<
+        template <typename TRange, typename = TTI::TEnableIf<
             RRangeOf<TRange, TElem>>>
-        cexpr TMutIter InsertAt(TIter pos, const TRange& range);
+        constexpr TMutIter InsertAt(TIter pos, const TRange& range);
 
         /// ----------------------------------------------------------------------------------------
         /// Insert element {el} by forward at front.
@@ -53,9 +55,9 @@ namespace Atom
         /// 
         /// @RETURNS {TMutIter} to the inserted element.
         /// ----------------------------------------------------------------------------------------
-        pubm template <typename U, typename = TTI::TEnableIf<
-            RSameAsUnqualified<U, TElem>>>
-        cexpr TMutIter InsertFront(U&& el);
+        template <typename T2, typename = TTI::TEnableIf<
+            RSameAsUnqualified<T2, TElem>>>
+        constexpr TMutIter InsertFront(T2&& el);
 
         /// ----------------------------------------------------------------------------------------
         /// Insert element range {range} at front.
@@ -64,9 +66,9 @@ namespace Atom
         /// 
         /// @RETURNS {TMutIter} to the first element of inserted range.
         /// ----------------------------------------------------------------------------------------
-        pubm template <typename TRange, typename = TTI::TEnableIf<
+        template <typename TRange, typename = TTI::TEnableIf<
             RRangeOf<TRange, TElem>>>
-        cexpr TMutIter InsertFront(const TRange& range);
+        constexpr TMutIter InsertFront(const TRange& range);
 
         /// ----------------------------------------------------------------------------------------
         /// Insert element {el} by forward at back.
@@ -75,9 +77,9 @@ namespace Atom
         /// 
         /// @RETURNS {TMutIter} to the inserted element.
         /// ----------------------------------------------------------------------------------------
-        pubm template <typename U, typename = TTI::TEnableIf<
-            RSameAsUnqualified<U, TElem>>>
-        cexpr TMutIter InsertBack(U&& el);
+        template <typename T2, typename = TTI::TEnableIf<
+            RSameAsUnqualified<T2, TElem>>>
+        constexpr TMutIter InsertBack(T2&& el);
 
         /// ----------------------------------------------------------------------------------------
         /// Insert element range {range} at back.
@@ -86,49 +88,51 @@ namespace Atom
         /// 
         /// @RETURNS {TMutIter} to the first element of inserted range.
         /// ----------------------------------------------------------------------------------------
-        pubm template <typename TRange, typename = TTI::TEnableIf<
+        template <typename TRange, typename = TTI::TEnableIf<
             RRangeOf<TRange, TElem>>>
-        cexpr TMutIter InsertBack(const TRange& range);
+        constexpr TMutIter InsertBack(const TRange& range);
 
         /// ----------------------------------------------------------------------------------------
         /// Calls {InsertBack(...)}.
         /// ----------------------------------------------------------------------------------------
-        pubm template <typename U, typename = TTI::TEnableIf<
-            RSameAsUnqualified<U, TElem>>>
-        cexpr TMutIter operator +=(U&& el);
+        template <typename T2, typename = TTI::TEnableIf<
+            RSameAsUnqualified<T2, TElem>>>
+        constexpr TMutIter operator +=(T2&& el);
 
         /// ----------------------------------------------------------------------------------------
         /// Calls {InsertBack(...)}.
         /// ----------------------------------------------------------------------------------------
-        pubm template <typename TRange, typename = TTI::TEnableIf<
+        template <typename TRange, typename = TTI::TEnableIf<
             RRangeOf<TRange, TElem>>>
-        cexpr TMutIter operator +=(const TRange& range);
+        constexpr TMutIter operator +=(const TRange& range);
 
-        // TODO: Refactor this. Should we use U here to denote other typename?
-        prim template <typename U>
-        cexpr usize _InsertAt(usize index, U&& el);
+    private:
+        // TODO: Refactor this. Should we use T2 here to denote other typename?
+        template <typename T2>
+        constexpr usize _InsertAt(usize index, T2&& el);
 
-        prim template <typename UIter>
-        cexpr usize _InsertAtCounted(usize index, UIter it, usize count);
+        template <typename TIter2>
+        constexpr usize _InsertAtCounted(usize index, TIter2 it, usize count);
 
-        prim template <typename UIter, typename UIterEnd>
-        cexpr usize _InsertAtUncounted(usize index, UIter begin, UIterEnd end);
+        template <typename TIter2, typename TIterEnd2>
+        constexpr usize _InsertAtUncounted(usize index, TIter2 begin, TIterEnd2 end);
 
-        prim template <typename U>
-        cexpr usize _InsertBack(U&& el);
+        template <typename T2>
+        constexpr usize _InsertBack(T2&& el);
 
-        prim template <typename UIter>
-        cexpr usize _InsertBackCounted(UIter it, usize count);
+        template <typename TIter2>
+        constexpr usize _InsertBackCounted(TIter2 it, usize count);
 
-        prim template <typename UIter, typename UIterEnd>
-        cexpr usize _InsertBackUncounted(UIter begin, UIterEnd end);
+        template <typename TIter2, typename TIterEnd2>
+        constexpr usize _InsertBackUncounted(TIter2 begin, TIterEnd2 end);
 
-        prim cexpr bool _ValidateIndexForInsert(isize index) const noex;
+        constexpr bool _ValidateIndexForInsert(isize index) const noexcept;
 
     //// -------------------------------------------------------------------------------------------
     //// Remove
     //// -------------------------------------------------------------------------------------------
 
+    public:
         /// ----------------------------------------------------------------------------------------
         /// Removes element at pos{pos}.
         /// 
@@ -136,7 +140,7 @@ namespace Atom
         /// 
         /// @RETURNS {TMutIter} to the next element.
         /// ----------------------------------------------------------------------------------------
-        pubm cexpr TMutIter RemoveAt(TIter pos);
+        constexpr TMutIter RemoveAt(TIter pos);
 
         /// ----------------------------------------------------------------------------------------
         /// Removes element at range{range}.
@@ -145,70 +149,73 @@ namespace Atom
         /// 
         /// @RETURNS {TMutIter} to the next element.
         /// ----------------------------------------------------------------------------------------
-        pubm cexpr TMutIter RemoveRange(Range<TIter, TIterEnd> range);
+        constexpr TMutIter RemoveRange(Range<TIter, TIterEnd> range);
 
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        cexpr void Clear();
+        constexpr void Clear();
 
-        prim cexpr usize _RemoveAt(usize index);
+    public:
+        constexpr usize _RemoveAt(usize index);
 
-        prim cexpr usize _RemoveRange(usize begin, usize count);
+        constexpr usize _RemoveRange(usize begin, usize count);
 
     //// -------------------------------------------------------------------------------------------
     //// Memory
     //// -------------------------------------------------------------------------------------------
 
+    public:
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pubm cexpr void Reserve(usize size);
+        constexpr void Reserve(usize size);
 
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pubm cexpr void Release();
+        constexpr void Release();
 
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pubm cexpr usize Capacity() const noex;
+        constexpr usize Capacity() const noexcept;
 
-        pubm using _TBase::Iter;
-        pubm using _TBase::IterEnd;
-        pubm using _TBase::MutIter;
-        pubm using _TBase::MutIterEnd;
+        using Base::Iter;
+        using Base::IterEnd;
+        using Base::MutIter;
+        using Base::MutIterEnd;
 
     //// -------------------------------------------------------------------------------------------
     //// Implementations
     //// -------------------------------------------------------------------------------------------
 
-        prom cexpr bool _ValidateIter(TIter it) const noex;
-        prom cexpr void _UpdateIterDebugId() noex;
-        prom cexpr bool _ValidateIndex(isize index) const noex;
-        prom cexpr isize _FetchIndex(TIter pos) const noex;
-        prom cexpr usize _CalcCapGrowth(usize required) const noex;
-        prom cexpr void _EnsureCapFor(usize count);
+    protected:
+        constexpr bool _ValidateIter(TIter it) const noexcept;
+        constexpr void _UpdateIterDebugId() noexcept;
+        constexpr bool _ValidateIndex(isize index) const noexcept;
+        constexpr isize _FetchIndex(TIter pos) const noexcept;
+        constexpr usize _CalcCapGrowth(usize required) const noexcept;
+        constexpr void _EnsureCapFor(usize count);
 
-        prom cexpr void _ConstructAt(usize index, auto&&... args);
-        prom cexpr void _DestructAt(usize index);
-        prom cexpr void _DestructRange(usize index, usize count);
-        prom cexpr void _MoveRangeFront(usize index, usize count);
-        prom cexpr void _MoveRangeBack(usize index, usize count);
-        prom cexpr void _MoveRangeTo(usize index, TElem* dest);
-        prom cexpr void _RotateRangeBack(usize index, usize count);
+        constexpr void _ConstructAt(usize index, auto&&... args);
+        constexpr void _DestructAt(usize index);
+        constexpr void _DestructRange(usize index, usize count);
+        constexpr void _MoveRangeFront(usize index, usize count);
+        constexpr void _MoveRangeBack(usize index, usize count);
+        constexpr void _MoveRangeTo(usize index, TElem* dest);
+        constexpr void _RotateRangeBack(usize index, usize count);
 
-        prom template <typename TRange>
-        static cexpr bool _CanGetRangeSize() noex;
+        template <typename TRange>
+        static constexpr bool _CanGetRangeSize() noexcept;
 
-        prom template <typename TRange>
-        static cexpr usize _GetRangeSize(const TRange& range) noex;
+        template <typename TRange>
+        static constexpr usize _GetRangeSize(const TRange& range) noexcept;
 
-        prom using _TBase::_Data;
-        prom using _TBase::_Count;
-        prom using _TBase::_Capacity;
-        prom using _TBase::_AllocMem;
-        prom using _TBase::_DeallocMem;
+        using Base::_Data;
+        using Base::_Count;
+        using Base::_Capacity;
+        using Base::_AllocMem;
+        using Base::_DeallocMem;
     };
 }
