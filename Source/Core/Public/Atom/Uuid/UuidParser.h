@@ -14,9 +14,9 @@ namespace Atom
         constexpr Uuid Parse(const TRange& range) const noexcept
         {
             RangeHelper helper;
-            if constexpr (helper.CanGetRangeCount<TRange>())
+            if constexpr (helper.CanGetCount<TRange>())
             {
-                return _ParseCounted(range.Iter(), helper.GetRangeCount(range));
+                return _ParseCounted(range.Iter(), helper.GetCount(range));
             }
             else
             {

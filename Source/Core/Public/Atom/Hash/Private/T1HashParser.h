@@ -25,7 +25,7 @@ namespace Atom::Private
             for (usize i = 0; i < _Size * 2; i += 2)
             {
                 byte hex1 = Math::CharToHex(str[i + 0]);
-                if (hex1 == -1)
+                if (hex1 == (byte)-1)
                 {
                     return T1Hash::Null;
                 }
@@ -34,7 +34,7 @@ namespace Atom::Private
                 hex1 = hex1 << 4;
 
                 byte hex2 = Math::CharToHex(str[i + 1]);
-                if (hex2 == -1)
+                if (hex2 == (byte)-1)
                 {
                     return T1Hash::Null;
                 }
@@ -61,7 +61,7 @@ namespace Atom::Private
                 }
 
                 byte hex1 = Math::CharToHex(range.Get());
-                if (hex1 == -1)
+                if (hex1 == (byte)-1)
                 {
                     return T1Hash::Null;
                 }
@@ -75,7 +75,7 @@ namespace Atom::Private
                 }
 
                 byte hex2 = Math::CharToHex(range.Get());
-                if (hex2 == -1)
+                if (hex2 == (byte)-1)
                 {
                     return T1Hash::Null;
                 }
@@ -107,7 +107,7 @@ namespace Atom::Private
             for (usize i = 0; i < 20; i++)
             {
                 byte hex1 = Math::CharToHex(range.Get());
-                if (hex1 == -1)
+                if (hex1 == (byte)-1)
                 {
                     return T1Hash::Null;
                 }
@@ -117,7 +117,7 @@ namespace Atom::Private
                 range.Next();
 
                 byte hex2 = Math::CharToHex(range.Get());
-                if (hex2 == -1)
+                if (hex2 == (byte)-1)
                 {
                     return T1Hash::Null;
                 }
