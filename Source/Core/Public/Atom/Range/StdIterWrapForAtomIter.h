@@ -10,7 +10,7 @@ namespace Atom
     /// 
     /// --------------------------------------------------------------------------------------------
     template <typename TIter>
-    using _StdIterCatForAtom = TTI::TEnableIf
+    using StdIterCatForAtomIter = TTI::TEnableIf
     <
         RIter<TIter>,
         TTI::TNotConditional
@@ -36,26 +36,26 @@ namespace Atom
     /// 
     /// --------------------------------------------------------------------------------------------
     template <typename TIter>
-    class _StdIterWrapForAtom
+    class StdIterWrapForAtomIter
     {
-        using This = _StdIterWrapForAtom<TIter>;
+        using This = StdIterWrapForAtomIter<TIter>;
 
     public:
         using value_type = typename TIter::TElem;
         using size_type = usize;
         using difference_type = isize;
-        using iterator_category = _StdIterCatForAtom<TIter>;
+        using iterator_category = StdIterCatForAtomIter<TIter>;
         using pointer = value_type*;
         using reference = value_type&;
 
     public:
-        constexpr _StdIterWrapForAtom(const TIter& iter) ATOM_NOEX_IF(_iter{ iter }):
+        constexpr StdIterWrapForAtomIter(const TIter& iter) ATOM_NOEX_IF(_iter{ iter }):
             _iter{ iter } { }
 
-        constexpr _StdIterWrapForAtom(TIter& iter) ATOM_NOEX_IF(_iter{ iter }):
+        constexpr StdIterWrapForAtomIter(TIter& iter) ATOM_NOEX_IF(_iter{ iter }):
             _iter{ iter } { }
 
-        constexpr _StdIterWrapForAtom(TIter&& iter) ATOM_NOEX_IF(_iter{ MOVE(iter) }):
+        constexpr StdIterWrapForAtomIter(TIter&& iter) ATOM_NOEX_IF(_iter{ MOVE(iter) }):
             _iter{ MOVE(iter) } { }
 
     public:
@@ -75,7 +75,7 @@ namespace Atom
 
         template <class TIterEnd>
         requires RIterEnd<TIter, TIterEnd>
-        constexpr bool operator == (const _StdIterWrapForAtom<TIterEnd>& that) const
+        constexpr bool operator == (const StdIterWrapForAtomIter<TIterEnd>& that) const
             ATOM_NOEX_IF(_iter == that._iter)
         {
             return _iter == that._iter;

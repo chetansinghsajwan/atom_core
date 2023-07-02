@@ -1,5 +1,5 @@
 #pragma once
-#include "_StdIter.h"
+#include "StdIterWrapForAtomIter.h"
 #include "RangeReq.h"
 
 #include <algorithm>
@@ -196,8 +196,8 @@ namespace Atom
         template <class TIter, class TIterEnd, typename T>
         constexpr void _Fill(TIter iter, TIterEnd iterEnd, T&& val) const
         {
-            _StdIterWrapForAtom stdIter{ iter };
-            _StdIterWrapForAtom stdIterEnd{ iterEnd };
+            StdIterWrapForAtomIter stdIter{ iter };
+            StdIterWrapForAtomIter stdIterEnd{ iterEnd };
 
             std::fill(stdIter, stdIterEnd, FORWARD(val));
         }
@@ -206,10 +206,9 @@ namespace Atom
         constexpr void _FwdCopy(const TIter1 iter1, const TIterEnd1 iterEnd1,
             TIter2 iter2, TIterEnd2 iterEnd2) const
         {
-            _StdIterWrapForAtom stdIter1{ iter1 };
-            _StdIterWrapForAtom stdIterEnd1{ iterEnd1 };
-            _StdIterWrapForAtom stdIter2{ iter2 };
-            _StdIterWrapForAtom stdIterEnd2{ iterEnd2 };
+            StdIterWrapForAtomIter stdIter1{ iter1 };
+            StdIterWrapForAtomIter stdIterEnd1{ iterEnd1 };
+            StdIterWrapForAtomIter stdIter2{ iter2 };
 
             std::copy(stdIter1, stdIterEnd1, stdIter2);
         }
@@ -218,10 +217,9 @@ namespace Atom
         constexpr void _BwdCopy(const TIter1 iter1, const TIterEnd1 iterEnd1,
             TIter2 iter2, TIterEnd2 iterEnd2) const
         {
-            _StdIterWrapForAtom stdIter1{ iter1 };
-            _StdIterWrapForAtom stdIterEnd1{ iterEnd1 };
-            _StdIterWrapForAtom stdIter2{ iter2 };
-            _StdIterWrapForAtom stdIterEnd2{ iterEnd2 };
+            StdIterWrapForAtomIter stdIter1{ iter1 };
+            StdIterWrapForAtomIter stdIterEnd1{ iterEnd1 };
+            StdIterWrapForAtomIter stdIter2{ iter2 };
 
             std::copy_backward(stdIter1, stdIterEnd1, stdIter2);
         }
@@ -230,10 +228,9 @@ namespace Atom
         constexpr void _FwdMove(TIter1 iter1, const TIterEnd1 iterEnd1,
             TIter2 iter2, TIterEnd2 iterEnd2) const
         {
-            _StdIterWrapForAtom stdIter1{ iter1 };
-            _StdIterWrapForAtom stdIterEnd1{ iterEnd1 };
-            _StdIterWrapForAtom stdIter2{ iter2 };
-            _StdIterWrapForAtom stdIterEnd2{ iterEnd2 };
+            StdIterWrapForAtomIter stdIter1{ iter1 };
+            StdIterWrapForAtomIter stdIterEnd1{ iterEnd1 };
+            StdIterWrapForAtomIter stdIter2{ iter2 };
 
             std::move(stdIter1, stdIterEnd1, stdIter2);
         }
@@ -242,10 +239,9 @@ namespace Atom
         constexpr void _BwdMove(TIter1 iter1, const TIterEnd1 iterEnd1,
             TIter2 iter2, TIterEnd2 iterEnd2) const
         {
-            _StdIterWrapForAtom stdIter1{ iter1 };
-            _StdIterWrapForAtom stdIterEnd1{ iterEnd1 };
-            _StdIterWrapForAtom stdIter2{ iter2 };
-            _StdIterWrapForAtom stdIterEnd2{ iterEnd2 };
+            StdIterWrapForAtomIter stdIter1{ iter1 };
+            StdIterWrapForAtomIter stdIterEnd1{ iterEnd1 };
+            StdIterWrapForAtomIter stdIter2{ iter2 };
 
             std::move_backward(stdIter1, stdIterEnd1, stdIter2);
         }
@@ -259,8 +255,8 @@ namespace Atom
                 return;
             }
 
-            _StdIterWrapForAtom stdIter{ iter };
-            _StdIterWrapForAtom stdIterEnd{ iterEnd };
+            StdIterWrapForAtomIter stdIter{ iter };
+            StdIterWrapForAtomIter stdIterEnd{ iterEnd };
 
             std::shift_right(stdIter, stdIterEnd, steps);
         }
@@ -274,8 +270,8 @@ namespace Atom
                 return;
             }
 
-            _StdIterWrapForAtom stdIter{ iter };
-            _StdIterWrapForAtom stdIterEnd{ iterEnd };
+            StdIterWrapForAtomIter stdIter{ iter };
+            StdIterWrapForAtomIter stdIterEnd{ iterEnd };
 
             std::shift_left(stdIter, stdIterEnd, steps);
         }
@@ -289,8 +285,8 @@ namespace Atom
                 return;
             }
 
-            _StdIterWrapForAtom stdIter{ iter };
-            _StdIterWrapForAtom stdIterEnd{ iterEnd };
+            StdIterWrapForAtomIter stdIter{ iter };
+            StdIterWrapForAtomIter stdIterEnd{ iterEnd };
 
             std::rotate(stdIter, stdIter + steps, stdIterEnd);
         }
@@ -304,8 +300,8 @@ namespace Atom
                 return;
             }
 
-            _StdIterWrapForAtom stdIter{ iter };
-            _StdIterWrapForAtom stdIterEnd{ iterEnd };
+            StdIterWrapForAtomIter stdIter{ iter };
+            StdIterWrapForAtomIter stdIterEnd{ iterEnd };
 
             std::rotate(stdIter, stdIterEnd - steps, stdIterEnd);
         }
@@ -319,8 +315,8 @@ namespace Atom
                 return;
             }
 
-            _StdIterWrapForAtom stdIter{ iter };
-            _StdIterWrapForAtom stdIterEnd{ iterEnd };
+            StdIterWrapForAtomIter stdIter{ iter };
+            StdIterWrapForAtomIter stdIterEnd{ iterEnd };
 
             std::destroy(stdIter, stdIterEnd);
         }
