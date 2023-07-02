@@ -46,13 +46,13 @@ namespace Atom
         }
 
         constexpr TMutIter MutIter() noexcept
-        requires RMutFwdIterPair<TMutIter, TMutIterEnd>
+        requires RMutIterPair<TMutIter, TMutIterEnd>
         {
             return _iter;
         }
 
         constexpr TMutIterEnd MutIterEnd() noexcept
-        requires RMutFwdIterPair<TMutIter, TMutIterEnd>
+        requires RMutIterPair<TMutIter, TMutIterEnd>
         {
             return _end;
         }

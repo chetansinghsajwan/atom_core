@@ -8,13 +8,17 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
-    template <typename TBase>
-    struct _BasicMutIterWrap: TBase
-    {
-        using TElem = typename TBase::TElem;
+    template <typename TWrap>
+    struct _BasicMutIterWrap: TWrap { };
 
-        using TBase::operator *;
-        using TBase::operator ->;
+    template <typename TWrap>
+    requires RIter<TWrap>
+    struct _BasicMutIterWrap<TWrap>: TWrap
+    {
+        using TElem = typename TWrap::TElem;
+
+        using TWrap::operator *;
+        using TWrap::operator ->;
 
         constexpr TElem& operator *() noexcept
         {
@@ -32,6 +36,16 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <typename TIter>
     struct IterWrap
+    {
+        TIter iter;
+    };
+
+    /// --------------------------------------------------------------------------------------------
+    /// 
+    /// --------------------------------------------------------------------------------------------
+    template <typename TIter>
+    requires RIter<TIter>
+    struct IterWrap<TIter>
     {
         using TElem = typename TIter::TElem;
 
@@ -105,6 +119,7 @@ namespace Atom
     struct BidiIterWrap: FwdIterWrap<TIter>
     {
         constexpr BidiIterWrap& operator --(int) noexcept
+        requires RBidiIter<TIter>
         {
             this->iter--;
             return *this;
@@ -134,22 +149,26 @@ namespace Atom
     struct JumpIterWrap: BidiIterWrap<TIter>
     {
         constexpr JumpIterWrap operator +(isize steps) const noexcept
+        requires RJumpIter<TIter>
         {
             return JumpIterWrap{ this->iter + steps };
         }
 
         constexpr JumpIterWrap operator -(isize steps) const noexcept
+        requires RJumpIter<TIter>
         {
             return JumpIterWrap{ this->iter - steps };
         }
 
         constexpr JumpIterWrap& operator +=(isize steps) noexcept
+        requires RJumpIter<TIter>
         {
             this->iter += steps;
             return *this;
         }
 
         constexpr JumpIterWrap& operator -=(isize steps) noexcept
+        requires RJumpIter<TIter>
         {
             this->iter -= steps;
             return *this;
@@ -157,6 +176,7 @@ namespace Atom
 
         template <typename TIter2>
         constexpr isize operator -(const TIter2& iter2) const noexcept
+        requires RJumpIter<TIter>
         {
             return this->iter - iter2;
         }
@@ -174,17 +194,20 @@ namespace Atom
     struct MutJumpIterWrap: _BasicMutIterWrap<JumpIterWrap<TIter>>
     {
         constexpr MutJumpIterWrap operator +(isize steps) const noexcept
+        requires RJumpIter<TIter>
         {
             return MutJumpIterWrap{ this->iter + steps };
         }
 
         constexpr MutJumpIterWrap operator -(isize steps) const noexcept
+        requires RJumpIter<TIter>
         {
             return MutJumpIterWrap{ this->iter - steps };
         }
 
         template <typename TIter2>
         constexpr isize operator -(const TIter2& iter2) const noexcept
+        requires RJumpIter<TIter>
         {
             return this->iter - iter2;
         }
