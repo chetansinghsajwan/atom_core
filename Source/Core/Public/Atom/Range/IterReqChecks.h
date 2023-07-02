@@ -68,9 +68,9 @@
 #pragma region Fwd Iter Assertions
 
 #define ATOM_SATISFIES_FWD_ITER(TIter)                          _ATOM_SATISFIES_ITER(RFwdIter, TIter)
-#define ATOM_SATISFIES_FWD_ITER_OF(TIter, T)                    _ATOM_SATISFIES_ITER_OF(RFwdIter, TIter, T)
+#define ATOM_SATISFIES_FWD_ITER_OF(TIter, T)                    _ATOM_SATISFIES_ITER_OF(RFwdIterOf, TIter, T)
 #define ATOM_SATISFIES_MUT_FWD_ITER(TIter)                      _ATOM_SATISFIES_MUT_ITER(RMutFwdIter, TIter)
-#define ATOM_SATISFIES_MUT_FWD_ITER_OF(TIter, T)                _ATOM_SATISFIES_MUT_ITER_OF(RMutFwdIter, TIter, T)
+#define ATOM_SATISFIES_MUT_FWD_ITER_OF(TIter, T)                _ATOM_SATISFIES_MUT_ITER_OF(RMutFwdIterOf, TIter, T)
 
 #define ATOM_SATISFIES_FWD_ITER_PAIR(TIter, TIterEnd)           _ATOM_SATISFIES_ITER_PAIR(RFwdIterPair, TIter, TIterEnd)
 #define ATOM_SATISFIES_FWD_ITER_PAIR_OF(TIter, TIterEnd, T)     _ATOM_SATISFIES_ITER_PAIR_OF(RFwdIterPairOf, TIter, TIterEnd, T)
@@ -87,9 +87,9 @@
 #pragma region Bidi Iter Assertions
 
 #define ATOM_SATISFIES_BIDI_ITER(TIter)                          _ATOM_SATISFIES_ITER(RBidiIter, TIter)
-#define ATOM_SATISFIES_BIDI_ITER_OF(TIter, T)                    _ATOM_SATISFIES_ITER_OF(RBidiIter, TIter, T)
+#define ATOM_SATISFIES_BIDI_ITER_OF(TIter, T)                    _ATOM_SATISFIES_ITER_OF(RBidiIterOf, TIter, T)
 #define ATOM_SATISFIES_MUT_BIDI_ITER(TIter)                      _ATOM_SATISFIES_MUT_ITER(RMutBidiIter, TIter)
-#define ATOM_SATISFIES_MUT_BIDI_ITER_OF(TIter, T)                _ATOM_SATISFIES_MUT_ITER_OF(RMutBidiIter, TIter, T)
+#define ATOM_SATISFIES_MUT_BIDI_ITER_OF(TIter, T)                _ATOM_SATISFIES_MUT_ITER_OF(RMutBidiIterOf, TIter, T)
 
 #define ATOM_SATISFIES_BIDI_ITER_PAIR(TIter, TIterEnd)           _ATOM_SATISFIES_ITER_PAIR(RBidiIterPair, TIter, TIterEnd)
 #define ATOM_SATISFIES_BIDI_ITER_PAIR_OF(TIter, TIterEnd, T)     _ATOM_SATISFIES_ITER_PAIR_OF(RBidiIterPairOf, TIter, TIterEnd, T)
@@ -106,9 +106,9 @@
 #pragma region Jump Iter Assertions
 
 #define ATOM_SATISFIES_JUMP_ITER(TIter)                          _ATOM_SATISFIES_ITER(RJumpIter, TIter)
-#define ATOM_SATISFIES_JUMP_ITER_OF(TIter, T)                    _ATOM_SATISFIES_ITER_OF(RJumpIter, TIter, T)
+#define ATOM_SATISFIES_JUMP_ITER_OF(TIter, T)                    _ATOM_SATISFIES_ITER_OF(RJumpIterOf, TIter, T)
 #define ATOM_SATISFIES_MUT_JUMP_ITER(TIter)                      _ATOM_SATISFIES_MUT_ITER(RMutJumpIter, TIter)
-#define ATOM_SATISFIES_MUT_JUMP_ITER_OF(TIter, T)                _ATOM_SATISFIES_MUT_ITER_OF(RMutJumpIter, TIter, T)
+#define ATOM_SATISFIES_MUT_JUMP_ITER_OF(TIter, T)                _ATOM_SATISFIES_MUT_ITER_OF(RMutJumpIterOf, TIter, T)
 
 #define ATOM_SATISFIES_JUMP_ITER_PAIR(TIter, TIterEnd)           _ATOM_SATISFIES_ITER_PAIR(RJumpIterPair, TIter, TIterEnd)
 #define ATOM_SATISFIES_JUMP_ITER_PAIR_OF(TIter, TIterEnd, T)     _ATOM_SATISFIES_ITER_PAIR_OF(RJumpIterPairOf, TIter, TIterEnd, T)
@@ -125,9 +125,9 @@
 #pragma region Arr Iter Assertions
 
 #define ATOM_SATISFIES_ARR_ITER(TIter)                          _ATOM_SATISFIES_ITER(RArrIter, TIter)
-#define ATOM_SATISFIES_ARR_ITER_OF(TIter, T)                    _ATOM_SATISFIES_ITER_OF(RArrIter, TIter, T)
+#define ATOM_SATISFIES_ARR_ITER_OF(TIter, T)                    _ATOM_SATISFIES_ITER_OF(RArrIterOf, TIter, T)
 #define ATOM_SATISFIES_MUT_ARR_ITER(TIter)                      _ATOM_SATISFIES_MUT_ITER(RMutArrIter, TIter)
-#define ATOM_SATISFIES_MUT_ARR_ITER_OF(TIter, T)                _ATOM_SATISFIES_MUT_ITER_OF(RMutArrIter, TIter, T)
+#define ATOM_SATISFIES_MUT_ARR_ITER_OF(TIter, T)                _ATOM_SATISFIES_MUT_ITER_OF(RMutArrIterOf, TIter, T)
 
 #define ATOM_SATISFIES_ARR_ITER_PAIR(TIter, TIterEnd)           _ATOM_SATISFIES_ITER_PAIR(RArrIterPair, TIter, TIterEnd)
 #define ATOM_SATISFIES_ARR_ITER_PAIR_OF(TIter, TIterEnd, T)     _ATOM_SATISFIES_ITER_PAIR_OF(RArrIterPairOf, TIter, TIterEnd, T)

@@ -268,7 +268,7 @@ namespace Atom
 #pragma region JumpIter
 
     template <typename TIter>
-    concept RJumpIter = requires(TIter it, const TIter cit, usize steps)
+    concept RJumpIter = requires(TIter it, const TIter cit, isize steps)
     {
         requires RBidiIter<TIter>;
 
