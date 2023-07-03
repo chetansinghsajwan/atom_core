@@ -16,6 +16,9 @@ namespace Atom
         using TIter = TIterWrap<typename TRange::TIter>;
         using TIterEnd = TIterWrap<typename TRange::TIterEnd>;
 
+        constexpr _RangeWrapBase(TRange& range) noexcept:
+            _range{ range } { }
+
         constexpr TIter Iter() const noexcept
         {
             return TIter{ _range.Iter() };
@@ -38,8 +41,12 @@ namespace Atom
     requires RMutRange<TRange>
     struct _MutRangeWrapBase: _RangeWrapBase<TRange, TIterWrap>
     {
+        using Base = _RangeWrapBase<TRange, TIterWrap>;
         using TMutIter = TMutIterWrap<typename TRange::TMutIter>;
         using TMutIterEnd = TMutIterWrap<typename TRange::TMutIterEnd>;
+
+        constexpr _MutRangeWrapBase(TRange& range) noexcept:
+            Base{ range } { }
 
         constexpr TMutIter MutIter() noexcept
         {
@@ -56,47 +63,47 @@ namespace Atom
     /// 
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
-    struct RangeRefWrap: _RangeWrapBase<TRange, IterWrap> { };
+    using RangeRefWrap = _RangeWrapBase<TRange, IterWrap>;
 
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
-    struct MutRangeRefWrap: _MutRangeWrapBase<TRange, IterWrap, MutIterWrap> { };
+    using MutRangeRefWrap = _MutRangeWrapBase<TRange, IterWrap, MutIterWrap>;
 
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
-    struct FwdRangeRefWrap: _RangeWrapBase<TRange, FwdIterWrap> { };
+    using FwdRangeRefWrap = _RangeWrapBase<TRange, FwdIterWrap>;
 
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
-    struct MutFwdRangeRefWrap: _MutRangeWrapBase<TRange, FwdIterWrap, MutFwdIterWrap> { };
+    using MutFwdRangeRefWrap = _MutRangeWrapBase<TRange, FwdIterWrap, MutFwdIterWrap>;
 
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
-    struct BidiRangeRefWrap: _RangeWrapBase<TRange, BidiIterWrap> { };
+    using BidiRangeRefWrap = _RangeWrapBase<TRange, BidiIterWrap>;
 
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
-    struct MutBidiRangeRefWrap: _MutRangeWrapBase<TRange, BidiIterWrap, MutBidiIterWrap> { };
+    using MutBidiRangeRefWrap = _MutRangeWrapBase<TRange, BidiIterWrap, MutBidiIterWrap>;
 
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
-    struct JumpRangeRefWrap: _RangeWrapBase<TRange, JumpIterWrap> { };
+    using JumpRangeRefWrap = _RangeWrapBase<TRange, JumpIterWrap>;
 
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
-    struct MutJumpRangeRefWrap: _MutRangeWrapBase<TRange, JumpIterWrap, MutJumpIterWrap> { };
+    using MutJumpRangeRefWrap = _MutRangeWrapBase<TRange, JumpIterWrap, MutJumpIterWrap>;
 }

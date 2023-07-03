@@ -46,3 +46,17 @@ TEST_CASE("Atom.Range.RangeWrappers", "[.compilation]")
     STATIC_CHECK(RMutJumpRange<MutJumpRangeWrapMock>);
     STATIC_CHECK_FALSE(RMutArrRange<RangeWrapMock>);
 }
+
+TEST_CASE("Atom.Range.RangeWrappers", "[.compilation]")
+{
+    Range<int*, int*> range{ nullptr, nullptr };
+
+    RangeRefWrap{ range };
+    MutRangeRefWrap{ range };
+    FwdRangeRefWrap{ range };
+    MutFwdRangeRefWrap{ range };
+    BidiRangeRefWrap{ range };
+    MutBidiRangeRefWrap{ range };
+    JumpRangeRefWrap{ range };
+    MutJumpRangeRefWrap{ range };
+}
