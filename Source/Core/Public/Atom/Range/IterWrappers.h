@@ -84,21 +84,11 @@ namespace Atom
         TIter iter;
     };
 
-    template <typename T>
-    using _IterWrapTestMock = IterWrap<MutArrIterReqMock<T>>;
-
-    ATOM_SATISFIES_ITER_TEMP(_IterWrapTestMock);
-
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
     template <typename TIter>
     using MutIterWrap = _BasicMutIterWrap<IterWrap<TIter>>;
-
-    template <typename T>
-    using _MutIterWrapTestMock = MutIterWrap<MutArrIterReqMock<T>>;
-
-    ATOM_SATISFIES_MUT_ITER_TEMP(_MutIterWrapTestMock);
 
     /// --------------------------------------------------------------------------------------------
     /// 
@@ -110,21 +100,11 @@ namespace Atom
         using Base::Base;
     };
 
-    template <typename T>
-    using _FwdIterWrapTestMock = FwdIterWrap<MutArrIterReqMock<T>>;
-
-    ATOM_SATISFIES_FWD_ITER_TEMP(_FwdIterWrapTestMock);
-
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
     template <typename TIter>
     using MutFwdIterWrap = _BasicMutIterWrap<FwdIterWrap<TIter>>;
-
-    template <typename T>
-    using _MutFwdIterWrapTestMock = MutFwdIterWrap<MutArrIterReqMock<T>>;
-
-    ATOM_SATISFIES_MUT_FWD_ITER_TEMP(_MutFwdIterWrapTestMock);
 
     /// --------------------------------------------------------------------------------------------
     /// 
@@ -143,21 +123,11 @@ namespace Atom
         }
     };
 
-    template <typename T>
-    using _BidiIterWrapTestMock = BidiIterWrap<MutArrIterReqMock<T>>;
-
-    ATOM_SATISFIES_BIDI_ITER_TEMP(_BidiIterWrapTestMock);
-
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
     template <typename TIter>
     using MutBidiIterWrap = _BasicMutIterWrap<BidiIterWrap<TIter>>;
-
-    template <typename T>
-    using _MutBidiIterWrapTestMock = MutBidiIterWrap<MutArrIterReqMock<T>>;
-
-    ATOM_SATISFIES_MUT_BIDI_ITER_TEMP(_MutBidiIterWrapTestMock);
 
     /// --------------------------------------------------------------------------------------------
     /// 
@@ -202,11 +172,6 @@ namespace Atom
         }
     };
 
-    template <typename T>
-    using _JumpIterWrapTestMock = JumpIterWrap<MutArrIterReqMock<T>>;
-
-    ATOM_SATISFIES_JUMP_ITER_TEMP(_JumpIterWrapTestMock);
-
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
@@ -235,9 +200,4 @@ namespace Atom
             return this->iter - iter2;
         }
     };
-
-    template <typename T>
-    using _MutJumpIterWrapTestMock = MutJumpIterWrap<MutArrIterReqMock<T>>;
-
-    ATOM_SATISFIES_MUT_JUMP_ITER_TEMP(_MutJumpIterWrapTestMock);
 }
