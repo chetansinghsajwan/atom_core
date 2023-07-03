@@ -4,7 +4,7 @@
 
 using namespace Atom;
 
-TEST_CASE("Atom.Range.IterWrappers" "[.compilation]")
+TEST_CASE("Atom.Range.IterWrappers", "[.compilation]")
 {
     using IterWrapMock = IterWrap<ArrIter<int>>;
     using MutIterWrapMock = MutIterWrap<ArrIter<int>>;
@@ -44,7 +44,7 @@ TEST_CASE("Atom.Range.IterWrappers" "[.compilation]")
     STATIC_CHECK_FALSE(RMutArrIter<IterWrapMock>);
 }
 
-TEST_CASE("Atom.Range.IterWrappers" "[.interface]")
+TEST_CASE("Atom.Range.IterWrappers", "[.interface]")
 {
     struct CustomIter: ArrIter<int>
     {

@@ -66,9 +66,9 @@ namespace Atom
         }
 
         template <typename TIterEnd>
-        constexpr bool operator ==(TIterEnd end) const noexcept
+        constexpr bool operator ==(const IterWrap<TIterEnd>& end) const noexcept
         {
-            return this->iter == end;
+            return this->iter == end.iter;
         }
 
         TIter iter;
