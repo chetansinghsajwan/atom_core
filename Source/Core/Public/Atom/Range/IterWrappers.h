@@ -9,13 +9,11 @@ namespace Atom
     /// 
     /// --------------------------------------------------------------------------------------------
     template <typename TWrap>
-    struct _BasicMutIterWrap: TWrap { };
-
-    template <typename TWrap>
-    requires RIter<TWrap>
-    struct _BasicMutIterWrap<TWrap>: TWrap
+    struct _BasicMutIterWrap: TWrap
     {
         using TElem = typename TWrap::TElem;
+
+        using TWrap::TWrap;
 
         using TWrap::operator *;
         using TWrap::operator ->;
@@ -34,20 +32,22 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
-    template <typename TIter>
-    struct IterWrap
-    {
-        TIter iter;
-    };
+    template <typename TWrap>
+    requires (!RIter<TWrap>)
+    struct _BasicMutIterWrap<TWrap>: TWrap { };
 
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
     template <typename TIter>
-    requires RIter<TIter>
-    struct IterWrap<TIter>
+    struct IterWrap
     {
-        using TElem = typename TIter::TElem;
+        using TElem = TTI::TEnableIf<RIter<TIter>, typename TIter::TElem>;
+
+        template <typename... TArgs>
+        requires RConstructible<TIter, TArgs...>
+        constexpr IterWrap(TArgs&&... args) noexcept:
+            iter{ FORWARD(args)... } { }
 
         constexpr const TElem& operator *() const noexcept
         {
@@ -74,6 +74,16 @@ namespace Atom
         TIter iter;
     };
 
+    /// --------------------------------------------------------------------------------------------
+    /// 
+    /// --------------------------------------------------------------------------------------------
+    template <typename TIter>
+    requires (!RIter<TIter>)
+    struct IterWrap<TIter>
+    {
+        TIter iter;
+    };
+
     template <typename T>
     using _IterWrapTestMock = IterWrap<MutArrIterReqMock<T>>;
 
@@ -83,7 +93,7 @@ namespace Atom
     /// 
     /// --------------------------------------------------------------------------------------------
     template <typename TIter>
-    struct MutIterWrap: _BasicMutIterWrap<IterWrap<TIter>> { };
+    using MutIterWrap = _BasicMutIterWrap<IterWrap<TIter>>;
 
     template <typename T>
     using _MutIterWrapTestMock = MutIterWrap<MutArrIterReqMock<T>>;
@@ -94,7 +104,11 @@ namespace Atom
     /// 
     /// --------------------------------------------------------------------------------------------
     template <typename TIter>
-    struct FwdIterWrap: IterWrap<TIter>, MultiPassIterTag { };
+    struct FwdIterWrap: IterWrap<TIter>, MultiPassIterTag
+    {
+        using Base = IterWrap<TIter>;
+        using Base::Base;
+    };
 
     template <typename T>
     using _FwdIterWrapTestMock = FwdIterWrap<MutArrIterReqMock<T>>;
@@ -105,7 +119,7 @@ namespace Atom
     /// 
     /// --------------------------------------------------------------------------------------------
     template <typename TIter>
-    struct MutFwdIterWrap: _BasicMutIterWrap<FwdIterWrap<TIter>> { };
+    using MutFwdIterWrap = _BasicMutIterWrap<FwdIterWrap<TIter>>;
 
     template <typename T>
     using _MutFwdIterWrapTestMock = MutFwdIterWrap<MutArrIterReqMock<T>>;
@@ -118,6 +132,9 @@ namespace Atom
     template <typename TIter>
     struct BidiIterWrap: FwdIterWrap<TIter>
     {
+        using Base = FwdIterWrap<TIter>;
+        using Base::Base;
+
         constexpr BidiIterWrap& operator --(int) noexcept
         requires RBidiIter<TIter>
         {
@@ -135,7 +152,7 @@ namespace Atom
     /// 
     /// --------------------------------------------------------------------------------------------
     template <typename TIter>
-    struct MutBidiIterWrap: _BasicMutIterWrap<BidiIterWrap<TIter>> { };
+    using MutBidiIterWrap = _BasicMutIterWrap<BidiIterWrap<TIter>>;
 
     template <typename T>
     using _MutBidiIterWrapTestMock = MutBidiIterWrap<MutArrIterReqMock<T>>;
@@ -148,6 +165,9 @@ namespace Atom
     template <typename TIter>
     struct JumpIterWrap: BidiIterWrap<TIter>
     {
+        using Base = BidiIterWrap<TIter>;
+        using Base::Base;
+
         constexpr JumpIterWrap operator +(isize steps) const noexcept
         requires RJumpIter<TIter>
         {
@@ -193,6 +213,9 @@ namespace Atom
     template <typename TIter>
     struct MutJumpIterWrap: _BasicMutIterWrap<JumpIterWrap<TIter>>
     {
+        using Base = _BasicMutIterWrap<JumpIterWrap<TIter>>;
+        using Base::Base;
+
         constexpr MutJumpIterWrap operator +(isize steps) const noexcept
         requires RJumpIter<TIter>
         {
