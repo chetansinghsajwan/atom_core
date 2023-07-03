@@ -51,12 +51,12 @@ TEST_CASE("Atom.Range.RangeWrappers", "[.compilation]")
 {
     Range<int*, int*> range{ nullptr, nullptr };
 
-    RangeRefWrap{ range };
-    MutRangeRefWrap{ range };
-    FwdRangeRefWrap{ range };
-    MutFwdRangeRefWrap{ range };
-    BidiRangeRefWrap{ range };
-    MutBidiRangeRefWrap{ range };
-    JumpRangeRefWrap{ range };
-    MutJumpRangeRefWrap{ range };
+    RangeRefWrap range{ range };
+    MutRangeRefWrap mutRange{ range };
+    FwdRangeRefWrap fwdRange{ range };
+    MutFwdRangeRefWrap mutFwdRange{ range };
+    BidiRangeRefWrap bidiRange{ range };
+    MutBidiRangeRefWrap mutBidiRange{ range };
+    JumpRangeRefWrap jumpRange{ range };
+    MutJumpRangeRefWrap mutJumpRange{ range };
 }

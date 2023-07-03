@@ -129,3 +129,5 @@ namespace Atom
     template <typename TRange>
     _RANGE_REF_WRAP(MutJumpRangeRefWrap, _MutRangeWrapBase<TRange, JumpIterWrap, MutJumpIterWrap>);
 }
+
+#undef _RANGE_REF_WRAP
