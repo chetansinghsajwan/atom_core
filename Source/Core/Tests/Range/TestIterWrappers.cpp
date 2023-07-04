@@ -6,14 +6,14 @@ using namespace Atom;
 
 TEST_CASE("Atom.Range.IterWrappers", "[.compilation]")
 {
-    using IterWrapMock = IterWrap<ArrIter<int>>;
-    using MutIterWrapMock = MutIterWrap<ArrIter<int>>;
-    using FwdIterWrapMock = FwdIterWrap<ArrIter<int>>;
-    using MutFwdIterWrapMock = MutFwdIterWrap<ArrIter<int>>;
-    using BidiIterWrapMock = BidiIterWrap<ArrIter<int>>;
-    using MutBidiIterWrapMock = MutBidiIterWrap<ArrIter<int>>;
-    using JumpIterWrapMock = JumpIterWrap<ArrIter<int>>;
-    using MutJumpIterWrapMock = MutJumpIterWrap<ArrIter<int>>;
+    using IterWrapMock = IterWrap<MutArrIter<int>>;
+    using MutIterWrapMock = MutIterWrap<MutArrIter<int>>;
+    using FwdIterWrapMock = FwdIterWrap<MutArrIter<int>>;
+    using MutFwdIterWrapMock = MutFwdIterWrap<MutArrIter<int>>;
+    using BidiIterWrapMock = BidiIterWrap<MutArrIter<int>>;
+    using MutBidiIterWrapMock = MutBidiIterWrap<MutArrIter<int>>;
+    using JumpIterWrapMock = JumpIterWrap<MutArrIter<int>>;
+    using MutJumpIterWrapMock = MutJumpIterWrap<MutArrIter<int>>;
 
     STATIC_CHECK(RIter<IterWrapMock>);
     STATIC_CHECK_FALSE(RMutIter<IterWrapMock>);
@@ -46,26 +46,50 @@ TEST_CASE("Atom.Range.IterWrappers", "[.compilation]")
 
 TEST_CASE("Atom.Range.IterWrappers", "[.interface]")
 {
-    struct CustomIter: ArrIter<int>
+    struct CustomIter: MutArrIter<int>
     {
-        CustomIter(int, char, float, const char*) { }
+        using Base = MutArrIter<int>;
+
+        constexpr CustomIter() { }
+
+        constexpr CustomIter(int, char, float, const char*) { }
+
+        constexpr CustomIter(const Base& base) noexcept:
+            Base{ base } { }
     };
 
-    using IterWrapMock = IterWrap<CustomIter>;
-    using MutIterWrapMock = MutIterWrap<CustomIter>;
-    using FwdIterWrapMock = FwdIterWrap<CustomIter>;
-    using MutFwdIterWrapMock = MutFwdIterWrap<CustomIter>;
-    using BidiIterWrapMock = BidiIterWrap<CustomIter>;
-    using MutBidiIterWrapMock = MutBidiIterWrap<CustomIter>;
-    using JumpIterWrapMock = JumpIterWrap<CustomIter>;
-    using MutJumpIterWrapMock = MutJumpIterWrap<CustomIter>;
+    SECTION("")
+    {
+        MutArrIter<int> iter;
 
-    IterWrapMock iter{ 0, 'a', 0.0f, "hello" };
-    MutIterWrapMock mutIter{ 0, 'a', 0.0f, "hello" };
-    FwdIterWrapMock fwdIter{ 0, 'a', 0.0f, "hello" };
-    MutFwdIterWrapMock mutFwdIter{ 0, 'a', 0.0f, "hello" };
-    BidiIterWrapMock bidiIter{ 0, 'a', 0.0f, "hello" };
-    MutBidiIterWrapMock mutBidiIter{ 0, 'a', 0.0f, "hello" };
-    JumpIterWrapMock jumpIter{ 0, 'a', 0.0f, "hello" };
-    MutJumpIterWrapMock mutJumpIter{ 0, 'a', 0.0f, "hello" };
+        IterWrap iterWrap{ iter };
+        MutIterWrap mutIterWrap{ iter };
+        FwdIterWrap fwdIterWrap{ iter };
+        MutFwdIterWrap mutFwdIterWrap{ iter };
+        BidiIterWrap bidiIterWrap{ iter };
+        MutBidiIterWrap mutBidiIterWrap{ iter };
+        JumpIterWrap jumpIterWrap{ iter };
+        MutJumpIterWrap mutJumpIterWrap{ iter };
+    }
+
+    SECTION("")
+    {
+        using IterWrapMock = IterWrap<CustomIter>;
+        using MutIterWrapMock = MutIterWrap<CustomIter>;
+        using FwdIterWrapMock = FwdIterWrap<CustomIter>;
+        using MutFwdIterWrapMock = MutFwdIterWrap<CustomIter>;
+        using BidiIterWrapMock = BidiIterWrap<CustomIter>;
+        using MutBidiIterWrapMock = MutBidiIterWrap<CustomIter>;
+        using JumpIterWrapMock = JumpIterWrap<CustomIter>;
+        using MutJumpIterWrapMock = MutJumpIterWrap<CustomIter>;
+
+        IterWrapMock iterWrap{ 0, 'a', 0.0f, "hello" };
+        MutIterWrapMock mutIterWrap{ 0, 'a', 0.0f, "hello" };
+        FwdIterWrapMock fwdIterWrap{ 0, 'a', 0.0f, "hello" };
+        MutFwdIterWrapMock mutFwdIterWrap{ 0, 'a', 0.0f, "hello" };
+        BidiIterWrapMock bidiIterWrap{ 0, 'a', 0.0f, "hello" };
+        MutBidiIterWrapMock mutBidiIterWrap{ 0, 'a', 0.0f, "hello" };
+        JumpIterWrapMock jumpIterWrap{ 0, 'a', 0.0f, "hello" };
+        MutJumpIterWrapMock mutJumpIterWrap{ 0, 'a', 0.0f, "hello" };
+    }
 }
