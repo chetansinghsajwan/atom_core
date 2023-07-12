@@ -17,8 +17,8 @@ namespace Atom::Logging::Internal
         /// Default constructs LogTargetBase().
         /// ----------------------------------------------------------------------------------------
         ctor LogTargetBase() noex:
-            m_logLevel(ELogLevel::Debug), m_flushLevel(ELogLevel::Info),
-            m_hasWritten(false), m_alwaysFlush(false) { }
+            _logLevel(ELogLevel::Debug), _flushLevel(ELogLevel::Info),
+            _hasWritten(false), _alwaysFlush(false) { }
 
     //// -------------------------------------------------------------------------------------------
     //// API Functions
@@ -30,25 +30,25 @@ namespace Atom::Logging::Internal
         /// 
         /// @EXCEPTION_SAFETY Strong.
         /// 
-        /// @SEE m_Write().
+        /// @SEE _Write().
         /// ----------------------------------------------------------------------------------------
-        virtual fn Write(const LogMsg& in_logMsg) -> void ofinal
+        virtual fn Write(const LogMsg& logMsg) -> void ofinal
         {
-            if (CheckLogLevel(in_logMsg.lvl))
+            if (CheckLogLevel(logMsg.lvl))
             {
                 // TODO: Add chrono support for Atom.Fmt.
                 // Str result = StrFmter().Fmt(TEXT("[{}] [{}] {}: {}\n"),
-                //     in_logMsg.time, in_logMsg.lvl, in_logMsg.loggerName, in_logMsg.msg);
+                //     logMsg.time, logMsg.lvl, logMsg.loggerName, logMsg.msg);
 
                 Str result = StrFmter().Fmt(TEXT("[{}] {}: {}\n"),
-                    in_logMsg.lvl, in_logMsg.loggerName, in_logMsg.msg);
+                    logMsg.lvl, logMsg.loggerName, logMsg.msg);
 
-                m_hasWritten = true;
-                m_Write(in_logMsg, result);
+                _hasWritten = true;
+                _Write(logMsg, result);
 
-                if (CheckFlushLevel(in_logMsg.lvl))
+                if (CheckFlushLevel(logMsg.lvl))
                 {
-                    m_Flush();
+                    _Flush();
                 }
             }
         }
@@ -62,7 +62,7 @@ namespace Atom::Logging::Internal
         {
             if (ShouldFlush())
             {
-                m_Flush();
+                _Flush();
             }
         }
 
@@ -71,24 +71,24 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         fn GetLogLevel() const noex -> ELogLevel
         {
-            return m_logLevel;
+            return _logLevel;
         }
 
         /// ----------------------------------------------------------------------------------------
         /// Sets the log level.
         /// ----------------------------------------------------------------------------------------
-        fn SetLogLevel(ELogLevel in_lvl) noex
+        fn SetLogLevel(ELogLevel lvl) noex
         {
-            m_logLevel = in_lvl;
+            _logLevel = lvl;
         }
 
         /// ----------------------------------------------------------------------------------------
         /// Checks if we should log the message of specified level.
         /// ----------------------------------------------------------------------------------------
-        fn CheckLogLevel(ELogLevel in_lvl) const noex -> bool
+        fn CheckLogLevel(ELogLevel lvl) const noex -> bool
         {
-            if (in_lvl == ELogLevel::OFF) return false;
-            if (in_lvl < m_logLevel) return false;
+            if (lvl == ELogLevel::OFF) return false;
+            if (lvl < _logLevel) return false;
 
             return true;
         }
@@ -98,26 +98,26 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         fn GetFlushLevel() const noex -> ELogLevel
         {
-            return m_flushLevel;
+            return _flushLevel;
         }
 
         /// ----------------------------------------------------------------------------------------
         /// Sets the flush level.
         /// ----------------------------------------------------------------------------------------
-        fn SetFlushLevel(ELogLevel in_lvl) noex
+        fn SetFlushLevel(ELogLevel lvl) noex
         {
-            m_flushLevel = in_lvl;
+            _flushLevel = lvl;
         }
 
         /// ----------------------------------------------------------------------------------------
         /// Checks if should flush after logging the message of specified level.
         /// It also asks ShouldFlush().
         /// ----------------------------------------------------------------------------------------
-        fn CheckFlushLevel(ELogLevel in_lvl) const noex -> bool
+        fn CheckFlushLevel(ELogLevel lvl) const noex -> bool
         {
-            if (!m_hasWritten) return false;
-            if (in_lvl == ELogLevel::OFF) return false;
-            if (in_lvl < m_flushLevel) return false;
+            if (!_hasWritten) return false;
+            if (lvl == ELogLevel::OFF) return false;
+            if (lvl < _flushLevel) return false;
 
             return true;
         }
@@ -129,7 +129,7 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         fn ShouldFlush() const noex -> bool
         {
-            return m_alwaysFlush || m_hasWritten;
+            return _alwaysFlush || _hasWritten;
         }
 
     //// -------------------------------------------------------------------------------------------
@@ -140,15 +140,15 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         /// Write implementation.
         /// 
-        /// @PARAM[IN] in_logMsg Log message object passed for logging.
-        /// @PARAM[IN] in_formattedMsg Formatted message generated from {in_logMsg}.
+        /// @PARAM[IN] logMsg Log message object passed for logging.
+        /// @PARAM[IN] formattedMsg Formatted message generated from {logMsg}.
         /// ----------------------------------------------------------------------------------------
-        virtual fn m_Write(const LogMsg& in_logMsg, StrView in_formattedMsg) -> void abstract;
+        virtual fn _Write(const LogMsg& logMsg, StrView formattedMsg) -> void abstract;
 
         /// ----------------------------------------------------------------------------------------
         /// Flush implementation.
         /// ----------------------------------------------------------------------------------------
-        virtual fn m_Flush() -> void abstract;
+        virtual fn _Flush() -> void abstract;
 
     //// -------------------------------------------------------------------------------------------
     //// Variables
@@ -158,23 +158,23 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         /// Log Level used to filter log messages.
         /// ----------------------------------------------------------------------------------------
-        ELogLevel m_logLevel;
+        ELogLevel _logLevel;
 
         /// ----------------------------------------------------------------------------------------
         /// Flush level used to check if to call flush after logging.
         /// ----------------------------------------------------------------------------------------
-        ELogLevel m_flushLevel;
+        ELogLevel _flushLevel;
 
         /// ----------------------------------------------------------------------------------------
         /// Value used to check if there has been any write since last flush.
         /// ----------------------------------------------------------------------------------------
-        bool m_hasWritten;
+        bool _hasWritten;
 
         /// ----------------------------------------------------------------------------------------
-        /// If true always calls underlying flush m_Flush(), even if not necessary.
-        /// This doesn't override CheckFlushLevel(ELogLevel in_lvl) check. It only affects 
+        /// If true always calls underlying flush _Flush(), even if not necessary.
+        /// This doesn't override CheckFlushLevel(ELogLevel lvl) check. It only affects 
         /// ShouldFlush().
         /// ----------------------------------------------------------------------------------------
-        bool m_alwaysFlush;
+        bool _alwaysFlush;
     };
 }

@@ -10,43 +10,43 @@ namespace Atom::Private
     class UuidNameGenerator
     {
     public:
-        explicit ctor UuidNameGenerator(const Uuid& in_nsUuid) noex:
-            m_nsUuid(in_nsUuid) { }
+        explicit ctor UuidNameGenerator(const Uuid& nsUuid) noex:
+            _nsUuid(nsUuid) { }
 
     public:
         fn Generate(StrView name) -> Uuid
         {
-            m_Reset();
-            m_ProcessChars(name);
-            return m_MakeUuid();
+            _Reset();
+            _ProcessChars(name);
+            return _MakeUuid();
         }
 
     private:
-        fn m_Reset()
+        fn _Reset()
         {
-            m_hashGenerator.Reset();
-            m_hashGenerator.ProcessBytes(m_nsUuid.bytes.Data(), 16);
+            _hashGenerator.Reset();
+            _hashGenerator.ProcessBytes(_nsUuid.bytes.Data(), 16);
         }
 
-        fn m_ProcessChars(StrView str)
+        fn _ProcessChars(StrView str)
         {
             for (uint32_t c : str)
             {
-                m_hashGenerator.ProcessByte(static_cast<byte>(c & 0xFF));
+                _hashGenerator.ProcessByte(static_cast<byte>(c & 0xFF));
 
                 // TODO: Check this
                 // if constexpr (!TTI::IsSame<Char, char>)
                 // {
-                //     m_hashGenerator.ProcessByte(static_cast<byte>((c >> 8) & 0xFF));
-                //     m_hashGenerator.ProcessByte(static_cast<byte>((c >> 16) & 0xFF));
-                //     m_hashGenerator.ProcessByte(static_cast<byte>((c >> 24) & 0xFF));
+                //     _hashGenerator.ProcessByte(static_cast<byte>((c >> 8) & 0xFF));
+                //     _hashGenerator.ProcessByte(static_cast<byte>((c >> 16) & 0xFF));
+                //     _hashGenerator.ProcessByte(static_cast<byte>((c >> 24) & 0xFF));
                 // }
             }
         }
 
-        fn m_MakeUuid() -> Uuid
+        fn _MakeUuid() -> Uuid
         {
-            THash hash = m_hashGenerator.Generate();
+            THash hash = _hashGenerator.Generate();
 
             // Variant must be EUuidVariant::RFC (0b10xxxxxx).
             hash.bytes[8] &= 0xBF;
@@ -67,8 +67,8 @@ namespace Atom::Private
         }
 
     private:
-        Uuid m_nsUuid;
-        THashGenerator m_hashGenerator;
+        Uuid _nsUuid;
+        THashGenerator _hashGenerator;
     };
 }
 

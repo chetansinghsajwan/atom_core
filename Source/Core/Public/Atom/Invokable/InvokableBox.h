@@ -19,7 +19,7 @@ namespace Atom
             requires RInvokable<TInvokable, TResult(TArgs...)>
             fn Set()
             {
-                m_impl = [](void* obj, TResult& result, TArgs&&... args)
+                _impl = [](void* obj, TResult& result, TArgs&&... args)
                 {
                     TInvokable& invokable = *reinterpret_cast<TInvokable*>(obj);
                     new (&result) TResult(invokable(fwd(args)...));
@@ -29,13 +29,13 @@ namespace Atom
             fn Invoke(void* invokable, TArgs&&... args) -> TResult
             {
                 TResult result;
-                m_impl(invokable, result, fwd(args)...);
+                _impl(invokable, result, fwd(args)...);
 
                 return result;
             }
 
         protected:
-            void (*m_impl) (void* invokable, TResult& result, TArgs&&... args);
+            void (*_impl) (void* invokable, TResult& result, TArgs&&... args);
         };
 
         template <tname... TArgs>
@@ -44,7 +44,7 @@ namespace Atom
             template <RInvokable<void(TArgs...)> TInvokable>
             fn Set()
             {
-                m_impl = [](void* obj, TArgs&&... args)
+                _impl = [](void* obj, TArgs&&... args)
                 {
                     TInvokable& invokable = *reinterpret_cast<TInvokable*>(obj);
                     invokable(fwd(args)...);
@@ -53,11 +53,11 @@ namespace Atom
 
             fn Invoke(void* invokable, TArgs&&... args)
             {
-                m_impl(invokable, fwd(args)...);
+                _impl(invokable, fwd(args)...);
             }
 
         protected:
-            void (*m_impl) (void* invokable, TArgs&&... args);
+            void (*_impl) (void* invokable, TArgs&&... args);
         };
     }
 
@@ -105,7 +105,7 @@ namespace Atom
         ctor InvokableBox(TInvokable&& invokable) :
             ObjectBox(fwd(invokable))
         {
-            m_SetInvoker<TInvokable>();
+            _SetInvoker<TInvokable>();
         }
 
         /// 
@@ -115,7 +115,7 @@ namespace Atom
         fn operator = (TInvokable&& invokable) -> InvokableBox&
         {
             ObjectBox::operator = (fwd(invokable));
-            m_SetInvoker<TInvokable>();
+            _SetInvoker<TInvokable>();
             return *this;
         }
 
@@ -157,7 +157,7 @@ namespace Atom
             ATOM_ASSERT(ObjectBox::_HasObject()) << NullPointerException(
                 TEXT("InvokableTarget is null."));
 
-            return m_invoker.Invoke(ObjectBox::_GetObject(), fwd(args)...);
+            return _invoker.Invoke(ObjectBox::_GetObject(), fwd(args)...);
         }
 
         /// 
@@ -186,19 +186,19 @@ namespace Atom
         /// 
         /// ----------------------------------------------------------------------------------------
         template <RInvokable<TResult(TArgs...)> TInvokable>
-        fn m_SetInvoker()
+        fn _SetInvoker()
         {
-            m_invoker.template Set<TInvokable>();
+            _invoker.template Set<TInvokable>();
         }
 
-        fn m_InvokeInvokable(TArgs&&... args) -> TResult
+        fn _InvokeInvokable(TArgs&&... args) -> TResult
         {
-            return m_invoker.Invoke(fwd(args)...);
+            return _invoker.Invoke(fwd(args)...);
         }
 
     protected:
         using TInvoker = Private::Invoker<TResult, TArgs...>;
 
-        TInvoker m_invoker;
+        TInvoker _invoker;
     };
 }

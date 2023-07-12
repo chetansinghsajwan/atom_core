@@ -55,15 +55,15 @@ namespace Atom::Engine
 
         fn GetNativeGLFW() const noex -> GLFWwindow*
         {
-            return m_glfwWindow;
+            return _glfwWindow;
         }
 
     protected:
-        GLFWwindow* m_glfwWindow;
-        SWindowCoords m_windowPos;
-        SWindowCoords m_windowSize;
-        bool m_windowVSync;
+        GLFWwindow* _glfwWindow;
+        SWindowCoords _windowPos;
+        SWindowCoords _windowSize;
+        bool _windowVSync;
 
-        EventSource<const SWindowEvent&> m_windowEventSource;
+        EventSource<const SWindowEvent&> _windowEventSource;
     };
 }

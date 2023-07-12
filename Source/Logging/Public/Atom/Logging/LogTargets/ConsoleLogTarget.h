@@ -53,7 +53,7 @@ namespace Atom::Logging
         /// 
         /// If {ShouldLogAsError(logMsg.lvl) == true}, writes the message to stderr else to stdout.
         /// ----------------------------------------------------------------------------------------
-        virtual fn m_Write(const LogMsg& logMsg, StrView formattedMsg) -> void ofinal
+        virtual fn _Write(const LogMsg& logMsg, StrView formattedMsg) -> void ofinal
         {
             FILE* file = _stdout;
 
@@ -68,7 +68,7 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Flushes both stdout and stderr.
         /// ----------------------------------------------------------------------------------------
-        virtual fn m_Flush() -> void ofinal
+        virtual fn _Flush() -> void ofinal
         {
             fflush(_stdout);
             fflush(_stderr);

@@ -6,53 +6,53 @@ using namespace Atom::Logging;
 namespace Atom::Engine
 {
     ctor GLFWWindow::GLFWWindow(const SWindowProps& props):
-        Window(m_windowEventSource)
+        Window(_windowEventSource)
     {
         GLFW_SWindowCoords glfwWindowSize = GLFW_WindowCoordsConverter::ToGLFW(
             props.windowSize);
 
         // TODO: Requires encoding conversion.
-        m_glfwWindow = glfwCreateWindow(glfwWindowSize.x, glfwWindowSize.y,
+        _glfwWindow = glfwCreateWindow(glfwWindowSize.x, glfwWindowSize.y,
             (const char*)props.windowName.Data(), nullptr, nullptr);
 
-        glfwMakeContextCurrent(m_glfwWindow);
-        glfwSetWindowUserPointer(m_glfwWindow, this);
+        glfwMakeContextCurrent(_glfwWindow);
+        glfwSetWindowUserPointer(_glfwWindow, this);
 
-        glfwSetWindowPosCallback(m_glfwWindow,
+        glfwSetWindowPosCallback(_glfwWindow,
             [](GLFWwindow* glfwWindow, int xpos, int ypos)
             {
                 GLFWWindow& window = *reinterpret_cast<GLFWWindow*>(
                     glfwGetWindowUserPointer(glfwWindow));
 
-                SWindowCoords oldPos = window.m_windowPos;
+                SWindowCoords oldPos = window._windowPos;
                 SWindowCoords newPos = GLFW_WindowCoordsConverter::FromGLFW({ xpos, ypos });
-                window.m_windowPos = newPos;
+                window._windowPos = newPos;
 
-                window.m_windowEventSource.Dispatch(SWindowRepositionEvent(
+                window._windowEventSource.Dispatch(SWindowRepositionEvent(
                     newPos, newPos - oldPos));
             });
 
-        glfwSetWindowSizeCallback(m_glfwWindow,
+        glfwSetWindowSizeCallback(_glfwWindow,
             [](GLFWwindow* glfwWindow, int width, int height)
             {
                 GLFWWindow& window = *reinterpret_cast<GLFWWindow*>(
                     glfwGetWindowUserPointer(glfwWindow));
 
-                SWindowCoords oldSize = window.m_windowSize;
+                SWindowCoords oldSize = window._windowSize;
                 SWindowCoords newSize = GLFW_WindowCoordsConverter::FromGLFW({ width, height });
-                window.m_windowSize = newSize;
+                window._windowSize = newSize;
 
-                window.m_windowEventSource.Dispatch(SWindowResizeEvent(
+                window._windowEventSource.Dispatch(SWindowResizeEvent(
                     newSize, newSize - oldSize));
             });
 
-        glfwSetWindowCloseCallback(m_glfwWindow,
+        glfwSetWindowCloseCallback(_glfwWindow,
             [](GLFWwindow* glfwWindow)
             {
                 GLFWWindow& window = *reinterpret_cast<GLFWWindow*>(
                     glfwGetWindowUserPointer(glfwWindow));
 
-                window.m_windowEventSource.Dispatch(SWindowCloseEvent());
+                window._windowEventSource.Dispatch(SWindowCloseEvent());
             });
 
         UpdatePos();
@@ -62,32 +62,32 @@ namespace Atom::Engine
 
     GLFWWindow::dtor GLFWWindow()
     {
-        glfwDestroyWindow(m_glfwWindow);
+        glfwDestroyWindow(_glfwWindow);
     }
 
     fn GLFWWindow::Update() -> void
     {
         glfwPollEvents();
-        glfwSwapBuffers(m_glfwWindow);
+        glfwSwapBuffers(_glfwWindow);
     }
 
     fn GLFWWindow::SetPos(SWindowCoords pos) -> void
     {
         GLFW_SWindowCoords glfwPos = GLFW_WindowCoordsConverter::ToGLFW(pos);
 
-        glfwSetWindowPos(m_glfwWindow, glfwPos.x, glfwPos.y);
-        m_windowPos = GLFW_WindowCoordsConverter::FromGLFW(glfwPos);
+        glfwSetWindowPos(_glfwWindow, glfwPos.x, glfwPos.y);
+        _windowPos = GLFW_WindowCoordsConverter::FromGLFW(glfwPos);
     }
 
     fn GLFWWindow::GetPos() const noex -> SWindowCoords
     {
-        return m_windowPos;
+        return _windowPos;
     }
 
     fn GLFWWindow::UpdatePos() -> SWindowCoords
     {
         GLFW_SWindowCoords glfwPos;
-        glfwGetWindowPos(m_glfwWindow, &glfwPos.x, &glfwPos.y);
+        glfwGetWindowPos(_glfwWindow, &glfwPos.x, &glfwPos.y);
 
         return GLFW_WindowCoordsConverter::FromGLFW(glfwPos);
     }
@@ -96,37 +96,37 @@ namespace Atom::Engine
     {
         GLFW_SWindowCoords glfwSize = GLFW_WindowCoordsConverter::ToGLFW(size);
 
-        glfwSetWindowSize(m_glfwWindow, glfwSize.x, glfwSize.y);
-        m_windowSize = GLFW_WindowCoordsConverter::FromGLFW(glfwSize);
+        glfwSetWindowSize(_glfwWindow, glfwSize.x, glfwSize.y);
+        _windowSize = GLFW_WindowCoordsConverter::FromGLFW(glfwSize);
     }
 
     fn GLFWWindow::GetSize() const noex -> SWindowCoords
     {
-        return m_windowSize;
+        return _windowSize;
     }
 
     fn GLFWWindow::UpdateSize() -> SWindowCoords
     {
         GLFW_SWindowCoords glfwSize;
-        glfwGetWindowSize(m_glfwWindow, &glfwSize.x, &glfwSize.y);
+        glfwGetWindowSize(_glfwWindow, &glfwSize.x, &glfwSize.y);
 
-        m_windowSize = GLFW_WindowCoordsConverter::FromGLFW(glfwSize);
-        return m_windowSize;
+        _windowSize = GLFW_WindowCoordsConverter::FromGLFW(glfwSize);
+        return _windowSize;
     }
 
     fn GLFWWindow::SetVSync(bool enable) -> void
     {
         glfwSwapInterval(enable ? 1 : 0);
-        m_windowVSync = enable;
+        _windowVSync = enable;
     }
 
     fn GLFWWindow::GetVSync() const noex -> bool
     {
-        return m_windowVSync;
+        return _windowVSync;
     }
 
     fn GLFWWindow::GetNative() const noex -> void*
     {
-        return m_glfwWindow;
+        return _glfwWindow;
     }
 }

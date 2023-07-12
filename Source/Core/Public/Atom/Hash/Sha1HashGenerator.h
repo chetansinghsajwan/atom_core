@@ -13,20 +13,20 @@ namespace Atom::Private
     {
         fn Initialize()
         {
-            Sha1Initialise(&m_context);
+            Sha1Initialise(&_context);
         }
 
         fn Update(const void* data, uint32_t dataSize)
         {
-            Sha1Update(&m_context, data, dataSize);
+            Sha1Update(&_context, data, dataSize);
         }
 
         fn Calculate(Sha1Hash& hash)
         {
-            Sha1Finalise(&m_context, (SHA1_HASH*)hash.bytes.Data());
+            Sha1Finalise(&_context, (SHA1_HASH*)hash.bytes.Data());
         }
 
-        Sha1Context m_context;
+        Sha1Context _context;
     };
 }
 

@@ -11,7 +11,7 @@ namespace Atom
     {
     public:
         explicit ctor BasicUuidRandomGenerator(uint32 seed = 0) noex:
-            m_generator{ seed } { }
+            _generator{ seed } { }
 
     public:
         fn Generate() noex -> Uuid
@@ -19,7 +19,7 @@ namespace Atom
             Uuid uuid;
             for (usize i = 0; i < 16; i += 4)
             {
-                *(uint32*)(uuid.bytes.Data() + i) = m_distribution(m_generator);
+                *(uint32*)(uuid.bytes.Data() + i) = _distribution(_generator);
             }
 
             // Variant must be 10xxxxxx
@@ -34,8 +34,8 @@ namespace Atom
         }
 
     private:
-        UniformIntDistribution<uint32> m_distribution;
-        TUniformRandomNumberGenerator m_generator;
+        UniformIntDistribution<uint32> _distribution;
+        TUniformRandomNumberGenerator _generator;
     };
 
     /// --------------------------------------------------------------------------------------------

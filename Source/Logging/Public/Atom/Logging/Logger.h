@@ -13,78 +13,78 @@ namespace Atom::Logging
         virtual fn Name() const noex -> StrView abstract;
 
         /// ----------------------------------------------------------------------------------------
-        /// Calls Log(ELogLevel::Trace, in_msg, fwd(in_args)...).
+        /// Calls Log(ELogLevel::Trace, msg, fwd(args)...).
         /// ----------------------------------------------------------------------------------------
         template <RLogArg... TArgs>
-        fn LogTrace(LogStr<TArgs...> in_msg, TArgs&&... in_args)
+        fn LogTrace(LogStr<TArgs...> msg, TArgs&&... args)
         {
-            Log(ELogLevel::Trace, in_msg, fwd(in_args)...);
+            Log(ELogLevel::Trace, msg, fwd(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Calls Log(ELogLevel::Debug, in_msg, fwd(in_args)...).
+        /// Calls Log(ELogLevel::Debug, msg, fwd(args)...).
         /// ----------------------------------------------------------------------------------------
         template <RLogArg... TArgs>
-        fn LogDebug(LogStr<TArgs...> in_msg, TArgs&&... in_args)
+        fn LogDebug(LogStr<TArgs...> msg, TArgs&&... args)
         {
-            Log(ELogLevel::Debug, in_msg, fwd(in_args)...);
+            Log(ELogLevel::Debug, msg, fwd(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Calls Log(ELogLevel::Info, in_msg, fwd(in_args)...).
+        /// Calls Log(ELogLevel::Info, msg, fwd(args)...).
         /// ----------------------------------------------------------------------------------------
         template <RLogArg... TArgs>
-        fn LogInfo(LogStr<TArgs...> in_msg, TArgs&&... in_args)
+        fn LogInfo(LogStr<TArgs...> msg, TArgs&&... args)
         {
-            Log(ELogLevel::Info, in_msg, fwd(in_args)...);
+            Log(ELogLevel::Info, msg, fwd(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Calls Log(ELogLevel::Warn, in_msg, fwd(in_args)...).
+        /// Calls Log(ELogLevel::Warn, msg, fwd(args)...).
         /// ----------------------------------------------------------------------------------------
         template <RLogArg... TArgs>
-        fn LogWarn(LogStr<TArgs...> in_msg, TArgs&&... in_args)
+        fn LogWarn(LogStr<TArgs...> msg, TArgs&&... args)
         {
-            Log(ELogLevel::Warn, in_msg, fwd(in_args)...);
+            Log(ELogLevel::Warn, msg, fwd(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Calls Log(ELogLevel::Error, in_msg, fwd(in_args)...).
+        /// Calls Log(ELogLevel::Error, msg, fwd(args)...).
         /// ----------------------------------------------------------------------------------------
         template <RLogArg... TArgs>
-        fn LogError(LogStr<TArgs...> in_msg, TArgs&&... in_args)
+        fn LogError(LogStr<TArgs...> msg, TArgs&&... args)
         {
-            Log(ELogLevel::Error, in_msg, fwd(in_args)...);
+            Log(ELogLevel::Error, msg, fwd(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Calls Log(ELogLevel::Fatal, in_msg, fwd(in_args)...).
+        /// Calls Log(ELogLevel::Fatal, msg, fwd(args)...).
         /// ----------------------------------------------------------------------------------------
         template <RLogArg... TArgs>
-        fn LogFatal(LogStr<TArgs...> in_msg, TArgs&&... in_args)
+        fn LogFatal(LogStr<TArgs...> msg, TArgs&&... args)
         {
-            Log(ELogLevel::Fatal, in_msg, fwd(in_args)...);
+            Log(ELogLevel::Fatal, msg, fwd(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
         /// Logs message if level is high enough to pass the filter level. Flushes if level passes 
         /// flush filter level.
         /// 
-        /// @PARAM[IN] in_lvl ELogLevel to log at.
-        /// @PARAM[IN] in_msg Log message containing format of the in_msg.
-        /// @PARAM[IN] in_args... Arguments used with {in_msg} to construct the formatted message.
+        /// @PARAM[IN] lvl ELogLevel to log at.
+        /// @PARAM[IN] msg Log message containing format of the msg.
+        /// @PARAM[IN] args... Arguments used with {msg} to construct the formatted message.
         /// ----------------------------------------------------------------------------------------
         template <RLogArg... TArgs>
-        fn Log(ELogLevel in_lvl, LogStr<TArgs...> in_msg, TArgs&&... in_args)
+        fn Log(ELogLevel lvl, LogStr<TArgs...> msg, TArgs&&... args)
         {
-            if (CheckLogLevel(in_lvl))
+            if (CheckLogLevel(lvl))
             {
-                Str formattedMsg = StrFmter().Fmt(in_msg, fwd(in_args)...);
+                Str formattedMsg = StrFmter().Fmt(msg, fwd(args)...);
                 LogMsg logMsg
                 {
                     .msg = formattedMsg,
                     .loggerName = Name(),
-                    .lvl = in_lvl,
+                    .lvl = lvl,
                     .time = Time::Now(),
                 };
 
@@ -97,7 +97,7 @@ namespace Atom::Logging
         /// 
         /// Logs the LogMsg object.
         /// ----------------------------------------------------------------------------------------
-        virtual fn Log(LogMsg& in_logMsg) -> void abstract;
+        virtual fn Log(LogMsg& logMsg) -> void abstract;
 
         /// ----------------------------------------------------------------------------------------
         /// Pure virtual function.
@@ -111,7 +111,7 @@ namespace Atom::Logging
         /// 
         /// Check if the message should be passed for logging.
         /// ----------------------------------------------------------------------------------------
-        virtual fn CheckLogLevel(ELogLevel in_lvl) const noex -> bool abstract;
+        virtual fn CheckLogLevel(ELogLevel lvl) const noex -> bool abstract;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -124,8 +124,8 @@ namespace Atom::Logging
     /// 
     /// --------------------------------------------------------------------------------------------
     template <RDerivedFrom<Logger> TLogger>
-    LoggerPtr MAKE_LOGGER(auto&&... in_args) noex
+    LoggerPtr MAKE_LOGGER(auto&&... args) noex
     {
-        return MakeShared<TLogger>(fwd(in_args)...);
+        return MakeShared<TLogger>(fwd(args)...);
     }
 }

@@ -13,20 +13,20 @@ namespace Atom::Private
     {
         fn Initialize()
         {
-            Md5Initialise(&m_context);
+            Md5Initialise(&_context);
         }
 
         fn Update(const void* data, uint32_t dataSize)
         {
-            Md5Update(&m_context, data, dataSize);
+            Md5Update(&_context, data, dataSize);
         }
 
         fn Calculate(Md5Hash& hash)
         {
-            Md5Finalise(&m_context, (MD5_HASH*)hash.bytes.Data());
+            Md5Finalise(&_context, (MD5_HASH*)hash.bytes.Data());
         }
 
-        Md5Context m_context;
+        Md5Context _context;
     };
 }
 
