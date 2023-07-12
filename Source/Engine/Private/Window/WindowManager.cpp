@@ -17,7 +17,7 @@ using namespace Atom::Logging;
 
 namespace Atom::Engine
 {
-    Window* WindowManger::CreateWindow(SWindowProps props)
+    fn WindowManger::CreateWindow(SWindowProps props) -> Window*
     {
         if (s_windowCount == 0)
         {
@@ -37,7 +37,7 @@ namespace Atom::Engine
         return new PlatformSelectedWindow(props);
     }
 
-    void WindowManger::CloseWindow(Window* window)
+    fn WindowManger::CloseWindow(Window* window) -> void
     {
         ATOM_ASSERT(window != nullptr) << NullPointerException(
             TEXT("Cannot close NULL window."));

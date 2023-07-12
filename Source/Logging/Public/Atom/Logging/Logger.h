@@ -10,13 +10,13 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Get the name of the logger.
         /// ----------------------------------------------------------------------------------------
-        virtual StrView Name() const noex abstract;
+        virtual fn Name() const noex -> StrView abstract;
 
         /// ----------------------------------------------------------------------------------------
         /// Calls Log(ELogLevel::Trace, in_msg, fwd(in_args)...).
         /// ----------------------------------------------------------------------------------------
         template <RLogArg... TArgs>
-        void LogTrace(LogStr<TArgs...> in_msg, TArgs&&... in_args)
+        fn LogTrace(LogStr<TArgs...> in_msg, TArgs&&... in_args)
         {
             Log(ELogLevel::Trace, in_msg, fwd(in_args)...);
         }
@@ -25,7 +25,7 @@ namespace Atom::Logging
         /// Calls Log(ELogLevel::Debug, in_msg, fwd(in_args)...).
         /// ----------------------------------------------------------------------------------------
         template <RLogArg... TArgs>
-        void LogDebug(LogStr<TArgs...> in_msg, TArgs&&... in_args)
+        fn LogDebug(LogStr<TArgs...> in_msg, TArgs&&... in_args)
         {
             Log(ELogLevel::Debug, in_msg, fwd(in_args)...);
         }
@@ -34,7 +34,7 @@ namespace Atom::Logging
         /// Calls Log(ELogLevel::Info, in_msg, fwd(in_args)...).
         /// ----------------------------------------------------------------------------------------
         template <RLogArg... TArgs>
-        void LogInfo(LogStr<TArgs...> in_msg, TArgs&&... in_args)
+        fn LogInfo(LogStr<TArgs...> in_msg, TArgs&&... in_args)
         {
             Log(ELogLevel::Info, in_msg, fwd(in_args)...);
         }
@@ -43,7 +43,7 @@ namespace Atom::Logging
         /// Calls Log(ELogLevel::Warn, in_msg, fwd(in_args)...).
         /// ----------------------------------------------------------------------------------------
         template <RLogArg... TArgs>
-        void LogWarn(LogStr<TArgs...> in_msg, TArgs&&... in_args)
+        fn LogWarn(LogStr<TArgs...> in_msg, TArgs&&... in_args)
         {
             Log(ELogLevel::Warn, in_msg, fwd(in_args)...);
         }
@@ -52,7 +52,7 @@ namespace Atom::Logging
         /// Calls Log(ELogLevel::Error, in_msg, fwd(in_args)...).
         /// ----------------------------------------------------------------------------------------
         template <RLogArg... TArgs>
-        void LogError(LogStr<TArgs...> in_msg, TArgs&&... in_args)
+        fn LogError(LogStr<TArgs...> in_msg, TArgs&&... in_args)
         {
             Log(ELogLevel::Error, in_msg, fwd(in_args)...);
         }
@@ -61,7 +61,7 @@ namespace Atom::Logging
         /// Calls Log(ELogLevel::Fatal, in_msg, fwd(in_args)...).
         /// ----------------------------------------------------------------------------------------
         template <RLogArg... TArgs>
-        void LogFatal(LogStr<TArgs...> in_msg, TArgs&&... in_args)
+        fn LogFatal(LogStr<TArgs...> in_msg, TArgs&&... in_args)
         {
             Log(ELogLevel::Fatal, in_msg, fwd(in_args)...);
         }
@@ -75,7 +75,7 @@ namespace Atom::Logging
         /// @PARAM[IN] in_args... Arguments used with {in_msg} to construct the formatted message.
         /// ----------------------------------------------------------------------------------------
         template <RLogArg... TArgs>
-        void Log(ELogLevel in_lvl, LogStr<TArgs...> in_msg, TArgs&&... in_args)
+        fn Log(ELogLevel in_lvl, LogStr<TArgs...> in_msg, TArgs&&... in_args)
         {
             if (CheckLogLevel(in_lvl))
             {
@@ -97,21 +97,21 @@ namespace Atom::Logging
         /// 
         /// Logs the LogMsg object.
         /// ----------------------------------------------------------------------------------------
-        virtual void Log(LogMsg& in_logMsg) abstract;
+        virtual fn Log(LogMsg& in_logMsg) -> void abstract;
 
         /// ----------------------------------------------------------------------------------------
         /// Pure virtual function.
         /// 
         /// Flushes the logs of this logger.
         /// ----------------------------------------------------------------------------------------
-        virtual void Flush() abstract;
+        virtual fn Flush() -> void abstract;
 
         /// ----------------------------------------------------------------------------------------
         /// Pure virtual function.
         /// 
         /// Check if the message should be passed for logging.
         /// ----------------------------------------------------------------------------------------
-        virtual bool CheckLogLevel(ELogLevel in_lvl) const noex abstract;
+        virtual fn CheckLogLevel(ELogLevel in_lvl) const noex -> bool abstract;
     };
 
     /// --------------------------------------------------------------------------------------------

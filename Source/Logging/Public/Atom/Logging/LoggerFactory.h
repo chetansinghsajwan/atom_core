@@ -7,19 +7,19 @@ namespace Atom::Logging
     class LoggerFactory
     {
     public:
-        LoggerPtr CreateLogger(Str name) noex
+        fn CreateLogger(Str name) noex -> LoggerPtr
         {
             return MAKE_LOGGER<SimpleLoggerST>(MOVE(name));
         }
     };
 
-    inline LoggerFactory& GET_LOGGER_FACTORY() noex
+    inline fn GET_LOGGER_FACTORY() noex -> LoggerFactory&
     {
         static LoggerFactory instance;
         return instance;
     }
 
-    inline LoggerPtr CREATE_LOGGER(auto&&... args) noex
+    inline fn CREATE_LOGGER(auto&&... args) noex -> LoggerPtr
     {
         return GET_LOGGER_FACTORY().CreateLogger(fwd(args)...);
     }

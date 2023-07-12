@@ -14,7 +14,7 @@ namespace Atom::Logging
         /// 
         /// ErrorLogLevel is set to ELogLevel::Error.
         /// ----------------------------------------------------------------------------------------
-        ConsoleLogTarget() noex:
+        ctor ConsoleLogTarget() noex:
             _stdout(stdout), _stderr(stderr),
             _errLogLevel(ELogLevel::Error) { }
 
@@ -22,7 +22,7 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Retuns the ELogLevel specified for error logging.
         /// ----------------------------------------------------------------------------------------
-        ELogLevel GetErrLogLevel() const noex
+        fn GetErrLogLevel() const noex -> ELogLevel
         {
             return _errLogLevel;
         }
@@ -32,7 +32,7 @@ namespace Atom::Logging
         /// 
         /// Logs of same or above level are written to stderr.
         /// ----------------------------------------------------------------------------------------
-        void SetErrLogLevel(ELogLevel lvl) noex
+        fn SetErrLogLevel(ELogLevel lvl) noex
         {
             _errLogLevel = lvl;
         }
@@ -42,7 +42,7 @@ namespace Atom::Logging
         /// 
         /// @RETURNS {true} if {lvl >= GetErrLogLevel()}, else {false}.
         /// ----------------------------------------------------------------------------------------
-        bool ShouldLogAsError(ELogLevel lvl) const noex
+        fn ShouldLogAsError(ELogLevel lvl) const noex -> bool
         {
             return lvl >= _errLogLevel;
         }
@@ -53,7 +53,7 @@ namespace Atom::Logging
         /// 
         /// If {ShouldLogAsError(logMsg.lvl) == true}, writes the message to stderr else to stdout.
         /// ----------------------------------------------------------------------------------------
-        virtual void m_Write(const LogMsg& logMsg, StrView formattedMsg) ofinal
+        virtual fn m_Write(const LogMsg& logMsg, StrView formattedMsg) -> void ofinal
         {
             FILE* file = _stdout;
 
@@ -68,14 +68,13 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Flushes both stdout and stderr.
         /// ----------------------------------------------------------------------------------------
-        virtual void m_Flush() ofinal
+        virtual fn m_Flush() -> void ofinal
         {
             fflush(_stdout);
             fflush(_stderr);
         }
 
     protected:
-
         /// ----------------------------------------------------------------------------------------
         /// FILE* to stdout.
         /// ----------------------------------------------------------------------------------------

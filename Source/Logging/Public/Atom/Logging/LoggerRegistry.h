@@ -18,10 +18,11 @@ namespace Atom::Logging
     class LoggerRegistry
     {
         using TContainer = UnorderedMap<Str, LoggerPtr>;
-        using TIterator = tname TContainer::const_iterator;
+        using TIter = tname TContainer::const_iterator;
+        using TIterEnd = tname TContainer::const_iterator;
 
     public:
-        LoggerRegistry() noex
+        ctor LoggerRegistry() noex
         {
             SetDefaultLogger(GET_LOGGER_FACTORY().CreateLogger(TEXT("DefaultLogger")));
         }
@@ -38,7 +39,7 @@ namespace Atom::Logging
         /// 
         /// @EXCEPTION_SAFETY VeryStrong
         /// ----------------------------------------------------------------------------------------
-        void RegisterLogger(LoggerPtr logger)
+        fn RegisterLogger(LoggerPtr logger)
         {
             ATOM_ASSERT(logger != nullptr) << NullPointerException(
                 TEXT("Cannot register NULL Logger."));
@@ -48,10 +49,10 @@ namespace Atom::Logging
             ATOM_ASSERT(!key.IsEmpty()) << InvalidArgumentException(
                 TEXT("Cannot register logger with NULL key."));
 
-            ATOM_ASSERT(m_HasLogger(key) == false) << InvalidOperationException(
+            ATOM_ASSERT(_HasLogger(key) == false) << InvalidOperationException(
                 TEXT("Logger for key{{key}} is already registered."));
 
-            m_RegisterLogger(logger, Str(key));
+            _RegisterLogger(logger, Str(key));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -70,7 +71,7 @@ namespace Atom::Logging
         /// 
         /// @EXCEPTION_SAFETY VeryStrong
         /// ----------------------------------------------------------------------------------------
-        void RegisterLogger(LoggerPtr logger, StrView key)
+        fn RegisterLogger(LoggerPtr logger, StrView key)
         {
             ATOM_ASSERT(logger != nullptr) << NullPointerException(
                 TEXT("Cannot register NULL Logger."));
@@ -78,10 +79,10 @@ namespace Atom::Logging
             ATOM_ASSERT(!key.IsEmpty()) << InvalidArgumentException(
                 TEXT("Cannot register logger with NULL key."));
 
-            ATOM_ASSERT(m_HasLogger(key) == false) << InvalidOperationException(
+            ATOM_ASSERT(_HasLogger(key) == false) << InvalidOperationException(
                 TEXT("Logger for key{{key}} is already registered."));
 
-            m_RegisterLogger(logger, Str(key));
+            _RegisterLogger(logger, Str(key));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -89,7 +90,7 @@ namespace Atom::Logging
         /// 
         /// @PARAM[IN] key RValue reference to Str, to avoid allocating memory to store the key.
         /// ----------------------------------------------------------------------------------------
-        void RegisterLogger(LoggerPtr logger, Str&& key)
+        fn RegisterLogger(LoggerPtr logger, Str&& key)
         {
             ATOM_ASSERT(logger != nullptr) << NullPointerException(
                 TEXT("Cannot register NULL Logger."));
@@ -97,10 +98,10 @@ namespace Atom::Logging
             ATOM_ASSERT(!key.IsEmpty()) << InvalidArgumentException(
                 TEXT("Cannot register logger with NULL key."));
 
-            ATOM_ASSERT(m_HasLogger(key) == false) << InvalidOperationException(
+            ATOM_ASSERT(_HasLogger(key) == false) << InvalidOperationException(
                 TEXT("Logger for key{{key}} is already registered."));
 
-            m_RegisterLogger(logger, MOVE(key));
+            _RegisterLogger(logger, MOVE(key));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -112,7 +113,7 @@ namespace Atom::Logging
         /// 
         /// @EXCEPTION_SAFETY VeryStrong
         /// ----------------------------------------------------------------------------------------
-        void ForceRegisterLogger(LoggerPtr logger)
+        fn ForceRegisterLogger(LoggerPtr logger)
         {
             ATOM_ASSERT(logger != nullptr) << NullPointerException(
                 TEXT("Cannot register NULL Logger."));
@@ -122,7 +123,7 @@ namespace Atom::Logging
             ATOM_ASSERT(!key.IsEmpty()) << InvalidArgumentException(
                 TEXT("Cannot register logger with NULL key."));
 
-            m_ForceRegisterLogger(logger, Str(key));
+            _ForceRegisterLogger(logger, Str(key));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -137,7 +138,7 @@ namespace Atom::Logging
         /// 
         /// @EXCEPTION_SAFETY VeryStrong
         /// ----------------------------------------------------------------------------------------
-        void ForceRegisterLogger(LoggerPtr logger, StrView key)
+        fn ForceRegisterLogger(LoggerPtr logger, StrView key)
         {
             ATOM_ASSERT(logger != nullptr) << NullPointerException(
                 TEXT("Cannot register NULL Logger."));
@@ -145,7 +146,7 @@ namespace Atom::Logging
             ATOM_ASSERT(!key.IsEmpty()) << InvalidArgumentException(
                 TEXT("Cannot register logger with NULL key."));
 
-            m_ForceRegisterLogger(logger, Str(key));
+            _ForceRegisterLogger(logger, Str(key));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -153,7 +154,7 @@ namespace Atom::Logging
         /// 
         /// @PARAM[IN] key RValue reference to Str, to avoid allocating memory to store the key.
         /// ----------------------------------------------------------------------------------------
-        void ForceRegisterLogger(LoggerPtr logger, Str&& key)
+        fn ForceRegisterLogger(LoggerPtr logger, Str&& key)
         {
             ATOM_ASSERT(logger != nullptr) << NullPointerException(
                 TEXT("Cannot register NULL Logger."));
@@ -161,7 +162,7 @@ namespace Atom::Logging
             ATOM_ASSERT(!key.IsEmpty()) << InvalidArgumentException(
                 TEXT("Cannot register logger with NULL key."));
 
-            m_ForceRegisterLogger(logger, MOVE(key));
+            _ForceRegisterLogger(logger, MOVE(key));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -169,7 +170,7 @@ namespace Atom::Logging
         /// 
         /// @PARAM[IN] logger Logger to register.
         /// ----------------------------------------------------------------------------------------
-        bool TryRegisterLogger(LoggerPtr logger) noex
+        fn TryRegisterLogger(LoggerPtr logger) noex -> bool
         {
             if (logger == nullptr)
                 return false;
@@ -178,10 +179,10 @@ namespace Atom::Logging
             if (key.IsEmpty())
                 return false;
 
-            if (m_HasLogger(key))
+            if (_HasLogger(key))
                 return false;
 
-            m_RegisterLogger(logger, Str(key));
+            _RegisterLogger(logger, Str(key));
             return true;
         }
 
@@ -191,7 +192,7 @@ namespace Atom::Logging
         /// @PARAM[IN] logger Logger to register.
         /// @PARAM[IN] key Str used as key to register logger.
         /// ----------------------------------------------------------------------------------------
-        bool TryRegisterLogger(LoggerPtr logger, StrView key) noex
+        fn TryRegisterLogger(LoggerPtr logger, StrView key) noex -> bool
         {
             if (logger == nullptr)
                 return false;
@@ -199,10 +200,10 @@ namespace Atom::Logging
             if (key.IsEmpty())
                 return false;
 
-            if (m_HasLogger(key))
+            if (_HasLogger(key))
                 return false;
 
-            m_RegisterLogger(logger, Str(key));
+            _RegisterLogger(logger, Str(key));
             return true;
         }
 
@@ -212,7 +213,7 @@ namespace Atom::Logging
         /// 
         /// @PARAM[IN] key RValue reference to Str, to avoid allocating memory to store the key.
         /// ----------------------------------------------------------------------------------------
-        bool TryRegisterLogger(LoggerPtr logger, Str&& key) noex
+        fn TryRegisterLogger(LoggerPtr logger, Str&& key) noex -> bool
         {
             if (logger == nullptr)
                 return false;
@@ -220,10 +221,10 @@ namespace Atom::Logging
             if (key.IsEmpty())
                 return false;
 
-            if (m_HasLogger(key))
+            if (_HasLogger(key))
                 return false;
 
-            m_RegisterLogger(logger, MOVE(key));
+            _RegisterLogger(logger, MOVE(key));
             return true;
         }
 
@@ -234,20 +235,20 @@ namespace Atom::Logging
         /// 
         /// @EXCEPTION_SAFETY VeryStrong
         /// ----------------------------------------------------------------------------------------
-        bool UnregisterLogger(StrView key)
+        fn UnregisterLogger(StrView key) -> bool
         {
             ATOM_ASSERT(!key.IsEmpty()) << InvalidArgumentException(
                 TEXT("Cannot access logger with NULL key."));
 
-            return m_UnregisterLogger(key) != nullptr;
+            return _UnregisterLogger(key) != nullptr;
         }
 
         /// ----------------------------------------------------------------------------------------
         /// Unregisters all loggers.
         /// ----------------------------------------------------------------------------------------
-        void UnregisterAllLoggers()
+        fn UnregisterAllLoggers()
         {
-            m_loggers.clear();
+            _loggers.clear();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -260,20 +261,20 @@ namespace Atom::Logging
         /// 
         /// @EXCEPTION_SAFETY VeryStrong
         /// ----------------------------------------------------------------------------------------
-        LoggerPtr UnregisterAndGetLogger(StrView key)
+        fn UnregisterAndGetLogger(StrView key) -> LoggerPtr
         {
             ATOM_ASSERT(!key.IsEmpty()) << InvalidArgumentException(
                 TEXT("Cannot access logger with NULL key."));
 
-            return m_UnregisterLogger(key);
+            return _UnregisterLogger(key);
         }
 
         /// ----------------------------------------------------------------------------------------
         /// Get the logger registered with key {key}.
         /// ----------------------------------------------------------------------------------------
-        LoggerPtr GetLogger(StrView key) const noex
+        fn GetLogger(StrView key) const noex -> LoggerPtr
         {
-            for (auto pair : m_loggers)
+            for (auto pair : _loggers)
             {
                 if (pair.first == key)
                 {
@@ -287,9 +288,9 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Checks if a logger for key {key} is registered.
         /// ----------------------------------------------------------------------------------------
-        bool HasLogger(StrView key) const noex
+        fn HasLogger(StrView key) const noex -> bool
         {
-            return m_HasLogger(key);
+            return _HasLogger(key);
         }
 
     //// -------------------------------------------------------------------------------------------
@@ -306,9 +307,9 @@ namespace Atom::Logging
         /// 
         /// DefaultLogger is used to log global logs or when categorization is not necessary.
         /// ----------------------------------------------------------------------------------------
-        LoggerPtr GetDefaultLogger() const noex
+        fn GetDefaultLogger() const noex -> LoggerPtr
         {
-            return m_defaultLogger;
+            return _defaultLogger;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -316,14 +317,14 @@ namespace Atom::Logging
         /// 
         /// @PARAM[IN] logger Logger to set as default logger. If null sets a fake logger instead.
         /// ----------------------------------------------------------------------------------------
-        void SetDefaultLogger(LoggerPtr logger) noex
+        fn SetDefaultLogger(LoggerPtr logger) noex -> void
         {
             if (logger == nullptr)
             {
                 logger = NullLogger::Instance;
             }
 
-            m_defaultLogger = logger;
+            _defaultLogger = logger;
         }
 
     //// -------------------------------------------------------------------------------------------
@@ -332,35 +333,19 @@ namespace Atom::Logging
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// @RETURNS TIterator to first Key-Logger pair.
+        /// @RETURNS TIter to first Key-Logger pair.
         /// ----------------------------------------------------------------------------------------
-        TIterator begin() const noex
+        fn iter() const noex -> TIter
         {
-            return m_loggers.begin();
+            return _loggers.begin();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// @RETURNS TIterator to last Key-Logger pair. 
+        /// @RETURNS TIter to last Key-Logger pair. 
         /// ----------------------------------------------------------------------------------------
-        TIterator end() const noex
+        fn iterEnd() const noex -> TIter
         {
-            return m_loggers.cend();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// @RETURNS TIterator to first Key-Logger pair.
-        /// ----------------------------------------------------------------------------------------
-        TIterator cbegin() const noex
-        {
-            return m_loggers.cbegin();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// @RETURNS TIterator to last Key-Logger pair.
-        /// ----------------------------------------------------------------------------------------
-        TIterator cend() const noex
-        {
-            return m_loggers.cend();
+            return _loggers.cend();
         }
 
     //// -------------------------------------------------------------------------------------------
@@ -380,50 +365,50 @@ namespace Atom::Logging
         /// 
         /// @EXCEPTION_SAFETY VeryStrong
         /// ----------------------------------------------------------------------------------------
-        void m_RegisterLogger(LoggerPtr logger, Str key)
+        fn _RegisterLogger(LoggerPtr logger, Str key) -> void
         {
             ATOM_DEBUG_EXPECTS(logger != nullptr);
             ATOM_DEBUG_EXPECTS(!key.IsEmpty());
 
-            bool result = m_loggers.insert({ MOVE(key), MOVE(logger) }).second;
-            ATOM_DEBUG_EXPECTS(result);
+            bool result = _loggers.insert({ MOVE(key), MOVE(logger) }).second;
+            ATOM_DEBUG_ENSURES(result);
         }
 
         /// ----------------------------------------------------------------------------------------
         /// 
         /// @EXCEPTION_SAFETY VeryStrong
         /// ----------------------------------------------------------------------------------------
-        void m_ForceRegisterLogger(LoggerPtr logger, Str key)
+        fn _ForceRegisterLogger(LoggerPtr logger, Str key) -> void
         {
             ATOM_DEBUG_EXPECTS(logger != nullptr);
             ATOM_DEBUG_EXPECTS(!key.IsEmpty());
 
-            m_loggers.insert_or_assign(MOVE(key), MOVE(logger));
+            _loggers.insert_or_assign(MOVE(key), MOVE(logger));
         }
 
         /// ----------------------------------------------------------------------------------------
         /// 
         /// @EXCEPTION_SAFETY VeryStrong
         /// ----------------------------------------------------------------------------------------
-        LoggerPtr m_UnregisterLogger(StrView key)
+        fn _UnregisterLogger(StrView key) -> LoggerPtr
         {
-            auto it = m_FindEntry(key);
-            if (it == end())
+            auto it = _FindEntry(key);
+            if (it == iterEnd())
             {
                 return nullptr;
             }
 
             LoggerPtr logger = MOVE(it->second);
-            m_loggers.erase(it);
+            _loggers.erase(it);
             return logger;
         }
 
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        bool m_HasLogger(StrView key) const noex
+        fn _HasLogger(StrView key) const noex -> bool
         {
-            for (auto pair : m_loggers)
+            for (auto pair : _loggers)
             {
                 if (pair.first == key)
                 {
@@ -437,10 +422,10 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        TIterator m_FindEntry(StrView key) const noex
+        fn _FindEntry(StrView key) const noex -> TIter
         {
-            auto it = m_loggers.cbegin();
-            for (; it != m_loggers.cend(); it++)
+            auto it = iter();
+            for (; it != iterEnd(); it++)
             {
                 if (it->first == key)
                 {
@@ -452,11 +437,11 @@ namespace Atom::Logging
         }
 
     protected:
-        TContainer m_loggers;
-        LoggerPtr m_defaultLogger;
+        TContainer _loggers;
+        LoggerPtr _defaultLogger;
     };
 
-    inline LoggerRegistry& GET_REGISTRY() noex
+    inline fn GET_REGISTRY() noex -> LoggerRegistry&
     {
         static LoggerRegistry s_instance;
         return s_instance;

@@ -15,77 +15,77 @@ namespace Atom::Logging
     /// ----------------------------------------------------------------------------------------
     /// Checks if RootLogger should log.
     /// 
-    /// @PARAM[IN] in_lvl ELogLevel to check against.
+    /// @PARAM[IN] lvl ELogLevel to check against.
     /// ----------------------------------------------------------------------------------------
-    inline bool CHECK_LOG_LEVEL(ELogLevel in_lvl) noex
+    inline fn CHECK_LOG_LEVEL(ELogLevel lvl) noex -> bool
     {
-        return GET_ROOT_LOGGER()->CheckLogLevel(in_lvl);
+        return GET_ROOT_LOGGER()->CheckLogLevel(lvl);
     }
 
     /// ----------------------------------------------------------------------------------------
     /// Calls Log on GET_ROOT_LOGGER().
     /// ----------------------------------------------------------------------------------------
     template <RLogArg... TArgs>
-    inline void LOG(ELogLevel in_lvl, LogStr<TArgs...> in_msg, TArgs&&... in_args)
+    inline fn LOG(ELogLevel lvl, LogStr<TArgs...> msg, TArgs&&... args)
     {
-        GET_ROOT_LOGGER()->Log(in_lvl, in_msg, fwd(in_args)...);
+        GET_ROOT_LOGGER()->Log(lvl, msg, fwd(args)...);
     }
 
     /// --------------------------------------------------------------------------------------------
-    /// Calls LOG(ELogLevel::Trace, in_msg, fwd(in_args)...).
+    /// Calls LOG(ELogLevel::Trace, msg, fwd(args)...).
     /// --------------------------------------------------------------------------------------------
     template <RLogArg... TArgs>
-    inline void LOG_TRACE(LogStr<TArgs...> in_msg, TArgs&&... in_args)
+    inline fn LOG_TRACE(LogStr<TArgs...> msg, TArgs&&... args)
     {
-        LOG(ELogLevel::Trace, in_msg, fwd(in_args)...);
+        LOG(ELogLevel::Trace, msg, fwd(args)...);
     }
 
     /// --------------------------------------------------------------------------------------------
-    /// Calls LOG(ELogLevel::Debug, in_msg, fwd(in_args)...).
+    /// Calls LOG(ELogLevel::Debug, msg, fwd(args)...).
     /// --------------------------------------------------------------------------------------------
     template <RLogArg... TArgs>
-    inline void LOG_DEBUG(LogStr<TArgs...> in_msg, TArgs&&... in_args)
+    inline fn LOG_DEBUG(LogStr<TArgs...> msg, TArgs&&... args)
     {
-        LOG(ELogLevel::Debug, in_msg, fwd(in_args)...);
+        LOG(ELogLevel::Debug, msg, fwd(args)...);
     }
 
     /// --------------------------------------------------------------------------------------------
-    /// Calls LOG(ELogLevel::Info, in_msg, fwd(in_args)...).
+    /// Calls LOG(ELogLevel::Info, msg, fwd(args)...).
     /// --------------------------------------------------------------------------------------------
     template <RLogArg... TArgs>
-    inline void LOG_INFO(LogStr<TArgs...> in_msg, TArgs&&... in_args)
+    inline fn LOG_INFO(LogStr<TArgs...> msg, TArgs&&... args)
     {
-        LOG(ELogLevel::Info, in_msg, fwd(in_args)...);
+        LOG(ELogLevel::Info, msg, fwd(args)...);
     }
 
     /// --------------------------------------------------------------------------------------------
-    /// Calls LOG(ELogLevel::Warn, in_msg, fwd(in_args)...).
+    /// Calls LOG(ELogLevel::Warn, msg, fwd(args)...).
     /// --------------------------------------------------------------------------------------------
     template <RLogArg... TArgs>
-    inline void LOG_WARN(LogStr<TArgs...> in_msg, TArgs&&... in_args)
+    inline fn LOG_WARN(LogStr<TArgs...> msg, TArgs&&... args)
     {
-        LOG(ELogLevel::Warn, in_msg, fwd(in_args)...);
+        LOG(ELogLevel::Warn, msg, fwd(args)...);
     }
 
     /// --------------------------------------------------------------------------------------------
-    /// Calls LOG(ELogLevel::Error, in_msg, fwd(in_args)...).
+    /// Calls LOG(ELogLevel::Error, msg, fwd(args)...).
     /// --------------------------------------------------------------------------------------------
     template <RLogArg... TArgs>
-    inline void LOG_ERROR(LogStr<TArgs...> in_msg, TArgs&&... in_args)
+    inline fn LOG_ERROR(LogStr<TArgs...> msg, TArgs&&... args)
     {
-        LOG(ELogLevel::Error, in_msg, fwd(in_args)...);
+        LOG(ELogLevel::Error, msg, fwd(args)...);
     }
 
     /// --------------------------------------------------------------------------------------------
-    /// Calls LOG(ELogLevel::Fatal, in_msg, fwd(in_args)...).
+    /// Calls LOG(ELogLevel::Fatal, msg, fwd(args)...).
     /// --------------------------------------------------------------------------------------------
     template <RLogArg... TArgs>
-    inline void LOG_FATAL(LogStr<TArgs...> in_msg, TArgs&&... in_args)
+    inline fn LOG_FATAL(LogStr<TArgs...> msg, TArgs&&... args)
     {
-        LOG(ELogLevel::Fatal, in_msg, fwd(in_args)...);
+        LOG(ELogLevel::Fatal, msg, fwd(args)...);
     }
 
-    inline void FLUSH_LOGS()
+    inline fn FLUSH_LOGS()
     {
         GET_ROOT_LOGGER()->Flush();
     }
@@ -102,85 +102,85 @@ namespace Atom::Logging
     constexpr ELogLevel STATIC_LOG_LEVEL = ELogLevel::Debug;
 
     /// --------------------------------------------------------------------------------------------
-    /// Checks at compile time if message of specified level {in_lvl} should be logged.
+    /// Checks at compile time if message of specified level {lvl} should be logged.
     /// 
-    /// @TPARAM[IN] in_lvl ELogLevel of the in_msg to check for.
+    /// @TPARAM[IN] lvl ELogLevel of the msg to check for.
     /// --------------------------------------------------------------------------------------------
-    template <ELogLevel in_lvl>
-    constexpr bool STATIC_CHECK_LOG_LEVEL() noex
+    template <ELogLevel lvl>
+    constexpr fn STATIC_CHECK_LOG_LEVEL() noex -> bool
     {
-        return in_lvl >= STATIC_LOG_LEVEL && in_lvl != ELogLevel::OFF;
+        return lvl >= STATIC_LOG_LEVEL && lvl != ELogLevel::OFF;
     }
 
     /// --------------------------------------------------------------------------------------------
     /// Checks at compile time if message should be logged. If not it's just an empty function
     /// and hopefully compiler will optimize it away, however it's yet to check.
     /// 
-    /// This is done to avoid the use of macros. But if this approach fails we may fallback to 
+    /// This is done to afn the use of macros. But if this approach fails we may fallback to 
     /// macros.
     /// 
     /// @TODO Check the overhead of this function when it should not log anything.
     /// --------------------------------------------------------------------------------------------
-    template <ELogLevel in_lvl, RLogArg... TArgs>
-    inline void STATIC_LOG(LogStr<TArgs...> in_msg, TArgs&&... in_args)
+    template <ELogLevel lvl, RLogArg... TArgs>
+    inline fn STATIC_LOG(LogStr<TArgs...> msg, TArgs&&... args)
     {
-        if constexpr (STATIC_CHECK_LOG_LEVEL<in_lvl>())
+        if constexpr (STATIC_CHECK_LOG_LEVEL<lvl>())
         {
-            LOG(in_lvl, in_msg, fwd(in_args)...);
+            LOG(lvl, msg, fwd(args)...);
         }
     }
 
     /// --------------------------------------------------------------------------------------------
-    /// Calls STATIC_LOG<ELogLevel::Trace>(in_msg, fwd(in_args)...).
+    /// Calls STATIC_LOG<ELogLevel::Trace>(msg, fwd(args)...).
     /// --------------------------------------------------------------------------------------------
     template <RLogArg... TArgs>
-    inline void STATIC_LOG_TRACE(LogStr<TArgs...> in_msg, TArgs&&... in_args)
+    inline fn STATIC_LOG_TRACE(LogStr<TArgs...> msg, TArgs&&... args)
     {
-        STATIC_LOG<ELogLevel::Trace>(in_msg, fwd(in_args)...);
+        STATIC_LOG<ELogLevel::Trace>(msg, fwd(args)...);
     }
 
     /// --------------------------------------------------------------------------------------------
-    /// Calls STATIC_LOG<ELogLevel::Debug>(in_msg, fwd(in_args)...).
+    /// Calls STATIC_LOG<ELogLevel::Debug>(msg, fwd(args)...).
     /// --------------------------------------------------------------------------------------------
     template <RLogArg... TArgs>
-    inline void STATIC_LOG_DEBUG(LogStr<TArgs...> in_msg, TArgs&&... in_args)
+    inline fn STATIC_LOG_DEBUG(LogStr<TArgs...> msg, TArgs&&... args)
     {
-        STATIC_LOG<ELogLevel::Debug>(in_msg, fwd(in_args)...);
+        STATIC_LOG<ELogLevel::Debug>(msg, fwd(args)...);
     }
 
     /// --------------------------------------------------------------------------------------------
-    /// Calls STATIC_LOG<ELogLevel::Info>(in_msg, fwd(in_args)...).
+    /// Calls STATIC_LOG<ELogLevel::Info>(msg, fwd(args)...).
     /// --------------------------------------------------------------------------------------------
     template <RLogArg... TArgs>
-    inline void STATIC_LOG_INFO(LogStr<TArgs...> in_msg, TArgs&&... in_args)
+    inline fn STATIC_LOG_INFO(LogStr<TArgs...> msg, TArgs&&... args)
     {
-        STATIC_LOG<ELogLevel::Info>(in_msg, fwd(in_args)...);
+        STATIC_LOG<ELogLevel::Info>(msg, fwd(args)...);
     }
 
     /// --------------------------------------------------------------------------------------------
-    /// Calls STATIC_LOG<ELogLevel::Warn>(in_msg, fwd(in_args)...).
+    /// Calls STATIC_LOG<ELogLevel::Warn>(msg, fwd(args)...).
     /// --------------------------------------------------------------------------------------------
     template <RLogArg... TArgs>
-    inline void STATIC_LOG_WARN(LogStr<TArgs...> in_msg, TArgs&&... in_args)
+    inline fn STATIC_LOG_WARN(LogStr<TArgs...> msg, TArgs&&... args)
     {
-        STATIC_LOG<ELogLevel::Warn>(in_msg, fwd(in_args)...);
+        STATIC_LOG<ELogLevel::Warn>(msg, fwd(args)...);
     }
 
     /// --------------------------------------------------------------------------------------------
-    /// Calls STATIC_LOG<ELogLevel::Error>(in_msg, fwd(in_args)...).
+    /// Calls STATIC_LOG<ELogLevel::Error>(msg, fwd(args)...).
     /// --------------------------------------------------------------------------------------------
     template <RLogArg... TArgs>
-    inline void STATIC_LOG_ERROR(LogStr<TArgs...> in_msg, TArgs&&... in_args)
+    inline fn STATIC_LOG_ERROR(LogStr<TArgs...> msg, TArgs&&... args)
     {
-        STATIC_LOG<ELogLevel::Error>(in_msg, fwd(in_args)...);
+        STATIC_LOG<ELogLevel::Error>(msg, fwd(args)...);
     }
 
     /// --------------------------------------------------------------------------------------------
-    /// Calls STATIC_LOG<ELogLevel::Fatal>(in_msg, fwd(in_args)...).
+    /// Calls STATIC_LOG<ELogLevel::Fatal>(msg, fwd(args)...).
     /// --------------------------------------------------------------------------------------------
     template <RLogArg... TArgs>
-    inline void STATIC_LOG_FATAL(LogStr<TArgs...> in_msg, TArgs&&... in_args)
+    inline fn STATIC_LOG_FATAL(LogStr<TArgs...> msg, TArgs&&... args)
     {
-        STATIC_LOG<ELogLevel::Fatal>(in_msg, fwd(in_args)...);
+        STATIC_LOG<ELogLevel::Fatal>(msg, fwd(args)...);
     }
 }

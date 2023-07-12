@@ -6,13 +6,13 @@ namespace Atom::Engine
     class Application
     {
     public:
-        Application();
-        virtual ~Application();
+        ctor Application();
+        virtual dtor Application();
 
     public:
-        virtual void Run();
+        virtual fn Run() -> void;
 
-        virtual void OnWindowEvent(const SWindowEvent& event);
+        virtual fn OnWindowEvent(const SWindowEvent& event) -> void;
 
     protected:
         Window* _window;

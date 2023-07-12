@@ -31,7 +31,7 @@ namespace Atom::Logging::Private
         /// ----------------------------------------------------------------------------------------
         /// Default constructor.
         /// ----------------------------------------------------------------------------------------
-        MultiLogTargetTemplate() noex { }
+        ctor MultiLogTargetTemplate() noex { }
 
         /// ----------------------------------------------------------------------------------------
         /// Constructs with LogTarget objects.
@@ -45,7 +45,7 @@ namespace Atom::Logging::Private
         /// ----------------------------------------------------------------------------------------
         template <tname TRange>
         requires RRangeOf<TRange, LogTargetPtr>
-        MultiLogTargetTemplate(const TRange& targets)
+        ctor MultiLogTargetTemplate(const TRange& targets)
         {
             _AddTargets(MOVE(targets));
         }
@@ -60,7 +60,7 @@ namespace Atom::Logging::Private
         /// 
         /// @EXCEPTION_SAFETY STRONG
         /// ----------------------------------------------------------------------------------------
-        virtual void Write(const LogMsg& logMsg) ofinal
+        virtual fn Write(const LogMsg& logMsg) -> void ofinal
         {
             LockGuard guard(_lock);
             for (auto& target : _targets)
@@ -74,7 +74,7 @@ namespace Atom::Logging::Private
         /// 
         /// @EXCEPTION_SAFETY STRONG
         /// ----------------------------------------------------------------------------------------
-        virtual void Flush() ofinal
+        virtual fn Flush() -> void ofinal
         {
             LockGuard guard(_lock);
             for (auto& target : _targets)
@@ -101,7 +101,7 @@ namespace Atom::Logging::Private
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        bool AddTarget(LogTargetPtr target) noex
+        fn AddTarget(LogTargetPtr target) noex -> bool
         {
             if (target == nullptr) return false;
 
@@ -146,7 +146,7 @@ namespace Atom::Logging::Private
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        bool RemoveTarget(LogTargetPtr target)
+        fn RemoveTarget(LogTargetPtr target) -> bool
         {
             if (target == nullptr) return false;
 
@@ -169,7 +169,7 @@ namespace Atom::Logging::Private
         /// ----------------------------------------------------------------------------------------
         template <tname TRange>
         requires RRangeOf<TRange, LogTargetPtr>
-        usize RemoveTargets(const TRange& targets)
+        fn RemoveTargets(const TRange& targets) -> usize
         {
             if (!targets.Iter() == targets.IterEnd())
                 return 0;
@@ -189,7 +189,7 @@ namespace Atom::Logging::Private
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        bool HasTarget(LogTargetPtr target) const noex
+        fn HasTarget(LogTargetPtr target) const noex -> bool
         {
             if (target == nullptr)
                 return false;
@@ -211,7 +211,7 @@ namespace Atom::Logging::Private
         /// ----------------------------------------------------------------------------------------
         template <tname TRange>
         requires RRangeOf<TRange, LogTargetPtr>
-        usize HasTargets(const TRange& targets) const noex
+        fn HasTargets(const TRange& targets) const noex -> usize
         {
             if (!targets.Iter() == targets.IterEnd())
                 return 0;
@@ -227,7 +227,7 @@ namespace Atom::Logging::Private
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        void Reserve(usize capacity)
+        fn Reserve(usize capacity)
         {
             LockGuard guard(_lock);
             _Reserve(capacity);
@@ -238,7 +238,7 @@ namespace Atom::Logging::Private
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        usize Count() const noex
+        fn Count() const noex -> usize
         {
             LockGuard guard(_lock);
             return _targets.Count();
@@ -256,7 +256,7 @@ namespace Atom::Logging::Private
         /// 
         /// @TODO Make ThreadSafe.
         /// ----------------------------------------------------------------------------------------
-        TIter Iter() const noex
+        fn Iter() const noex -> TIter
         {
             return _targets.Iter();
         }
@@ -268,7 +268,7 @@ namespace Atom::Logging::Private
         /// 
         /// @TODO Make ThreadSafe.
         /// ----------------------------------------------------------------------------------------
-        TIter IterEnd() const noex
+        fn IterEnd() const noex -> TIterEnd
         {
             return _targets.IterEnd();
         }
@@ -293,7 +293,7 @@ namespace Atom::Logging::Private
         /// 
         /// @THREAD_SAFETY NONE
         /// ----------------------------------------------------------------------------------------
-        bool _AddTarget(LogTargetPtr target)
+        fn _AddTarget(LogTargetPtr target) -> bool
         {
             ATOM_DEBUG_EXPECTS(target != nullptr);
 
@@ -315,7 +315,7 @@ namespace Atom::Logging::Private
         /// ----------------------------------------------------------------------------------------
         template <tname TRange>
         requires RRangeOf<TRange, LogTargetPtr>
-        usize _AddTargets(const TRange& targets)
+        fn _AddTargets(const TRange& targets) -> usize
         {
             usize count = 0;
             for (LogTargetPtr target : targets)
@@ -341,7 +341,7 @@ namespace Atom::Logging::Private
         /// 
         /// @TIME_COMPLEXITY @COPY_FROM ${_TContainer}::Remove(LogTarget& target)
         /// ----------------------------------------------------------------------------------------
-        bool _RemoveTarget(LogTargetPtr target)
+        fn _RemoveTarget(LogTargetPtr target) -> bool
         {
             ATOM_DEBUG_EXPECTS(target != nullptr);
 
@@ -371,7 +371,7 @@ namespace Atom::Logging::Private
         /// ----------------------------------------------------------------------------------------
         template <tname TRange>
         requires RRangeOf<TRange, LogTargetPtr>
-        usize _RemoveTargets(const TRange& targets)
+        fn _RemoveTargets(const TRange& targets) -> usize
         {
             usize count = 0;
             for (auto target : targets)
@@ -404,7 +404,7 @@ namespace Atom::Logging::Private
         /// 
         /// @TIME_COMPLEXITY Linear
         /// ----------------------------------------------------------------------------------------
-        bool _HasTarget(const LogTargetPtr& target) const noex
+        fn _HasTarget(const LogTargetPtr& target) const noex -> bool
         {
             ATOM_DEBUG_EXPECTS(target != nullptr);
 
@@ -425,7 +425,7 @@ namespace Atom::Logging::Private
         /// ----------------------------------------------------------------------------------------
         template <tname TRange>
         requires RRangeOf<TRange, LogTargetPtr>
-        usize _HasTargets(const TRange& targets)
+        fn _HasTargets(const TRange& targets) -> usize
         {
             return RangeFinder().Contains(_targets, targets);
         }
@@ -435,7 +435,7 @@ namespace Atom::Logging::Private
         /// 
         /// @EXCEPTION_SAFETY @COPY_FROM ${_TContainer}::Reserve(usize capacity).
         /// ----------------------------------------------------------------------------------------
-        void _Reserve(usize capacity)
+        fn _Reserve(usize capacity)
         {
             _targets.Reserve(capacity);
         }

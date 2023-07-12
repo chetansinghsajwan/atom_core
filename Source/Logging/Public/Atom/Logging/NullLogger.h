@@ -36,13 +36,13 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Default constructs NullLogger.
         /// ----------------------------------------------------------------------------------------
-        constexpr NullLogger() noex { }
+        constexpr ctor NullLogger() noex { }
 
     public:
         /// ----------------------------------------------------------------------------------------
         /// Returns name of the NullLogger.
         /// ----------------------------------------------------------------------------------------
-        constexpr virtual StrView Name() const noex override
+        constexpr virtual fn Name() const noex -> StrView override
         {
             return s_name;
         }
@@ -50,17 +50,17 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Does nothing.
         /// ----------------------------------------------------------------------------------------
-        constexpr virtual void Log(LogMsg& logMsg) override { }
+        constexpr virtual fn Log(LogMsg& logMsg) -> void override { }
 
         /// ----------------------------------------------------------------------------------------
         /// Does nothing.
         /// ----------------------------------------------------------------------------------------
-        constexpr virtual void Flush() override { }
+        constexpr virtual fn Flush() -> void override { }
 
         /// ----------------------------------------------------------------------------------------
         /// Always returns false to avoid constructing log msg.
         /// ----------------------------------------------------------------------------------------
-        constexpr virtual bool CheckLogLevel(ELogLevel lvl) const noex override
+        constexpr virtual fn CheckLogLevel(ELogLevel lvl) const noex -> bool override
         {
             return false;
         }

@@ -14,9 +14,9 @@ namespace Atom::Engine
     class ATOM_API WindowManger
     {
     public:
-        static Window* CreateWindow(SWindowProps props);
+        static fn CreateWindow(SWindowProps props) -> Window*;
 
-        static void CloseWindow(Window* window);
+        static fn CloseWindow(Window* window) -> void;
 
     protected:
         static usize s_windowCount;

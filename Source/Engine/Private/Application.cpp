@@ -2,7 +2,7 @@
 
 namespace Atom::Engine
 {
-    Application::Application()
+    ctor Application::Application()
     {
         SWindowProps windowProps
         {
@@ -19,7 +19,7 @@ namespace Atom::Engine
         };
     }
 
-    Application::~Application()
+    Application::dtor Application()
     {
         if (_window != nullptr)
         {
@@ -27,7 +27,7 @@ namespace Atom::Engine
         }
     }
 
-    void Application::Run()
+    fn Application::Run() -> void
     {
         while (true)
         {
@@ -35,5 +35,5 @@ namespace Atom::Engine
         }
     }
 
-    void Application::OnWindowEvent(const SWindowEvent& event) { }
+    fn Application::OnWindowEvent(const SWindowEvent& event) -> void { }
 }

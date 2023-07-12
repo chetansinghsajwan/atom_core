@@ -14,8 +14,7 @@ namespace Atom::Engine
 
     struct GLFW_WindowCoordsConverter
     {
-    public:
-        static constexpr GLFW_SWindowCoords ToGLFW(SWindowCoords coords)
+        static constexpr fn ToGLFW(SWindowCoords coords) -> GLFW_SWindowCoords
         {
             coords.x = Math::Clamp<int>(coords.x, NumLimits<int>::min(), NumLimits<int>::max());
             coords.y = Math::Clamp<int>(coords.y, NumLimits<int>::min(), NumLimits<int>::max());
@@ -23,7 +22,7 @@ namespace Atom::Engine
             return { (int)coords.x, (int)coords.y };
         };
 
-        static constexpr SWindowCoords FromGLFW(GLFW_SWindowCoords coords)
+        static constexpr fn FromGLFW(GLFW_SWindowCoords coords) -> SWindowCoords
         {
             coords.x = Math::Clamp<int>(coords.x, NumLimits<int>::min(), NumLimits<int>::max());
             coords.y = Math::Clamp<int>(coords.y, NumLimits<int>::min(), NumLimits<int>::max());
@@ -35,26 +34,26 @@ namespace Atom::Engine
     class GLFWWindow: public Window
     {
     public:
-        GLFWWindow(const SWindowProps& props);
-        ~GLFWWindow();
+        ctor GLFWWindow(const SWindowProps& props);
+        dtor GLFWWindow();
 
     public:
-        virtual void Update() override;
+        virtual fn Update() -> void override;
 
-        virtual void SetPos(SWindowCoords size) override;
-        virtual SWindowCoords GetPos() const noex override;
-        virtual SWindowCoords UpdatePos();
+        virtual fn SetPos(SWindowCoords size) -> void override;
+        virtual fn GetPos() const noex -> SWindowCoords override;
+        virtual fn UpdatePos() -> SWindowCoords;
 
-        virtual void SetSize(SWindowCoords size) override;
-        virtual SWindowCoords GetSize() const noex override;
-        virtual SWindowCoords UpdateSize();
+        virtual fn SetSize(SWindowCoords size) -> void override;
+        virtual fn GetSize() const noex -> SWindowCoords override;
+        virtual fn UpdateSize() -> SWindowCoords;
 
-        void SetVSync(bool enable);
-        bool GetVSync() const noex;
+        virtual fn GetNative() const noex -> void* ofinal;
 
-        virtual void* GetNative() const noex ofinal;
+        fn SetVSync(bool enable) -> void;
+        fn GetVSync() const noex -> bool;
 
-        GLFWwindow* GetNativeGLFW() const noex
+        fn GetNativeGLFW() const noex -> GLFWwindow*
         {
             return m_glfwWindow;
         }

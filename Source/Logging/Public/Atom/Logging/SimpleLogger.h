@@ -24,7 +24,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @PARAM[IN] name Name of this logger.
         /// ----------------------------------------------------------------------------------------
-        explicit SimpleLoggerTemplate(Str name) noex:
+        explicit ctor SimpleLoggerTemplate(Str name) noex:
             _name(MOVE(name)), targets() { }
 
         /// ----------------------------------------------------------------------------------------
@@ -36,7 +36,7 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         template <tname TRange>
         requires RRangeOf<TRange, LogTargetPtr>
-        SimpleLoggerTemplate(Str name, const TRange& targets) noex:
+        ctor SimpleLoggerTemplate(Str name, const TRange& targets) noex:
             _name(MOVE(name)), targets(targets) { }
 
     public:
@@ -45,7 +45,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        StrView Name() const noex ofinal
+        fn Name() const noex -> StrView ofinal
         {
             return _name;
         }
@@ -55,7 +55,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        void Log(LogMsg& logMsg) override
+        fn Log(LogMsg& logMsg) -> void override
         {
             targets.Write(logMsg);
         }
@@ -65,7 +65,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        void Flush() override
+        fn Flush() -> void override
         {
             targets.Flush();
         }
@@ -75,7 +75,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        void SetLogLevel(ELogLevel lvl) noex
+        fn SetLogLevel(ELogLevel lvl) noex
         {
             _logLevel = lvl;
         }
@@ -85,7 +85,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        ELogLevel GetLogLevel(ELogLevel lvl) noex
+        fn GetLogLevel(ELogLevel lvl) noex -> ELogLevel
         {
             return _logLevel;
         }
@@ -95,7 +95,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        bool CheckLogLevel(ELogLevel lvl) const noex ofinal
+        fn CheckLogLevel(ELogLevel lvl) const noex -> bool ofinal
         {
             return lvl != ELogLevel::OFF && lvl >= _logLevel;
         }
@@ -105,7 +105,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        void SetFlushLevel(ELogLevel lvl) noex
+        fn SetFlushLevel(ELogLevel lvl) noex
         {
             _flushLevel = lvl;
         }
@@ -115,7 +115,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        ELogLevel GetFlushLevel() const noex
+        fn GetFlushLevel() const noex -> ELogLevel
         {
             return _flushLevel;
         }
@@ -125,7 +125,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        bool CheckFlushLevel(ELogLevel lvl) const noex
+        fn CheckFlushLevel(ELogLevel lvl) const noex -> bool
         {
             return lvl != ELogLevel::OFF && lvl >= _flushLevel;
         }

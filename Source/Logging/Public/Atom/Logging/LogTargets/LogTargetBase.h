@@ -16,7 +16,7 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         /// Default constructs LogTargetBase().
         /// ----------------------------------------------------------------------------------------
-        LogTargetBase() noex:
+        ctor LogTargetBase() noex:
             m_logLevel(ELogLevel::Debug), m_flushLevel(ELogLevel::Info),
             m_hasWritten(false), m_alwaysFlush(false) { }
 
@@ -32,7 +32,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @SEE m_Write().
         /// ----------------------------------------------------------------------------------------
-        virtual void Write(const LogMsg& in_logMsg) ofinal
+        virtual fn Write(const LogMsg& in_logMsg) -> void ofinal
         {
             if (CheckLogLevel(in_logMsg.lvl))
             {
@@ -58,7 +58,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @EXCEPTION_SAFETY Strong.
         /// ----------------------------------------------------------------------------------------
-        virtual void Flush() ofinal
+        virtual fn Flush() -> void ofinal
         {
             if (ShouldFlush())
             {
@@ -69,7 +69,7 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         /// Get the log level.
         /// ----------------------------------------------------------------------------------------
-        ELogLevel GetLogLevel() const noex
+        fn GetLogLevel() const noex -> ELogLevel
         {
             return m_logLevel;
         }
@@ -77,7 +77,7 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         /// Sets the log level.
         /// ----------------------------------------------------------------------------------------
-        void SetLogLevel(ELogLevel in_lvl) noex
+        fn SetLogLevel(ELogLevel in_lvl) noex
         {
             m_logLevel = in_lvl;
         }
@@ -85,7 +85,7 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         /// Checks if we should log the message of specified level.
         /// ----------------------------------------------------------------------------------------
-        bool CheckLogLevel(ELogLevel in_lvl) const noex
+        fn CheckLogLevel(ELogLevel in_lvl) const noex -> bool
         {
             if (in_lvl == ELogLevel::OFF) return false;
             if (in_lvl < m_logLevel) return false;
@@ -96,7 +96,7 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         /// Gets the flush level.
         /// ----------------------------------------------------------------------------------------
-        ELogLevel GetFlushLevel() const noex
+        fn GetFlushLevel() const noex -> ELogLevel
         {
             return m_flushLevel;
         }
@@ -104,7 +104,7 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         /// Sets the flush level.
         /// ----------------------------------------------------------------------------------------
-        void SetFlushLevel(ELogLevel in_lvl) noex
+        fn SetFlushLevel(ELogLevel in_lvl) noex
         {
             m_flushLevel = in_lvl;
         }
@@ -113,7 +113,7 @@ namespace Atom::Logging::Internal
         /// Checks if should flush after logging the message of specified level.
         /// It also asks ShouldFlush().
         /// ----------------------------------------------------------------------------------------
-        bool CheckFlushLevel(ELogLevel in_lvl) const noex
+        fn CheckFlushLevel(ELogLevel in_lvl) const noex -> bool
         {
             if (!m_hasWritten) return false;
             if (in_lvl == ELogLevel::OFF) return false;
@@ -127,7 +127,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @RETURNS {true} if there has been a log since last flush, else {false}.
         /// ----------------------------------------------------------------------------------------
-        bool ShouldFlush() const noex
+        fn ShouldFlush() const noex -> bool
         {
             return m_alwaysFlush || m_hasWritten;
         }
@@ -143,12 +143,12 @@ namespace Atom::Logging::Internal
         /// @PARAM[IN] in_logMsg Log message object passed for logging.
         /// @PARAM[IN] in_formattedMsg Formatted message generated from {in_logMsg}.
         /// ----------------------------------------------------------------------------------------
-        virtual void m_Write(const LogMsg& in_logMsg, StrView in_formattedMsg) abstract;
+        virtual fn m_Write(const LogMsg& in_logMsg, StrView in_formattedMsg) -> void abstract;
 
         /// ----------------------------------------------------------------------------------------
         /// Flush implementation.
         /// ----------------------------------------------------------------------------------------
-        virtual void m_Flush() abstract;
+        virtual fn m_Flush() -> void abstract;
 
     //// -------------------------------------------------------------------------------------------
     //// Variables
