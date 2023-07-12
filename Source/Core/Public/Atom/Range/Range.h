@@ -90,17 +90,17 @@ namespace Atom
     template <tname T>
     struct Range<const T*, const T*>: Range<ArrIter<T>, ArrIter<T>>
     {
-        using _TBase = Range<ArrIter<T>, ArrIter<T>>;
+        using Base = Range<ArrIter<T>, ArrIter<T>>;
 
         constexpr Range(const T* arr, const T* end) noex:
-            _TBase{ arr, end } { }
+            Base{ arr, end } { }
 
         constexpr Range(const T* arr, usize count) noex:
-            _TBase{ arr, arr + count } { }
+            Base{ arr, arr + count } { }
 
         template <usize count>
         constexpr Range(const T(&arr)[count]) noex:
-            _TBase{ arr, arr + count } { }
+            Base{ arr, arr + count } { }
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -109,17 +109,17 @@ namespace Atom
     template <tname T>
     struct Range<T*, T*>: Range<MutArrIter<T>, MutArrIter<T>>
     {
-        using _TBase = Range<MutArrIter<T>, MutArrIter<T>>;
+        using Base = Range<MutArrIter<T>, MutArrIter<T>>;
 
         constexpr Range(T* arr, T* end) noex:
-            _TBase{ arr, end } { }
+            Base{ arr, end } { }
 
         constexpr Range(T* arr, usize count) noex:
-            _TBase{ arr, arr + count } { }
+            Base{ arr, arr + count } { }
 
         template <usize count>
         constexpr Range(T(&arr)[count]) noex:
-            _TBase{ arr, arr + count } { }
+            Base{ arr, arr + count } { }
     };
 
     template <tname T>

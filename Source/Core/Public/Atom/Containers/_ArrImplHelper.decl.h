@@ -10,12 +10,12 @@ namespace Atom
     //// Aliases
     //// -------------------------------------------------------------------------------------------
 
-        using _TBase = _ConstArrImplHelper<_TImpl>;
+        using Base = _ConstArrImplHelper<_TImpl>;
 
     public:
-        using TElem = tname _TBase::TElem;
-        using TIter = tname _TBase::TIter;
-        using TIterEnd = tname _TBase::TIterEnd;
+        using TElem = tname Base::TElem;
+        using TIter = tname Base::TIter;
+        using TIterEnd = tname Base::TIterEnd;
         using TMutIter = MutArrIter<TElem>;
         using TMutIterEnd = TMutIter;
 
@@ -24,13 +24,13 @@ namespace Atom
     //// -------------------------------------------------------------------------------------------
 
     public:
-        using _TBase::ElemAt;
-        using _TBase::operator[];
-        using _TBase::ElemFront;
-        using _TBase::ElemBack;
-        using _TBase::Data;
-        using _TBase::Count;
-        using _TBase::IsEmpty;
+        using Base::ElemAt;
+        using Base::operator[];
+        using Base::ElemFront;
+        using Base::ElemBack;
+        using Base::Data;
+        using Base::Count;
+        using Base::IsEmpty;
 
         /// ----------------------------------------------------------------------------------------
         /// Access element at index{index}.
@@ -130,9 +130,9 @@ namespace Atom
     //// -------------------------------------------------------------------------------------------
 
     public:
-        using _TBase::_Data;
-        using _TBase::_Count;
-        using _TBase::_ValidateIndexForAccess;
+        using Base::_Data;
+        using Base::_Count;
+        using Base::_ValidateIndexForAccess;
 
         constexpr auto _Data() noex
             -> TElem*
