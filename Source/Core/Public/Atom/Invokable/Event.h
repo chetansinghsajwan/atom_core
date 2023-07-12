@@ -9,11 +9,11 @@ namespace Atom
     struct SEventKey
     {
     public:
-        SEventKey(const TypeInfo& typeInfo) noexcept:
+        SEventKey(const TypeInfo& typeInfo) noex:
             _typeInfo(typeInfo) { }
 
     public:
-        const TypeInfo& GetType() const noexcept
+        const TypeInfo& GetType() const noex
         {
             return _typeInfo;
         }
@@ -32,14 +32,14 @@ namespace Atom
         /// Calls Subscribe(FORWARD(listener));
         /// ----------------------------------------------------------------------------------------
         template <RInvokable<TSignature> TInvokable>
-        SEventKey operator += (TInvokable&& listener) noexcept
+        SEventKey operator += (TInvokable&& listener) noex
         {
             return Subscribe(FORWARD(listener));
         }
 
         /// Calls Unsubscribe(key);
         /// ----------------------------------------------------------------------------------------
-        bool operator -= (SEventKey key) noexcept
+        bool operator -= (SEventKey key) noex
         {
             return Unsubscribe(key);
         }
@@ -47,18 +47,18 @@ namespace Atom
         /// Calls Subscribe(FORWARD(listener)) on {Source}.
         /// ----------------------------------------------------------------------------------------
         template <RInvokable<TSignature> TInvokable>
-        SEventKey Subscribe(TInvokable&& listener) noexcept
+        SEventKey Subscribe(TInvokable&& listener) noex
         {
             return Subscribe(InvokableBox<TSignature>(FORWARD(listener)));
         }
 
         /// 
         /// ----------------------------------------------------------------------------------------
-        virtual SEventKey Subscribe(InvokableBox<TSignature>&& invokable) noexcept = 0;
+        virtual SEventKey Subscribe(InvokableBox<TSignature>&& invokable) noex = 0;
 
         /// Calls Unsubscribe(key) on {Source}.
         /// ----------------------------------------------------------------------------------------
-        virtual usize Unsubscribe(SEventKey key) noexcept = 0;
+        virtual usize Unsubscribe(SEventKey key) noex = 0;
     };
 
     /// EventSource is used to manage listeners and dispatch event.
@@ -69,19 +69,19 @@ namespace Atom
     class EventSource: public IEvent<TArgs...>
     {        
     public:
-        constexpr EventSource() noexcept { }
+        constexpr EventSource() noex { }
 
     public:
         /// 
         /// ----------------------------------------------------------------------------------------
-        virtual SEventKey Subscribe(InvokableBox<void(TArgs...)>&& invokable) noexcept override final
+        virtual SEventKey Subscribe(InvokableBox<void(TArgs...)>&& invokable) noex override final
         {
             return _AddListener(FORWARD(invokable));
         }
 
         /// 
         /// ----------------------------------------------------------------------------------------
-        virtual usize Unsubscribe(SEventKey key) noexcept override final
+        virtual usize Unsubscribe(SEventKey key) noex override final
         {
             return _RemoveListener(key);
         }
@@ -111,7 +111,7 @@ namespace Atom
 
         /// 
         /// ----------------------------------------------------------------------------------------
-        usize _RemoveListener(SEventKey key) noexcept
+        usize _RemoveListener(SEventKey key) noex
         {
             return RangeModifier().RemoveIf(_listeners, [&](const auto& listener)
                 {
@@ -121,7 +121,7 @@ namespace Atom
 
         /// 
         /// ----------------------------------------------------------------------------------------
-        usize _CountListeners(SEventKey key) noexcept
+        usize _CountListeners(SEventKey key) noex
         {
             usize count = 0;
             for (auto& listener : _listeners)

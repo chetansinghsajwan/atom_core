@@ -12,13 +12,13 @@ namespace Atom
 
 namespace Atom::Math
 {
-    constexpr double Abs(double value) noexcept
+    constexpr double Abs(double value) noex
     {
         // TODO: Improve this, maybe using sign bit flag.
         return value * (value < 0 ? -1 : 1);
     }
 
-    constexpr bool IsApproximatelyZero(double lhs, double rhs) noexcept
+    constexpr bool IsApproximatelyZero(double lhs, double rhs) noex
     {
         return Abs(lhs - rhs) < 0.0001f;
     }
@@ -46,7 +46,7 @@ namespace Atom::Math
         return lhs > rhs ? lhs : rhs;
     }
 
-    constexpr byte CharToHex(Char ch) noexcept
+    constexpr byte CharToHex(Char ch) noex
     {
         if (ch >= TEXT('0') && ch <= TEXT('9'))
             return byte(ch - TEXT('0'));
@@ -58,7 +58,7 @@ namespace Atom::Math
         return -1;
     }
 
-    constexpr StaticStr<2> HexToChar(byte hex) noexcept
+    constexpr StaticStr<2> HexToChar(byte hex) noex
     {
         constexpr const Char chars[] = TEXT("0123456789abcdef");
 
@@ -67,7 +67,7 @@ namespace Atom::Math
         return { chars[high], chars[low] };
     }
 
-    constexpr bool IsHexChar(Char ch) noexcept
+    constexpr bool IsHexChar(Char ch) noex
     {
         return (ch >= TEXT('0') && ch <= TEXT('9')) ||
             (ch >= TEXT('a') && ch <= TEXT('f')) ||

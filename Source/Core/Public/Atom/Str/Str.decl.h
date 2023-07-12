@@ -12,7 +12,7 @@ namespace std
     template < >
     struct hash<Atom::Str>
     {
-        size_t operator ()(const Atom::Str& str) const noexcept
+        size_t operator ()(const Atom::Str& str) const noex
         {
             using TChar = Atom::BasicChar<Atom::CharEncoding>;
             using StdStirngView = basic_string_view<TChar>;

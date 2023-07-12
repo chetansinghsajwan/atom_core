@@ -15,7 +15,7 @@ namespace Atom
     }
 
     template <typename TImpl>
-    constexpr auto _ConstArrImplHelper<TImpl>::operator [](usize index) const noexcept
+    constexpr auto _ConstArrImplHelper<TImpl>::operator [](usize index) const noex
         -> const TElem&
     {
         ATOM_DEBUG_EXPECTS(_ValidateIndexForAccess(index)) << IndexOutOfRangeException(
@@ -25,7 +25,7 @@ namespace Atom
     }
 
     template <typename TImpl>
-    constexpr auto _ConstArrImplHelper<TImpl>::ElemFront() const noexcept
+    constexpr auto _ConstArrImplHelper<TImpl>::ElemFront() const noex
         -> const TElem&
     {
         ATOM_DEBUG_EXPECTS(!IsEmpty()) << OutOfRangeException(
@@ -35,7 +35,7 @@ namespace Atom
     }
 
     template <typename TImpl>
-    constexpr auto _ConstArrImplHelper<TImpl>::ElemBack() const noexcept
+    constexpr auto _ConstArrImplHelper<TImpl>::ElemBack() const noex
         -> const TElem&
     {
         ATOM_DEBUG_EXPECTS(!IsEmpty()) << OutOfRangeException(

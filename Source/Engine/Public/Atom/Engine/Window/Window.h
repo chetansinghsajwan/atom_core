@@ -13,7 +13,7 @@ namespace Atom::Engine
         int y;
     };
 
-    constexpr SWindowCoords operator - (const SWindowCoords& lhs, const SWindowCoords& rhs) noexcept
+    constexpr SWindowCoords operator - (const SWindowCoords& lhs, const SWindowCoords& rhs) noex
     {
         return { lhs.x - rhs.x, lhs.y - rhs.y };
     }
@@ -27,7 +27,7 @@ namespace Atom::Engine
 
     struct SWindowEvent
     {
-        constexpr SWindowEvent(EWindowEventType eventType) noexcept:
+        constexpr SWindowEvent(EWindowEventType eventType) noex:
             eventType(eventType) { }
 
         const EWindowEventType eventType;
@@ -35,7 +35,7 @@ namespace Atom::Engine
 
     struct SWindowResizeEvent: public SWindowEvent
     {
-        constexpr SWindowResizeEvent(SWindowCoords size, SWindowCoords delta) noexcept:
+        constexpr SWindowResizeEvent(SWindowCoords size, SWindowCoords delta) noex:
             size(size), delta(delta),
             SWindowEvent(EWindowEventType::Resize) { }
 
@@ -45,7 +45,7 @@ namespace Atom::Engine
 
     struct SWindowRepositionEvent: public SWindowEvent
     {
-        constexpr SWindowRepositionEvent(SWindowCoords position, SWindowCoords delta) noexcept:
+        constexpr SWindowRepositionEvent(SWindowCoords position, SWindowCoords delta) noex:
             position(position), delta(delta),
             SWindowEvent(EWindowEventType::Reposition) { }
 
@@ -55,14 +55,14 @@ namespace Atom::Engine
 
     struct SWindowCloseEvent: public SWindowEvent
     {
-        constexpr SWindowCloseEvent() noexcept:
+        constexpr SWindowCloseEvent() noex:
             SWindowEvent(EWindowEventType::Close) { }
     };
 
     struct Window
     {
     public:
-        Window(IEvent<const SWindowEvent&>& event) noexcept:
+        Window(IEvent<const SWindowEvent&>& event) noex:
             OnEvent{ event } { }
 
         virtual ~Window() = default;
@@ -70,13 +70,13 @@ namespace Atom::Engine
     public:
         virtual void Update() = 0;
 
-        virtual SWindowCoords GetSize() const noexcept = 0;
+        virtual SWindowCoords GetSize() const noex = 0;
         virtual void SetSize(SWindowCoords size) = 0;
 
-        virtual SWindowCoords GetPos() const noexcept = 0;
+        virtual SWindowCoords GetPos() const noex = 0;
         virtual void SetPos(SWindowCoords pos) = 0;
 
-        virtual void* GetNative() const noexcept = 0;
+        virtual void* GetNative() const noex = 0;
 
     public:
         IEvent<const SWindowEvent&>& OnEvent;

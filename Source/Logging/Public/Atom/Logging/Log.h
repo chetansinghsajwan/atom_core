@@ -17,7 +17,7 @@ namespace Atom::Logging
     /// 
     /// @PARAM[IN] in_lvl ELogLevel to check against.
     /// ----------------------------------------------------------------------------------------
-    inline bool CHECK_LOG_LEVEL(ELogLevel in_lvl) noexcept
+    inline bool CHECK_LOG_LEVEL(ELogLevel in_lvl) noex
     {
         return GET_ROOT_LOGGER()->CheckLogLevel(in_lvl);
     }
@@ -107,7 +107,7 @@ namespace Atom::Logging
     /// @TPARAM[IN] in_lvl ELogLevel of the in_msg to check for.
     /// --------------------------------------------------------------------------------------------
     template <ELogLevel in_lvl>
-    constexpr bool STATIC_CHECK_LOG_LEVEL() noexcept
+    constexpr bool STATIC_CHECK_LOG_LEVEL() noex
     {
         return in_lvl >= STATIC_LOG_LEVEL && in_lvl != ELogLevel::OFF;
     }

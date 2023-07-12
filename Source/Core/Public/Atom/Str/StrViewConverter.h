@@ -31,7 +31,7 @@ namespace Atom
     template < >
     class StrViewConverter<StrView>
     {
-        constexpr StrView Convert(StrView in) noexcept
+        constexpr StrView Convert(StrView in) noex
         {
             return in;
         }
@@ -53,12 +53,12 @@ namespace Atom
     template <RStrViewConvertible T>
     struct StrConverter<T>
     {
-        constexpr Str Convert(const T& in) noexcept
+        constexpr Str Convert(const T& in) noex
         {
             return converter.Convert();
         }
 
-        constexpr void Convert(const T& in, ROutput<Char> auto out) noexcept
+        constexpr void Convert(const T& in, ROutput<Char> auto out) noex
         {
             StrView strView = converter.Convert(in);
             out.InsertBack(in);

@@ -75,11 +75,11 @@ namespace Atom
     public:
         /// DefaultConstructor.
         /// ----------------------------------------------------------------------------------------
-        constexpr InvokableBox() noexcept { }
+        constexpr InvokableBox() noex { }
 
         /// NullConstructor.
         /// ----------------------------------------------------------------------------------------
-        InvokableBox(NullType null) noexcept :
+        InvokableBox(NullType null) noex :
             ObjectBox(null) { }
 
         /// NullAssignmentOperator.
@@ -92,7 +92,7 @@ namespace Atom
 
         /// NullEqualityOperator.
         /// ----------------------------------------------------------------------------------------
-        bool operator == (NullType null) const noexcept
+        bool operator == (NullType null) const noex
         {
             return ObjectBox::operator == (null);
         }
@@ -168,7 +168,7 @@ namespace Atom
 
     public:
         template <typename T>
-        T* GetInvokable() noexcept
+        T* GetInvokable() noex
         {
             if (typeid(T) != GetInvokableType())
                 return nullptr;
@@ -176,7 +176,7 @@ namespace Atom
             return ObjectBox::_GetObject<T>();
         }
 
-        const TypeInfo& GetInvokableType() const noexcept
+        const TypeInfo& GetInvokableType() const noex
         {
             return ObjectBox::_GetObjectType();
         }

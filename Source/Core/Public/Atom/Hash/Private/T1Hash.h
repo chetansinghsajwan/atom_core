@@ -12,8 +12,8 @@ namespace Atom::Private
 
         static const T1Hash Null;
 
-        constexpr bool operator == (const T1Hash& other) const noexcept = default;
-        constexpr bool operator != (const T1Hash& other) const noexcept = default;
+        constexpr bool operator == (const T1Hash& other) const noex = default;
+        constexpr bool operator != (const T1Hash& other) const noex = default;
 
         StaArr<byte, size> bytes;
     };

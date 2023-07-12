@@ -13,7 +13,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <class TRange>
         requires RRange<TRange>
-        constexpr auto CanGetCount() const noexcept -> bool
+        constexpr auto CanGetCount() const noex -> bool
         {
             return RFwdRange<TRange>;
         }
@@ -23,7 +23,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <class TRange>
         requires RFwdRange<TRange>
-        constexpr auto GetCount(const TRange& range) const noexcept -> usize
+        constexpr auto GetCount(const TRange& range) const noex -> usize
         {
             return _GetCount(range.Iter(), range.IterEnd());
         }

@@ -9,7 +9,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
     requires RRange<TRange>
-    constexpr auto begin(const TRange& range) noexcept
+    constexpr auto begin(const TRange& range) noex
     {
         return range.Iter();
     }
@@ -19,7 +19,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
     requires RMutRange<TRange>
-    constexpr auto begin(TRange& range) noexcept
+    constexpr auto begin(TRange& range) noex
     {
         return range.MutIter();
     }
@@ -29,7 +29,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
     requires RRange<TRange>
-    constexpr auto end(const TRange& range) noexcept
+    constexpr auto end(const TRange& range) noex
     {
         return range.IterEnd();
     }
@@ -39,7 +39,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
     requires RMutRange<TRange>
-    constexpr auto end(TRange& range) noexcept
+    constexpr auto end(TRange& range) noex
     {
         return range.MutIterEnd();
     }
@@ -49,7 +49,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <typename TRange1, typename TRange2>
     requires RRange<TRange1> && RRange<TRange2>
-    constexpr bool operator ==(const TRange1& range1, const TRange2& range2) noexcept
+    constexpr bool operator ==(const TRange1& range1, const TRange2& range2) noex
     {
         return RangeComparer().AreEqual(range1, range2);
     }
@@ -59,7 +59,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <typename TRange1, typename TRange2>
     requires RRange<TRange1> && RRange<TRange2>
-    constexpr bool operator !=(const TRange1& range1, const TRange2& range2) noexcept
+    constexpr bool operator !=(const TRange1& range1, const TRange2& range2) noex
     {
         return !RangeComparer().AreEqual(range1, range2);
     }

@@ -25,7 +25,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @PARAM[IN] name Name of this logger.
         /// ----------------------------------------------------------------------------------------
-        explicit SimpleLoggerTemplate(Str name) noexcept:
+        explicit SimpleLoggerTemplate(Str name) noex:
             _name(MOVE(name)), targets() { }
 
         /// ----------------------------------------------------------------------------------------
@@ -37,7 +37,7 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
         requires RRangeOf<TRange, LogTargetPtr>
-        SimpleLoggerTemplate(Str name, const TRange& targets) noexcept:
+        SimpleLoggerTemplate(Str name, const TRange& targets) noex:
             _name(MOVE(name)), targets(targets) { }
 
     public:
@@ -46,7 +46,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        StrView Name() const noexcept override final
+        StrView Name() const noex override final
         {
             return _name;
         }
@@ -76,7 +76,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        void SetLogLevel(ELogLevel lvl) noexcept
+        void SetLogLevel(ELogLevel lvl) noex
         {
             _logLevel = lvl;
         }
@@ -86,7 +86,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        ELogLevel GetLogLevel(ELogLevel lvl) noexcept
+        ELogLevel GetLogLevel(ELogLevel lvl) noex
         {
             return _logLevel;
         }
@@ -96,7 +96,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        bool CheckLogLevel(ELogLevel lvl) const noexcept override final
+        bool CheckLogLevel(ELogLevel lvl) const noex override final
         {
             return lvl != ELogLevel::OFF && lvl >= _logLevel;
         }
@@ -106,7 +106,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        void SetFlushLevel(ELogLevel lvl) noexcept
+        void SetFlushLevel(ELogLevel lvl) noex
         {
             _flushLevel = lvl;
         }
@@ -116,7 +116,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        ELogLevel GetFlushLevel() const noexcept
+        ELogLevel GetFlushLevel() const noex
         {
             return _flushLevel;
         }
@@ -126,7 +126,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        bool CheckFlushLevel(ELogLevel lvl) const noexcept
+        bool CheckFlushLevel(ELogLevel lvl) const noex
         {
             return lvl != ELogLevel::OFF && lvl >= _flushLevel;
         }

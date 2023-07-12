@@ -6,7 +6,7 @@
 
 namespace Atom
 {
-    constexpr ExceptionSource ExceptionSource::Current(TImpl src) noexcept
+    constexpr ExceptionSource ExceptionSource::Current(TImpl src) noex
     {
         return ExceptionSource
         {
@@ -18,10 +18,10 @@ namespace Atom
         };
     }
 
-    inline Exception::Exception(Str msg) noexcept:
+    inline Exception::Exception(Str msg) noex:
         msg(MOVE(msg)) { }
 
-    inline Exception::~Exception() noexcept { }
+    inline Exception::~Exception() noex { }
 
     inline IndexOutOfRangeException::IndexOutOfRangeException(
         Str msg, usize index, usize begin, usize end):
@@ -30,7 +30,7 @@ namespace Atom
 
 namespace Atom::Ex::Internal
 {
-    inline Thrower::Thrower(ExceptionSource src, StackTrace stackTrace) noexcept:
+    inline Thrower::Thrower(ExceptionSource src, StackTrace stackTrace) noex:
         src{ MOVE(src) }, stackTrace{ MOVE(stackTrace) } { }
 
     inline Thrower& Thrower::RecordStack(StackTrace stackTrace)

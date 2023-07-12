@@ -7,7 +7,7 @@
 namespace Atom
 {
     template <typename TImpl>
-    constexpr auto _DynArrImplHelper<TImpl>::Capacity() const noexcept
+    constexpr auto _DynArrImplHelper<TImpl>::Capacity() const noex
         -> usize
     {
         return _Capacity();
@@ -279,7 +279,7 @@ namespace Atom
 
     template <typename TImpl>
     constexpr bool _DynArrImplHelper<TImpl>::_ValidateIter(
-        TIter it) const noexcept
+        TIter it) const noex
     {
         // TODO: Implement this.
         // return it.debugId == _iterValidDebugId;
@@ -288,35 +288,35 @@ namespace Atom
 
     template <typename TImpl>
     constexpr void _DynArrImplHelper<TImpl>::_UpdateIterDebugId()
-        noexcept
+        noex
     {
         // _iterValidDebugId++;
     }
 
     template <typename TImpl>
     constexpr auto _DynArrImplHelper<TImpl>::_ValidateIndex(
-        isize index) const noexcept -> bool
+        isize index) const noex -> bool
     {
         return index >= 0 && (usize)index <= _Count() - 1;
     }
 
     template <typename TImpl>
     constexpr auto _DynArrImplHelper<TImpl>::_ValidateIndexForInsert(
-        isize index) const noexcept -> bool
+        isize index) const noex -> bool
     {
         return index >= 0 && index <= _Count();
     }
 
     template <typename TImpl>
     constexpr auto _DynArrImplHelper<TImpl>::_FetchIndex(
-        TIter pos) const noexcept -> isize
+        TIter pos) const noex -> isize
     {
         return &*pos - _Data();
     }
 
     template <typename TImpl>
     constexpr usize _DynArrImplHelper<TImpl>::_CalcCapGrowth(
-        usize required) const noexcept
+        usize required) const noex
     {
         return Math::Max(_Count() + required, _Capacity() * 2);
     }
@@ -403,7 +403,7 @@ namespace Atom
     template <typename TImpl>
     template <typename TRange>
     constexpr auto _DynArrImplHelper<TImpl>::_CanGetRangeSize()
-        noexcept -> bool
+        noex -> bool
     {
         return RangeHelper().CanGetCount<TRange>();
     }
@@ -411,7 +411,7 @@ namespace Atom
     template <typename TImpl>
     template <typename TRange>
     constexpr usize _DynArrImplHelper<TImpl>::_GetRangeSize(
-        const TRange& range) noexcept
+        const TRange& range) noex
     {
         return RangeHelper().GetCount(range);
     }

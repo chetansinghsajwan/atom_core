@@ -36,13 +36,13 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Default constructs NullLogger.
         /// ----------------------------------------------------------------------------------------
-        constexpr NullLogger() noexcept { }
+        constexpr NullLogger() noex { }
 
     public:
         /// ----------------------------------------------------------------------------------------
         /// Returns name of the NullLogger.
         /// ----------------------------------------------------------------------------------------
-        constexpr virtual StrView Name() const noexcept override
+        constexpr virtual StrView Name() const noex override
         {
             return s_name;
         }
@@ -60,7 +60,7 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Always returns false to avoid constructing log msg.
         /// ----------------------------------------------------------------------------------------
-        constexpr virtual bool CheckLogLevel(ELogLevel lvl) const noexcept override
+        constexpr virtual bool CheckLogLevel(ELogLevel lvl) const noex override
         {
             return false;
         }

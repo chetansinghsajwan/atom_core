@@ -13,17 +13,17 @@ namespace Atom
         static constexpr TChar Null = ATOM_TEXT_UTF16('\0');
         static constexpr bool IsMultiCharEncoding = true;
 
-        static constexpr bool IsContinuationChar(TChar ch) noexcept
+        static constexpr bool IsContinuationChar(TChar ch) noex
         {
             return (ch & 0b11000000) == 0b10000000;
         }
 
-        static constexpr usize ParseStartingChar(TChar ch) noexcept
+        static constexpr usize ParseStartingChar(TChar ch) noex
         {
             return 0;
         }
 
-        static constexpr bool IsStartingChar(TChar ch) noexcept
+        static constexpr bool IsStartingChar(TChar ch) noex
         {
             return ParseStartingChar(ch) != 0;
         }

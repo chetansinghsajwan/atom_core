@@ -11,7 +11,7 @@ namespace Atom
     {
         template <typename TRange>
         requires RRangeOf<TRange, Char>
-        constexpr Uuid Parse(const TRange& range) const noexcept
+        constexpr Uuid Parse(const TRange& range) const noex
         {
             RangeHelper helper;
             if constexpr (helper.CanGetCount<TRange>())
@@ -26,7 +26,7 @@ namespace Atom
 
     private:
         template <typename TIter>
-        constexpr Uuid _ParseCounted(TIter it, usize itCount) const noexcept
+        constexpr Uuid _ParseCounted(TIter it, usize itCount) const noex
         {
             if (itCount != 36)
                 return Uuid::Null;
@@ -67,7 +67,7 @@ namespace Atom
         }
 
         template <typename TIter, typename TIterEnd>
-        constexpr Uuid _ParseUncounted(TIter it, TIterEnd itEnd) const noexcept
+        constexpr Uuid _ParseUncounted(TIter it, TIterEnd itEnd) const noex
         {
             Uuid uuid;                          // output result
             usize i = 0;                        // index of byte to write

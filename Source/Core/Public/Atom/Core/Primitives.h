@@ -2,6 +2,8 @@
 #include <iostream>
 #include <cstdint>
 
+#include "LangExtensions.h"
+
 namespace Atom
 {
     using byte = unsigned char;
@@ -50,13 +52,13 @@ namespace Atom
     using TypeInfo = std::type_info;
 
     template <typename T>
-    constexpr T&& MOVE(T& obj) noexcept
+    constexpr T&& MOVE(T& obj) noex
     {
         return std::move(obj);
     }
 
     template <typename T>
-    constexpr T& MOVE(T& lhs, T& rhs) noexcept
+    constexpr T& MOVE(T& lhs, T& rhs) noex
     {
         lhs = std::move(rhs);
         return lhs;

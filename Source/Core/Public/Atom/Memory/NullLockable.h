@@ -17,7 +17,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// DefaultConstructor. Does nothing.
         /// ----------------------------------------------------------------------------------------
-        constexpr NullLockable() noexcept { }
+        constexpr NullLockable() noex { }
 
         /// ----------------------------------------------------------------------------------------
         /// CopyConstructor is deleted.
@@ -75,7 +75,7 @@ namespace Atom
         /// 
         /// @PARAM[IN] lock NullLockable reference. (UNUSED).
         /// ----------------------------------------------------------------------------------------
-        constexpr LockGuard(NullLockable& lock) noexcept { }
+        constexpr LockGuard(NullLockable& lock) noex { }
 
         /// ----------------------------------------------------------------------------------------
         /// Destructor. Does nothing.

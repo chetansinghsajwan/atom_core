@@ -38,15 +38,15 @@ TEST_CASE("Atom/Invokable/InvokableBox")
         class Lambda final
         {
         public:
-            Lambda(int* capturedValue) noexcept:
+            Lambda(int* capturedValue) noex:
                 _capturedValue(capturedValue) { }
 
-            Lambda(const Lambda& other) noexcept
+            Lambda(const Lambda& other) noex
             {
                 _capturedValue = other._capturedValue;
             }
 
-            Lambda(Lambda&& other) noexcept
+            Lambda(Lambda&& other) noex
             {
                 this->_capturedValue = other._capturedValue;
                 other._capturedValue = nullptr;

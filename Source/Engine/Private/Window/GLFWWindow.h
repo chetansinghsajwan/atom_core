@@ -42,19 +42,19 @@ namespace Atom::Engine
         virtual void Update() override;
 
         virtual void SetPos(SWindowCoords size) override;
-        virtual SWindowCoords GetPos() const noexcept override;
+        virtual SWindowCoords GetPos() const noex override;
         virtual SWindowCoords UpdatePos();
 
         virtual void SetSize(SWindowCoords size) override;
-        virtual SWindowCoords GetSize() const noexcept override;
+        virtual SWindowCoords GetSize() const noex override;
         virtual SWindowCoords UpdateSize();
 
         void SetVSync(bool enable);
-        bool GetVSync() const noexcept;
+        bool GetVSync() const noex;
 
-        virtual void* GetNative() const noexcept override final;
+        virtual void* GetNative() const noex override final;
 
-        GLFWwindow* GetNativeGLFW() const noexcept
+        GLFWwindow* GetNativeGLFW() const noex
         {
             return m_glfwWindow;
         }

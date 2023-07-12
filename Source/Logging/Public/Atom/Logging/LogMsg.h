@@ -58,7 +58,7 @@ namespace Atom
     template < >
     struct StrViewConverter<Logging::ELogLevel>
     {
-        constexpr StrView Convert(Logging::ELogLevel in_lvl) noexcept
+        constexpr StrView Convert(Logging::ELogLevel in_lvl) noex
         {
             switch (in_lvl)
             {

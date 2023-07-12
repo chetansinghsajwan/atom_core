@@ -41,7 +41,7 @@ namespace Atom
             return Base::_DeallocMem(mem);
         }
 
-        constexpr auto _CalcCapGrowth(usize required) const noexcept -> usize
+        constexpr auto _CalcCapGrowth(usize required) const noex -> usize
         {
             // return Math::Max(_Count() + required, _Capacity() * 2);
             return required;
@@ -67,18 +67,18 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// DefCtor.
         /// ----------------------------------------------------------------------------------------
-        constexpr BufArr() noexcept = default;
+        constexpr BufArr() noex = default;
 
         /// ----------------------------------------------------------------------------------------
         /// NullCtor.
         /// ----------------------------------------------------------------------------------------
-        constexpr BufArr(NullPtr) noexcept:
+        constexpr BufArr(NullPtr) noex:
             Base{ nullptr } { }
 
         /// ----------------------------------------------------------------------------------------
         /// NullOper.
         /// ----------------------------------------------------------------------------------------
-        constexpr BufArr& operator =(NullPtr) noexcept
+        constexpr BufArr& operator =(NullPtr) noex
         {
             Clear();
             Release();
@@ -89,7 +89,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
         requires RRangeOf<TRange, T>
-        constexpr BufArr(TRange&& range) noexcept:
+        constexpr BufArr(TRange&& range) noex:
             Base{ nullptr }
         {
             InsertBack(range);
@@ -100,7 +100,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
         requires RRangeOf<TRange, T>
-        constexpr BufArr& operator =(TRange&& range) noexcept
+        constexpr BufArr& operator =(TRange&& range) noex
         {
             Clear();
             InsertBack(range);
@@ -112,7 +112,7 @@ namespace Atom
         /// @TODO: Check if we need this ctor to satisfy std::is_copy_constructible and 
         ///     RCopyConstructible.
         /// ----------------------------------------------------------------------------------------
-        constexpr BufArr(const BufArr& that) noexcept:
+        constexpr BufArr(const BufArr& that) noex:
             Base{ nullptr }
         {
             // InsertBack(that);
@@ -123,7 +123,7 @@ namespace Atom
         /// 
         /// @TODO: Same as CopyCtor.
         /// ----------------------------------------------------------------------------------------
-        constexpr BufArr& operator =(const BufArr& that) noexcept
+        constexpr BufArr& operator =(const BufArr& that) noex
         {
             Clear();
             InsertBack(that);
@@ -133,7 +133,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// MoveCtor.
         /// ----------------------------------------------------------------------------------------
-        constexpr BufArr(BufArr&& that) noexcept:
+        constexpr BufArr(BufArr&& that) noex:
             Base{ nullptr }
         {
             _Move(MOVE(that));
@@ -143,7 +143,7 @@ namespace Atom
         /// TempMoveCtor.
         /// ----------------------------------------------------------------------------------------
         template <usize thatBufSize>
-        constexpr BufArr(BufArr<TElem, thatBufSize, TAlloc>&& that) noexcept:
+        constexpr BufArr(BufArr<TElem, thatBufSize, TAlloc>&& that) noex:
             Base{ nullptr }
         {
             _Move(MOVE(that));
@@ -152,7 +152,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// MoveCtor for DynArr.
         /// ----------------------------------------------------------------------------------------
-        constexpr BufArr(DynArr<TElem, TAlloc>&& that) noexcept:
+        constexpr BufArr(DynArr<TElem, TAlloc>&& that) noex:
             Base{ nullptr }
         {
             BaseImpl::_Move(that);
@@ -161,7 +161,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// MoveOper.
         /// ----------------------------------------------------------------------------------------
-        constexpr BufArr& operator =(BufArr&& that) noexcept
+        constexpr BufArr& operator =(BufArr&& that) noex
         {
             Clear();
             _Move(MOVE(that));
@@ -171,7 +171,7 @@ namespace Atom
         /// TempMoveOper.
         /// ----------------------------------------------------------------------------------------
         template <usize thatBufSize>
-        constexpr BufArr& operator =(BufArr<TElem, thatBufSize, TAlloc>&& that) noexcept
+        constexpr BufArr& operator =(BufArr<TElem, thatBufSize, TAlloc>&& that) noex
         {
             Clear();
             _Move(MOVE(that));
@@ -180,7 +180,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// MoveOper for DynArr.
         /// ----------------------------------------------------------------------------------------
-        constexpr BufArr& operator =(DynArr<TElem, TAlloc>&& that) noexcept
+        constexpr BufArr& operator =(DynArr<TElem, TAlloc>&& that) noex
         {
             Clear();
             Release();
@@ -191,7 +191,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Dtor.
         /// ----------------------------------------------------------------------------------------
-        constexpr ~BufArr() noexcept
+        constexpr ~BufArr() noex
         {
             Clear();
             Release();

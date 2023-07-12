@@ -126,7 +126,7 @@ namespace Atom
         template <typename TIter2, typename TIterEnd2>
         constexpr usize _InsertBackUncounted(TIter2 begin, TIterEnd2 end);
 
-        constexpr bool _ValidateIndexForInsert(isize index) const noexcept;
+        constexpr bool _ValidateIndexForInsert(isize index) const noex;
 
     //// -------------------------------------------------------------------------------------------
     //// Remove
@@ -179,7 +179,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr usize Capacity() const noexcept;
+        constexpr usize Capacity() const noex;
 
         using Base::Iter;
         using Base::IterEnd;
@@ -191,11 +191,11 @@ namespace Atom
     //// -------------------------------------------------------------------------------------------
 
     protected:
-        constexpr bool _ValidateIter(TIter it) const noexcept;
-        constexpr void _UpdateIterDebugId() noexcept;
-        constexpr bool _ValidateIndex(isize index) const noexcept;
-        constexpr isize _FetchIndex(TIter pos) const noexcept;
-        constexpr usize _CalcCapGrowth(usize required) const noexcept;
+        constexpr bool _ValidateIter(TIter it) const noex;
+        constexpr void _UpdateIterDebugId() noex;
+        constexpr bool _ValidateIndex(isize index) const noex;
+        constexpr isize _FetchIndex(TIter pos) const noex;
+        constexpr usize _CalcCapGrowth(usize required) const noex;
         constexpr void _EnsureCapFor(usize count);
 
         constexpr void _ConstructAt(usize index, auto&&... args);
@@ -207,10 +207,10 @@ namespace Atom
         constexpr void _RotateRangeBack(usize index, usize count);
 
         template <typename TRange>
-        static constexpr bool _CanGetRangeSize() noexcept;
+        static constexpr bool _CanGetRangeSize() noex;
 
         template <typename TRange>
-        static constexpr usize _GetRangeSize(const TRange& range) noexcept;
+        static constexpr usize _GetRangeSize(const TRange& range) noex;
 
         using Base::_Data;
         using Base::_Count;

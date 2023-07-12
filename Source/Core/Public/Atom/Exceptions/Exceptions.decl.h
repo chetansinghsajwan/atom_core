@@ -15,7 +15,7 @@ namespace Atom
     {
         using TImpl = std::source_location;
 
-        static constexpr ExceptionSource Current(TImpl src = TImpl::current()) noexcept;
+        static constexpr ExceptionSource Current(TImpl src = TImpl::current()) noex;
 
         uint32 line;
         uint32 column;
@@ -31,7 +31,7 @@ namespace Atom
     // using StackTrace = std::stacktrace;
     struct StackTrace
     {
-        static constexpr StackTrace current() noexcept
+        static constexpr StackTrace current() noex
         {
             return StackTrace{ };
         }
@@ -46,12 +46,12 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Basic constructor with msg.
         /// ----------------------------------------------------------------------------------------
-        Exception(Str msg) noexcept;
+        Exception(Str msg) noex;
 
         /// ----------------------------------------------------------------------------------------
         /// VirtualDestructor.
         /// ----------------------------------------------------------------------------------------
-        virtual ~Exception() noexcept;
+        virtual ~Exception() noex;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -134,7 +134,7 @@ namespace Atom::Ex::Internal
     {
     public:
         Thrower(ExceptionSource src = ExceptionSource::Current(),
-            StackTrace stackTrace = StackTrace::current()) noexcept;
+            StackTrace stackTrace = StackTrace::current()) noex;
 
         Thrower& RecordStack(StackTrace stackTrace = StackTrace::current());
 

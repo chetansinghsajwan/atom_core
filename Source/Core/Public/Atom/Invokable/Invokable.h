@@ -25,7 +25,7 @@ namespace Atom
         };
 
         template <typename TInvokable, typename TResult, typename... TArgs>
-        struct IsInvokableImpl<TInvokable, TResult(TArgs...) noexcept>
+        struct IsInvokableImpl<TInvokable, TResult(TArgs...) noex>
         {
             static constexpr bool Value = ::std::is_nothrow_invocable_r_v<
                 TResult, TInvokable, TArgs...>;
@@ -33,7 +33,7 @@ namespace Atom
 
         /// @TODO Add impl for const invocable.
         template <typename TInvokable, typename TResult, typename... TArgs>
-        struct IsInvokableImpl<TInvokable, TResult(TArgs...) const noexcept>
+        struct IsInvokableImpl<TInvokable, TResult(TArgs...) const noex>
         {
             static constexpr bool Value = ::std::is_nothrow_invocable_r_v<
                 TResult, TInvokable, TArgs...>;

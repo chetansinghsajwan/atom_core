@@ -10,7 +10,7 @@ namespace Atom::Private
     class UuidNameGenerator
     {
     public:
-        explicit UuidNameGenerator(const Uuid& in_nsUuid) noexcept:
+        explicit UuidNameGenerator(const Uuid& in_nsUuid) noex:
             m_nsUuid(in_nsUuid) { }
 
     public:

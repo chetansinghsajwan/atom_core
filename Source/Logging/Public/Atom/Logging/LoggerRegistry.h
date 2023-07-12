@@ -21,7 +21,7 @@ namespace Atom::Logging
         using TIterator = typename TContainer::const_iterator;
 
     public:
-        LoggerRegistry() noexcept
+        LoggerRegistry() noex
         {
             SetDefaultLogger(GET_LOGGER_FACTORY().CreateLogger(TEXT("DefaultLogger")));
         }
@@ -169,7 +169,7 @@ namespace Atom::Logging
         /// 
         /// @PARAM[IN] logger Logger to register.
         /// ----------------------------------------------------------------------------------------
-        bool TryRegisterLogger(LoggerPtr logger) noexcept
+        bool TryRegisterLogger(LoggerPtr logger) noex
         {
             if (logger == nullptr)
                 return false;
@@ -191,7 +191,7 @@ namespace Atom::Logging
         /// @PARAM[IN] logger Logger to register.
         /// @PARAM[IN] key Str used as key to register logger.
         /// ----------------------------------------------------------------------------------------
-        bool TryRegisterLogger(LoggerPtr logger, StrView key) noexcept
+        bool TryRegisterLogger(LoggerPtr logger, StrView key) noex
         {
             if (logger == nullptr)
                 return false;
@@ -207,12 +207,12 @@ namespace Atom::Logging
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Overload for bool TryRegisterLogger(LoggerPtr logger, StrView key) noexcept for 
+        /// Overload for bool TryRegisterLogger(LoggerPtr logger, StrView key) noex for 
         /// performance.
         /// 
         /// @PARAM[IN] key RValue reference to Str, to avoid allocating memory to store the key.
         /// ----------------------------------------------------------------------------------------
-        bool TryRegisterLogger(LoggerPtr logger, Str&& key) noexcept
+        bool TryRegisterLogger(LoggerPtr logger, Str&& key) noex
         {
             if (logger == nullptr)
                 return false;
@@ -271,7 +271,7 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Get the logger registered with key {key}.
         /// ----------------------------------------------------------------------------------------
-        LoggerPtr GetLogger(StrView key) const noexcept
+        LoggerPtr GetLogger(StrView key) const noex
         {
             for (auto pair : m_loggers)
             {
@@ -287,7 +287,7 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Checks if a logger for key {key} is registered.
         /// ----------------------------------------------------------------------------------------
-        bool HasLogger(StrView key) const noexcept
+        bool HasLogger(StrView key) const noex
         {
             return m_HasLogger(key);
         }
@@ -306,7 +306,7 @@ namespace Atom::Logging
         /// 
         /// DefaultLogger is used to log global logs or when categorization is not necessary.
         /// ----------------------------------------------------------------------------------------
-        LoggerPtr GetDefaultLogger() const noexcept
+        LoggerPtr GetDefaultLogger() const noex
         {
             return m_defaultLogger;
         }
@@ -316,7 +316,7 @@ namespace Atom::Logging
         /// 
         /// @PARAM[IN] logger Logger to set as default logger. If null sets a fake logger instead.
         /// ----------------------------------------------------------------------------------------
-        void SetDefaultLogger(LoggerPtr logger) noexcept
+        void SetDefaultLogger(LoggerPtr logger) noex
         {
             if (logger == nullptr)
             {
@@ -334,7 +334,7 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// @RETURNS TIterator to first Key-Logger pair.
         /// ----------------------------------------------------------------------------------------
-        TIterator begin() const noexcept
+        TIterator begin() const noex
         {
             return m_loggers.begin();
         }
@@ -342,7 +342,7 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// @RETURNS TIterator to last Key-Logger pair. 
         /// ----------------------------------------------------------------------------------------
-        TIterator end() const noexcept
+        TIterator end() const noex
         {
             return m_loggers.cend();
         }
@@ -350,7 +350,7 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// @RETURNS TIterator to first Key-Logger pair.
         /// ----------------------------------------------------------------------------------------
-        TIterator cbegin() const noexcept
+        TIterator cbegin() const noex
         {
             return m_loggers.cbegin();
         }
@@ -358,7 +358,7 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// @RETURNS TIterator to last Key-Logger pair.
         /// ----------------------------------------------------------------------------------------
-        TIterator cend() const noexcept
+        TIterator cend() const noex
         {
             return m_loggers.cend();
         }
@@ -421,7 +421,7 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        bool m_HasLogger(StrView key) const noexcept
+        bool m_HasLogger(StrView key) const noex
         {
             for (auto pair : m_loggers)
             {
@@ -437,7 +437,7 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        TIterator m_FindEntry(StrView key) const noexcept
+        TIterator m_FindEntry(StrView key) const noex
         {
             auto it = m_loggers.cbegin();
             for (; it != m_loggers.cend(); it++)
@@ -456,7 +456,7 @@ namespace Atom::Logging
         LoggerPtr m_defaultLogger;
     };
 
-    inline LoggerRegistry& GET_REGISTRY() noexcept
+    inline LoggerRegistry& GET_REGISTRY() noex
     {
         static LoggerRegistry s_instance;
         return s_instance;

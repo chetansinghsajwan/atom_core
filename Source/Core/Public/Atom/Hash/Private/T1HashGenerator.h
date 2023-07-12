@@ -15,7 +15,7 @@ namespace Atom::Private
         /// 
         /// Same as calling Reset.
         /// ----------------------------------------------------------------------------------------
-        T1HashGenerator() noexcept
+        T1HashGenerator() noex
         {
             Reset();
         }
@@ -23,7 +23,7 @@ namespace Atom::Private
     public:
         /// Resets the {T1HashGenerator} to its initial state.
         /// ----------------------------------------------------------------------------------------
-        void Reset() noexcept
+        void Reset() noex
         {
             _impl.Initialize();
         }
@@ -104,7 +104,7 @@ namespace Atom::Private
         /// 
         /// @RETURNS {T1Hash} object.
         /// ----------------------------------------------------------------------------------------
-        T1Hash Generate() noexcept
+        T1Hash Generate() noex
         {
             T1Hash hash;
             _impl.Calculate(hash);

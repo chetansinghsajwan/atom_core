@@ -10,22 +10,22 @@ namespace Atom
         using TElem = T;
 
     public:
-        constexpr _ArrViewImplBase() noexcept = default;
+        constexpr _ArrViewImplBase() noex = default;
 
-        constexpr _ArrViewImplBase(NullPtr) noexcept:
+        constexpr _ArrViewImplBase(NullPtr) noex:
             _arr{ nullptr }, _count{ 0 } { }
 
-        constexpr _ArrViewImplBase(const T* arr, usize count) noexcept:
+        constexpr _ArrViewImplBase(const T* arr, usize count) noex:
             _arr{ arr }, _count{ count } { }
 
     public:
-        constexpr auto _Data() const noexcept
+        constexpr auto _Data() const noex
             -> const T*
         {
             return _arr;
         }
 
-        constexpr auto _Count() const noexcept
+        constexpr auto _Count() const noex
             -> usize
         {
             return _count;
@@ -49,18 +49,18 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// DefCtor.
         /// ----------------------------------------------------------------------------------------
-        constexpr ArrView() noexcept = default;
+        constexpr ArrView() noex = default;
 
         /// ----------------------------------------------------------------------------------------
         /// NullCtor.
         /// ----------------------------------------------------------------------------------------
-        constexpr ArrView(NullPtr) noexcept:
+        constexpr ArrView(NullPtr) noex:
             Base{BaseImpl{ nullptr }} { }
 
         /// ----------------------------------------------------------------------------------------
         /// NullOper.
         /// ----------------------------------------------------------------------------------------
-        constexpr ArrView& operator =(NullPtr) noexcept
+        constexpr ArrView& operator =(NullPtr) noex
         {
             *this = ArrView(nullptr);
         }
@@ -70,7 +70,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
         requires RArrRangeOf<TRange, T>
-        constexpr ArrView(const TRange& range) noexcept:
+        constexpr ArrView(const TRange& range) noex:
             Base{BaseImpl{ range.Data(), range.Count() }} { }
 
         /// ----------------------------------------------------------------------------------------
@@ -78,7 +78,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
         requires RArrRangeOf<TRange, T>
-        constexpr ArrView& operator =(const TRange& range) noexcept
+        constexpr ArrView& operator =(const TRange& range) noex
         {
             *this = ArrView{ range.Data(), range.Count() };
         }

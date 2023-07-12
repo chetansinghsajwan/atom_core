@@ -4,6 +4,6 @@
 
 namespace Atom
 {
-    inline AssertException::AssertException(Str msg, StrView assertExpr) noexcept:
+    inline AssertException::AssertException(Str msg, StrView assertExpr) noex:
         assertExpr{ assertExpr }, Exception(MOVE(msg)) { }
 }

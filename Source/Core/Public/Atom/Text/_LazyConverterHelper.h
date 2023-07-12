@@ -36,22 +36,22 @@ namespace Atom::Text
 
         using TIterEnd = _CharEncodingLazyConverterHelperIterEnd;
 
-        constexpr TIter Iter() noexcept
+        constexpr TIter Iter() noex
         {
             return TIter(_impl, _input);
         }
 
-        constexpr TIter IterEnd() noexcept
+        constexpr TIter IterEnd() noex
         {
             return TIterEnd();
         }
 
-        constexpr TIter begin() noexcept
+        constexpr TIter begin() noex
         {
             return Iter();
         }
 
-        constexpr TIterEnd end() noexcept
+        constexpr TIterEnd end() noex
         {
             return IterEnd();
         }
@@ -79,7 +79,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr _CharEncodingLazyConverterHelperIter(TImpl&& impl, TInput&& in) noexcept:
+        constexpr _CharEncodingLazyConverterHelperIter(TImpl&& impl, TInput&& in) noex:
             _impl{ FORWARD(impl) }, _input{ FORWARD(input) }, _out{ 0 }, _outIndex{ -1 }
         {
             _ProcessNextChar();
@@ -88,7 +88,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// Get the current char.
         /// ----------------------------------------------------------------------------------------
-        constexpr TOutChar& operator* () noexcept
+        constexpr TOutChar& operator* () noex
         {
             return _out[_outIndex];
         }
@@ -118,7 +118,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// Checks if the iter has reached its end.
         /// ----------------------------------------------------------------------------------------
-        constexpr bool operator== (TIterEnd end) const noexcept
+        constexpr bool operator== (TIterEnd end) const noex
         {
             return _outIndex > 0 || _input.HasNext();
         }
@@ -126,7 +126,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// Will be removed in CPP2;
         /// ----------------------------------------------------------------------------------------
-        constexpr bool operator!= (TIterEnd end) const noexcept
+        constexpr bool operator!= (TIterEnd end) const noex
         {
             return !(*this == end);
         }
@@ -163,11 +163,11 @@ namespace Atom::Text
         using TChar = BasicChar<TCharEncoding>;
 
     public:
-        constexpr _CharEncodingLazyConverterHelper(TInput&& input) noexcept:
+        constexpr _CharEncodingLazyConverterHelper(TInput&& input) noex:
             _input{ input } { }
 
     public:
-        constexpr TChar Get() noexcept
+        constexpr TChar Get() noex
         {
             return _input.Get();
         }
@@ -177,7 +177,7 @@ namespace Atom::Text
             return _input.Next();
         }
 
-        constexpr bool HasNext() const noexcept
+        constexpr bool HasNext() const noex
         {
             return _input.HasNext();
         }

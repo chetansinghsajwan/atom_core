@@ -60,7 +60,7 @@ namespace Atom
         /// 
         /// @TIME_COMPLEXITY Constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator [](usize index) noexcept
+        constexpr auto operator [](usize index) noex
             -> TElem&;
 
         /// ----------------------------------------------------------------------------------------
@@ -73,7 +73,7 @@ namespace Atom
         /// 
         /// @TIME_COMPLEXITY Constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto ElemFront() noexcept
+        constexpr auto ElemFront() noex
             -> TElem&;
 
         /// ----------------------------------------------------------------------------------------
@@ -86,7 +86,7 @@ namespace Atom
         /// 
         /// @TIME_COMPLEXITY Constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto ElemBack() noexcept
+        constexpr auto ElemBack() noex
             -> TElem&;
 
         /// ----------------------------------------------------------------------------------------
@@ -96,7 +96,7 @@ namespace Atom
         /// 
         /// @TIME_COMPLEXITY Constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto Data() noexcept
+        constexpr auto Data() noex
             -> TElem*
         {
             return _Data();
@@ -110,7 +110,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// {TMutIter} to the first element.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto MutIter() noexcept
+        constexpr auto MutIter() noex
             -> TMutIter
         {
             return TMutIter{ _Data() };
@@ -119,7 +119,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// {TMutIter} to element following the last element.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto MutIterEnd() noexcept
+        constexpr auto MutIterEnd() noex
             -> TMutIter
         {
             return TMutIter{ _Data() + _Count() - 1 };
@@ -134,7 +134,7 @@ namespace Atom
         using _TBase::_Count;
         using _TBase::_ValidateIndexForAccess;
 
-        constexpr auto _Data() noexcept
+        constexpr auto _Data() noex
             -> TElem*
         {
             return _TImpl::_Data();

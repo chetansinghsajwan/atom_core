@@ -12,43 +12,43 @@ namespace Atom
         using TElem = T;
 
     public:
-        constexpr _DynArrImplBase() noexcept = default;
+        constexpr _DynArrImplBase() noex = default;
 
-        constexpr _DynArrImplBase(NullPtr) noexcept:
+        constexpr _DynArrImplBase(NullPtr) noex:
             _arr{ nullptr }, _count{ 0 }, _capacity{ 0 }, _alloc{ } { }
 
     protected:
-        constexpr const T* _Data() const noexcept
+        constexpr const T* _Data() const noex
         {
             return _arr;
         }
 
-        constexpr T* _Data() noexcept
+        constexpr T* _Data() noex
         {
             return _arr;
         }
 
-        constexpr void _Data(T* arr) noexcept
+        constexpr void _Data(T* arr) noex
         {
             _arr = arr;
         }
 
-        constexpr usize _Count() const noexcept
+        constexpr usize _Count() const noex
         {
             return _count;
         }
 
-        constexpr void _Count(usize count) noexcept
+        constexpr void _Count(usize count) noex
         {
             _count = count;
         }
 
-        constexpr usize _Capacity() const noexcept
+        constexpr usize _Capacity() const noex
         {
             return _capacity;
         }
 
-        constexpr void _Capacity(usize cap) noexcept
+        constexpr void _Capacity(usize cap) noex
         {
             _capacity = cap;
         }
@@ -63,20 +63,20 @@ namespace Atom
             return _alloc.Dealloc(mem);
         }
 
-        constexpr usize _CalcCapGrowth(usize required) const noexcept
+        constexpr usize _CalcCapGrowth(usize required) const noex
         {
             // return Math::Max(_Count() + required, _Capacity() * 2);
             return required;
         }
 
-        constexpr void _Swap(_DynArrImplBase& that) noexcept
+        constexpr void _Swap(_DynArrImplBase& that) noex
         {
             _DynArrImplBase tmp = that;
             *this = that;
             that = tmp;
         }
 
-        constexpr void _Move(_DynArrImplBase& that) noexcept
+        constexpr void _Move(_DynArrImplBase& that) noex
         {
             *this = that;
             that = _DynArrImplBase(nullptr);
@@ -99,12 +99,12 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// DefCtor.
         /// ----------------------------------------------------------------------------------------
-        constexpr DynArr() noexcept = default;
+        constexpr DynArr() noex = default;
 
         /// ----------------------------------------------------------------------------------------
         /// NullCtor.
         /// ----------------------------------------------------------------------------------------
-        constexpr DynArr(NullPtr) noexcept:
+        constexpr DynArr(NullPtr) noex:
             Base{BaseImpl{ nullptr }} { }
 
         /// ----------------------------------------------------------------------------------------
@@ -112,7 +112,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
         requires RRangeOf<TRange, T>
-        constexpr DynArr(const TRange& range) noexcept:
+        constexpr DynArr(const TRange& range) noex:
             Base{BaseImpl{ nullptr }}
         {
             this->InsertBack(range);
@@ -121,7 +121,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// CopyCtor.
         /// ----------------------------------------------------------------------------------------
-        constexpr DynArr(const DynArr& that) noexcept:
+        constexpr DynArr(const DynArr& that) noex:
             Base{BaseImpl{ nullptr }}
         {
             this->InsertBack(that);
@@ -130,7 +130,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// CopyOper.
         /// ----------------------------------------------------------------------------------------
-        constexpr DynArr& operator =(const DynArr& that) noexcept
+        constexpr DynArr& operator =(const DynArr& that) noex
         {
             this->Clear();
             this->InsertBack(that);
@@ -140,13 +140,13 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// MoveCtor.
         /// ----------------------------------------------------------------------------------------
-        constexpr DynArr(DynArr&& that) noexcept:
+        constexpr DynArr(DynArr&& that) noex:
             Base{BaseImpl{ MOVE(that) }} { }
 
         /// ----------------------------------------------------------------------------------------
         /// MoveOper.
         /// ----------------------------------------------------------------------------------------
-        constexpr DynArr& operator =(DynArr&& that) noexcept
+        constexpr DynArr& operator =(DynArr&& that) noex
         {
             DynArr tmp = MOVE(that);
             this->_Swap(tmp);
@@ -156,7 +156,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Dtor.
         /// ----------------------------------------------------------------------------------------
-        constexpr ~DynArr() noexcept
+        constexpr ~DynArr() noex
         {
             this->Clear();
             this->Release();

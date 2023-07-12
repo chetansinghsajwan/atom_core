@@ -9,7 +9,7 @@ namespace Atom
     using UniquePtr = std::unique_ptr<T>;
 
     template <typename T>
-    UniquePtr<T> MakeUnique(auto&&... args) noexcept
+    UniquePtr<T> MakeUnique(auto&&... args) noex
     {
         return std::make_unique<T>(FORWARD(args)...);
     }

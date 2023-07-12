@@ -50,17 +50,17 @@ namespace Atom
     template < >
     struct StrConverter<Str>
     {
-        constexpr Str Convert(Str&& str) noexcept
+        constexpr Str Convert(Str&& str) noex
         {
             return MOVE(str);
         }
 
-        constexpr Str Convert(const Str& str) noexcept
+        constexpr Str Convert(const Str& str) noex
         {
             return Str{ str };
         }
 
-        constexpr void Convert(const Str& str, ROutput<Char> auto out) noexcept
+        constexpr void Convert(const Str& str, ROutput<Char> auto out) noex
         {
             out += str;
         }

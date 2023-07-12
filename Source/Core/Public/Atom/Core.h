@@ -1,8 +1,9 @@
 #pragma once
-#include "Atom/Core/Platform.h"
-#include "Atom/Core/Compiler.h"
-#include "Atom/Core/Requirements.h"
-#include "Atom/Core/Primitives.h"
+#include "Core/Platform.h"
+#include "Core/Compiler.h"
+#include "Core/Requirements.h"
+#include "Core/Primitives.h"
+#include "Core/LangExtensions.h"
 
 //// -----------------------------------------------------------------------------------------------
 //// ATOM API

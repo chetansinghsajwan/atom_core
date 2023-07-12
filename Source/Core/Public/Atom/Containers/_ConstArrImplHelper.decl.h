@@ -50,7 +50,7 @@ namespace Atom
         /// 
         /// @TIME_COMPLEXITY Constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator [](usize index) const noexcept
+        constexpr auto operator [](usize index) const noex
             -> const TElem&;
 
         /// ----------------------------------------------------------------------------------------
@@ -63,7 +63,7 @@ namespace Atom
         /// 
         /// @TIME_COMPLEXITY Constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto ElemFront() const noexcept
+        constexpr auto ElemFront() const noex
             -> const TElem&;
 
         /// ----------------------------------------------------------------------------------------
@@ -76,7 +76,7 @@ namespace Atom
         /// 
         /// @TIME_COMPLEXITY Constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto ElemBack() const noexcept
+        constexpr auto ElemBack() const noex
             -> const TElem&;
 
         /// ----------------------------------------------------------------------------------------
@@ -86,7 +86,7 @@ namespace Atom
         /// 
         /// @TIME_COMPLEXITY Constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto Data() const noexcept
+        constexpr auto Data() const noex
             -> const TElem*
         {
             return _Data();
@@ -95,7 +95,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Get count of elements.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto Count() const noexcept
+        constexpr auto Count() const noex
             -> usize
         {
             return _Count();
@@ -104,7 +104,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Is arr empty.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto IsEmpty() const noexcept
+        constexpr auto IsEmpty() const noex
             -> bool
         {
             return _Count() == 0;
@@ -118,7 +118,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// {TIter} to the first element.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto Iter() const noexcept
+        constexpr auto Iter() const noex
             -> TIter
         {
             return TIter{ _Data() };
@@ -127,7 +127,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// {TIter} to element following the last element.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto IterEnd() const noexcept
+        constexpr auto IterEnd() const noex
             -> TIter
         {
             return TIter{ _Data() + _Count()};
@@ -138,7 +138,7 @@ namespace Atom
     //// -------------------------------------------------------------------------------------------
 
     protected:
-        constexpr auto _ValidateIndexForAccess(isize index) const noexcept
+        constexpr auto _ValidateIndexForAccess(isize index) const noex
             -> bool
         {
             return index > 0 && index < (isize)_Count();

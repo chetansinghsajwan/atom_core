@@ -32,8 +32,8 @@ namespace Atom
     {
         static const Uuid Null;
 
-        constexpr bool operator == (const Uuid& other) const noexcept = default;
-        constexpr bool operator != (const Uuid& other) const noexcept = default;
+        constexpr bool operator == (const Uuid& other) const noex = default;
+        constexpr bool operator != (const Uuid& other) const noex = default;
 
         StaArr<byte, 16> bytes;
     };

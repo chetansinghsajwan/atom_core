@@ -10,7 +10,7 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Get the name of the logger.
         /// ----------------------------------------------------------------------------------------
-        virtual StrView Name() const noexcept = 0;
+        virtual StrView Name() const noex = 0;
 
         /// ----------------------------------------------------------------------------------------
         /// Calls Log(ELogLevel::Trace, in_msg, FORWARD(in_args)...).
@@ -111,7 +111,7 @@ namespace Atom::Logging
         /// 
         /// Check if the message should be passed for logging.
         /// ----------------------------------------------------------------------------------------
-        virtual bool CheckLogLevel(ELogLevel in_lvl) const noexcept = 0;
+        virtual bool CheckLogLevel(ELogLevel in_lvl) const noex = 0;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -124,7 +124,7 @@ namespace Atom::Logging
     /// 
     /// --------------------------------------------------------------------------------------------
     template <RDerivedFrom<Logger> TLogger>
-    LoggerPtr MAKE_LOGGER(auto&&... in_args) noexcept
+    LoggerPtr MAKE_LOGGER(auto&&... in_args) noex
     {
         return MakeShared<TLogger>(FORWARD(in_args)...);
     }
