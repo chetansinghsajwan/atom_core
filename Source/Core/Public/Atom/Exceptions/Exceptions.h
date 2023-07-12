@@ -6,7 +6,7 @@
 
 namespace Atom
 {
-    constexpr ExceptionSource ExceptionSource::Current(TImpl src) noex
+    cexpr ExceptionSource ExceptionSource::Current(TImpl src) noex
     {
         return ExceptionSource
         {

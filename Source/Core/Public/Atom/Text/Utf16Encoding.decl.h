@@ -10,20 +10,20 @@ namespace Atom
         using TChar = char16;
         using TRune = char32;
 
-        static constexpr TChar Null = ATOM_TEXT_UTF16('\0');
-        static constexpr bool IsMultiCharEncoding = true;
+        static cexpr TChar Null = ATOM_TEXT_UTF16('\0');
+        static cexpr bool IsMultiCharEncoding = true;
 
-        static constexpr bool IsContinuationChar(TChar ch) noex
+        static cexpr bool IsContinuationChar(TChar ch) noex
         {
             return (ch & 0b11000000) == 0b10000000;
         }
 
-        static constexpr usize ParseStartingChar(TChar ch) noex
+        static cexpr usize ParseStartingChar(TChar ch) noex
         {
             return 0;
         }
 
-        static constexpr bool IsStartingChar(TChar ch) noex
+        static cexpr bool IsStartingChar(TChar ch) noex
         {
             return ParseStartingChar(ch) != 0;
         }

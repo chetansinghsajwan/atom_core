@@ -10,7 +10,7 @@ namespace Atom::Private
     template <tname T1Hash>
     class T1HashParser
     {
-        static constexpr usize _Size = T1Hash::_Size;
+        static cexpr usize _Size = T1Hash::_Size;
 
     public:
         /// 
@@ -19,7 +19,7 @@ namespace Atom::Private
         // _Size * 2 (1 byte represents 2 hex values and 1 char represents one hex value) +
         // 1 (null terminator)
         requires (count == (_Size * 2) + 1)
-        constexpr fn Parse(const Char(&str)[count]) const noex -> T1Hash
+        cexpr fn Parse(const Char(&str)[count]) const noex -> T1Hash
         {
             T1Hash hash;
             for (usize i = 0; i < _Size * 2; i += 2)
@@ -49,7 +49,7 @@ namespace Atom::Private
         /// ----------------------------------------------------------------------------------------
         template <tname TRange>
         requires RRangeOf<TRange, Char>
-        constexpr fn Parse(const TRange& range) const noex -> T1Hash
+        cexpr fn Parse(const TRange& range) const noex -> T1Hash
         {
             T1Hash hash;
             usize i = 0;
@@ -96,7 +96,7 @@ namespace Atom::Private
         /// ----------------------------------------------------------------------------------------
         template <tname TRange>
         requires RJumpRangeOf<TRange, Char>
-        constexpr fn Parse(const TRange& range) const noex -> T1Hash
+        cexpr fn Parse(const TRange& range) const noex -> T1Hash
         {
             if (range.Size() != _Size * 2)
             {

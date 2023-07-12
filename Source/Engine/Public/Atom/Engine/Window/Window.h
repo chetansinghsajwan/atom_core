@@ -13,7 +13,7 @@ namespace Atom::Engine
         int y;
     };
 
-    constexpr SWindowCoords operator - (const SWindowCoords& lhs, const SWindowCoords& rhs) noex
+    cexpr SWindowCoords operator - (const SWindowCoords& lhs, const SWindowCoords& rhs) noex
     {
         return { lhs.x - rhs.x, lhs.y - rhs.y };
     }
@@ -27,7 +27,7 @@ namespace Atom::Engine
 
     struct SWindowEvent
     {
-        constexpr SWindowEvent(EWindowEventType eventType) noex:
+        cexpr SWindowEvent(EWindowEventType eventType) noex:
             eventType(eventType) { }
 
         const EWindowEventType eventType;
@@ -35,7 +35,7 @@ namespace Atom::Engine
 
     struct SWindowResizeEvent: public SWindowEvent
     {
-        constexpr SWindowResizeEvent(SWindowCoords size, SWindowCoords delta) noex:
+        cexpr SWindowResizeEvent(SWindowCoords size, SWindowCoords delta) noex:
             size(size), delta(delta),
             SWindowEvent(EWindowEventType::Resize) { }
 
@@ -45,7 +45,7 @@ namespace Atom::Engine
 
     struct SWindowRepositionEvent: public SWindowEvent
     {
-        constexpr SWindowRepositionEvent(SWindowCoords position, SWindowCoords delta) noex:
+        cexpr SWindowRepositionEvent(SWindowCoords position, SWindowCoords delta) noex:
             position(position), delta(delta),
             SWindowEvent(EWindowEventType::Reposition) { }
 
@@ -55,7 +55,7 @@ namespace Atom::Engine
 
     struct SWindowCloseEvent: public SWindowEvent
     {
-        constexpr SWindowCloseEvent() noex:
+        cexpr SWindowCloseEvent() noex:
             SWindowEvent(EWindowEventType::Close) { }
     };
 

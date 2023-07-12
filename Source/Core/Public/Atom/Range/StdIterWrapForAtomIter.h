@@ -49,33 +49,33 @@ namespace Atom
         using reference = value_type&;
 
     public:
-        constexpr ctor StdIterWrapForAtomIter(const TIter& iter) noex:
+        cexpr ctor StdIterWrapForAtomIter(const TIter& iter) noex:
             _iter{ iter } { }
 
-        constexpr ctor StdIterWrapForAtomIter(TIter& iter) noex:
+        cexpr ctor StdIterWrapForAtomIter(TIter& iter) noex:
             _iter{ iter } { }
 
-        constexpr ctor StdIterWrapForAtomIter(TIter&& iter) noex:
+        cexpr ctor StdIterWrapForAtomIter(TIter&& iter) noex:
             _iter{ MOVE(iter) } { }
 
     public:
         template <class = void>
         requires RIter<TIter>
-        constexpr fn operator *() const noex_if(*_iter) -> const value_type&
+        cexpr fn operator *() const noex_if(*_iter) -> const value_type&
         {
             return *_iter;
         }
 
         template <class = void>
         requires RMutIter<TIter>
-        constexpr fn operator *() noex_if(*_iter) -> value_type&
+        cexpr fn operator *() noex_if(*_iter) -> value_type&
         {
             return *_iter;
         }
 
         template <class TIterEnd>
         requires RIterEnd<TIter, TIterEnd>
-        constexpr fn operator == (const StdIterWrapForAtomIter<TIterEnd>& that)
+        cexpr fn operator == (const StdIterWrapForAtomIter<TIterEnd>& that)
             const noex_if(_iter == that._iter) -> bool
         {
             return _iter == that._iter;
@@ -83,7 +83,7 @@ namespace Atom
 
         template <class TIterEnd>
         requires RIterEnd<TIter, TIterEnd>
-        constexpr fn operator != (const StdIterWrapForAtomIter<TIterEnd>& that)
+        cexpr fn operator != (const StdIterWrapForAtomIter<TIterEnd>& that)
             const noex_if(_iter != that._iter) -> bool
         {
             return _iter != that._iter;
@@ -91,7 +91,7 @@ namespace Atom
 
         template <class = void>
         requires RIter<TIter>
-        constexpr fn operator ++() noex_if(++_iter) -> This&
+        cexpr fn operator ++() noex_if(++_iter) -> This&
         {
             ++_iter;
             return *this;
@@ -99,14 +99,14 @@ namespace Atom
 
         template <class = void>
         requires RIter<TIter>
-        constexpr fn operator ++(int) noex_if(_iter++) -> This
+        cexpr fn operator ++(int) noex_if(_iter++) -> This
         {
             return This{ _iter++ };
         }
 
         template <class = void>
         requires RBidiIter<TIter>
-        constexpr fn operator --() noex_if(--_iter) -> This&
+        cexpr fn operator --() noex_if(--_iter) -> This&
         {
             --_iter;
             return *this;
@@ -114,28 +114,28 @@ namespace Atom
 
         template <class = void>
         requires RBidiIter<TIter>
-        constexpr fn operator --(int) const noex_if(_iter--) -> This
+        cexpr fn operator --(int) const noex_if(_iter--) -> This
         {
             return This{ _iter-- };
         }
 
         template <class = void>
         requires RJumpIter<TIter>
-        constexpr fn operator +(difference_type steps) noex_if(_iter + steps) -> This
+        cexpr fn operator +(difference_type steps) noex_if(_iter + steps) -> This
         {
             return This{ _iter + steps };
         }
 
         template <class = void>
         requires RJumpIter<TIter>
-        constexpr fn operator -(difference_type steps) noex_if(_iter - steps) -> This
+        cexpr fn operator -(difference_type steps) noex_if(_iter - steps) -> This
         {
             return This{ _iter - steps };
         }
 
         template <class = void>
         requires RJumpIter<TIter>
-        constexpr fn operator -(const This& that) noex_if(_iter - that._iter) -> difference_type
+        cexpr fn operator -(const This& that) noex_if(_iter - that._iter) -> difference_type
         {
             return _iter - that._iter;
         }

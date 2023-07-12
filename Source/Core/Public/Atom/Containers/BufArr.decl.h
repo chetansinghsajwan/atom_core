@@ -16,12 +16,12 @@ namespace Atom
         using Base::Base;
 
     protected:
-        constexpr auto _StackBuf() const -> const T*
+        cexpr auto _StackBuf() const -> const T*
         {
             return _stackBuf;
         }
 
-        constexpr auto _AllocMem(usize size) -> T*
+        cexpr auto _AllocMem(usize size) -> T*
         {
             if (BufSize <= size)
             {
@@ -31,7 +31,7 @@ namespace Atom
             return Base::_AllocMem(size);
         }
 
-        constexpr auto _DeallocMem(T* mem) -> void
+        cexpr auto _DeallocMem(T* mem) -> void
         {
             if (mem == _stackBuf)
             {
@@ -41,7 +41,7 @@ namespace Atom
             return Base::_DeallocMem(mem);
         }
 
-        constexpr auto _CalcCapGrowth(usize required) const noex -> usize
+        cexpr auto _CalcCapGrowth(usize required) const noex -> usize
         {
             // return Math::Max(_Count() + required, _Capacity() * 2);
             return required;
@@ -67,18 +67,18 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// DefCtor.
         /// ----------------------------------------------------------------------------------------
-        constexpr ctor BufArr() noex = default;
+        cexpr ctor BufArr() noex = default;
 
         /// ----------------------------------------------------------------------------------------
         /// NullCtor.
         /// ----------------------------------------------------------------------------------------
-        constexpr ctor BufArr(NullPtr) noex:
+        cexpr ctor BufArr(NullPtr) noex:
             Base{ nullptr } { }
 
         /// ----------------------------------------------------------------------------------------
         /// NullOper.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator =(NullPtr) noex -> BufArr&
+        cexpr fn operator =(NullPtr) noex -> BufArr&
         {
             Clear();
             Release();
@@ -89,7 +89,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <tname TRange>
         requires RRangeOf<TRange, T>
-        constexpr ctor BufArr(TRange&& range) noex:
+        cexpr ctor BufArr(TRange&& range) noex:
             Base{ nullptr }
         {
             InsertBack(range);
@@ -100,7 +100,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <tname TRange>
         requires RRangeOf<TRange, T>
-        constexpr fn operator =(TRange&& range) noex -> BufArr&
+        cexpr fn operator =(TRange&& range) noex -> BufArr&
         {
             Clear();
             InsertBack(range);
@@ -112,7 +112,7 @@ namespace Atom
         /// @TODO: Check if we need this ctor to satisfy std::is_copy_constructible and 
         ///     RCopyConstructible.
         /// ----------------------------------------------------------------------------------------
-        constexpr ctor BufArr(const BufArr& that) noex:
+        cexpr ctor BufArr(const BufArr& that) noex:
             Base{ nullptr }
         {
             // InsertBack(that);
@@ -123,7 +123,7 @@ namespace Atom
         /// 
         /// @TODO: Same as CopyCtor.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator =(const BufArr& that) noex -> BufArr&
+        cexpr fn operator =(const BufArr& that) noex -> BufArr&
         {
             Clear();
             InsertBack(that);
@@ -133,7 +133,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// MoveCtor.
         /// ----------------------------------------------------------------------------------------
-        constexpr ctor BufArr(BufArr&& that) noex:
+        cexpr ctor BufArr(BufArr&& that) noex:
             Base{ nullptr }
         {
             _Move(MOVE(that));
@@ -143,7 +143,7 @@ namespace Atom
         /// TempMoveCtor.
         /// ----------------------------------------------------------------------------------------
         template <usize thatBufSize>
-        constexpr ctor BufArr(BufArr<TElem, thatBufSize, TAlloc>&& that) noex:
+        cexpr ctor BufArr(BufArr<TElem, thatBufSize, TAlloc>&& that) noex:
             Base{ nullptr }
         {
             _Move(MOVE(that));
@@ -152,7 +152,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// MoveCtor for DynArr.
         /// ----------------------------------------------------------------------------------------
-        constexpr ctor BufArr(DynArr<TElem, TAlloc>&& that) noex:
+        cexpr ctor BufArr(DynArr<TElem, TAlloc>&& that) noex:
             Base{ nullptr }
         {
             BaseImpl::_Move(that);
@@ -161,7 +161,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// MoveOper.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator =(BufArr&& that) noex -> BufArr&
+        cexpr fn operator =(BufArr&& that) noex -> BufArr&
         {
             Clear();
             _Move(MOVE(that));
@@ -171,7 +171,7 @@ namespace Atom
         /// TempMoveOper.
         /// ----------------------------------------------------------------------------------------
         template <usize thatBufSize>
-        constexpr fn operator =(BufArr<TElem, thatBufSize, TAlloc>&& that) noex -> BufArr&
+        cexpr fn operator =(BufArr<TElem, thatBufSize, TAlloc>&& that) noex -> BufArr&
         {
             Clear();
             _Move(MOVE(that));
@@ -180,7 +180,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// MoveOper for DynArr.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator =(DynArr<TElem, TAlloc>&& that) noex -> BufArr&
+        cexpr fn operator =(DynArr<TElem, TAlloc>&& that) noex -> BufArr&
         {
             Clear();
             Release();
@@ -191,7 +191,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Dtor.
         /// ----------------------------------------------------------------------------------------
-        constexpr dtor BufArr() noex
+        cexpr dtor BufArr() noex
         {
             Clear();
             Release();

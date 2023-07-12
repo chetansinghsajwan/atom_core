@@ -14,7 +14,7 @@ namespace Atom::Engine
 
     struct GLFW_WindowCoordsConverter
     {
-        static constexpr fn ToGLFW(SWindowCoords coords) -> GLFW_SWindowCoords
+        static cexpr fn ToGLFW(SWindowCoords coords) -> GLFW_SWindowCoords
         {
             coords.x = Math::Clamp<int>(coords.x, NumLimits<int>::min(), NumLimits<int>::max());
             coords.y = Math::Clamp<int>(coords.y, NumLimits<int>::min(), NumLimits<int>::max());
@@ -22,7 +22,7 @@ namespace Atom::Engine
             return { (int)coords.x, (int)coords.y };
         };
 
-        static constexpr fn FromGLFW(GLFW_SWindowCoords coords) -> SWindowCoords
+        static cexpr fn FromGLFW(GLFW_SWindowCoords coords) -> SWindowCoords
         {
             coords.x = Math::Clamp<int>(coords.x, NumLimits<int>::min(), NumLimits<int>::max());
             coords.y = Math::Clamp<int>(coords.y, NumLimits<int>::min(), NumLimits<int>::max());

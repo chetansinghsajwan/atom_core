@@ -5,7 +5,7 @@
 namespace Atom
 {
     template <tname TImpl>
-    constexpr fn _ArrImplHelper<TImpl>::ElemAt(usize index) -> TElem&
+    cexpr fn _ArrImplHelper<TImpl>::ElemAt(usize index) -> TElem&
     {
         ATOM_EXPECTS(_ValidateIndexForAccess(index)) << IndexOutOfRangeException(
             ATOM_TEXT("{index} was out of range[{0}, {1}]."), index, 0, _Count() - 1);
@@ -14,7 +14,7 @@ namespace Atom
     }
 
     template <tname TImpl>
-    constexpr fn _ArrImplHelper<TImpl>::operator [](usize index) noex -> TElem&
+    cexpr fn _ArrImplHelper<TImpl>::operator [](usize index) noex -> TElem&
     {
         ATOM_DEBUG_EXPECTS(_ValidateIndexForAccess(index)) << IndexOutOfRangeException(
             ATOM_TEXT("{index} was out of range[{0}, {1}]."), index, 0, _Count() - 1);
@@ -23,7 +23,7 @@ namespace Atom
     }
 
     template <tname TImpl>
-    constexpr fn _ArrImplHelper<TImpl>::ElemFront() noex -> TElem&
+    cexpr fn _ArrImplHelper<TImpl>::ElemFront() noex -> TElem&
     {
         ATOM_DEBUG_EXPECTS(!IsEmpty()) << OutOfRangeException(
             ATOM_TEXT("Arr is empty."));
@@ -32,7 +32,7 @@ namespace Atom
     }
 
     template <tname TImpl>
-    constexpr fn _ArrImplHelper<TImpl>::ElemBack() noex -> TElem&
+    cexpr fn _ArrImplHelper<TImpl>::ElemBack() noex -> TElem&
     {
         ATOM_DEBUG_EXPECTS(!IsEmpty()) << OutOfRangeException(
             ATOM_TEXT("Arr is empty."));

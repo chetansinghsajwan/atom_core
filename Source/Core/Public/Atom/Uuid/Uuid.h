@@ -32,11 +32,11 @@ namespace Atom
     {
         static const Uuid Null;
 
-        constexpr fn operator == (const Uuid& other) const noex -> bool = default;
-        constexpr fn operator != (const Uuid& other) const noex -> bool = default;
+        cexpr fn operator == (const Uuid& other) const noex -> bool = default;
+        cexpr fn operator != (const Uuid& other) const noex -> bool = default;
 
         StaArr<byte, 16> bytes;
     };
 
-    constexpr inline const Uuid Uuid::Null = Uuid{ 0 };
+    cexpr inline const Uuid Uuid::Null = Uuid{ 0 };
 }

@@ -8,7 +8,7 @@ namespace Atom
     {
     public:
         template <usize size>
-        consteval ctor ArrLit(T(&arr)[size]) noex:
+        ceval ctor ArrLit(T(&arr)[size]) noex:
             ArrView{ arr, size } { }
     };
 }

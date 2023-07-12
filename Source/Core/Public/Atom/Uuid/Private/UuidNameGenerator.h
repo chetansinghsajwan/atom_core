@@ -35,7 +35,7 @@ namespace Atom::Private
                 _hashGenerator.ProcessByte(static_cast<byte>(c & 0xFF));
 
                 // TODO: Check this
-                // if constexpr (!TTI::IsSame<Char, char>)
+                // if cexpr (!TTI::IsSame<Char, char>)
                 // {
                 //     _hashGenerator.ProcessByte(static_cast<byte>((c >> 8) & 0xFF));
                 //     _hashGenerator.ProcessByte(static_cast<byte>((c >> 16) & 0xFF));
@@ -77,28 +77,28 @@ namespace Atom
     struct UuidNamespaces
     {
         // Name string is a fully-qualified domain name
-        static constexpr Uuid Dns =
+        static cexpr Uuid Dns =
         {
             0x6b, 0xa7, 0xb8, 0x10, 0x9d, 0xad, 0x11, 0xd1,
             0x80, 0xb4, 0x00, 0xc0, 0x4f, 0xd4, 0x30, 0xc8
         };
 
         // Name string is a URL
-        static constexpr Uuid Url =
+        static cexpr Uuid Url =
         {
             0x6b, 0xa7, 0xb8, 0x11, 0x9d, 0xad, 0x11, 0xd1,
             0x80, 0xb4, 0x00, 0xc0, 0x4f, 0xd4, 0x30, 0xc8
         };
 
         // Name string is an ISO OID
-        static constexpr Uuid Oid =
+        static cexpr Uuid Oid =
         {
             0x6b, 0xa7, 0xb8, 0x12, 0x9d, 0xad, 0x11, 0xd1,
             0x80, 0xb4, 0x00, 0xc0, 0x4f, 0xd4, 0x30, 0xc8
         };
 
         // Name string is an X.500 DN, in DER or a text output format
-        static constexpr Uuid X500 =
+        static cexpr Uuid X500 =
         {
             0x6b, 0xa7, 0xb8, 0x14, 0x9d, 0xad, 0x11, 0xd1,
             0x80, 0xb4, 0x00, 0xc0, 0x4f, 0xd4, 0x30, 0xc8

@@ -11,8 +11,8 @@ namespace Atom::Text
         using TChar = char32;
         using TRune = char32;
 
-        static constexpr TChar Null = UTF32('\0');
-        static constexpr bool IsMultiCharEncoding = false;
+        static cexpr TChar Null = UTF32('\0');
+        static cexpr bool IsMultiCharEncoding = false;
     };
 
     using UTF32Char = tname UTF32Encoding::TChar;

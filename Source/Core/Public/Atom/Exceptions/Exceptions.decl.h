@@ -15,7 +15,7 @@ namespace Atom
     {
         using TImpl = std::source_location;
 
-        static constexpr ExceptionSource Current(TImpl src = TImpl::current()) noex;
+        static cexpr ExceptionSource Current(TImpl src = TImpl::current()) noex;
 
         uint32 line;
         uint32 column;
@@ -31,7 +31,7 @@ namespace Atom
     // using StackTrace = std::stacktrace;
     struct StackTrace
     {
-        static constexpr StackTrace current() noex
+        static cexpr StackTrace current() noex
         {
             return StackTrace{ };
         }

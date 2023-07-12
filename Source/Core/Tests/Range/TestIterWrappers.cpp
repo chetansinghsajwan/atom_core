@@ -50,11 +50,11 @@ TEST_CASE("Atom.Range.IterWrappers", "[.interface]")
     {
         using Base = MutArrIter<int>;
 
-        constexpr CustomIter() { }
+        cexpr CustomIter() { }
 
-        constexpr CustomIter(int, char, float, const char*) { }
+        cexpr CustomIter(int, char, float, const char*) { }
 
-        constexpr CustomIter(const Base& base) noex:
+        cexpr CustomIter(const Base& base) noex:
             Base{ base } { }
     };
 

@@ -99,7 +99,7 @@ namespace Atom::Logging
     /// --------------------------------------------------------------------------------------------
     /// @TODO Add this as option.
     /// --------------------------------------------------------------------------------------------
-    constexpr ELogLevel STATIC_LOG_LEVEL = ELogLevel::Debug;
+    cexpr ELogLevel STATIC_LOG_LEVEL = ELogLevel::Debug;
 
     /// --------------------------------------------------------------------------------------------
     /// Checks at compile time if message of specified level {lvl} should be logged.
@@ -107,7 +107,7 @@ namespace Atom::Logging
     /// @TPARAM[IN] lvl ELogLevel of the msg to check for.
     /// --------------------------------------------------------------------------------------------
     template <ELogLevel lvl>
-    constexpr fn STATIC_CHECK_LOG_LEVEL() noex -> bool
+    cexpr fn STATIC_CHECK_LOG_LEVEL() noex -> bool
     {
         return lvl >= STATIC_LOG_LEVEL && lvl != ELogLevel::OFF;
     }
@@ -124,7 +124,7 @@ namespace Atom::Logging
     template <ELogLevel lvl, RLogArg... TArgs>
     inline fn STATIC_LOG(LogStr<TArgs...> msg, TArgs&&... args)
     {
-        if constexpr (STATIC_CHECK_LOG_LEVEL<lvl>())
+        if cexpr (STATIC_CHECK_LOG_LEVEL<lvl>())
         {
             LOG(lvl, msg, fwd(args)...);
         }

@@ -17,48 +17,48 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// DefaultConstructor. Does nothing.
         /// ----------------------------------------------------------------------------------------
-        constexpr ctor NullLockable() noex { }
+        cexpr ctor NullLockable() noex { }
 
         /// ----------------------------------------------------------------------------------------
         /// CopyConstructor is default.
         /// ----------------------------------------------------------------------------------------
-        constexpr ctor NullLockable(const NullLockable& other) { }
+        cexpr ctor NullLockable(const NullLockable& other) { }
 
         /// ----------------------------------------------------------------------------------------
         /// MoveConstructor is default.
         /// ----------------------------------------------------------------------------------------
-        constexpr ctor NullLockable(NullLockable&& other) { }
+        cexpr ctor NullLockable(NullLockable&& other) { }
 
         /// ----------------------------------------------------------------------------------------
         /// CopyOperator is default.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator = (const NullLockable& other) -> NullLockable& { return *this; }
+        cexpr fn operator = (const NullLockable& other) -> NullLockable& { return *this; }
 
         /// ----------------------------------------------------------------------------------------
         /// MoveOperator is default.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator = (NullLockable&& other) -> NullLockable& { return *this; }
+        cexpr fn operator = (NullLockable&& other) -> NullLockable& { return *this; }
 
         /// ----------------------------------------------------------------------------------------
         /// Destructor. Does nothing.
         /// ----------------------------------------------------------------------------------------
-        constexpr dtor NullLockable() { }
+        cexpr dtor NullLockable() { }
 
     public:
         /// ----------------------------------------------------------------------------------------
         /// Does nothing.
         /// ----------------------------------------------------------------------------------------
-        constexpr void Lock() { }
+        cexpr void Lock() { }
 
         /// ----------------------------------------------------------------------------------------
         /// Always returns true.
         /// ----------------------------------------------------------------------------------------
-        constexpr bool TryLock() { return true; }
+        cexpr bool TryLock() { return true; }
 
         /// ----------------------------------------------------------------------------------------
         /// Does nothing.
         /// ----------------------------------------------------------------------------------------
-        constexpr void Unlock() { }
+        cexpr void Unlock() { }
     };
 
     static_assert(RLockable<NullLockable>);
@@ -75,11 +75,11 @@ namespace Atom
         /// 
         /// @PARAM[IN] lock NullLockable reference. (UNUSED).
         /// ----------------------------------------------------------------------------------------
-        constexpr ctor LockGuard(NullLockable& lock) noex { }
+        cexpr ctor LockGuard(NullLockable& lock) noex { }
 
         /// ----------------------------------------------------------------------------------------
         /// Destructor. Does nothing.
         /// ----------------------------------------------------------------------------------------
-        constexpr dtor LockGuard() { }
+        cexpr dtor LockGuard() { }
     };
 }

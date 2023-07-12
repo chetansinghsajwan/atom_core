@@ -34,7 +34,7 @@ namespace Atom
         /// 
         /// @TIME_COMPLEXITY Constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn ElemAt(usize index) const -> const TElem&;
+        cexpr fn ElemAt(usize index) const -> const TElem&;
 
         /// ----------------------------------------------------------------------------------------
         /// Access element at index{index}. Same as {ElemAt(...)}, but doesn't perform bounds checking
@@ -49,7 +49,7 @@ namespace Atom
         /// 
         /// @TIME_COMPLEXITY Constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator [](usize index) const noex -> const TElem&;
+        cexpr fn operator [](usize index) const noex -> const TElem&;
 
         /// ----------------------------------------------------------------------------------------
         /// Access first element.
@@ -61,7 +61,7 @@ namespace Atom
         /// 
         /// @TIME_COMPLEXITY Constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn ElemFront() const noex -> const TElem&;
+        cexpr fn ElemFront() const noex -> const TElem&;
 
         /// ----------------------------------------------------------------------------------------
         /// Access last element.
@@ -73,7 +73,7 @@ namespace Atom
         /// 
         /// @TIME_COMPLEXITY Constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn ElemBack() const noex -> const TElem&;
+        cexpr fn ElemBack() const noex -> const TElem&;
 
         /// ----------------------------------------------------------------------------------------
         /// Pointer to underlying arr.
@@ -82,7 +82,7 @@ namespace Atom
         /// 
         /// @TIME_COMPLEXITY Constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn Data() const noex -> const TElem*
+        cexpr fn Data() const noex -> const TElem*
         {
             return _Data();
         }
@@ -90,7 +90,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Get count of elements.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn Count() const noex -> usize
+        cexpr fn Count() const noex -> usize
         {
             return _Count();
         }
@@ -98,7 +98,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Is arr empty.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn IsEmpty() const noex -> bool
+        cexpr fn IsEmpty() const noex -> bool
         {
             return _Count() == 0;
         }
@@ -111,7 +111,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// {TIter} to the first element.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn Iter() const noex -> TIter
+        cexpr fn Iter() const noex -> TIter
         {
             return TIter{ _Data() };
         }
@@ -119,7 +119,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// {TIter} to element following the last element.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn IterEnd() const noex -> TIter
+        cexpr fn IterEnd() const noex -> TIter
         {
             return TIter{ _Data() + _Count()};
         }
@@ -129,7 +129,7 @@ namespace Atom
     //// -------------------------------------------------------------------------------------------
 
     protected:
-        constexpr fn _ValidateIndexForAccess(isize index) const noex -> bool
+        cexpr fn _ValidateIndexForAccess(isize index) const noex -> bool
         {
             return index > 0 && index < (isize)_Count();
         }

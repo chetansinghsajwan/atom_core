@@ -21,31 +21,31 @@ namespace Atom::TTI
     using TConditionalField = TConditional<Condition, T, Private::Empty>;
 
     template <tname TBase, tname TDerived>
-    constexpr bool IsBaseOf = std::is_base_of_v<TBase, std::decay_t<TDerived>>;
+    cexpr bool IsBaseOf = std::is_base_of_v<TBase, std::decay_t<TDerived>>;
 
     template <tname TBase, tname TDerived>
-    constexpr bool IsNotBaseOf = !IsBaseOf<TBase, TDerived>;
+    cexpr bool IsNotBaseOf = !IsBaseOf<TBase, TDerived>;
 
     template <bool Requirements, tname T = void>
     using TEnableIf = std::enable_if_t<Requirements, T>;
 
     template <tname T>
-    constexpr bool IsCopyConstructible = std::is_copy_constructible_v<T>;
+    cexpr bool IsCopyConstructible = std::is_copy_constructible_v<T>;
 
     template <tname T>
-    constexpr bool IsMoveConstructible = std::is_copy_constructible_v<T>;
+    cexpr bool IsMoveConstructible = std::is_copy_constructible_v<T>;
 
     template <tname T>
-    constexpr bool IsCopyAssignable = std::is_copy_assignable_v<T>;
+    cexpr bool IsCopyAssignable = std::is_copy_assignable_v<T>;
 
     template <tname T>
-    constexpr bool IsMoveAssignable = std::is_move_assignable_v<T>;
+    cexpr bool IsMoveAssignable = std::is_move_assignable_v<T>;
 
     template <tname T1, tname T2>
-    constexpr bool IsSame = std::is_same_v<T1, T2>;
+    cexpr bool IsSame = std::is_same_v<T1, T2>;
 
     template <tname T1, tname T2>
-    constexpr bool IsNotSame = !IsSame<T1, T2>;
+    cexpr bool IsNotSame = !IsSame<T1, T2>;
 
     template <tname T>
     using TRemoveConst = std::remove_const_t<T>;

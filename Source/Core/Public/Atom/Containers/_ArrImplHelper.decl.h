@@ -44,7 +44,7 @@ namespace Atom
         /// 
         /// @TIME_COMPLEXITY Constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn ElemAt(usize index) -> TElem&;
+        cexpr fn ElemAt(usize index) -> TElem&;
 
         /// ----------------------------------------------------------------------------------------
         /// Access element at index{index}. Same as {ElemAt(...)}, but doesn't perform bounds checking
@@ -59,7 +59,7 @@ namespace Atom
         /// 
         /// @TIME_COMPLEXITY Constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator [](usize index) noex -> TElem&;
+        cexpr fn operator [](usize index) noex -> TElem&;
 
         /// ----------------------------------------------------------------------------------------
         /// Access first element.
@@ -71,7 +71,7 @@ namespace Atom
         /// 
         /// @TIME_COMPLEXITY Constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn ElemFront() noex -> TElem&;
+        cexpr fn ElemFront() noex -> TElem&;
 
         /// ----------------------------------------------------------------------------------------
         /// Access last element.
@@ -83,7 +83,7 @@ namespace Atom
         /// 
         /// @TIME_COMPLEXITY Constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn ElemBack() noex -> TElem&;
+        cexpr fn ElemBack() noex -> TElem&;
 
         /// ----------------------------------------------------------------------------------------
         /// Pointer to underlying arr.
@@ -92,7 +92,7 @@ namespace Atom
         /// 
         /// @TIME_COMPLEXITY Constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn Data() noex -> TElem*
+        cexpr fn Data() noex -> TElem*
         {
             return _Data();
         }
@@ -105,7 +105,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// {TMutIter} to the first element.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn MutIter() noex -> TMutIter
+        cexpr fn MutIter() noex -> TMutIter
         {
             return TMutIter{ _Data() };
         }
@@ -113,7 +113,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// {TMutIter} to element following the last element.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn MutIterEnd() noex -> TMutIter
+        cexpr fn MutIterEnd() noex -> TMutIter
         {
             return TMutIter{ _Data() + _Count() - 1 };
         }
@@ -127,7 +127,7 @@ namespace Atom
         using Base::_Count;
         using Base::_ValidateIndexForAccess;
 
-        constexpr fn _Data() noex -> TElem*
+        cexpr fn _Data() noex -> TElem*
         {
             return TImpl::_Data();
         }

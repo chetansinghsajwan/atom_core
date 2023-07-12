@@ -9,12 +9,12 @@ namespace Atom::Private
     template <usize Size>
     struct T1Hash
     {
-        static constexpr usize _Size = Size;
+        static cexpr usize _Size = Size;
 
         static const T1Hash Null;
 
-        constexpr fn operator == (const T1Hash& other) const noex -> bool = default;
-        constexpr fn operator != (const T1Hash& other) const noex -> bool = default;
+        cexpr fn operator == (const T1Hash& other) const noex -> bool = default;
+        cexpr fn operator != (const T1Hash& other) const noex -> bool = default;
 
         StaArr<byte, Size> bytes;
     };
@@ -24,7 +24,7 @@ namespace Atom::Private
 #ifdef ATOM_COMP_MSVC
     inline
 #else
-    constexpr
+    cexpr
 #endif
     const T1Hash<Size> T1Hash<Size>::Null = T1Hash<Size>{ 0 };
 }

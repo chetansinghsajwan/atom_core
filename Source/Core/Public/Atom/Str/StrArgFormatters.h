@@ -49,7 +49,7 @@ namespace Atom
 	/// --------------------------------------------------------------------------------------------
 	struct StrFmtParseCtx
 	{
-		constexpr ctor StrFmtParseCtx(_FmtFmtParseCtx& fmtCtx) noex:
+		cexpr ctor StrFmtParseCtx(_FmtFmtParseCtx& fmtCtx) noex:
 			_fmtCtx{ fmtCtx } { }
 
 		fn GetRange() noex -> StrView
@@ -70,7 +70,7 @@ namespace Atom
 	/// --------------------------------------------------------------------------------------------
 	struct StrFmtCtx
 	{
-		constexpr ctor StrFmtCtx(_FmtFmtCtx& fmtCtx) noex:
+		cexpr ctor StrFmtCtx(_FmtFmtCtx& fmtCtx) noex:
 			_fmtCtx{ fmtCtx } { }
 
 		fn Write(Char ch)
@@ -181,7 +181,7 @@ namespace Atom
 	template <RStrViewConvertible T>
 	struct StrFmtArgFmterImpl<T>: StrFmtArgFmter<StrView>
 	{
-		constexpr fn Fmt(const T& in, StrFmtCtx& ctx) noex
+		cexpr fn Fmt(const T& in, StrFmtCtx& ctx) noex
 		{
 			StrFmtArgFmter<StrView>::Fmt(
 				convter.Convert(in), ctx);
@@ -193,13 +193,13 @@ namespace Atom
 	template <tname T>
 	struct _FmtFmtfierFilter
 	{
-		static constexpr bool Enable = true;
+		static cexpr bool Enable = true;
 	};
 
 	template <usize N>
 	struct _FmtFmtfierFilter<Char[N]>
 	{
-		static constexpr bool Enable = false;
+		static cexpr bool Enable = false;
 	};
 }
 

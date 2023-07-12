@@ -13,7 +13,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <class TRange>
         requires RRange<TRange>
-        constexpr fn CanGetCount() const noex -> bool
+        cexpr fn CanGetCount() const noex -> bool
         {
             return RFwdRange<TRange>;
         }
@@ -23,7 +23,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <class TRange>
         requires RFwdRange<TRange>
-        constexpr fn GetCount(const TRange& range) const noex -> usize
+        cexpr fn GetCount(const TRange& range) const noex -> usize
         {
             return _GetCount(range.Iter(), range.IterEnd());
         }
@@ -34,7 +34,7 @@ namespace Atom
         template <class TRange, class T>
         requires RMutRange<TRange>
             and RAssignable<tname TRange::TElem, T>
-        constexpr fn Fill(TRange&& range, T&& val) const -> void
+        cexpr fn Fill(TRange&& range, T&& val) const -> void
         {
             _Fill(range.Iter(), range.IterEnd(), fwd(val));
         }
@@ -46,7 +46,7 @@ namespace Atom
         template <class TRange, tname T>
         requires RMutRange<TRange>
             and RAssignable<tname TRange::TElem, T>
-        constexpr fn FillExplicit(TRange&& range, T&& val) const -> void
+        cexpr fn FillExplicit(TRange&& range, T&& val) const -> void
         {
             _Fill(range.Iter(), range.IterEnd(), fwd(val));
         }
@@ -59,7 +59,7 @@ namespace Atom
         requires RRange<TRange1>
             and RMutRange<TRange2>
             and RAssignable<tname TRange2::TElem, tname TRange1::TElem>
-        constexpr fn FwdCopyTo(const TRange1& range1, TRange2&& range2) const -> void
+        cexpr fn FwdCopyTo(const TRange1& range1, TRange2&& range2) const -> void
         {
             _FwdCopy(range1.Iter(), range1.IterEnd(), range2.Iter(), range2.IterEnd());
         }
@@ -71,7 +71,7 @@ namespace Atom
         requires RRange<TRange1>
             and RMutRange<TRange2>
             and RAssignable<tname TRange2::TElem, tname TRange1::TElem>
-        constexpr fn BwdCopyTo(const TRange1& range1, TRange2&& range2) const -> void
+        cexpr fn BwdCopyTo(const TRange1& range1, TRange2&& range2) const -> void
         {
             _BwdCopy(range1.Iter(), range1.IterEnd(), range2.Iter(), range2.IterEnd());
         }
@@ -83,7 +83,7 @@ namespace Atom
         requires RMutRange<TRange1>
             and RMutRange<TRange2>
             and RAssignable<tname TRange2::TElem, tname TRange1::TElem>
-        constexpr fn FwdMoveTo(TRange1&& range1, TRange2&& range2) const -> void
+        cexpr fn FwdMoveTo(TRange1&& range1, TRange2&& range2) const -> void
         {
             _FwdMove(range1.Iter(), range1.IterEnd(), range2.Iter(), range2.IterEnd());
         }
@@ -95,7 +95,7 @@ namespace Atom
         requires RMutRange<TRange1>
             and RMutRange<TRange2>
             and RAssignable<tname TRange2::TElem, tname TRange1::TElem>
-        constexpr fn BwdMoveTo(TRange1&& range1, TRange2&& range2) const -> void
+        cexpr fn BwdMoveTo(TRange1&& range1, TRange2&& range2) const -> void
         {
             _BwdMove(range1.Iter(), range1.IterEnd(), range2.Iter(), range2.IterEnd());
         }
@@ -106,7 +106,7 @@ namespace Atom
         template <class TRange>
         requires RMutFwdRange<TRange>
             and RMoveAssignable<tname TRange::TElem>
-        constexpr fn ShiftFwd(TRange&& range, usize steps) const -> void
+        cexpr fn ShiftFwd(TRange&& range, usize steps) const -> void
         {
             _FwdShift(range.Iter(), range.IterEnd(), steps);
         }
@@ -117,7 +117,7 @@ namespace Atom
         template <class TRange>
         requires RMutFwdRange<TRange>
             and RMoveAssignable<tname TRange::TElem>
-        constexpr fn ShiftBwd(TRange&& range, usize steps) const -> void
+        cexpr fn ShiftBwd(TRange&& range, usize steps) const -> void
         {
             _BwdShift(range.Iter(), range.IterEnd(), steps);
         }
@@ -128,7 +128,7 @@ namespace Atom
         template <class TRange>
         requires RMutFwdRange<TRange>
             and RSwappable<tname TRange::TElem>
-        constexpr fn ShiftBy(TRange&& range, isize steps) const -> void
+        cexpr fn ShiftBy(TRange&& range, isize steps) const -> void
         {
             if (steps > 0)
             {
@@ -146,7 +146,7 @@ namespace Atom
         template <class TRange>
         requires RMutRange<TRange>
             and RSwappable<tname TRange::TElem>
-        constexpr fn RotateFwd(TRange&& range, usize steps) const -> void
+        cexpr fn RotateFwd(TRange&& range, usize steps) const -> void
         {
             _FwdRotate(range.Iter(), range.IterEnd(), steps);
         }
@@ -157,7 +157,7 @@ namespace Atom
         template <class TRange>
         requires RMutRange<TRange>
             and RSwappable<tname TRange::TElem>
-        constexpr fn RotateBwd(TRange&& range, usize steps) const -> void
+        cexpr fn RotateBwd(TRange&& range, usize steps) const -> void
         {
             _BwdRotate(range.Iter(), range.IterEnd(), steps);
         }
@@ -168,7 +168,7 @@ namespace Atom
         template <class TRange>
         requires RMutRange<TRange>
             and RSwappable<tname TRange::TElem>
-        constexpr fn RotateBy(TRange&& range, isize steps) const -> void
+        cexpr fn RotateBy(TRange&& range, isize steps) const -> void
         {
             if (steps > 0)
             {
@@ -186,16 +186,16 @@ namespace Atom
         template <class TRange>
         requires RMutRange<TRange>
             and RDestructible<tname TRange::TElem>
-        constexpr fn Destruct(TRange&& range) const -> void
+        cexpr fn Destruct(TRange&& range) const -> void
         {
             _Destruct(range.Iter(), range.IterEnd());
         }
 
     private:
         template <class TIter, class TIterEnd>
-        constexpr fn _GetCount(TIter iter, TIterEnd iterEnd) const -> usize
+        cexpr fn _GetCount(TIter iter, TIterEnd iterEnd) const -> usize
         {
-            if constexpr (RJumpIterPair<TIter, TIterEnd>)
+            if cexpr (RJumpIterPair<TIter, TIterEnd>)
             {
                 return iterEnd - iter;
             }
@@ -207,7 +207,7 @@ namespace Atom
         }
 
         template <class TIter, class TIterEnd, tname T>
-        constexpr fn _Fill(TIter iter, TIterEnd iterEnd, T&& val) const -> void
+        cexpr fn _Fill(TIter iter, TIterEnd iterEnd, T&& val) const -> void
         {
             StdIterWrapForAtomIter stdIter{ iter };
             StdIterWrapForAtomIter stdIterEnd{ iterEnd };
@@ -216,7 +216,7 @@ namespace Atom
         }
 
         template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
-        constexpr fn _FwdCopy(const TIter1 iter1, const TIterEnd1 iterEnd1,
+        cexpr fn _FwdCopy(const TIter1 iter1, const TIterEnd1 iterEnd1,
             TIter2 iter2, TIterEnd2 iterEnd2) const -> void
         {
             StdIterWrapForAtomIter stdIter1{ iter1 };
@@ -227,7 +227,7 @@ namespace Atom
         }
 
         template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
-        constexpr fn _BwdCopy(const TIter1 iter1, const TIterEnd1 iterEnd1,
+        cexpr fn _BwdCopy(const TIter1 iter1, const TIterEnd1 iterEnd1,
             TIter2 iter2, TIterEnd2 iterEnd2) const -> void
         {
             StdIterWrapForAtomIter stdIter1{ iter1 };
@@ -238,7 +238,7 @@ namespace Atom
         }
 
         template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
-        constexpr fn _FwdMove(TIter1 iter1, const TIterEnd1 iterEnd1,
+        cexpr fn _FwdMove(TIter1 iter1, const TIterEnd1 iterEnd1,
             TIter2 iter2, TIterEnd2 iterEnd2) const -> void
         {
             StdIterWrapForAtomIter stdIter1{ iter1 };
@@ -249,7 +249,7 @@ namespace Atom
         }
 
         template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
-        constexpr fn _BwdMove(TIter1 iter1, const TIterEnd1 iterEnd1,
+        cexpr fn _BwdMove(TIter1 iter1, const TIterEnd1 iterEnd1,
             TIter2 iter2, TIterEnd2 iterEnd2) const -> void
         {
             StdIterWrapForAtomIter stdIter1{ iter1 };
@@ -260,9 +260,9 @@ namespace Atom
         }
 
         template <class TIter, class TIterEnd>
-        constexpr fn _FwdShift(TIter iter, TIterEnd iterEnd, usize steps) const -> void
+        cexpr fn _FwdShift(TIter iter, TIterEnd iterEnd, usize steps) const -> void
         {
-            if constexpr (RArrIterPair<TIter, TIterEnd>)
+            if cexpr (RArrIterPair<TIter, TIterEnd>)
             {
                 std::shift_right(&*iter, &*iterEnd, steps);
                 return;
@@ -275,9 +275,9 @@ namespace Atom
         }
 
         template <class TIter, class TIterEnd>
-        constexpr fn _BwdShift(TIter iter, TIterEnd iterEnd, usize steps) const -> void
+        cexpr fn _BwdShift(TIter iter, TIterEnd iterEnd, usize steps) const -> void
         {
-            if constexpr (RArrIterPair<TIter, TIterEnd>)
+            if cexpr (RArrIterPair<TIter, TIterEnd>)
             {
                 std::shift_left(&*iter, &*iterEnd, steps);
                 return;
@@ -290,9 +290,9 @@ namespace Atom
         }
 
         template <class TIter, class TIterEnd>
-        constexpr fn _BwdRotate(TIter iter, TIterEnd iterEnd, usize steps) const -> void
+        cexpr fn _BwdRotate(TIter iter, TIterEnd iterEnd, usize steps) const -> void
         {
-            if constexpr (RArrIterPair<TIter, TIterEnd>)
+            if cexpr (RArrIterPair<TIter, TIterEnd>)
             {
                 std::rotate(&*iter, &*iter + steps, &*iterEnd);
                 return;
@@ -305,9 +305,9 @@ namespace Atom
         }
 
         template <class TIter, class TIterEnd>
-        constexpr fn _FwdRotate(TIter iter, TIterEnd iterEnd, isize steps) const -> void
+        cexpr fn _FwdRotate(TIter iter, TIterEnd iterEnd, isize steps) const -> void
         {
-            if constexpr (RArrIterPair<TIter, TIterEnd>)
+            if cexpr (RArrIterPair<TIter, TIterEnd>)
             {
                 std::rotate(&*iter, &*iterEnd - steps, &*iterEnd);
                 return;
@@ -320,9 +320,9 @@ namespace Atom
         }
 
         template <class TIter, class TIterEnd>
-        constexpr fn _Destruct(TIter iter, TIterEnd iterEnd) const -> void
+        cexpr fn _Destruct(TIter iter, TIterEnd iterEnd) const -> void
         {
-            if constexpr (RArrIterPair<TIter, TIterEnd>)
+            if cexpr (RArrIterPair<TIter, TIterEnd>)
             {
                 std::destroy(&*iter, &*iterEnd);
                 return;

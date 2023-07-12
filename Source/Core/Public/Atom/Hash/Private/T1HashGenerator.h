@@ -8,7 +8,7 @@ namespace Atom::Private
     /// --------------------------------------------------------------------------------------------
     /// T1Hash Generator.
     /// 
-    /// @TODO: Make this type constexpr.
+    /// @TODO: Make this type cexpr.
     /// --------------------------------------------------------------------------------------------
     template <tname T1Hash, tname TImpl>
     class T1HashGenerator
@@ -42,7 +42,7 @@ namespace Atom::Private
         requires RRangeOf<TRange, byte>
         fn ProcessBytes(TRange bytes) -> This&
         {
-            if constexpr (RArrRangeOf<TRange, byte>)
+            if cexpr (RArrRangeOf<TRange, byte>)
             {
                 return ProcessBytes(bytes.Data(), bytes.Size());
             }
@@ -89,7 +89,7 @@ namespace Atom::Private
             // in parts.
 
             // Max size of input WjCrypt accepts at once.
-            static constexpr usize maxInput = NumLimits<uint32_t>::max();
+            static cexpr usize maxInput = NumLimits<uint32_t>::max();
             for (usize processed = 0; processed < dataSize; processed += maxInput)
             {
                 _impl.Update((byte*)data + processed,

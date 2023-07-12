@@ -20,10 +20,10 @@ namespace Atom
 
     struct MemBlk
     {
-        constexpr ctor MemBlk(MemPtr mem, usize count) noex:
+        cexpr ctor MemBlk(MemPtr mem, usize count) noex:
             mem{ mem }, count{ count } { }
 
-        constexpr ctor MemBlk(MemPtr begin, MemPtr end) noex:
+        cexpr ctor MemBlk(MemPtr begin, MemPtr end) noex:
             mem{ begin }, count{ (usize)(end - begin) }
         {
             ATOM_DEBUG_EXPECTS(end >= begin);
@@ -33,7 +33,7 @@ namespace Atom
         usize count;
     };
 
-    constexpr fn operator ==(const MemBlk& lhs, NullPtr) noex -> bool
+    cexpr fn operator ==(const MemBlk& lhs, NullPtr) noex -> bool
     {
         return lhs.mem == nullptr && lhs.count > 0;
     }
@@ -49,7 +49,7 @@ namespace Atom
         /// @PARAM mem: Mem block to write to.
         /// @PARAM val: Value to write.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn Fill(MemBlk mem, MemUnit val) const noex -> void
+        cexpr fn Fill(MemBlk mem, MemUnit val) const noex -> void
         {
             ATOM_DEBUG_EXPECTS(mem != nullptr);
 
@@ -60,7 +60,7 @@ namespace Atom
         /// Same as {Fill(...)}, but the call will not be optimized away.
         /// ----------------------------------------------------------------------------------------
         #pragma optimize("", off)
-        constexpr fn FillExplicit(MemBlk mem, MemUnit val) const noex -> void
+        cexpr fn FillExplicit(MemBlk mem, MemUnit val) const noex -> void
         {
             Fill(mem, val);
         }
@@ -72,7 +72,7 @@ namespace Atom
         /// @PARAM src: Mem block to copy from.
         /// @PARAM dest: Mem block to copy to.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn FwdCopyTo(const MemBlk src, MemBlk dest) const noex -> void
+        cexpr fn FwdCopyTo(const MemBlk src, MemBlk dest) const noex -> void
         {
             ATOM_DEBUG_EXPECTS(src != nullptr);
             ATOM_DEBUG_EXPECTS(dest != nullptr);
@@ -89,7 +89,7 @@ namespace Atom
         /// @PARAM src: Mem block to copy from.
         /// @PARAM dest: Mem block to copy to.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn BwdCopyTo(const MemBlk src, MemBlk dest) const noex -> void
+        cexpr fn BwdCopyTo(const MemBlk src, MemBlk dest) const noex -> void
         {
             ATOM_DEBUG_EXPECTS(src != nullptr);
             ATOM_DEBUG_EXPECTS(dest != nullptr);
@@ -107,7 +107,7 @@ namespace Atom
         /// @PARAM src: Mem block to copy from.
         /// @PARAM dest: Mem block to copy to.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn CopyTo(const MemBlk src, MemBlk dest) const noex -> void
+        cexpr fn CopyTo(const MemBlk src, MemBlk dest) const noex -> void
         {
             ATOM_DEBUG_EXPECTS(src != nullptr);
             ATOM_DEBUG_EXPECTS(dest != nullptr);
@@ -130,7 +130,7 @@ namespace Atom
         /// @PARAM mem: Mem block to copy from.
         /// @PARAM outset: Count of mem units outset from {mem}.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn CopyFwd(const MemBlk mem, usize outset) const noex -> void
+        cexpr fn CopyFwd(const MemBlk mem, usize outset) const noex -> void
         {
             ATOM_DEBUG_EXPECTS(mem != nullptr);
             ATOM_DEBUG_EXPECTS(outset > 0);
@@ -144,7 +144,7 @@ namespace Atom
         /// @PARAM mem: Mem block to copy from.
         /// @PARAM inset: Count of mem units inset from {mem}.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn CopyBwd(const MemBlk mem, usize inset) const noex -> void
+        cexpr fn CopyBwd(const MemBlk mem, usize inset) const noex -> void
         {
             ATOM_DEBUG_EXPECTS(mem != nullptr);
             ATOM_DEBUG_EXPECTS(inset > 0);
@@ -159,7 +159,7 @@ namespace Atom
         /// @PARAM mem: Mem block to copy from.
         /// @PARAM offset: Count of mem units offset from {mem}.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn CopyBy(const MemBlk mem, isize offset) const noex -> void
+        cexpr fn CopyBy(const MemBlk mem, isize offset) const noex -> void
         {
             ATOM_DEBUG_EXPECTS(mem != nullptr);
             ATOM_DEBUG_EXPECTS(offset != 0);
@@ -180,7 +180,7 @@ namespace Atom
         /// @PARAM mem: Mem block to shift mem units of.
         /// @PARAM steps: Count of mem units to shift by.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn ShiftFwd(MemBlk mem, usize steps) const noex -> void
+        cexpr fn ShiftFwd(MemBlk mem, usize steps) const noex -> void
         {
             ATOM_DEBUG_EXPECTS(mem != nullptr);
             ATOM_DEBUG_EXPECTS(steps > 0);
@@ -194,7 +194,7 @@ namespace Atom
         /// @PARAM mem: Mem block to shift mem units of.
         /// @PARAM steps: Count of mem units to shift by.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn ShiftBwd(MemBlk mem, usize steps) const noex -> void
+        cexpr fn ShiftBwd(MemBlk mem, usize steps) const noex -> void
         {
             ATOM_DEBUG_EXPECTS(mem != nullptr);
             ATOM_DEBUG_EXPECTS(steps > 0);
@@ -208,7 +208,7 @@ namespace Atom
         /// @PARAM mem: Mem block to shift mem units of.
         /// @PARAM steps: Count of mem units to shift by.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn ShiftBy(MemBlk mem, isize steps) const noex -> void
+        cexpr fn ShiftBy(MemBlk mem, isize steps) const noex -> void
         {
             ATOM_DEBUG_EXPECTS(mem != nullptr);
             ATOM_DEBUG_EXPECTS(steps != 0);
@@ -229,7 +229,7 @@ namespace Atom
         /// @PARAM mem: Mem block to rotate.
         /// @PARAM steps: Count of mem units to rotate by.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn RotateFwd(MemBlk mem, usize steps) const noex -> void
+        cexpr fn RotateFwd(MemBlk mem, usize steps) const noex -> void
         {
             ATOM_DEBUG_EXPECTS(mem != nullptr);
             ATOM_DEBUG_EXPECTS(steps > 0);
@@ -243,7 +243,7 @@ namespace Atom
         /// @PARAM mem: Mem block to rotate.
         /// @PARAM steps: Count of mem units to rotate by.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn RotateBwd(MemBlk mem, usize steps) const noex -> void
+        cexpr fn RotateBwd(MemBlk mem, usize steps) const noex -> void
         {
             ATOM_DEBUG_EXPECTS(mem != nullptr);
             ATOM_DEBUG_EXPECTS(steps > 0);
@@ -257,7 +257,7 @@ namespace Atom
         /// @PARAM mem: Mem block to rotate.
         /// @PARAM steps: Count of mem units to rotate by.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn RotateBy(MemBlk mem, isize steps) const noex -> void
+        cexpr fn RotateBy(MemBlk mem, isize steps) const noex -> void
         {
             ATOM_DEBUG_EXPECTS(mem != nullptr);
             ATOM_DEBUG_EXPECTS(steps != 0);
@@ -273,37 +273,37 @@ namespace Atom
         }
 
     private:
-        constexpr fn _Fill(MemPtr mem, usize count, MemUnit val) const noex -> void
+        cexpr fn _Fill(MemPtr mem, usize count, MemUnit val) const noex -> void
         {
             std::fill(mem, mem + count, val);
         }
     
-        constexpr fn _FwdCopy(const MemPtr src, usize count, MemPtr dest) const noex -> void
+        cexpr fn _FwdCopy(const MemPtr src, usize count, MemPtr dest) const noex -> void
         {
             std::copy(src, src + count, dest);
         }
 
-        constexpr fn _BwdCopy(const MemPtr src, usize count, MemPtr dest) const noex -> void
+        cexpr fn _BwdCopy(const MemPtr src, usize count, MemPtr dest) const noex -> void
         {
             std::copy_backward(src, src + count, dest);
         }
 
-        constexpr fn _ShiftFwd(const MemPtr mem, usize memCount, usize steps) const noex -> void
+        cexpr fn _ShiftFwd(const MemPtr mem, usize memCount, usize steps) const noex -> void
         {
             std::shift_right(mem, mem + memCount, steps);
         }
 
-        constexpr fn _ShiftBwd(const MemPtr mem, usize memCount, usize steps) const noex -> void
+        cexpr fn _ShiftBwd(const MemPtr mem, usize memCount, usize steps) const noex -> void
         {
             std::shift_left(mem, mem + memCount, steps);
         }
 
-        constexpr fn _RotateFwd(const MemPtr mem, usize memCount, usize offset) const noex -> void
+        cexpr fn _RotateFwd(const MemPtr mem, usize memCount, usize offset) const noex -> void
         {
             std::rotate(mem, mem + offset, mem + memCount);
         }
 
-        constexpr fn _RotateBwd(const MemPtr mem, usize memCount, usize offset) const noex -> void
+        cexpr fn _RotateBwd(const MemPtr mem, usize memCount, usize offset) const noex -> void
         {
             std::rotate(mem, mem + offset, mem + memCount);
         }

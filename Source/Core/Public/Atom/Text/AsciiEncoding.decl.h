@@ -12,8 +12,8 @@ namespace Atom
         using TChar = char;
         using TRune = char;
 
-        static constexpr TChar Null = ATOM_TXT_ASCII('\0');
-        static constexpr bool IsMultiCharEncoding = false;
+        static cexpr TChar Null = ATOM_TXT_ASCII('\0');
+        static cexpr bool IsMultiCharEncoding = false;
     };
 
     /// --------------------------------------------------------------------------------------------

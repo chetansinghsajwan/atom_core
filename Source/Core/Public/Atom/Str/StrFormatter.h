@@ -8,12 +8,12 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     struct _FmtStrViewCnvter
     {
-        constexpr StrView FromFmt(_FmtStrView strv) noex
+        cexpr StrView FromFmt(_FmtStrView strv) noex
         {
             return StrView{ Range(strv.data(), strv.size()) };
         }
 
-        constexpr _FmtStrView ToFmt(StrView strv) noex
+        cexpr _FmtStrView ToFmt(StrView strv) noex
         {
             return _FmtStrView{ strv.Data(), strv.Count() };
         }
@@ -36,7 +36,7 @@ namespace Atom
 //     struct FmtStr
 //     {
 //         template <tname T>
-//         consteval FmtStr(const T& strv) noex { }
+//         ceval FmtStr(const T& strv) noex { }
 //             _fmt{ _FmtStrViewCnvter().ToFmt(strv) } { }
 // 
 //         FmtStr(RunFmtStr str) noex { }

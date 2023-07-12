@@ -31,19 +31,19 @@ namespace Atom
 namespace Atom
 {
     using NullPtr = std::nullptr_t;
-    // static constexpr NullPtr nullptr;
+    // static cexpr NullPtr nullptr;
 }
 
 namespace Atom
 {
     using NullVal = std::nullptr_t;
-    static constexpr NullVal nullval = NullVal();
+    static cexpr NullVal nullval = NullVal();
 }
 
 namespace Atom
 {
     using NullPos = std::nullptr_t;
-    static constexpr NullPos nullpos = NullPos();
+    static cexpr NullPos nullpos = NullPos();
 }
 
 namespace Atom
@@ -52,13 +52,13 @@ namespace Atom
     using TypeInfo = std::type_info;
 
     template <tname T>
-    constexpr T&& MOVE(T& obj) noex
+    cexpr T&& MOVE(T& obj) noex
     {
         return std::move(obj);
     }
 
     template <tname T>
-    constexpr T& MOVE(T& lhs, T& rhs) noex
+    cexpr T& MOVE(T& lhs, T& rhs) noex
     {
         lhs = std::move(rhs);
         return lhs;

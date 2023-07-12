@@ -26,47 +26,47 @@ namespace Atom
         using TIterEnd = _TIterEnd;
 
     public:
-        constexpr ctor Range(TIter iter, TIterEnd end) noex:
+        cexpr ctor Range(TIter iter, TIterEnd end) noex:
             _iter{ iter }, _end{ end } { }
 
     public:
-        constexpr fn Iter() const noex -> TIter
+        cexpr fn Iter() const noex -> TIter
         requires RIterPair<TIter, TIterEnd>
         {
             return TIter{ _iter };
         }
 
-        constexpr fn IterEnd() const noex -> TIterEnd
+        cexpr fn IterEnd() const noex -> TIterEnd
         requires RIterPair<TIter, TIterEnd>
         {
             return TIterEnd{ _end };
         }
 
-        constexpr fn MutIter() noex -> TMutIter
+        cexpr fn MutIter() noex -> TMutIter
         requires RMutIterPair<TMutIter, TMutIterEnd>
         {
             return _iter;
         }
 
-        constexpr fn MutIterEnd() noex -> TMutIterEnd
+        cexpr fn MutIterEnd() noex -> TMutIterEnd
         requires RMutIterPair<TMutIter, TMutIterEnd>
         {
             return _end;
         }
 
-        constexpr fn Count() const noex -> usize
+        cexpr fn Count() const noex -> usize
         requires RJumpIterPair<TIter, TIterEnd>
         {
             return _end - _iter;
         }
 
-        constexpr fn Data() const noex -> const TElem*
+        cexpr fn Data() const noex -> const TElem*
         requires RArrIterPair<TIter, TIterEnd>
         {
             return &*_iter;
         }
 
-        constexpr fn Data() noex -> TElem*
+        cexpr fn Data() noex -> TElem*
         requires RMutArrIterPair<TIter, TIterEnd>
         {
             return &*_iter;
@@ -89,14 +89,14 @@ namespace Atom
     {
         using Base = Range<ArrIter<T>, ArrIter<T>>;
 
-        constexpr ctor Range(const T* arr, const T* end) noex:
+        cexpr ctor Range(const T* arr, const T* end) noex:
             Base{ arr, end } { }
 
-        constexpr ctor Range(const T* arr, usize count) noex:
+        cexpr ctor Range(const T* arr, usize count) noex:
             Base{ arr, arr + count } { }
 
         template <usize count>
-        constexpr ctor Range(const T(&arr)[count]) noex:
+        cexpr ctor Range(const T(&arr)[count]) noex:
             Base{ arr, arr + count } { }
     };
 
@@ -108,14 +108,14 @@ namespace Atom
     {
         using Base = Range<MutArrIter<T>, MutArrIter<T>>;
 
-        constexpr ctor Range(T* arr, T* end) noex:
+        cexpr ctor Range(T* arr, T* end) noex:
             Base{ arr, end } { }
 
-        constexpr ctor Range(T* arr, usize count) noex:
+        cexpr ctor Range(T* arr, usize count) noex:
             Base{ arr, arr + count } { }
 
         template <usize count>
-        constexpr ctor Range(T(&arr)[count]) noex:
+        cexpr ctor Range(T(&arr)[count]) noex:
             Base{ arr, arr + count } { }
     };
 
@@ -136,7 +136,7 @@ namespace Atom
     {
         using Base = Range<const T*, const T*>;
 
-        constexpr ctor Range(const InitList<T>& init) noex:
+        cexpr ctor Range(const InitList<T>& init) noex:
             Base{ init.begin(), init.end() } { }
     };
 

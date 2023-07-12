@@ -76,7 +76,7 @@ namespace Atom
     public:
         /// DefaultConstructor.
         /// ----------------------------------------------------------------------------------------
-        constexpr ctor InvokableBox() noex { }
+        cexpr ctor InvokableBox() noex { }
 
         /// NullConstructor.
         /// ----------------------------------------------------------------------------------------

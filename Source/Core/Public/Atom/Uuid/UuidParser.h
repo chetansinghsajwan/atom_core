@@ -1,6 +1,5 @@
 #pragma once
 #include "Uuid.h"
-
 #include "Atom/Range.h"
 #include "Atom/Str.h"
 #include "Atom/Math.h"
@@ -11,10 +10,10 @@ namespace Atom
     {
         template <tname TRange>
         requires RRangeOf<TRange, Char>
-        constexpr fn Parse(const TRange& range) const noex -> Uuid
+        cexpr fn Parse(const TRange& range) const noex -> Uuid
         {
             RangeHelper helper;
-            if constexpr (helper.CanGetCount<TRange>())
+            if cexpr (helper.CanGetCount<TRange>())
             {
                 return _ParseCounted(range.Iter(), helper.GetCount(range));
             }
@@ -26,7 +25,7 @@ namespace Atom
 
     private:
         template <tname TIter>
-        constexpr fn _ParseCounted(TIter it, usize itCount) const noex -> Uuid
+        cexpr fn _ParseCounted(TIter it, usize itCount) const noex -> Uuid
         {
             if (itCount != 36)
                 return Uuid::Null;
@@ -67,11 +66,11 @@ namespace Atom
         }
 
         template <tname TIter, tname TIterEnd>
-        constexpr fn _ParseUncounted(TIter it, TIterEnd itEnd) const noex -> Uuid
+        cexpr fn _ParseUncounted(TIter it, TIterEnd itEnd) const noex -> Uuid
         {
-            Uuid uuid;                          // output result
-            usize i = 0;                        // index of byte to write
-            usize j = 0;                        // index of char to read
+            Uuid uuid;         // output result
+            usize i = 0;       // index of byte to write
+            usize j = 0;       // index of char to read
 
             while (i < 16)
             {
