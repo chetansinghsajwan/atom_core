@@ -12,7 +12,7 @@ namespace Atom
         template <tname TInvokable, tname TResult, tname... TArgs>
         struct IsInvokableImpl<TInvokable, TResult(TArgs...)>
         {
-            static constexpr bool Value = ::std::is_invocable_r_v<
+            static constexpr bool Value = std::is_invocable_r_v<
                 TResult, TInvokable, TArgs...>;
         };
 
@@ -20,14 +20,14 @@ namespace Atom
         template <tname TInvokable, tname TResult, tname... TArgs>
         struct IsInvokableImpl<TInvokable, TResult(TArgs...) const>
         {
-            static constexpr bool Value = ::std::is_invocable_r_v<
+            static constexpr bool Value = std::is_invocable_r_v<
                 TResult, TInvokable, TArgs...>;
         };
 
         template <tname TInvokable, tname TResult, tname... TArgs>
         struct IsInvokableImpl<TInvokable, TResult(TArgs...) noex>
         {
-            static constexpr bool Value = ::std::is_nothrow_invocable_r_v<
+            static constexpr bool Value = std::is_nothrow_invocable_r_v<
                 TResult, TInvokable, TArgs...>;
         };
 
@@ -35,7 +35,7 @@ namespace Atom
         template <tname TInvokable, tname TResult, tname... TArgs>
         struct IsInvokableImpl<TInvokable, TResult(TArgs...) const noex>
         {
-            static constexpr bool Value = ::std::is_nothrow_invocable_r_v<
+            static constexpr bool Value = std::is_nothrow_invocable_r_v<
                 TResult, TInvokable, TArgs...>;
         };
     }

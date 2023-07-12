@@ -46,12 +46,12 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Basic constructor with msg.
         /// ----------------------------------------------------------------------------------------
-        Exception(Str msg) noex;
+        ctor Exception(Str msg) noex;
 
         /// ----------------------------------------------------------------------------------------
         /// VirtualDestructor.
         /// ----------------------------------------------------------------------------------------
-        virtual ~Exception() noex;
+        virtual dtor Exception() noex;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -120,7 +120,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     struct IndexOutOfRangeException: OutOfRangeException
     {
-        IndexOutOfRangeException(Str msg, usize index, usize begin, usize end);
+        ctor IndexOutOfRangeException(Str msg, usize index, usize begin, usize end);
 
         usize index;
         usize begin;
@@ -133,16 +133,16 @@ namespace Atom::Ex::Internal
     class Thrower
     {
     public:
-        Thrower(ExceptionSource src = ExceptionSource::Current(),
+        ctor Thrower(ExceptionSource src = ExceptionSource::Current(),
             StackTrace stackTrace = StackTrace::current()) noex;
 
-        Thrower& RecordStack(StackTrace stackTrace = StackTrace::current());
+        fn RecordStack(StackTrace stackTrace = StackTrace::current()) -> Thrower&;
 
-        Thrower& RecordSource(ExceptionSource src = ExceptionSource::Current());
+        fn RecordSource(ExceptionSource src = ExceptionSource::Current()) -> Thrower&;
 
         template <tname TEx>
         requires RDerivedFrom<TEx, Exception>
-        noret void operator << (TEx&& ex);
+        noret fn operator << (TEx&& ex);
 
     protected:
         ExceptionSource src;

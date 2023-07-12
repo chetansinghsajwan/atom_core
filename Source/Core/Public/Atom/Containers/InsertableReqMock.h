@@ -11,11 +11,11 @@ namespace Atom
     {
         template <tname U>
         requires RSameAsUnqualified<U, T>
-        void Insert(U&& el);
+        fn Insert(U&& el);
 
         template <tname TRange>
         requires RRangeOf<TRange, T>
-        void Insert(const TRange& range);
+        fn Insert(const TRange& range);
     };
 
     static_assert(RInsertable<InsertableReqMock<int>, int>,
@@ -29,11 +29,11 @@ namespace Atom
     {
         template <tname U>
         requires RSameAsUnqualified<U, T>
-        void InsertFront(U&& el);
+        fn InsertFront(U&& el);
 
         template <tname TRange>
         requires RRangeOf<TRange, T>
-        void InsertFront(const TRange& range);
+        fn InsertFront(const TRange& range);
     };
 
     static_assert(RFrontInsertable<FrontInsertableReqMock<int>, int>,
@@ -47,11 +47,11 @@ namespace Atom
     {
         template <tname U>
         requires RSameAsUnqualified<U, T>
-        void InsertBack(U&& el);
+        fn InsertBack(U&& el);
 
         template <tname TRange>
         requires RRangeOf<TRange, T>
-        void InsertBack(const TRange& range);
+        fn InsertBack(const TRange& range);
     };
 
     static_assert(RBackInsertable<BackInsertableReqMock<int>, int>,
@@ -65,11 +65,11 @@ namespace Atom
     {
         template <tname U>
         requires RSameAsUnqualified<U, T>
-        void Insert(TKey key, U&& el);
+        fn Insert(TKey key, U&& el);
 
         template <tname TRange>
         requires RRangeOf<TRange, T>
-        void Insert(TKey key, const TRange& range);
+        fn Insert(TKey key, const TRange& range);
     };
 
     static_assert(RKeyInsertable<KeyInsertableReqMock<char, int>, char, int>,

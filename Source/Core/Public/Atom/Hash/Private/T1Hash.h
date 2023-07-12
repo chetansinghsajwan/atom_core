@@ -3,27 +3,28 @@
 
 namespace Atom::Private
 {
+    /// --------------------------------------------------------------------------------------------
     /// T1Hash output.
     /// --------------------------------------------------------------------------------------------
-    template <usize size>
+    template <usize Size>
     struct T1Hash
     {
-        static constexpr usize _Size = size;
+        static constexpr usize _Size = Size;
 
         static const T1Hash Null;
 
-        constexpr bool operator == (const T1Hash& other) const noex = default;
-        constexpr bool operator != (const T1Hash& other) const noex = default;
+        constexpr fn operator == (const T1Hash& other) const noex -> bool = default;
+        constexpr fn operator != (const T1Hash& other) const noex -> bool = default;
 
-        StaArr<byte, size> bytes;
+        StaArr<byte, Size> bytes;
     };
 
     // FIX: Compilation error in MSVC, checkout /Zc:externConstexpr
-    template <usize size>
+    template <usize Size>
 #ifdef ATOM_COMP_MSVC
     inline
 #else
     constexpr
 #endif
-    const T1Hash<size> T1Hash<size>::Null = T1Hash<size>{ 0 };
+    const T1Hash<Size> T1Hash<Size>::Null = T1Hash<Size>{ 0 };
 }

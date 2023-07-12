@@ -9,7 +9,7 @@ namespace Atom
     /// exception safety.
     /// --------------------------------------------------------------------------------------------
     template <tname TLockable>
-        requires RLockable<TLockable>
+    requires RLockable<TLockable>
     class LockGuard
     {
     public:
@@ -20,7 +20,7 @@ namespace Atom
         /// 
         /// @THROWS UnkownException Exception thrown by {lock.Lock()}.
         /// ----------------------------------------------------------------------------------------
-        LockGuard(TLockable& lock):
+        ctor LockGuard(TLockable& lock):
             _lock(lock)
         {
             _lock.Lock();
@@ -31,7 +31,7 @@ namespace Atom
         /// 
         /// @THROWS UnkownException Exception thrown by {lock.Lock()}.
         /// ----------------------------------------------------------------------------------------
-        ~LockGuard()
+        dtor LockGuard()
         {
             _lock.Unlock();
         }

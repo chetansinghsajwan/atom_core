@@ -10,9 +10,6 @@
 
 namespace Atom
 {
-	using Str = Str;
-	using StrView = StrView;
-
 	using _FmtFmtParseCtx = ::fmt::basic_format_parse_context<Char>;
 	using _FmtFmtParseCtxIter = tname _FmtFmtParseCtx::iterator;
 
@@ -35,12 +32,12 @@ namespace Atom
 	class StrFmtEx: public Exception
 	{
 	public:
-		StrFmtEx(Str msg) noex:
+		ctor StrFmtEx(Str msg) noex:
 			Exception(MOVE(msg)) { }
 
 		/// @TODO Fix this ugly code.
 		/// ----------------------------------------------------------------------------------------
-		StrFmtEx(const _FmtFmtEx& fmtEx) noex:
+		ctor StrFmtEx(const _FmtFmtEx& fmtEx) noex:
 			Exception(TEXT("Not implemented.")) { }
 		// StrFmtEx(const _FmtFmtEx& fmtEx) noex:
 		// 	Exception(CharEncodingConverter<UTF8CharEncoding, CharEncoding>()
@@ -52,15 +49,15 @@ namespace Atom
 	/// --------------------------------------------------------------------------------------------
 	struct StrFmtParseCtx
 	{
-		constexpr StrFmtParseCtx(_FmtFmtParseCtx& fmtCtx) noex:
+		constexpr ctor StrFmtParseCtx(_FmtFmtParseCtx& fmtCtx) noex:
 			_fmtCtx{ fmtCtx } { }
 
-		StrView GetRange() noex
+		fn GetRange() noex -> StrView
 		{
 			return StrView{ Range(_fmtCtx.begin(), _fmtCtx.end()) };
 		}
 
-		void AdvanceTo(ArrIter<Char> it) noex
+		fn AdvanceTo(ArrIter<Char> it) noex
 		{
 			_fmtCtx.advance_to(&*it);
 		}
@@ -73,10 +70,10 @@ namespace Atom
 	/// --------------------------------------------------------------------------------------------
 	struct StrFmtCtx
 	{
-		constexpr StrFmtCtx(_FmtFmtCtx& fmtCtx) noex:
+		constexpr ctor StrFmtCtx(_FmtFmtCtx& fmtCtx) noex:
 			_fmtCtx{ fmtCtx } { }
 
-		void Write(Char ch)
+		fn Write(Char ch)
 		{
 			auto out = _fmtCtx.out();
 			*out++ = ch;
@@ -85,7 +82,7 @@ namespace Atom
 
 		template <tname TRange>
 		requires RRangeOf<TRange, Char>
-		void Write(const TRange& chars)
+		fn Write(const TRange& chars)
 		{
 			auto out = _fmtCtx.out();
 			for (Char ch : chars)
@@ -145,14 +142,14 @@ namespace Atom
 	template < >
 	struct StrFmtArgFmterImpl<StrView>
 	{
-		void Parse(StrFmtParseCtx& ctx) noex
+		fn Parse(StrFmtParseCtx& ctx) noex
 		{
 			_FmtFmtParseCtx& fmtCtx = ctx._fmtCtx;
 
 			fmtCtx.advance_to(_fmtFmter.parse(fmtCtx));
 		}
 
-		void Fmt(StrView str, StrFmtCtx& ctx) noex
+		fn Fmt(StrView str, StrFmtCtx& ctx) noex
 		{
 			_FmtFmtCtx& fmtCtx = ctx._fmtCtx;
 
@@ -171,7 +168,7 @@ namespace Atom
 	template <usize N>
 	struct StrFmtArgFmterImpl<Char[N]>: StrFmtArgFmter<StrView>
 	{
-		void Fmt(const Char(&chars)[N], StrFmtCtx& ctx) noex
+		fn Fmt(const Char(&chars)[N], StrFmtCtx& ctx) noex
 		{
 			StrView str{ chars, N };
 			StrFmtArgFmter<StrView>::Fmt(str, ctx);
@@ -184,7 +181,7 @@ namespace Atom
 	template <RStrViewConvertible T>
 	struct StrFmtArgFmterImpl<T>: StrFmtArgFmter<StrView>
 	{
-		constexpr void Fmt(const T& in, StrFmtCtx& ctx) noex
+		constexpr fn Fmt(const T& in, StrFmtCtx& ctx) noex
 		{
 			StrFmtArgFmter<StrView>::Fmt(
 				convter.Convert(in), ctx);

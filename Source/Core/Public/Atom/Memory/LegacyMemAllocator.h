@@ -5,17 +5,17 @@ namespace Atom
 {
     struct LegacyMemAllocator
     {
-        void* Alloc(usize size)
+        fn Alloc(usize size) -> void*
         {
             return std::malloc(size);
         }
 
-        void* Realloc(void* mem, usize size)
+        fn Realloc(void* mem, usize size) -> void*
         {
             return std::realloc(mem, size);
         }
 
-        void Dealloc(void* mem)
+        fn Dealloc(void* mem)
         {
             std::free(mem);
         }

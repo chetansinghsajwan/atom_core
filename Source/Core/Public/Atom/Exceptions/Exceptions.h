@@ -18,28 +18,28 @@ namespace Atom
         };
     }
 
-    inline Exception::Exception(Str msg) noex:
+    inline Exception::ctor Exception(Str msg) noex:
         msg(MOVE(msg)) { }
 
-    inline Exception::~Exception() noex { }
+    inline Exception::dtor Exception() noex { }
 
-    inline IndexOutOfRangeException::IndexOutOfRangeException(
+    inline IndexOutOfRangeException::ctor IndexOutOfRangeException(
         Str msg, usize index, usize begin, usize end):
         OutOfRangeException(MOVE(msg)), index{ index }, begin{ begin }, end{ end } { }
 }
 
 namespace Atom::Ex::Internal
 {
-    inline Thrower::Thrower(ExceptionSource src, StackTrace stackTrace) noex:
+    inline ctor Thrower::Thrower(ExceptionSource src, StackTrace stackTrace) noex:
         src{ MOVE(src) }, stackTrace{ MOVE(stackTrace) } { }
 
-    inline Thrower& Thrower::RecordStack(StackTrace stackTrace)
+    inline fn Thrower::RecordStack(StackTrace stackTrace) -> Thrower&
     {
         this->stackTrace = MOVE(stackTrace);
         return *this;
     }
 
-    inline Thrower& Thrower::RecordSource(ExceptionSource src)
+    inline fn Thrower::RecordSource(ExceptionSource src) -> Thrower&
     {
         this->src = MOVE(src);
         return *this;
@@ -47,7 +47,7 @@ namespace Atom::Ex::Internal
 
     template <tname TEx>
     requires RDerivedFrom<TEx, Exception>
-    inline void Thrower::operator << (TEx&& ex)
+    inline fn Thrower::operator << (TEx&& ex)
     {
         ex.src = MOVE(src);
         ex.stackTrace = MOVE(stackTrace);

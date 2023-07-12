@@ -19,34 +19,34 @@ namespace Atom
         /// 
         /// @POST Mutex is not locked.
         /// ----------------------------------------------------------------------------------------
-        SimpleMutex() noex { }
+        ctor SimpleMutex() noex { }
 
         /// ----------------------------------------------------------------------------------------
         /// CopyConstructor is deleted.
         /// ----------------------------------------------------------------------------------------
-        SimpleMutex(const SimpleMutex& other) = delete;
+        ctor SimpleMutex(const SimpleMutex& other) = delete;
 
         /// ----------------------------------------------------------------------------------------
         /// MoveConstructor is delete.
         /// ----------------------------------------------------------------------------------------
-        SimpleMutex(SimpleMutex&& other) = delete;
+        ctor SimpleMutex(SimpleMutex&& other) = delete;
 
         /// ----------------------------------------------------------------------------------------
         /// CopyOperator is deleted.
         /// ----------------------------------------------------------------------------------------
-        SimpleMutex& operator = (const SimpleMutex& other) = delete;
+        fn operator = (const SimpleMutex& other) = delete;
 
         /// ----------------------------------------------------------------------------------------
         /// MoveOperator is delete.
         /// ----------------------------------------------------------------------------------------
-        SimpleMutex& operator = (SimpleMutex&& other) = delete;
+        fn operator = (SimpleMutex&& other) = delete;
 
         /// ----------------------------------------------------------------------------------------
         /// Destructor.
         /// 
         /// @NOTE If lock is locked by some thread and lock is destroyed, behaviour is undefined.
         /// ----------------------------------------------------------------------------------------
-        ~SimpleMutex() { }
+        dtor SimpleMutex() { }
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -55,7 +55,7 @@ namespace Atom
         /// 
         /// @SEE TryLock().
         /// ----------------------------------------------------------------------------------------
-        void Lock()
+        fn Lock()
         {
             _impl.lock();
         }
@@ -66,7 +66,7 @@ namespace Atom
         /// 
         /// @RETURNS {true} if lock acquired, else {false}.
         /// ----------------------------------------------------------------------------------------
-        bool TryLock()
+        fn TryLock() -> bool
         {
             return _impl.try_lock();
         }
@@ -74,7 +74,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Unlocks the lock.
         /// ----------------------------------------------------------------------------------------
-        void Unlock()
+        fn Unlock()
         {
             _impl.unlock();
         }

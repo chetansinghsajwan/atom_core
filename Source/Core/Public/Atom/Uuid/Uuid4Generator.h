@@ -12,11 +12,11 @@ namespace Atom
     class BasicUuidRandomGenerator
     {
     public:
-        explicit BasicUuidRandomGenerator(uint32 seed = 0) noex:
+        explicit ctor BasicUuidRandomGenerator(uint32 seed = 0) noex:
             m_generator{ seed } { }
 
     public:
-        Uuid Generate() noex
+        fn Generate() noex -> Uuid
         {
             Uuid uuid;
             for (usize i = 0; i < 16; i += 4)

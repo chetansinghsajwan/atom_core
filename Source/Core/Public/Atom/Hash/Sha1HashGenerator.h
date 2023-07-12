@@ -11,17 +11,17 @@ namespace Atom::Private
 {
     struct Sha1GeneratorImpl
     {
-        void Initialize()
+        fn Initialize()
         {
             Sha1Initialise(&m_context);
         }
 
-        void Update(const void* data, uint32_t dataSize)
+        fn Update(const void* data, uint32_t dataSize)
         {
             Sha1Update(&m_context, data, dataSize);
         }
 
-        void Calculate(Sha1Hash& hash)
+        fn Calculate(Sha1Hash& hash)
         {
             Sha1Finalise(&m_context, (SHA1_HASH*)hash.bytes.Data());
         }

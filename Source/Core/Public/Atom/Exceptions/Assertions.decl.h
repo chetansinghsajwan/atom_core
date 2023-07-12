@@ -9,7 +9,7 @@ namespace Atom
     class AssertException: public Exception
     {
     public:
-        AssertException(Str msg, StrView assertExpr) noex;
+        ctor AssertException(Str msg, StrView assertExpr) noex;
 
     public:
         StrView assertExpr;
@@ -22,12 +22,12 @@ namespace Atom::Internal
     {
         using Thrower = Ex::Internal::Thrower;
 
-        AssertionFailure(StrView assertExpr, 
+        ctor AssertionFailure(StrView assertExpr, 
             ExceptionSource src = ExceptionSource::Current(),
             StackTrace stackTrace = StackTrace::current()):
             assertExpr{ assertExpr }, Thrower(MOVE(src), MOVE(stackTrace)) { }
 
-        ~AssertionFailure()
+        dtor AssertionFailure()
         {
             if (!done)
             {

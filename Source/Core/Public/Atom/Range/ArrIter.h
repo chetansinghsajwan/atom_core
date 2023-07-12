@@ -16,26 +16,26 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// DefaultConstructor.
         /// ----------------------------------------------------------------------------------------
-        constexpr ArrIter() noex:
+        constexpr ctor ArrIter() noex:
             _it{ nullptr } { }
 
         /// ----------------------------------------------------------------------------------------
         /// NullConstructor.
         /// ----------------------------------------------------------------------------------------
-        constexpr ArrIter(NullPtr) noex:
+        constexpr ctor ArrIter(NullPtr) noex:
             _it{ nullptr } { }
 
         /// ----------------------------------------------------------------------------------------
         /// Constructor.
         /// ----------------------------------------------------------------------------------------
-        constexpr ArrIter(const T* it) noex:
+        constexpr ctor ArrIter(const T* it) noex:
             _it{ it } { }
 
     public:
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr const T& operator *() const noex
+        constexpr fn operator *() const noex -> const T&
         {
             return *_it;
         }
@@ -43,7 +43,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr bool operator ==(const ArrIter& that) const noex
+        constexpr fn operator ==(const ArrIter& that) const noex -> bool
         {
             return this->_it == that._it;
         }
@@ -51,7 +51,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr bool operator !=(const ArrIter& that) const noex
+        constexpr fn operator !=(const ArrIter& that) const noex -> bool
         {
             return this->_it != that._it;
         }
@@ -59,7 +59,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr ArrIter& operator ++(int) noex
+        constexpr fn operator ++(int) noex -> ArrIter&
         {
             _it++;
             return *this;
@@ -68,7 +68,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// @TODO[Cpp2RemoveOper].
         /// ----------------------------------------------------------------------------------------
-        constexpr ArrIter& operator ++() noex
+        constexpr fn operator ++() noex -> ArrIter&
         {
             _it++;
             return *this;
@@ -77,7 +77,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr ArrIter& operator --(int) noex
+        constexpr fn operator --(int) noex -> ArrIter&
         {
             _it--;
             return *this;
@@ -86,7 +86,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr ArrIter& operator +=(usize steps) noex
+        constexpr fn operator +=(usize steps) noex -> ArrIter&
         {
             _it =+ steps;
             return *this;
@@ -95,7 +95,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr ArrIter& operator -=(usize steps) noex
+        constexpr fn operator -=(usize steps) noex -> ArrIter&
         {
             _it =- steps;
             return *this;
@@ -104,7 +104,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr ArrIter operator +(usize steps) const noex
+        constexpr fn operator +(usize steps) const noex -> ArrIter
         {
             return ArrIter(_it + steps);
         }
@@ -112,7 +112,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr ArrIter operator -(usize steps) const noex
+        constexpr fn operator -(usize steps) const noex -> ArrIter
         {
             return ArrIter(_it - steps);
         }
@@ -120,7 +120,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr isize operator -(const ArrIter& that) const noex
+        constexpr fn operator -(const ArrIter& that) const noex -> isize
         {
             return this->_it - that._it;
         }
@@ -146,7 +146,7 @@ namespace Atom
     public:
         using ArrIter<T>::operator*;
 
-        constexpr T& operator *() noex
+        constexpr fn operator *() noex -> T&
         {
             return *(T*)this->_it;
         }
@@ -155,7 +155,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr MutArrIter operator +(usize steps) const noex
+        constexpr fn operator +(usize steps) const noex -> MutArrIter
         {
             return MutArrIter(this->_it + steps);
         }
@@ -163,7 +163,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr MutArrIter operator -(usize steps) const noex
+        constexpr fn operator -(usize steps) const noex -> MutArrIter
         {
             return MutArrIter(this->_it - steps);
         }
@@ -171,7 +171,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr isize operator -(const MutArrIter& that) const noex
+        constexpr fn operator -(const MutArrIter& that) const noex -> isize
         {
             return this->_it - that._it;
         }

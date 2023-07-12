@@ -19,12 +19,12 @@ namespace Atom
     {
         using TElem = T;
 
-        const T& operator *() const;
+        fn operator *() const -> const T&;
 
-        bool operator ==(IterEndReqMock end) const;
-        bool operator !=(IterEndReqMock end) const;
+        fn operator ==(IterEndReqMock end) const -> bool;
+        fn operator !=(IterEndReqMock end) const -> bool;
 
-        IterReqMock& operator ++(int);
+        fn operator ++(int) -> IterReqMock&;
     };
 
     ATOM_SATISFIES_ITER_PAIR(IterReqMock<int>, IterEndReqMock);
@@ -37,13 +37,13 @@ namespace Atom
     {
         using TElem = T;
 
-        T& operator *();
-        const T& operator *() const;
+        fn operator *() -> T&;
+        fn operator *() const -> const T&;
 
-        bool operator ==(IterEndReqMock end) const;
-        bool operator !=(IterEndReqMock end) const;
+        fn operator ==(IterEndReqMock end) const -> bool;
+        fn operator !=(IterEndReqMock end) const -> bool;
 
-        MutIterReqMock& operator ++(int);
+        fn operator ++(int) -> MutIterReqMock&;
     };
 
     ATOM_SATISFIES_MUT_ITER_PAIR(MutIterReqMock<int>, IterEndReqMock);
@@ -56,12 +56,12 @@ namespace Atom
     {
         using TElem = T;
 
-        const T& operator *() const;
+        fn operator *() const -> const T&;
 
-        bool operator ==(IterEndReqMock end) const;
-        bool operator !=(IterEndReqMock end) const;
+        fn operator ==(IterEndReqMock end) const -> bool;
+        fn operator !=(IterEndReqMock end) const -> bool;
 
-        FwdIterReqMock& operator ++(int);
+        fn operator ++(int) -> FwdIterReqMock&;
     };
 
     ATOM_SATISFIES_FWD_ITER_PAIR(FwdIterReqMock<int>, IterEndReqMock);
@@ -74,13 +74,13 @@ namespace Atom
     {
         using TElem = T;
 
-        T& operator *();
-        const T& operator *() const;
+        fn operator *() -> T&;
+        fn operator *() const -> const T&;
 
-        bool operator ==(IterEndReqMock end) const;
-        bool operator !=(IterEndReqMock end) const;
+        fn operator ==(IterEndReqMock end) const -> bool;
+        fn operator !=(IterEndReqMock end) const -> bool;
 
-        MutFwdIterReqMock& operator ++(int);
+        fn operator ++(int) -> MutFwdIterReqMock&;
     };
 
     ATOM_SATISFIES_MUT_FWD_ITER_PAIR(MutFwdIterReqMock<int>, IterEndReqMock);
@@ -93,13 +93,13 @@ namespace Atom
     {
         using TElem = T;
 
-        const T& operator *() const;
+        fn operator *() const -> const T&;
 
-        bool operator ==(IterEndReqMock end) const;
-        bool operator !=(IterEndReqMock end) const;
+        fn operator ==(IterEndReqMock end) const -> bool;
+        fn operator !=(IterEndReqMock end) const -> bool;
 
-        BidiIterReqMock& operator ++(int);
-        BidiIterReqMock& operator --(int);
+        fn operator ++(int) -> BidiIterReqMock&;
+        fn operator --(int) -> BidiIterReqMock&;
     };
 
     ATOM_SATISFIES_BIDI_ITER_PAIR(BidiIterReqMock<int>, IterEndReqMock);
@@ -112,14 +112,14 @@ namespace Atom
     {
         using TElem = T;
 
-        T& operator *();
-        const T& operator *() const;
+        fn operator *() -> T&;
+        fn operator *() const -> const T&;
 
-        bool operator ==(IterEndReqMock end) const;
-        bool operator !=(IterEndReqMock end) const;
+        fn operator ==(IterEndReqMock end) const -> bool;
+        fn operator !=(IterEndReqMock end) const -> bool;
 
-        MutBidiIterReqMock& operator ++(int);
-        MutBidiIterReqMock& operator --(int);
+        fn operator ++(int) -> MutBidiIterReqMock&;
+        fn operator --(int) -> MutBidiIterReqMock&;
     };
 
     ATOM_SATISFIES_MUT_BIDI_ITER_PAIR(MutBidiIterReqMock<int>, IterEndReqMock);
@@ -132,21 +132,21 @@ namespace Atom
     {
         using TElem = T;
 
-        const T& operator *() const;
+        fn operator *() const -> const T&;
 
-        bool operator ==(IterEndReqMock end) const;
-        bool operator !=(IterEndReqMock end) const;
+        fn operator ==(IterEndReqMock end) const -> bool;
+        fn operator !=(IterEndReqMock end) const -> bool;
 
-        JumpIterReqMock& operator ++(int);
-        JumpIterReqMock& operator --(int);
+        fn operator ++(int) -> JumpIterReqMock&;
+        fn operator --(int) -> JumpIterReqMock&;
 
-        JumpIterReqMock& operator +=(usize steps);
-        JumpIterReqMock& operator -=(usize steps);
+        fn operator +=(usize steps) -> JumpIterReqMock&;
+        fn operator -=(usize steps) -> JumpIterReqMock&;
 
-        JumpIterReqMock operator +(usize steps) const;
-        JumpIterReqMock operator -(usize steps) const;
+        fn operator +(usize steps) const -> JumpIterReqMock;
+        fn operator -(usize steps) const -> JumpIterReqMock;
 
-        isize operator -(const JumpIterReqMock& that) const;
+        fn operator -(const JumpIterReqMock& that) const -> isize;
     };
 
     ATOM_SATISFIES_JUMP_ITER_PAIR(JumpIterReqMock<int>, IterEndReqMock);
@@ -159,22 +159,22 @@ namespace Atom
     {
         using TElem = T;
 
-        T& operator *();
-        const T& operator *() const;
+        fn operator *() -> T&;
+        fn operator *() const -> const T&;
 
-        bool operator ==(IterEndReqMock end) const;
-        bool operator !=(IterEndReqMock end) const;
+        fn operator ==(IterEndReqMock end) const -> bool;
+        fn operator !=(IterEndReqMock end) const -> bool;
 
-        MutJumpIterReqMock& operator ++(int);
-        MutJumpIterReqMock& operator --(int);
+        fn operator ++(int) -> MutJumpIterReqMock&;
+        fn operator --(int) -> MutJumpIterReqMock&;
 
-        MutJumpIterReqMock& operator +=(usize steps);
-        MutJumpIterReqMock& operator -=(usize steps);
+        fn operator +=(usize steps) -> MutJumpIterReqMock&;
+        fn operator -=(usize steps) -> MutJumpIterReqMock&;
 
-        MutJumpIterReqMock operator +(usize steps) const;
-        MutJumpIterReqMock operator -(usize steps) const;
+        fn operator +(usize steps) const -> MutJumpIterReqMock;
+        fn operator -(usize steps) const -> MutJumpIterReqMock;
 
-        isize operator -(const MutJumpIterReqMock& that) const;
+        fn operator -(const MutJumpIterReqMock& that) const -> isize;
     };
 
     ATOM_SATISFIES_MUT_JUMP_ITER_PAIR(MutJumpIterReqMock<int>, IterEndReqMock);
@@ -187,22 +187,22 @@ namespace Atom
     {
         using TElem = T;
 
-        T& operator *();
-        const T& operator *() const;
+        fn operator *() -> T&;
+        fn operator *() const -> const T&;
 
-        bool operator ==(IterEndReqMock end) const;
-        bool operator !=(IterEndReqMock end) const;
+        fn operator ==(IterEndReqMock end) const -> bool;
+        fn operator !=(IterEndReqMock end) const -> bool;
 
-        ArrIterReqMock& operator ++(int);
-        ArrIterReqMock& operator --(int);
+        fn operator ++(int) -> ArrIterReqMock&;
+        fn operator --(int) -> ArrIterReqMock&;
 
-        ArrIterReqMock& operator +=(usize steps);
-        ArrIterReqMock& operator -=(usize steps);
+        fn operator +=(usize steps) -> ArrIterReqMock&;
+        fn operator -=(usize steps) -> ArrIterReqMock&;
 
-        ArrIterReqMock operator +(usize steps) const;
-        ArrIterReqMock operator -(usize steps) const;
+        fn operator +(usize steps) const -> ArrIterReqMock;
+        fn operator -(usize steps) const -> ArrIterReqMock;
 
-        isize operator -(const ArrIterReqMock& that) const;
+        fn operator -(const ArrIterReqMock& that) const -> isize;
     };
 
     ATOM_SATISFIES_ARR_ITER_PAIR(ArrIterReqMock<int>, IterEndReqMock);
@@ -215,22 +215,22 @@ namespace Atom
     {
         using TElem = T;
 
-        T& operator *();
-        const T& operator *() const;
+        fn operator *() -> T&;
+        fn operator *() const -> const T&;
 
-        bool operator ==(IterEndReqMock end) const;
-        bool operator !=(IterEndReqMock end) const;
+        fn operator ==(IterEndReqMock end) const -> bool;
+        fn operator !=(IterEndReqMock end) const -> bool;
 
-        MutArrIterReqMock& operator ++(int);
-        MutArrIterReqMock& operator --(int);
+        fn operator ++(int) -> MutArrIterReqMock&;
+        fn operator --(int) -> MutArrIterReqMock&;
 
-        MutArrIterReqMock& operator +=(usize steps);
-        MutArrIterReqMock& operator -=(usize steps);
+        fn operator +=(usize steps) -> MutArrIterReqMock&;
+        fn operator -=(usize steps) -> MutArrIterReqMock&;
 
-        MutArrIterReqMock operator +(usize steps) const;
-        MutArrIterReqMock operator -(usize steps) const;
+        fn operator +(usize steps) const -> MutArrIterReqMock;
+        fn operator -(usize steps) const -> MutArrIterReqMock;
 
-        isize operator -(const MutArrIterReqMock& that) const;
+        fn operator -(const MutArrIterReqMock& that) const -> isize;
     };
 
     ATOM_SATISFIES_MUT_ARR_ITER_PAIR(MutArrIterReqMock<int>, IterEndReqMock);

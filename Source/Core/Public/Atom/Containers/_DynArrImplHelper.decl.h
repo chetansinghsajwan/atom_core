@@ -34,7 +34,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <tname T2, tname = TTI::TEnableIf<
             RSameAsUnqualified<T2, TElem>>>
-        constexpr TMutIter InsertAt(TIter pos, T2&& el);
+        constexpr fn InsertAt(TIter pos, T2&& el) -> TMutIter;
 
         /// ----------------------------------------------------------------------------------------
         /// Insert element range {range} at {pos} pos.
@@ -46,7 +46,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <tname TRange, tname = TTI::TEnableIf<
             RRangeOf<TRange, TElem>>>
-        constexpr TMutIter InsertAt(TIter pos, const TRange& range);
+        constexpr fn InsertAt(TIter pos, const TRange& range) -> TMutIter;
 
         /// ----------------------------------------------------------------------------------------
         /// Insert element {el} by forward at front.
@@ -57,7 +57,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <tname T2, tname = TTI::TEnableIf<
             RSameAsUnqualified<T2, TElem>>>
-        constexpr TMutIter InsertFront(T2&& el);
+        constexpr fn InsertFront(T2&& el) -> TMutIter;
 
         /// ----------------------------------------------------------------------------------------
         /// Insert element range {range} at front.
@@ -68,7 +68,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <tname TRange, tname = TTI::TEnableIf<
             RRangeOf<TRange, TElem>>>
-        constexpr TMutIter InsertFront(const TRange& range);
+        constexpr fn InsertFront(const TRange& range) -> TMutIter;
 
         /// ----------------------------------------------------------------------------------------
         /// Insert element {el} by forward at back.
@@ -79,7 +79,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <tname T2, tname = TTI::TEnableIf<
             RSameAsUnqualified<T2, TElem>>>
-        constexpr TMutIter InsertBack(T2&& el);
+        constexpr fn InsertBack(T2&& el) -> TMutIter;
 
         /// ----------------------------------------------------------------------------------------
         /// Insert element range {range} at back.
@@ -90,43 +90,43 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <tname TRange, tname = TTI::TEnableIf<
             RRangeOf<TRange, TElem>>>
-        constexpr TMutIter InsertBack(const TRange& range);
+        constexpr fn InsertBack(const TRange& range) -> TMutIter;
 
         /// ----------------------------------------------------------------------------------------
         /// Calls {InsertBack(...)}.
         /// ----------------------------------------------------------------------------------------
         template <tname T2, tname = TTI::TEnableIf<
             RSameAsUnqualified<T2, TElem>>>
-        constexpr TMutIter operator +=(T2&& el);
+        constexpr fn operator +=(T2&& el) -> TMutIter;
 
         /// ----------------------------------------------------------------------------------------
         /// Calls {InsertBack(...)}.
         /// ----------------------------------------------------------------------------------------
         template <tname TRange, tname = TTI::TEnableIf<
             RRangeOf<TRange, TElem>>>
-        constexpr TMutIter operator +=(const TRange& range);
+        constexpr fn operator +=(const TRange& range) -> TMutIter;
 
     private:
         // TODO: Refactor this. Should we use T2 here to denote other tname?
         template <tname T2>
-        constexpr usize _InsertAt(usize index, T2&& el);
+        constexpr fn _InsertAt(usize index, T2&& el) -> usize;
 
         template <tname TIter2>
-        constexpr usize _InsertAtCounted(usize index, TIter2 it, usize count);
+        constexpr fn _InsertAtCounted(usize index, TIter2 it, usize count) -> usize;
 
         template <tname TIter2, tname TIterEnd2>
-        constexpr usize _InsertAtUncounted(usize index, TIter2 begin, TIterEnd2 end);
+        constexpr fn _InsertAtUncounted(usize index, TIter2 begin, TIterEnd2 end) -> usize;
 
         template <tname T2>
-        constexpr usize _InsertBack(T2&& el);
+        constexpr fn _InsertBack(T2&& el) -> usize;
 
         template <tname TIter2>
-        constexpr usize _InsertBackCounted(TIter2 it, usize count);
+        constexpr fn _InsertBackCounted(TIter2 it, usize count) -> usize;
 
         template <tname TIter2, tname TIterEnd2>
-        constexpr usize _InsertBackUncounted(TIter2 begin, TIterEnd2 end);
+        constexpr fn _InsertBackUncounted(TIter2 begin, TIterEnd2 end) -> usize;
 
-        constexpr bool _ValidateIndexForInsert(isize index) const noex;
+        constexpr fn _ValidateIndexForInsert(isize index) const noex -> bool;
 
     //// -------------------------------------------------------------------------------------------
     //// Remove
@@ -140,7 +140,7 @@ namespace Atom
         /// 
         /// @RETURNS {TMutIter} to the next element.
         /// ----------------------------------------------------------------------------------------
-        constexpr TMutIter RemoveAt(TIter pos);
+        constexpr fn RemoveAt(TIter pos) -> TMutIter;
 
         /// ----------------------------------------------------------------------------------------
         /// Removes element at range{range}.
@@ -149,17 +149,17 @@ namespace Atom
         /// 
         /// @RETURNS {TMutIter} to the next element.
         /// ----------------------------------------------------------------------------------------
-        constexpr TMutIter RemoveRange(Range<TIter, TIterEnd> range);
+        constexpr fn RemoveRange(Range<TIter, TIterEnd> range) -> TMutIter;
 
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr void Clear();
+        constexpr fn Clear();
 
     public:
-        constexpr usize _RemoveAt(usize index);
+        constexpr fn _RemoveAt(usize index) -> usize;
 
-        constexpr usize _RemoveRange(usize begin, usize count);
+        constexpr fn _RemoveRange(usize begin, usize count) -> usize;
 
     //// -------------------------------------------------------------------------------------------
     //// Memory
@@ -169,17 +169,17 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr void Reserve(usize size);
+        constexpr fn Reserve(usize size);
 
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr void Release();
+        constexpr fn Release();
 
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr usize Capacity() const noex;
+        constexpr fn Capacity() const noex -> usize;
 
         using Base::Iter;
         using Base::IterEnd;
@@ -191,26 +191,26 @@ namespace Atom
     //// -------------------------------------------------------------------------------------------
 
     protected:
-        constexpr bool _ValidateIter(TIter it) const noex;
-        constexpr void _UpdateIterDebugId() noex;
-        constexpr bool _ValidateIndex(isize index) const noex;
-        constexpr isize _FetchIndex(TIter pos) const noex;
-        constexpr usize _CalcCapGrowth(usize required) const noex;
-        constexpr void _EnsureCapFor(usize count);
+        constexpr fn _ValidateIter(TIter it) const noex -> bool;
+        constexpr fn _UpdateIterDebugId() noex;
+        constexpr fn _ValidateIndex(isize index) const noex -> bool;
+        constexpr fn _FetchIndex(TIter pos) const noex -> isize;
+        constexpr fn _CalcCapGrowth(usize required) const noex -> usize;
+        constexpr fn _EnsureCapFor(usize count);
 
-        constexpr void _ConstructAt(usize index, auto&&... args);
-        constexpr void _DestructAt(usize index);
-        constexpr void _DestructRange(usize index, usize count);
-        constexpr void _MoveRangeFront(usize index, usize count);
-        constexpr void _MoveRangeBack(usize index, usize count);
-        constexpr void _MoveRangeTo(usize index, TElem* dest);
-        constexpr void _RotateRangeBack(usize index, usize count);
-
-        template <tname TRange>
-        static constexpr bool _CanGetRangeSize() noex;
+        constexpr fn _ConstructAt(usize index, auto&&... args);
+        constexpr fn _DestructAt(usize index);
+        constexpr fn _DestructRange(usize index, usize count);
+        constexpr fn _MoveRangeFront(usize index, usize count);
+        constexpr fn _MoveRangeBack(usize index, usize count);
+        constexpr fn _MoveRangeTo(usize index, TElem* dest);
+        constexpr fn _RotateRangeBack(usize index, usize count);
 
         template <tname TRange>
-        static constexpr usize _GetRangeSize(const TRange& range) noex;
+        static constexpr fn _CanGetRangeSize() noex -> bool;
+
+        template <tname TRange>
+        static constexpr fn _GetRangeSize(const TRange& range) noex -> usize;
 
         using Base::_Data;
         using Base::_Count;

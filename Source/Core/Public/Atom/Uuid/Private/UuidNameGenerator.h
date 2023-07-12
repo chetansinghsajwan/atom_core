@@ -10,11 +10,11 @@ namespace Atom::Private
     class UuidNameGenerator
     {
     public:
-        explicit UuidNameGenerator(const Uuid& in_nsUuid) noex:
+        explicit ctor UuidNameGenerator(const Uuid& in_nsUuid) noex:
             m_nsUuid(in_nsUuid) { }
 
     public:
-        Uuid Generate(StrView name)
+        fn Generate(StrView name) -> Uuid
         {
             m_Reset();
             m_ProcessChars(name);
@@ -22,13 +22,13 @@ namespace Atom::Private
         }
 
     private:
-        void m_Reset()
+        fn m_Reset()
         {
             m_hashGenerator.Reset();
             m_hashGenerator.ProcessBytes(m_nsUuid.bytes.Data(), 16);
         }
 
-        void m_ProcessChars(StrView str)
+        fn m_ProcessChars(StrView str)
         {
             for (uint32_t c : str)
             {
@@ -44,7 +44,7 @@ namespace Atom::Private
             }
         }
 
-        Uuid m_MakeUuid()
+        fn m_MakeUuid() -> Uuid
         {
             THash hash = m_hashGenerator.Generate();
 

@@ -13,7 +13,7 @@
 #define _RANGE_REF_WRAP(Wrap, ...)                                \
     struct Wrap: __VA_ARGS__                                      \
     {                                                             \
-        constexpr Wrap(TRange& range) noex:                   \
+        constexpr ctor Wrap(TRange& range) noex:                   \
             __VA_ARGS__{ range } { }                              \
     }
 
@@ -38,15 +38,15 @@ namespace Atom
         using TIter = TIterWrap<tname TRange::TIter>;
         using TIterEnd = TIterWrap<tname TRange::TIterEnd>;
 
-        constexpr _RangeWrapBase(TRange& range) noex:
+        constexpr ctor _RangeWrapBase(TRange& range) noex:
             _range{ range } { }
 
-        constexpr TIter Iter() const noex
+        constexpr fn Iter() const noex -> TIter
         {
             return TIter{ _range.Iter() };
         }
 
-        constexpr TIterEnd IterEnd() const noex
+        constexpr fn IterEnd() const noex -> TIterEnd
         {
             return TIterEnd{ _range.IterEnd() };
         }
@@ -67,15 +67,15 @@ namespace Atom
         using TMutIter = TMutIterWrap<tname TRange::TMutIter>;
         using TMutIterEnd = TMutIterWrap<tname TRange::TMutIterEnd>;
 
-        constexpr _MutRangeWrapBase(TRange& range) noex:
+        constexpr ctor _MutRangeWrapBase(TRange& range) noex:
             Base{ range } { }
 
-        constexpr TMutIter MutIter() noex
+        constexpr fn MutIter() noex -> TMutIter
         {
             return TMutIter{ this->_range.MutIter() };
         }
 
-        constexpr TMutIterEnd MutIterEnd() noex
+        constexpr fn MutIterEnd() noex -> TMutIterEnd
         {
             return TMutIterEnd{ this->_range.MutIterEnd() };
         }

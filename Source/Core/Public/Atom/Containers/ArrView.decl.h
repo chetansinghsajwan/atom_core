@@ -10,23 +10,21 @@ namespace Atom
         using TElem = T;
 
     public:
-        constexpr _ArrViewImplBase() noex = default;
+        constexpr ctor _ArrViewImplBase() noex = default;
 
-        constexpr _ArrViewImplBase(NullPtr) noex:
+        constexpr ctor _ArrViewImplBase(NullPtr) noex:
             _arr{ nullptr }, _count{ 0 } { }
 
-        constexpr _ArrViewImplBase(const T* arr, usize count) noex:
+        constexpr ctor _ArrViewImplBase(const T* arr, usize count) noex:
             _arr{ arr }, _count{ count } { }
 
     public:
-        constexpr auto _Data() const noex
-            -> const T*
+        constexpr fn _Data() const noex -> const T*
         {
             return _arr;
         }
 
-        constexpr auto _Count() const noex
-            -> usize
+        constexpr fn _Count() const noex -> usize
         {
             return _count;
         }
@@ -49,18 +47,18 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// DefCtor.
         /// ----------------------------------------------------------------------------------------
-        constexpr ArrView() noex = default;
+        constexpr ctor ArrView() noex = default;
 
         /// ----------------------------------------------------------------------------------------
         /// NullCtor.
         /// ----------------------------------------------------------------------------------------
-        constexpr ArrView(NullPtr) noex:
+        constexpr ctor ArrView(NullPtr) noex:
             Base{BaseImpl{ nullptr }} { }
 
         /// ----------------------------------------------------------------------------------------
         /// NullOper.
         /// ----------------------------------------------------------------------------------------
-        constexpr ArrView& operator =(NullPtr) noex
+        constexpr fn operator =(NullPtr) noex -> ArrView&
         {
             *this = ArrView(nullptr);
         }
@@ -70,7 +68,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <tname TRange>
         requires RArrRangeOf<TRange, T>
-        constexpr ArrView(const TRange& range) noex:
+        constexpr ctor ArrView(const TRange& range) noex:
             Base{BaseImpl{ range.Data(), range.Count() }} { }
 
         /// ----------------------------------------------------------------------------------------
@@ -78,7 +76,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <tname TRange>
         requires RArrRangeOf<TRange, T>
-        constexpr ArrView& operator =(const TRange& range) noex
+        constexpr fn operator =(const TRange& range) noex -> ArrView&
         {
             *this = ArrView{ range.Data(), range.Count() };
         }

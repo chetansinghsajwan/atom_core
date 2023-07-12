@@ -5,15 +5,15 @@
 
 namespace Atom
 {
-    template <tname _TImpl>
-    class _ConstArrImplHelper: public _TImpl
+    template <tname TImpl>
+    class _ConstArrImplHelper: public TImpl
     {
     //// -------------------------------------------------------------------------------------------
     //// Aliases
     //// -------------------------------------------------------------------------------------------
 
     public:
-        using TElem = tname _TImpl::TElem;
+        using TElem = tname TImpl::TElem;
         using TIter = ArrIter<TElem>;
         using TIterEnd = TIter;
 
@@ -34,8 +34,7 @@ namespace Atom
         /// 
         /// @TIME_COMPLEXITY Constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto ElemAt(usize index) const
-            -> const TElem&;
+        constexpr fn ElemAt(usize index) const -> const TElem&;
 
         /// ----------------------------------------------------------------------------------------
         /// Access element at index{index}. Same as {ElemAt(...)}, but doesn't perform bounds checking
@@ -50,8 +49,7 @@ namespace Atom
         /// 
         /// @TIME_COMPLEXITY Constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator [](usize index) const noex
-            -> const TElem&;
+        constexpr fn operator [](usize index) const noex -> const TElem&;
 
         /// ----------------------------------------------------------------------------------------
         /// Access first element.
@@ -63,8 +61,7 @@ namespace Atom
         /// 
         /// @TIME_COMPLEXITY Constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto ElemFront() const noex
-            -> const TElem&;
+        constexpr fn ElemFront() const noex -> const TElem&;
 
         /// ----------------------------------------------------------------------------------------
         /// Access last element.
@@ -76,8 +73,7 @@ namespace Atom
         /// 
         /// @TIME_COMPLEXITY Constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto ElemBack() const noex
-            -> const TElem&;
+        constexpr fn ElemBack() const noex -> const TElem&;
 
         /// ----------------------------------------------------------------------------------------
         /// Pointer to underlying arr.
@@ -86,8 +82,7 @@ namespace Atom
         /// 
         /// @TIME_COMPLEXITY Constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto Data() const noex
-            -> const TElem*
+        constexpr fn Data() const noex -> const TElem*
         {
             return _Data();
         }
@@ -95,8 +90,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Get count of elements.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto Count() const noex
-            -> usize
+        constexpr fn Count() const noex -> usize
         {
             return _Count();
         }
@@ -104,8 +98,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Is arr empty.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto IsEmpty() const noex
-            -> bool
+        constexpr fn IsEmpty() const noex -> bool
         {
             return _Count() == 0;
         }
@@ -118,8 +111,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// {TIter} to the first element.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto Iter() const noex
-            -> TIter
+        constexpr fn Iter() const noex -> TIter
         {
             return TIter{ _Data() };
         }
@@ -127,8 +119,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// {TIter} to element following the last element.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto IterEnd() const noex
-            -> TIter
+        constexpr fn IterEnd() const noex -> TIter
         {
             return TIter{ _Data() + _Count()};
         }
@@ -138,13 +129,12 @@ namespace Atom
     //// -------------------------------------------------------------------------------------------
 
     protected:
-        constexpr auto _ValidateIndexForAccess(isize index) const noex
-            -> bool
+        constexpr fn _ValidateIndexForAccess(isize index) const noex -> bool
         {
             return index > 0 && index < (isize)_Count();
         }
 
-        using _TImpl::_Data;
-        using _TImpl::_Count;
+        using TImpl::_Data;
+        using TImpl::_Count;
     };
 }

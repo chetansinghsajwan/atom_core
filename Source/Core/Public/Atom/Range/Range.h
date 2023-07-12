@@ -19,9 +19,6 @@ namespace Atom
     struct Range<_TIter, _TIterEnd>
     {
     public:
-        /// ----------------------------------------------------------------------------------------
-        /// @TODO: Refactor this.
-        /// ----------------------------------------------------------------------------------------
         using TElem = tname _TIter::TElem;
         using TMutIter = _TIter;
         using TMutIterEnd = _TIterEnd;
@@ -29,47 +26,47 @@ namespace Atom
         using TIterEnd = _TIterEnd;
 
     public:
-        constexpr Range(TIter iter, TIterEnd end) noex:
+        constexpr ctor Range(TIter iter, TIterEnd end) noex:
             _iter{ iter }, _end{ end } { }
 
     public:
-        constexpr TIter Iter() const noex
+        constexpr fn Iter() const noex -> TIter
         requires RIterPair<TIter, TIterEnd>
         {
             return TIter{ _iter };
         }
 
-        constexpr TIterEnd IterEnd() const noex
+        constexpr fn IterEnd() const noex -> TIterEnd
         requires RIterPair<TIter, TIterEnd>
         {
             return TIterEnd{ _end };
         }
 
-        constexpr TMutIter MutIter() noex
+        constexpr fn MutIter() noex -> TMutIter
         requires RMutIterPair<TMutIter, TMutIterEnd>
         {
             return _iter;
         }
 
-        constexpr TMutIterEnd MutIterEnd() noex
+        constexpr fn MutIterEnd() noex -> TMutIterEnd
         requires RMutIterPair<TMutIter, TMutIterEnd>
         {
             return _end;
         }
 
-        constexpr usize Count() const noex
+        constexpr fn Count() const noex -> usize
         requires RJumpIterPair<TIter, TIterEnd>
         {
             return _end - _iter;
         }
 
-        constexpr const TElem* Data() const noex
+        constexpr fn Data() const noex -> const TElem*
         requires RArrIterPair<TIter, TIterEnd>
         {
             return &*_iter;
         }
 
-        constexpr TElem* Data() noex
+        constexpr fn Data() noex -> TElem*
         requires RMutArrIterPair<TIter, TIterEnd>
         {
             return &*_iter;
@@ -92,14 +89,14 @@ namespace Atom
     {
         using Base = Range<ArrIter<T>, ArrIter<T>>;
 
-        constexpr Range(const T* arr, const T* end) noex:
+        constexpr ctor Range(const T* arr, const T* end) noex:
             Base{ arr, end } { }
 
-        constexpr Range(const T* arr, usize count) noex:
+        constexpr ctor Range(const T* arr, usize count) noex:
             Base{ arr, arr + count } { }
 
         template <usize count>
-        constexpr Range(const T(&arr)[count]) noex:
+        constexpr ctor Range(const T(&arr)[count]) noex:
             Base{ arr, arr + count } { }
     };
 
@@ -111,14 +108,14 @@ namespace Atom
     {
         using Base = Range<MutArrIter<T>, MutArrIter<T>>;
 
-        constexpr Range(T* arr, T* end) noex:
+        constexpr ctor Range(T* arr, T* end) noex:
             Base{ arr, end } { }
 
-        constexpr Range(T* arr, usize count) noex:
+        constexpr ctor Range(T* arr, usize count) noex:
             Base{ arr, arr + count } { }
 
         template <usize count>
-        constexpr Range(T(&arr)[count]) noex:
+        constexpr ctor Range(T(&arr)[count]) noex:
             Base{ arr, arr + count } { }
     };
 
@@ -139,7 +136,7 @@ namespace Atom
     {
         using Base = Range<const T*, const T*>;
 
-        constexpr Range(const InitList<T>& init) noex:
+        constexpr ctor Range(const InitList<T>& init) noex:
             Base{ init.begin(), init.end() } { }
     };
 

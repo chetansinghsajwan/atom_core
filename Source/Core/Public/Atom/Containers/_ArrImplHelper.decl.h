@@ -3,14 +3,14 @@
 
 namespace Atom
 {
-    template <tname _TImpl>
-    class _ArrImplHelper: public _ConstArrImplHelper<_TImpl>
+    template <tname TImpl>
+    class _ArrImplHelper: public _ConstArrImplHelper<TImpl>
     {
     //// -------------------------------------------------------------------------------------------
     //// Aliases
     //// -------------------------------------------------------------------------------------------
 
-        using Base = _ConstArrImplHelper<_TImpl>;
+        using Base = _ConstArrImplHelper<TImpl>;
 
     public:
         using TElem = tname Base::TElem;
@@ -44,8 +44,7 @@ namespace Atom
         /// 
         /// @TIME_COMPLEXITY Constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto ElemAt(usize index)
-            -> TElem&;
+        constexpr fn ElemAt(usize index) -> TElem&;
 
         /// ----------------------------------------------------------------------------------------
         /// Access element at index{index}. Same as {ElemAt(...)}, but doesn't perform bounds checking
@@ -60,8 +59,7 @@ namespace Atom
         /// 
         /// @TIME_COMPLEXITY Constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator [](usize index) noex
-            -> TElem&;
+        constexpr fn operator [](usize index) noex -> TElem&;
 
         /// ----------------------------------------------------------------------------------------
         /// Access first element.
@@ -73,8 +71,7 @@ namespace Atom
         /// 
         /// @TIME_COMPLEXITY Constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto ElemFront() noex
-            -> TElem&;
+        constexpr fn ElemFront() noex -> TElem&;
 
         /// ----------------------------------------------------------------------------------------
         /// Access last element.
@@ -86,8 +83,7 @@ namespace Atom
         /// 
         /// @TIME_COMPLEXITY Constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto ElemBack() noex
-            -> TElem&;
+        constexpr fn ElemBack() noex -> TElem&;
 
         /// ----------------------------------------------------------------------------------------
         /// Pointer to underlying arr.
@@ -96,8 +92,7 @@ namespace Atom
         /// 
         /// @TIME_COMPLEXITY Constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto Data() noex
-            -> TElem*
+        constexpr fn Data() noex -> TElem*
         {
             return _Data();
         }
@@ -110,8 +105,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// {TMutIter} to the first element.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto MutIter() noex
-            -> TMutIter
+        constexpr fn MutIter() noex -> TMutIter
         {
             return TMutIter{ _Data() };
         }
@@ -119,8 +113,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// {TMutIter} to element following the last element.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto MutIterEnd() noex
-            -> TMutIter
+        constexpr fn MutIterEnd() noex -> TMutIter
         {
             return TMutIter{ _Data() + _Count() - 1 };
         }
@@ -134,10 +127,9 @@ namespace Atom
         using Base::_Count;
         using Base::_ValidateIndexForAccess;
 
-        constexpr auto _Data() noex
-            -> TElem*
+        constexpr fn _Data() noex -> TElem*
         {
-            return _TImpl::_Data();
+            return TImpl::_Data();
         }
     };
 }

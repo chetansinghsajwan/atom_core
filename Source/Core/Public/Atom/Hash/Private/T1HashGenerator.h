@@ -5,34 +5,42 @@
 
 namespace Atom::Private
 {
+    /// --------------------------------------------------------------------------------------------
     /// T1Hash Generator.
+    /// 
+    /// @TODO: Make this type constexpr.
     /// --------------------------------------------------------------------------------------------
     template <tname T1Hash, tname TImpl>
     class T1HashGenerator
     {
+        using This = T1HashGenerator;
+
     public:
+        /// ----------------------------------------------------------------------------------------
         /// DefaultConstructor.
         /// 
         /// Same as calling Reset.
         /// ----------------------------------------------------------------------------------------
-        T1HashGenerator() noex
+        ctor T1HashGenerator() noex
         {
             Reset();
         }
 
     public:
+        /// ----------------------------------------------------------------------------------------
         /// Resets the {T1HashGenerator} to its initial state.
         /// ----------------------------------------------------------------------------------------
-        void Reset() noex
+        fn Reset() noex
         {
             _impl.Initialize();
         }
 
+        /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
         template <tname TRange, usize BufSize = 50>
         requires RRangeOf<TRange, byte>
-        T1HashGenerator& ProcessBytes(TRange bytes)
+        fn ProcessBytes(TRange bytes) -> This&
         {
             if constexpr (RArrRangeOf<TRange, byte>)
             {
@@ -59,6 +67,7 @@ namespace Atom::Private
             return *this;
         }
 
+        /// ----------------------------------------------------------------------------------------
         /// Processes data. This can be called infinite times.
         /// 
         /// @PARAM[IN] data Ptr to the input data.
@@ -70,7 +79,7 @@ namespace Atom::Private
         /// @THROWS AssertionException Expects {data != nullptr}.
         /// @THROWS AssertionException Expects {dataSize > 0}.
         /// ----------------------------------------------------------------------------------------
-        T1HashGenerator& ProcessBytes(const void* data, usize dataSize)
+        fn ProcessBytes(const void* data, usize dataSize) -> This&
         {
             ATOM_DEBUG_EXPECTS(data != nullptr);
             ATOM_DEBUG_EXPECTS(dataSize > 0);
@@ -90,21 +99,23 @@ namespace Atom::Private
             return *this;
         }
 
+        /// ----------------------------------------------------------------------------------------
         /// Processes single byte. This can be called infinite times.
         /// 
         /// @PARAM[IN] data Data to process.
         /// ----------------------------------------------------------------------------------------
-        T1HashGenerator& ProcessByte(byte data)
+        fn ProcessByte(byte data) -> This&
         {
             _impl.Update(&data, 1);
             return *this;
         }
 
+        /// ----------------------------------------------------------------------------------------
         /// Generates T1Hash.
         /// 
         /// @RETURNS {T1Hash} object.
         /// ----------------------------------------------------------------------------------------
-        T1Hash Generate() noex
+        fn Generate() noex -> T1Hash
         {
             T1Hash hash;
             _impl.Calculate(hash);
@@ -112,6 +123,7 @@ namespace Atom::Private
         }
 
     private:
+        /// ----------------------------------------------------------------------------------------
         /// Underlying T1HashGenerator implementation.
         /// ----------------------------------------------------------------------------------------
         TImpl _impl;

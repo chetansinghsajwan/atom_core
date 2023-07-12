@@ -19,12 +19,12 @@ namespace Atom
         using Base::operator *;
         using Base::operator ->;
 
-        constexpr TElem& operator *() noex
+        constexpr fn operator *() noex -> TElem&
         {
             return &*this->iter;
         }
 
-        constexpr TElem* operator ->() noex
+        constexpr fn operator ->() noex -> TElem*
         {
             return &*this->iter;
         }
@@ -45,32 +45,32 @@ namespace Atom
     {
         using TElem = TTI::TEnableIf<RIter<TIter>, tname TIter::TElem>;
 
-        constexpr IterWrap(TIter iter) noex:
+        constexpr ctor IterWrap(TIter iter) noex:
             iter{ iter } { }
 
         template <tname... TArgs>
         requires RConstructible<TIter, TArgs...>
-        constexpr IterWrap(TArgs&&... args) noex:
+        constexpr ctor IterWrap(TArgs&&... args) noex:
             iter{ fwd(args)... } { }
 
-        constexpr const TElem& operator *() const noex
+        constexpr fn operator *() const noex -> const TElem&
         {
             return *this->iter;
         }
 
-        constexpr const TElem* operator ->() const noex
+        constexpr fn operator ->() const noex -> const TElem*
         {
             return &*this->iter;
         }
 
-        constexpr IterWrap& operator ++(int) noex
+        constexpr fn operator ++(int) noex -> IterWrap&
         {
             this->iter++;
             return *this;
         }
 
         template <tname TIterEnd>
-        constexpr bool operator ==(const IterWrap<TIterEnd>& end) const noex
+        constexpr fn operator ==(const IterWrap<TIterEnd>& end) const noex -> bool
         {
             return this->iter == end.iter;
         }
@@ -97,7 +97,7 @@ namespace Atom
         using Base = _BasicMutIterWrap<IterWrap<TIter>>;
         using Base::Base;
 
-        constexpr MutIterWrap(TIter iter) noex:
+        constexpr ctor MutIterWrap(TIter iter) noex:
             Base{ iter } { }
     };
 
@@ -110,7 +110,7 @@ namespace Atom
         using Base = IterWrap<TIter>;
         using Base::Base;
 
-        constexpr FwdIterWrap(TIter iter) noex:
+        constexpr ctor FwdIterWrap(TIter iter) noex:
             Base{ iter } { }
     };
 
@@ -124,7 +124,7 @@ namespace Atom
         using Base = _BasicMutIterWrap<FwdIterWrap<TIter>>;
         using Base::Base;
 
-        constexpr MutFwdIterWrap(TIter iter) noex:
+        constexpr ctor MutFwdIterWrap(TIter iter) noex:
             Base{ iter } { }
     };
 
@@ -138,10 +138,10 @@ namespace Atom
         using Base = FwdIterWrap<TIter>;
         using Base::Base;
 
-        constexpr BidiIterWrap(TIter iter) noex:
+        constexpr ctor BidiIterWrap(TIter iter) noex:
             Base{ iter } { }
 
-        constexpr BidiIterWrap& operator --(int) noex
+        constexpr fn operator --(int) noex -> BidiIterWrap&
         {
             this->iter--;
             return *this;
@@ -158,7 +158,7 @@ namespace Atom
         using Base = _BasicMutIterWrap<BidiIterWrap<TIter>>;
         using Base::Base;
 
-        constexpr MutBidiIterWrap(TIter iter) noex:
+        constexpr ctor MutBidiIterWrap(TIter iter) noex:
             Base{ iter } { }
     };
 
@@ -172,33 +172,33 @@ namespace Atom
         using Base = BidiIterWrap<TIter>;
         using Base::Base;
 
-        constexpr JumpIterWrap(TIter iter) noex:
+        constexpr ctor JumpIterWrap(TIter iter) noex:
             Base{ iter } { }
 
-        constexpr JumpIterWrap operator +(isize steps) const noex
+        constexpr fn operator +(isize steps) const noex -> JumpIterWrap
         {
             return JumpIterWrap{ this->iter + steps };
         }
 
-        constexpr JumpIterWrap operator -(isize steps) const noex
+        constexpr fn operator -(isize steps) const noex -> JumpIterWrap
         {
             return JumpIterWrap{ this->iter - steps };
         }
 
-        constexpr JumpIterWrap& operator +=(isize steps) noex
+        constexpr fn operator +=(isize steps) noex -> JumpIterWrap&
         {
             this->iter += steps;
             return *this;
         }
 
-        constexpr JumpIterWrap& operator -=(isize steps) noex
+        constexpr fn operator -=(isize steps) noex -> JumpIterWrap&
         {
             this->iter -= steps;
             return *this;
         }
 
         template <tname TIter2>
-        constexpr isize operator -(const TIter2& iter2) const noex
+        constexpr fn operator -(const TIter2& iter2) const noex -> isize
         {
             return this->iter - iter2;
         }
@@ -214,21 +214,21 @@ namespace Atom
         using Base = _BasicMutIterWrap<JumpIterWrap<TIter>>;
         using Base::Base;
 
-        constexpr MutJumpIterWrap(TIter iter) noex:
+        constexpr ctor MutJumpIterWrap(TIter iter) noex:
             Base{ iter } { }
 
-        constexpr MutJumpIterWrap operator +(isize steps) const noex
+        constexpr fn operator +(isize steps) const noex -> MutJumpIterWrap
         {
             return MutJumpIterWrap{ this->iter + steps };
         }
 
-        constexpr MutJumpIterWrap operator -(isize steps) const noex
+        constexpr fn operator -(isize steps) const noex -> MutJumpIterWrap
         {
             return MutJumpIterWrap{ this->iter - steps };
         }
 
         template <tname TIter2>
-        constexpr isize operator -(const TIter2& iter2) const noex
+        constexpr fn operator -(const TIter2& iter2) const noex -> isize
         {
             return this->iter - iter2;
         }

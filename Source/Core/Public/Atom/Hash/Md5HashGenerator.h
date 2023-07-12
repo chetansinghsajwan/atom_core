@@ -11,17 +11,17 @@ namespace Atom::Private
 {
     struct Md5GeneratorImpl
     {
-        void Initialize()
+        fn Initialize()
         {
             Md5Initialise(&m_context);
         }
 
-        void Update(const void* data, uint32_t dataSize)
+        fn Update(const void* data, uint32_t dataSize)
         {
             Md5Update(&m_context, data, dataSize);
         }
 
-        void Calculate(Md5Hash& hash)
+        fn Calculate(Md5Hash& hash)
         {
             Md5Finalise(&m_context, (MD5_HASH*)hash.bytes.Data());
         }

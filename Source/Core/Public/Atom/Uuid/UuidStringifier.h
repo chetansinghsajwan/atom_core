@@ -7,8 +7,9 @@ namespace Atom
 {
     struct UuidStringifier
     {
-        constexpr void WriteStr(const Uuid& uuid,
-            ROutput<Char> auto&& out) const noex
+        template <tname TOutput>
+        requires ROutput<TOutput, Char>
+        constexpr fn WriteStr(const Uuid& uuid, TOutput&& out) const noex
         {
             out += Math::HexToChar(uuid.bytes[0]);
             out += Math::HexToChar(uuid.bytes[1]);
@@ -32,7 +33,7 @@ namespace Atom
             out += Math::HexToChar(uuid.bytes[15]);
         }
 
-        constexpr Str ToStr(const Uuid& uuid) const noex
+        constexpr fn ToStr(const Uuid& uuid) const noex -> Str
         {
             Str out;
             WriteStr(uuid, out);

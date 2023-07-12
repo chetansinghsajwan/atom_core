@@ -5,32 +5,33 @@
 
 namespace Atom
 {
-    template <tname _TEncoding, tname _TContainer>
-    class _StrImpl: public _TContainer
+    template <tname _TEncoding, tname TContainer>
+    class _StrImpl: public TContainer
     {
     public:
         using TEncoding            = _TEncoding;
 
         using TChar                = BasicChar<TEncoding>;
-        using TIter                = tname _TContainer::TIter;
-        using TIterEnd             = tname _TContainer::TIterEnd;
-        // using TMutIter             = tname _TContainer::TMutIter;
-        // using TMutIterEnd          = tname _TContainer::TMutIterEnd;
+        using TIter                = tname TContainer::TIter;
+        using TIterEnd             = tname TContainer::TIterEnd;
+        // using TMutIter             = tname TContainer::TMutIter;
+        // using TMutIterEnd          = tname TContainer::TMutIterEnd;
 
         using TRune                = BasicRune<TEncoding>;
-        // using TRuneIter            = tname _TContainer::TRuneIter;
-        // using TRuneIterEnd         = tname _TContainer::TRuneIterEnd;
-        // using TMutRuneIter         = tname _TContainer::TMutRuneIter;
-        // using TMutRuneIterEnd      = tname _TContainer::TMutRuneIterEnd;
+        // using TRuneIter            = tname TContainer::TRuneIter;
+        // using TRuneIterEnd         = tname TContainer::TRuneIterEnd;
+        // using TMutRuneIter         = tname TContainer::TMutRuneIter;
+        // using TMutRuneIterEnd      = tname TContainer::TMutRuneIterEnd;
 
     public:
-        using _TContainer::_TContainer;
-        using _TContainer::operator =;
+        using TContainer::TContainer;
+        using TContainer::operator =;
 
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
         template <usize count>
-        constexpr _StrImpl(const TChar(&arr)[count]): _TContainer(nullptr) { }
+        constexpr ctor _StrImpl(const TChar(&arr)[count]):
+            TContainer(nullptr) { }
     };
 }

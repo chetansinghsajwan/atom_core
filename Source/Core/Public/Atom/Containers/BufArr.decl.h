@@ -67,18 +67,18 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// DefCtor.
         /// ----------------------------------------------------------------------------------------
-        constexpr BufArr() noex = default;
+        constexpr ctor BufArr() noex = default;
 
         /// ----------------------------------------------------------------------------------------
         /// NullCtor.
         /// ----------------------------------------------------------------------------------------
-        constexpr BufArr(NullPtr) noex:
+        constexpr ctor BufArr(NullPtr) noex:
             Base{ nullptr } { }
 
         /// ----------------------------------------------------------------------------------------
         /// NullOper.
         /// ----------------------------------------------------------------------------------------
-        constexpr BufArr& operator =(NullPtr) noex
+        constexpr fn operator =(NullPtr) noex -> BufArr&
         {
             Clear();
             Release();
@@ -89,7 +89,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <tname TRange>
         requires RRangeOf<TRange, T>
-        constexpr BufArr(TRange&& range) noex:
+        constexpr ctor BufArr(TRange&& range) noex:
             Base{ nullptr }
         {
             InsertBack(range);
@@ -100,7 +100,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <tname TRange>
         requires RRangeOf<TRange, T>
-        constexpr BufArr& operator =(TRange&& range) noex
+        constexpr fn operator =(TRange&& range) noex -> BufArr&
         {
             Clear();
             InsertBack(range);
@@ -112,7 +112,7 @@ namespace Atom
         /// @TODO: Check if we need this ctor to satisfy std::is_copy_constructible and 
         ///     RCopyConstructible.
         /// ----------------------------------------------------------------------------------------
-        constexpr BufArr(const BufArr& that) noex:
+        constexpr ctor BufArr(const BufArr& that) noex:
             Base{ nullptr }
         {
             // InsertBack(that);
@@ -123,7 +123,7 @@ namespace Atom
         /// 
         /// @TODO: Same as CopyCtor.
         /// ----------------------------------------------------------------------------------------
-        constexpr BufArr& operator =(const BufArr& that) noex
+        constexpr fn operator =(const BufArr& that) noex -> BufArr&
         {
             Clear();
             InsertBack(that);
@@ -133,7 +133,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// MoveCtor.
         /// ----------------------------------------------------------------------------------------
-        constexpr BufArr(BufArr&& that) noex:
+        constexpr ctor BufArr(BufArr&& that) noex:
             Base{ nullptr }
         {
             _Move(MOVE(that));
@@ -143,7 +143,7 @@ namespace Atom
         /// TempMoveCtor.
         /// ----------------------------------------------------------------------------------------
         template <usize thatBufSize>
-        constexpr BufArr(BufArr<TElem, thatBufSize, TAlloc>&& that) noex:
+        constexpr ctor BufArr(BufArr<TElem, thatBufSize, TAlloc>&& that) noex:
             Base{ nullptr }
         {
             _Move(MOVE(that));
@@ -152,7 +152,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// MoveCtor for DynArr.
         /// ----------------------------------------------------------------------------------------
-        constexpr BufArr(DynArr<TElem, TAlloc>&& that) noex:
+        constexpr ctor BufArr(DynArr<TElem, TAlloc>&& that) noex:
             Base{ nullptr }
         {
             BaseImpl::_Move(that);
@@ -161,7 +161,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// MoveOper.
         /// ----------------------------------------------------------------------------------------
-        constexpr BufArr& operator =(BufArr&& that) noex
+        constexpr fn operator =(BufArr&& that) noex -> BufArr&
         {
             Clear();
             _Move(MOVE(that));
@@ -171,7 +171,7 @@ namespace Atom
         /// TempMoveOper.
         /// ----------------------------------------------------------------------------------------
         template <usize thatBufSize>
-        constexpr BufArr& operator =(BufArr<TElem, thatBufSize, TAlloc>&& that) noex
+        constexpr fn operator =(BufArr<TElem, thatBufSize, TAlloc>&& that) noex -> BufArr&
         {
             Clear();
             _Move(MOVE(that));
@@ -180,7 +180,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// MoveOper for DynArr.
         /// ----------------------------------------------------------------------------------------
-        constexpr BufArr& operator =(DynArr<TElem, TAlloc>&& that) noex
+        constexpr fn operator =(DynArr<TElem, TAlloc>&& that) noex -> BufArr&
         {
             Clear();
             Release();
@@ -191,7 +191,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Dtor.
         /// ----------------------------------------------------------------------------------------
-        constexpr ~BufArr() noex
+        constexpr dtor BufArr() noex
         {
             Clear();
             Release();
@@ -207,7 +207,7 @@ namespace Atom
         /// @EXPECTS Empty().
         /// ----------------------------------------------------------------------------------------
         template <usize thatBufSize>
-        void _Move(BufArr<TElem, thatBufSize, TAlloc>&& that)
+        fn _Move(BufArr<TElem, thatBufSize, TAlloc>&& that)
         {
             if (that._Data() == that._StackBuf())
             {

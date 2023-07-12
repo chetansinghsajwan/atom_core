@@ -8,14 +8,14 @@ namespace Atom::Private
     template <tname T1Hash>
     struct T1HashStringifier
     {
-        constexpr Str ToStr(const T1Hash& hash) noex
+        constexpr fn ToStr(const T1Hash& hash) noex -> Str
         {
             Str str;
             WriteStr(hash, str);
             return str;
         };
 
-        constexpr void WriteStr(const T1Hash& hash, ROutput<Char> auto&& out) noex
+        constexpr fn WriteStr(const T1Hash& hash, ROutput<Char> auto&& out) noex
         {
             for (byte b : hash.bytes)
             {
@@ -33,13 +33,13 @@ namespace Atom
     requires RDefaultConstructible<Private::T1HashStringifier<T1Hash>>
     struct StrConverter<T1Hash>
     {
-        constexpr Str Convert(const T1Hash& hash) noex
+        constexpr fn Convert(const T1Hash& hash) noex -> Str
         {
             return Private::T1HashStringifier<T1Hash>()
                 .ToStr(hash);
         }
 
-        constexpr void Convert(const T1Hash& hash, ROutput<Char> auto&& out) noex
+        constexpr fn Convert(const T1Hash& hash, ROutput<Char> auto&& out) noex
         {
             return Private::T1HashStringifier<T1Hash>()
                 .WriteStr(hash, out);

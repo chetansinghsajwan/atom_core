@@ -10,6 +10,8 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// NullLockable is a stateless object that doesn't has any locking mechanism.
     /// It's used where a Lockable implementation is needed but thread-safety is not needed.
+    /// 
+    /// @TODO: Should we delete its constructors and operators to match {SimpleMutex}?
     /// --------------------------------------------------------------------------------------------
     class NullLockable
     {
@@ -17,32 +19,32 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// DefaultConstructor. Does nothing.
         /// ----------------------------------------------------------------------------------------
-        constexpr NullLockable() noex { }
+        constexpr ctor NullLockable() noex { }
 
         /// ----------------------------------------------------------------------------------------
-        /// CopyConstructor is deleted.
+        /// CopyConstructor is default.
         /// ----------------------------------------------------------------------------------------
-        constexpr NullLockable(const NullLockable& other) { }
+        constexpr ctor NullLockable(const NullLockable& other) { }
 
         /// ----------------------------------------------------------------------------------------
         /// MoveConstructor is default.
         /// ----------------------------------------------------------------------------------------
-        constexpr NullLockable(NullLockable&& other) { }
+        constexpr ctor NullLockable(NullLockable&& other) { }
 
         /// ----------------------------------------------------------------------------------------
-        /// CopyOperator is deleted.
+        /// CopyOperator is default.
         /// ----------------------------------------------------------------------------------------
-        constexpr NullLockable& operator = (const NullLockable& other) { return *this; }
+        constexpr fn operator = (const NullLockable& other) -> NullLockable& { return *this; }
 
         /// ----------------------------------------------------------------------------------------
         /// MoveOperator is default.
         /// ----------------------------------------------------------------------------------------
-        constexpr NullLockable& operator = (NullLockable&& other) { return *this; }
+        constexpr fn operator = (NullLockable&& other) -> NullLockable& { return *this; }
 
         /// ----------------------------------------------------------------------------------------
         /// Destructor. Does nothing.
         /// ----------------------------------------------------------------------------------------
-        ~NullLockable() { }
+        constexpr dtor NullLockable() { }
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -75,11 +77,11 @@ namespace Atom
         /// 
         /// @PARAM[IN] lock NullLockable reference. (UNUSED).
         /// ----------------------------------------------------------------------------------------
-        constexpr LockGuard(NullLockable& lock) noex { }
+        constexpr ctor LockGuard(NullLockable& lock) noex { }
 
         /// ----------------------------------------------------------------------------------------
         /// Destructor. Does nothing.
         /// ----------------------------------------------------------------------------------------
-        ~LockGuard() { }
+        constexpr dtor LockGuard() { }
     };
 }

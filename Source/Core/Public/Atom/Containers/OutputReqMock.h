@@ -8,10 +8,10 @@ namespace Atom
     {
         template <tname U>
         requires RSameAsUnqualified<U, T>
-        void operator +=(U&& el);
+        fn operator +=(U&& el);
 
         template <tname TRange>
         requires RRangeOf<TRange, T>
-        void operator +=(const TRange& range);
+        fn operator +=(const TRange& range);
     };
 }

@@ -9,11 +9,11 @@ namespace Atom
     struct SEventKey
     {
     public:
-        SEventKey(const TypeInfo& typeInfo) noex:
+        ctor SEventKey(const TypeInfo& typeInfo) noex:
             _typeInfo(typeInfo) { }
 
     public:
-        const TypeInfo& GetType() const noex
+        fn GetType() const noex -> const TypeInfo&
         {
             return _typeInfo;
         }
@@ -32,14 +32,14 @@ namespace Atom
         /// Calls Subscribe(fwd(listener));
         /// ----------------------------------------------------------------------------------------
         template <RInvokable<TSignature> TInvokable>
-        SEventKey operator += (TInvokable&& listener) noex
+        fn operator += (TInvokable&& listener) noex -> SEventKey
         {
             return Subscribe(fwd(listener));
         }
 
         /// Calls Unsubscribe(key);
         /// ----------------------------------------------------------------------------------------
-        bool operator -= (SEventKey key) noex
+        fn operator -= (SEventKey key) noex -> bool
         {
             return Unsubscribe(key);
         }
@@ -47,18 +47,18 @@ namespace Atom
         /// Calls Subscribe(fwd(listener)) on {Source}.
         /// ----------------------------------------------------------------------------------------
         template <RInvokable<TSignature> TInvokable>
-        SEventKey Subscribe(TInvokable&& listener) noex
+        fn Subscribe(TInvokable&& listener) noex -> SEventKey
         {
             return Subscribe(InvokableBox<TSignature>(fwd(listener)));
         }
 
         /// 
         /// ----------------------------------------------------------------------------------------
-        virtual SEventKey Subscribe(InvokableBox<TSignature>&& invokable) noex = 0;
+        virtual fn Subscribe(InvokableBox<TSignature>&& invokable) noex -> SEventKey = 0;
 
         /// Calls Unsubscribe(key) on {Source}.
         /// ----------------------------------------------------------------------------------------
-        virtual usize Unsubscribe(SEventKey key) noex = 0;
+        virtual fn Unsubscribe(SEventKey key) noex -> usize = 0;
     };
 
     /// EventSource is used to manage listeners and dispatch event.
@@ -67,21 +67,18 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <tname... TArgs>
     class EventSource: public IEvent<TArgs...>
-    {        
-    public:
-        constexpr EventSource() noex { }
-
+    {
     public:
         /// 
         /// ----------------------------------------------------------------------------------------
-        virtual SEventKey Subscribe(InvokableBox<void(TArgs...)>&& invokable) noex ofinal
+        virtual fn Subscribe(InvokableBox<void(TArgs...)>&& invokable) noex -> SEventKey ofinal
         {
             return _AddListener(fwd(invokable));
         }
 
         /// 
         /// ----------------------------------------------------------------------------------------
-        virtual usize Unsubscribe(SEventKey key) noex ofinal
+        virtual fn Unsubscribe(SEventKey key) noex -> usize ofinal
         {
             return _RemoveListener(key);
         }
@@ -90,7 +87,7 @@ namespace Atom
         /// 
         /// @TODO Add detailed documentation on argument passing.
         /// ----------------------------------------------------------------------------------------
-        void Dispatch(TArgs... args)
+        fn Dispatch(TArgs... args)
         {
             for (auto& listener : _listeners)
             {
@@ -101,7 +98,7 @@ namespace Atom
     protected:
         /// 
         /// ----------------------------------------------------------------------------------------
-        SEventKey _AddListener(InvokableBox<void(TArgs...)>&& invokable)
+        fn _AddListener(InvokableBox<void(TArgs...)>&& invokable) -> SEventKey
         {
             SEventKey key = invokable.GetInvokableType();
 
@@ -111,7 +108,7 @@ namespace Atom
 
         /// 
         /// ----------------------------------------------------------------------------------------
-        usize _RemoveListener(SEventKey key) noex
+        fn _RemoveListener(SEventKey key) noex -> usize
         {
             return RangeModifier().RemoveIf(_listeners, [&](const auto& listener)
                 {
@@ -121,7 +118,7 @@ namespace Atom
 
         /// 
         /// ----------------------------------------------------------------------------------------
-        usize _CountListeners(SEventKey key) noex
+        fn _CountListeners(SEventKey key) noex -> usize
         {
             usize count = 0;
             for (auto& listener : _listeners)
@@ -137,7 +134,7 @@ namespace Atom
 
     protected:
         using TListener = InvokableBox<void(TArgs...)>;
-    
+
         /// List of event listeners.
         /// ----------------------------------------------------------------------------------------
         DynArr<TListener> _listeners;

@@ -15,7 +15,7 @@ namespace Atom
         template <tname TRange1, tname TRange2>
         requires RFwdRange<TRange1> && RFwdRange<TRange2> &&
             RSameAs<tname TRange1::TElem, tname TRange2::TElem>
-        int8 AreEqual(const TRange1& range1, const TRange2& range2)
+        fn AreEqual(const TRange1& range1, const TRange2& range2) -> int8
         {
             StdIterWrapForAtomIter stdIter1{ range1.Iter() };
             StdIterWrapForAtomIter stdIterEnd1{ range1.IterEnd() };

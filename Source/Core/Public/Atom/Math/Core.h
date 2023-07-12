@@ -12,19 +12,19 @@ namespace Atom
 
 namespace Atom::Math
 {
-    constexpr double Abs(double value) noex
+    constexpr fn Abs(double value) noex -> double
     {
         // TODO: Improve this, maybe using sign bit flag.
         return value * (value < 0 ? -1 : 1);
     }
 
-    constexpr bool IsApproximatelyZero(double lhs, double rhs) noex
+    constexpr fn IsApproximatelyZero(double lhs, double rhs) noex -> bool
     {
         return Abs(lhs - rhs) < 0.0001f;
     }
 
     template <tname TInt>
-    constexpr TInt Clamp(const TInt& value, const TInt& lhs, const TInt& rhs)
+    constexpr fn Clamp(const TInt& value, const TInt& lhs, const TInt& rhs) -> TInt
     {
         if (value < lhs) return lhs;
         if (value > rhs) return rhs;
@@ -34,19 +34,19 @@ namespace Atom::Math
 
     // TODO: Implement with template args
     template <tname TInt>
-    constexpr TInt Min(const TInt& lhs, const TInt& rhs)
+    constexpr fn Min(const TInt& lhs, const TInt& rhs) -> TInt
     {
         return lhs < rhs ? lhs : rhs;
     }
 
     // TODO: Implement with template args
     template <tname TInt>
-    constexpr TInt Max(const TInt& lhs, const TInt& rhs)
+    constexpr fn Max(const TInt& lhs, const TInt& rhs) -> TInt
     {
         return lhs > rhs ? lhs : rhs;
     }
 
-    constexpr byte CharToHex(Char ch) noex
+    constexpr fn CharToHex(Char ch) noex -> byte
     {
         if (ch >= TEXT('0') && ch <= TEXT('9'))
             return byte(ch - TEXT('0'));
@@ -58,7 +58,7 @@ namespace Atom::Math
         return -1;
     }
 
-    constexpr StaticStr<2> HexToChar(byte hex) noex
+    constexpr fn HexToChar(byte hex) noex -> StaticStr<2>
     {
         constexpr const Char chars[] = TEXT("0123456789abcdef");
 
@@ -67,7 +67,7 @@ namespace Atom::Math
         return { chars[high], chars[low] };
     }
 
-    constexpr bool IsHexChar(Char ch) noex
+    constexpr fn IsHexChar(Char ch) noex -> bool
     {
         return (ch >= TEXT('0') && ch <= TEXT('9')) ||
             (ch >= TEXT('a') && ch <= TEXT('f')) ||

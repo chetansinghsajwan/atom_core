@@ -8,17 +8,17 @@ namespace Atom
     {
         using TElem = T;
 
-        constexpr T* _Data() noex
+        constexpr fn _Data() noex -> T*
         {
             return _arr;
         }
 
-        constexpr const T* _Data() const noex
+        constexpr fn _Data() const noex -> const T*
         {
             return _arr;
         }
 
-        constexpr usize _Count() const noex
+        constexpr fn _Count() const noex -> usize
         {
             return Size;
         }

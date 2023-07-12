@@ -9,81 +9,81 @@ namespace Atom
         float y;
     };
 
-    constexpr SVector2 operator + (SVector2 lhs, SVector2 rhs) noex
+    constexpr fn operator + (SVector2 lhs, SVector2 rhs) noex -> SVector2
     {
         return { lhs.x + rhs.x, lhs.y + rhs.y };
     }
 
-    constexpr SVector2 operator - (SVector2 lhs, SVector2 rhs) noex
+    constexpr fn operator - (SVector2 lhs, SVector2 rhs) noex -> SVector2
     {
         return { lhs.x - rhs.x, lhs.y - rhs.y };
     }
 
-    constexpr SVector2 operator * (SVector2 lhs, float scalar) noex
+    constexpr fn operator * (SVector2 lhs, float scalar) noex -> SVector2
     {
         return { lhs.x * scalar, lhs.y * scalar };
     }
 
-    constexpr SVector2 operator / (SVector2 lhs, float scalar) noex
+    constexpr fn operator / (SVector2 lhs, float scalar) noex -> SVector2
     {
         return { lhs.x / scalar, lhs.y / scalar };
     }
 
-    constexpr SVector2& operator += (SVector2& lhs, const SVector2& rhs) noex
+    constexpr fn operator += (SVector2& lhs, const SVector2& rhs) noex -> SVector2&
     {
         lhs.x += rhs.x;
         lhs.y += rhs.y;
         return lhs;
     }
 
-    constexpr SVector2& operator -= (SVector2& lhs, const SVector2& rhs) noex
+    constexpr fn operator -= (SVector2& lhs, const SVector2& rhs) noex -> SVector2&
     {
         lhs.x -= rhs.x;
         lhs.y -= rhs.y;
         return lhs;
     }
 
-    constexpr SVector2& operator *= (SVector2& lhs, float scalar) noex
+    constexpr fn operator *= (SVector2& lhs, float scalar) noex -> SVector2&
     {
         lhs.x *= scalar;
         lhs.y *= scalar;
         return lhs;
     }
 
-    constexpr SVector2& operator /= (SVector2& lhs, float scalar) noex
+    constexpr fn operator /= (SVector2& lhs, float scalar) noex -> SVector2&
     {
         lhs.x /= scalar;
         lhs.y /= scalar;
         return lhs;
     }
 
-    constexpr bool operator == (SVector2 lhs, SVector2 rhs) noex
+    constexpr fn operator == (SVector2 lhs, SVector2 rhs) noex -> bool
     {
         return Math::IsApproximatelyZero(lhs.x, rhs.x) &&
             Math::IsApproximatelyZero(lhs.y, rhs.y);
     }
 
-    constexpr bool operator != (SVector2 lhs, SVector2 rhs) noex
+    constexpr fn operator != (SVector2 lhs, SVector2 rhs) noex -> bool
     {
         return !(lhs == rhs);
     }
 
-    constexpr bool operator > (SVector2 lhs, SVector2 rhs) noex
+    constexpr fn operator > (SVector2 lhs, SVector2 rhs) noex -> bool
     {
         return (lhs.x > rhs.x) && (lhs.y > rhs.y);
     }
 
-    constexpr bool operator < (SVector2 lhs, SVector2 rhs) noex
+    constexpr fn operator < (SVector2 lhs, SVector2 rhs) noex -> bool
     {
         return (lhs.x < rhs.x) && (lhs.y < rhs.y);
     }
 
-    constexpr bool operator >= (SVector2 lhs, SVector2 rhs) noex
+    constexpr fn operator >= (SVector2 lhs, SVector2 rhs) noex -> bool
     {
         return (lhs.x >= rhs.x) && (lhs.y >= rhs.y);
     }
 
-    constexpr bool operator <= (SVector2 lhs, SVector2 rhs) noex
+    constexpr fn operator <= (SVector2 lhs, SVector2 rhs) noex -> bool
     {
         return (lhs.x <= rhs.x) && (lhs.y <= rhs.y);
     }

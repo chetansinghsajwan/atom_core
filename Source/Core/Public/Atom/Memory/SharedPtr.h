@@ -9,7 +9,7 @@ namespace Atom
     using SharedPtr = std::shared_ptr<T>;
 
     template <tname T>
-    SharedPtr<T> MakeShared(auto&&... args) noex
+    fn MakeShared(auto&&... args) noex -> SharedPtr<T>
     {
         return std::make_shared<T>(fwd(args)...);
     }

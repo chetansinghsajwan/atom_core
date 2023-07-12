@@ -11,5 +11,8 @@
 #define is_noex(...) noex(__VA_ARGS__)
 #define ofinal override final
 #define fwd(...) static_cast<decltype(__VA_ARGS__)>(__VA_ARGS__)
-#define declval(T) ::std::declval<T>()
+#define declval(T) std::declval<T>()
 #define noret [[noreturn]]
+#define ctor
+#define dtor ~
+#define fn auto
