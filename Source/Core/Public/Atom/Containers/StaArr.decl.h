@@ -3,7 +3,7 @@
 
 namespace Atom
 {
-    template <typename T, usize Size>
+    template <tname T, usize Size>
     struct _StaArrImplBase
     {
         using TElem = T;
@@ -26,6 +26,6 @@ namespace Atom
         T _arr[Size];
     };
 
-    template <typename T, usize Size>
+    template <tname T, usize Size>
     using StaArr = _ArrImplHelper<_StaArrImplBase<T, Size>>;
 }

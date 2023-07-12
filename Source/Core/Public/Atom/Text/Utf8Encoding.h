@@ -46,6 +46,6 @@ namespace Atom::Text
         }
     };
 
-    using UTF8Char = typename UTF8Encoding::TChar;
-    using UTF8Rune = typename UTF8Encoding::TRune;
+    using UTF8Char = tname UTF8Encoding::TChar;
+    using UTF8Rune = tname UTF8Encoding::TRune;
 }

@@ -7,7 +7,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange>
+    template <tname TRange>
     requires RRange<TRange>
     constexpr auto begin(const TRange& range) noex
     {
@@ -17,7 +17,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange>
+    template <tname TRange>
     requires RMutRange<TRange>
     constexpr auto begin(TRange& range) noex
     {
@@ -27,7 +27,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange>
+    template <tname TRange>
     requires RRange<TRange>
     constexpr auto end(const TRange& range) noex
     {
@@ -37,7 +37,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange>
+    template <tname TRange>
     requires RMutRange<TRange>
     constexpr auto end(TRange& range) noex
     {
@@ -47,7 +47,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// @TODO: Add comparision requirements for TElem of both ranges.
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange1, typename TRange2>
+    template <tname TRange1, tname TRange2>
     requires RRange<TRange1> && RRange<TRange2>
     constexpr bool operator ==(const TRange1& range1, const TRange2& range2) noex
     {
@@ -57,7 +57,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// @TODO: Add comparision requirements for TElem of both ranges.
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange1, typename TRange2>
+    template <tname TRange1, tname TRange2>
     requires RRange<TRange1> && RRange<TRange2>
     constexpr bool operator !=(const TRange1& range1, const TRange2& range2) noex
     {

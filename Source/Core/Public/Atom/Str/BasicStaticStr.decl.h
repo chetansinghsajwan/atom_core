@@ -5,7 +5,7 @@
 namespace Atom
 {
     // TODO: Fix this, cannot inherit to preserve aggregate initialization.
-    template <typename TEncoding, usize Size>
+    template <tname TEncoding, usize Size>
     using BasicStaticStr = StaArr<BasicChar<TEncoding>, Size>;
     // using BasicStaticStr = _StrImpl
     // <

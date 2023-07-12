@@ -45,7 +45,7 @@ namespace Atom::Ex::Internal
         return *this;
     }
 
-    template <typename TEx>
+    template <tname TEx>
     requires RDerivedFrom<TEx, Exception>
     inline void Thrower::operator << (TEx&& ex)
     {

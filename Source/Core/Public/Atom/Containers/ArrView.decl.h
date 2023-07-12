@@ -3,7 +3,7 @@
 
 namespace Atom
 {
-    template <typename T>
+    template <tname T>
     struct _ArrViewImplBase
     {
     public:
@@ -39,7 +39,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
+    template <tname T>
     class ArrView: public _ConstArrImplHelper<_ArrViewImplBase<T>>
     {
         using Base = _ConstArrImplHelper<_ArrViewImplBase<T>>;
@@ -68,7 +68,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// ParamCtor.
         /// ----------------------------------------------------------------------------------------
-        template <typename TRange>
+        template <tname TRange>
         requires RArrRangeOf<TRange, T>
         constexpr ArrView(const TRange& range) noex:
             Base{BaseImpl{ range.Data(), range.Count() }} { }
@@ -76,7 +76,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// ParamOper.
         /// ----------------------------------------------------------------------------------------
-        template <typename TRange>
+        template <tname TRange>
         requires RArrRangeOf<TRange, T>
         constexpr ArrView& operator =(const TRange& range) noex
         {

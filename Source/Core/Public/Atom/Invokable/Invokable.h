@@ -6,10 +6,10 @@ namespace Atom
 {
     namespace Private
     {
-        template <typename TInvokable, typename... TSignature>
+        template <tname TInvokable, tname... TSignature>
         struct IsInvokableImpl;
 
-        template <typename TInvokable, typename TResult, typename... TArgs>
+        template <tname TInvokable, tname TResult, tname... TArgs>
         struct IsInvokableImpl<TInvokable, TResult(TArgs...)>
         {
             static constexpr bool Value = ::std::is_invocable_r_v<
@@ -17,14 +17,14 @@ namespace Atom
         };
 
         /// @TODO Add impl for const invocable.
-        template <typename TInvokable, typename TResult, typename... TArgs>
+        template <tname TInvokable, tname TResult, tname... TArgs>
         struct IsInvokableImpl<TInvokable, TResult(TArgs...) const>
         {
             static constexpr bool Value = ::std::is_invocable_r_v<
                 TResult, TInvokable, TArgs...>;
         };
 
-        template <typename TInvokable, typename TResult, typename... TArgs>
+        template <tname TInvokable, tname TResult, tname... TArgs>
         struct IsInvokableImpl<TInvokable, TResult(TArgs...) noex>
         {
             static constexpr bool Value = ::std::is_nothrow_invocable_r_v<
@@ -32,7 +32,7 @@ namespace Atom
         };
 
         /// @TODO Add impl for const invocable.
-        template <typename TInvokable, typename TResult, typename... TArgs>
+        template <tname TInvokable, tname TResult, tname... TArgs>
         struct IsInvokableImpl<TInvokable, TResult(TArgs...) const noex>
         {
             static constexpr bool Value = ::std::is_nothrow_invocable_r_v<
@@ -40,6 +40,6 @@ namespace Atom
         };
     }
 
-    template <typename TInvokable, typename... TSignature>
+    template <tname TInvokable, tname... TSignature>
     concept RInvokable = Private::IsInvokableImpl<TInvokable, TSignature...>::Value;
 }

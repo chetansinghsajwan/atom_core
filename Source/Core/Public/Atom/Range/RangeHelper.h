@@ -33,7 +33,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <class TRange, class T>
         requires RMutRange<TRange>
-            and RAssignable<typename TRange::TElem, T>
+            and RAssignable<tname TRange::TElem, T>
         constexpr auto Fill(TRange&& range, T&& val) const -> void
         {
             _Fill(range.Iter(), range.IterEnd(), FORWARD(val));
@@ -43,9 +43,9 @@ namespace Atom
         /// 
         /// ----------------------------------------------------------------------------------------
     #pragma optimize("", off)
-        template <class TRange, typename T>
+        template <class TRange, tname T>
         requires RMutRange<TRange>
-            and RAssignable<typename TRange::TElem, T>
+            and RAssignable<tname TRange::TElem, T>
         constexpr auto FillExplicit(TRange&& range, T&& val) const -> void
         {
             _Fill(range.Iter(), range.IterEnd(), FORWARD(val));
@@ -58,7 +58,7 @@ namespace Atom
         template <class TRange1, class TRange2>
         requires RRange<TRange1>
             and RMutRange<TRange2>
-            and RAssignable<typename TRange2::TElem, typename TRange1::TElem>
+            and RAssignable<tname TRange2::TElem, tname TRange1::TElem>
         constexpr auto FwdCopyTo(const TRange1& range1, TRange2&& range2) const -> void
         {
             _FwdCopy(range1.Iter(), range1.IterEnd(), range2.Iter(), range2.IterEnd());
@@ -70,7 +70,7 @@ namespace Atom
         template <class TRange1, class TRange2>
         requires RRange<TRange1>
             and RMutRange<TRange2>
-            and RAssignable<typename TRange2::TElem, typename TRange1::TElem>
+            and RAssignable<tname TRange2::TElem, tname TRange1::TElem>
         constexpr auto BwdCopyTo(const TRange1& range1, TRange2&& range2) const -> void
         {
             _BwdCopy(range1.Iter(), range1.IterEnd(), range2.Iter(), range2.IterEnd());
@@ -82,7 +82,7 @@ namespace Atom
         template <class TRange1, class TRange2>
         requires RMutRange<TRange1>
             and RMutRange<TRange2>
-            and RAssignable<typename TRange2::TElem, typename TRange1::TElem>
+            and RAssignable<tname TRange2::TElem, tname TRange1::TElem>
         constexpr auto FwdMoveTo(TRange1&& range1, TRange2&& range2) const -> void
         {
             _FwdMove(range1.Iter(), range1.IterEnd(), range2.Iter(), range2.IterEnd());
@@ -94,7 +94,7 @@ namespace Atom
         template <class TRange1, class TRange2>
         requires RMutRange<TRange1>
             and RMutRange<TRange2>
-            and RAssignable<typename TRange2::TElem, typename TRange1::TElem>
+            and RAssignable<tname TRange2::TElem, tname TRange1::TElem>
         constexpr auto BwdMoveTo(TRange1&& range1, TRange2&& range2) const -> void
         {
             _BwdMove(range1.Iter(), range1.IterEnd(), range2.Iter(), range2.IterEnd());
@@ -105,7 +105,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <class TRange>
         requires RMutFwdRange<TRange>
-            and RMoveAssignable<typename TRange::TElem>
+            and RMoveAssignable<tname TRange::TElem>
         constexpr auto ShiftFwd(TRange&& range, usize steps) const -> void
         {
             _FwdShift(range.Iter(), range.IterEnd(), steps);
@@ -116,7 +116,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <class TRange>
         requires RMutFwdRange<TRange>
-            and RMoveAssignable<typename TRange::TElem>
+            and RMoveAssignable<tname TRange::TElem>
         constexpr auto ShiftBwd(TRange&& range, usize steps) const -> void
         {
             _BwdShift(range.Iter(), range.IterEnd(), steps);
@@ -127,7 +127,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <class TRange>
         requires RMutFwdRange<TRange>
-            and RSwappable<typename TRange::TElem>
+            and RSwappable<tname TRange::TElem>
         constexpr auto ShiftBy(TRange&& range, isize steps) const -> void
         {
             if (steps > 0)
@@ -145,7 +145,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <class TRange>
         requires RMutRange<TRange>
-            and RSwappable<typename TRange::TElem>
+            and RSwappable<tname TRange::TElem>
         constexpr auto RotateFwd(TRange&& range, usize steps) const -> void
         {
             _FwdRotate(range.Iter(), range.IterEnd(), steps);
@@ -156,7 +156,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <class TRange>
         requires RMutRange<TRange>
-            and RSwappable<typename TRange::TElem>
+            and RSwappable<tname TRange::TElem>
         constexpr auto RotateBwd(TRange&& range, usize steps) const -> void
         {
             _BwdRotate(range.Iter(), range.IterEnd(), steps);
@@ -167,7 +167,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <class TRange>
         requires RMutRange<TRange>
-            and RSwappable<typename TRange::TElem>
+            and RSwappable<tname TRange::TElem>
         constexpr auto RotateBy(TRange&& range, isize steps) const -> void
         {
             if (steps > 0)
@@ -185,7 +185,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <class TRange>
         requires RMutRange<TRange>
-            and RDestructible<typename TRange::TElem>
+            and RDestructible<tname TRange::TElem>
         constexpr auto Destruct(TRange&& range) const -> void
         {
             _Destruct(range.Iter(), range.IterEnd());
@@ -206,7 +206,7 @@ namespace Atom
             return count;
         }
 
-        template <class TIter, class TIterEnd, typename T>
+        template <class TIter, class TIterEnd, tname T>
         constexpr auto _Fill(TIter iter, TIterEnd iterEnd, T&& val) const -> void
         {
             StdIterWrapForAtomIter stdIter{ iter };

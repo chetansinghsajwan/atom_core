@@ -24,8 +24,8 @@ namespace Atom::Logging::Private
 
     public:
         using TElem = LogTargetPtr;
-        using TIter = typename _TContainer::TIter;
-        using TIterEnd = typename _TContainer::TIterEnd;
+        using TIter = tname _TContainer::TIter;
+        using TIterEnd = tname _TContainer::TIterEnd;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -43,7 +43,7 @@ namespace Atom::Logging::Private
         /// 
         /// @TIME_COMPLEXITY @COPY_FROM _AddTargets(range).
         /// ----------------------------------------------------------------------------------------
-        template <typename TRange>
+        template <tname TRange>
         requires RRangeOf<TRange, LogTargetPtr>
         MultiLogTargetTemplate(const TRange& targets)
         {
@@ -122,7 +122,7 @@ namespace Atom::Logging::Private
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        template <typename TRange>
+        template <tname TRange>
         requires RRangeOf<TRange, LogTargetPtr>
         usize AddTargets(const TRange& targets)
         {
@@ -167,7 +167,7 @@ namespace Atom::Logging::Private
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        template <typename TRange>
+        template <tname TRange>
         requires RRangeOf<TRange, LogTargetPtr>
         usize RemoveTargets(const TRange& targets)
         {
@@ -209,7 +209,7 @@ namespace Atom::Logging::Private
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        template <typename TRange>
+        template <tname TRange>
         requires RRangeOf<TRange, LogTargetPtr>
         usize HasTargets(const TRange& targets) const noex
         {
@@ -313,7 +313,7 @@ namespace Atom::Logging::Private
         /// 
         /// @THREAD_SAFETY NONE
         /// ----------------------------------------------------------------------------------------
-        template <typename TRange>
+        template <tname TRange>
         requires RRangeOf<TRange, LogTargetPtr>
         usize _AddTargets(const TRange& targets)
         {
@@ -369,7 +369,7 @@ namespace Atom::Logging::Private
         /// 
         /// @TIME_COMPLEXITY @COPY_FROM ${_TContainer}::Remove(LogTarget& target)
         /// ----------------------------------------------------------------------------------------
-        template <typename TRange>
+        template <tname TRange>
         requires RRangeOf<TRange, LogTargetPtr>
         usize _RemoveTargets(const TRange& targets)
         {
@@ -423,7 +423,7 @@ namespace Atom::Logging::Private
         /// 
         /// @TIME_COMPLEXITY Exponential
         /// ----------------------------------------------------------------------------------------
-        template <typename TRange>
+        template <tname TRange>
         requires RRangeOf<TRange, LogTargetPtr>
         usize _HasTargets(const TRange& targets)
         {

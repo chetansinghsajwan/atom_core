@@ -5,7 +5,7 @@ namespace Atom::Text
     /// --------------------------------------------------------------------------------------------
     /// Requirements for {_CharEncodingLazyConverterHelper} API.
     /// --------------------------------------------------------------------------------------------
-    template <typename TConverter, typename TInEncoding, typename TOutEncoding>
+    template <tname TConverter, tname TInEncoding, tname TOutEncoding>
     concept RCharEncodingLazyConverter = requires
     {
         requires RRangeOf<TConverter, BasicChar<TOutEncoding>>;
@@ -16,7 +16,7 @@ namespace Atom::Text
     /// Ensures {_CharEncodingLazyConverterHelper<TInEncoding, TOutEncoding>} satisfies
     /// {RCharEncodingLazyConverter<TInEncoding, TOutEncoding>}.
     /// --------------------------------------------------------------------------------------------
-    template <typename TInEncoding, typename TOutEncoding>
+    template <tname TInEncoding, tname TOutEncoding>
     concept RCharEncodingLazyConvertible = RCharEncodingLazyConverter<
         _CharEncodingLazyConverterHelper<TInEncoding, TOutEncoding, Internal::FwdIterMock<BasicChar<TInEncoding>>>,
         TInEncoding, TOutEncoding>;
@@ -28,7 +28,7 @@ namespace Atom::Text
     /// Converts data from {TInEncoding} character encoding to {TOutEncoding} on demand.
     /// This doesn't process the whole string, only the requested part.
     /// --------------------------------------------------------------------------------------------
-    template <typename TImpl, typename TInEncoding, typename TOutEncoding, typename TInput>
+    template <tname TImpl, tname TInEncoding, tname TOutEncoding, tname TInput>
     struct _CharEncodingLazyConverterHelper
     {
         using TIter = _CharEncodingLazyConverterHelperIter<
@@ -67,13 +67,13 @@ namespace Atom::Text
     /// Converts data from {TInEncoding} character encoding to {TOutEncoding} on demand.
     /// This doesn't process the whole string, only the requested part.
     /// --------------------------------------------------------------------------------------------
-    template <typename TImpl, typename TInEncoding, typename TOutEncoding, typename TInput>
+    template <tname TImpl, tname TInEncoding, tname TOutEncoding, tname TInput>
     struct _CharEncodingLazyConverterHelperIter
     {
         using TThis = _CharEncodingLazyConverterHelperIter;
         using TIterEnd = _CharEncodingLazyConverterHelperIterEnd;
-        using TInChar = typename TInEncoding::TChar;
-        using TOutChar = typename TOutEncoding::TChar;
+        using TInChar = tname TInEncoding::TChar;
+        using TOutChar = tname TOutEncoding::TChar;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -157,7 +157,7 @@ namespace Atom::Text
     /// --------------------------------------------------------------------------------------------
     /// {_CharEncodingLazyConverterHelper} specialization for same character encodings.
     /// --------------------------------------------------------------------------------------------
-    template <typename TImpl, typename TCharEncoding, typename TInput>
+    template <tname TImpl, tname TCharEncoding, tname TInput>
     class _CharEncodingLazyConverterHelper<TImpl, TCharEncoding, TCharEncoding, TInput>
     {
         using TChar = BasicChar<TCharEncoding>;

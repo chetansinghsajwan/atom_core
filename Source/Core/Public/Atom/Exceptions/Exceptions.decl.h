@@ -140,7 +140,7 @@ namespace Atom::Ex::Internal
 
         Thrower& RecordSource(ExceptionSource src = ExceptionSource::Current());
 
-        template <typename TEx>
+        template <tname TEx>
         requires RDerivedFrom<TEx, Exception>
         ATOM_ATTR_NORETURN
         void operator << (TEx&& ex);

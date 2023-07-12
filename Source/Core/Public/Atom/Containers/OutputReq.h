@@ -3,7 +3,7 @@
 
 namespace Atom
 {
-    template <typename TOut, typename T>
+    template <tname TOut, tname T>
     concept ROutput = requires(TOut out)
     {
         { out += declval(const T&) };

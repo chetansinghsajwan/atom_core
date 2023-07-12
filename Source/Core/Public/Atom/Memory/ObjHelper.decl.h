@@ -5,7 +5,7 @@ namespace Atom
 {
     struct ObjHelper
     {
-        template <typename TPtr>
+        template <tname TPtr>
         constexpr void Construct(TPtr&& mem, auto&&... args) const
         {
             ATOM_DEBUG_EXPECTS(mem != nullptr);
@@ -13,7 +13,7 @@ namespace Atom
             std::construct_at(mem, FORWARD(args)...);
         }
 
-        template <typename TPtr>
+        template <tname TPtr>
         constexpr void Destruct(TPtr&& mem) const
         {
             ATOM_DEBUG_EXPECTS(mem != nullptr);

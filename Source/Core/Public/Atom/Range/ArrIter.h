@@ -6,7 +6,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// ArrIter iterates over const raw arr.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
+    template <tname T>
     class ArrIter: public ArrIterTag
     {
     public:
@@ -137,7 +137,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// MutArrIter iterates over raw arr.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
+    template <tname T>
     class MutArrIter: public ArrIter<T>
     {
     public:

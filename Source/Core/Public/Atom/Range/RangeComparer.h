@@ -12,9 +12,9 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// @TODO: Update comparision requirements for TElem of both ranges.
         /// ----------------------------------------------------------------------------------------
-        template <typename TRange1, typename TRange2>
+        template <tname TRange1, tname TRange2>
         requires RFwdRange<TRange1> && RFwdRange<TRange2> &&
-            RSameAs<typename TRange1::TElem, typename TRange2::TElem>
+            RSameAs<tname TRange1::TElem, tname TRange2::TElem>
         int8 AreEqual(const TRange1& range1, const TRange2& range2)
         {
             StdIterWrapForAtomIter stdIter1{ range1.Iter() };

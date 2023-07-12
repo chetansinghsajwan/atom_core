@@ -19,10 +19,10 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// {Char} for {AsciiEncoding}.
     /// --------------------------------------------------------------------------------------------
-    using AsciiChar = typename AsciiEncoding::TChar;
+    using AsciiChar = tname AsciiEncoding::TChar;
 
     /// --------------------------------------------------------------------------------------------
     /// {Rune} for {AsciiEncoding}.
     /// --------------------------------------------------------------------------------------------
-    using AsciiRune = typename AsciiEncoding::TRune;
+    using AsciiRune = tname AsciiEncoding::TRune;
 }

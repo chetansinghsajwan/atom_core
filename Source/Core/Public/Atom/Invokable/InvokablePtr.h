@@ -4,16 +4,16 @@ namespace Atom
 {
     namespace Private
     {
-        template <typename... TSign>
+        template <tname... TSign>
         struct InvokablePtrImpl;
 
-        template <typename TResult, typename... TArgs>
+        template <tname TResult, tname... TArgs>
         struct InvokablePtrImpl<TResult(TArgs...)>
         {
             using Type = TResult(*) (TArgs...);
         };
     }
 
-    template <typename... TSign>
-    using InvokablePtr = typename Private::InvokablePtrImpl<TSign...>::Type;
+    template <tname... TSign>
+    using InvokablePtr = tname Private::InvokablePtrImpl<TSign...>::Type;
 }

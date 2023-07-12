@@ -6,7 +6,7 @@
 
 namespace Atom
 {
-    template <typename T>
+    template <tname T>
     using NumLimits = std::numeric_limits<T>;
 }
 
@@ -23,7 +23,7 @@ namespace Atom::Math
         return Abs(lhs - rhs) < 0.0001f;
     }
 
-    template <typename TInt>
+    template <tname TInt>
     constexpr TInt Clamp(const TInt& value, const TInt& lhs, const TInt& rhs)
     {
         if (value < lhs) return lhs;
@@ -33,14 +33,14 @@ namespace Atom::Math
     }
 
     // TODO: Implement with template args
-    template <typename TInt>
+    template <tname TInt>
     constexpr TInt Min(const TInt& lhs, const TInt& rhs)
     {
         return lhs < rhs ? lhs : rhs;
     }
 
     // TODO: Implement with template args
-    template <typename TInt>
+    template <tname TInt>
     constexpr TInt Max(const TInt& lhs, const TInt& rhs)
     {
         return lhs > rhs ? lhs : rhs;

@@ -5,7 +5,7 @@ namespace Atom
     template < >
     struct _AsciiToAsciiConversionImpl
     {
-        template <typename TIn, typename TOut>
+        template <tname TIn, tname TOut>
         constexpr void ConvertChar(const TIn& in, TOut& out)
         {
         }
@@ -14,7 +14,7 @@ namespace Atom
     export using AsciiToAsciiConverter = _CharEncodingConverterHelper<
         _AsciiToAsciiConversionImpl, AsciiEncoding, AsciiEncoding>;
 
-    template <typename TInput>
+    template <tname TInput>
     export using AsciiToAsciiLazyConverter = _CharEncodingLazyConverterHelper<
         _AsciiToAsciiConversionImpl, AsciiEncoding, AsciiEncoding, TInput>;
 }

@@ -35,7 +35,7 @@ namespace Atom::Internal
             }
         }
 
-        template <typename TEx>
+        template <tname TEx>
         requires RDerivedFrom<TEx, Exception>
         ATOM_ATTR_NORETURN
         void operator << (TEx&& ex)
@@ -45,7 +45,7 @@ namespace Atom::Internal
             Thrower::operator << (FORWARD(ex));
         }
 
-        template <typename TArg>
+        template <tname TArg>
         requires RNotDerivedFrom<TArg, Exception>
         ATOM_ATTR_NORETURN
         void operator << (TArg&& arg)

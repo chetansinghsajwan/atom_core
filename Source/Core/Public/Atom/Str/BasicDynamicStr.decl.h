@@ -4,7 +4,7 @@
 
 namespace Atom
 {
-    template <typename TEncoding, typename TAlloc = DefaultMemAllocator>
+    template <tname TEncoding, tname TAlloc = DefaultMemAllocator>
     using BasicDynamicStr = _StrImpl
     <
         TEncoding,

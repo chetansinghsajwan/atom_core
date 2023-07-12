@@ -7,7 +7,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
-    template <typename _TIter, typename _TIterEnd, typename T>
+    template <tname _TIter, tname _TIterEnd, tname T>
     struct _RangeReqMock
     {
         using TElem = T;
@@ -21,7 +21,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
-    template <typename _TIter, typename _TIterEnd, typename T>
+    template <tname _TIter, tname _TIterEnd, tname T>
     struct _MutRangeReqMock
     {
         using TElem = T;
@@ -39,7 +39,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// {RRange} mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
+    template <tname T>
     struct RangeReqMock :
         _RangeReqMock<IterReqMock<T>, IterEndReqMock, T> { };
 
@@ -48,7 +48,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// {RMutRange} mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
+    template <tname T>
     struct MutRangeReqMock :
         _MutRangeReqMock<MutIterReqMock<T>, IterEndReqMock, T> { };
 
@@ -57,7 +57,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// {RFwdRange} mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
+    template <tname T>
     struct FwdRangeReqMock :
         _RangeReqMock<FwdIterReqMock<T>, IterEndReqMock, T> { };
 
@@ -66,7 +66,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// {RMutFwdRange} mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
+    template <tname T>
     struct MutFwdRangeReqMock :
         _MutRangeReqMock<MutFwdIterReqMock<T>, IterEndReqMock, T> { };
 
@@ -75,7 +75,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// {RBidiRange} mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
+    template <tname T>
     struct BidiRangeReqMock :
         _RangeReqMock<BidiIterReqMock<T>, IterEndReqMock, T> { };
 
@@ -84,7 +84,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// {RMutBidiRange} mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
+    template <tname T>
     struct MutBidiRangeReqMock :
         _MutRangeReqMock<MutBidiIterReqMock<T>, IterEndReqMock, T> { };
 
@@ -93,7 +93,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// {RJumpRange} mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
+    template <tname T>
     struct JumpRangeReqMock :
         _RangeReqMock<JumpIterReqMock<T>, IterEndReqMock, T> { };
 
@@ -102,7 +102,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// {RMutJumpRange} mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
+    template <tname T>
     struct MutJumpRangeReqMock :
         _MutRangeReqMock<MutJumpIterReqMock<T>, IterEndReqMock, T> { };
 
@@ -111,7 +111,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// {RArrRange} mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
+    template <tname T>
     struct ArrRangeReqMock :
         _RangeReqMock<ArrIterReqMock<T>, IterEndReqMock, T> { };
 
@@ -120,7 +120,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// {RMutArrRange} mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
+    template <tname T>
     struct MutArrRangeReqMock :
         _MutRangeReqMock<MutArrIterReqMock<T>, IterEndReqMock, T> { };
 
@@ -129,7 +129,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// {RCommonRange} mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
+    template <tname T>
     struct CommonRangeReqMock : 
         _RangeReqMock<IterReqMock<T>, IterReqMock<T>, T> { };
 
@@ -138,7 +138,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// {RMutCommonRange} mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
+    template <tname T>
     struct MutCommonRangeReqMock :
         _MutRangeReqMock<MutFwdIterReqMock<T>, MutFwdIterReqMock<T>, T> { };
 

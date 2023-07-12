@@ -14,13 +14,13 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// Ensures {T1} is same as {T2}.
     /// --------------------------------------------------------------------------------------------
-    template <typename T1, typename T2>
+    template <tname T1, tname T2>
     concept RSameAs = std::same_as<T1, T2>;
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures unqualified type of {T1} is same as unqualified type of {T2}.
     /// --------------------------------------------------------------------------------------------
-    template <typename T1, typename T2>
+    template <tname T1, tname T2>
     concept RSameAsUnqualified = std::same_as<TTI::TRemoveCVRef<T1>, TTI::TRemoveCVRef<T2>>;
 
     template <bool V>
@@ -29,13 +29,13 @@ namespace Atom
     template <bool V>
     concept RFalse = (V == false);
 
-    template <typename T>
+    template <tname T>
     concept RConst = ::std::is_const_v<T>;
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures {TFrom} is {Convertible} to {TTo}.
     /// --------------------------------------------------------------------------------------------
-    template <typename TFrom, typename TTo>
+    template <tname TFrom, tname TTo>
     concept RConvertibleTo = requires
     {
         static_cast<TTo>(declval(TFrom));
@@ -44,25 +44,25 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// Ensures {TDerived} is derived from {TBase}.
     /// --------------------------------------------------------------------------------------------
-    template <typename TDerived, typename TBase>
+    template <tname TDerived, tname TBase>
     concept RDerivedFrom = ::std::derived_from<::std::remove_cvref_t<TDerived>, ::std::remove_cvref_t<TBase>>;
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures {TDerived} not is derived from {TBase}.
     /// --------------------------------------------------------------------------------------------
-    template <typename TDerived, typename TBase>
+    template <tname TDerived, tname TBase>
     concept RNotDerivedFrom = (!RDerivedFrom<TDerived, TBase>);
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures {TDerived} is same as or derived from {TBase}.
     /// --------------------------------------------------------------------------------------------
-    template <typename TDerived, typename TBase>
+    template <tname TDerived, tname TBase>
     concept RSameOrDerivedFrom = RSameAs<TDerived, TBase> || RDerivedFrom<TDerived, TBase>;
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures {TDerived} is not same as or derived from {TBase}.
     /// --------------------------------------------------------------------------------------------
-    template <typename TDerived, typename TBase>
+    template <tname TDerived, tname TBase>
     concept RNotSameOrDerivedFrom = !RSameOrDerivedFrom<TDerived, TBase>;
 
 //// -----------------------------------------------------------------------------------------------
@@ -72,7 +72,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// Ensures {T} is {Constructible} using {args...}.
     /// --------------------------------------------------------------------------------------------
-    template <typename T, typename... TArgs>
+    template <tname T, tname... TArgs>
     concept RConstructible = requires(TArgs&&... args)
     {
         T(FORWARD(args)...);
@@ -81,25 +81,25 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// Ensures {T} is {DefaultConstructible}.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
+    template <tname T>
     concept RDefaultConstructible = RConstructible<T>;
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures {T} is {CopyConstructible}.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
+    template <tname T>
     concept RCopyConstructible = RConstructible<T, const T&>;
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures {T} is {MoveConstructible}.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
+    template <tname T>
     concept RMoveConstructible = RConstructible<T, T&&>;
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures {T} is {DefaultInitializable}.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
+    template <tname T>
     concept RDefaultInitializable = requires
     {
         requires RDefaultConstructible<T>;
@@ -111,7 +111,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// Ensures {T} is {Assignable} using {from}.
     /// --------------------------------------------------------------------------------------------
-    template <typename T1, typename T2>
+    template <tname T1, tname T2>
     concept RAssignable = requires(T1 t1, T2 t2)
     {
         { t1 = t2 } -> RSameAs<T1&>;
@@ -120,43 +120,43 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// Ensures {T} is {CopyAssignable}.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
+    template <tname T>
     concept RCopyAssignable = RAssignable<T, const T&>;
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures {T} is {MoveAssignable}.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
+    template <tname T>
     concept RMoveAssignable = RAssignable<T, T&&>;
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures {T} is {CopyConstructible} and {CopyAssignable}.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
+    template <tname T>
     concept RCopyable = RCopyConstructible<T> && RCopyAssignable<T>;
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures {T} is {MoveConstructible} and {MoveAssignable}.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
+    template <tname T>
     concept RMoveable = RMoveConstructible<T> && RMoveAssignable<T>;
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures {T1} is {Swappable} with {T2}.
     /// --------------------------------------------------------------------------------------------
-    template <typename T1, typename T2>
+    template <tname T1, tname T2>
     concept RSwappableWith = RAssignable<T1, T2> && RAssignable<T2, T1>;
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures {T} is {Swappable} with itself.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
+    template <tname T>
     concept RSwappable = RSwappableWith<T, T>;
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures {T} is {Destructible}.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
+    template <tname T>
     concept RDestructible = requires
     {
         requires std::destructible<T>;
@@ -169,7 +169,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// Ensures {T1} and {T2} are {EqualityComparable}.
     /// --------------------------------------------------------------------------------------------
-    template <typename T1, typename T2>
+    template <tname T1, tname T2>
     concept REqualityComparableWith = requires(T1 t1, T2 t2)
     {
         { t1 == t2 } -> RConvertibleTo<bool>;
@@ -179,13 +179,13 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// Ensures {T} is {EqualityComparable}.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
+    template <tname T>
     concept REqualityComparable = REqualityComparableWith<T, T>;
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures {T1} and {T2} are {Comparable}.
     /// --------------------------------------------------------------------------------------------
-    template <typename T1, typename T2>
+    template <tname T1, tname T2>
     concept RComparableWith = requires(T1 t1, T2 t2)
     {
         requires REqualityComparableWith<T1, T2>;
@@ -199,7 +199,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// Ensures {T} is {Comparable}.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
+    template <tname T>
     concept RComparable = RComparableWith<T, T>;
 
 //// -----------------------------------------------------------------------------------------------    
@@ -209,7 +209,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// Ensures {T} is {SemiRegular}.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
+    template <tname T>
     concept RSemiRegular = RCopyable<T> && RDefaultInitializable<T>;
 
     /// --------------------------------------------------------------------------------------------

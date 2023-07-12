@@ -8,13 +8,13 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
-    template <typename... TArgs>
+    template <tname... TArgs>
     struct Range;
 
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
-    template <typename _TIter, typename _TIterEnd>
+    template <tname _TIter, tname _TIterEnd>
     requires RIterPair<_TIter, _TIterEnd>
     struct Range<_TIter, _TIterEnd>
     {
@@ -22,7 +22,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// @TODO: Refactor this.
         /// ----------------------------------------------------------------------------------------
-        using TElem = typename _TIter::TElem;
+        using TElem = tname _TIter::TElem;
         using TMutIter = _TIter;
         using TMutIterEnd = _TIterEnd;
         using TIter = _TIter;
@@ -80,14 +80,14 @@ namespace Atom
         TIterEnd _end;
     };
 
-    template <typename TIter, typename TIterEnd>
+    template <tname TIter, tname TIterEnd>
     requires RIterPair<TIter, TIterEnd>
     Range(TIter iter, TIterEnd end) -> Range<TIter, TIterEnd>;
 
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
+    template <tname T>
     struct Range<const T*, const T*>: Range<ArrIter<T>, ArrIter<T>>
     {
         using _TBase = Range<ArrIter<T>, ArrIter<T>>;
@@ -106,7 +106,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
+    template <tname T>
     struct Range<T*, T*>: Range<MutArrIter<T>, MutArrIter<T>>
     {
         using _TBase = Range<MutArrIter<T>, MutArrIter<T>>;
@@ -122,19 +122,19 @@ namespace Atom
             _TBase{ arr, arr + count } { }
     };
 
-    template <typename T>
+    template <tname T>
     Range(T* iter, T* end) -> Range<T*, T*>;
 
-    template <typename T>
+    template <tname T>
     Range(T* iter, usize count) -> Range<T*, T*>;
 
-    template <typename T, usize count>
+    template <tname T, usize count>
     Range(T(&arr)[count]) -> Range<T*, T*>;
 
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
+    template <tname T>
     struct Range<InitList<T>>: Range<const T*, const T*>
     {
         using Base = Range<const T*, const T*>;
@@ -143,6 +143,6 @@ namespace Atom
             Base{ init.begin(), init.end() } { }
     };
 
-    template <typename T>
+    template <tname T>
     Range(const InitList<T>& init) -> Range<InitList<T>>;
 }

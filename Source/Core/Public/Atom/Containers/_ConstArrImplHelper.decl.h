@@ -5,7 +5,7 @@
 
 namespace Atom
 {
-    template <typename _TImpl>
+    template <tname _TImpl>
     class _ConstArrImplHelper: public _TImpl
     {
     //// -------------------------------------------------------------------------------------------
@@ -13,7 +13,7 @@ namespace Atom
     //// -------------------------------------------------------------------------------------------
 
     public:
-        using TElem = typename _TImpl::TElem;
+        using TElem = tname _TImpl::TElem;
         using TIter = ArrIter<TElem>;
         using TIterEnd = TIter;
 

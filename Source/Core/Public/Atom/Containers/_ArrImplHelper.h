@@ -4,7 +4,7 @@
 
 namespace Atom
 {
-    template <typename _TImpl>
+    template <tname _TImpl>
     constexpr auto _ArrImplHelper<_TImpl>::ElemAt(usize index)
         -> TElem&
     {
@@ -14,7 +14,7 @@ namespace Atom
         return _Data()[index];
     }
 
-    template <typename _TImpl>
+    template <tname _TImpl>
     constexpr auto _ArrImplHelper<_TImpl>::operator [](usize index) noex
         -> TElem&
     {
@@ -24,7 +24,7 @@ namespace Atom
         return _Data()[index];
     }
 
-    template <typename _TImpl>
+    template <tname _TImpl>
     constexpr auto _ArrImplHelper<_TImpl>::ElemFront() noex
         -> TElem&
     {
@@ -34,7 +34,7 @@ namespace Atom
         return _Data()[0];
     }
 
-    template <typename _TImpl>
+    template <tname _TImpl>
     constexpr auto _ArrImplHelper<_TImpl>::ElemBack() noex
         -> TElem&
     {

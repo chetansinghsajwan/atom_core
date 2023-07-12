@@ -5,23 +5,23 @@
 
 namespace Atom
 {
-    template <typename _TEncoding, typename _TContainer>
+    template <tname _TEncoding, tname _TContainer>
     class _StrImpl: public _TContainer
     {
     public:
         using TEncoding            = _TEncoding;
 
         using TChar                = BasicChar<TEncoding>;
-        using TIter                = typename _TContainer::TIter;
-        using TIterEnd             = typename _TContainer::TIterEnd;
-        // using TMutIter             = typename _TContainer::TMutIter;
-        // using TMutIterEnd          = typename _TContainer::TMutIterEnd;
+        using TIter                = tname _TContainer::TIter;
+        using TIterEnd             = tname _TContainer::TIterEnd;
+        // using TMutIter             = tname _TContainer::TMutIter;
+        // using TMutIterEnd          = tname _TContainer::TMutIterEnd;
 
         using TRune                = BasicRune<TEncoding>;
-        // using TRuneIter            = typename _TContainer::TRuneIter;
-        // using TRuneIterEnd         = typename _TContainer::TRuneIterEnd;
-        // using TMutRuneIter         = typename _TContainer::TMutRuneIter;
-        // using TMutRuneIterEnd      = typename _TContainer::TMutRuneIterEnd;
+        // using TRuneIter            = tname _TContainer::TRuneIter;
+        // using TRuneIterEnd         = tname _TContainer::TRuneIterEnd;
+        // using TMutRuneIter         = tname _TContainer::TMutRuneIter;
+        // using TMutRuneIterEnd      = tname _TContainer::TMutRuneIterEnd;
 
     public:
         using _TContainer::_TContainer;

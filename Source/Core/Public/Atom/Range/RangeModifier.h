@@ -12,8 +12,8 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <typename TRange, typename TPred>
-        requires RRange<TRange> && RInvokable<TPred, bool(const typename TRange::TElem&)>
+        template <tname TRange, tname TPred>
+        requires RRange<TRange> && RInvokable<TPred, bool(const tname TRange::TElem&)>
         usize RemoveIf(TRange& range, TPred&& pred)
         {
             usize count = 0;

@@ -29,6 +29,6 @@ namespace Atom
         }
     };
 
-    using Utf16Char = typename Utf16Encoding::TChar;
-    using Utf16Rune = typename Utf16Encoding::TRune;
+    using Utf16Char = tname Utf16Encoding::TChar;
+    using Utf16Rune = tname Utf16Encoding::TRune;
 }

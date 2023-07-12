@@ -51,20 +51,20 @@ namespace Atom
     using NullType = std::nullptr_t;
     using TypeInfo = std::type_info;
 
-    template <typename T>
+    template <tname T>
     constexpr T&& MOVE(T& obj) noex
     {
         return std::move(obj);
     }
 
-    template <typename T>
+    template <tname T>
     constexpr T& MOVE(T& lhs, T& rhs) noex
     {
         lhs = std::move(rhs);
         return lhs;
     }
 
-    template <typename T>
+    template <tname T>
     void SWAP(T& lhs, T& rhs)
     {
         T tmp = MOVE(lhs);

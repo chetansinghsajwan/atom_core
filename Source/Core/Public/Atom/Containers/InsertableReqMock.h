@@ -6,14 +6,14 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// {RInsertable} mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
+    template <tname T>
     struct InsertableReqMock
     {
-        template <typename U>
+        template <tname U>
         requires RSameAsUnqualified<U, T>
         void Insert(U&& el);
 
-        template <typename TRange>
+        template <tname TRange>
         requires RRangeOf<TRange, T>
         void Insert(const TRange& range);
     };
@@ -24,14 +24,14 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// {RFrontInsertable} mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
+    template <tname T>
     struct FrontInsertableReqMock
     {
-        template <typename U>
+        template <tname U>
         requires RSameAsUnqualified<U, T>
         void InsertFront(U&& el);
 
-        template <typename TRange>
+        template <tname TRange>
         requires RRangeOf<TRange, T>
         void InsertFront(const TRange& range);
     };
@@ -42,14 +42,14 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// {RBackInsertable} mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
+    template <tname T>
     struct BackInsertableReqMock
     {
-        template <typename U>
+        template <tname U>
         requires RSameAsUnqualified<U, T>
         void InsertBack(U&& el);
 
-        template <typename TRange>
+        template <tname TRange>
         requires RRangeOf<TRange, T>
         void InsertBack(const TRange& range);
     };
@@ -60,14 +60,14 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// {RKeyInsertable} mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename TKey, typename T>
+    template <tname TKey, tname T>
     struct KeyInsertableReqMock
     {
-        template <typename U>
+        template <tname U>
         requires RSameAsUnqualified<U, T>
         void Insert(TKey key, U&& el);
 
-        template <typename TRange>
+        template <tname TRange>
         requires RRangeOf<TRange, T>
         void Insert(TKey key, const TRange& range);
     };
@@ -78,7 +78,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// {RIndexInsertable} mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
+    template <tname T>
     using IndexInsertableReqMock = KeyInsertableReqMock<usize, T>;
 
     static_assert(RIndexInsertable<IndexInsertableReqMock<int>, int>,

@@ -7,7 +7,7 @@ namespace Atom::Private
 {
     /// T1Hash Parser.
     /// --------------------------------------------------------------------------------------------
-    template <typename T1Hash>
+    template <tname T1Hash>
     class T1HashParser
     {
         static constexpr usize _Size = T1Hash::_Size;
@@ -47,7 +47,7 @@ namespace Atom::Private
 
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <typename TRange>
+        template <tname TRange>
         requires RRangeOf<TRange, Char>
         constexpr T1Hash Parse(const TRange& range) const noex
         {
@@ -94,7 +94,7 @@ namespace Atom::Private
 
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <typename TRange>
+        template <tname TRange>
         requires RJumpRangeOf<TRange, Char>
         constexpr T1Hash Parse(const TRange& range) const noex
         {

@@ -24,7 +24,7 @@ namespace Atom
 
     /// {Event} is just a frontend to {EventSource} to prevent users from dispatching events.
     /// --------------------------------------------------------------------------------------------
-    template <typename... TArgs>
+    template <tname... TArgs>
     struct IEvent
     {
         using TSignature = void(TArgs...);
@@ -65,7 +65,7 @@ namespace Atom
     /// 
     /// @TODO Add async dispatching.
     /// --------------------------------------------------------------------------------------------
-    template <typename... TArgs>
+    template <tname... TArgs>
     class EventSource: public IEvent<TArgs...>
     {        
     public:

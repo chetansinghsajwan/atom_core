@@ -4,7 +4,7 @@
 
 namespace Atom
 {
-    template <typename TEncoding>
+    template <tname TEncoding>
     using BasicStrView = _StrImpl
     <
         TEncoding,

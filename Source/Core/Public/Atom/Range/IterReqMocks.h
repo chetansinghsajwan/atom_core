@@ -14,7 +14,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// {RIter} mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
+    template <tname T>
     struct IterReqMock
     {
         using TElem = T;
@@ -32,7 +32,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// {RMutIter} mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
+    template <tname T>
     struct MutIterReqMock
     {
         using TElem = T;
@@ -51,7 +51,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// {RFwdIter} mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
+    template <tname T>
     struct FwdIterReqMock : MultiPassIterTag
     {
         using TElem = T;
@@ -69,7 +69,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// {RMutFwdIter} mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
+    template <tname T>
     struct MutFwdIterReqMock : MultiPassIterTag
     {
         using TElem = T;
@@ -88,7 +88,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// {RBidiIter} mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
+    template <tname T>
     struct BidiIterReqMock : MultiPassIterTag
     {
         using TElem = T;
@@ -107,7 +107,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// {RMutBidiIter} mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
+    template <tname T>
     struct MutBidiIterReqMock : MultiPassIterTag
     {
         using TElem = T;
@@ -127,7 +127,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// {RJumpIter} mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
+    template <tname T>
     struct JumpIterReqMock : MultiPassIterTag
     {
         using TElem = T;
@@ -154,7 +154,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// {RMutJumpIter} mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
+    template <tname T>
     struct MutJumpIterReqMock : MultiPassIterTag
     {
         using TElem = T;
@@ -182,7 +182,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// {RArrIter} mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
+    template <tname T>
     struct ArrIterReqMock : ArrIterTag
     {
         using TElem = T;
@@ -210,7 +210,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// {RMutArrIter} mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
+    template <tname T>
     struct MutArrIterReqMock : ArrIterTag
     {
         using TElem = T;

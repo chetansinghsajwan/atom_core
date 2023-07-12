@@ -14,17 +14,17 @@ namespace Atom
 	using StrView = StrView;
 
 	using _FmtFmtParseCtx = ::fmt::basic_format_parse_context<Char>;
-	using _FmtFmtParseCtxIter = typename _FmtFmtParseCtx::iterator;
+	using _FmtFmtParseCtxIter = tname _FmtFmtParseCtx::iterator;
 
 	using _FmtFmtCtxOut = ::fmt::detail::buffer_appender<Char>;
 	using _FmtFmtCtx = ::fmt::basic_format_context<_FmtFmtCtxOut, Char>;
 
-	template <typename... TArgs>
+	template <tname... TArgs>
 	using _FmtFmtStr = ::fmt::basic_format_string<Char, fmt::type_identity_t<TArgs>...>;
 	using _FmtRunFmtStr = ::fmt::runtime_format_string<Char>;
 	using _FmtStrView = ::fmt::basic_string_view<Char>;
 
-	template <typename T>
+	template <tname T>
 	using _FmtFmter = ::fmt::formatter<T, Char>;
 
 	using _FmtFmtEx = ::fmt::format_error;
@@ -83,7 +83,7 @@ namespace Atom
 			_fmtCtx.advance_to(MOVE(out));
 		}
 
-		template <typename TRange>
+		template <tname TRange>
 		requires RRangeOf<TRange, Char>
 		void Write(const TRange& chars)
 		{
@@ -103,19 +103,19 @@ namespace Atom
 	/// Parses and writes string representation for types according to the specified format 
 	/// specifiers.
 	/// --------------------------------------------------------------------------------------------
-	template <typename T>
+	template <tname T>
 	struct StrFmtArgFmterImpl;
 
 	/// --------------------------------------------------------------------------------------------
 	/// 
 	/// --------------------------------------------------------------------------------------------
-	template <typename T>
+	template <tname T>
 	using StrFmtArgFmter = StrFmtArgFmterImpl<TTI::TRemoveCVRef<T>>;
 
 	/// --------------------------------------------------------------------------------------------
 	/// Ensures {TFmter} is {StrFmtArgFmter} for type {T}.
 	/// --------------------------------------------------------------------------------------------
-	template <typename TFmter, typename T>
+	template <tname TFmter, tname T>
 	concept RStrFmtArgFmter = requires(TFmter fmter)
 	{
 		fmter.Parse(declval(StrFmtParseCtx&));
@@ -130,7 +130,7 @@ namespace Atom
 	/// --------------------------------------------------------------------------------------------
 	/// Ensures {T} is {StrArgFmtable}.
 	/// --------------------------------------------------------------------------------------------
-	template <typename T>
+	template <tname T>
 	concept RStrFmtArgFmtable = RStrFmtArgFmter<StrFmtArgFmter<T>, T>;
 }
 
@@ -193,7 +193,7 @@ namespace Atom
 		StrViewConverter<T> convter;
 	};
 
-	template <typename T>
+	template <tname T>
 	struct _FmtFmtfierFilter
 	{
 		static constexpr bool Enable = true;

@@ -12,7 +12,7 @@ namespace Atom
     {
         struct InvokableBoxIdentifier { };
 
-        template <typename TResult, typename... TArgs>
+        template <tname TResult, tname... TArgs>
         struct Invoker
         {
             template <RInvokable<TResult(TArgs...)> TInvokable>
@@ -37,7 +37,7 @@ namespace Atom
             void (*m_impl) (void* invokable, TResult& result, TArgs&&... args);
         };
 
-        template <typename... TArgs>
+        template <tname... TArgs>
         struct Invoker <void, TArgs...>
         {
             template <RInvokable<void(TArgs...)> TInvokable>
@@ -62,12 +62,12 @@ namespace Atom
 
     /// InvokableBox declaration.
     /// --------------------------------------------------------------------------------------------
-    template <typename>
+    template <tname>
     class InvokableBox;
 
     /// 
     /// --------------------------------------------------------------------------------------------
-    template <typename TResult, typename... TArgs>
+    template <tname TResult, tname... TArgs>
     class InvokableBox <TResult(TArgs...)> :
         public ObjectBox<true, true, true, 50, DefaultMemAllocator>,
         public Private::InvokableBoxIdentifier
@@ -167,7 +167,7 @@ namespace Atom
         }
 
     public:
-        template <typename T>
+        template <tname T>
         T* GetInvokable() noex
         {
             if (typeid(T) != GetInvokableType())

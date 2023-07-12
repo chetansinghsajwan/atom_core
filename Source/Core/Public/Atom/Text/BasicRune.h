@@ -3,6 +3,6 @@
 
 namespace Atom
 {
-    template <typename TCharEncoding>
-    using BasicRune = typename TCharEncoding::TRune;
+    template <tname TCharEncoding>
+    using BasicRune = tname TCharEncoding::TRune;
 }

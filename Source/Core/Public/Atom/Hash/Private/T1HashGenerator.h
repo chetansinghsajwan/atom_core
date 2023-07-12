@@ -7,7 +7,7 @@ namespace Atom::Private
 {
     /// T1Hash Generator.
     /// --------------------------------------------------------------------------------------------
-    template <typename T1Hash, typename TImpl>
+    template <tname T1Hash, tname TImpl>
     class T1HashGenerator
     {
     public:
@@ -30,7 +30,7 @@ namespace Atom::Private
 
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <typename TRange, usize BufSize = 50>
+        template <tname TRange, usize BufSize = 50>
         requires RRangeOf<TRange, byte>
         T1HashGenerator& ProcessBytes(TRange bytes)
         {

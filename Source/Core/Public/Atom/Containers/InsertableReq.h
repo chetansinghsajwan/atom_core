@@ -22,7 +22,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// Ensures {TInsertable} is {Insertable} for type {T}.
     /// --------------------------------------------------------------------------------------------
-    template <typename TInsertable, typename T>
+    template <tname TInsertable, tname T>
     concept RInsertable = requires(TInsertable insertable, T el, RangeReqMock<T> range)
     {
         insertable.Insert(el);
@@ -32,7 +32,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// Ensures {TInsertable} is {FrontInsertable} for type {T}.
     /// --------------------------------------------------------------------------------------------
-    template <typename TFrontInsertable, typename T>
+    template <tname TFrontInsertable, tname T>
     concept RFrontInsertable = requires(TFrontInsertable insertable, T el, RangeReqMock<T> range)
     {
         insertable.InsertFront(el);
@@ -42,7 +42,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// Ensures {TInsertable} is {BackInsertable} for type {T}.
     /// --------------------------------------------------------------------------------------------
-    template <typename TInsertable, typename T>
+    template <tname TInsertable, tname T>
     concept RBackInsertable = requires(TInsertable insertable, T el, RangeReqMock<T> range)
     {
         insertable.InsertBack(el);
@@ -52,7 +52,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// Ensures {TInsertable} is {KeyInsertable} for type {T}.
     /// --------------------------------------------------------------------------------------------
-    template <typename TInsertable, typename TKey, typename T>
+    template <tname TInsertable, tname TKey, tname T>
     concept RKeyInsertable = requires(TInsertable insertable, TKey key, T el, RangeReqMock<T> range)
     {
         insertable.Insert(key, el);
@@ -62,6 +62,6 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// Ensures {TInsertable} is {IndexInsertable} for type {T}.
     /// --------------------------------------------------------------------------------------------
-    template <typename TInsertable, typename T>
+    template <tname TInsertable, tname T>
     concept RIndexInsertable = RKeyInsertable<TInsertable, usize, T>;
 }

@@ -9,7 +9,7 @@ namespace Atom
 {
     struct UuidParser
     {
-        template <typename TRange>
+        template <tname TRange>
         requires RRangeOf<TRange, Char>
         constexpr Uuid Parse(const TRange& range) const noex
         {
@@ -25,7 +25,7 @@ namespace Atom
         }
 
     private:
-        template <typename TIter>
+        template <tname TIter>
         constexpr Uuid _ParseCounted(TIter it, usize itCount) const noex
         {
             if (itCount != 36)
@@ -66,7 +66,7 @@ namespace Atom
             return uuid;
         }
 
-        template <typename TIter, typename TIterEnd>
+        template <tname TIter, tname TIterEnd>
         constexpr Uuid _ParseUncounted(TIter it, TIterEnd itEnd) const noex
         {
             Uuid uuid;                          // output result

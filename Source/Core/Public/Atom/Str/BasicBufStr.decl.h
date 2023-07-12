@@ -4,7 +4,7 @@
 
 namespace Atom
 {
-    template <typename TEncoding, usize BufSize, typename TAlloc = DefaultMemAllocator>
+    template <tname TEncoding, usize BufSize, tname TAlloc = DefaultMemAllocator>
     using BasicBufStr = _StrImpl
     <
         TEncoding,

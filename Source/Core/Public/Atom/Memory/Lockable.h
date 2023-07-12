@@ -6,7 +6,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// Requirements for Lockable type.
     /// --------------------------------------------------------------------------------------------
-    template <typename TLockable>
+    template <tname TLockable>
     concept RLockable = requires(TLockable lock)
     {
         { lock.Lock() } -> RSameAs<void>;

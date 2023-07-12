@@ -5,6 +5,6 @@
 
 namespace Atom
 {
-    template <typename T>
+    template <tname T>
     using Atomic = std::atomic<T>;
 }

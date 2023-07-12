@@ -5,7 +5,7 @@
 
 namespace Atom::Private
 {
-    template <typename T1Hash>
+    template <tname T1Hash>
     struct T1HashStringifier
     {
         constexpr Str ToStr(const T1Hash& hash) noex
@@ -29,7 +29,7 @@ namespace Atom::Private
 
 namespace Atom
 {
-    template <typename T1Hash>
+    template <tname T1Hash>
     requires RDefaultConstructible<Private::T1HashStringifier<T1Hash>>
     struct StrConverter<T1Hash>
     {

@@ -11,9 +11,9 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// @TODO: Add comparision requirements for TElem of both ranges.
         /// ----------------------------------------------------------------------------------------
-        template <typename TRange1, typename TRange2>
+        template <tname TRange1, tname TRange2>
         requires RFwdRange<TRange1> && RFwdRange<TRange2>
-        typename TRange1::TIter Find(const TRange1& range1, const TRange2& range2)
+        tname TRange1::TIter Find(const TRange1& range1, const TRange2& range2)
         {
             return std::find(range1.Iter(), range1.IterEnd(), range2.Iter(), range2.IterEnd());
         }
@@ -21,9 +21,9 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <typename TRange>
+        template <tname TRange>
         requires RFwdRange<TRange>
-        typename TRange::TIter Find(const TRange& range, const typename TRange::TElem& el)
+        tname TRange::TIter Find(const TRange& range, const tname TRange::TElem& el)
         {
             return std::find(range.Iter(), range.IterEnd(), el);
         }
@@ -31,9 +31,9 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <typename TRange>
+        template <tname TRange>
         requires RFwdRange<TRange>
-        bool Contains(const TRange& range, const typename TRange::TElem& el)
+        bool Contains(const TRange& range, const tname TRange::TElem& el)
         {
             return Find(range, el) != range.IterEnd();
         }
@@ -41,7 +41,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// @TODO: Add comparision requirements for TElem of both ranges.
         /// ----------------------------------------------------------------------------------------
-        template <typename TRange1, typename TRange2>
+        template <tname TRange1, tname TRange2>
         requires RFwdRange<TRange1> && RFwdRange<TRange2>
         bool Contains(const TRange1& range1, const TRange2& range2)
         {

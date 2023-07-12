@@ -8,7 +8,7 @@ namespace Atom
     /// Locks the lock on construction and unlocks at destruction. This is done to guarantee
     /// exception safety.
     /// --------------------------------------------------------------------------------------------
-    template <typename TLockable>
+    template <tname TLockable>
         requires RLockable<TLockable>
     class LockGuard
     {

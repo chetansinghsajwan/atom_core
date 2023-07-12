@@ -8,10 +8,10 @@ namespace Atom
 //// LogStr Requirements
 //// -----------------------------------------------------------------------------------------------
 
-    template <typename... TArgs>
+    template <tname... TArgs>
     using LogStr = FmtStr<TArgs...>;
 
-    template <typename T>
+    template <tname T>
     concept RLogArg = requires(T arg)
     {
         requires RConvertibleTo<T, StrView>;

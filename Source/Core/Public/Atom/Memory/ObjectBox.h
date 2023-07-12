@@ -28,11 +28,11 @@ namespace Atom
     /// @TPARAM TMemAllocator {MemAllocator} to allocate memory to store object.
     /// --------------------------------------------------------------------------------------------
     template <bool Copyable, bool Movable, bool AllowNonMovableObject, usize StackSize,
-        typename TMemAllocator = DefaultMemAllocator>
+        tname TMemAllocator = DefaultMemAllocator>
     class ObjectBox: public Internal::ObjectBoxIdentifier
     {
         template <bool OtherCopyable, bool OtherMovable, bool OtherAllowNonMovableObject,
-            usize OtherStackSize, typename TOtherMemAllocator>
+            usize OtherStackSize, tname TOtherMemAllocator>
         friend class ObjectBox;
 
         /// --------------------------------------------------------------------------------------------
@@ -56,7 +56,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Requirements for {Object} accepted by this {ObjectBox}.
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
+        template <tname T>
         static constexpr bool RObject = requires
         {
             // {ObjectBox} variants are not stored inside {ObjectBox} variants.
@@ -126,7 +126,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Constructor. Initializes with object.
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
+        template <tname T>
         requires RObject<T>
         ObjectBox(T&& obj): ObjectBox()
         {
@@ -136,7 +136,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// AssignmentOperator. Assigns new object.
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
+        template <tname T>
         requires RObject<T>
         ObjectBox& operator = (T&& object)
         {
@@ -157,7 +157,7 @@ namespace Atom
         /// CopyConstructorTemplate.
         /// ----------------------------------------------------------------------------------------
         template <bool OtherMovable, bool OtherAllowNonMovableObject,
-            usize OtherStackSize, typename TOtherMemAllocator>
+            usize OtherStackSize, tname TOtherMemAllocator>
         requires Copyable && ROtherBox<Copyable, OtherMovable, OtherAllowNonMovableObject>
         ObjectBox(const ObjectBox<Copyable, OtherMovable, OtherAllowNonMovableObject, 
             OtherStackSize, TOtherMemAllocator>& other): ObjectBox()
@@ -179,7 +179,7 @@ namespace Atom
         /// CopyAssignmentOperatorTemplate.
         /// ----------------------------------------------------------------------------------------
         template <bool OtherMovable, bool OtherAllowNonMovableObject, 
-            usize OtherStackSize, typename TOtherMemAllocator>
+            usize OtherStackSize, tname TOtherMemAllocator>
         requires Copyable && ROtherBox<Copyable, OtherMovable, OtherAllowNonMovableObject>
         ObjectBox& operator = (const ObjectBox<Copyable, OtherMovable, OtherAllowNonMovableObject,
             OtherStackSize, TOtherMemAllocator>& other)
@@ -201,7 +201,7 @@ namespace Atom
         /// MoveConstructorTemplate.
         /// ----------------------------------------------------------------------------------------
         template <bool OtherCopyable, bool OtherMovable, bool OtherAllowNonMovableObject,
-            usize OtherStackSize, typename TOtherMemAllocator>
+            usize OtherStackSize, tname TOtherMemAllocator>
         requires Movable && ROtherBox<OtherCopyable, OtherMovable, OtherAllowNonMovableObject>
         ObjectBox(ObjectBox<OtherCopyable, OtherMovable, OtherAllowNonMovableObject,
             OtherStackSize, TOtherMemAllocator>&& other): ObjectBox()
@@ -223,7 +223,7 @@ namespace Atom
         /// MoveAssignmentOperatorTemplate.
         /// ----------------------------------------------------------------------------------------
         template <bool OtherCopyable, bool OtherMovable, bool OtherAllowNonMovableObject,
-            usize OtherStackSize, typename TOtherMemAllocator>
+            usize OtherStackSize, tname TOtherMemAllocator>
         requires Movable && ROtherBox<OtherCopyable, OtherMovable, OtherAllowNonMovableObject>
         ObjectBox& operator = (ObjectBox<OtherCopyable, OtherMovable, OtherAllowNonMovableObject,
             OtherStackSize, TOtherMemAllocator>&& other)
@@ -248,7 +248,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Sets the new object.
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
+        template <tname T>
         requires RObject<T>
         void SetObject(T&& obj)
         {
@@ -258,7 +258,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Get the object.
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
+        template <tname T>
         T& GetObject() noex
         {
             return *_GetObject<T>();
@@ -267,7 +267,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Get the const object.
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
+        template <tname T>
         const T& GetObject() const noex
         {
             return *_GetObject<T>();
@@ -282,7 +282,7 @@ namespace Atom
         /// Copies {other} {ObjectBox} into {this} {ObjectBox}.
         /// ----------------------------------------------------------------------------------------
         template <bool OtherMovable, bool OtherAllowNonMovableObject,
-            usize OtherStackSize, typename TOtherMemAllocator>
+            usize OtherStackSize, tname TOtherMemAllocator>
         requires Copyable && ROtherBox<Copyable, OtherMovable, OtherAllowNonMovableObject>
         void _CopyBox(const ObjectBox<Copyable, OtherMovable, OtherAllowNonMovableObject,
             OtherStackSize, TOtherMemAllocator>& other)
@@ -294,7 +294,7 @@ namespace Atom
         /// Moves {other} {ObjectBox} into {this} {ObjectBox}.
         /// ----------------------------------------------------------------------------------------
         template <bool OtherCopyable, bool OtherMovable, bool OtherAllowNonMovableObject,
-            usize OtherStackSize, typename TOtherMemAllocator>
+            usize OtherStackSize, tname TOtherMemAllocator>
         requires Movable && ROtherBox<OtherCopyable, OtherMovable, OtherAllowNonMovableObject>
         void _MoveBox(ObjectBox<OtherCopyable, OtherMovable, OtherAllowNonMovableObject,
             OtherStackSize, TOtherMemAllocator>&& other)
@@ -361,7 +361,7 @@ namespace Atom
         /// 
         /// @EXPECTS Previous object is not set.
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
+        template <tname T>
         requires RObject<T>
         void _InitObject(T&& obj, bool forceHeap = false)
         {
@@ -415,7 +415,7 @@ namespace Atom
         /// @PARAM[IN] obj Object to store.
         /// @PARAM[IN] forceHeap (default = false) Force store on heap.
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
+        template <tname T>
         requires RObject<T>
         void _SetObject(T&& obj, bool forceHeap = false)
         {
@@ -428,7 +428,7 @@ namespace Atom
         /// 
         /// @TPARAM T Type as which to get the object.
         /// ----------------------------------------------------------------------------------------
-        template <typename T = void>
+        template <tname T = void>
         T* _GetObject() noex
         {
             return reinterpret_cast<T*>(_object.obj);
@@ -457,7 +457,7 @@ namespace Atom
         /// @PARAM[IN] forceHeap (default = false) Force allocate object on heap.
         /// ----------------------------------------------------------------------------------------
         template <bool OtherMovable, bool OtherAllowNonMovableObject,
-            usize OtherStackSize, typename TOtherMemAllocator>
+            usize OtherStackSize, tname TOtherMemAllocator>
         requires Copyable && ROtherBox<Copyable, OtherMovable, OtherAllowNonMovableObject>
         void _CopyObject(const ObjectBox<Copyable, OtherMovable, OtherAllowNonMovableObject,    
             OtherStackSize, TOtherMemAllocator>& other, bool forceHeap = false)
@@ -488,7 +488,7 @@ namespace Atom
         /// @NOTE This doesn't moves the memory from {other} {ObjectBox}.
         /// ----------------------------------------------------------------------------------------
         template <bool OtherCopyable, bool OtherMovable, bool OtherAllowNoneMovableObject,
-            usize OtherStackSize, typename TOtherMemAllocator>
+            usize OtherStackSize, tname TOtherMemAllocator>
         requires Movable && ROtherBox<OtherCopyable, OtherMovable, OtherAllowNoneMovableObject>
         void _MoveObject(ObjectBox<OtherCopyable, OtherMovable, OtherAllowNoneMovableObject,
             OtherStackSize, TOtherMemAllocator>&& other, bool forceHeap = false)
@@ -525,7 +525,7 @@ namespace Atom
         /// @PARAM[IN] otherBox {ObjectBox} of which to copy {ObjectData}.
         /// ----------------------------------------------------------------------------------------
         template <bool OtherCopyable, bool OtherMovable, bool OtherAllowNonMovableObject,
-            usize OtherStackSize, typename TOtherMemAllocator>
+            usize OtherStackSize, tname TOtherMemAllocator>
         void _CopyObjectData(const ObjectBox<OtherCopyable, OtherMovable,
             OtherAllowNonMovableObject, OtherStackSize, TOtherMemAllocator>& otherBox)
         {

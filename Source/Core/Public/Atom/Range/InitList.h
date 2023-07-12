@@ -5,6 +5,6 @@
 
 namespace Atom
 {
-    template <typename T>
+    template <tname T>
     using InitList = std::initializer_list<T>;
 }
