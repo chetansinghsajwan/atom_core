@@ -143,12 +143,12 @@ namespace Atom::Logging::Internal
         /// @PARAM[IN] in_logMsg Log message object passed for logging.
         /// @PARAM[IN] in_formattedMsg Formatted message generated from {in_logMsg}.
         /// ----------------------------------------------------------------------------------------
-        virtual void m_Write(const LogMsg& in_logMsg, StrView in_formattedMsg) = 0;
+        virtual void m_Write(const LogMsg& in_logMsg, StrView in_formattedMsg) abstract;
 
         /// ----------------------------------------------------------------------------------------
         /// Flush implementation.
         /// ----------------------------------------------------------------------------------------
-        virtual void m_Flush() = 0;
+        virtual void m_Flush() abstract;
 
     //// -------------------------------------------------------------------------------------------
     //// Variables

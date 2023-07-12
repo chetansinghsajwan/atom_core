@@ -2,8 +2,6 @@
 #include "RangeReq.h"
 #include "Atom/Invokable/Invokable.h"
 
-#include <algorithm>
-
 namespace Atom
 {
     class RangeModifier

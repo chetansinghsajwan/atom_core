@@ -16,3 +16,4 @@
 #define ctor
 #define dtor ~
 #define fn auto
+#define abstract = 0

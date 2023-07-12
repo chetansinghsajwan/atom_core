@@ -2,7 +2,6 @@
 #include "Atom/Logging/Logger.h"
 #include "Atom/Logging/LogTarget.h"
 #include "Atom/Logging/LogTargets/MultiLogTarget.h"
-#include <functional>
 
 namespace Atom::Logging::Internal
 {

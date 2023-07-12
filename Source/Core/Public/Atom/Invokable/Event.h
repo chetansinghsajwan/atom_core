@@ -54,11 +54,11 @@ namespace Atom
 
         /// 
         /// ----------------------------------------------------------------------------------------
-        virtual fn Subscribe(InvokableBox<TSignature>&& invokable) noex -> SEventKey = 0;
+        virtual fn Subscribe(InvokableBox<TSignature>&& invokable) noex -> SEventKey abstract;
 
         /// Calls Unsubscribe(key) on {Source}.
         /// ----------------------------------------------------------------------------------------
-        virtual fn Unsubscribe(SEventKey key) noex -> usize = 0;
+        virtual fn Unsubscribe(SEventKey key) noex -> usize abstract;
     };
 
     /// EventSource is used to manage listeners and dispatch event.

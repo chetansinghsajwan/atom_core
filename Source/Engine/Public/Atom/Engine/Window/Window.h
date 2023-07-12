@@ -62,21 +62,21 @@ namespace Atom::Engine
     struct Window
     {
     public:
-        Window(IEvent<const SWindowEvent&>& event) noex:
+        ctor Window(IEvent<const SWindowEvent&>& event) noex:
             OnEvent{ event } { }
 
-        virtual ~Window() = default;
+        virtual dtor Window() = default;
 
     public:
-        virtual void Update() = 0;
+        virtual fn Update() -> void abstract;
 
-        virtual SWindowCoords GetSize() const noex = 0;
-        virtual void SetSize(SWindowCoords size) = 0;
+        virtual fn GetSize() const noex -> SWindowCoords abstract;
+        virtual fn SetSize(SWindowCoords size) -> void abstract;
 
-        virtual SWindowCoords GetPos() const noex = 0;
-        virtual void SetPos(SWindowCoords pos) = 0;
+        virtual fn GetPos() const noex -> SWindowCoords abstract;
+        virtual fn SetPos(SWindowCoords pos) -> void abstract;
 
-        virtual void* GetNative() const noex = 0;
+        virtual fn GetNative() const noex -> void* abstract;
 
     public:
         IEvent<const SWindowEvent&>& OnEvent;

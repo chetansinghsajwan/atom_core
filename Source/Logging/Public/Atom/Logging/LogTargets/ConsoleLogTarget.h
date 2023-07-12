@@ -1,5 +1,4 @@
 #pragma once
-#include <stddef.h>
 #include "Atom/Logging/LogTargets/LogTargetBase.h"
 
 namespace Atom::Logging

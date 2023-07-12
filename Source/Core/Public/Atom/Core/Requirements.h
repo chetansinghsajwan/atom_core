@@ -30,7 +30,7 @@ namespace Atom
     concept RFalse = (V == false);
 
     template <tname T>
-    concept RConst = ::std::is_const_v<T>;
+    concept RConst = std::is_const_v<T>;
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures {TFrom} is {Convertible} to {TTo}.
@@ -45,7 +45,8 @@ namespace Atom
     /// Ensures {TDerived} is derived from {TBase}.
     /// --------------------------------------------------------------------------------------------
     template <tname TDerived, tname TBase>
-    concept RDerivedFrom = ::std::derived_from<::std::remove_cvref_t<TDerived>, ::std::remove_cvref_t<TBase>>;
+    concept RDerivedFrom = std::derived_from<std::remove_cvref_t<TDerived>, 
+        std::remove_cvref_t<TBase>>;
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures {TDerived} not is derived from {TBase}.

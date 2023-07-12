@@ -10,7 +10,7 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Get the name of the logger.
         /// ----------------------------------------------------------------------------------------
-        virtual StrView Name() const noex = 0;
+        virtual StrView Name() const noex abstract;
 
         /// ----------------------------------------------------------------------------------------
         /// Calls Log(ELogLevel::Trace, in_msg, fwd(in_args)...).
@@ -97,21 +97,21 @@ namespace Atom::Logging
         /// 
         /// Logs the LogMsg object.
         /// ----------------------------------------------------------------------------------------
-        virtual void Log(LogMsg& in_logMsg) = 0;
+        virtual void Log(LogMsg& in_logMsg) abstract;
 
         /// ----------------------------------------------------------------------------------------
         /// Pure virtual function.
         /// 
         /// Flushes the logs of this logger.
         /// ----------------------------------------------------------------------------------------
-        virtual void Flush() = 0;
+        virtual void Flush() abstract;
 
         /// ----------------------------------------------------------------------------------------
         /// Pure virtual function.
         /// 
         /// Check if the message should be passed for logging.
         /// ----------------------------------------------------------------------------------------
-        virtual bool CheckLogLevel(ELogLevel in_lvl) const noex = 0;
+        virtual bool CheckLogLevel(ELogLevel in_lvl) const noex abstract;
     };
 
     /// --------------------------------------------------------------------------------------------
