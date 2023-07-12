@@ -10,7 +10,7 @@ namespace Atom
         {
             ATOM_DEBUG_EXPECTS(mem != nullptr);
 
-            std::construct_at(mem, FORWARD(args)...);
+            std::construct_at(mem, fwd(args)...);
         }
 
         template <tname TPtr>

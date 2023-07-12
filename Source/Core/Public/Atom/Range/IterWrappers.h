@@ -51,7 +51,7 @@ namespace Atom
         template <tname... TArgs>
         requires RConstructible<TIter, TArgs...>
         constexpr IterWrap(TArgs&&... args) noex:
-            iter{ FORWARD(args)... } { }
+            iter{ fwd(args)... } { }
 
         constexpr const TElem& operator *() const noex
         {

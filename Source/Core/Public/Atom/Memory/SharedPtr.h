@@ -11,6 +11,6 @@ namespace Atom
     template <tname T>
     SharedPtr<T> MakeShared(auto&&... args) noex
     {
-        return std::make_shared<T>(FORWARD(args)...);
+        return std::make_shared<T>(fwd(args)...);
     }
 }

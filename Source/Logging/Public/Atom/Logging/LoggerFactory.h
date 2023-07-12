@@ -21,6 +21,6 @@ namespace Atom::Logging
 
     inline LoggerPtr CREATE_LOGGER(auto&&... args) noex
     {
-        return GET_LOGGER_FACTORY().CreateLogger(FORWARD(args)...);
+        return GET_LOGGER_FACTORY().CreateLogger(fwd(args)...);
     }
 }

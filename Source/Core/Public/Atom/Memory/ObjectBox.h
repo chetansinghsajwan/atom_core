@@ -130,7 +130,7 @@ namespace Atom
         requires RObject<T>
         ObjectBox(T&& obj): ObjectBox()
         {
-            _InitObject(FORWARD(obj));
+            _InitObject(fwd(obj));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -140,7 +140,7 @@ namespace Atom
         requires RObject<T>
         ObjectBox& operator = (T&& object)
         {
-            _SetObject(FORWARD(object));
+            _SetObject(fwd(object));
             return *this;
         }
 
@@ -252,7 +252,7 @@ namespace Atom
         requires RObject<T>
         void SetObject(T&& obj)
         {
-            _SetObject(FORWARD(obj));
+            _SetObject(fwd(obj));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -404,7 +404,7 @@ namespace Atom
             }
 
             _object.obj = _AllocMem(_object.size, forceHeap);
-            new (_object.obj) T(FORWARD(obj));
+            new (_object.obj) T(fwd(obj));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -420,7 +420,7 @@ namespace Atom
         void _SetObject(T&& obj, bool forceHeap = false)
         {
             _DisposeObject();
-            _InitObject(FORWARD(obj));
+            _InitObject(fwd(obj));
         }
 
         /// ----------------------------------------------------------------------------------------

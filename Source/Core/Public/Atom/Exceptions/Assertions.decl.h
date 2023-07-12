@@ -42,7 +42,7 @@ namespace Atom::Internal
         {
             done = true;
 
-            Thrower::operator << (FORWARD(ex));
+            Thrower::operator << (fwd(ex));
         }
 
         template <tname TArg>
@@ -53,7 +53,7 @@ namespace Atom::Internal
             done = true;
 
             throw 0;
-            // Thrower::operator<< AssertException(FORWARD(arg), assertExpr);
+            // Thrower::operator<< AssertException(fwd(arg), assertExpr);
         }
 
         bool done = false;

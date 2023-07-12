@@ -29,12 +29,12 @@ namespace Atom
     {
         using TSignature = void(TArgs...);
 
-        /// Calls Subscribe(FORWARD(listener));
+        /// Calls Subscribe(fwd(listener));
         /// ----------------------------------------------------------------------------------------
         template <RInvokable<TSignature> TInvokable>
         SEventKey operator += (TInvokable&& listener) noex
         {
-            return Subscribe(FORWARD(listener));
+            return Subscribe(fwd(listener));
         }
 
         /// Calls Unsubscribe(key);
@@ -44,12 +44,12 @@ namespace Atom
             return Unsubscribe(key);
         }
 
-        /// Calls Subscribe(FORWARD(listener)) on {Source}.
+        /// Calls Subscribe(fwd(listener)) on {Source}.
         /// ----------------------------------------------------------------------------------------
         template <RInvokable<TSignature> TInvokable>
         SEventKey Subscribe(TInvokable&& listener) noex
         {
-            return Subscribe(InvokableBox<TSignature>(FORWARD(listener)));
+            return Subscribe(InvokableBox<TSignature>(fwd(listener)));
         }
 
         /// 
@@ -76,7 +76,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         virtual SEventKey Subscribe(InvokableBox<void(TArgs...)>&& invokable) noex ofinal
         {
-            return _AddListener(FORWARD(invokable));
+            return _AddListener(fwd(invokable));
         }
 
         /// 

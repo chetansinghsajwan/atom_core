@@ -80,7 +80,7 @@ namespace Atom::Text
         /// 
         /// ----------------------------------------------------------------------------------------
         constexpr _CharEncodingLazyConverterHelperIter(TImpl&& impl, TInput&& in) noex:
-            _impl{ FORWARD(impl) }, _input{ FORWARD(input) }, _out{ 0 }, _outIndex{ -1 }
+            _impl{ fwd(impl) }, _input{ fwd(input) }, _out{ 0 }, _outIndex{ -1 }
         {
             _ProcessNextChar();
         }

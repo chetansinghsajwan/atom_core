@@ -21,14 +21,14 @@ namespace Atom
                 m_impl = [](void* obj, TResult& result, TArgs&&... args)
                 {
                     TInvokable& invokable = *reinterpret_cast<TInvokable*>(obj);
-                    new (&result) TResult(invokable(FORWARD(args)...));
+                    new (&result) TResult(invokable(fwd(args)...));
                 };
             }
 
             TResult Invoke(void* invokable, TArgs&&... args)
             {
                 TResult result;
-                m_impl(invokable, result, FORWARD(args)...);
+                m_impl(invokable, result, fwd(args)...);
 
                 return result;
             }
@@ -46,13 +46,13 @@ namespace Atom
                 m_impl = [](void* obj, TArgs&&... args)
                 {
                     TInvokable& invokable = *reinterpret_cast<TInvokable*>(obj);
-                    invokable(FORWARD(args)...);
+                    invokable(fwd(args)...);
                 };
             }
 
             void Invoke(void* invokable, TArgs&&... args)
             {
-                m_impl(invokable, FORWARD(args)...);
+                m_impl(invokable, fwd(args)...);
             }
 
         protected:
@@ -102,7 +102,7 @@ namespace Atom
         template <RInvokable<TResult(TArgs...)> TInvokable>
             requires RNotDerivedFrom<TInvokable, Private::InvokableBoxIdentifier>
         InvokableBox(TInvokable&& invokable) :
-            ObjectBox(FORWARD(invokable))
+            ObjectBox(fwd(invokable))
         {
             m_SetInvoker<TInvokable>();
         }
@@ -113,7 +113,7 @@ namespace Atom
             requires RNotDerivedFrom<TInvokable, Private::InvokableBoxIdentifier>
         InvokableBox& operator = (TInvokable&& invokable)
         {
-            ObjectBox::operator = (FORWARD(invokable));
+            ObjectBox::operator = (fwd(invokable));
             m_SetInvoker<TInvokable>();
             return *this;
         }
@@ -156,14 +156,14 @@ namespace Atom
             ATOM_ASSERT(ObjectBox::_HasObject()) << NullPointerException(
                 TEXT("InvokableTarget is null."));
 
-            return m_invoker.Invoke(ObjectBox::_GetObject(), FORWARD(args)...);
+            return m_invoker.Invoke(ObjectBox::_GetObject(), fwd(args)...);
         }
 
         /// 
         /// ----------------------------------------------------------------------------------------
         TResult operator () (TArgs&&... args)
         {
-            return Invoke(FORWARD(args)...);
+            return Invoke(fwd(args)...);
         }
 
     public:
@@ -192,7 +192,7 @@ namespace Atom
 
         TResult m_InvokeInvokable(TArgs&&... args)
         {
-            return m_invoker.Invoke(FORWARD(args)...);
+            return m_invoker.Invoke(fwd(args)...);
         }
 
     protected:

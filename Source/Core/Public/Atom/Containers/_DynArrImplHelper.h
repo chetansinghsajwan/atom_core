@@ -24,7 +24,7 @@ namespace Atom
         ATOM_ASSERT(_ValidateIndexForInsert(index)) << IndexOutOfRangeException(
             TEXT("{pos} is out of range."), index, 0, _Count());
 
-        return MutIter() + _InsertAt(index, FORWARD(el));
+        return MutIter() + _InsertAt(index, fwd(el));
     }
 
     template <tname TImpl>
@@ -53,7 +53,7 @@ namespace Atom
     constexpr auto _DynArrImplHelper<TImpl>::InsertFront(T2&& el)
         -> tname _DynArrImplHelper<TImpl>::TMutIter
     {
-        return MutIter() + _InsertAt(0, FORWARD(el));
+        return MutIter() + _InsertAt(0, fwd(el));
     }
 
     template <tname TImpl>
@@ -76,7 +76,7 @@ namespace Atom
     constexpr auto _DynArrImplHelper<TImpl>::InsertBack(T2&& el)
         -> tname _DynArrImplHelper<TImpl>::TMutIter
     {
-        return MutIter() + _InsertBack(FORWARD(el));
+        return MutIter() + _InsertBack(fwd(el));
     }
 
     template <tname TImpl>
@@ -99,7 +99,7 @@ namespace Atom
     constexpr auto _DynArrImplHelper<TImpl>::operator +=(T2&& el)
         -> tname _DynArrImplHelper<TImpl>::TMutIter
     {
-        return InsertBack(FORWARD(el));
+        return InsertBack(fwd(el));
     }
 
     template <tname TImpl>
@@ -117,7 +117,7 @@ namespace Atom
     {
         _EnsureCapFor(1);
         _MoveRangeBack(index, 1);
-        _ConstructAt(index, FORWARD(el));
+        _ConstructAt(index, fwd(el));
 
         return index;
     }
@@ -136,7 +136,7 @@ namespace Atom
         // Insert new elements
         for (usize i = 0; i < count; i++)
         {
-            _ConstructAt(i + index, FORWARD(*it++));
+            _ConstructAt(i + index, fwd(*it++));
         }
 
         return index;
@@ -159,7 +159,7 @@ namespace Atom
     constexpr usize _DynArrImplHelper<TImpl>::_InsertBack(T2&& el)
     {
         _EnsureCapFor(1);
-        _ConstructAt(_Count(), FORWARD(el));
+        _ConstructAt(_Count(), fwd(el));
         _Count(_Count() + 1);
 
         return _Count() - 1;
@@ -179,7 +179,7 @@ namespace Atom
 
         for (usize i = 0; i < count; i++)
         {
-            _ConstructAt(index + i, FORWARD(*it++));
+            _ConstructAt(index + i, fwd(*it++));
         }
 
         _Count(_Count() + count);
@@ -195,7 +195,7 @@ namespace Atom
         for (auto&& el : Range(begin, end))
         {
             _EnsureCapFor(1);
-            _ConstructAt(_Count(), FORWARD(el));
+            _ConstructAt(_Count(), fwd(el));
             _Count(_Count() + 1);
         }
 
@@ -344,7 +344,7 @@ namespace Atom
     constexpr void _DynArrImplHelper<TImpl>::_ConstructAt(
         usize index, auto&&... args)
     {
-        ObjHelper().Construct(_Data() + index, FORWARD(args)...);
+        ObjHelper().Construct(_Data() + index, fwd(args)...);
     }
 
     template <tname TImpl>

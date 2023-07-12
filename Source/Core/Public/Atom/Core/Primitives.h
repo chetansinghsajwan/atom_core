@@ -72,13 +72,3 @@ namespace Atom
         rhs = MOVE(tmp);
     }
 }
-
-#define ATOM_IS_CONFIG_DEBUG true
-#define ATOM_IF_DEBUG if constexpr (ATOM_IS_CONFIG_DEBUG)
-
-#define FORWARD(...) std::forward<decltype(__VA_ARGS__)>(__VA_ARGS__)
-
-#define ATOM_FUNCTION __func__
-#define ATOM_ATTR_NORETURN [[noreturn]]
-
-#define declval(T) ::std::declval<T>()

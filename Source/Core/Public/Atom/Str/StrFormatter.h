@@ -83,7 +83,7 @@ namespace Atom
             try
             {
                 fmt::detail::vformat_to<Char>(buf, fmt,
-                    fmt::make_format_args<fmt::buffer_context<Char>>(FORWARD(args)...),
+                    fmt::make_format_args<fmt::buffer_context<Char>>(fwd(args)...),
                     fmt::detail::locale_ref{});
             }
             catch (const _FmtFmtEx& err)
@@ -99,7 +99,7 @@ namespace Atom
         Str Fmt(FmtStr<TArgs...> fmt, TArgs&&... args)
         {
             Str out;
-            FmtTo(out, fmt, FORWARD(args)...);
+            FmtTo(out, fmt, fwd(args)...);
 
             return out;
         }

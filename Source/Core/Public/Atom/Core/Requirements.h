@@ -75,7 +75,7 @@ namespace Atom
     template <tname T, tname... TArgs>
     concept RConstructible = requires(TArgs&&... args)
     {
-        T(FORWARD(args)...);
+        T(fwd(args)...);
     };
 
     /// --------------------------------------------------------------------------------------------

@@ -36,7 +36,7 @@ namespace Atom
             and RAssignable<tname TRange::TElem, T>
         constexpr auto Fill(TRange&& range, T&& val) const -> void
         {
-            _Fill(range.Iter(), range.IterEnd(), FORWARD(val));
+            _Fill(range.Iter(), range.IterEnd(), fwd(val));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -48,7 +48,7 @@ namespace Atom
             and RAssignable<tname TRange::TElem, T>
         constexpr auto FillExplicit(TRange&& range, T&& val) const -> void
         {
-            _Fill(range.Iter(), range.IterEnd(), FORWARD(val));
+            _Fill(range.Iter(), range.IterEnd(), fwd(val));
         }
     #pragma optimize("", on)
 
@@ -212,7 +212,7 @@ namespace Atom
             StdIterWrapForAtomIter stdIter{ iter };
             StdIterWrapForAtomIter stdIterEnd{ iterEnd };
 
-            std::fill(stdIter, stdIterEnd, FORWARD(val));
+            std::fill(stdIter, stdIterEnd, fwd(val));
         }
 
         template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>

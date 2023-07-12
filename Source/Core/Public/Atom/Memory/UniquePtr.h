@@ -11,6 +11,6 @@ namespace Atom
     template <tname T>
     UniquePtr<T> MakeUnique(auto&&... args) noex
     {
-        return std::make_unique<T>(FORWARD(args)...);
+        return std::make_unique<T>(fwd(args)...);
     }
 }
