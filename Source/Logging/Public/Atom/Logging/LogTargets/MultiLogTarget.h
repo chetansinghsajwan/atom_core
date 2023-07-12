@@ -60,7 +60,7 @@ namespace Atom::Logging::Private
         /// 
         /// @EXCEPTION_SAFETY STRONG
         /// ----------------------------------------------------------------------------------------
-        virtual void Write(const LogMsg& logMsg) override final
+        virtual void Write(const LogMsg& logMsg) ofinal
         {
             LockGuard guard(_lock);
             for (auto& target : _targets)
@@ -74,7 +74,7 @@ namespace Atom::Logging::Private
         /// 
         /// @EXCEPTION_SAFETY STRONG
         /// ----------------------------------------------------------------------------------------
-        virtual void Flush() override final
+        virtual void Flush() ofinal
         {
             LockGuard guard(_lock);
             for (auto& target : _targets)

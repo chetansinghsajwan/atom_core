@@ -52,7 +52,7 @@ namespace Atom::Engine
         void SetVSync(bool enable);
         bool GetVSync() const noex;
 
-        virtual void* GetNative() const noex override final;
+        virtual void* GetNative() const noex ofinal;
 
         GLFWwindow* GetNativeGLFW() const noex
         {

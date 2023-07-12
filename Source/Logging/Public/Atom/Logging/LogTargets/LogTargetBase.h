@@ -32,7 +32,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @SEE m_Write().
         /// ----------------------------------------------------------------------------------------
-        virtual void Write(const LogMsg& in_logMsg) override final
+        virtual void Write(const LogMsg& in_logMsg) ofinal
         {
             if (CheckLogLevel(in_logMsg.lvl))
             {
@@ -58,7 +58,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @EXCEPTION_SAFETY Strong.
         /// ----------------------------------------------------------------------------------------
-        virtual void Flush() override final
+        virtual void Flush() ofinal
         {
             if (ShouldFlush())
             {

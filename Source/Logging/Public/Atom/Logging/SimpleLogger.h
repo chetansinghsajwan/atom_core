@@ -46,7 +46,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        StrView Name() const noex override final
+        StrView Name() const noex ofinal
         {
             return _name;
         }
@@ -96,7 +96,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        bool CheckLogLevel(ELogLevel lvl) const noex override final
+        bool CheckLogLevel(ELogLevel lvl) const noex ofinal
         {
             return lvl != ELogLevel::OFF && lvl >= _logLevel;
         }

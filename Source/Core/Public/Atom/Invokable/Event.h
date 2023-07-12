@@ -74,14 +74,14 @@ namespace Atom
     public:
         /// 
         /// ----------------------------------------------------------------------------------------
-        virtual SEventKey Subscribe(InvokableBox<void(TArgs...)>&& invokable) noex override final
+        virtual SEventKey Subscribe(InvokableBox<void(TArgs...)>&& invokable) noex ofinal
         {
             return _AddListener(FORWARD(invokable));
         }
 
         /// 
         /// ----------------------------------------------------------------------------------------
-        virtual usize Unsubscribe(SEventKey key) noex override final
+        virtual usize Unsubscribe(SEventKey key) noex ofinal
         {
             return _RemoveListener(key);
         }
