@@ -37,8 +37,7 @@ namespace Atom::Internal
 
         template <tname TEx>
         requires RDerivedFrom<TEx, Exception>
-        ATOM_ATTR_NORETURN
-        void operator << (TEx&& ex)
+        noret void operator << (TEx&& ex)
         {
             done = true;
 
@@ -47,8 +46,7 @@ namespace Atom::Internal
 
         template <tname TArg>
         requires RNotDerivedFrom<TArg, Exception>
-        ATOM_ATTR_NORETURN
-        void operator << (TArg&& arg)
+        noret void operator << (TArg&& arg)
         {
             done = true;
 

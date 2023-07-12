@@ -142,8 +142,7 @@ namespace Atom::Ex::Internal
 
         template <tname TEx>
         requires RDerivedFrom<TEx, Exception>
-        ATOM_ATTR_NORETURN
-        void operator << (TEx&& ex);
+        noret void operator << (TEx&& ex);
 
     protected:
         ExceptionSource src;
