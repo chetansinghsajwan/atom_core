@@ -7,16 +7,16 @@ namespace Atom::Private
     /// T1Hash output.
     /// --------------------------------------------------------------------------------------------
     template <usize Size>
-    struct T1Hash
+    class T1Hash
     {
-        static cexpr usize _Size = Size;
+        pub static cexpr usize _Size = Size;
 
-        static const T1Hash Null;
+        pub static const T1Hash Null;
 
-        cexpr fn operator == (const T1Hash& other) const noex -> bool = default;
-        cexpr fn operator != (const T1Hash& other) const noex -> bool = default;
+        pub cexpr fn operator == (const T1Hash& other) const noex -> bool = default;
+        pub cexpr fn operator != (const T1Hash& other) const noex -> bool = default;
 
-        StaArr<byte, Size> bytes;
+        pub StaArr<byte, Size> bytes;
     };
 
     // FIX: Compilation error in MSVC, checkout /Zc:externConstexpr

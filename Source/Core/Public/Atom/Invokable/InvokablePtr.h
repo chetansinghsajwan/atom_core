@@ -5,12 +5,12 @@ namespace Atom
     namespace Private
     {
         template <tname... TSign>
-        struct InvokablePtrImpl;
+        class InvokablePtrImpl;
 
         template <tname TResult, tname... TArgs>
-        struct InvokablePtrImpl<TResult(TArgs...)>
+        class InvokablePtrImpl<TResult(TArgs...)>
         {
-            using Type = TResult(*) (TArgs...);
+            pub using Type = TResult(*) (TArgs...);
         };
     }
 

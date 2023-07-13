@@ -6,7 +6,7 @@ namespace Atom::Engine
     class WindowsWindow: public GLFWWindow
     {
     public:
-        ctor WindowsWindow(const SWindowProps& props):
+        ctor WindowsWindow(const WindowProps& props):
             GLFWWindow(props) { }
     };
 }

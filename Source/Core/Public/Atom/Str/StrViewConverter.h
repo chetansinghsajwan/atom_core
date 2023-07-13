@@ -8,7 +8,7 @@ namespace Atom
     /// Converts {T} object to {StrView}.
     /// --------------------------------------------------------------------------------------------
     template <tname T>
-    struct StrViewConverter;
+    class StrViewConverter;
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures {TConverter} can convert {T} object to {StrView}.
@@ -45,25 +45,25 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
 	template <tname T>
 	requires (!RSameAs<T, TTI::TRemoveCVRef<T>>) && RStrViewConvertible<TTI::TRemoveCVRef<T>>
-	struct StrViewConverter<T>: StrViewConverter<TTI::TRemoveCVRef<T>> { };
+	class StrViewConverter<T>: StrViewConverter<TTI::TRemoveCVRef<T>> { };
 
     /// --------------------------------------------------------------------------------------------
     /// {StrConverter} specialization for types which are {StrViewConvertible}.
     /// --------------------------------------------------------------------------------------------
     template <RStrViewConvertible T>
-    struct StrConverter<T>
+    class StrConverter<T>
     {
-        cexpr Str Convert(const T& in) noex
+        pub cexpr fn Convert(const T& in) noex -> Str
         {
             return converter.Convert();
         }
 
-        cexpr void Convert(const T& in, ROutput<Char> auto out) noex
+        pub cexpr fn Convert(const T& in, ROutput<Char> auto out) noex -> void
         {
             StrView strView = converter.Convert(in);
             out.InsertBack(in);
         }
 
-        StrViewConverter<T> converter;
+        pub StrViewConverter<T> converter;
     };
 }

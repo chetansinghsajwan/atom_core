@@ -11,16 +11,16 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// Details about the origin of exception.
     /// --------------------------------------------------------------------------------------------
-    struct ExceptionSource
+    class ExceptionSource
     {
-        using TImpl = std::source_location;
+        pub using TImpl = std::source_location;
 
-        static cexpr ExceptionSource Current(TImpl src = TImpl::current()) noex;
+        pub static cexpr ExceptionSource Current(TImpl src = TImpl::current()) noex;
 
-        uint32 line;
-        uint32 column;
-        AsciiStrView fileName;
-        AsciiStrView funcName;
+        pub uint32 line;
+        pub uint32 column;
+        pub AsciiStrView fileName;
+        pub AsciiStrView funcName;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -29,9 +29,9 @@ namespace Atom
     /// @FIX: GCC doesn't has stacktrace.
     /// --------------------------------------------------------------------------------------------
     // using StackTrace = std::stacktrace;
-    struct StackTrace
+    class StackTrace
     {
-        static cexpr StackTrace current() noex
+        pub static cexpr StackTrace current() noex
         {
             return StackTrace{ };
         }
@@ -40,91 +40,89 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// Base class for all exceptions.
     /// --------------------------------------------------------------------------------------------
-    class Exception: public std::exception
+    class Exception extends std::exception
     {
-    public:
         /// ----------------------------------------------------------------------------------------
         /// Basic constructor with msg.
         /// ----------------------------------------------------------------------------------------
-        ctor Exception(Str msg) noex;
+        pub ctor Exception(Str msg) noex;
 
         /// ----------------------------------------------------------------------------------------
         /// VirtualDestructor.
         /// ----------------------------------------------------------------------------------------
-        virtual dtor Exception() noex;
+        pub virtual dtor Exception() noex;
 
-    public:
         /// ----------------------------------------------------------------------------------------
         /// Name of the exception.
         /// ----------------------------------------------------------------------------------------
-        StrView exName;
+        pub StrView exName;
 
         /// ----------------------------------------------------------------------------------------
         /// Message explaining what went wrong.
         /// ----------------------------------------------------------------------------------------
-        Str msg;
+        pub Str msg;
 
         /// ----------------------------------------------------------------------------------------
         /// Origin of the exception.
         /// ----------------------------------------------------------------------------------------
-        ExceptionSource src;
+        pub ExceptionSource src;
 
         /// ----------------------------------------------------------------------------------------
         /// StackTrace when exception was thrown.
         /// ----------------------------------------------------------------------------------------
-        StackTrace stackTrace;
+        pub StackTrace stackTrace;
     };
 
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
-    struct RuntimeException: Exception
+    class RuntimeException extends Exception
     {
-        using Exception::Exception;
+        pub using Exception::Exception;
     };
 
     /// --------------------------------------------------------------------------------------------
     /// Exception represents invalid operation.
     /// --------------------------------------------------------------------------------------------
-    struct InvalidOperationException: Exception
+    class InvalidOperationException extends Exception
     {
-        using Exception::Exception;
+        pub using Exception::Exception;
     };
 
     /// --------------------------------------------------------------------------------------------
     /// Exception represents invalid argument.
     /// --------------------------------------------------------------------------------------------
-    struct InvalidArgumentException: Exception
+    class InvalidArgumentException extends Exception
     {
-        using Exception::Exception;
+        pub using Exception::Exception;
     };
 
     /// --------------------------------------------------------------------------------------------
     /// Exception represents null pointer access.
     /// --------------------------------------------------------------------------------------------
-    struct NullPointerException: Exception
+    class NullPointerException extends Exception
     {
-        using Exception::Exception;
+        pub using Exception::Exception;
     };
 
     /// --------------------------------------------------------------------------------------------
     /// Exception represents an out of range access.
     /// --------------------------------------------------------------------------------------------
-    struct OutOfRangeException: Exception
+    class OutOfRangeException extends Exception
     {
-        using Exception::Exception;
+        pub using Exception::Exception;
     };
 
     /// --------------------------------------------------------------------------------------------
     /// Exception represents an out of range access, where range is representable using indices.
     /// --------------------------------------------------------------------------------------------
-    struct IndexOutOfRangeException: OutOfRangeException
+    class IndexOutOfRangeException extends OutOfRangeException
     {
-        ctor IndexOutOfRangeException(Str msg, usize index, usize begin, usize end);
+        pub ctor IndexOutOfRangeException(Str msg, usize index, usize begin, usize end);
 
-        usize index;
-        usize begin;
-        usize end;
+        pub usize index;
+        pub usize begin;
+        pub usize end;
     };
 }
 
@@ -132,21 +130,19 @@ namespace Atom::Ex::Internal
 {
     class Thrower
     {
-    public:
-        ctor Thrower(ExceptionSource src = ExceptionSource::Current(),
+        pub ctor Thrower(ExceptionSource src = ExceptionSource::Current(),
             StackTrace stackTrace = StackTrace::current()) noex;
 
-        fn RecordStack(StackTrace stackTrace = StackTrace::current()) -> Thrower&;
+        pub fn RecordStack(StackTrace stackTrace = StackTrace::current()) -> Thrower&;
 
-        fn RecordSource(ExceptionSource src = ExceptionSource::Current()) -> Thrower&;
+        pub fn RecordSource(ExceptionSource src = ExceptionSource::Current()) -> Thrower&;
 
-        template <tname TEx>
+        pub template <tname TEx>
         requires RDerivedFrom<TEx, Exception>
         noret fn operator << (TEx&& ex);
 
-    protected:
-        ExceptionSource src;
-        StackTrace stackTrace;
+        pro ExceptionSource _src;
+        pro StackTrace _stackTrace;
     };
 }
 

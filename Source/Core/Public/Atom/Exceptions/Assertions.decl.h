@@ -18,16 +18,16 @@ namespace Atom
 
 namespace Atom::Internal
 {
-    struct AssertionFailure: Ex::Internal::Thrower
+    class AssertionFailure: Ex::Internal::Thrower
     {
-        using Thrower = Ex::Internal::Thrower;
+        pub using Thrower = Ex::Internal::Thrower;
 
-        ctor AssertionFailure(StrView assertExpr, 
+        pub ctor AssertionFailure(StrView assertExpr, 
             ExceptionSource src = ExceptionSource::Current(),
             StackTrace stackTrace = StackTrace::current()):
             assertExpr{ assertExpr }, Thrower(MOVE(src), MOVE(stackTrace)) { }
 
-        dtor AssertionFailure()
+        pub dtor AssertionFailure()
         {
             if (!done)
             {
@@ -35,7 +35,7 @@ namespace Atom::Internal
             }
         }
 
-        template <tname TEx>
+        pub template <tname TEx>
         requires RDerivedFrom<TEx, Exception>
         noret void operator << (TEx&& ex)
         {
@@ -44,7 +44,7 @@ namespace Atom::Internal
             Thrower::operator << (fwd(ex));
         }
 
-        template <tname TArg>
+        pub template <tname TArg>
         requires RNotDerivedFrom<TArg, Exception>
         noret void operator << (TArg&& arg)
         {
@@ -54,8 +54,8 @@ namespace Atom::Internal
             // Thrower::operator<< AssertException(fwd(arg), assertExpr);
         }
 
-        bool done = false;
-        StrView assertExpr;
+        pub bool done = false;
+        pub StrView assertExpr;
     };
 }
 

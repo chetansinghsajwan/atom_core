@@ -3,10 +3,10 @@
 
 namespace Atom
 {
-    struct SVector2
+    class SVector2
     {
-        float x;
-        float y;
+        pub float x;
+        pub float y;
     };
 
     cexpr fn operator + (SVector2 lhs, SVector2 rhs) noex -> SVector2

@@ -4,26 +4,26 @@
 namespace Atom
 {
     template <tname T, usize Size>
-    struct _StaArrImplBase
+    class _StaArrImplBase
     {
-        using TElem = T;
+        pro using TElem = T;
 
-        cexpr fn _Data() noex -> T*
+        pro cexpr fn _Data() noex -> T*
         {
             return _arr;
         }
 
-        cexpr fn _Data() const noex -> const T*
+        pro cexpr fn _Data() const noex -> const T*
         {
             return _arr;
         }
 
-        cexpr fn _Count() const noex -> usize
+        pro cexpr fn _Count() const noex -> usize
         {
             return Size;
         }
 
-        T _arr[Size];
+        pub T _arr[Size];
     };
 
     template <tname T, usize Size>

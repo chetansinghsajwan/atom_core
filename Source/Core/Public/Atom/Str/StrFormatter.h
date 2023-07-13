@@ -6,14 +6,14 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
-    struct _FmtStrViewCnvter
+    class _FmtStrViewCnvter
     {
-        cexpr StrView FromFmt(_FmtStrView strv) noex
+        pub cexpr fn FromFmt(_FmtStrView strv) noex -> StrView
         {
             return StrView{ Range(strv.data(), strv.size()) };
         }
 
-        cexpr _FmtStrView ToFmt(StrView strv) noex
+        pub cexpr fn ToFmt(StrView strv) noex -> _FmtStrView
         {
             return _FmtStrView{ strv.Data(), strv.Count() };
         }
@@ -23,9 +23,9 @@ namespace Atom
     /// Wrapper over {StrView} to represent format string. This is done to avoid compile 
     /// time checks.
     /// --------------------------------------------------------------------------------------------
-    struct RunFmtStr
+    class RunFmtStr
     {
-        StrView str;
+        pub StrView str;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -33,49 +33,49 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <RStrFmtArgFmtable... TArgs>
     using FmtStr = _FmtFmtStr<TArgs...>;
-//     struct FmtStr
+//     class FmtStr
 //     {
-//         template <tname T>
+//         pub template <tname T>
 //         ceval FmtStr(const T& strv) noex { }
 //             _fmt{ _FmtStrViewCnvter().ToFmt(strv) } { }
 // 
-//         FmtStr(RunFmtStr str) noex { }
+//         pub FmtStr(RunFmtStr str) noex { }
 //             _fmt{ _FmtRunFmtStr{ _FmtStrViewCnvter().ToFmt(str.str) } } { }
 // 
-//         _FmtFmtStr<TArgs...> _fmt;
+//         pub _FmtFmtStr<TArgs...> _fmt;
 //     };
 
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
-    struct StrFmter
+    class StrFmter
     {
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <tname TOut, RStrFmtArgFmtable... TArgs>
+        pub template <tname TOut, RStrFmtArgFmtable... TArgs>
         requires ROutput<TOut, Char>
-        void FmtTo(TOut out, FmtStr<TArgs...> fmt, TArgs&&... args)
+        fn FmtTo(TOut out, FmtStr<TArgs...> fmt, TArgs&&... args)
         {
-            struct _OutIterWrap
+            class _OutIterWrap
             {
-                _OutIterWrap& operator ++ (int)
+                pub fn operator++ (int) -> _OutIterWrap&
                 {
                     return *this;
                 }
 
-                _OutIterWrap& operator * ()
+                pub fn operator* () -> _OutIterWrap&
                 {
                     return *this;
                 }
 
-                _OutIterWrap& operator = (Char ch)
+                pub fn operator= (Char ch) -> _OutIterWrap&
                 {
                     *out+= ch;
                     return *this;
                 }
 
-                TOut* out;
+                pub TOut* out;
             };
 
             fmt::detail::iterator_buffer<_OutIterWrap, Char> buf{ _OutIterWrap{ &out } };
@@ -95,8 +95,8 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <RStrFmtArgFmtable... TArgs>
-        Str Fmt(FmtStr<TArgs...> fmt, TArgs&&... args)
+        pub template <RStrFmtArgFmtable... TArgs>
+        fn Fmt(FmtStr<TArgs...> fmt, TArgs&&... args) -> Str
         {
             Str out;
             FmtTo(out, fmt, fwd(args)...);

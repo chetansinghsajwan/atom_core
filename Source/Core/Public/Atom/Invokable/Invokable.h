@@ -7,35 +7,35 @@ namespace Atom
     namespace Private
     {
         template <tname TInvokable, tname... TSignature>
-        struct IsInvokableImpl;
+        class IsInvokableImpl;
 
         template <tname TInvokable, tname TResult, tname... TArgs>
-        struct IsInvokableImpl<TInvokable, TResult(TArgs...)>
+        class IsInvokableImpl<TInvokable, TResult(TArgs...)>
         {
-            static cexpr bool Value = std::is_invocable_r_v<
+            pub static cexpr bool Value = std::is_invocable_r_v<
                 TResult, TInvokable, TArgs...>;
         };
 
         /// @TODO Add impl for const invocable.
         template <tname TInvokable, tname TResult, tname... TArgs>
-        struct IsInvokableImpl<TInvokable, TResult(TArgs...) const>
+        class IsInvokableImpl<TInvokable, TResult(TArgs...) const>
         {
-            static cexpr bool Value = std::is_invocable_r_v<
+            pub static cexpr bool Value = std::is_invocable_r_v<
                 TResult, TInvokable, TArgs...>;
         };
 
         template <tname TInvokable, tname TResult, tname... TArgs>
-        struct IsInvokableImpl<TInvokable, TResult(TArgs...) noex>
+        class IsInvokableImpl<TInvokable, TResult(TArgs...) noex>
         {
-            static cexpr bool Value = std::is_nothrow_invocable_r_v<
+            pub static cexpr bool Value = std::is_nothrow_invocable_r_v<
                 TResult, TInvokable, TArgs...>;
         };
 
         /// @TODO Add impl for const invocable.
         template <tname TInvokable, tname TResult, tname... TArgs>
-        struct IsInvokableImpl<TInvokable, TResult(TArgs...) const noex>
+        class IsInvokableImpl<TInvokable, TResult(TArgs...) const noex>
         {
-            static cexpr bool Value = std::is_nothrow_invocable_r_v<
+            pub static cexpr bool Value = std::is_nothrow_invocable_r_v<
                 TResult, TInvokable, TArgs...>;
         };
     }

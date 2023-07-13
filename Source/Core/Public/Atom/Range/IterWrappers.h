@@ -9,22 +9,22 @@ namespace Atom
     /// 
     /// --------------------------------------------------------------------------------------------
     template<tname TWrap>
-    struct _BasicMutIterWrap: TWrap
+    class _BasicMutIterWrap extends TWrap
     {
-        using Base = TWrap;
-        using TElem = tname Base::TElem;
+        pub using Base = TWrap;
+        pub using TElem = tname Base::TElem;
 
-        using Base::Base;
+        pub using Base::Base;
 
-        using Base::operator *;
-        using Base::operator ->;
+        pub using Base::operator *;
+        pub using Base::operator ->;
 
-        cexpr fn operator *() noex -> TElem&
+        pub cexpr fn operator *() noex -> TElem&
         {
             return &*this->iter;
         }
 
-        cexpr fn operator ->() noex -> TElem*
+        pub cexpr fn operator ->() noex -> TElem*
         {
             return &*this->iter;
         }
@@ -35,41 +35,41 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <tname TWrap>
     requires (!RIter<TWrap>)
-    struct _BasicMutIterWrap<TWrap>: TWrap { };
+    class _BasicMutIterWrap<TWrap> extends TWrap { };
 
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
     template <tname TIter>
-    struct IterWrap
+    class IterWrap
     {
-        using TElem = TTI::TEnableIf<RIter<TIter>, tname TIter::TElem>;
+        pub using TElem = TTI::TEnableIf<RIter<TIter>, tname TIter::TElem>;
 
-        cexpr ctor IterWrap(TIter iter) noex:
+        pub cexpr ctor IterWrap(TIter iter) noex:
             iter{ iter } { }
 
-        template <tname... TArgs>
+        pub template <tname... TArgs>
         requires RConstructible<TIter, TArgs...>
         cexpr ctor IterWrap(TArgs&&... args) noex:
             iter{ fwd(args)... } { }
 
-        cexpr fn operator *() const noex -> const TElem&
+        pub cexpr fn operator *() const noex -> const TElem&
         {
             return *this->iter;
         }
 
-        cexpr fn operator ->() const noex -> const TElem*
+        pub cexpr fn operator ->() const noex -> const TElem*
         {
             return &*this->iter;
         }
 
-        cexpr fn operator ++(int) noex -> IterWrap&
+        pub cexpr fn operator ++(int) noex -> IterWrap&
         {
             this->iter++;
             return *this;
         }
 
-        template <tname TIterEnd>
+        pub template <tname TIterEnd>
         cexpr fn operator ==(const IterWrap<TIterEnd>& end) const noex -> bool
         {
             return this->iter == end.iter;
@@ -83,7 +83,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <tname TIter>
     requires (!RIter<TIter>)
-    struct IterWrap<TIter>
+    class IterWrap<TIter>
     {
         TIter iter;
     };
@@ -92,12 +92,12 @@ namespace Atom
     /// 
     /// --------------------------------------------------------------------------------------------
     template <tname TIter>
-    struct MutIterWrap: _BasicMutIterWrap<IterWrap<TIter>>
+    class MutIterWrap extends _BasicMutIterWrap<IterWrap<TIter>>
     {
-        using Base = _BasicMutIterWrap<IterWrap<TIter>>;
-        using Base::Base;
+        pub using Base = _BasicMutIterWrap<IterWrap<TIter>>;
+        pub using Base::Base;
 
-        cexpr ctor MutIterWrap(TIter iter) noex:
+        pub cexpr ctor MutIterWrap(TIter iter) noex:
             Base{ iter } { }
     };
 
@@ -105,12 +105,13 @@ namespace Atom
     /// 
     /// --------------------------------------------------------------------------------------------
     template <tname TIter>
-    struct FwdIterWrap: IterWrap<TIter>, MultiPassIterTag
+    class FwdIterWrap extends IterWrap<TIter>,
+        public MultiPassIterTag
     {
-        using Base = IterWrap<TIter>;
-        using Base::Base;
+        pub using Base = IterWrap<TIter>;
+        pub using Base::Base;
 
-        cexpr ctor FwdIterWrap(TIter iter) noex:
+        pub cexpr ctor FwdIterWrap(TIter iter) noex:
             Base{ iter } { }
     };
 
@@ -119,12 +120,12 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <tname TIter>
     requires RMutFwdIter<TIter>
-    struct MutFwdIterWrap: _BasicMutIterWrap<FwdIterWrap<TIter>>
+    class MutFwdIterWrap extends _BasicMutIterWrap<FwdIterWrap<TIter>>
     {
-        using Base = _BasicMutIterWrap<FwdIterWrap<TIter>>;
-        using Base::Base;
+        pub using Base = _BasicMutIterWrap<FwdIterWrap<TIter>>;
+        pub using Base::Base;
 
-        cexpr ctor MutFwdIterWrap(TIter iter) noex:
+        pub cexpr ctor MutFwdIterWrap(TIter iter) noex:
             Base{ iter } { }
     };
 
@@ -133,15 +134,15 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <tname TIter>
     requires RBidiIter<TIter>
-    struct BidiIterWrap: FwdIterWrap<TIter>
+    class BidiIterWrap extends FwdIterWrap<TIter>
     {
-        using Base = FwdIterWrap<TIter>;
-        using Base::Base;
+        pub using Base = FwdIterWrap<TIter>;
+        pub using Base::Base;
 
-        cexpr ctor BidiIterWrap(TIter iter) noex:
+        pub cexpr ctor BidiIterWrap(TIter iter) noex:
             Base{ iter } { }
 
-        cexpr fn operator --(int) noex -> BidiIterWrap&
+        pub cexpr fn operator --(int) noex -> BidiIterWrap&
         {
             this->iter--;
             return *this;
@@ -153,12 +154,12 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <tname TIter>
     requires RMutBidiIter<TIter>
-    struct MutBidiIterWrap: _BasicMutIterWrap<BidiIterWrap<TIter>>
+    class MutBidiIterWrap extends _BasicMutIterWrap<BidiIterWrap<TIter>>
     {
-        using Base = _BasicMutIterWrap<BidiIterWrap<TIter>>;
-        using Base::Base;
+        pub using Base = _BasicMutIterWrap<BidiIterWrap<TIter>>;
+        pub using Base::Base;
 
-        cexpr ctor MutBidiIterWrap(TIter iter) noex:
+        pub cexpr ctor MutBidiIterWrap(TIter iter) noex:
             Base{ iter } { }
     };
 
@@ -167,38 +168,38 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <tname TIter>
     requires RJumpIter<TIter>
-    struct JumpIterWrap: BidiIterWrap<TIter>
+    class JumpIterWrap extends BidiIterWrap<TIter>
     {
-        using Base = BidiIterWrap<TIter>;
-        using Base::Base;
+        pub using Base = BidiIterWrap<TIter>;
+        pub using Base::Base;
 
-        cexpr ctor JumpIterWrap(TIter iter) noex:
+        pub cexpr ctor JumpIterWrap(TIter iter) noex:
             Base{ iter } { }
 
-        cexpr fn operator +(isize steps) const noex -> JumpIterWrap
+        pub cexpr fn operator +(isize steps) const noex -> JumpIterWrap
         {
             return JumpIterWrap{ this->iter + steps };
         }
 
-        cexpr fn operator -(isize steps) const noex -> JumpIterWrap
+        pub cexpr fn operator -(isize steps) const noex -> JumpIterWrap
         {
             return JumpIterWrap{ this->iter - steps };
         }
 
-        cexpr fn operator +=(isize steps) noex -> JumpIterWrap&
+        pub cexpr fn operator +=(isize steps) noex -> JumpIterWrap&
         {
             this->iter += steps;
             return *this;
         }
 
-        cexpr fn operator -=(isize steps) noex -> JumpIterWrap&
+        pub cexpr fn operator -=(isize steps) noex -> JumpIterWrap&
         {
             this->iter -= steps;
             return *this;
         }
 
         template <tname TIter2>
-        cexpr fn operator -(const TIter2& iter2) const noex -> isize
+        pub cexpr fn operator -(const TIter2& iter2) const noex -> isize
         {
             return this->iter - iter2;
         }
@@ -209,26 +210,26 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <tname TIter>
     requires RMutJumpIter<TIter>
-    struct MutJumpIterWrap: _BasicMutIterWrap<JumpIterWrap<TIter>>
+    class MutJumpIterWrap extends _BasicMutIterWrap<JumpIterWrap<TIter>>
     {
-        using Base = _BasicMutIterWrap<JumpIterWrap<TIter>>;
-        using Base::Base;
+        pub using Base = _BasicMutIterWrap<JumpIterWrap<TIter>>;
+        pub using Base::Base;
 
-        cexpr ctor MutJumpIterWrap(TIter iter) noex:
+        pub cexpr ctor MutJumpIterWrap(TIter iter) noex:
             Base{ iter } { }
 
-        cexpr fn operator +(isize steps) const noex -> MutJumpIterWrap
+        pub cexpr fn operator +(isize steps) const noex -> MutJumpIterWrap
         {
             return MutJumpIterWrap{ this->iter + steps };
         }
 
-        cexpr fn operator -(isize steps) const noex -> MutJumpIterWrap
+        pub cexpr fn operator -(isize steps) const noex -> MutJumpIterWrap
         {
             return MutJumpIterWrap{ this->iter - steps };
         }
 
         template <tname TIter2>
-        cexpr fn operator -(const TIter2& iter2) const noex -> isize
+        pub cexpr fn operator -(const TIter2& iter2) const noex -> isize
         {
             return this->iter - iter2;
         }

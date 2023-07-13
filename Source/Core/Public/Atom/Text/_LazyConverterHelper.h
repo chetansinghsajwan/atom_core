@@ -29,57 +29,55 @@ namespace Atom::Text
     /// This doesn't process the whole string, only the requested part.
     /// --------------------------------------------------------------------------------------------
     template <tname TImpl, tname TInEncoding, tname TOutEncoding, tname TInput>
-    struct _CharEncodingLazyConverterHelper
+    class _CharEncodingLazyConverterHelper
     {
-        using TIter = _CharEncodingLazyConverterHelperIter<
+        pub using TIter = _CharEncodingLazyConverterHelperIter<
             TImpl, TInEncoding, TOutEncoding, TInput>;
 
-        using TIterEnd = _CharEncodingLazyConverterHelperIterEnd;
+        pub using TIterEnd = _CharEncodingLazyConverterHelperIterEnd;
 
-        cexpr TIter Iter() noex
+        pub cexpr fn Iter() noex -> TIter
         {
             return TIter(_impl, _input);
         }
 
-        cexpr TIter IterEnd() noex
+        pub cexpr fn IterEnd() noex -> TIter
         {
             return TIterEnd();
         }
 
-        cexpr TIter begin() noex
+        pub cexpr fn begin() noex -> TIter
         {
             return Iter();
         }
 
-        cexpr TIterEnd end() noex
+        pub cexpr fn end() noex -> TIterEnd
         {
             return IterEnd();
         }
 
-    protected:
-        TImpl _impl;
-        TInput& _input;
+        pro TImpl _impl;
+        pro TInput& _input;
     };
 
-    struct _CharEncodingLazyConverterHelperIterEnd { };
+    class _CharEncodingLazyConverterHelperIterEnd { };
 
     /// --------------------------------------------------------------------------------------------
     /// Converts data from {TInEncoding} character encoding to {TOutEncoding} on demand.
     /// This doesn't process the whole string, only the requested part.
     /// --------------------------------------------------------------------------------------------
     template <tname TImpl, tname TInEncoding, tname TOutEncoding, tname TInput>
-    struct _CharEncodingLazyConverterHelperIter
+    class _CharEncodingLazyConverterHelperIter
     {
-        using TThis = _CharEncodingLazyConverterHelperIter;
-        using TIterEnd = _CharEncodingLazyConverterHelperIterEnd;
-        using TInChar = tname TInEncoding::TChar;
-        using TOutChar = tname TOutEncoding::TChar;
+        pub using TThis = _CharEncodingLazyConverterHelperIter;
+        pub using TIterEnd = _CharEncodingLazyConverterHelperIterEnd;
+        pub using TInChar = tname TInEncoding::TChar;
+        pub using TOutChar = tname TOutEncoding::TChar;
 
-    public:
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        cexpr _CharEncodingLazyConverterHelperIter(TImpl&& impl, TInput&& in) noex:
+        pub cexpr ctor _CharEncodingLazyConverterHelperIter(TImpl&& impl, TInput&& in) noex:
             _impl{ fwd(impl) }, _input{ fwd(input) }, _out{ 0 }, _outIndex{ -1 }
         {
             _ProcessNextChar();
@@ -88,7 +86,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// Get the current char.
         /// ----------------------------------------------------------------------------------------
-        cexpr TOutChar& operator* () noex
+        pub cexpr fn operator* () noex -> TOutChar&
         {
             return _out[_outIndex];
         }
@@ -96,7 +94,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// Advances the iter.
         /// ----------------------------------------------------------------------------------------
-        cexpr TThis& operator++ ()
+        pub cexpr fn operator++ () -> TThis&
         {
             if (_outIndex == -1)
             {
@@ -110,7 +108,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// Will be removed in CPP2;
         /// ----------------------------------------------------------------------------------------
-        cexpr TThis& operator++ (int)
+        pub cexpr fn operator++ (int) -> TThis&
         {
             return ++(*this);
         }
@@ -118,7 +116,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// Checks if the iter has reached its end.
         /// ----------------------------------------------------------------------------------------
-        cexpr bool operator== (TIterEnd end) const noex
+        pub cexpr fn operator== (TIterEnd end) const noex -> bool
         {
             return _outIndex > 0 || _input.HasNext();
         }
@@ -126,16 +124,15 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// Will be removed in CPP2;
         /// ----------------------------------------------------------------------------------------
-        cexpr bool operator!= (TIterEnd end) const noex
+        pub cexpr fn operator!= (TIterEnd end) const noex -> bool
         {
             return !(*this == end);
         }
 
-    protected:
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        void _ProcessNextChar()
+        pro fn _ProcessNextChar()
         {
             if (_inIter == _inIterEnd)
             {
@@ -145,13 +142,12 @@ namespace Atom::Text
             _outRune = TImpl::ConvertChar(*_inIter);
         }
 
-    protected:
-        TImpl _impl;
-        TInIter _inIter;
-        TInIterEnd _inIterEnd;
+        pro TImpl _impl;
+        pro TInIter _inIter;
+        pro TInIterEnd _inIterEnd;
 
-        TInRune _inRune;
-        TOutRune _outRune;
+        pro TInRune _inRune;
+        pro TOutRune _outRune;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -160,29 +156,26 @@ namespace Atom::Text
     template <tname TImpl, tname TCharEncoding, tname TInput>
     class _CharEncodingLazyConverterHelper<TImpl, TCharEncoding, TCharEncoding, TInput>
     {
-        using TChar = BasicChar<TCharEncoding>;
+        pri using TChar = BasicChar<TCharEncoding>;
 
-    public:
-        cexpr _CharEncodingLazyConverterHelper(TInput&& input) noex:
+        pub cexpr ctor _CharEncodingLazyConverterHelper(TInput&& input) noex:
             _input{ input } { }
 
-    public:
-        cexpr TChar Get() noex
+        pub cexpr fn Get() noex -> TChar
         {
             return _input.Get();
         }
 
-        cexpr bool Next()
+        pub cexpr fn Next() -> bool
         {
             return _input.Next();
         }
 
-        cexpr bool HasNext() const noex
+        pub cexpr fn HasNext() const noex -> bool
         {
             return _input.HasNext();
         }
 
-    protected:
-        TInput _input;
+        pro TInput _input;
     };
 };

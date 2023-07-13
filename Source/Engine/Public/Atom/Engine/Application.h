@@ -5,17 +5,14 @@ namespace Atom::Engine
 {
     class Application
     {
-    public:
-        ctor Application();
-        virtual dtor Application();
+        pub ctor Application();
+        pub virtual dtor Application();
 
-    public:
-        virtual fn Run() -> void;
+        pub virtual fn Run() -> void;
 
-        virtual fn OnWindowEvent(const SWindowEvent& event) -> void;
+        pub virtual fn OnWindowEvent(const SWindowEvent& event) -> void;
 
-    protected:
-        Window* _window;
+        pro Window* _window;
     };
 
     extern Application* CreateApplication();

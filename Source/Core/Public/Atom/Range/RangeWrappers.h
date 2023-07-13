@@ -11,9 +11,9 @@
 /// @TODO: Use the commented implementation once that feature is implemented.
 /// ------------------------------------------------------------------------------------------------
 #define _RANGE_REF_WRAP(Wrap, ...)                                \
-    struct Wrap: __VA_ARGS__                                      \
+    class Wrap: __VA_ARGS__                                      \
     {                                                             \
-        cexpr ctor Wrap(TRange& range) noex:                   \
+        pub pub cexpr ctor Wrap(TRange& range) noex:                   \
             __VA_ARGS__{ range } { }                              \
     }
 
@@ -32,21 +32,21 @@ namespace Atom
         template<tname TIter> tname TIterWrap
     >
     requires RRange<TRange>
-    struct _RangeWrapBase
+    class _RangeWrapBase
     {
-        using TElem = tname TRange::TElem;
-        using TIter = TIterWrap<tname TRange::TIter>;
-        using TIterEnd = TIterWrap<tname TRange::TIterEnd>;
+        pub using TElem = tname TRange::TElem;
+        pub using TIter = TIterWrap<tname TRange::TIter>;
+        pub using TIterEnd = TIterWrap<tname TRange::TIterEnd>;
 
-        cexpr ctor _RangeWrapBase(TRange& range) noex:
+        pub cexpr ctor _RangeWrapBase(TRange& range) noex:
             _range{ range } { }
 
-        cexpr fn Iter() const noex -> TIter
+        pub cexpr fn Iter() const noex -> TIter
         {
             return TIter{ _range.Iter() };
         }
 
-        cexpr fn IterEnd() const noex -> TIterEnd
+        pub cexpr fn IterEnd() const noex -> TIterEnd
         {
             return TIterEnd{ _range.IterEnd() };
         }
@@ -61,21 +61,21 @@ namespace Atom
         template<tname TIter> tname TMutIterWrap
     >
     requires RMutRange<TRange>
-    struct _MutRangeWrapBase: _RangeWrapBase<TRange, TIterWrap>
+    class _MutRangeWrapBase: _RangeWrapBase<TRange, TIterWrap>
     {
-        using Base = _RangeWrapBase<TRange, TIterWrap>;
-        using TMutIter = TMutIterWrap<tname TRange::TMutIter>;
-        using TMutIterEnd = TMutIterWrap<tname TRange::TMutIterEnd>;
+        pub using Base = _RangeWrapBase<TRange, TIterWrap>;
+        pub using TMutIter = TMutIterWrap<tname TRange::TMutIter>;
+        pub using TMutIterEnd = TMutIterWrap<tname TRange::TMutIterEnd>;
 
-        cexpr ctor _MutRangeWrapBase(TRange& range) noex:
+        pub cexpr ctor _MutRangeWrapBase(TRange& range) noex:
             Base{ range } { }
 
-        cexpr fn MutIter() noex -> TMutIter
+        pub cexpr fn MutIter() noex -> TMutIter
         {
             return TMutIter{ this->_range.MutIter() };
         }
 
-        cexpr fn MutIterEnd() noex -> TMutIterEnd
+        pub cexpr fn MutIterEnd() noex -> TMutIterEnd
         {
             return TMutIterEnd{ this->_range.MutIterEnd() };
         }

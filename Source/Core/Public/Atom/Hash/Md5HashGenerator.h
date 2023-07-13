@@ -9,24 +9,24 @@ extern "C"
 
 namespace Atom::Private
 {
-    struct Md5GeneratorImpl
+    class Md5GeneratorImpl
     {
-        fn Initialize()
+        pub fn Initialize()
         {
             Md5Initialise(&_context);
         }
 
-        fn Update(const void* data, uint32_t dataSize)
+        pub fn Update(const void* data, uint32_t dataSize)
         {
             Md5Update(&_context, data, dataSize);
         }
 
-        fn Calculate(Md5Hash& hash)
+        pub fn Calculate(Md5Hash& hash)
         {
             Md5Finalise(&_context, (MD5_HASH*)hash.bytes.Data());
         }
 
-        Md5Context _context;
+        pub Md5Context _context;
     };
 }
 

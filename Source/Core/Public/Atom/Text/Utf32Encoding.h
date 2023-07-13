@@ -6,13 +6,13 @@ import Atom.Core.Core;
 
 namespace Atom::Text
 {
-    struct UTF32Encoding
+    class UTF32Encoding
     {
-        using TChar = char32;
-        using TRune = char32;
+        pub using TChar = char32;
+        pub using TRune = char32;
 
-        static cexpr TChar Null = UTF32('\0');
-        static cexpr bool IsMultiCharEncoding = false;
+        pub static cexpr TChar Null = UTF32('\0');
+        pub static cexpr bool IsMultiCharEncoding = false;
     };
 
     using UTF32Char = tname UTF32Encoding::TChar;

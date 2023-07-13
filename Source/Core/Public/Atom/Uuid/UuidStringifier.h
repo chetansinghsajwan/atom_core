@@ -5,9 +5,9 @@
 
 namespace Atom
 {
-    struct UuidStringifier
+    class UuidStringifier
     {
-        template <tname TOutput>
+        pub template <tname TOutput>
         requires ROutput<TOutput, Char>
         cexpr fn WriteStr(const Uuid& uuid, TOutput&& out) const noex
         {
@@ -33,7 +33,7 @@ namespace Atom
             out += Math::HexToChar(uuid.bytes[15]);
         }
 
-        cexpr fn ToStr(const Uuid& uuid) const noex -> Str
+        pub cexpr fn ToStr(const Uuid& uuid) const noex -> Str
         {
             Str out;
             WriteStr(uuid, out);

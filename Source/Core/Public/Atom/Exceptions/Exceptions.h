@@ -31,17 +31,17 @@ namespace Atom
 namespace Atom::Ex::Internal
 {
     inline ctor Thrower::Thrower(ExceptionSource src, StackTrace stackTrace) noex:
-        src{ MOVE(src) }, stackTrace{ MOVE(stackTrace) } { }
+        _src{ MOVE(src) }, _stackTrace{ MOVE(stackTrace) } { }
 
     inline fn Thrower::RecordStack(StackTrace stackTrace) -> Thrower&
     {
-        this->stackTrace = MOVE(stackTrace);
+        this->_stackTrace = MOVE(stackTrace);
         return *this;
     }
 
     inline fn Thrower::RecordSource(ExceptionSource src) -> Thrower&
     {
-        this->src = MOVE(src);
+        this->_src = MOVE(src);
         return *this;
     }
 
@@ -49,8 +49,8 @@ namespace Atom::Ex::Internal
     requires RDerivedFrom<TEx, Exception>
     inline fn Thrower::operator << (TEx&& ex)
     {
-        ex.src = MOVE(src);
-        ex.stackTrace = MOVE(stackTrace);
+        ex.src = MOVE(_src);
+        ex.stackTrace = MOVE(_stackTrace);
 
         throw ex;
     }

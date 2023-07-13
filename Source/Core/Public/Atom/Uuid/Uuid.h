@@ -3,7 +3,7 @@
 
 namespace Atom
 {
-    enum struct EUuidVersion : byte
+    enum class EUuidVersion : byte
     {
         None = 0,
 
@@ -20,7 +20,7 @@ namespace Atom
         NameBasedSHA1 = V5
     };
 
-    enum struct EUuidVariant : byte
+    enum class EUuidVariant : byte
     {
         NCS,
         RFC,
@@ -28,14 +28,14 @@ namespace Atom
         Reserved
     };
 
-    struct Uuid
+    class Uuid
     {
-        static const Uuid Null;
+        pub static const Uuid Null;
 
-        cexpr fn operator == (const Uuid& other) const noex -> bool = default;
-        cexpr fn operator != (const Uuid& other) const noex -> bool = default;
+        pub cexpr fn operator == (const Uuid& other) const noex -> bool = default;
+        pub cexpr fn operator != (const Uuid& other) const noex -> bool = default;
 
-        StaArr<byte, 16> bytes;
+        pub StaArr<byte, 16> bytes;
     };
 
     cexpr inline const Uuid Uuid::Null = Uuid{ 0 };

@@ -8,7 +8,7 @@ namespace Atom::TTI
 {
     namespace Private
     {
-        struct Empty { };
+        class Empty { };
     }
 
     template <bool Condition, tname TTrue, tname TFalse>

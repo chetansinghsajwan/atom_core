@@ -26,22 +26,22 @@ namespace Atom::Logging
     /// --------------------------------------------------------------------------------------------
     /// Lightweight object containing all the details of the log.
     /// --------------------------------------------------------------------------------------------
-    struct LogMsg
+    class LogMsg
     {
         /// ----------------------------------------------------------------------------------------
         /// Message of the log.
         /// ----------------------------------------------------------------------------------------
-        StrView msg;
+        pub StrView msg;
 
         /// ----------------------------------------------------------------------------------------
         /// Name of the logger through which this message was logged.
         /// ----------------------------------------------------------------------------------------
-        StrView loggerName;
+        pub StrView loggerName;
 
         /// ----------------------------------------------------------------------------------------
         /// Level of this message.
         /// ----------------------------------------------------------------------------------------
-        ELogLevel lvl;
+        pub ELogLevel lvl;
 
         /// ----------------------------------------------------------------------------------------
         /// Time when this message was logged.
@@ -49,16 +49,16 @@ namespace Atom::Logging
         /// This is necessary to store as the message may be logged asynchronously or may face 
         /// some latency in writing.
         /// ----------------------------------------------------------------------------------------
-        TimePoint time;
+        pub TimePoint time;
     };
 }
 
 namespace Atom
 {
     template < >
-    struct StrViewConverter<Logging::ELogLevel>
+    class StrViewConverter<Logging::ELogLevel>
     {
-        cexpr StrView Convert(Logging::ELogLevel lvl) noex
+        pub cexpr fn Convert(Logging::ELogLevel lvl) noex -> StrView
         {
             switch (lvl)
             {

@@ -6,12 +6,12 @@
 
 namespace Atom
 {
-    struct RangeHelper
+    class RangeHelper
     {
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <class TRange>
+        pub template <class TRange>
         requires RRange<TRange>
         cexpr fn CanGetCount() const noex -> bool
         {
@@ -21,7 +21,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <class TRange>
+        pub template <class TRange>
         requires RFwdRange<TRange>
         cexpr fn GetCount(const TRange& range) const noex -> usize
         {
@@ -31,7 +31,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <class TRange, class T>
+        pub template <class TRange, class T>
         requires RMutRange<TRange>
             and RAssignable<tname TRange::TElem, T>
         cexpr fn Fill(TRange&& range, T&& val) const -> void
@@ -43,7 +43,7 @@ namespace Atom
         /// 
         /// ----------------------------------------------------------------------------------------
     #pragma optimize("", off)
-        template <class TRange, tname T>
+        pub template <class TRange, tname T>
         requires RMutRange<TRange>
             and RAssignable<tname TRange::TElem, T>
         cexpr fn FillExplicit(TRange&& range, T&& val) const -> void
@@ -55,7 +55,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <class TRange1, class TRange2>
+        pub template <class TRange1, class TRange2>
         requires RRange<TRange1>
             and RMutRange<TRange2>
             and RAssignable<tname TRange2::TElem, tname TRange1::TElem>
@@ -67,7 +67,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <class TRange1, class TRange2>
+        pub template <class TRange1, class TRange2>
         requires RRange<TRange1>
             and RMutRange<TRange2>
             and RAssignable<tname TRange2::TElem, tname TRange1::TElem>
@@ -79,7 +79,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <class TRange1, class TRange2>
+        pub template <class TRange1, class TRange2>
         requires RMutRange<TRange1>
             and RMutRange<TRange2>
             and RAssignable<tname TRange2::TElem, tname TRange1::TElem>
@@ -91,7 +91,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <class TRange1, class TRange2>
+        pub template <class TRange1, class TRange2>
         requires RMutRange<TRange1>
             and RMutRange<TRange2>
             and RAssignable<tname TRange2::TElem, tname TRange1::TElem>
@@ -103,7 +103,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <class TRange>
+        pub template <class TRange>
         requires RMutFwdRange<TRange>
             and RMoveAssignable<tname TRange::TElem>
         cexpr fn ShiftFwd(TRange&& range, usize steps) const -> void
@@ -114,7 +114,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <class TRange>
+        pub template <class TRange>
         requires RMutFwdRange<TRange>
             and RMoveAssignable<tname TRange::TElem>
         cexpr fn ShiftBwd(TRange&& range, usize steps) const -> void
@@ -125,7 +125,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <class TRange>
+        pub template <class TRange>
         requires RMutFwdRange<TRange>
             and RSwappable<tname TRange::TElem>
         cexpr fn ShiftBy(TRange&& range, isize steps) const -> void
@@ -143,7 +143,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <class TRange>
+        pub template <class TRange>
         requires RMutRange<TRange>
             and RSwappable<tname TRange::TElem>
         cexpr fn RotateFwd(TRange&& range, usize steps) const -> void
@@ -154,7 +154,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <class TRange>
+        pub template <class TRange>
         requires RMutRange<TRange>
             and RSwappable<tname TRange::TElem>
         cexpr fn RotateBwd(TRange&& range, usize steps) const -> void
@@ -165,7 +165,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <class TRange>
+        pub template <class TRange>
         requires RMutRange<TRange>
             and RSwappable<tname TRange::TElem>
         cexpr fn RotateBy(TRange&& range, isize steps) const -> void
@@ -183,7 +183,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <class TRange>
+        pub template <class TRange>
         requires RMutRange<TRange>
             and RDestructible<tname TRange::TElem>
         cexpr fn Destruct(TRange&& range) const -> void
@@ -191,8 +191,7 @@ namespace Atom
             _Destruct(range.Iter(), range.IterEnd());
         }
 
-    private:
-        template <class TIter, class TIterEnd>
+        pri template <class TIter, class TIterEnd>
         cexpr fn _GetCount(TIter iter, TIterEnd iterEnd) const -> usize
         {
             if cexpr (RJumpIterPair<TIter, TIterEnd>)
@@ -206,7 +205,7 @@ namespace Atom
             return count;
         }
 
-        template <class TIter, class TIterEnd, tname T>
+        pri template <class TIter, class TIterEnd, tname T>
         cexpr fn _Fill(TIter iter, TIterEnd iterEnd, T&& val) const -> void
         {
             StdIterWrapForAtomIter stdIter{ iter };
@@ -215,7 +214,7 @@ namespace Atom
             std::fill(stdIter, stdIterEnd, fwd(val));
         }
 
-        template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
+        pri template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
         cexpr fn _FwdCopy(const TIter1 iter1, const TIterEnd1 iterEnd1,
             TIter2 iter2, TIterEnd2 iterEnd2) const -> void
         {
@@ -226,7 +225,7 @@ namespace Atom
             std::copy(stdIter1, stdIterEnd1, stdIter2);
         }
 
-        template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
+        pri template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
         cexpr fn _BwdCopy(const TIter1 iter1, const TIterEnd1 iterEnd1,
             TIter2 iter2, TIterEnd2 iterEnd2) const -> void
         {
@@ -237,7 +236,7 @@ namespace Atom
             std::copy_backward(stdIter1, stdIterEnd1, stdIter2);
         }
 
-        template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
+        pri template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
         cexpr fn _FwdMove(TIter1 iter1, const TIterEnd1 iterEnd1,
             TIter2 iter2, TIterEnd2 iterEnd2) const -> void
         {
@@ -248,7 +247,7 @@ namespace Atom
             std::move(stdIter1, stdIterEnd1, stdIter2);
         }
 
-        template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
+        pri template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
         cexpr fn _BwdMove(TIter1 iter1, const TIterEnd1 iterEnd1,
             TIter2 iter2, TIterEnd2 iterEnd2) const -> void
         {
@@ -259,7 +258,7 @@ namespace Atom
             std::move_backward(stdIter1, stdIterEnd1, stdIter2);
         }
 
-        template <class TIter, class TIterEnd>
+        pri template <class TIter, class TIterEnd>
         cexpr fn _FwdShift(TIter iter, TIterEnd iterEnd, usize steps) const -> void
         {
             if cexpr (RArrIterPair<TIter, TIterEnd>)
@@ -274,7 +273,7 @@ namespace Atom
             std::shift_right(stdIter, stdIterEnd, steps);
         }
 
-        template <class TIter, class TIterEnd>
+        pri template <class TIter, class TIterEnd>
         cexpr fn _BwdShift(TIter iter, TIterEnd iterEnd, usize steps) const -> void
         {
             if cexpr (RArrIterPair<TIter, TIterEnd>)
@@ -289,7 +288,7 @@ namespace Atom
             std::shift_left(stdIter, stdIterEnd, steps);
         }
 
-        template <class TIter, class TIterEnd>
+        pri template <class TIter, class TIterEnd>
         cexpr fn _BwdRotate(TIter iter, TIterEnd iterEnd, usize steps) const -> void
         {
             if cexpr (RArrIterPair<TIter, TIterEnd>)
@@ -304,7 +303,7 @@ namespace Atom
             std::rotate(stdIter, stdIter + steps, stdIterEnd);
         }
 
-        template <class TIter, class TIterEnd>
+        pri template <class TIter, class TIterEnd>
         cexpr fn _FwdRotate(TIter iter, TIterEnd iterEnd, isize steps) const -> void
         {
             if cexpr (RArrIterPair<TIter, TIterEnd>)
@@ -319,7 +318,7 @@ namespace Atom
             std::rotate(stdIter, stdIterEnd - steps, stdIterEnd);
         }
 
-        template <class TIter, class TIterEnd>
+        pri template <class TIter, class TIterEnd>
         cexpr fn _Destruct(TIter iter, TIterEnd iterEnd) const -> void
         {
             if cexpr (RArrIterPair<TIter, TIterEnd>)

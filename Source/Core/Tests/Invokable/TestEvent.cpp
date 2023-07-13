@@ -8,5 +8,5 @@ TEST_CASE("Invokable/Event")
     EventSource<int> eventSource;
     IEvent<int>& event = eventSource;
 
-    SEventKey key = event += [](int id) {};
+    EventKey key = event += [](int id) {};
 }

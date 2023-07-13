@@ -7,78 +7,75 @@
 
 namespace Atom::Engine
 {
-    struct SWindowCoords
+    class SWindowCoords
     {
-        int x;
-        int y;
+        pub int x;
+        pub int y;
     };
 
-    cexpr SWindowCoords operator - (const SWindowCoords& lhs, const SWindowCoords& rhs) noex
+    cexpr fn operator - (const SWindowCoords& lhs, const SWindowCoords& rhs) noex -> SWindowCoords
     {
         return { lhs.x - rhs.x, lhs.y - rhs.y };
     }
 
-    enum struct EWindowEventType
+    enum class EWindowEventType
     {
         Resize,
         Reposition,
         Close,
     };
 
-    struct SWindowEvent
+    class SWindowEvent
     {
-        cexpr SWindowEvent(EWindowEventType eventType) noex:
+        pub cexpr ctor SWindowEvent(EWindowEventType eventType) noex:
             eventType(eventType) { }
 
-        const EWindowEventType eventType;
+        pub const EWindowEventType eventType;
     };
 
-    struct SWindowResizeEvent: public SWindowEvent
+    class SWindowResizeEvent extends SWindowEvent
     {
-        cexpr SWindowResizeEvent(SWindowCoords size, SWindowCoords delta) noex:
+        pub cexpr ctor SWindowResizeEvent(SWindowCoords size, SWindowCoords delta) noex:
             size(size), delta(delta),
             SWindowEvent(EWindowEventType::Resize) { }
 
-        SWindowCoords size;
-        SWindowCoords delta;
+        pub SWindowCoords size;
+        pub SWindowCoords delta;
     };
 
-    struct SWindowRepositionEvent: public SWindowEvent
+    class SWindowRepositionEvent extends SWindowEvent
     {
-        cexpr SWindowRepositionEvent(SWindowCoords position, SWindowCoords delta) noex:
+        pub cexpr ctor SWindowRepositionEvent(SWindowCoords position, SWindowCoords delta) noex:
             position(position), delta(delta),
             SWindowEvent(EWindowEventType::Reposition) { }
 
-        SWindowCoords position;
-        SWindowCoords delta;
+        pub SWindowCoords position;
+        pub SWindowCoords delta;
     };
 
-    struct SWindowCloseEvent: public SWindowEvent
+    class SWindowCloseEvent extends SWindowEvent
     {
-        cexpr SWindowCloseEvent() noex:
+        pub cexpr ctor SWindowCloseEvent() noex:
             SWindowEvent(EWindowEventType::Close) { }
     };
 
-    struct Window
+    class Window
     {
-    public:
-        ctor Window(IEvent<const SWindowEvent&>& event) noex:
+        pub ctor Window(IEvent<const SWindowEvent&>& event) noex:
             OnEvent{ event } { }
 
-        virtual dtor Window() = default;
+        pub virtual dtor Window() = default;
 
-    public:
-        virtual fn Update() -> void abstract;
+        pub virtual fn Update() -> void abstract;
 
-        virtual fn GetSize() const noex -> SWindowCoords abstract;
-        virtual fn SetSize(SWindowCoords size) -> void abstract;
+        pub virtual fn GetSize() const noex -> SWindowCoords abstract;
+        pub virtual fn SetSize(SWindowCoords size) -> void abstract;
 
-        virtual fn GetPos() const noex -> SWindowCoords abstract;
-        virtual fn SetPos(SWindowCoords pos) -> void abstract;
+        pub virtual fn GetPos() const noex -> SWindowCoords abstract;
+        pub virtual fn SetPos(SWindowCoords pos) -> void abstract;
 
-        virtual fn GetNative() const noex -> void* abstract;
+        pub virtual fn GetNative() const noex -> void* abstract;
 
-    public:
-        IEvent<const SWindowEvent&>& OnEvent;
+        pub IEvent<const SWindowEvent&>& OnEvent;
     };
 }

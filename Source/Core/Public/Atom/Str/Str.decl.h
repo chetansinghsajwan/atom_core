@@ -10,9 +10,9 @@ namespace Atom
 namespace std
 {
     template < >
-    struct hash<Atom::Str>
+    class hash<Atom::Str>
     {
-        size_t operator ()(const Atom::Str& str) const noex
+        pub fn operator ()(const Atom::Str& str) const noex -> size_t
         {
             using TChar = Atom::BasicChar<Atom::CharEncoding>;
             using StdStirngView = basic_string_view<TChar>;

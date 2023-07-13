@@ -3,18 +3,18 @@ export module Atom.Core.Text:Encodings.AsciiToAscii;
 namespace Atom
 {
     template < >
-    struct _AsciiToAsciiConversionImpl
+    class _AsciiToAsciiConversionImpl
     {
-        template <tname TIn, tname TOut>
+        pub template <tname TIn, tname TOut>
         cexpr void ConvertChar(const TIn& in, TOut& out)
         {
         }
     };
 
-    export using AsciiToAsciiConverter = _CharEncodingConverterHelper<
+    using AsciiToAsciiConverter = _CharEncodingConverterHelper<
         _AsciiToAsciiConversionImpl, AsciiEncoding, AsciiEncoding>;
 
     template <tname TInput>
-    export using AsciiToAsciiLazyConverter = _CharEncodingLazyConverterHelper<
+    using AsciiToAsciiLazyConverter = _CharEncodingLazyConverterHelper<
         _AsciiToAsciiConversionImpl, AsciiEncoding, AsciiEncoding, TInput>;
 }

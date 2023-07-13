@@ -9,24 +9,24 @@ extern "C"
 
 namespace Atom::Private
 {
-    struct Sha1GeneratorImpl
+    class Sha1GeneratorImpl
     {
-        fn Initialize()
+        pub fn Initialize()
         {
             Sha1Initialise(&_context);
         }
 
-        fn Update(const void* data, uint32_t dataSize)
+        pub fn Update(const void* data, uint32_t dataSize)
         {
             Sha1Update(&_context, data, dataSize);
         }
 
-        fn Calculate(Sha1Hash& hash)
+        pub fn Calculate(Sha1Hash& hash)
         {
             Sha1Finalise(&_context, (SHA1_HASH*)hash.bytes.Data());
         }
 
-        Sha1Context _context;
+        pub Sha1Context _context;
     };
 }
 

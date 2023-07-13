@@ -4,95 +4,93 @@
 namespace Atom
 {
     template <tname TImpl>
-    class _ArrImplHelper: public _ConstArrImplHelper<TImpl>
+    class _ArrImplHelper extends _ConstArrImplHelper<TImpl>
     {
     //// -------------------------------------------------------------------------------------------
     //// Aliases
     //// -------------------------------------------------------------------------------------------
 
-        using Base = _ConstArrImplHelper<TImpl>;
+        pri using Base = _ConstArrImplHelper<TImpl>;
 
-    public:
-        using TElem = tname Base::TElem;
-        using TIter = tname Base::TIter;
-        using TIterEnd = tname Base::TIterEnd;
-        using TMutIter = MutArrIter<TElem>;
-        using TMutIterEnd = TMutIter;
+        pub using TElem = tname Base::TElem;
+        pub using TIter = tname Base::TIter;
+        pub using TIterEnd = tname Base::TIterEnd;
+        pub using TMutIter = MutArrIter<TElem>;
+        pub using TMutIterEnd = TMutIter;
 
     //// -------------------------------------------------------------------------------------------
     //// Access
     //// -------------------------------------------------------------------------------------------
 
-    public:
-        using Base::ElemAt;
-        using Base::operator[];
-        using Base::ElemFront;
-        using Base::ElemBack;
-        using Base::Data;
-        using Base::Count;
-        using Base::IsEmpty;
+        pub using Base::ElemAt;
+        pub using Base::operator[];
+        pub using Base::ElemFront;
+        pub using Base::ElemBack;
+        pub using Base::Data;
+        pub using Base::Count;
+        pub using Base::IsEmpty;
 
         /// ----------------------------------------------------------------------------------------
-        /// Access element at index{index}.
+        /// Access element at index `index`.
         /// 
-        /// @PARAM index: Index of element to access.
+        /// # Parameters
+        /// - `index`: Index of element to access.
         /// 
-        /// @RETURNS Ref to element.
+        /// # Returns
+        ///     Ref to element.
         /// 
-        /// @EXPECTS {index} is in range[0, Count() - 1].
-        ///     @THROWS IndexOutOfRangeException.
-        /// 
-        /// @TIME_COMPLEXITY Constant.
+        /// # Time Complexity
+        ///     Constant
         /// ----------------------------------------------------------------------------------------
-        cexpr fn ElemAt(usize index) -> TElem&;
+        pub cexpr fn ElemAt(usize index) -> TElem&;
 
         /// ----------------------------------------------------------------------------------------
-        /// Access element at index{index}. Same as {ElemAt(...)}, but doesn't perform bounds checking
-        /// in Release.
+        /// Access element at index `index`. Same as [`ElemAt(usize index)`], but doesn't perform 
+        /// bounds checking in Release.
         /// 
-        /// @PARAM index: Index of element to access.
+        /// # Parameters
+        /// - `index`: Index of element to access.
         /// 
-        /// @RETURNS Ref to element.
+        /// # Returns
+        ///     Ref to element.
         /// 
-        /// @EXPECTS {index} is in range[0, Count() - 1].
-        ///     @THROWS IndexOutOfRangeException: In Debug.
-        /// 
-        /// @TIME_COMPLEXITY Constant.
+        /// # Time Complexity
+        ///     Constant
         /// ----------------------------------------------------------------------------------------
-        cexpr fn operator [](usize index) noex -> TElem&;
+        pub cexpr fn operator [](usize index) noex -> TElem&;
 
         /// ----------------------------------------------------------------------------------------
         /// Access first element.
         /// 
-        /// @RETURNS Ref to element.
+        /// # Returns
+        ///     Ref to element.
         /// 
-        /// @EXPECTS {!IsEmpty()}.
-        ///     @THROWS OutOfRangeException: In Debug.
-        /// 
-        /// @TIME_COMPLEXITY Constant.
+        /// # Time Complexity
+        ///     Constant
         /// ----------------------------------------------------------------------------------------
-        cexpr fn ElemFront() noex -> TElem&;
+        pub cexpr fn ElemFront() noex -> TElem&;
 
         /// ----------------------------------------------------------------------------------------
         /// Access last element.
         /// 
-        /// @RETURNS Ref to element.
+        /// # Returns
+        ///     Ref to element.
         /// 
-        /// @EXPECTS {!IsEmpty()}.
-        ///     @THROWS OutOfRangeException: In Debug.
-        /// 
-        /// @TIME_COMPLEXITY Constant.
+        /// # Time Complexity
+        ///     Constant
         /// ----------------------------------------------------------------------------------------
-        cexpr fn ElemBack() noex -> TElem&;
+        pub cexpr fn ElemBack() noex -> TElem&;
 
         /// ----------------------------------------------------------------------------------------
         /// Pointer to underlying arr.
         /// 
-        /// @RETURNS Ptr to underlying arr.
+        /// # Returns
+        ///     Ptr to underlying arr.
         /// 
-        /// @TIME_COMPLEXITY Constant.
+        /// # Time Complexity
+        ///     Constant
         /// ----------------------------------------------------------------------------------------
-        cexpr fn Data() noex -> TElem*
+        pub cexpr fn Data() noex -> TElem*
         {
             return _Data();
         }
@@ -101,19 +99,18 @@ namespace Atom
     //// Iteration
     //// -------------------------------------------------------------------------------------------
 
-    public:
         /// ----------------------------------------------------------------------------------------
-        /// {TMutIter} to the first element.
+        /// [`TMutIter`] to the first element.
         /// ----------------------------------------------------------------------------------------
-        cexpr fn MutIter() noex -> TMutIter
+        pub cexpr fn MutIter() noex -> TMutIter
         {
             return TMutIter{ _Data() };
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// {TMutIter} to element following the last element.
+        /// [`TMutIter`] to element following the last element.
         /// ----------------------------------------------------------------------------------------
-        cexpr fn MutIterEnd() noex -> TMutIter
+        pub cexpr fn MutIterEnd() noex -> TMutIter
         {
             return TMutIter{ _Data() + _Count() - 1 };
         }
@@ -122,12 +119,11 @@ namespace Atom
     //// Implementations
     //// -------------------------------------------------------------------------------------------
 
-    public:
-        using Base::_Data;
-        using Base::_Count;
-        using Base::_ValidateIndexForAccess;
+        pro using Base::_Data;
+        pro using Base::_Count;
+        pro using Base::_ValidateIndexForAccess;
 
-        cexpr fn _Data() noex -> TElem*
+        pro cexpr fn _Data() noex -> TElem*
         {
             return TImpl::_Data();
         }

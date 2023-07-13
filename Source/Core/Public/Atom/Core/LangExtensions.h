@@ -20,13 +20,13 @@
 #define cexpr constexpr
 #define ceval consteval
 #define cinit constinit
+#define extends : public
+#define pub public:
+#define pro protected:
+#define pri private:
 
 // #define op operator
 // #define use using
-// #define pub public:
-// #define pro protected:
-// #define pri private:
-// #define extends :
 // #define var auto
 // #define let const auto
 // #define inl inline
@@ -39,4 +39,4 @@
 // #define ret return
 // #define this (*this)
 // #define base ((Base&)this)
-// #define enum enum struct
+// #define enum enum class

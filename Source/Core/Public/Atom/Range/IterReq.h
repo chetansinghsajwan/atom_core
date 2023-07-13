@@ -60,9 +60,9 @@ namespace Atom
         requires RDerivedFrom<TIter, TTag>;
     };
 
-    struct MultiPassIterTag { };
+    class MultiPassIterTag { };
 
-    struct ArrIterTag : MultiPassIterTag { };
+    class ArrIterTag extends MultiPassIterTag { };
 
 #pragma endregion
 //// -----------------------------------------------------------------------------------------------
@@ -368,6 +368,7 @@ namespace Atom
     concept RArrIterPair = requires
     {
         requires RArrIter<TIter>;
+        requires RArrIter<TIterEnd>;
         requires RIterEnd<TIter, TIterEnd>;
     };
 
@@ -375,6 +376,7 @@ namespace Atom
     concept RMutArrIterPair = requires
     {
         requires RMutArrIter<TIter>;
+        requires RMutArrIter<TIterEnd>;
         requires RIterEnd<TIter, TIterEnd>;
     };
 
@@ -382,6 +384,7 @@ namespace Atom
     concept RArrIterPairOf = requires
     {
         requires RArrIterOf<TIter, T>;
+        requires RArrIterOf<TIterEnd, T>;
         requires RIterEnd<TIter, TIterEnd>;
     };
 
@@ -389,6 +392,7 @@ namespace Atom
     concept RMutArrIterPairOf = requires
     {
         requires RMutArrIterOf<TIter, T>;
+        requires RMutArrIterOf<TIterEnd, T>;
         requires RIterEnd<TIter, TIterEnd>;
     };
 

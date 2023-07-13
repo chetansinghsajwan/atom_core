@@ -2,7 +2,7 @@
 
 using namespace Atom;
 
-struct Console
+class Console
 {
     void Out(StrView str)
     {

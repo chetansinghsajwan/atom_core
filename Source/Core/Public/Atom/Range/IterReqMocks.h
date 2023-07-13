@@ -9,22 +9,22 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// Mock object used as IterEnd.
     /// --------------------------------------------------------------------------------------------
-    struct IterEndReqMock { };
+    class IterEndReqMock { };
 
     /// --------------------------------------------------------------------------------------------
     /// {RIter} mock object.
     /// --------------------------------------------------------------------------------------------
     template <tname T>
-    struct IterReqMock
+    class IterReqMock
     {
-        using TElem = T;
+        pub using TElem = T;
 
-        fn operator *() const -> const T&;
+        pub fn operator *() const -> const T&;
 
-        fn operator ==(IterEndReqMock end) const -> bool;
-        fn operator !=(IterEndReqMock end) const -> bool;
+        pub fn operator ==(IterEndReqMock end) const -> bool;
+        pub fn operator !=(IterEndReqMock end) const -> bool;
 
-        fn operator ++(int) -> IterReqMock&;
+        pub fn operator ++(int) -> IterReqMock&;
     };
 
     ATOM_SATISFIES_ITER_PAIR(IterReqMock<int>, IterEndReqMock);
@@ -33,17 +33,17 @@ namespace Atom
     /// {RMutIter} mock object.
     /// --------------------------------------------------------------------------------------------
     template <tname T>
-    struct MutIterReqMock
+    class MutIterReqMock
     {
-        using TElem = T;
+        pub using TElem = T;
 
-        fn operator *() -> T&;
-        fn operator *() const -> const T&;
+        pub fn operator *() -> T&;
+        pub fn operator *() const -> const T&;
 
-        fn operator ==(IterEndReqMock end) const -> bool;
-        fn operator !=(IterEndReqMock end) const -> bool;
+        pub fn operator ==(IterEndReqMock end) const -> bool;
+        pub fn operator !=(IterEndReqMock end) const -> bool;
 
-        fn operator ++(int) -> MutIterReqMock&;
+        pub fn operator ++(int) -> MutIterReqMock&;
     };
 
     ATOM_SATISFIES_MUT_ITER_PAIR(MutIterReqMock<int>, IterEndReqMock);
@@ -52,16 +52,16 @@ namespace Atom
     /// {RFwdIter} mock object.
     /// --------------------------------------------------------------------------------------------
     template <tname T>
-    struct FwdIterReqMock : MultiPassIterTag
+    class FwdIterReqMock extends MultiPassIterTag
     {
-        using TElem = T;
+        pub using TElem = T;
 
-        fn operator *() const -> const T&;
+        pub fn operator *() const -> const T&;
 
-        fn operator ==(IterEndReqMock end) const -> bool;
-        fn operator !=(IterEndReqMock end) const -> bool;
+        pub fn operator ==(IterEndReqMock end) const -> bool;
+        pub fn operator !=(IterEndReqMock end) const -> bool;
 
-        fn operator ++(int) -> FwdIterReqMock&;
+        pub fn operator ++(int) -> FwdIterReqMock&;
     };
 
     ATOM_SATISFIES_FWD_ITER_PAIR(FwdIterReqMock<int>, IterEndReqMock);
@@ -70,17 +70,17 @@ namespace Atom
     /// {RMutFwdIter} mock object.
     /// --------------------------------------------------------------------------------------------
     template <tname T>
-    struct MutFwdIterReqMock : MultiPassIterTag
+    class MutFwdIterReqMock extends MultiPassIterTag
     {
-        using TElem = T;
+        pub using TElem = T;
 
-        fn operator *() -> T&;
-        fn operator *() const -> const T&;
+        pub fn operator *() -> T&;
+        pub fn operator *() const -> const T&;
 
-        fn operator ==(IterEndReqMock end) const -> bool;
-        fn operator !=(IterEndReqMock end) const -> bool;
+        pub fn operator ==(IterEndReqMock end) const -> bool;
+        pub fn operator !=(IterEndReqMock end) const -> bool;
 
-        fn operator ++(int) -> MutFwdIterReqMock&;
+        pub fn operator ++(int) -> MutFwdIterReqMock&;
     };
 
     ATOM_SATISFIES_MUT_FWD_ITER_PAIR(MutFwdIterReqMock<int>, IterEndReqMock);
@@ -89,17 +89,17 @@ namespace Atom
     /// {RBidiIter} mock object.
     /// --------------------------------------------------------------------------------------------
     template <tname T>
-    struct BidiIterReqMock : MultiPassIterTag
+    class BidiIterReqMock extends MultiPassIterTag
     {
-        using TElem = T;
+        pub using TElem = T;
 
-        fn operator *() const -> const T&;
+        pub fn operator *() const -> const T&;
 
-        fn operator ==(IterEndReqMock end) const -> bool;
-        fn operator !=(IterEndReqMock end) const -> bool;
+        pub fn operator ==(IterEndReqMock end) const -> bool;
+        pub fn operator !=(IterEndReqMock end) const -> bool;
 
-        fn operator ++(int) -> BidiIterReqMock&;
-        fn operator --(int) -> BidiIterReqMock&;
+        pub fn operator ++(int) -> BidiIterReqMock&;
+        pub fn operator --(int) -> BidiIterReqMock&;
     };
 
     ATOM_SATISFIES_BIDI_ITER_PAIR(BidiIterReqMock<int>, IterEndReqMock);
@@ -108,18 +108,18 @@ namespace Atom
     /// {RMutBidiIter} mock object.
     /// --------------------------------------------------------------------------------------------
     template <tname T>
-    struct MutBidiIterReqMock : MultiPassIterTag
+    class MutBidiIterReqMock extends MultiPassIterTag
     {
-        using TElem = T;
+        pub using TElem = T;
 
-        fn operator *() -> T&;
-        fn operator *() const -> const T&;
+        pub fn operator *() -> T&;
+        pub fn operator *() const -> const T&;
 
-        fn operator ==(IterEndReqMock end) const -> bool;
-        fn operator !=(IterEndReqMock end) const -> bool;
+        pub fn operator ==(IterEndReqMock end) const -> bool;
+        pub fn operator !=(IterEndReqMock end) const -> bool;
 
-        fn operator ++(int) -> MutBidiIterReqMock&;
-        fn operator --(int) -> MutBidiIterReqMock&;
+        pub fn operator ++(int) -> MutBidiIterReqMock&;
+        pub fn operator --(int) -> MutBidiIterReqMock&;
     };
 
     ATOM_SATISFIES_MUT_BIDI_ITER_PAIR(MutBidiIterReqMock<int>, IterEndReqMock);
@@ -128,25 +128,25 @@ namespace Atom
     /// {RJumpIter} mock object.
     /// --------------------------------------------------------------------------------------------
     template <tname T>
-    struct JumpIterReqMock : MultiPassIterTag
+    class JumpIterReqMock extends MultiPassIterTag
     {
-        using TElem = T;
+        pub using TElem = T;
 
-        fn operator *() const -> const T&;
+        pub fn operator *() const -> const T&;
 
-        fn operator ==(IterEndReqMock end) const -> bool;
-        fn operator !=(IterEndReqMock end) const -> bool;
+        pub fn operator ==(IterEndReqMock end) const -> bool;
+        pub fn operator !=(IterEndReqMock end) const -> bool;
 
-        fn operator ++(int) -> JumpIterReqMock&;
-        fn operator --(int) -> JumpIterReqMock&;
+        pub fn operator ++(int) -> JumpIterReqMock&;
+        pub fn operator --(int) -> JumpIterReqMock&;
 
-        fn operator +=(usize steps) -> JumpIterReqMock&;
-        fn operator -=(usize steps) -> JumpIterReqMock&;
+        pub fn operator +=(usize steps) -> JumpIterReqMock&;
+        pub fn operator -=(usize steps) -> JumpIterReqMock&;
 
-        fn operator +(usize steps) const -> JumpIterReqMock;
-        fn operator -(usize steps) const -> JumpIterReqMock;
+        pub fn operator +(usize steps) const -> JumpIterReqMock;
+        pub fn operator -(usize steps) const -> JumpIterReqMock;
 
-        fn operator -(const JumpIterReqMock& that) const -> isize;
+        pub fn operator -(const JumpIterReqMock& that) const -> isize;
     };
 
     ATOM_SATISFIES_JUMP_ITER_PAIR(JumpIterReqMock<int>, IterEndReqMock);
@@ -155,26 +155,26 @@ namespace Atom
     /// {RMutJumpIter} mock object.
     /// --------------------------------------------------------------------------------------------
     template <tname T>
-    struct MutJumpIterReqMock : MultiPassIterTag
+    class MutJumpIterReqMock extends MultiPassIterTag
     {
-        using TElem = T;
+        pub using TElem = T;
 
-        fn operator *() -> T&;
-        fn operator *() const -> const T&;
+        pub fn operator *() -> T&;
+        pub fn operator *() const -> const T&;
 
-        fn operator ==(IterEndReqMock end) const -> bool;
-        fn operator !=(IterEndReqMock end) const -> bool;
+        pub fn operator ==(IterEndReqMock end) const -> bool;
+        pub fn operator !=(IterEndReqMock end) const -> bool;
 
-        fn operator ++(int) -> MutJumpIterReqMock&;
-        fn operator --(int) -> MutJumpIterReqMock&;
+        pub fn operator ++(int) -> MutJumpIterReqMock&;
+        pub fn operator --(int) -> MutJumpIterReqMock&;
 
-        fn operator +=(usize steps) -> MutJumpIterReqMock&;
-        fn operator -=(usize steps) -> MutJumpIterReqMock&;
+        pub fn operator +=(usize steps) -> MutJumpIterReqMock&;
+        pub fn operator -=(usize steps) -> MutJumpIterReqMock&;
 
-        fn operator +(usize steps) const -> MutJumpIterReqMock;
-        fn operator -(usize steps) const -> MutJumpIterReqMock;
+        pub fn operator +(usize steps) const -> MutJumpIterReqMock;
+        pub fn operator -(usize steps) const -> MutJumpIterReqMock;
 
-        fn operator -(const MutJumpIterReqMock& that) const -> isize;
+        pub fn operator -(const MutJumpIterReqMock& that) const -> isize;
     };
 
     ATOM_SATISFIES_MUT_JUMP_ITER_PAIR(MutJumpIterReqMock<int>, IterEndReqMock);
@@ -183,55 +183,55 @@ namespace Atom
     /// {RArrIter} mock object.
     /// --------------------------------------------------------------------------------------------
     template <tname T>
-    struct ArrIterReqMock : ArrIterTag
+    class ArrIterReqMock extends ArrIterTag
     {
-        using TElem = T;
+        pub using TElem = T;
 
-        fn operator *() -> T&;
-        fn operator *() const -> const T&;
+        pub fn operator *() -> T&;
+        pub fn operator *() const -> const T&;
 
-        fn operator ==(IterEndReqMock end) const -> bool;
-        fn operator !=(IterEndReqMock end) const -> bool;
+        pub fn operator ==(ArrIterReqMock end) const -> bool;
+        pub fn operator !=(ArrIterReqMock end) const -> bool;
 
-        fn operator ++(int) -> ArrIterReqMock&;
-        fn operator --(int) -> ArrIterReqMock&;
+        pub fn operator ++(int) -> ArrIterReqMock&;
+        pub fn operator --(int) -> ArrIterReqMock&;
 
-        fn operator +=(usize steps) -> ArrIterReqMock&;
-        fn operator -=(usize steps) -> ArrIterReqMock&;
+        pub fn operator +=(usize steps) -> ArrIterReqMock&;
+        pub fn operator -=(usize steps) -> ArrIterReqMock&;
 
-        fn operator +(usize steps) const -> ArrIterReqMock;
-        fn operator -(usize steps) const -> ArrIterReqMock;
+        pub fn operator +(usize steps) const -> ArrIterReqMock;
+        pub fn operator -(usize steps) const -> ArrIterReqMock;
 
-        fn operator -(const ArrIterReqMock& that) const -> isize;
+        pub fn operator -(const ArrIterReqMock& that) const -> isize;
     };
 
-    ATOM_SATISFIES_ARR_ITER_PAIR(ArrIterReqMock<int>, IterEndReqMock);
+    ATOM_SATISFIES_ARR_ITER_PAIR(ArrIterReqMock<int>, ArrIterReqMock<int>);
 
     /// --------------------------------------------------------------------------------------------
     /// {RMutArrIter} mock object.
     /// --------------------------------------------------------------------------------------------
     template <tname T>
-    struct MutArrIterReqMock : ArrIterTag
+    class MutArrIterReqMock extends ArrIterTag
     {
-        using TElem = T;
+        pub using TElem = T;
 
-        fn operator *() -> T&;
-        fn operator *() const -> const T&;
+        pub fn operator *() -> T&;
+        pub fn operator *() const -> const T&;
 
-        fn operator ==(IterEndReqMock end) const -> bool;
-        fn operator !=(IterEndReqMock end) const -> bool;
+        pub fn operator ==(MutArrIterReqMock end) const -> bool;
+        pub fn operator !=(MutArrIterReqMock end) const -> bool;
 
-        fn operator ++(int) -> MutArrIterReqMock&;
-        fn operator --(int) -> MutArrIterReqMock&;
+        pub fn operator ++(int) -> MutArrIterReqMock&;
+        pub fn operator --(int) -> MutArrIterReqMock&;
 
-        fn operator +=(usize steps) -> MutArrIterReqMock&;
-        fn operator -=(usize steps) -> MutArrIterReqMock&;
+        pub fn operator +=(usize steps) -> MutArrIterReqMock&;
+        pub fn operator -=(usize steps) -> MutArrIterReqMock&;
 
-        fn operator +(usize steps) const -> MutArrIterReqMock;
-        fn operator -(usize steps) const -> MutArrIterReqMock;
+        pub fn operator +(usize steps) const -> MutArrIterReqMock;
+        pub fn operator -(usize steps) const -> MutArrIterReqMock;
 
-        fn operator -(const MutArrIterReqMock& that) const -> isize;
+        pub fn operator -(const MutArrIterReqMock& that) const -> isize;
     };
 
-    ATOM_SATISFIES_MUT_ARR_ITER_PAIR(MutArrIterReqMock<int>, IterEndReqMock);
+    ATOM_SATISFIES_MUT_ARR_ITER_PAIR(MutArrIterReqMock<int>, MutArrIterReqMock<int>);
 }

@@ -3,9 +3,9 @@
 
 namespace Atom
 {
-    struct SVector1
+    class SVector1
     {
-        float x;
+        pub float x;
     };
 
     cexpr fn operator + (SVector1 lhs, SVector1 rhs) noex -> SVector1

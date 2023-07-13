@@ -41,26 +41,27 @@ namespace Atom
     /// @TODO Needs refactoring.
     /// --------------------------------------------------------------------------------------------
 	template <tname T>
-	requires (!RSameAs<T, TTI::TRemoveCVRef<T>>) && RStrConvertible<TTI::TRemoveCVRef<T>>
-	struct StrConverter<T>: StrConverter<TTI::TRemoveCVRef<T>> { };
+	requires (!RSameAs<T, TTI::TRemoveCVRef<T>>)
+        and RStrConvertible<TTI::TRemoveCVRef<T>>
+	class StrConverter<T>: StrConverter<TTI::TRemoveCVRef<T>> { };
 
     /// --------------------------------------------------------------------------------------------
     /// {StrConverter} specialization for {Str}.
     /// --------------------------------------------------------------------------------------------
     template < >
-    struct StrConverter<Str>
+    class StrConverter<Str>
     {
-        cexpr Str Convert(Str&& str) noex
+        pub cexpr fn Convert(Str&& str) noex -> Str
         {
             return MOVE(str);
         }
 
-        cexpr Str Convert(const Str& str) noex
+        pub cexpr fn Convert(const Str& str) noex -> Str
         {
             return Str{ str };
         }
 
-        cexpr void Convert(const Str& str, ROutput<Char> auto out) noex
+        pub cexpr fn Convert(const Str& str, ROutput<Char> auto out) noex -> void
         {
             out += str;
         }

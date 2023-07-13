@@ -7,13 +7,13 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// Ascii char encoding.
     /// --------------------------------------------------------------------------------------------
-    struct AsciiEncoding
+    class AsciiEncoding
     {
-        using TChar = char;
-        using TRune = char;
+        pub using TChar = char;
+        pub using TRune = char;
 
-        static cexpr TChar Null = ATOM_TXT_ASCII('\0');
-        static cexpr bool IsMultiCharEncoding = false;
+        pub static cexpr TChar Null = ATOM_TXT_ASCII('\0');
+        pub static cexpr bool IsMultiCharEncoding = false;
     };
 
     /// --------------------------------------------------------------------------------------------

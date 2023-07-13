@@ -8,15 +8,15 @@ TEST_CASE("Atom/Invokable/InvokableBox")
 {
     SECTION("NotMoveAssignable Result")
     {
-        struct NotMoveAssignable
+        class NotMoveAssignable
         {
-            NotMoveAssignable() = default;
+            pub ctor NotMoveAssignable() = default;
 
-            NotMoveAssignable(const NotMoveAssignable& other) = default;
-            NotMoveAssignable(NotMoveAssignable&& other) = default;
+            pub ctor NotMoveAssignable(const NotMoveAssignable& other) = default;
+            pub ctor NotMoveAssignable(NotMoveAssignable&& other) = default;
 
-            NotMoveAssignable& operator = (const NotMoveAssignable& other) = delete;
-            NotMoveAssignable& operator = (NotMoveAssignable&& other) = delete;
+            pub fn operator = (const NotMoveAssignable& other) -> NotMoveAssignable& = delete;
+            pub fn operator = (NotMoveAssignable&& other) -> NotMoveAssignable& = delete;
         };
 
         InvokableBox<NotMoveAssignable(int)> invokable = [](int value)
@@ -37,31 +37,28 @@ TEST_CASE("Atom/Invokable/InvokableBox")
 
         class Lambda final
         {
-        public:
-            Lambda(int* capturedValue) noex:
+            pub ctor Lambda(int* capturedValue) noex:
                 _capturedValue(capturedValue) { }
 
-            Lambda(const Lambda& other) noex
+            pub ctor Lambda(const Lambda& other) noex
             {
                 _capturedValue = other._capturedValue;
             }
 
-            Lambda(Lambda&& other) noex
+            pub ctor Lambda(Lambda&& other) noex
             {
                 this->_capturedValue = other._capturedValue;
                 other._capturedValue = nullptr;
             }
 
-            ~Lambda() { }
+            pub dtor Lambda() { }
 
-        public:
-            int operator () ()
+            pub fn operator() () -> int
             {
                 return *_capturedValue;
             }
 
-        private:
-            int* _capturedValue;
+            pri int* _capturedValue;
         };
 
         int capturedValue = 10;

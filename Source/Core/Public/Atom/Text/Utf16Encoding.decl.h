@@ -5,25 +5,25 @@
 
 namespace Atom
 {
-    struct Utf16Encoding
+    class Utf16Encoding
     {
-        using TChar = char16;
-        using TRune = char32;
+        pub using TChar = char16;
+        pub using TRune = char32;
 
-        static cexpr TChar Null = ATOM_TEXT_UTF16('\0');
-        static cexpr bool IsMultiCharEncoding = true;
+        pub static cexpr TChar Null = ATOM_TEXT_UTF16('\0');
+        pub static cexpr bool IsMultiCharEncoding = true;
 
-        static cexpr bool IsContinuationChar(TChar ch) noex
+        pub static cexpr fn IsContinuationChar(TChar ch) noex -> bool
         {
             return (ch & 0b11000000) == 0b10000000;
         }
 
-        static cexpr usize ParseStartingChar(TChar ch) noex
+        pub static cexpr fn ParseStartingChar(TChar ch) noex -> usize
         {
             return 0;
         }
 
-        static cexpr bool IsStartingChar(TChar ch) noex
+        pub static cexpr fn IsStartingChar(TChar ch) noex -> bool
         {
             return ParseStartingChar(ch) != 0;
         }

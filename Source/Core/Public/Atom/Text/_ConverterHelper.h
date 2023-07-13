@@ -39,18 +39,19 @@ namespace Atom::Text
     /// @TPARAM TOutEncoding Character encoding to convert data to.
     /// --------------------------------------------------------------------------------------------
     template <tname TImpl, tname TInEncoding, tname TOutEncoding>
-    struct _CharEncodingConverterHelper
+    class _CharEncodingConverterHelper
     {
-        using TInChar = tname TInEncoding::TChar;
-        using TOutChar = tname TOutEncoding::TChar;
-        using TOutStr = Internal::Str<TOutEncoding>;
+        pub using TInChar = tname TInEncoding::TChar;
+        pub using TOutChar = tname TOutEncoding::TChar;
+        pub using TOutStr = Internal::Str<TOutEncoding>;
 
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <tname TInput, tname TOut>
-        requires RRangeOf<TInput, TInChar> && ROutput<TOut, TOutChar>
-        cexpr void ConvertTo(const TInput& in, TOut out)
+        pub template <tname TInput, tname TOut>
+        requires RRangeOf<TInput, TInChar>
+            and ROutput<TOut, TOutChar>
+        cexpr fn ConvertTo(const TInput& in, TOut out)
         {
             auto end = in.end();
             for (auto it = in.begin(); it != end; it++)
@@ -64,18 +65,18 @@ namespace Atom::Text
     /// Specialization for same {CharEncoding}.
     /// --------------------------------------------------------------------------------------------
     template <tname TImpl, tname TEncoding>
-    struct _CharEncodingConverterHelper<TImpl, TEncoding, TEncoding>
+    class _CharEncodingConverterHelper<TImpl, TEncoding, TEncoding>
     {
-        using TChar = BasicChar<TCharEncoding>;
-        using TStr = BasicStr<TCharEncoding>;
+        pub using TChar = BasicChar<TCharEncoding>;
+        pub using TStr = BasicStr<TCharEncoding>;
 
-    public:
         /// ----------------------------------------------------------------------------------------
         /// Writes input to output as is.
         /// ----------------------------------------------------------------------------------------
-        template <tname TInput, tname TOut>
-        requires RRangeOf<TInput, const TChar> && ROutput<TOut, TChar>
-        cexpr void Convert(TInput&& in, TOut& out)
+        pub template <tname TInput, tname TOut>
+        requires RRangeOf<TInput, const TChar>
+            and ROutput<TOut, TChar>
+        cexpr fn Convert(TInput&& in, TOut& out)
         {
             out += fwd(in);
         }

@@ -14,7 +14,7 @@ namespace Atom
         /// {ObjectBoxIdentifier} is used to check if the type is same as or derived from 
         /// {ObjectBox} template.
         /// ----------------------------------------------------------------------------------------
-        struct ObjectBoxIdentifier { };
+        class ObjectBoxIdentifier { };
     }
 
     /// --------------------------------------------------------------------------------------------
@@ -38,19 +38,19 @@ namespace Atom
         /// --------------------------------------------------------------------------------------------
         /// Stores data for object. Like, {CopyConstructor}, {MoveConstructor} and {ObjectSize}.
         /// --------------------------------------------------------------------------------------------
-        struct ObjectData
+        class ObjectData
         {
-            ATOM_CONDITIONAL_FIELD(Copyable,
+            pub ATOM_CONDITIONAL_FIELD(Copyable,
                 InvokablePtr<void(void*, const void*)>) copy;
 
-            ATOM_CONDITIONAL_FIELD(Movable,
+            pub ATOM_CONDITIONAL_FIELD(Movable,
                 InvokablePtr<void(void*, void*)>) move;
 
-            InvokablePtr<void(void* obj)> dtor_;
+            pub InvokablePtr<void(void* obj)> dtor_;
 
-            usize size;
-            void* obj;
-            const TypeInfo* type;
+            pub usize size;
+            pub void* obj;
+            pub const TypeInfo* type;
         };
 
         /// ----------------------------------------------------------------------------------------

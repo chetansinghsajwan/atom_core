@@ -14,8 +14,7 @@ namespace Atom
 
     template <tname TImpl>
     template <tname T2, tname Req>
-    cexpr fn _DynArrImplHelper<TImpl>::InsertAt(TIter pos, T2&& el)
-        -> tname _DynArrImplHelper<TImpl>::TMutIter
+    cexpr fn _DynArrImplHelper<TImpl>::InsertAt(TIter pos, T2&& el) -> TMutIter
     {
         ATOM_DEBUG_EXPECTS(_ValidateIter(pos)) << TEXT("Invalid iter.");
 
@@ -28,8 +27,7 @@ namespace Atom
 
     template <tname TImpl>
     template <tname TRange, tname Req>
-    cexpr fn _DynArrImplHelper<TImpl>::InsertAt(TIter pos, const TRange& range)
-        -> tname _DynArrImplHelper<TImpl>::TMutIter
+    cexpr fn _DynArrImplHelper<TImpl>::InsertAt(TIter pos, const TRange& range) -> TMutIter
     {
         ATOM_DEBUG_EXPECTS(_ValidateIter(pos)) << TEXT("Invalid iter.");
 
@@ -49,16 +47,14 @@ namespace Atom
 
     template <tname TImpl>
     template <tname T2, tname Req>
-    cexpr fn _DynArrImplHelper<TImpl>::InsertFront(T2&& el)
-        -> tname _DynArrImplHelper<TImpl>::TMutIter
+    cexpr fn _DynArrImplHelper<TImpl>::InsertFront(T2&& el) -> TMutIter
     {
         return MutIter() + _InsertAt(0, fwd(el));
     }
 
     template <tname TImpl>
     template <tname TRange, tname Req>
-    cexpr fn _DynArrImplHelper<TImpl>::InsertFront(const TRange& range)
-        -> tname _DynArrImplHelper<TImpl>::TMutIter
+    cexpr fn _DynArrImplHelper<TImpl>::InsertFront(const TRange& range) -> TMutIter
     {
         if cexpr (_CanGetRangeSize<TRange>())
         {
@@ -72,16 +68,14 @@ namespace Atom
 
     template <tname TImpl>
     template <tname T2, tname Req>
-    cexpr fn _DynArrImplHelper<TImpl>::InsertBack(T2&& el)
-        -> tname _DynArrImplHelper<TImpl>::TMutIter
+    cexpr fn _DynArrImplHelper<TImpl>::InsertBack(T2&& el) -> TMutIter
     {
         return MutIter() + _InsertBack(fwd(el));
     }
 
     template <tname TImpl>
     template <tname TRange, tname Req>
-    cexpr fn _DynArrImplHelper<TImpl>::InsertBack(const TRange& range)
-        -> tname _DynArrImplHelper<TImpl>::TMutIter
+    cexpr fn _DynArrImplHelper<TImpl>::InsertBack(const TRange& range) -> TMutIter
     {
         if cexpr (_CanGetRangeSize<TRange>())
         {
@@ -95,16 +89,14 @@ namespace Atom
 
     template <tname TImpl>
     template <tname T2, tname Req>
-    cexpr fn _DynArrImplHelper<TImpl>::operator +=(T2&& el)
-        -> tname _DynArrImplHelper<TImpl>::TMutIter
+    cexpr fn _DynArrImplHelper<TImpl>::operator +=(T2&& el) -> TMutIter
     {
         return InsertBack(fwd(el));
     }
 
     template <tname TImpl>
     template <tname TRange, tname Req>
-    cexpr fn _DynArrImplHelper<TImpl>::operator +=(const TRange& range)
-        -> tname _DynArrImplHelper<TImpl>::TMutIter
+    cexpr fn _DynArrImplHelper<TImpl>::operator +=(const TRange& range) -> TMutIter
     {
         return InsertBack(range);
     }
@@ -202,8 +194,7 @@ namespace Atom
     }
 
     template <tname TImpl>
-    cexpr fn _DynArrImplHelper<TImpl>::RemoveAt(TIter pos)
-        -> tname _DynArrImplHelper<TImpl>::TMutIter
+    cexpr fn _DynArrImplHelper<TImpl>::RemoveAt(TIter pos) -> TMutIter
     {
         ATOM_DEBUG_EXPECTS(_ValidateIter(pos)) << TEXT("Invalid iter.");
 
@@ -216,8 +207,7 @@ namespace Atom
     }
 
     template <tname TImpl>
-    cexpr fn _DynArrImplHelper<TImpl>::RemoveRange(Range<TIter, TIterEnd> range)
-        -> tname _DynArrImplHelper<TImpl>::TMutIter
+    cexpr fn _DynArrImplHelper<TImpl>::RemoveRange(Range<TIter, TIterEnd> range) -> TMutIter
     {
         TIter rangeBegin = range.MutIter();
         TIterEnd rangeEnd = range.IterEnd();

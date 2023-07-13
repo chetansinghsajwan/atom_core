@@ -3,10 +3,9 @@
 
 namespace Atom::Engine
 {
-    class LinuxWindow: public GLFWWindow
+    class LinuxWindow extends GLFWWindow
     {
-    public:
-        ctor LinuxWindow(const SWindowProps& props):
+        pub ctor LinuxWindow(const WindowProps& props):
             GLFWWindow(props) { }
     };
 }

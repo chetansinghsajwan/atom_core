@@ -14,8 +14,7 @@ namespace Atom
         template <tname TRange1, tname TRange2>
         requires RFwdRange<TRange1>
             and RFwdRange<TRange2>
-        cexpr fn Find(const TRange1& range1, const TRange2& range2)
-            -> tname TRange1::TIter 
+        cexpr fn Find(const TRange1& range1, const TRange2& range2) -> tname TRange1::TIter 
         {
             return std::find(range1.Iter(), range1.IterEnd(), range2.Iter(), range2.IterEnd());
         }
@@ -25,8 +24,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <tname TRange>
         requires RFwdRange<TRange>
-        cexpr fn Find(const TRange& range, const tname TRange::TElem& el)
-            -> tname TRange::TIter 
+        cexpr fn Find(const TRange& range, const tname TRange::TElem& el) -> tname TRange::TIter 
         {
             return std::find(range.Iter(), range.IterEnd(), el);
         }

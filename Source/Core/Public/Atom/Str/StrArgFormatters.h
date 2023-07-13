@@ -29,15 +29,15 @@ namespace Atom
 	/// --------------------------------------------------------------------------------------------
 	/// Exception thrown during formatting error.
 	/// --------------------------------------------------------------------------------------------
-	class StrFmtEx: public Exception
+	class StrFmtEx extends Exception
 	{
-	public:
-		ctor StrFmtEx(Str msg) noex:
+		pub ctor StrFmtEx(Str msg) noex:
 			Exception(MOVE(msg)) { }
 
+		/// ----------------------------------------------------------------------------------------
 		/// @TODO Fix this ugly code.
 		/// ----------------------------------------------------------------------------------------
-		ctor StrFmtEx(const _FmtFmtEx& fmtEx) noex:
+		pub ctor StrFmtEx(const _FmtFmtEx& fmtEx) noex:
 			Exception(TEXT("Not implemented.")) { }
 		// StrFmtEx(const _FmtFmtEx& fmtEx) noex:
 		// 	Exception(CharEncodingConverter<UTF8CharEncoding, CharEncoding>()
@@ -47,40 +47,40 @@ namespace Atom
 	/// --------------------------------------------------------------------------------------------
 	/// Context to parse format string.
 	/// --------------------------------------------------------------------------------------------
-	struct StrFmtParseCtx
+	class StrFmtParseCtx
 	{
-		cexpr ctor StrFmtParseCtx(_FmtFmtParseCtx& fmtCtx) noex:
+		pub cexpr ctor StrFmtParseCtx(_FmtFmtParseCtx& fmtCtx) noex:
 			_fmtCtx{ fmtCtx } { }
 
-		fn GetRange() noex -> StrView
+		pub fn GetRange() noex -> StrView
 		{
 			return StrView{ Range(_fmtCtx.begin(), _fmtCtx.end()) };
 		}
 
-		fn AdvanceTo(ArrIter<Char> it) noex
+		pub fn AdvanceTo(ArrIter<Char> it) noex
 		{
 			_fmtCtx.advance_to(&*it);
 		}
 
-		_FmtFmtParseCtx& _fmtCtx;
+		pub _FmtFmtParseCtx& _fmtCtx;
 	};
 
 	/// --------------------------------------------------------------------------------------------
 	/// Context to write formatted string.
 	/// --------------------------------------------------------------------------------------------
-	struct StrFmtCtx
+	class StrFmtCtx
 	{
-		cexpr ctor StrFmtCtx(_FmtFmtCtx& fmtCtx) noex:
+		pub cexpr ctor StrFmtCtx(_FmtFmtCtx& fmtCtx) noex:
 			_fmtCtx{ fmtCtx } { }
 
-		fn Write(Char ch)
+		pub fn Write(Char ch)
 		{
 			auto out = _fmtCtx.out();
 			*out++ = ch;
 			_fmtCtx.advance_to(MOVE(out));
 		}
 
-		template <tname TRange>
+		pub template <tname TRange>
 		requires RRangeOf<TRange, Char>
 		fn Write(const TRange& chars)
 		{
@@ -93,7 +93,7 @@ namespace Atom
 			_fmtCtx.advance_to(MOVE(out));
 		}
 
-		_FmtFmtCtx& _fmtCtx;
+		pub _FmtFmtCtx& _fmtCtx;
 	};
 
 	/// --------------------------------------------------------------------------------------------
@@ -101,7 +101,7 @@ namespace Atom
 	/// specifiers.
 	/// --------------------------------------------------------------------------------------------
 	template <tname T>
-	struct StrFmtArgFmterImpl;
+	class StrFmtArgFmterImpl;
 
 	/// --------------------------------------------------------------------------------------------
 	/// 
@@ -133,23 +133,23 @@ namespace Atom
 
 namespace Atom
 {
-	/// -----------------------------------------------------------------------------------------------
+	/// --------------------------------------------------------------------------------------------
 	/// {StrFmtArgFmter} specialization for {StrView}.
 	/// 
 	/// @INTERNAL
 	/// Uses {fmt::fmter<fmt::string_view>} specialization.
-	/// -----------------------------------------------------------------------------------------------
+	/// --------------------------------------------------------------------------------------------
 	template < >
-	struct StrFmtArgFmterImpl<StrView>
+	class StrFmtArgFmterImpl<StrView>
 	{
-		fn Parse(StrFmtParseCtx& ctx) noex
+		pub fn Parse(StrFmtParseCtx& ctx) noex
 		{
 			_FmtFmtParseCtx& fmtCtx = ctx._fmtCtx;
 
 			fmtCtx.advance_to(_fmtFmter.parse(fmtCtx));
 		}
 
-		fn Fmt(StrView str, StrFmtCtx& ctx) noex
+		pub fn Fmt(StrView str, StrFmtCtx& ctx) noex
 		{
 			_FmtFmtCtx& fmtCtx = ctx._fmtCtx;
 
@@ -157,49 +157,50 @@ namespace Atom
 			fmtCtx.advance_to(_fmtFmter.format(fmt_str, fmtCtx));
 		}
 
-		_FmtFmter<_FmtStrView> _fmtFmter;
+		pub _FmtFmter<_FmtStrView> _fmtFmter;
 	};
 
 	static_assert(RStrFmtArgFmtable<StrView>, "StrView is not formattable.");
 
-	/// -----------------------------------------------------------------------------------------------
+	/// --------------------------------------------------------------------------------------------
 	/// {StrFmtArgFmter} specialization for {Char} arr.
-	/// -----------------------------------------------------------------------------------------------
+	/// --------------------------------------------------------------------------------------------
 	template <usize N>
-	struct StrFmtArgFmterImpl<Char[N]>: StrFmtArgFmter<StrView>
+	class StrFmtArgFmterImpl<Char[N]> extends StrFmtArgFmter<StrView>
 	{
-		fn Fmt(const Char(&chars)[N], StrFmtCtx& ctx) noex
+		pub fn Fmt(const Char(&chars)[N], StrFmtCtx& ctx) noex
 		{
 			StrView str{ chars, N };
 			StrFmtArgFmter<StrView>::Fmt(str, ctx);
 		}
 	};
 
-	/// -----------------------------------------------------------------------------------------------
+	/// --------------------------------------------------------------------------------------------
 	/// {StrFmtArgFmter} specialization for types which satisfy {RStrViewConvertible} requirement.
-	/// -----------------------------------------------------------------------------------------------
-	template <RStrViewConvertible T>
-	struct StrFmtArgFmterImpl<T>: StrFmtArgFmter<StrView>
+	/// --------------------------------------------------------------------------------------------
+	template <tname T>
+	requires RStrViewConvertible<T>
+	class StrFmtArgFmterImpl<T> extends StrFmtArgFmter<StrView>
 	{
-		cexpr fn Fmt(const T& in, StrFmtCtx& ctx) noex
+		pub cexpr fn Fmt(const T& in, StrFmtCtx& ctx) noex
 		{
 			StrFmtArgFmter<StrView>::Fmt(
 				convter.Convert(in), ctx);
 		}
 
-		StrViewConverter<T> convter;
+		pub StrViewConverter<T> convter;
 	};
 
 	template <tname T>
-	struct _FmtFmtfierFilter
+	class _FmtFmtfierFilter
 	{
-		static cexpr bool Enable = true;
+		pub static cexpr bool Enable = true;
 	};
 
 	template <usize N>
-	struct _FmtFmtfierFilter<Char[N]>
+	class _FmtFmtfierFilter<Char[N]>
 	{
-		static cexpr bool Enable = false;
+		pub static cexpr bool Enable = false;
 	};
 }
 
@@ -216,16 +217,16 @@ namespace fmt
 	/// --------------------------------------------------------------------------------------------
 	template <Atom::RStrFmtArgFmtable T>
 	requires Atom::_FmtFmtfierFilter<T>::Enable
-	struct formatter <T, Atom::Char>
+	class formatter <T, Atom::Char>
 	{
-		Atom::_FmtFmtParseCtxIter parse(Atom::_FmtFmtParseCtx& fmtCtx)
+		pub fn parse(Atom::_FmtFmtParseCtx& fmtCtx) -> Atom::_FmtFmtParseCtxIter
 		{
 			Atom::StrFmtParseCtx ctx(fmtCtx);
 			this->fmter.Parse(ctx);
 			return fmtCtx.begin();
 		}
 
-		Atom::_FmtFmtCtxOut format(const T& in, Atom::_FmtFmtCtx& fmtCtx)
+		pub fn format(const T& in, Atom::_FmtFmtCtx& fmtCtx) -> Atom::_FmtFmtCtxOut
 		{
 			Atom::StrFmtCtx ctx(fmtCtx);
 			this->fmter.Fmt(in, ctx);
@@ -235,6 +236,6 @@ namespace fmt
 		/// ----------------------------------------------------------------------------------------
 		/// This contains actual implementation.
 		/// ----------------------------------------------------------------------------------------
-		Atom::StrFmtArgFmter<T> fmter;
+		pub Atom::StrFmtArgFmter<T> fmter;
 	};
 }

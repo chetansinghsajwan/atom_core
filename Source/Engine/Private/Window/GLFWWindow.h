@@ -6,15 +6,15 @@
 
 namespace Atom::Engine
 {
-    struct GLFW_SWindowCoords
+    class GLFW_SWindowCoords
     {
-        int x;
-        int y;
+        pub int x;
+        pub int y;
     };
 
-    struct GLFW_WindowCoordsConverter
+    class GLFW_WindowCoordsConverter
     {
-        static cexpr fn ToGLFW(SWindowCoords coords) -> GLFW_SWindowCoords
+        pub static cexpr fn ToGLFW(SWindowCoords coords) -> GLFW_SWindowCoords
         {
             coords.x = Math::Clamp<int>(coords.x, NumLimits<int>::min(), NumLimits<int>::max());
             coords.y = Math::Clamp<int>(coords.y, NumLimits<int>::min(), NumLimits<int>::max());
@@ -22,7 +22,7 @@ namespace Atom::Engine
             return { (int)coords.x, (int)coords.y };
         };
 
-        static cexpr fn FromGLFW(GLFW_SWindowCoords coords) -> SWindowCoords
+        pub static cexpr fn FromGLFW(GLFW_SWindowCoords coords) -> SWindowCoords
         {
             coords.x = Math::Clamp<int>(coords.x, NumLimits<int>::min(), NumLimits<int>::max());
             coords.y = Math::Clamp<int>(coords.y, NumLimits<int>::min(), NumLimits<int>::max());
@@ -33,37 +33,34 @@ namespace Atom::Engine
 
     class GLFWWindow: public Window
     {
-    public:
-        ctor GLFWWindow(const SWindowProps& props);
-        dtor GLFWWindow();
+        pub ctor GLFWWindow(const WindowProps& props);
+        pub dtor GLFWWindow();
 
-    public:
-        virtual fn Update() -> void override;
+        pub virtual fn Update() -> void override;
 
-        virtual fn SetPos(SWindowCoords size) -> void override;
-        virtual fn GetPos() const noex -> SWindowCoords override;
-        virtual fn UpdatePos() -> SWindowCoords;
+        pub virtual fn SetPos(SWindowCoords size) -> void override;
+        pub virtual fn GetPos() const noex -> SWindowCoords override;
+        pub virtual fn UpdatePos() -> SWindowCoords;
 
-        virtual fn SetSize(SWindowCoords size) -> void override;
-        virtual fn GetSize() const noex -> SWindowCoords override;
-        virtual fn UpdateSize() -> SWindowCoords;
+        pub virtual fn SetSize(SWindowCoords size) -> void override;
+        pub virtual fn GetSize() const noex -> SWindowCoords override;
+        pub virtual fn UpdateSize() -> SWindowCoords;
 
-        virtual fn GetNative() const noex -> void* ofinal;
+        pub virtual fn GetNative() const noex -> void* ofinal;
 
-        fn SetVSync(bool enable) -> void;
-        fn GetVSync() const noex -> bool;
+        pub fn SetVSync(bool enable) -> void;
+        pub fn GetVSync() const noex -> bool;
 
-        fn GetNativeGLFW() const noex -> GLFWwindow*
+        pub fn GetNativeGLFW() const noex -> GLFWwindow*
         {
             return _glfwWindow;
         }
 
-    protected:
-        GLFWwindow* _glfwWindow;
-        SWindowCoords _windowPos;
-        SWindowCoords _windowSize;
-        bool _windowVSync;
+        pro GLFWwindow* _glfwWindow;
+        pro SWindowCoords _windowPos;
+        pro SWindowCoords _windowSize;
+        pro bool _windowVSync;
 
-        EventSource<const SWindowEvent&> _windowEventSource;
+        pro EventSource<const SWindowEvent&> _windowEventSource;
     };
 }

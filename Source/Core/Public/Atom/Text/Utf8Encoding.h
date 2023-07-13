@@ -8,18 +8,18 @@ namespace Atom::Text
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
-    export struct Utf8Encoding
+    export class Utf8Encoding
     {
-        using TChar = char8;
-        using TRune = char32;
+        pub using TChar = char8;
+        pub using TRune = char32;
 
-        static cexpr TChar Null = ATOM_TEXT_UTF8('\0');
-        static cexpr bool IsMultiCharEncoding = true;
+        pub static cexpr TChar Null = ATOM_TEXT_UTF8('\0');
+        pub static cexpr bool IsMultiCharEncoding = true;
 
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        static cexpr bool IsContinuationChar(TChar ch) noex
+        pub static cexpr fn IsContinuationChar(TChar ch) noex -> bool
         {
             return (ch & 0b11000000) == 0b10000000;
         }
@@ -27,7 +27,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        static cexpr usize ParseStartingChar(TChar ch) noex
+        pub static cexpr fn ParseStartingChar(TChar ch) noex -> usize
         {
             if ((ch & 0b10000000) == 0b00000000) return 1;
             if ((ch & 0b11100000) == 0b11000000) return 2;
@@ -40,7 +40,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        static cexpr bool IsStartingChar(TChar ch) noex
+        pub static cexpr fn IsStartingChar(TChar ch) noex -> bool
         {
             return ParseStartingChar(ch) != 0;
         }

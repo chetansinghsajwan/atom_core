@@ -4,13 +4,13 @@
 namespace Atom
 {
     template <tname T>
-    struct OutputReqMock
+    class OutputReqMock
     {
-        template <tname U>
+        pub template <tname U>
         requires RSameAsUnqualified<U, T>
         fn operator +=(U&& el);
 
-        template <tname TRange>
+        pub template <tname TRange>
         requires RRangeOf<TRange, T>
         fn operator +=(const TRange& range);
     };

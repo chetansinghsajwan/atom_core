@@ -5,7 +5,7 @@ using namespace Atom::Logging;
 
 namespace Atom::Engine
 {
-    ctor GLFWWindow::GLFWWindow(const SWindowProps& props):
+    ctor GLFWWindow::GLFWWindow(const WindowProps& props):
         Window(_windowEventSource)
     {
         GLFW_SWindowCoords glfwWindowSize = GLFW_WindowCoordsConverter::ToGLFW(

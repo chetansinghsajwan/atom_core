@@ -3,9 +3,9 @@
 
 namespace Atom
 {
-    struct ObjHelper
+    class ObjHelper
     {
-        template <tname TPtr>
+        pub template <tname TPtr>
         cexpr fn Construct(TPtr&& mem, auto&&... args) const
         {
             ATOM_DEBUG_EXPECTS(mem != nullptr);
@@ -13,7 +13,7 @@ namespace Atom
             std::construct_at(mem, fwd(args)...);
         }
 
-        template <tname TPtr>
+        pub template <tname TPtr>
         cexpr fn Destruct(TPtr&& mem) const
         {
             ATOM_DEBUG_EXPECTS(mem != nullptr);

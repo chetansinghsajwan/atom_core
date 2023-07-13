@@ -4,90 +4,101 @@
 
 namespace Atom
 {
-    /// SEventKey is used to identify events registered for this key.
     /// --------------------------------------------------------------------------------------------
-    struct SEventKey
+    /// EventKey is used to identify events registered for this key.
+    /// --------------------------------------------------------------------------------------------
+    class EventKey
     {
-    public:
-        ctor SEventKey(const TypeInfo& typeInfo) noex:
+        pub ctor EventKey(const TypeInfo& typeInfo) noex:
             _typeInfo(typeInfo) { }
 
-    public:
-        fn GetType() const noex -> const TypeInfo&
+        pub fn GetType() const noex -> const TypeInfo&
         {
             return _typeInfo;
         }
 
-    private:
-        const TypeInfo& _typeInfo;
+        pri const TypeInfo& _typeInfo;
     };
 
+    /// --------------------------------------------------------------------------------------------
     /// {Event} is just a frontend to {EventSource} to prevent users from dispatching events.
     /// --------------------------------------------------------------------------------------------
     template <tname... TArgs>
-    struct IEvent
+    class IEvent
     {
-        using TSignature = void(TArgs...);
+        pro using _TSignature = void(TArgs...);
 
+        /// ----------------------------------------------------------------------------------------
         /// Calls Subscribe(fwd(listener));
         /// ----------------------------------------------------------------------------------------
-        template <RInvokable<TSignature> TInvokable>
-        fn operator += (TInvokable&& listener) noex -> SEventKey
+        pub template <tname TInvokable>
+        requires RInvokable<TInvokable, _TSignature>
+        fn operator += (TInvokable&& listener) noex -> EventKey
         {
             return Subscribe(fwd(listener));
         }
 
+        /// ----------------------------------------------------------------------------------------
         /// Calls Unsubscribe(key);
         /// ----------------------------------------------------------------------------------------
-        fn operator -= (SEventKey key) noex -> bool
+        pub fn operator -= (EventKey key) noex -> bool
         {
             return Unsubscribe(key);
         }
 
+        /// ----------------------------------------------------------------------------------------
         /// Calls Subscribe(fwd(listener)) on {Source}.
         /// ----------------------------------------------------------------------------------------
-        template <RInvokable<TSignature> TInvokable>
-        fn Subscribe(TInvokable&& listener) noex -> SEventKey
+        pub template <tname TInvokable>
+        requires RInvokable<TInvokable, _TSignature>
+        fn Subscribe(TInvokable&& listener) noex -> EventKey
         {
-            return Subscribe(InvokableBox<TSignature>(fwd(listener)));
+            return Subscribe(InvokableBox<_TSignature>(fwd(listener)));
         }
 
+        /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        virtual fn Subscribe(InvokableBox<TSignature>&& invokable) noex -> SEventKey abstract;
+        pub virtual fn Subscribe(InvokableBox<_TSignature>&& invokable) noex -> EventKey abstract;
 
+        /// ----------------------------------------------------------------------------------------
         /// Calls Unsubscribe(key) on {Source}.
         /// ----------------------------------------------------------------------------------------
-        virtual fn Unsubscribe(SEventKey key) noex -> usize abstract;
+        pub virtual fn Unsubscribe(EventKey key) noex -> usize abstract;
     };
 
+    /// --------------------------------------------------------------------------------------------
     /// EventSource is used to manage listeners and dispatch event.
     /// 
     /// @TODO Add async dispatching.
     /// --------------------------------------------------------------------------------------------
     template <tname... TArgs>
-    class EventSource: public IEvent<TArgs...>
+    class EventSource extends IEvent<TArgs...>
     {
-    public:
+        pro using _TSignature = tname IEvent<TArgs...>::_TSignature;
+        
+        /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        virtual fn Subscribe(InvokableBox<void(TArgs...)>&& invokable) noex -> SEventKey ofinal
+        pub virtual fn Subscribe(InvokableBox<_TSignature>&& invokable) noex -> EventKey ofinal
         {
             return _AddListener(fwd(invokable));
         }
 
+        /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        virtual fn Unsubscribe(SEventKey key) noex -> usize ofinal
+        pub virtual fn Unsubscribe(EventKey key) noex -> usize ofinal
         {
             return _RemoveListener(key);
         }
 
+        /// ----------------------------------------------------------------------------------------
         /// Dispatches the events. Calls each event listener(invokables) with given args.
         /// 
         /// @TODO Add detailed documentation on argument passing.
         /// ----------------------------------------------------------------------------------------
-        fn Dispatch(TArgs... args)
+        pub fn Dispatch(TArgs... args)
         {
             for (auto& listener : _listeners)
             {
@@ -95,20 +106,21 @@ namespace Atom
             }
         }
 
-    protected:
+        /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        fn _AddListener(InvokableBox<void(TArgs...)>&& invokable) -> SEventKey
+        pro fn _AddListener(InvokableBox<_TSignature>&& invokable) -> EventKey
         {
-            SEventKey key = invokable.GetInvokableType();
+            EventKey key = invokable.GetInvokableType();
 
             _listeners.InsertBack(MOVE(invokable));
             return key;
         }
 
+        /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        fn _RemoveListener(SEventKey key) noex -> usize
+        pro fn _RemoveListener(EventKey key) noex -> usize
         {
             return RangeModifier().RemoveIf(_listeners, [&](const auto& listener)
                 {
@@ -116,9 +128,10 @@ namespace Atom
                 });
         }
 
+        /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        fn _CountListeners(SEventKey key) noex -> usize
+        pro fn _CountListeners(EventKey key) noex -> usize
         {
             usize count = 0;
             for (auto& listener : _listeners)
@@ -132,11 +145,11 @@ namespace Atom
             return count;
         }
 
-    protected:
-        using TListener = InvokableBox<void(TArgs...)>;
+        pro using TListener = InvokableBox<_TSignature>;
 
+        /// ----------------------------------------------------------------------------------------
         /// List of event listeners.
         /// ----------------------------------------------------------------------------------------
-        DynArr<TListener> _listeners;
+        pro DynArr<TListener> _listeners;
     };
 }

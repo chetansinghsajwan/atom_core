@@ -90,27 +90,26 @@ namespace Atom
     };
 
     template <tname T, tname TAlloc = DefaultMemAllocator>
-    class DynArr: public _DynArrImplHelper<_DynArrImplBase<T, TAlloc>>
+    class DynArr extends _DynArrImplHelper<_DynArrImplBase<T, TAlloc>>
     {
-        using Base = _DynArrImplHelper<_DynArrImplBase<T, TAlloc>>;
-        using BaseImpl = _DynArrImplBase<T, TAlloc>;
+        pri using Base = _DynArrImplHelper<_DynArrImplBase<T, TAlloc>>;
+        pri using BaseImpl = _DynArrImplBase<T, TAlloc>;
 
-    public:
         /// ----------------------------------------------------------------------------------------
         /// DefCtor.
         /// ----------------------------------------------------------------------------------------
-        cexpr ctor DynArr() noex = default;
+        pub cexpr ctor DynArr() noex = default;
 
         /// ----------------------------------------------------------------------------------------
         /// NullCtor.
         /// ----------------------------------------------------------------------------------------
-        cexpr ctor DynArr(NullPtr) noex:
+        pub cexpr ctor DynArr(NullPtr) noex:
             Base{BaseImpl{ nullptr }} { }
 
         /// ----------------------------------------------------------------------------------------
         /// ParamCtor.
         /// ----------------------------------------------------------------------------------------
-        template <tname TRange>
+        pub template <tname TRange>
         requires RRangeOf<TRange, T>
         cexpr ctor DynArr(const TRange& range) noex:
             Base{BaseImpl{ nullptr }}
@@ -121,7 +120,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// CopyCtor.
         /// ----------------------------------------------------------------------------------------
-        cexpr ctor DynArr(const DynArr& that) noex:
+        pub cexpr ctor DynArr(const DynArr& that) noex:
             Base{BaseImpl{ nullptr }}
         {
             this->InsertBack(that);
@@ -130,7 +129,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// CopyOper.
         /// ----------------------------------------------------------------------------------------
-        cexpr fn operator =(const DynArr& that) noex -> DynArr&
+        pub cexpr fn operator =(const DynArr& that) noex -> DynArr&
         {
             this->Clear();
             this->InsertBack(that);
@@ -140,13 +139,13 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// MoveCtor.
         /// ----------------------------------------------------------------------------------------
-        cexpr ctor DynArr(DynArr&& that) noex:
+        pub cexpr ctor DynArr(DynArr&& that) noex:
             Base{BaseImpl{ MOVE(that) }} { }
 
         /// ----------------------------------------------------------------------------------------
         /// MoveOper.
         /// ----------------------------------------------------------------------------------------
-        cexpr fn operator =(DynArr&& that) noex -> DynArr&
+        pub cexpr fn operator =(DynArr&& that) noex -> DynArr&
         {
             DynArr tmp = MOVE(that);
             this->_Swap(tmp);
@@ -156,7 +155,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Dtor.
         /// ----------------------------------------------------------------------------------------
-        cexpr dtor DynArr() noex
+        pub cexpr dtor DynArr() noex
         {
             this->Clear();
             this->Release();
