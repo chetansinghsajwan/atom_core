@@ -4,24 +4,18 @@
 namespace Atom
 {
     template <tname T, usize BufSize, tname TAlloc>
-    class _BufArrImplBase : protected _DynArrImplBase<T, TAlloc>
+    class _BufArrImplBase: protected _DynArrImplBase<T, TAlloc>
     {
-    private:
-        using Base = _DynArrImplBase<T, TAlloc>;
+        pri using Base = _DynArrImplBase<T, TAlloc>;
+        pro using TElem = T;
+        pro using Base::Base;
 
-    public:
-        using TElem = T;
-
-    public:
-        using Base::Base;
-
-    protected:
-        cexpr auto _StackBuf() const -> const T*
+        pro cexpr fn _StackBuf() const -> const T*
         {
             return _stackBuf;
         }
 
-        cexpr auto _AllocMem(usize size) -> T*
+        pro cexpr fn _AllocMem(usize size) -> T*
         {
             if (BufSize <= size)
             {
@@ -31,7 +25,7 @@ namespace Atom
             return Base::_AllocMem(size);
         }
 
-        cexpr auto _DeallocMem(T* mem) -> void
+        pro cexpr fn _DeallocMem(T* mem) -> void
         {
             if (mem == _stackBuf)
             {
@@ -41,44 +35,41 @@ namespace Atom
             return Base::_DeallocMem(mem);
         }
 
-        cexpr auto _CalcCapGrowth(usize required) const noex -> usize
+        pro cexpr fn _CalcCapGrowth(usize required) const noex -> usize
         {
             // return Math::Max(_Count() + required, _Capacity() * 2);
             return required;
         }
 
-        using Base::_Count;
-        using Base::_Capacity;
+        pro using Base::_Count;
+        pro using Base::_Capacity;
 
-    protected:
-        T _stackBuf[BufSize];
+        pro T _stackBuf[BufSize];
     };
 
     template <tname T, usize bufSize, tname TAlloc>
     class BufArr: public _DynArrImplHelper<_BufArrImplBase<T, bufSize, TAlloc>>
     {
-        using Base = _DynArrImplHelper<_BufArrImplBase<T, bufSize, TAlloc>>;
-        using BaseImpl = _BufArrImplBase<T, bufSize, TAlloc>;
+        pri using Base = _DynArrImplHelper<_BufArrImplBase<T, bufSize, TAlloc>>;
+        pri using BaseImpl = _BufArrImplBase<T, bufSize, TAlloc>;
 
-    public:
-        using TElem = tname Base::TElem;
+        pub using TElem = tname Base::TElem;
 
-    public:
         /// ----------------------------------------------------------------------------------------
         /// DefCtor.
         /// ----------------------------------------------------------------------------------------
-        cexpr ctor BufArr() noex = default;
+        pub cexpr ctor BufArr() noex = default;
 
         /// ----------------------------------------------------------------------------------------
         /// NullCtor.
         /// ----------------------------------------------------------------------------------------
-        cexpr ctor BufArr(NullPtr) noex:
+        pub cexpr ctor BufArr(NullPtr) noex:
             Base{ nullptr } { }
 
         /// ----------------------------------------------------------------------------------------
         /// NullOper.
         /// ----------------------------------------------------------------------------------------
-        cexpr fn operator =(NullPtr) noex -> BufArr&
+        pub cexpr fn operator =(NullPtr) noex -> BufArr&
         {
             Clear();
             Release();
@@ -87,9 +78,9 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// ParamCtor for Range.
         /// ----------------------------------------------------------------------------------------
-        template <tname TRange>
+        pub template <tname TRange>
         requires RRangeOf<TRange, T>
-        cexpr ctor BufArr(TRange&& range) noex:
+        cexpr ctor BufArr(TRange rref range) noex:
             Base{ nullptr }
         {
             InsertBack(range);
@@ -98,7 +89,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// ParamOper for Range.
         /// ----------------------------------------------------------------------------------------
-        template <tname TRange>
+        pub template <tname TRange>
         requires RRangeOf<TRange, T>
         cexpr fn operator =(TRange&& range) noex -> BufArr&
         {
@@ -123,7 +114,7 @@ namespace Atom
         /// 
         /// @TODO: Same as CopyCtor.
         /// ----------------------------------------------------------------------------------------
-        cexpr fn operator =(const BufArr& that) noex -> BufArr&
+        pub cexpr fn operator =(const BufArr& that) noex -> BufArr&
         {
             Clear();
             InsertBack(that);
@@ -133,7 +124,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// MoveCtor.
         /// ----------------------------------------------------------------------------------------
-        cexpr ctor BufArr(BufArr&& that) noex:
+        pub cexpr ctor BufArr(BufArr&& that) noex:
             Base{ nullptr }
         {
             _Move(MOVE(that));
@@ -142,7 +133,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// TempMoveCtor.
         /// ----------------------------------------------------------------------------------------
-        template <usize thatBufSize>
+        pub template <usize thatBufSize>
         cexpr ctor BufArr(BufArr<TElem, thatBufSize, TAlloc>&& that) noex:
             Base{ nullptr }
         {
@@ -152,7 +143,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// MoveCtor for DynArr.
         /// ----------------------------------------------------------------------------------------
-        cexpr ctor BufArr(DynArr<TElem, TAlloc>&& that) noex:
+        pub cexpr ctor BufArr(DynArr<TElem, TAlloc>&& that) noex:
             Base{ nullptr }
         {
             BaseImpl::_Move(that);
@@ -161,7 +152,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// MoveOper.
         /// ----------------------------------------------------------------------------------------
-        cexpr fn operator =(BufArr&& that) noex -> BufArr&
+        pub cexpr fn operator =(BufArr&& that) noex -> BufArr&
         {
             Clear();
             _Move(MOVE(that));
@@ -170,7 +161,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// TempMoveOper.
         /// ----------------------------------------------------------------------------------------
-        template <usize thatBufSize>
+        pub template <usize thatBufSize>
         cexpr fn operator =(BufArr<TElem, thatBufSize, TAlloc>&& that) noex -> BufArr&
         {
             Clear();
@@ -180,7 +171,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// MoveOper for DynArr.
         /// ----------------------------------------------------------------------------------------
-        cexpr fn operator =(DynArr<TElem, TAlloc>&& that) noex -> BufArr&
+        pub cexpr fn operator =(DynArr<TElem, TAlloc>&& that) noex -> BufArr&
         {
             Clear();
             Release();
@@ -191,22 +182,20 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Dtor.
         /// ----------------------------------------------------------------------------------------
-        cexpr dtor BufArr() noex
+        pub cexpr dtor BufArr() noex
         {
             Clear();
             Release();
         }
 
-    public:
-        using Base::Clear;
-        using Base::Release;
-        using Base::InsertBack;
+        pub using Base::Clear;
+        pub using Base::Release;
+        pub using Base::InsertBack;
 
-    protected:
         /// ----------------------------------------------------------------------------------------
         /// @EXPECTS Empty().
         /// ----------------------------------------------------------------------------------------
-        template <usize thatBufSize>
+        pro template <usize thatBufSize>
         fn _Move(BufArr<TElem, thatBufSize, TAlloc>&& that)
         {
             if (that._Data() == that._StackBuf())
