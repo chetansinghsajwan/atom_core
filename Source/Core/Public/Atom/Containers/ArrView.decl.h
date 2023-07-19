@@ -36,26 +36,24 @@ namespace Atom
     template <tname T>
     class ArrView extends _ConstArrImplHelper<_ArrViewImplBase<T>>
     {
-    private:
-        using Base = _ConstArrImplHelper<_ArrViewImplBase<T>>;
-        using BaseImpl = _ArrViewImplBase<T>;
+        priv using Base = _ConstArrImplHelper<_ArrViewImplBase<T>>;
+        priv using BaseImpl = _ArrViewImplBase<T>;
 
-    public:
         /// ----------------------------------------------------------------------------------------
         /// DefCtor.
         /// ----------------------------------------------------------------------------------------
-        cexpr ctor ArrView() noex = default;
+        pub cexpr ctor ArrView() noex = default;
 
         /// ----------------------------------------------------------------------------------------
         /// NullCtor.
         /// ----------------------------------------------------------------------------------------
-        cexpr ctor ArrView(NullPtr) noex:
-            Base{BaseImpl{ nullptr }} { }
+        pub cexpr ctor ArrView(NullPtr) noex:
+            Base{ BaseImpl{ nullptr } } { }
 
         /// ----------------------------------------------------------------------------------------
         /// NullOper.
         /// ----------------------------------------------------------------------------------------
-        cexpr fn operator =(NullPtr) noex -> ArrView&
+        pub cexpr fn operator =(NullPtr) noex -> ArrView&
         {
             *this = ArrView(nullptr);
         }
@@ -63,15 +61,15 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// ParamCtor.
         /// ----------------------------------------------------------------------------------------
-        template <tname TRange>
+        pub template <tname TRange>
         requires RArrRangeOf<TRange, T>
         cexpr ctor ArrView(const TRange& range) noex:
-            Base{BaseImpl{ range.Data(), range.Count() }} { }
+            Base{ BaseImpl{ range.Data(), range.Count() } } { }
 
         /// ----------------------------------------------------------------------------------------
         /// ParamOper.
         /// ----------------------------------------------------------------------------------------
-        template <tname TRange>
+        pub template <tname TRange>
         requires RArrRangeOf<TRange, T>
         cexpr fn operator =(const TRange& range) noex -> ArrView&
         {
