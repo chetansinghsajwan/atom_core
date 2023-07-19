@@ -56,8 +56,8 @@ namespace Atom::Text
             return IterEnd();
         }
 
-        pro TImpl _impl;
-        pro TInput& _input;
+        prot TImpl _impl;
+        prot TInput& _input;
     };
 
     class _CharEncodingLazyConverterHelperIterEnd { };
@@ -132,7 +132,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pro fn _ProcessNextChar()
+        prot fn _ProcessNextChar()
         {
             if (_inIter == _inIterEnd)
             {
@@ -142,12 +142,12 @@ namespace Atom::Text
             _outRune = TImpl::ConvertChar(*_inIter);
         }
 
-        pro TImpl _impl;
-        pro TInIter _inIter;
-        pro TInIterEnd _inIterEnd;
+        prot TImpl _impl;
+        prot TInIter _inIter;
+        prot TInIterEnd _inIterEnd;
 
-        pro TInRune _inRune;
-        pro TOutRune _outRune;
+        prot TInRune _inRune;
+        prot TOutRune _outRune;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -156,7 +156,7 @@ namespace Atom::Text
     template <tname TImpl, tname TCharEncoding, tname TInput>
     class _CharEncodingLazyConverterHelper<TImpl, TCharEncoding, TCharEncoding, TInput>
     {
-        pri using TChar = BasicChar<TCharEncoding>;
+        priv using TChar = BasicChar<TCharEncoding>;
 
         pub cexpr ctor _CharEncodingLazyConverterHelper(TInput&& input) noex:
             _input{ input } { }
@@ -176,6 +176,6 @@ namespace Atom::Text
             return _input.HasNext();
         }
 
-        pro TInput _input;
+        prot TInput _input;
     };
 };

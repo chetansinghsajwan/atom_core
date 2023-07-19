@@ -191,7 +191,7 @@ namespace Atom
             _Destruct(range.Iter(), range.IterEnd());
         }
 
-        pri template <class TIter, class TIterEnd>
+        priv template <class TIter, class TIterEnd>
         cexpr fn _GetCount(TIter iter, TIterEnd iterEnd) const -> usize
         {
             if cexpr (RJumpIterPair<TIter, TIterEnd>)
@@ -205,7 +205,7 @@ namespace Atom
             return count;
         }
 
-        pri template <class TIter, class TIterEnd, tname T>
+        priv template <class TIter, class TIterEnd, tname T>
         cexpr fn _Fill(TIter iter, TIterEnd iterEnd, T&& val) const -> void
         {
             StdIterWrapForAtomIter stdIter{ iter };
@@ -214,7 +214,7 @@ namespace Atom
             std::fill(stdIter, stdIterEnd, fwd(val));
         }
 
-        pri template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
+        priv template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
         cexpr fn _FwdCopy(const TIter1 iter1, const TIterEnd1 iterEnd1,
             TIter2 iter2, TIterEnd2 iterEnd2) const -> void
         {
@@ -225,7 +225,7 @@ namespace Atom
             std::copy(stdIter1, stdIterEnd1, stdIter2);
         }
 
-        pri template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
+        priv template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
         cexpr fn _BwdCopy(const TIter1 iter1, const TIterEnd1 iterEnd1,
             TIter2 iter2, TIterEnd2 iterEnd2) const -> void
         {
@@ -236,7 +236,7 @@ namespace Atom
             std::copy_backward(stdIter1, stdIterEnd1, stdIter2);
         }
 
-        pri template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
+        priv template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
         cexpr fn _FwdMove(TIter1 iter1, const TIterEnd1 iterEnd1,
             TIter2 iter2, TIterEnd2 iterEnd2) const -> void
         {
@@ -247,7 +247,7 @@ namespace Atom
             std::move(stdIter1, stdIterEnd1, stdIter2);
         }
 
-        pri template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
+        priv template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
         cexpr fn _BwdMove(TIter1 iter1, const TIterEnd1 iterEnd1,
             TIter2 iter2, TIterEnd2 iterEnd2) const -> void
         {
@@ -258,7 +258,7 @@ namespace Atom
             std::move_backward(stdIter1, stdIterEnd1, stdIter2);
         }
 
-        pri template <class TIter, class TIterEnd>
+        priv template <class TIter, class TIterEnd>
         cexpr fn _FwdShift(TIter iter, TIterEnd iterEnd, usize steps) const -> void
         {
             if cexpr (RArrIterPair<TIter, TIterEnd>)
@@ -273,7 +273,7 @@ namespace Atom
             std::shift_right(stdIter, stdIterEnd, steps);
         }
 
-        pri template <class TIter, class TIterEnd>
+        priv template <class TIter, class TIterEnd>
         cexpr fn _BwdShift(TIter iter, TIterEnd iterEnd, usize steps) const -> void
         {
             if cexpr (RArrIterPair<TIter, TIterEnd>)
@@ -288,7 +288,7 @@ namespace Atom
             std::shift_left(stdIter, stdIterEnd, steps);
         }
 
-        pri template <class TIter, class TIterEnd>
+        priv template <class TIter, class TIterEnd>
         cexpr fn _BwdRotate(TIter iter, TIterEnd iterEnd, usize steps) const -> void
         {
             if cexpr (RArrIterPair<TIter, TIterEnd>)
@@ -303,7 +303,7 @@ namespace Atom
             std::rotate(stdIter, stdIter + steps, stdIterEnd);
         }
 
-        pri template <class TIter, class TIterEnd>
+        priv template <class TIter, class TIterEnd>
         cexpr fn _FwdRotate(TIter iter, TIterEnd iterEnd, isize steps) const -> void
         {
             if cexpr (RArrIterPair<TIter, TIterEnd>)
@@ -318,7 +318,7 @@ namespace Atom
             std::rotate(stdIter, stdIterEnd - steps, stdIterEnd);
         }
 
-        pri template <class TIter, class TIterEnd>
+        priv template <class TIter, class TIterEnd>
         cexpr fn _Destruct(TIter iter, TIterEnd iterEnd) const -> void
         {
             if cexpr (RArrIterPair<TIter, TIterEnd>)

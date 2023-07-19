@@ -272,37 +272,37 @@ namespace Atom
             }
         }
 
-        pri cexpr fn _Fill(MemPtr mem, usize count, MemUnit val) const noex -> void
+        priv cexpr fn _Fill(MemPtr mem, usize count, MemUnit val) const noex -> void
         {
             std::fill(mem, mem + count, val);
         }
     
-        pri cexpr fn _FwdCopy(const MemPtr src, usize count, MemPtr dest) const noex -> void
+        priv cexpr fn _FwdCopy(const MemPtr src, usize count, MemPtr dest) const noex -> void
         {
             std::copy(src, src + count, dest);
         }
 
-        pri cexpr fn _BwdCopy(const MemPtr src, usize count, MemPtr dest) const noex -> void
+        priv cexpr fn _BwdCopy(const MemPtr src, usize count, MemPtr dest) const noex -> void
         {
             std::copy_backward(src, src + count, dest);
         }
 
-        pri cexpr fn _ShiftFwd(const MemPtr mem, usize memCount, usize steps) const noex -> void
+        priv cexpr fn _ShiftFwd(const MemPtr mem, usize memCount, usize steps) const noex -> void
         {
             std::shift_right(mem, mem + memCount, steps);
         }
 
-        pri cexpr fn _ShiftBwd(const MemPtr mem, usize memCount, usize steps) const noex -> void
+        priv cexpr fn _ShiftBwd(const MemPtr mem, usize memCount, usize steps) const noex -> void
         {
             std::shift_left(mem, mem + memCount, steps);
         }
 
-        pri cexpr fn _RotateFwd(const MemPtr mem, usize memCount, usize offset) const noex -> void
+        priv cexpr fn _RotateFwd(const MemPtr mem, usize memCount, usize offset) const noex -> void
         {
             std::rotate(mem, mem + offset, mem + memCount);
         }
 
-        pri cexpr fn _RotateBwd(const MemPtr mem, usize memCount, usize offset) const noex -> void
+        priv cexpr fn _RotateBwd(const MemPtr mem, usize memCount, usize offset) const noex -> void
         {
             std::rotate(mem, mem + offset, mem + memCount);
         }

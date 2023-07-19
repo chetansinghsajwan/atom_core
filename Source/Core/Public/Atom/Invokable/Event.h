@@ -17,7 +17,7 @@ namespace Atom
             return _typeInfo;
         }
 
-        pri const TypeInfo& _typeInfo;
+        priv const TypeInfo& _typeInfo;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -26,7 +26,7 @@ namespace Atom
     template <tname... TArgs>
     class IEvent
     {
-        pro using _TSignature = void(TArgs...);
+        prot using _TSignature = void(TArgs...);
 
         /// ----------------------------------------------------------------------------------------
         /// Calls Subscribe(fwd(listener));
@@ -75,7 +75,7 @@ namespace Atom
     template <tname... TArgs>
     class EventSource extends IEvent<TArgs...>
     {
-        pro using _TSignature = tname IEvent<TArgs...>::_TSignature;
+        prot using _TSignature = tname IEvent<TArgs...>::_TSignature;
         
         /// ----------------------------------------------------------------------------------------
         /// 
@@ -109,7 +109,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pro fn _AddListener(InvokableBox<_TSignature>&& invokable) -> EventKey
+        prot fn _AddListener(InvokableBox<_TSignature>&& invokable) -> EventKey
         {
             EventKey key = invokable.GetInvokableType();
 
@@ -120,7 +120,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pro fn _RemoveListener(EventKey key) noex -> usize
+        prot fn _RemoveListener(EventKey key) noex -> usize
         {
             return RangeModifier().RemoveIf(_listeners, [&](const auto& listener)
                 {
@@ -131,7 +131,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pro fn _CountListeners(EventKey key) noex -> usize
+        prot fn _CountListeners(EventKey key) noex -> usize
         {
             usize count = 0;
             for (auto& listener : _listeners)
@@ -145,11 +145,11 @@ namespace Atom
             return count;
         }
 
-        pro using TListener = InvokableBox<_TSignature>;
+        prot using TListener = InvokableBox<_TSignature>;
 
         /// ----------------------------------------------------------------------------------------
         /// List of event listeners.
         /// ----------------------------------------------------------------------------------------
-        pro DynArr<TListener> _listeners;
+        prot DynArr<TListener> _listeners;
     };
 }

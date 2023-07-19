@@ -4,18 +4,18 @@
 namespace Atom
 {
     template <tname T, usize BufSize, tname TAlloc>
-    class _BufArrImplBase: protected _DynArrImplBase<T, TAlloc>
+    class _BufArrImplBase extends _DynArrImplBase<T, TAlloc>
     {
-        pri using Base = _DynArrImplBase<T, TAlloc>;
-        pro using TElem = T;
-        pro using Base::Base;
+        priv using Base = _DynArrImplBase<T, TAlloc>;
+        prot using TElem = T;
+        prot using Base::Base;
 
-        pro cexpr fn _StackBuf() const -> const T*
+        prot cexpr fn _StackBuf() const -> const T*
         {
             return _stackBuf;
         }
 
-        pro cexpr fn _AllocMem(usize size) -> T*
+        prot cexpr fn _AllocMem(usize size) -> T*
         {
             if (BufSize <= size)
             {
@@ -25,7 +25,7 @@ namespace Atom
             return Base::_AllocMem(size);
         }
 
-        pro cexpr fn _DeallocMem(T* mem) -> void
+        prot cexpr fn _DeallocMem(T* mem) -> void
         {
             if (mem == _stackBuf)
             {
@@ -35,23 +35,23 @@ namespace Atom
             return Base::_DeallocMem(mem);
         }
 
-        pro cexpr fn _CalcCapGrowth(usize required) const noex -> usize
+        prot cexpr fn _CalcCapGrowth(usize required) const noex -> usize
         {
             // return Math::Max(_Count() + required, _Capacity() * 2);
             return required;
         }
 
-        pro using Base::_Count;
-        pro using Base::_Capacity;
+        prot using Base::_Count;
+        prot using Base::_Capacity;
 
-        pro T _stackBuf[BufSize];
+        prot T _stackBuf[BufSize];
     };
 
     template <tname T, usize bufSize, tname TAlloc>
-    class BufArr: public _DynArrImplHelper<_BufArrImplBase<T, bufSize, TAlloc>>
+    class BufArr extends _DynArrImplHelper<_BufArrImplBase<T, bufSize, TAlloc>>
     {
-        pri using Base = _DynArrImplHelper<_BufArrImplBase<T, bufSize, TAlloc>>;
-        pri using BaseImpl = _BufArrImplBase<T, bufSize, TAlloc>;
+        priv using Base = _DynArrImplHelper<_BufArrImplBase<T, bufSize, TAlloc>>;
+        priv using BaseImpl = _BufArrImplBase<T, bufSize, TAlloc>;
 
         pub using TElem = tname Base::TElem;
 
@@ -80,7 +80,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         pub template <tname TRange>
         requires RRangeOf<TRange, T>
-        cexpr ctor BufArr(TRange rref range) noex:
+        cexpr ctor BufArr(TRange&& range) noex:
             Base{ nullptr }
         {
             InsertBack(range);
@@ -195,7 +195,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// @EXPECTS Empty().
         /// ----------------------------------------------------------------------------------------
-        pro template <usize thatBufSize>
+        prot template <usize thatBufSize>
         fn _Move(BufArr<TElem, thatBufSize, TAlloc>&& that)
         {
             if (that._Data() == that._StackBuf())

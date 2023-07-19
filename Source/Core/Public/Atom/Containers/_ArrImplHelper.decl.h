@@ -10,7 +10,7 @@ namespace Atom
     //// Aliases
     //// -------------------------------------------------------------------------------------------
 
-        pri using Base = _ConstArrImplHelper<TImpl>;
+        priv using Base = _ConstArrImplHelper<TImpl>;
 
         pub using TElem = tname Base::TElem;
         pub using TIter = tname Base::TIter;
@@ -119,11 +119,11 @@ namespace Atom
     //// Implementations
     //// -------------------------------------------------------------------------------------------
 
-        pro using Base::_Data;
-        pro using Base::_Count;
-        pro using Base::_ValidateIndexForAccess;
+        prot using Base::_Data;
+        prot using Base::_Count;
+        prot using Base::_ValidateIndexForAccess;
 
-        pro cexpr fn _Data() noex -> TElem*
+        prot cexpr fn _Data() noex -> TElem*
         {
             return TImpl::_Data();
         }

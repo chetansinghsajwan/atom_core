@@ -92,8 +92,8 @@ namespace Atom
     template <tname T, tname TAlloc = DefaultMemAllocator>
     class DynArr extends _DynArrImplHelper<_DynArrImplBase<T, TAlloc>>
     {
-        pri using Base = _DynArrImplHelper<_DynArrImplBase<T, TAlloc>>;
-        pri using BaseImpl = _DynArrImplBase<T, TAlloc>;
+        priv using Base = _DynArrImplHelper<_DynArrImplBase<T, TAlloc>>;
+        priv using BaseImpl = _DynArrImplBase<T, TAlloc>;
 
         /// ----------------------------------------------------------------------------------------
         /// DefCtor.

@@ -12,7 +12,7 @@ namespace Atom::Engine
 
         pub virtual fn OnWindowEvent(const SWindowEvent& event) -> void;
 
-        pro Window* _window;
+        prot Window* _window;
     };
 
     extern Application* CreateApplication();

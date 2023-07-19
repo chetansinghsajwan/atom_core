@@ -69,8 +69,8 @@ namespace Atom
             return &*_iter;
         }
 
-        pro TIter _iter;
-        pro TIterEnd _end;
+        prot TIter _iter;
+        prot TIterEnd _end;
     };
 
     template <tname TIter, tname TIterEnd>

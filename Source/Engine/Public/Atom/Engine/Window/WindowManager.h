@@ -17,6 +17,6 @@ namespace Atom::Engine
 
         pub static fn CloseWindow(Window* window) -> void;
 
-        pro static usize s_windowCount;
+        prot static usize s_windowCount;
     };
 }

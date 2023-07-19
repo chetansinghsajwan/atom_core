@@ -58,7 +58,7 @@ TEST_CASE("Atom/Invokable/InvokableBox")
                 return *_capturedValue;
             }
 
-            pri int* _capturedValue;
+            priv int* _capturedValue;
         };
 
         int capturedValue = 10;

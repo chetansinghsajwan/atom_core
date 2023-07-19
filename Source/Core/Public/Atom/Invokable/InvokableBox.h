@@ -195,7 +195,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pro template <tname TInvokable>
+        prot template <tname TInvokable>
         requires RInvokable<TInvokable, TResult(TArgs...)>
         fn _SetInvoker()
         {
@@ -205,13 +205,13 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pro fn _InvokeInvokable(TArgs&&... args) -> TResult
+        prot fn _InvokeInvokable(TArgs&&... args) -> TResult
         {
             return _invoker.Invoke(fwd(args)...);
         }
 
-        pro using TInvoker = Private::Invoker<TResult, TArgs...>;
+        prot using TInvoker = Private::Invoker<TResult, TArgs...>;
 
-        pro TInvoker _invoker;
+        prot TInvoker _invoker;
     };
 }

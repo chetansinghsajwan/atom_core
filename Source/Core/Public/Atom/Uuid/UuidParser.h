@@ -23,7 +23,7 @@ namespace Atom
             }
         }
 
-        pri template <tname TIter>
+        priv template <tname TIter>
         cexpr fn _ParseCounted(TIter it, usize itCount) const noex -> Uuid
         {
             if (itCount != 36)
@@ -64,7 +64,7 @@ namespace Atom
             return uuid;
         }
 
-        pri template <tname TIter, tname TIterEnd>
+        priv template <tname TIter, tname TIterEnd>
         cexpr fn _ParseUncounted(TIter it, TIterEnd itEnd) const noex -> Uuid
         {
             Uuid uuid;         // output result

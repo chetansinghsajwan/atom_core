@@ -56,11 +56,11 @@ namespace Atom::Engine
             return _glfwWindow;
         }
 
-        pro GLFWwindow* _glfwWindow;
-        pro SWindowCoords _windowPos;
-        pro SWindowCoords _windowSize;
-        pro bool _windowVSync;
+        prot GLFWwindow* _glfwWindow;
+        prot SWindowCoords _windowPos;
+        prot SWindowCoords _windowSize;
+        prot bool _windowVSync;
 
-        pro EventSource<const SWindowEvent&> _windowEventSource;
+        prot EventSource<const SWindowEvent&> _windowEventSource;
     };
 }

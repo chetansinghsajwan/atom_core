@@ -141,8 +141,8 @@ namespace Atom::Ex::Internal
         requires RDerivedFrom<TEx, Exception>
         noret fn operator << (TEx&& ex);
 
-        pro ExceptionSource _src;
-        pro StackTrace _stackTrace;
+        prot ExceptionSource _src;
+        prot StackTrace _stackTrace;
     };
 }
 
