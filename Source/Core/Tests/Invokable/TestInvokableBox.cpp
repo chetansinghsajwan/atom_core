@@ -15,8 +15,8 @@ TEST_CASE("Atom/Invokable/InvokableBox")
             pub ctor NotMoveAssignable(const NotMoveAssignable& other) = default;
             pub ctor NotMoveAssignable(NotMoveAssignable&& other) = default;
 
-            pub fn operator = (const NotMoveAssignable& other) -> NotMoveAssignable& = delete;
-            pub fn operator = (NotMoveAssignable&& other) -> NotMoveAssignable& = delete;
+            pub fn op=(const NotMoveAssignable& other) -> NotMoveAssignable& = delete;
+            pub fn op=(NotMoveAssignable&& other) -> NotMoveAssignable& = delete;
         };
 
         InvokableBox<NotMoveAssignable(int)> invokable = [](int value)
@@ -53,7 +53,7 @@ TEST_CASE("Atom/Invokable/InvokableBox")
 
             pub dtor Lambda() { }
 
-            pub fn operator() () -> int
+            pub fn op()() -> int
             {
                 return *_capturedValue;
             }

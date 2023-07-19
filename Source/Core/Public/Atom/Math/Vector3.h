@@ -10,27 +10,27 @@ namespace Atom
         pub float z;
     };
 
-    cexpr fn operator + (SVector3 lhs, SVector3 rhs) noex -> SVector3
+    cexpr fn op+(SVector3 lhs, SVector3 rhs) noex -> SVector3
     {
         return { lhs.x + rhs.x, lhs.y + rhs.y };
     }
 
-    cexpr fn operator - (SVector3 lhs, SVector3 rhs) noex -> SVector3
+    cexpr fn op-(SVector3 lhs, SVector3 rhs) noex -> SVector3
     {
         return { lhs.x - rhs.x, lhs.y - rhs.y };
     }
 
-    cexpr fn operator * (SVector3 lhs, float scalar) noex -> SVector3
+    cexpr fn op*(SVector3 lhs, float scalar) noex -> SVector3
     {
         return { lhs.x * scalar, lhs.y * scalar };
     }
 
-    cexpr fn operator / (SVector3 lhs, float scalar) noex -> SVector3
+    cexpr fn op/(SVector3 lhs, float scalar) noex -> SVector3
     {
         return { lhs.x / scalar, lhs.y / scalar };
     }
 
-    cexpr fn operator += (SVector3& lhs, const SVector3& rhs) noex -> SVector3&
+    cexpr fn op+=(SVector3& lhs, const SVector3& rhs) noex -> SVector3&
     {
         lhs.x += rhs.x;
         lhs.y += rhs.y;
@@ -38,7 +38,7 @@ namespace Atom
         return lhs;
     }
 
-    cexpr fn operator -= (SVector3& lhs, const SVector3& rhs) noex -> SVector3&
+    cexpr fn op-=(SVector3& lhs, const SVector3& rhs) noex -> SVector3&
     {
         lhs.x -= rhs.x;
         lhs.y -= rhs.y;
@@ -46,7 +46,7 @@ namespace Atom
         return lhs;
     }
 
-    cexpr fn operator *= (SVector3& lhs, float scalar) noex -> SVector3&
+    cexpr fn op*=(SVector3& lhs, float scalar) noex -> SVector3&
     {
         lhs.x *= scalar;
         lhs.y *= scalar;
@@ -54,7 +54,7 @@ namespace Atom
         return lhs;
     }
 
-    cexpr fn operator /= (SVector3& lhs, float scalar) noex -> SVector3&
+    cexpr fn op/=(SVector3& lhs, float scalar) noex -> SVector3&
     {
         lhs.x /= scalar;
         lhs.y /= scalar;
@@ -62,34 +62,34 @@ namespace Atom
         return lhs;
     }
 
-    cexpr fn operator == (SVector3 lhs, SVector3 rhs) noex -> bool
+    cexpr fn op==(SVector3 lhs, SVector3 rhs) noex -> bool
     {
         return Math::IsApproximatelyZero(lhs.x, rhs.x) &&
             Math::IsApproximatelyZero(lhs.y, rhs.y) &&
             Math::IsApproximatelyZero(lhs.z, rhs.z);
     }
 
-    cexpr fn operator != (SVector3 lhs, SVector3 rhs) noex -> bool
+    cexpr fn op!=(SVector3 lhs, SVector3 rhs) noex -> bool
     {
         return !(lhs == rhs);
     }
 
-    cexpr fn operator > (SVector3 lhs, SVector3 rhs) noex -> bool
+    cexpr fn op>(SVector3 lhs, SVector3 rhs) noex -> bool
     {
         return (lhs.x > rhs.x) && (lhs.y > rhs.y) && (lhs.z > rhs.z);
     }
 
-    cexpr fn operator < (SVector3 lhs, SVector3 rhs) noex -> bool
+    cexpr fn op<(SVector3 lhs, SVector3 rhs) noex -> bool
     {
         return (lhs.x < rhs.x) && (lhs.y < rhs.y) && (lhs.z < rhs.z);
     }
 
-    cexpr fn operator >= (SVector3 lhs, SVector3 rhs) noex -> bool
+    cexpr fn op>=(SVector3 lhs, SVector3 rhs) noex -> bool
     {
         return (lhs.x >= rhs.x) && (lhs.y >= rhs.y) && (lhs.z >= rhs.z);
     }
 
-    cexpr fn operator <= (SVector3 lhs, SVector3 rhs) noex -> bool
+    cexpr fn op<=(SVector3 lhs, SVector3 rhs) noex -> bool
     {
         return (lhs.x <= rhs.x) && (lhs.y <= rhs.y) && (lhs.z <= rhs.z);
     }

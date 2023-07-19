@@ -37,21 +37,21 @@ namespace Atom::Internal
 
         pub template <tname TEx>
         requires RDerivedFrom<TEx, Exception>
-        noret void operator << (TEx&& ex)
+        noret void op<<(TEx&& ex)
         {
             done = true;
 
-            Thrower::operator << (fwd(ex));
+            Thrower::op<<(fwd(ex));
         }
 
         pub template <tname TArg>
         requires RNotDerivedFrom<TArg, Exception>
-        noret void operator << (TArg&& arg)
+        noret void op<<(TArg&& arg)
         {
             done = true;
 
             throw 0;
-            // Thrower::operator<< AssertException(fwd(arg), assertExpr);
+            // Thrower::op<<AssertException(fwd(arg), assertExpr);
         }
 
         pub bool done = false;

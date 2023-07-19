@@ -86,7 +86,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// Get the current char.
         /// ----------------------------------------------------------------------------------------
-        pub cexpr fn operator* () noex -> TOutChar&
+        pub cexpr fn op*() noex -> TOutChar&
         {
             return _out[_outIndex];
         }
@@ -94,7 +94,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// Advances the iter.
         /// ----------------------------------------------------------------------------------------
-        pub cexpr fn operator++ () -> TThis&
+        pub cexpr fn op++() -> TThis&
         {
             if (_outIndex == -1)
             {
@@ -108,7 +108,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// Will be removed in CPP2;
         /// ----------------------------------------------------------------------------------------
-        pub cexpr fn operator++ (int) -> TThis&
+        pub cexpr fn op++(int) -> TThis&
         {
             return ++(*this);
         }
@@ -116,7 +116,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// Checks if the iter has reached its end.
         /// ----------------------------------------------------------------------------------------
-        pub cexpr fn operator== (TIterEnd end) const noex -> bool
+        pub cexpr fn op==(TIterEnd end) const noex -> bool
         {
             return _outIndex > 0 || _input.HasNext();
         }
@@ -124,7 +124,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// Will be removed in CPP2;
         /// ----------------------------------------------------------------------------------------
-        pub cexpr fn operator!= (TIterEnd end) const noex -> bool
+        pub cexpr fn op!=(TIterEnd end) const noex -> bool
         {
             return !(*this == end);
         }

@@ -59,17 +59,17 @@ namespace Atom
         {
             class _OutIterWrap
             {
-                pub fn operator++ (int) -> _OutIterWrap&
+                pub fn op++(int) -> _OutIterWrap&
                 {
                     return *this;
                 }
 
-                pub fn operator* () -> _OutIterWrap&
+                pub fn op*() -> _OutIterWrap&
                 {
                     return *this;
                 }
 
-                pub fn operator= (Char ch) -> _OutIterWrap&
+                pub fn op=(Char ch) -> _OutIterWrap&
                 {
                     *out+= ch;
                     return *this;

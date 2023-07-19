@@ -24,6 +24,7 @@
 #define pub public:
 #define prot protected:
 #define priv private:
+#define op operator
 
 // #define sassert(...) static_assert(__VA_ARGS__)
 // #define scast(...) static_cast(__VA_ARGS__)
@@ -31,7 +32,6 @@
 // #define rcast(...) static_cast(__VA_ARGS__)
 // #define ccast(...) static_cast(__VA_ARGS__)
 
-// #define op operator
 // #define use using
 // #define var auto
 // #define let const auto

@@ -33,7 +33,7 @@ namespace Atom
         pub usize count;
     };
 
-    cexpr fn operator ==(const MemBlk& lhs, NullPtr) noex -> bool
+    cexpr fn op==(const MemBlk& lhs, NullPtr) noex -> bool
     {
         return lhs.mem == nullptr && lhs.count > 0;
     }

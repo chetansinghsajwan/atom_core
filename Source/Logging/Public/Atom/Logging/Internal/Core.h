@@ -1,4 +1,5 @@
 #pragma once
+#include "Atom/Core.h"
 #include "Atom/TTI.h"
 #include "Atom/Str.h"
 

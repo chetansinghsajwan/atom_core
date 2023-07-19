@@ -139,7 +139,7 @@ namespace Atom::Ex::Internal
 
         pub template <tname TEx>
         requires RDerivedFrom<TEx, Exception>
-        noret fn operator << (TEx&& ex);
+        noret fn op<<(TEx&& ex);
 
         prot ExceptionSource _src;
         prot StackTrace _stackTrace;

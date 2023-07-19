@@ -32,8 +32,8 @@ namespace Atom
     {
         pub static const Uuid Null;
 
-        pub cexpr fn operator == (const Uuid& other) const noex -> bool = default;
-        pub cexpr fn operator != (const Uuid& other) const noex -> bool = default;
+        pub cexpr fn op==(const Uuid& other) const noex -> bool = default;
+        pub cexpr fn op!=(const Uuid& other) const noex -> bool = default;
 
         pub StaArr<byte, 16> bytes;
     };

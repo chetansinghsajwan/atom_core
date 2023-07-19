@@ -13,7 +13,7 @@ namespace Atom::Engine
         pub int y;
     };
 
-    cexpr fn operator - (const SWindowCoords& lhs, const SWindowCoords& rhs) noex -> SWindowCoords
+    cexpr fn op-(const SWindowCoords& lhs, const SWindowCoords& rhs) noex -> SWindowCoords
     {
         return { lhs.x - rhs.x, lhs.y - rhs.y };
     }

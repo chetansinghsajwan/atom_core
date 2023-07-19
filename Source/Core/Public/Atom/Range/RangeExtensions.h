@@ -49,7 +49,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <tname TRange1, tname TRange2>
     requires RRange<TRange1> && RRange<TRange2>
-    cexpr fn operator ==(const TRange1& range1, const TRange2& range2) noex -> bool
+    cexpr fn op==(const TRange1& range1, const TRange2& range2) noex -> bool
     {
         return RangeComparer().AreEqual(range1, range2);
     }
@@ -59,7 +59,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <tname TRange1, tname TRange2>
     requires RRange<TRange1> && RRange<TRange2>
-    cexpr fn operator !=(const TRange1& range1, const TRange2& range2) noex -> bool
+    cexpr fn op!=(const TRange1& range1, const TRange2& range2) noex -> bool
     {
         return !RangeComparer().AreEqual(range1, range2);
     }

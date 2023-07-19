@@ -129,7 +129,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// CopyOper.
         /// ----------------------------------------------------------------------------------------
-        pub cexpr fn operator =(const DynArr& that) noex -> DynArr&
+        pub cexpr fn op=(const DynArr& that) noex -> DynArr&
         {
             this->Clear();
             this->InsertBack(that);
@@ -145,7 +145,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// MoveOper.
         /// ----------------------------------------------------------------------------------------
-        pub cexpr fn operator =(DynArr&& that) noex -> DynArr&
+        pub cexpr fn op=(DynArr&& that) noex -> DynArr&
         {
             DynArr tmp = MOVE(that);
             this->_Swap(tmp);

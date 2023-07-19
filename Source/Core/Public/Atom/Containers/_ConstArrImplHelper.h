@@ -14,7 +14,7 @@ namespace Atom
     }
 
     template <tname TImpl>
-    cexpr fn _ConstArrImplHelper<TImpl>::operator [](usize index) const noex -> const TElem&
+    cexpr fn _ConstArrImplHelper<TImpl>::op[](usize index) const noex -> const TElem&
     {
         ATOM_DEBUG_EXPECTS(_ValidateIndexForAccess(index)) << IndexOutOfRangeException(
             ATOM_TEXT("{index} was out of range[{0}, {1}]."), index, 0, _Count() - 1);

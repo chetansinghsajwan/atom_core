@@ -49,7 +49,7 @@ namespace Atom
         /// 
         /// @TIME_COMPLEXITY Constant.
         /// ----------------------------------------------------------------------------------------
-        cexpr fn operator [](usize index) const noex -> const TElem&;
+        cexpr fn op[](usize index) const noex -> const TElem&;
 
         /// ----------------------------------------------------------------------------------------
         /// Access first element.

@@ -14,7 +14,7 @@ namespace Atom
     }
 
     template <tname TImpl>
-    cexpr fn _ArrImplHelper<TImpl>::operator [](usize index) noex -> TElem&
+    cexpr fn _ArrImplHelper<TImpl>::op[](usize index) noex -> TElem&
     {
         ATOM_DEBUG_EXPECTS(_ValidateIndexForAccess(index)) << IndexOutOfRangeException(
             ATOM_TEXT("{index} was out of range[{0}, {1}]."), index, 0, _Count() - 1);

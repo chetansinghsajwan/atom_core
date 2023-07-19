@@ -33,7 +33,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         pub template <tname TInvokable>
         requires RInvokable<TInvokable, _TSignature>
-        fn operator += (TInvokable&& listener) noex -> EventKey
+        fn op+=(TInvokable&& listener) noex -> EventKey
         {
             return Subscribe(fwd(listener));
         }
@@ -41,7 +41,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Calls Unsubscribe(key);
         /// ----------------------------------------------------------------------------------------
-        pub fn operator -= (EventKey key) noex -> bool
+        pub fn op-=(EventKey key) noex -> bool
         {
             return Unsubscribe(key);
         }

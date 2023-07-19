@@ -1,7 +1,13 @@
 #pragma once
-#include "GLFW/glfw3.h"
-#include "Atom/Engine/Window/WindowManager.h"
 
+/// # To Do
+/// 
+/// - Refactor this.
+#undef op
+#include "GLFW/glfw3.h"
+#define op operator
+
+#include "Atom/Engine/Window/WindowManager.h"
 #include "Atom/Math.h"
 
 namespace Atom::Engine

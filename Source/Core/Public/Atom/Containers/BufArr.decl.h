@@ -69,7 +69,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// NullOper.
         /// ----------------------------------------------------------------------------------------
-        pub cexpr fn operator =(NullPtr) noex -> BufArr&
+        pub cexpr fn op=(NullPtr) noex -> BufArr&
         {
             Clear();
             Release();
@@ -91,7 +91,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         pub template <tname TRange>
         requires RRangeOf<TRange, T>
-        cexpr fn operator =(TRange&& range) noex -> BufArr&
+        cexpr fn op=(TRange&& range) noex -> BufArr&
         {
             Clear();
             InsertBack(range);
@@ -114,7 +114,7 @@ namespace Atom
         /// 
         /// @TODO: Same as CopyCtor.
         /// ----------------------------------------------------------------------------------------
-        pub cexpr fn operator =(const BufArr& that) noex -> BufArr&
+        pub cexpr fn op=(const BufArr& that) noex -> BufArr&
         {
             Clear();
             InsertBack(that);
@@ -152,7 +152,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// MoveOper.
         /// ----------------------------------------------------------------------------------------
-        pub cexpr fn operator =(BufArr&& that) noex -> BufArr&
+        pub cexpr fn op=(BufArr&& that) noex -> BufArr&
         {
             Clear();
             _Move(MOVE(that));
@@ -162,7 +162,7 @@ namespace Atom
         /// TempMoveOper.
         /// ----------------------------------------------------------------------------------------
         pub template <usize thatBufSize>
-        cexpr fn operator =(BufArr<TElem, thatBufSize, TAlloc>&& that) noex -> BufArr&
+        cexpr fn op=(BufArr<TElem, thatBufSize, TAlloc>&& that) noex -> BufArr&
         {
             Clear();
             _Move(MOVE(that));
@@ -171,7 +171,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// MoveOper for DynArr.
         /// ----------------------------------------------------------------------------------------
-        pub cexpr fn operator =(DynArr<TElem, TAlloc>&& that) noex -> BufArr&
+        pub cexpr fn op=(DynArr<TElem, TAlloc>&& that) noex -> BufArr&
         {
             Clear();
             Release();

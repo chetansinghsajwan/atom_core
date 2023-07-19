@@ -89,14 +89,14 @@ namespace Atom
 
     template <tname TImpl>
     template <tname T2, tname Req>
-    cexpr fn _DynArrImplHelper<TImpl>::operator +=(T2&& el) -> TMutIter
+    cexpr fn _DynArrImplHelper<TImpl>::op+=(T2&& el) -> TMutIter
     {
         return InsertBack(fwd(el));
     }
 
     template <tname TImpl>
     template <tname TRange, tname Req>
-    cexpr fn _DynArrImplHelper<TImpl>::operator +=(const TRange& range) -> TMutIter
+    cexpr fn _DynArrImplHelper<TImpl>::op+=(const TRange& range) -> TMutIter
     {
         return InsertBack(range);
     }

@@ -109,7 +109,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// NullAssignmentOperator.
         /// ----------------------------------------------------------------------------------------
-        fn operator = (NullType null) -> ObjectBox&
+        fn op=(NullType null) -> ObjectBox&
         {
             _DisposeObject();
             return *this;
@@ -118,7 +118,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// NullEqualityOperator.
         /// ----------------------------------------------------------------------------------------
-        fn operator == (NullType null) const noex -> bool
+        fn op==(NullType null) const noex -> bool
         {
             return _HasObject();
         }
@@ -138,7 +138,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <tname T>
         requires RObject<T>
-        fn operator = (T&& object) -> ObjectBox&
+        fn op=(T&& object) -> ObjectBox&
         {
             _SetObject(fwd(object));
             return *this;
@@ -168,7 +168,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// CopyAssignmentOperator.
         /// ----------------------------------------------------------------------------------------
-        fn operator = (const ObjectBox& other) -> ObjectBox&
+        fn op=(const ObjectBox& other) -> ObjectBox&
             requires Copyable
         {
             _CopyBox(other);
@@ -181,7 +181,7 @@ namespace Atom
         template <bool OtherMovable, bool OtherAllowNonMovableObject, 
             usize OtherStackSize, tname TOtherMemAllocator>
         requires Copyable && ROtherBox<Copyable, OtherMovable, OtherAllowNonMovableObject>
-        fn operator = (const ObjectBox<Copyable, OtherMovable, OtherAllowNonMovableObject,
+        fn op=(const ObjectBox<Copyable, OtherMovable, OtherAllowNonMovableObject,
             OtherStackSize, TOtherMemAllocator>& other) -> ObjectBox&
         {
             _CopyBox(other);
@@ -212,7 +212,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// MoveAssignmentOperator.
         /// ----------------------------------------------------------------------------------------
-        fn operator = (ObjectBox&& other) -> ObjectBox&
+        fn op=(ObjectBox&& other) -> ObjectBox&
             requires Movable
         {
             _MoveBox(MOVE(other));
@@ -225,7 +225,7 @@ namespace Atom
         template <bool OtherCopyable, bool OtherMovable, bool OtherAllowNonMovableObject,
             usize OtherStackSize, tname TOtherMemAllocator>
         requires Movable && ROtherBox<OtherCopyable, OtherMovable, OtherAllowNonMovableObject>
-        fn operator = (ObjectBox<OtherCopyable, OtherMovable, OtherAllowNonMovableObject,
+        fn op=(ObjectBox<OtherCopyable, OtherMovable, OtherAllowNonMovableObject,
             OtherStackSize, TOtherMemAllocator>&& other) -> ObjectBox&
         {
             _MoveBox(MOVE(other));

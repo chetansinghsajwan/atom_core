@@ -53,7 +53,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// NullOper.
         /// ----------------------------------------------------------------------------------------
-        pub cexpr fn operator =(NullPtr) noex -> ArrView&
+        pub cexpr fn op=(NullPtr) noex -> ArrView&
         {
             *this = ArrView(nullptr);
         }
@@ -71,7 +71,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         pub template <tname TRange>
         requires RArrRangeOf<TRange, T>
-        cexpr fn operator =(const TRange& range) noex -> ArrView&
+        cexpr fn op=(const TRange& range) noex -> ArrView&
         {
             *this = ArrView{ range.Data(), range.Count() };
         }
