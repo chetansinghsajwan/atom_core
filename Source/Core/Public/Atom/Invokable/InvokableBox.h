@@ -143,14 +143,14 @@ namespace Atom
         /// 
         /// ----------------------------------------------------------------------------------------
         pub ctor InvokableBox(InvokableBox&& other) :
-            ObjectBox(MOVE(other)) { }
+            ObjectBox(mov(other)) { }
 
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
         pub fn op=(InvokableBox&& other) -> InvokableBox&
         {
-            ObjectBox::op=(MOVE(other));
+            ObjectBox::op=(mov(other));
             return *this;
         }
 

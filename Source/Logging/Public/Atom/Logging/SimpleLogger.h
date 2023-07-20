@@ -25,7 +25,7 @@ namespace Atom::Logging::Internal
         /// @PARAM[IN] name Name of this logger.
         /// ----------------------------------------------------------------------------------------
         explicit ctor SimpleLoggerTemplate(Str name) noex:
-            _name(MOVE(name)), targets() { }
+            _name(mov(name)), targets() { }
 
         /// ----------------------------------------------------------------------------------------
         /// Constructs and adds LogTarget objects.
@@ -37,7 +37,7 @@ namespace Atom::Logging::Internal
         template <tname TRange>
         requires RRangeOf<TRange, LogTargetPtr>
         ctor SimpleLoggerTemplate(Str name, const TRange& targets) noex:
-            _name(MOVE(name)), targets(targets) { }
+            _name(mov(name)), targets(targets) { }
 
     public:
         /// ----------------------------------------------------------------------------------------

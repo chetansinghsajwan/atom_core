@@ -9,7 +9,7 @@ namespace Atom::Logging
     public:
         fn CreateLogger(Str name) noex -> LoggerPtr
         {
-            return MAKE_LOGGER<SimpleLoggerST>(MOVE(name));
+            return MAKE_LOGGER<SimpleLoggerST>(mov(name));
         }
     };
 

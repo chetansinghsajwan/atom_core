@@ -53,7 +53,7 @@ namespace Atom
     {
         pub cexpr fn Convert(Str&& str) noex -> Str
         {
-            return MOVE(str);
+            return mov(str);
         }
 
         pub cexpr fn Convert(const Str& str) noex -> Str

@@ -113,7 +113,7 @@ namespace Atom
         {
             EventKey key = invokable.GetInvokableType();
 
-            _listeners.InsertBack(MOVE(invokable));
+            _listeners.InsertBack(mov(invokable));
             return key;
         }
 

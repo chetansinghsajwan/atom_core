@@ -32,7 +32,7 @@ namespace Atom
 	class StrFmtEx extends Exception
 	{
 		pub ctor StrFmtEx(Str msg) noex:
-			Exception(MOVE(msg)) { }
+			Exception(mov(msg)) { }
 
 		/// ----------------------------------------------------------------------------------------
 		/// @TODO Fix this ugly code.
@@ -77,7 +77,7 @@ namespace Atom
 		{
 			auto out = _fmtCtx.out();
 			*out++ = ch;
-			_fmtCtx.advance_to(MOVE(out));
+			_fmtCtx.advance_to(mov(out));
 		}
 
 		pub template <tname TRange>
@@ -90,7 +90,7 @@ namespace Atom
 				*out++ = ch;
 			}
 
-			_fmtCtx.advance_to(MOVE(out));
+			_fmtCtx.advance_to(mov(out));
 		}
 
 		pub _FmtFmtCtx& _fmtCtx;

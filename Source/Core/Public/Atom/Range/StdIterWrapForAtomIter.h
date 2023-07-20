@@ -56,7 +56,7 @@ namespace Atom
             _iter{ iter } { }
 
         cexpr ctor StdIterWrapForAtomIter(TIter&& iter) noex:
-            _iter{ MOVE(iter) } { }
+            _iter{ mov(iter) } { }
 
     public:
         template <class = void>

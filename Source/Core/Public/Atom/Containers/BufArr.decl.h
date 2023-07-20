@@ -127,7 +127,7 @@ namespace Atom
         pub cexpr ctor BufArr(BufArr&& that) noex:
             Base{ nullptr }
         {
-            _Move(MOVE(that));
+            _Move(mov(that));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -137,7 +137,7 @@ namespace Atom
         cexpr ctor BufArr(BufArr<TElem, thatBufSize, TAlloc>&& that) noex:
             Base{ nullptr }
         {
-            _Move(MOVE(that));
+            _Move(mov(that));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -155,7 +155,7 @@ namespace Atom
         pub cexpr fn op=(BufArr&& that) noex -> BufArr&
         {
             Clear();
-            _Move(MOVE(that));
+            _Move(mov(that));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -165,7 +165,7 @@ namespace Atom
         cexpr fn op=(BufArr<TElem, thatBufSize, TAlloc>&& that) noex -> BufArr&
         {
             Clear();
-            _Move(MOVE(that));
+            _Move(mov(that));
         }
 
         /// ----------------------------------------------------------------------------------------

@@ -194,7 +194,7 @@ namespace Atom
         ctor ObjectBox(ObjectBox&& other)
             requires Movable : ObjectBox()
         {
-            _MoveBox(MOVE(other));
+            _MoveBox(mov(other));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -206,7 +206,7 @@ namespace Atom
         ctor ObjectBox(ObjectBox<OtherCopyable, OtherMovable, OtherAllowNonMovableObject,
             OtherStackSize, TOtherMemAllocator>&& other): ObjectBox()
         {
-            _MoveBox(MOVE(other));
+            _MoveBox(mov(other));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -215,7 +215,7 @@ namespace Atom
         fn op=(ObjectBox&& other) -> ObjectBox&
             requires Movable
         {
-            _MoveBox(MOVE(other));
+            _MoveBox(mov(other));
             return *this;
         }
 
@@ -228,7 +228,7 @@ namespace Atom
         fn op=(ObjectBox<OtherCopyable, OtherMovable, OtherAllowNonMovableObject,
             OtherStackSize, TOtherMemAllocator>&& other) -> ObjectBox&
         {
-            _MoveBox(MOVE(other));
+            _MoveBox(mov(other));
             return *this;
         }
 
@@ -322,14 +322,14 @@ namespace Atom
             {
                 _ReleaseMem();
 
-                MOVE(_heapMem, other._heapMem);
-                MOVE(_heapMemSize, other._heapMemSize);
-                MOVE(_memAllocator, other._memAllocator);
+                mov(_heapMem, other._heapMem);
+                mov(_heapMemSize, other._heapMemSize);
+                mov(_memAllocator, other._memAllocator);
             }
 
             if (otherIsUsingStackMem)
             {
-                _MoveObject(MOVE(other));
+                _MoveObject(mov(other));
             }
             else
             {
@@ -387,7 +387,7 @@ namespace Atom
                 {
                     _object.move = [](void* obj, void* other)
                     {
-                        new (obj) T(MOVE(*reinterpret_cast<T*>(other)));
+                        new (obj) T(mov(*reinterpret_cast<T*>(other)));
                     };
                 }
                 else

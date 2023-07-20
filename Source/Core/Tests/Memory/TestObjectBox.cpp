@@ -89,23 +89,23 @@ TEST_CASE("ObjectBox.Conversion")
 
     //////////////////////// | n | y | y |
                           // |-----------|
-    box5 = MOVE(box1);    // | y | y | y |
-    box5 = MOVE(box2);    // | y | y | n |
-    box5 = MOVE(box3);    // | y | n | y |
-    box5 = MOVE(box4);    // | y | n | n |
-    box5 = MOVE(box5);    // | n | y | y |
-    box5 = MOVE(box6);    // | n | y | n |
-    box5 = MOVE(box7);    // | n | n | y |
-    box5 = MOVE(box8);    // | n | n | n |
+    box5 = mov(box1);    // | y | y | y |
+    box5 = mov(box2);    // | y | y | n |
+    box5 = mov(box3);    // | y | n | y |
+    box5 = mov(box4);    // | y | n | n |
+    box5 = mov(box5);    // | n | y | y |
+    box5 = mov(box6);    // | n | y | n |
+    box5 = mov(box7);    // | n | n | y |
+    box5 = mov(box8);    // | n | n | n |
 
     ////////////////// | n | y | n |
                     // |-----------|
-    // box6 = MOVE(box1);    // | y | y | y |
-    box6 = MOVE(box2);    // | y | y | n |
-    // box6 = MOVE(box3);    // | y | n | y |
-    // box6 = MOVE(box4);    // | y | n | n |
-    // box6 = MOVE(box5);    // | n | y | y |
-    box6 = MOVE(box6);    // | n | y | n |
-    // box6 = MOVE(box7);    // | n | n | y |
-    // box6 = MOVE(box8);    // | n | n | n |
+    // box6 = mov(box1);    // | y | y | y |
+    box6 = mov(box2);    // | y | y | n |
+    // box6 = mov(box3);    // | y | n | y |
+    // box6 = mov(box4);    // | y | n | n |
+    // box6 = mov(box5);    // | n | y | y |
+    box6 = mov(box6);    // | n | y | n |
+    // box6 = mov(box7);    // | n | n | y |
+    // box6 = mov(box8);    // | n | n | n |
 }

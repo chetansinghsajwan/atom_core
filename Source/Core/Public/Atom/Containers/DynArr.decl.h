@@ -140,14 +140,14 @@ namespace Atom
         /// MoveCtor.
         /// ----------------------------------------------------------------------------------------
         pub cexpr ctor DynArr(DynArr&& that) noex:
-            Base{BaseImpl{ MOVE(that) }} { }
+            Base{BaseImpl{ mov(that) }} { }
 
         /// ----------------------------------------------------------------------------------------
         /// MoveOper.
         /// ----------------------------------------------------------------------------------------
         pub cexpr fn op=(DynArr&& that) noex -> DynArr&
         {
-            DynArr tmp = MOVE(that);
+            DynArr tmp = mov(that);
             this->_Swap(tmp);
             return *this;
         }

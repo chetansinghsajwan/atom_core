@@ -47,7 +47,7 @@ namespace Atom::Logging::Private
         requires RRangeOf<TRange, LogTargetPtr>
         ctor MultiLogTargetTemplate(const TRange& targets)
         {
-            _AddTargets(MOVE(targets));
+            _AddTargets(mov(targets));
         }
 
     //// -------------------------------------------------------------------------------------------
@@ -297,7 +297,7 @@ namespace Atom::Logging::Private
         {
             ATOM_DEBUG_EXPECTS(target != nullptr);
 
-            return _targets.InsertBack(MOVE(target)) != _targets.IterEnd();
+            return _targets.InsertBack(mov(target)) != _targets.IterEnd();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -322,7 +322,7 @@ namespace Atom::Logging::Private
             {
                 if (target != nullptr)
                 {
-                    _targets.InsertBack(MOVE(target));
+                    _targets.InsertBack(mov(target));
                     count++;
                 }
             }

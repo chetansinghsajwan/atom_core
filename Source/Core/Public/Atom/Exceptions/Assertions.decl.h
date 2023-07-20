@@ -25,7 +25,7 @@ namespace Atom::Internal
         pub ctor AssertionFailure(StrView assertExpr, 
             ExceptionSource src = ExceptionSource::Current(),
             StackTrace stackTrace = StackTrace::current()):
-            assertExpr{ assertExpr }, Thrower(MOVE(src), MOVE(stackTrace)) { }
+            assertExpr{ assertExpr }, Thrower(mov(src), mov(stackTrace)) { }
 
         pub dtor AssertionFailure()
         {

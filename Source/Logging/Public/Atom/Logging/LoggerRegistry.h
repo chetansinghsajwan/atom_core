@@ -101,7 +101,7 @@ namespace Atom::Logging
             ATOM_ASSERT(_HasLogger(key) == false) << InvalidOperationException(
                 TEXT("Logger for key{{key}} is already registered."));
 
-            _RegisterLogger(logger, MOVE(key));
+            _RegisterLogger(logger, mov(key));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -162,7 +162,7 @@ namespace Atom::Logging
             ATOM_ASSERT(!key.IsEmpty()) << InvalidArgumentException(
                 TEXT("Cannot register logger with NULL key."));
 
-            _ForceRegisterLogger(logger, MOVE(key));
+            _ForceRegisterLogger(logger, mov(key));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -224,7 +224,7 @@ namespace Atom::Logging
             if (_HasLogger(key))
                 return false;
 
-            _RegisterLogger(logger, MOVE(key));
+            _RegisterLogger(logger, mov(key));
             return true;
         }
 
@@ -370,7 +370,7 @@ namespace Atom::Logging
             ATOM_DEBUG_EXPECTS(logger != nullptr);
             ATOM_DEBUG_EXPECTS(!key.IsEmpty());
 
-            bool result = _loggers.insert({ MOVE(key), MOVE(logger) }).second;
+            bool result = _loggers.insert({ mov(key), mov(logger) }).second;
             ATOM_DEBUG_ENSURES(result);
         }
 
@@ -383,7 +383,7 @@ namespace Atom::Logging
             ATOM_DEBUG_EXPECTS(logger != nullptr);
             ATOM_DEBUG_EXPECTS(!key.IsEmpty());
 
-            _loggers.insert_or_assign(MOVE(key), MOVE(logger));
+            _loggers.insert_or_assign(mov(key), mov(logger));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -398,7 +398,7 @@ namespace Atom::Logging
                 return nullptr;
             }
 
-            LoggerPtr logger = MOVE(it->second);
+            LoggerPtr logger = mov(const_cast<LoggerPtr&>(it->second));
             _loggers.erase(it);
             return logger;
         }

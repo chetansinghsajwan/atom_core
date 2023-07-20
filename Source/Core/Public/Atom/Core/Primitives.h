@@ -32,43 +32,13 @@ namespace Atom
 {
     using NullPtr = std::nullptr_t;
     // static cexpr NullPtr nullptr;
-}
 
-namespace Atom
-{
     using NullVal = std::nullptr_t;
     static cexpr NullVal nullval = NullVal();
-}
 
-namespace Atom
-{
     using NullPos = std::nullptr_t;
     static cexpr NullPos nullpos = NullPos();
-}
 
-namespace Atom
-{
     using NullType = std::nullptr_t;
     using TypeInfo = std::type_info;
-
-    template <tname T>
-    cexpr T&& MOVE(T& obj) noex
-    {
-        return std::move(obj);
-    }
-
-    template <tname T>
-    cexpr T& MOVE(T& lhs, T& rhs) noex
-    {
-        lhs = std::move(rhs);
-        return lhs;
-    }
-
-    template <tname T>
-    void SWAP(T& lhs, T& rhs)
-    {
-        T tmp = MOVE(lhs);
-        lhs = MOVE(rhs);
-        rhs = MOVE(tmp);
-    }
 }
