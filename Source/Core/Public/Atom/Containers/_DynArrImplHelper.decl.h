@@ -154,7 +154,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        cexpr fn Clear();
+        cexpr fn Clear() -> void;
 
     public:
         cexpr fn _RemoveAt(usize index) -> usize;
@@ -174,7 +174,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        cexpr fn Release();
+        cexpr fn Release() -> void;
 
         /// ----------------------------------------------------------------------------------------
         /// 
@@ -192,19 +192,19 @@ namespace Atom
 
     protected:
         cexpr fn _ValidateIter(TIter it) const noex -> bool;
-        cexpr fn _UpdateIterDebugId() noex;
+        cexpr fn _UpdateIterDebugId() noex -> void;
         cexpr fn _ValidateIndex(isize index) const noex -> bool;
         cexpr fn _FetchIndex(TIter pos) const noex -> isize;
         cexpr fn _CalcCapGrowth(usize required) const noex -> usize;
-        cexpr fn _EnsureCapFor(usize count);
+        cexpr fn _EnsureCapFor(usize count) -> void;
 
-        cexpr fn _ConstructAt(usize index, auto&&... args);
-        cexpr fn _DestructAt(usize index);
-        cexpr fn _DestructRange(usize index, usize count);
-        cexpr fn _MoveRangeFront(usize index, usize count);
-        cexpr fn _MoveRangeBack(usize index, usize count);
-        cexpr fn _MoveRangeTo(usize index, TElem* dest);
-        cexpr fn _RotateRangeBack(usize index, usize count);
+        cexpr fn _ConstructAt(usize index, auto&&... args) -> void;
+        cexpr fn _DestructAt(usize index) -> void;
+        cexpr fn _DestructRange(usize index, usize count) -> void;
+        cexpr fn _MoveRangeFront(usize index, usize count) -> void;
+        cexpr fn _MoveRangeBack(usize index, usize count) -> void;
+        cexpr fn _MoveRangeTo(usize index, TElem* dest) -> void;
+        cexpr fn _RotateRangeBack(usize index, usize count) -> void;
 
         template <tname TRange>
         static cexpr fn _CanGetRangeSize() noex -> bool;

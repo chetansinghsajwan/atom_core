@@ -231,7 +231,7 @@ namespace Atom
     }
 
     template <tname TImpl>
-    cexpr fn _DynArrImplHelper<TImpl>::Clear()
+    cexpr fn _DynArrImplHelper<TImpl>::Clear() -> void
     {
         _RemoveRange(0, _Count() - 1);
     }
@@ -262,7 +262,7 @@ namespace Atom
     }
 
     template <tname TImpl>
-    cexpr fn _DynArrImplHelper<TImpl>::Release()
+    cexpr fn _DynArrImplHelper<TImpl>::Release() -> void
     {
     }
 
@@ -276,7 +276,7 @@ namespace Atom
     }
 
     template <tname TImpl>
-    cexpr fn _DynArrImplHelper<TImpl>::_UpdateIterDebugId() noex
+    cexpr fn _DynArrImplHelper<TImpl>::_UpdateIterDebugId() noex -> void
     {
         // _iterValidDebugId++;
     }
@@ -311,7 +311,7 @@ namespace Atom
 
     template <tname TImpl>
     cexpr fn _DynArrImplHelper<TImpl>::_EnsureCapFor(
-        usize count)
+        usize count) -> void
     {
         _UpdateIterDebugId();
 
@@ -330,28 +330,28 @@ namespace Atom
 
     template <tname TImpl>
     cexpr fn _DynArrImplHelper<TImpl>::_ConstructAt(
-        usize index, auto&&... args)
+        usize index, auto&&... args) -> void
     {
         ObjHelper().Construct(_Data() + index, fwd(args)...);
     }
 
     template <tname TImpl>
     cexpr fn _DynArrImplHelper<TImpl>::_DestructAt(
-        usize index)
+        usize index) -> void
     {
         ObjHelper().Destruct(_Data() + index);
     }
 
     template <tname TImpl>
     cexpr fn _DynArrImplHelper<TImpl>::_DestructRange(
-        usize index, usize count)
+        usize index, usize count) -> void
     {
         RangeHelper().Destruct(Range(_Data() + index, count - index));
     }
 
     template <tname TImpl>
     cexpr fn _DynArrImplHelper<TImpl>::_MoveRangeFront(
-        usize index, usize count)
+        usize index, usize count) -> void
     {
         RangeHelper().FwdMoveTo(
             Range(_Data() + index, _Count() - 1 - index), 
@@ -360,7 +360,7 @@ namespace Atom
 
     template <tname TImpl>
     cexpr fn _DynArrImplHelper<TImpl>::_MoveRangeBack(
-        usize index, usize count)
+        usize index, usize count) -> void
     {
         RangeHelper().BwdMoveTo
         (
@@ -371,7 +371,7 @@ namespace Atom
 
     template <tname TImpl>
     cexpr fn _DynArrImplHelper<TImpl>::_MoveRangeTo(
-        usize index, TElem* dest)
+        usize index, TElem* dest) -> void
     {
         RangeHelper().FwdMoveTo
         (
@@ -382,7 +382,7 @@ namespace Atom
 
     template <tname TImpl>
     cexpr fn _DynArrImplHelper<TImpl>::_RotateRangeBack(
-        usize index, usize count)
+        usize index, usize count) -> void
     {
         RangeHelper().RotateBwd(
             Range(_Data() + index, _Count() - 1 - index), count);
