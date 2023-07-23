@@ -52,6 +52,15 @@ namespace Atom::TTI
 
     template <tname T>
     using TRemoveCVRef = std::remove_cvref_t<T>;
+
+    template <tname T>
+    using TRemoveQuailfiersRef = std::remove_cvref_t<T>;
+
+    template <tname T>
+    using TUnqualified = std::remove_cv_t<T>;
+
+    template <tname T>
+    cexpr bool IsRValueRef = std::is_rvalue_reference_v<T>;
 }
 
 /// ------------------------------------------------------------------------------------------------
