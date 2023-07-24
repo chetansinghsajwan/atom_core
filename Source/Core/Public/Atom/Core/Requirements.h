@@ -24,7 +24,7 @@ namespace Atom
     };
 
     template <tname TCheck, tname T, tname... Ts>
-    cexpr bool _CheckAll = _CheckAllImpl<TCheck, Ts...>::Value;
+    cexpr bool _CheckAll = _CheckAllImpl<TCheck, T, Ts...>::Value;
 
 #define _WRAP_REQ(...) decltype([]<tname T> { return __VA_ARGS__; })
 

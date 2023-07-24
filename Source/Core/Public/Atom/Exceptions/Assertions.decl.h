@@ -41,7 +41,8 @@ namespace Atom::Internal
         {
             done = true;
 
-            Thrower::op<<(fwd(ex));
+            // Thrower::op<<(fwd(ex));
+            throw 0;
         }
 
         pub template <tname TArg>
