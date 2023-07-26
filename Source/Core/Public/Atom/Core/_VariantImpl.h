@@ -5,18 +5,6 @@
 #include "Atom/Memory/ObjHelper.h"
 #include "TypeList.h"
 
-[[noreturn]]
-void myTerminate(auto& msg)
-{
-    std::cout << msg << std::endl;
-    std::terminate();
-}
-
-#define CONTRACTS_EXPECTS(assert, msg) if (!(assert)) throw 0
-#define CONTRACTS_DEBUG_EXPECTS(assert, msg) if (!(assert)) throw 0
-#define CONTRACTS_DEBUG_ASSERTS(assert) if (!(assert)) throw 0
-#define TERMINATE(...) myTerminate(__VA_ARGS__)
-
 namespace Atom
 {
     /// --------------------------------------------------------------------------------------------
