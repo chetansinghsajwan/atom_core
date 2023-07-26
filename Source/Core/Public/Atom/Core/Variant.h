@@ -54,7 +54,7 @@ namespace Atom
         requires (Has<T>())
         static ceval fn IndexOf() -> usize
         {
-            return ImplBase::template _IndexOf<T>();
+            return ImplBase::template _GetIndexForType<T>();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -62,7 +62,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         pub static ceval fn Count() -> usize
         {
-            return ImplBase::Count;
+            return ImplBase::_TypeCount;
         }
 
     //// -------------------------------------------------------------------------------------------

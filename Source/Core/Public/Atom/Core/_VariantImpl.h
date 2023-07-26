@@ -12,9 +12,9 @@ void myTerminate(auto& msg)
     std::terminate();
 }
 
-#define CONTRACTS_EXPECTS(assert, msg) if (assert) throw 0
-#define CONTRACTS_DEBUG_EXPECTS(assert, msg) if (assert) throw 0
-#define CONTRACTS_DEBUG_ASSERTS(assert) if (assert) throw 0
+#define CONTRACTS_EXPECTS(assert, msg) if (!(assert)) throw 0
+#define CONTRACTS_DEBUG_EXPECTS(assert, msg) if (!(assert)) throw 0
+#define CONTRACTS_DEBUG_ASSERTS(assert) if (!(assert)) throw 0
 #define TERMINATE(...) myTerminate(__VA_ARGS__)
 
 namespace Atom
@@ -88,6 +88,8 @@ namespace Atom
                 ObjHelper().Construct(&_getDataAs<TOther>(),
                     that.template _getDataAs<TOther>());
             }
+
+            _index = _GetIndexForType<TOther>();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -103,7 +105,7 @@ namespace Atom
         prot template <tname... TOthers>
         cexpr fn _setValueFromVariant(_VariantImpl<TOthers...>&& that)
         {
-            _setValueFromVariantImpl<false, 0, TOthers...>(mov(that), that._getTypeIndex());
+            _setValueFromVariantImpl<true, 0, TOthers...>(mov(that), that._getTypeIndex());
         }
 
         priv template <bool move, usize index, tname TOther, tname... TOthers>
@@ -127,7 +129,6 @@ namespace Atom
             // Index for this variant of type same as that variant' current type.
             usize indexForThis = _GetIndexForType<TOther>();
 
-            // auto thatData = if move mov(that._data) else that._data;
             // We already have this type, so we don't construct it but assign it.
             if (indexForThis == _index)
             {
@@ -157,6 +158,8 @@ namespace Atom
                         that.template _getDataAs<TOther>());
                 }
             }
+
+            _index = _GetIndexForType<TOther>();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -168,7 +171,7 @@ namespace Atom
         prot template <tname T, tname... TArgs>
         cexpr fn _emplaceValueByType(TArgs&&... args)
         {
-            ObjHelper().Construct(&_data, fwd(args)...);
+            ObjHelper().Construct(&_getDataAs<T>(), fwd(args)...);
             _index = _GetIndexForType<T>();
         }
 
@@ -196,7 +199,7 @@ namespace Atom
             // The new type to set is same as current.
             if (indexToSet == _index)
             {
-                ObjHelper().Assign(&_data, fwd(value));
+                ObjHelper().Assign(&_getDataAs<T>(), fwd(value));
             }
             else
             {

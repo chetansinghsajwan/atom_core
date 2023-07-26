@@ -37,7 +37,7 @@ namespace Atom
         class At<indexToGet, index, T, Ts...>
         {
             pub using Type = TTI::TConditional<indexToGet == index, T,
-                At<indexToGet, index + 1, Ts...>>;
+                tname At<indexToGet, index + 1, Ts...>::Type>;
         };
 
         template <usize indexToGet, usize index>

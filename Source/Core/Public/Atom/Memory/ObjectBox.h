@@ -322,9 +322,9 @@ namespace Atom
             {
                 _ReleaseMem();
 
-                mov(_heapMem, other._heapMem);
-                mov(_heapMemSize, other._heapMemSize);
-                mov(_memAllocator, other._memAllocator);
+                _heapMem = mov(other._heapMem);
+                _heapMemSize = mov(other._heapMemSize);
+                _memAllocator = mov(other._memAllocator);
             }
 
             if (otherIsUsingStackMem)
