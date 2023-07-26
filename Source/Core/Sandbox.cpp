@@ -1,18 +1,18 @@
-#include "Atom/Str/StrView.h"
+#include "Atom/Core.h"
 
 using namespace Atom;
 
-class Console
+void PrintCmdArgs(int argc, char** argv)
 {
-    void Out(StrView str)
+    for (int i = 1; i < argc; ++i)
     {
-        std::wcout << std::wstring_view((const wchar_t*)str.Data(), str.Count()) << std::endl;
+        std::cout << argv[i] << std::endl;
     }
-};
+}
 
-static Console console;
-
-int main()
+int main(int argc, char **argv)
 {
+    PrintCmdArgs(argc, argv);
+    
     return 0;
 }
