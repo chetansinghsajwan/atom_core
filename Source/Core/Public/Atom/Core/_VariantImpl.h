@@ -3,6 +3,7 @@
 #include "Atom/TTI.h"
 #include "Atom/Memory/ObjHelper.h"
 #include "TypeList.h"
+#include "Storage.h"
 
 namespace Atom
 {
