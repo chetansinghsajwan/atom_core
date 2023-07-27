@@ -1,7 +1,6 @@
 #pragma once
 #include "Atom/Core.h"
 #include "Atom/TTI.h"
-#include "UnionOf.h"
 #include "Atom/Memory/ObjHelper.h"
 #include "TypeList.h"
 
@@ -290,27 +289,26 @@ namespace Atom
                 }
             }
 
-            // TODO: Refactor this.
-            ObjHelper().Destruct<T>((T*)&_data);
+            ObjHelper().Destruct(&_getDataAs<T>());
         }
 
         prot template <tname T>
         cexpr fn _getDataAs() const -> const T&
         {
-            return reinterpret_cast<const T&>(_data);
+            return reinterpret_cast<const T&>(*_data.storage);
         }
 
         prot template <tname T>
         cexpr fn _getDataAs() -> T&
         {
-            return reinterpret_cast<T&>(_data);
+            return reinterpret_cast<T&>(*_data.storage);
         }
 
     //// -------------------------------------------------------------------------------------------
     //// Fields
     //// -------------------------------------------------------------------------------------------
 
-        priv UnionOf<Ts...> _data;
+        priv AlignedUnionStorageFor<Ts...> _data;
         priv usize _index;
     };
 }

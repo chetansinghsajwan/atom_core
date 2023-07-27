@@ -27,6 +27,94 @@ namespace Atom
         };
 
     //// -------------------------------------------------------------------------------------------
+    //// MaxSize
+    //// -------------------------------------------------------------------------------------------
+
+        template <usize max, tname... Ts>
+        class MaxSize;
+
+        template <usize max, tname T, tname... Ts>
+        class MaxSize<max, T, Ts...>
+        {
+            priv static cexpr usize _ThisSize = sizeof(T);
+            pub static cexpr usize Value = MaxSize<(_ThisSize > max ? _ThisSize : max),
+                Ts...>::Value;
+        };
+
+        template <usize max>
+        class MaxSize<max>
+        {
+            priv static cexpr usize _ThisSize = 0;
+            pub static cexpr usize Value = _ThisSize > max ? _ThisSize : max;
+        };
+
+    //// -------------------------------------------------------------------------------------------
+    //// MinSize
+    //// -------------------------------------------------------------------------------------------
+
+        template <usize min, tname... Ts>
+        class MinSize;
+
+        template <usize min, tname T, tname... Ts>
+        class MinSize<min, T, Ts...>
+        {
+            priv static cexpr usize _ThisSize = alignof(T);
+            pub static cexpr usize Value = MinSize<(_ThisSize < min ? _ThisSize : min),
+                Ts...>::Value;
+        };
+
+        template <usize min>
+        class MinSize<min>
+        {
+            priv static cexpr usize _ThisSize = 0;
+            pub static cexpr usize Value = _ThisSize < min ? _ThisSize : min;
+        };
+
+    //// -------------------------------------------------------------------------------------------
+    //// MaxAlign
+    //// -------------------------------------------------------------------------------------------
+
+        template <usize max, tname... Ts>
+        class MaxAlign;
+
+        template <usize max, tname T, tname... Ts>
+        class MaxAlign<max, T, Ts...>
+        {
+            priv static cexpr usize _ThisAlign = alignof(T);
+            pub static cexpr usize Value = MaxAlign<(_ThisAlign > max ? _ThisAlign : max),
+                Ts...>::Value;
+        };
+
+        template <usize max>
+        class MaxAlign<max>
+        {
+            priv static cexpr usize _ThisAlign = 0;
+            pub static cexpr usize Value = _ThisAlign > max ? _ThisAlign : max;
+        };
+
+    //// -------------------------------------------------------------------------------------------
+    //// MinAlign
+    //// -------------------------------------------------------------------------------------------
+
+        template <usize min, tname... Ts>
+        class MinAlign;
+
+        template <usize min, tname T, tname... Ts>
+        class MinAlign<min, T, Ts...>
+        {
+            priv static cexpr usize _ThisAlign = sizeof(T);
+            pub static cexpr usize Value = MinAlign<(_ThisAlign < min ? _ThisAlign : min),
+                Ts...>::Value;
+        };
+
+        template <usize min>
+        class MinAlign<min>
+        {
+            priv static cexpr usize _ThisAlign = 0;
+            pub static cexpr usize Value = _ThisAlign < min ? _ThisAlign : min;
+        };
+
+    //// -------------------------------------------------------------------------------------------
     //// At
     //// -------------------------------------------------------------------------------------------
 
@@ -208,6 +296,26 @@ namespace Atom
         static cexpr usize Count = TypeListOps::template Count<Ts...>::Value;
 
         /// ----------------------------------------------------------------------------------------
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        static cexpr usize MaxSize = TypeListOps::template MaxSize<0, Ts...>::Value;
+
+        /// ----------------------------------------------------------------------------------------
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        static cexpr usize MinSize = TypeListOps::template MaxSize<0, Ts...>::Value;
+
+        /// ----------------------------------------------------------------------------------------
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        static cexpr usize MaxAlign = TypeListOps::template MaxAlign<0, Ts...>::Value;
+
+        /// ----------------------------------------------------------------------------------------
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        static cexpr usize MinAlign = TypeListOps::template MaxAlign<0, Ts...>::Value;
+
+        /// ----------------------------------------------------------------------------------------
         /// # To Do
         /// - Try to remove the explicit 0 index.
         /// ----------------------------------------------------------------------------------------
@@ -233,5 +341,13 @@ namespace Atom
         /// 
         /// ----------------------------------------------------------------------------------------
         static cexpr bool AreUnique = TypeListOps::template AreUnique<Ts...>::Value;
+    };
+
+    template <typename... Ts>
+    class AlignedUnionStorageFor
+    {
+        priv using _Types = TypeList<Ts...>;
+
+        pub alignas(_Types::MaxAlign) byte storage[_Types::MaxSize];
     };
 }
