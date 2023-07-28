@@ -326,8 +326,8 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <tname T>
-        static cexpr bool Has = TypeListOps::template Has<T, Ts...>::Value;
+        template <tname... TsToCheck>
+        static cexpr bool Has = (TypeListOps::template Has<TsToCheck, Ts...>::Value and...);
 
         /// ----------------------------------------------------------------------------------------
         /// # To Do

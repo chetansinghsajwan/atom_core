@@ -1,4 +1,5 @@
 #include "Atom/Core.h"
+#include "Atom/Core/Variant.h"
 
 using namespace Atom;
 

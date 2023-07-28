@@ -13,6 +13,9 @@ namespace Atom
     template <tname... Ts>
     class _VariantImpl
     {
+        template <tname... TOthers>
+        friend class _VariantImpl;
+
         priv using _Types = TypeList<Ts...>;
 
         prot static cexpr usize _TypeCount = _Types::Count;
@@ -310,6 +313,6 @@ namespace Atom
     //// -------------------------------------------------------------------------------------------
 
         priv AlignedUnionStorageFor<Ts...> _data;
-        priv usize _index;
+        priv usize _index = 0;
     };
 }

@@ -116,6 +116,12 @@ TEST_CASE("Atom.Core.Variant")
         REQUIRE(!Var::Has<3>());
     }
 
+    SECTION("Trivial Default Constructor")
+    {
+        REQUIRE(RTriviallyDefaultConstructible<
+            Variant<int, char, float>>);
+    }
+
     SECTION("Default Constructor")
     {
         Variant<TestType0, TestType1, TestType2> v;
@@ -125,88 +131,196 @@ TEST_CASE("Atom.Core.Variant")
         REQUIRE(v.as<TestType0>().lastOp == EOperation::DefaultConstructor);
     }
 
+    SECTION("Trivial Copy Constructor")
+    {
+        REQUIRE(RTriviallyCopyConstructible<
+            Variant<int, char, float>>);
+    }
+
     SECTION("Copy Constructor")
     {
-        Variant<TestType0, TestType1, TestType2> v1 = TestType1{};
-        Variant<TestType0, TestType1, TestType2> v2 = v1;
+        Variant<TestType0, TestType1, TestType2> v0 = TestType1{};
+        Variant<TestType0, TestType1, TestType2> v1 = v0;
+
+        REQUIRE(v0.index() == 1);
+        REQUIRE(v0.is<TestType1>());
+        REQUIRE(v0.as<TestType1>().lastOp == EOperation::CopyConstructorAsThat);
 
         REQUIRE(v1.index() == 1);
         REQUIRE(v1.is<TestType1>());
-        REQUIRE(v1.as<TestType1>().lastOp == EOperation::CopyConstructorAsThat);
+        REQUIRE(v1.as<TestType1>().lastOp == EOperation::CopyConstructor);
+    }
 
-        REQUIRE(v2.index() == 1);
-        REQUIRE(v2.is<TestType1>());
-        REQUIRE(v2.as<TestType1>().lastOp == EOperation::CopyConstructor);
+    SECTION("Copy Constructor Template")
+    {
+        Variant<TestType1, TestType2> v0 = TestType1{};
+        Variant<TestType0, TestType1, TestType2> v1 = v0;
+
+        REQUIRE(v0.index() == 0);
+        REQUIRE(v0.is<TestType1>());
+        REQUIRE(v0.as<TestType1>().lastOp == EOperation::CopyConstructorAsThat);
+
+        REQUIRE(v1.index() == 1);
+        REQUIRE(v1.is<TestType1>());
+        REQUIRE(v1.as<TestType1>().lastOp == EOperation::CopyConstructor);
+    }
+
+    SECTION("Trivial Copy Assignment Operator")
+    {
+        REQUIRE(RTriviallyCopyAssignable<
+            Variant<int, char, float>>);
     }
 
     SECTION("Copy Assignment Operator")
     {
-        Variant<TestType0, TestType1, TestType2> v1 = TestType1{};
+        Variant<TestType0, TestType1, TestType2> v0 = TestType1{};
 
-        // v2 holds TestType0, so it will construct TestType1 when assigned
-        Variant<TestType0, TestType1, TestType2> v2;
-        v2 = v1;
+        // v1 holds TestType0, so it will construct TestType1 when assigned
+        Variant<TestType0, TestType1, TestType2> v1;
+        v1 = v0;
 
-        REQUIRE(v1.index() == 1);
-        REQUIRE(v1.is<TestType1>());
-        REQUIRE(v1.as<TestType1>().lastOp == EOperation::CopyConstructorAsThat);
-
-        REQUIRE(v2.index() == 1);
-        REQUIRE(v2.is<TestType1>());
-        REQUIRE(v2.as<TestType1>().lastOp == EOperation::CopyConstructor);
-
-        // v2 holds TestType1, so it will assign TestType1 when now
-        v2 = v1;
+        REQUIRE(v0.index() == 1);
+        REQUIRE(v0.is<TestType1>());
+        REQUIRE(v0.as<TestType1>().lastOp == EOperation::CopyConstructorAsThat);
 
         REQUIRE(v1.index() == 1);
         REQUIRE(v1.is<TestType1>());
-        REQUIRE(v1.as<TestType1>().lastOp == EOperation::CopyOperatorAsThat);
+        REQUIRE(v1.as<TestType1>().lastOp == EOperation::CopyConstructor);
 
-        REQUIRE(v2.index() == 1);
-        REQUIRE(v2.is<TestType1>());
-        REQUIRE(v2.as<TestType1>().lastOp == EOperation::CopyOperator);
+        // v1 holds TestType1, so it will assign TestType1 when now
+        v1 = v0;
+
+        REQUIRE(v0.index() == 1);
+        REQUIRE(v0.is<TestType1>());
+        REQUIRE(v0.as<TestType1>().lastOp == EOperation::CopyOperatorAsThat);
+
+        REQUIRE(v1.index() == 1);
+        REQUIRE(v1.is<TestType1>());
+        REQUIRE(v1.as<TestType1>().lastOp == EOperation::CopyOperator);
+    }
+
+    SECTION("Copy Assignment Operator Template")
+    {
+        Variant<TestType1, TestType2> v0 = TestType1{};
+
+        // v1 holds TestType0, so it will construct TestType1 when assigned
+        Variant<TestType0, TestType1, TestType2> v1;
+        v1 = v0;
+
+        REQUIRE(v0.index() == 0);
+        REQUIRE(v0.is<TestType1>());
+        REQUIRE(v0.as<TestType1>().lastOp == EOperation::CopyConstructorAsThat);
+
+        REQUIRE(v1.index() == 1);
+        REQUIRE(v1.is<TestType1>());
+        REQUIRE(v1.as<TestType1>().lastOp == EOperation::CopyConstructor);
+
+        // v1 holds TestType1, so it will assign TestType1 when now
+        v1 = v0;
+
+        REQUIRE(v0.index() == 0);
+        REQUIRE(v0.is<TestType1>());
+        REQUIRE(v0.as<TestType1>().lastOp == EOperation::CopyOperatorAsThat);
+
+        REQUIRE(v1.index() == 1);
+        REQUIRE(v1.is<TestType1>());
+        REQUIRE(v1.as<TestType1>().lastOp == EOperation::CopyOperator);
+    }
+
+    SECTION("Trivial Move Constructor")
+    {
+        REQUIRE(RTriviallyMoveConstructible<
+            Variant<int, char, float>>);
     }
 
     SECTION("Move Constructor")
     {
-        Variant<TestType0, TestType1, TestType2> v1 = TestType1{};
-        Variant<TestType0, TestType1, TestType2> v2 = mov(v1);
+        Variant<TestType0, TestType1, TestType2> v0 = TestType1{};
+        Variant<TestType0, TestType1, TestType2> v1 = mov(v0);
+
+        REQUIRE(v0.index() == 1);
+        REQUIRE(v0.is<TestType1>());
+        REQUIRE(v0.as<TestType1>().lastOp == EOperation::MoveConstructorAsThat);
 
         REQUIRE(v1.index() == 1);
         REQUIRE(v1.is<TestType1>());
-        REQUIRE(v1.as<TestType1>().lastOp == EOperation::MoveConstructorAsThat);
+        REQUIRE(v1.as<TestType1>().lastOp == EOperation::MoveConstructor);
+    }
 
-        REQUIRE(v2.index() == 1);
-        REQUIRE(v2.is<TestType1>());
-        REQUIRE(v2.as<TestType1>().lastOp == EOperation::MoveConstructor);
+    SECTION("Move Constructor Template")
+    {
+        Variant<TestType1, TestType2> v0 = TestType1{};
+        Variant<TestType0, TestType1, TestType2> v1 = mov(v0);
+
+        REQUIRE(v0.index() == 0);
+        REQUIRE(v0.is<TestType1>());
+        REQUIRE(v0.as<TestType1>().lastOp == EOperation::MoveConstructorAsThat);
+
+        REQUIRE(v1.index() == 1);
+        REQUIRE(v1.is<TestType1>());
+        REQUIRE(v1.as<TestType1>().lastOp == EOperation::MoveConstructor);
+    }
+
+    SECTION("Trivial Move Assignment Operator")
+    {
+        REQUIRE(RTriviallyMoveAssignable<
+            Variant<int, char, float>>);
     }
 
     SECTION("Move Assignment Operator")
     {
-        Variant<TestType0, TestType1, TestType2> v1 = TestType1{};
+        Variant<TestType0, TestType1, TestType2> v0 = TestType1{};
 
-        // v2 holds TestType0, so it will construct TestType1 when assigned
-        Variant<TestType0, TestType1, TestType2> v2;
-        v2 = mov(v1);
+        // v1 holds TestType0, so it will construct TestType1 when assigned
+        Variant<TestType0, TestType1, TestType2> v1;
+        v1 = mov(v0);
 
-        REQUIRE(v1.index() == 1);
-        REQUIRE(v1.is<TestType1>());
-        REQUIRE(v1.as<TestType1>().lastOp == EOperation::MoveConstructorAsThat);
-
-        REQUIRE(v2.index() == 1);
-        REQUIRE(v2.is<TestType1>());
-        REQUIRE(v2.as<TestType1>().lastOp == EOperation::MoveConstructor);
-
-        // v2 holds TestType1, so it will assign TestType1 when now
-        v2 = mov(v1);
+        REQUIRE(v0.index() == 1);
+        REQUIRE(v0.is<TestType1>());
+        REQUIRE(v0.as<TestType1>().lastOp == EOperation::MoveConstructorAsThat);
 
         REQUIRE(v1.index() == 1);
         REQUIRE(v1.is<TestType1>());
-        REQUIRE(v1.as<TestType1>().lastOp == EOperation::MoveOperatorAsThat);
+        REQUIRE(v1.as<TestType1>().lastOp == EOperation::MoveConstructor);
 
-        REQUIRE(v2.index() == 1);
-        REQUIRE(v2.is<TestType1>());
-        REQUIRE(v2.as<TestType1>().lastOp == EOperation::MoveOperator);
+        // v1 holds TestType1, so it will assign TestType1 when now
+        v1 = mov(v0);
+
+        REQUIRE(v0.index() == 1);
+        REQUIRE(v0.is<TestType1>());
+        REQUIRE(v0.as<TestType1>().lastOp == EOperation::MoveOperatorAsThat);
+
+        REQUIRE(v1.index() == 1);
+        REQUIRE(v1.is<TestType1>());
+        REQUIRE(v1.as<TestType1>().lastOp == EOperation::MoveOperator);
+    }
+
+    SECTION("Move Assignment Operator Template")
+    {
+        Variant<TestType1, TestType2> v0 = TestType1{};
+
+        // v1 holds TestType0, so it will construct TestType1 when assigned
+        Variant<TestType0, TestType1, TestType2> v1;
+        v1 = mov(v0);
+
+        REQUIRE(v0.index() == 0);
+        REQUIRE(v0.is<TestType1>());
+        REQUIRE(v0.as<TestType1>().lastOp == EOperation::MoveConstructorAsThat);
+
+        REQUIRE(v1.index() == 1);
+        REQUIRE(v1.is<TestType1>());
+        REQUIRE(v1.as<TestType1>().lastOp == EOperation::MoveConstructor);
+
+        // v1 holds TestType1, so it will assign TestType1 when now
+        v1 = mov(v0);
+
+        REQUIRE(v0.index() == 0);
+        REQUIRE(v0.is<TestType1>());
+        REQUIRE(v0.as<TestType1>().lastOp == EOperation::MoveOperatorAsThat);
+
+        REQUIRE(v1.index() == 1);
+        REQUIRE(v1.is<TestType1>());
+        REQUIRE(v1.as<TestType1>().lastOp == EOperation::MoveOperator);
     }
 
     SECTION("Param Constructor")
@@ -259,8 +373,8 @@ TEST_CASE("Atom.Core.Variant")
         EOperation* lastOpPtr;
 
         {
-            Variant<TestType0, TestType1, TestType2> v1 = TestType1{};
-            lastOpPtr = &v1.as<TestType1>().lastOp;
+            Variant<TestType0, TestType1, TestType2> v0 = TestType1{};
+            lastOpPtr = &v0.as<TestType1>().lastOp;
         }
 
         REQUIRE(*lastOpPtr == EOperation::Destructor);

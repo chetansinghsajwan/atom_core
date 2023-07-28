@@ -4,14 +4,23 @@
 namespace Atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// 
+    /// # To Do
+    /// - Check Requirements for assignments.
+    /// - Check if requirements using TypeList functionality can be made concepts.
     /// --------------------------------------------------------------------------------------------
     template <tname... Ts>
-    requires (TypeList<Ts...>::AreUnique)
+    requires(TypeList<Ts...>::AreUnique)
+        and (not TypeList<Ts...>::template Has<void>)
     class Variant: private _VariantImpl<Ts...>
     {
-        priv using This = Variant<Ts...>;
-        priv using ImplBase = _VariantImpl<Ts...>;
+    private:
+        template <tname... TOthers>
+        requires(TypeList<TOthers...>::AreUnique)
+            and (not TypeList<TOthers...>::template Has<void>)
+        friend class Variant;
+
+        using This = Variant<Ts...>;
+        using ImplBase = _VariantImpl<Ts...>;
 
         /// ----------------------------------------------------------------------------------------
         /// TypeList of this variant.
@@ -71,21 +80,28 @@ namespace Atom
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// Default Constructor.
+        /// Trivial Default Constructor.
         /// ----------------------------------------------------------------------------------------
         cexpr ctor Variant() = default;
 
+        /// ----------------------------------------------------------------------------------------
+        /// Default Constructor.
+        /// ----------------------------------------------------------------------------------------
         cexpr ctor Variant()
         requires(RDefaultConstructible<TAt<0>>)
+            and (not RTriviallyDefaultConstructible<TAt<0>>)
         {
             ImplBase::template _emplaceValueByIndex<0>();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Copy Constructor.
+        /// Trivial Copy Constructor.
         /// ----------------------------------------------------------------------------------------
         cexpr ctor Variant(const Variant& that) = default;
 
+        /// ----------------------------------------------------------------------------------------
+        /// Copy Constructor.
+        /// ----------------------------------------------------------------------------------------
         cexpr ctor Variant(const Variant& that)
         requires(RCopyConstructibleAll<Ts...>)
             and (not RTriviallyCopyConstructibleAll<Ts...>)
@@ -94,10 +110,24 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Copy Assignment Operator.
+        /// Copy Constructor Template.
+        /// ----------------------------------------------------------------------------------------
+        template <tname... TOthers>
+        cexpr ctor Variant(const Variant<TOthers...>& that)
+        requires(Types::template Has<TOthers...>)
+            and (RCopyConstructibleAll<TOthers...>)
+        {
+            ImplBase::_emplaceValueFromVariant(that);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// Trivial Copy Assignment Operator.
         /// ----------------------------------------------------------------------------------------
         cexpr fn op=(const Variant& that) -> Variant& = default;
 
+        /// ----------------------------------------------------------------------------------------
+        /// Copy Assignment Operator.
+        /// ----------------------------------------------------------------------------------------
         cexpr fn op=(const Variant& that) -> Variant&
         requires(RCopyConstructibleAll<Ts...>)
             and (RCopyAssignableAll<Ts...>)
@@ -109,10 +139,26 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Move Constructor.
+        /// Copy Assignment Operator Template.
+        /// ----------------------------------------------------------------------------------------
+        template <tname... TOthers>
+        cexpr fn op=(const Variant<TOthers...>& that) -> Variant&
+        requires(Types::template Has<TOthers...>)
+            and (RCopyConstructibleAll<TOthers...>)
+            and (RCopyAssignableAll<TOthers...>)
+        {
+            ImplBase::_setValueFromVariant(that);
+            return *this;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// Trivial Move Constructor.
         /// ----------------------------------------------------------------------------------------
         cexpr ctor Variant(Variant&& that) = default;
 
+        /// ----------------------------------------------------------------------------------------
+        /// Move Constructor.
+        /// ----------------------------------------------------------------------------------------
         cexpr ctor Variant(Variant&& that)
         requires(RMoveConstructibleAll<Ts...>)
             and (not RTriviallyMoveConstructibleAll<Ts...>)
@@ -121,15 +167,42 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Move Assignment Operator.
+        /// Move Constructor Template.
+        /// ----------------------------------------------------------------------------------------
+        template <tname... TOthers>
+        cexpr ctor Variant(Variant<TOthers...>&& that)
+        requires(Types::template Has<TOthers...>)
+            and (RMoveConstructibleAll<TOthers...>)
+        {
+            ImplBase::_emplaceValueFromVariant(mov(that));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// Trivial Move Assignment Operator.
         /// ----------------------------------------------------------------------------------------
         cexpr fn op=(Variant&& that) -> Variant& = default;
 
+        /// ----------------------------------------------------------------------------------------
+        /// Move Assignment Operator.
+        /// ----------------------------------------------------------------------------------------
         cexpr fn op=(Variant&& that) -> Variant&
         requires(RMoveConstructibleAll<Ts...>)
             and (RMoveAssignableAll<Ts...>)
             and (not RTriviallyMoveConstructibleAll<Ts...>)
             and (not RTriviallyMoveAssignableAll<Ts...>)
+        {
+            ImplBase::_setValueFromVariant(mov(that));
+            return *this;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// Move Assignment Operator Template.
+        /// ----------------------------------------------------------------------------------------
+        template <tname... TOthers>
+        cexpr fn op=(Variant<TOthers...>&& that) -> Variant&
+        requires(Types::template Has<TOthers...>)
+            and (RMoveConstructibleAll<Ts...>)
+            and (RMoveAssignableAll<Ts...>)
         {
             ImplBase::_setValueFromVariant(mov(that));
             return *this;
@@ -163,10 +236,13 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Destructor. Destructs value.
+        /// Trivial Destructor.
         /// ----------------------------------------------------------------------------------------
         cexpr dtor Variant() = default;
 
+        /// ----------------------------------------------------------------------------------------
+        /// Destructor. Destructs value.
+        /// ----------------------------------------------------------------------------------------
         cexpr dtor Variant()
         requires(not RTriviallyDestructibleAll<Ts...>)
         {
