@@ -22,19 +22,21 @@ namespace Atom
         using This = Variant<Ts...>;
         using ImplBase = _VariantImpl<Ts...>;
 
+    public:
         /// ----------------------------------------------------------------------------------------
         /// TypeList of this variant.
         /// ----------------------------------------------------------------------------------------
-        pub using Types = TypeList<Ts...>;
+        using Types = TypeList<Ts...>;
 
     //// -------------------------------------------------------------------------------------------
     //// Static Functions
     //// -------------------------------------------------------------------------------------------
 
+    public:
         /// ----------------------------------------------------------------------------------------
         /// Check if this variant supports type `T`.
         /// ----------------------------------------------------------------------------------------
-        pub template <tname T>
+        template <tname T>
         static ceval fn Has() -> bool
         {
             return ImplBase::template _HasType<T>();
@@ -43,7 +45,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Check if index `i` can be used to access value.
         /// ----------------------------------------------------------------------------------------
-        pub template <usize i>
+        template <usize i>
         static ceval fn Has() -> bool
         {
             return ImplBase::template _HasIndex<i>();
@@ -52,16 +54,16 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Get type at index.
         /// ----------------------------------------------------------------------------------------
-        pub template <usize i>
-        requires (Has<i>())
+        template <usize i>
+        requires(Has<i>())
         using TAt = tname ImplBase::template _TypeAtIndex<i>;
 
         /// ----------------------------------------------------------------------------------------
         /// Index of type. This index than can be used to access value of type at that index.
         /// ----------------------------------------------------------------------------------------
-        pub template <tname T>
-        requires (Has<T>())
+        template <tname T>
         static ceval fn IndexOf() -> usize
+            requires(Has<T>())
         {
             return ImplBase::template _GetIndexForType<T>();
         }
@@ -69,7 +71,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Count of types this variant supports.
         /// ----------------------------------------------------------------------------------------
-        pub static ceval fn Count() -> usize
+        static ceval fn Count() -> usize
         {
             return ImplBase::_TypeCount;
         }
@@ -88,8 +90,8 @@ namespace Atom
         /// Default Constructor.
         /// ----------------------------------------------------------------------------------------
         cexpr ctor Variant()
-        requires(RDefaultConstructible<TAt<0>>)
-            and (not RTriviallyDefaultConstructible<TAt<0>>)
+            requires(RDefaultConstructible<TAt<0>>)
+                and (not RTriviallyDefaultConstructible<TAt<0>>)
         {
             ImplBase::template _emplaceValueByIndex<0>();
         }
@@ -103,8 +105,8 @@ namespace Atom
         /// Copy Constructor.
         /// ----------------------------------------------------------------------------------------
         cexpr ctor Variant(const Variant& that)
-        requires(RCopyConstructibleAll<Ts...>)
-            and (not RTriviallyCopyConstructibleAll<Ts...>)
+            requires(RCopyConstructibleAll<Ts...>)
+                and (not RTriviallyCopyConstructibleAll<Ts...>)
         {
             ImplBase::_emplaceValueFromVariant(that);
         }
@@ -114,8 +116,8 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <tname... TOthers>
         cexpr ctor Variant(const Variant<TOthers...>& that)
-        requires(Types::template Has<TOthers...>)
-            and (RCopyConstructibleAll<TOthers...>)
+            requires(Types::template Has<TOthers...>)
+                and (RCopyConstructibleAll<TOthers...>)
         {
             ImplBase::_emplaceValueFromVariant(that);
         }
@@ -129,10 +131,10 @@ namespace Atom
         /// Copy Assignment Operator.
         /// ----------------------------------------------------------------------------------------
         cexpr fn op=(const Variant& that) -> Variant&
-        requires(RCopyConstructibleAll<Ts...>)
-            and (RCopyAssignableAll<Ts...>)
-            and (not RTriviallyCopyConstructibleAll<Ts...>)
-            and (not RTriviallyCopyAssignableAll<Ts...>)
+            requires(RCopyConstructibleAll<Ts...>)
+                and (RCopyAssignableAll<Ts...>)
+                and (not RTriviallyCopyConstructibleAll<Ts...>)
+                and (not RTriviallyCopyAssignableAll<Ts...>)
         {
             ImplBase::_setValueFromVariant(that);
             return *this;
@@ -143,9 +145,9 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <tname... TOthers>
         cexpr fn op=(const Variant<TOthers...>& that) -> Variant&
-        requires(Types::template Has<TOthers...>)
-            and (RCopyConstructibleAll<TOthers...>)
-            and (RCopyAssignableAll<TOthers...>)
+            requires(Types::template Has<TOthers...>)
+                and (RCopyConstructibleAll<TOthers...>)
+                and (RCopyAssignableAll<TOthers...>)
         {
             ImplBase::_setValueFromVariant(that);
             return *this;
@@ -160,8 +162,8 @@ namespace Atom
         /// Move Constructor.
         /// ----------------------------------------------------------------------------------------
         cexpr ctor Variant(Variant&& that)
-        requires(RMoveConstructibleAll<Ts...>)
-            and (not RTriviallyMoveConstructibleAll<Ts...>)
+            requires(RMoveConstructibleAll<Ts...>)
+                and (not RTriviallyMoveConstructibleAll<Ts...>)
         {
             ImplBase::_emplaceValueFromVariant(mov(that));
         }
@@ -171,8 +173,8 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <tname... TOthers>
         cexpr ctor Variant(Variant<TOthers...>&& that)
-        requires(Types::template Has<TOthers...>)
-            and (RMoveConstructibleAll<TOthers...>)
+            requires(Types::template Has<TOthers...>)
+                and (RMoveConstructibleAll<TOthers...>)
         {
             ImplBase::_emplaceValueFromVariant(mov(that));
         }
@@ -186,10 +188,10 @@ namespace Atom
         /// Move Assignment Operator.
         /// ----------------------------------------------------------------------------------------
         cexpr fn op=(Variant&& that) -> Variant&
-        requires(RMoveConstructibleAll<Ts...>)
-            and (RMoveAssignableAll<Ts...>)
-            and (not RTriviallyMoveConstructibleAll<Ts...>)
-            and (not RTriviallyMoveAssignableAll<Ts...>)
+            requires(RMoveConstructibleAll<Ts...>)
+                and (RMoveAssignableAll<Ts...>)
+                and (not RTriviallyMoveConstructibleAll<Ts...>)
+                and (not RTriviallyMoveAssignableAll<Ts...>)
         {
             ImplBase::_setValueFromVariant(mov(that));
             return *this;
@@ -200,9 +202,9 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <tname... TOthers>
         cexpr fn op=(Variant<TOthers...>&& that) -> Variant&
-        requires(Types::template Has<TOthers...>)
-            and (RMoveConstructibleAll<Ts...>)
-            and (RMoveAssignableAll<Ts...>)
+            requires(Types::template Has<TOthers...>)
+                and (RMoveConstructibleAll<Ts...>)
+                and (RMoveAssignableAll<Ts...>)
         {
             ImplBase::_setValueFromVariant(mov(that));
             return *this;
@@ -216,7 +218,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <tname TFwd, tname T = TTI::TRemoveQuailfiersRef<TFwd>>
         cexpr ctor Variant(TFwd&& value)
-        requires(Has<T>())
+            requires(Has<T>())
         {
             ImplBase::template _emplaceValueByType<T>(fwd(value));
         }
@@ -229,7 +231,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <tname TFwd, tname T = TTI::TRemoveQuailfiersRef<TFwd>>
         cexpr fn op=(TFwd&& value) -> Variant&
-        requires(Has<T>())
+            requires(Has<T>())
         {
             ImplBase::_setValue(fwd(value));
             return *this;
@@ -244,7 +246,7 @@ namespace Atom
         /// Destructor. Destructs value.
         /// ----------------------------------------------------------------------------------------
         cexpr dtor Variant()
-        requires(not RTriviallyDestructibleAll<Ts...>)
+            requires(not RTriviallyDestructibleAll<Ts...>)
         {
             ImplBase::_destroyValue();
         }
@@ -253,15 +255,17 @@ namespace Atom
     //// Functions
     //// -------------------------------------------------------------------------------------------
 
+    public:
         /// ----------------------------------------------------------------------------------------
         /// Constructs the type `T` and sets the value.
         /// 
         /// # See Also
         /// - [`TAt`]
         /// ----------------------------------------------------------------------------------------
-        pub template <tname T, tname... TArgs>
-        requires (Has<T>()) and RConstructible<T, TArgs...>
+        template <tname T, tname... TArgs>
         cexpr fn emplace(TArgs&&... args)
+            requires(Has<T>())
+                and (RConstructible<T, TArgs...>)
         {
             ImplBase::_destroyValue();
             ImplBase::template _emplaceValueByType<T>(fwd(args)...);
@@ -273,9 +277,10 @@ namespace Atom
         /// # See Also
         /// - [`TAt`]
         /// ----------------------------------------------------------------------------------------
-        pub template <usize i, tname... TArgs>
-        requires (Has<i>()) and RConstructible<TAt<i>, TArgs...>
+        template <usize i, tname... TArgs>
         cexpr fn emplace(TArgs&&... args)
+            requires(Has<i>())
+                and (RConstructible<TAt<i>, TArgs...>)
         {
             ImplBase::_destroyValue();
             ImplBase::template _emplaceByIndex<i>(fwd(args)...);
@@ -287,9 +292,10 @@ namespace Atom
         /// # Parameters
         /// - `value`: Value to set.
         /// ----------------------------------------------------------------------------------------
-        pub template <tname TFwd, tname T = TTI::TRemoveQuailfiersRef<TFwd>>
-        requires (Has<T>()) and RConstructible<T, TFwd>
+        template <tname TFwd, tname T = TTI::TRemoveQuailfiersRef<TFwd>>
         cexpr fn set(TFwd&& value)
+            requires(Has<T>())
+                and (RConstructible<T, TFwd>)
         {
             ImplBase::_setValue(fwd(value));
         }
@@ -300,9 +306,9 @@ namespace Atom
         /// # Template Parameters
         /// - `T`: Type to access variant's value as.
         /// ----------------------------------------------------------------------------------------
-        pub template <tname T>
-        requires (Has<T>())
+        template <tname T>
         cexpr fn as() const -> const T&
+            requires(Has<T>())
         {
             CONTRACTS_EXPECTS(is<T>(), "Access to invalid type.");
 
@@ -315,9 +321,9 @@ namespace Atom
         /// # Template Parameters
         /// - `T`: Type to access variant's value as.
         /// ----------------------------------------------------------------------------------------
-        pub template <tname T>
-        requires (Has<T>())
+        template <tname T>
         cexpr fn as() -> T&
+            requires(Has<T>())
         {
             CONTRACTS_EXPECTS(is<T>(), "Access to invalid type.");
 
@@ -333,9 +339,9 @@ namespace Atom
         /// # See Also
         /// - [`TAt`]
         /// ----------------------------------------------------------------------------------------
-        pub template <usize i>
-        requires (Has<i>())
+        template <usize i>
         cexpr fn at() const -> const TAt<i>&
+            requires(Has<i>())
         {
             CONTRACTS_EXPECTS(is<i>(), "Access to invalid type by index.");
 
@@ -351,9 +357,9 @@ namespace Atom
         /// # See Also
         /// - [`TAt`]
         /// ----------------------------------------------------------------------------------------
-        pub template <usize i>
-        requires (Has<i>())
+        template <usize i>
         cexpr fn at() -> TAt<i>&
+            requires(Has<i>())
         {
             CONTRACTS_EXPECTS(is<i>(), "Access to invalid type by index.");
 
@@ -363,9 +369,9 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Checks if current value is of type `T`.
         /// ----------------------------------------------------------------------------------------
-        pub template <tname T>
-        requires (Has<T>())
+        template <tname T>
         cexpr fn is() const -> bool
+            requires(Has<T>())
         {
             return ImplBase::template _isType<T>();
         }
@@ -376,9 +382,9 @@ namespace Atom
         /// # See Also
         /// - [`TAt`]
         /// ----------------------------------------------------------------------------------------
-        pub template <usize i>
-        requires (Has<i>())
+        template <usize i>
         cexpr fn is() const -> bool
+            requires(Has<i>())
         {
             return ImplBase::template _isIndex<i>();
         }
@@ -386,7 +392,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Get the index to current type.
         /// ----------------------------------------------------------------------------------------
-        pub cexpr fn index() const -> usize
+        cexpr fn index() const -> usize
         {
             return ImplBase::_getTypeIndex();
         }
