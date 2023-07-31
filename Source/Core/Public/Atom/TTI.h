@@ -61,6 +61,9 @@ namespace Atom::TTI
 
     template <tname T>
     cexpr bool IsRValueRef = std::is_rvalue_reference_v<T>;
+
+    template <tname T>
+    cexpr bool IsConst = std::is_const_v<T>;
 }
 
 /// ------------------------------------------------------------------------------------------------
