@@ -219,4 +219,24 @@ TEST_CASE("Atom.Core.Option")
         REQUIRE(opt0->lastOp == EOperation::MoveConstructor);
         REQUIRE(opt1->lastOp == EOperation::MoveConstructor);
     }
+
+    SECTION("Reference Types")
+    {
+        TestType val;
+        Option<TestType&> opt = val;
+
+        REQUIRE(&val == &opt.value());
+
+        opt.value().lastOp = EOperation::Destructor;
+        REQUIRE(val.lastOp == EOperation::Destructor);
+
+        using Opt = Option<int&>;
+
+        static_assert(RDefaultConstructible<Opt>);
+        static_assert(RCopyConstructible<Opt>);
+        static_assert(RMoveConstructible<Opt>);
+        static_assert(RCopyAssignable<Opt>);
+        static_assert(RMoveAssignable<Opt>);
+        static_assert(RDestructible<Opt>);
+    }
 }
