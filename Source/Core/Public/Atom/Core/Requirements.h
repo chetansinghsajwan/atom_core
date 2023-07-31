@@ -224,7 +224,7 @@ namespace Atom
     /// Ensures {T} is {TriviallyCopyAssignable}.
     /// --------------------------------------------------------------------------------------------
     template <tname T>
-    concept RTriviallyCopyAssignable = RTriviallyAssignable<T, const T&>;
+    concept RTriviallyCopyAssignable = RTriviallyAssignable<T&, const T&>;
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures each {T} in {Ts...} is {CopyAssignable}.
@@ -248,7 +248,7 @@ namespace Atom
     /// Ensures {T} is {TriviallyMoveAssignable}.
     /// --------------------------------------------------------------------------------------------
     template <tname T>
-    concept RTriviallyMoveAssignable = RTriviallyAssignable<T, T&&>;
+    concept RTriviallyMoveAssignable = RTriviallyAssignable<T&, T&&>;
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures each {T} in {Ts...} is {MoveAssignable}.
