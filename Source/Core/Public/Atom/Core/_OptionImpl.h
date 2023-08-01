@@ -2,8 +2,8 @@
 #include "Atom/Core.h"
 #include "Atom/Memory/ObjHelper.h"
 
-#define debug_expects(assertion, msg) if (!(assertion)) throw 0;
-#define expects(assertion, msg) if (!(assertion)) throw 0;
+#define debug_expects(...)
+#define expects(...)
 
 namespace Atom
 {
@@ -54,10 +54,37 @@ namespace Atom
         NoInit _dummy;
     };
 
+    template <tname T>
+    union _OptionStorage <T*>
+    {
+    public:
+        class NoInit{};
+
+    public:
+        _OptionStorage() = default;
+
+        _OptionStorage(NoInit) { }
+
+        _OptionStorage(T* ptr):
+            _ptr{ ptr } { }
+
+    public:
+        constexpr fn getData() -> T**
+        {
+            return &_ptr;
+        }
+
+        constexpr fn getData() const -> const T**
+        {
+            return &_ptr;
+        }
+
+    private:
+        T* _ptr;
+    };
+
     /// --------------------------------------------------------------------------------------------
-    /// # To Do
     /// 
-    /// - Optimize operations.
     /// --------------------------------------------------------------------------------------------
     template <tname T>
     class _OptionImpl
@@ -75,68 +102,105 @@ namespace Atom
         }
 
     public:
-        cexpr ctor _OptionImpl() = default;
+        constexpr ctor _OptionImpl() = default;
 
-        cexpr ctor _OptionImpl(CtorNoVal):
+        constexpr ctor _OptionImpl(CtorNoVal):
             _storage{ _StorageCtorNoInit{} }, _isValue{ false } { }
 
-        cexpr ctor _OptionImpl(auto&&... args):
+        constexpr ctor _OptionImpl(auto&&... args):
             _storage{ fwd(args)... }, _isValue{ true } { }
 
     public:
-        constexpr fn copyConstructValueFromOption(const _OptionImpl& opt)
+        constexpr fn constructValueFromOption(const _OptionImpl& opt)
         {
             _constructValueFromOption<false>(opt);
         }
 
-        constexpr fn moveConstructValueFromOption(_OptionImpl& opt)
+        constexpr fn constructValueFromOption(_OptionImpl&& opt)
         {
             _constructValueFromOption<true>(opt);
         }
 
-        constexpr fn copyAssignValueFromOption(const _OptionImpl& opt)
+        constexpr fn assignValueFromOption(const _OptionImpl& opt)
         {
             _assignValueFromOption<false>(opt);
         }
 
-        constexpr fn moveAssignValueFromOption(_OptionImpl&& opt)
+        constexpr fn assignValueFromOption(_OptionImpl&& opt)
         {
             _assignValueFromOption<true>(opt);
         }
 
+        constexpr fn swapValueFromOption(_OptionImpl& opt)
+        {
+            _swapValueFromOption(opt);
+        }
+
         constexpr fn constructValue(auto&&... args)
-        {            
-            ObjHelper().Construct<T>(_storage.getData(), fwd(args)...);
+        {
+            debug_expects(not _isValue);
+
+            _constructValue(fwd(args)...);
             _isValue = true;
+        }
+
+        constexpr fn emplaceValue(auto&&... args)
+        {
+            if (_isValue)
+            {
+                _destroyValue();
+                _constructValue(fwd(args)...);
+            }
+            else
+            {
+                _constructValue(fwd(args)...);
+                _isValue = true;
+            }
         }
 
         constexpr fn assignValue(auto&& val)
         {
-            ObjHelper().Assign<T>(_storage.getData(), fwd(val));
+            _assignValue(fwd(val));
             _isValue = true;
         }
 
         constexpr fn destroyValue()
         {
-            if (isValue())
+            debug_expects(_isValue);
+
+            _destroyValue();
+            _isValue = false;
+        }
+
+        constexpr fn destroyValueWithCheck()
+        {
+            if (_isValue)
             {
-                ObjHelper().Destruct<T>(_storage.getData());
+                _destroyValue();
                 _isValue = false;
+            }
+        }
+
+        constexpr fn destroyValueOnDestructor()
+        {
+            if (_isValue)
+            {
+                _destroyValue();
             }
         }
 
         constexpr fn getValue() -> T&
         {
-            debug_expects(isValue(), "");
+            debug_expects(_isValue);
 
-            return *_storage.getData();
+            return _getValue();
         }
 
         constexpr fn getValue() const -> const T&
         {
-            debug_expects(isValue(), "");
+            debug_expects(_isValue);
 
-            return *_storage.getData();
+            return _getValue();
         }
 
         constexpr fn isValue() const -> bool
@@ -148,39 +212,103 @@ namespace Atom
         template <bool move>
         constexpr fn _constructValueFromOption(auto&& opt)
         {
-            if (opt.isValue())
+            if (opt._isValue)
             {
                 if constexpr (move)
-                    constructValue(mov(opt.getValue()));
+                    _constructValue(mov(opt._getValue()));
                 else
-                    constructValue(opt.getValue());
+                    _constructValue(opt._getValue());
+
+                _isValue = true;
             }
         }
 
         template <bool move>
         constexpr fn _assignValueFromOption(auto&& opt)
         {
-            if (opt.isValue())
+            if (opt._isValue)
             {
-                if (isValue())
+                if (_isValue)
                 {
                     if constexpr (move)
-                        assignValue(mov(opt.getValue()));
+                        _assignValue(mov(opt._getValue()));
                     else
-                        assignValue(opt.getValue());
+                        _assignValue(opt._getValue());
                 }
                 else
                 {
                     if constexpr (move)
-                        constructValue(mov(opt.getValue()));
+                        _constructValue(mov(opt._getValue()));
                     else
-                        constructValue(opt.getValue());
+                        _constructValue(opt._getValue());
+
+                    _isValue = true;
                 }
             }
             else
             {
-                destroyValue();
+                if (_isValue)
+                {
+                    _destroyValue();
+                    _isValue = false;
+                }
             }
+        }
+
+        constexpr fn _swapValueFromOption(_OptionImpl& opt)
+        {
+            if (opt._isValue)
+            {
+                if (_isValue)
+                {
+                    _swapValue(opt._getValue());
+                }
+                else
+                {
+                    _constructValue(mov(opt._getValue()));
+                    _isValue = true;
+                    opt._isValue = false;
+                }
+            }
+            else
+            {
+                if (_isValue)
+                {
+                    opt._constructValue(mov(_getValue()));
+                    opt._isValue = true;
+                    _isValue = false;
+                }
+            }
+        }
+
+        constexpr fn _constructValue(auto&&... args)
+        {
+            ObjHelper().Construct<T>(_storage.getData(), fwd(args)...);
+        }
+
+        constexpr fn _assignValue(auto&& val)
+        {
+            ObjHelper().Assign<T>(_storage.getData(), fwd(val));
+        }
+
+        constexpr fn _swapValue(T& that)
+        {
+            ObjHelper().Swap(_getValue(), that);
+        }
+
+        constexpr fn _destroyValue()
+        {
+            ObjHelper().Destruct<T>(_storage.getData());
+        }
+
+        constexpr fn _getValue() -> T&
+        {
+            return *_storage.getData();
+        }
+
+        constexpr fn _getValue() const -> const T&
+        {
+            return *_storage.getData();
         }
 
     private:

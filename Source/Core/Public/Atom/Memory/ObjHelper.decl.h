@@ -29,6 +29,14 @@ namespace Atom
             *mem = fwd(arg);
         }
 
+        pub template <tname T>
+        cexpr fn Swap(T& t1, T& t2) const
+        {
+            T tmp = mov(t1);
+            t1 = mov(t2);
+            t2 = mov(tmp);
+        }
+
         pub template <tname TPtr>
         cexpr fn Destruct(TPtr&& mem) const
         {

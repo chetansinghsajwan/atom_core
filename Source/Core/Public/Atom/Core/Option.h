@@ -3,6 +3,9 @@
 
 namespace Atom
 {
+    class NullOption { };
+    constexpr inline auto nullopt = NullOption{};
+
     template <typename T>
     class Option
     {
@@ -36,7 +39,7 @@ namespace Atom
             requires(RCopyConstructible<T>)
                 and (not RTriviallyCopyConstructible<T>)
         {
-            _impl.copyConstructValueFromOption(that._impl);
+            _impl.constructValueFromOption(that._impl);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -53,7 +56,7 @@ namespace Atom
             requires(RCopyAssignable<T>)
                 and (not RTriviallyCopyAssignable<T>)
         {
-            _impl.copyAssignValueFromOption(that._impl);
+            _impl.assignValueFromOption(that._impl);
             return *this;
         }
 
@@ -71,7 +74,7 @@ namespace Atom
             requires(RMoveConstructible<T>)
                 and (not RTriviallyMoveConstructible<T>)
         {
-            _impl.moveConstructValueFromOption(that._impl);
+            _impl.constructValueFromOption(mov(that._impl));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -88,7 +91,22 @@ namespace Atom
             requires(RMoveAssignable<T>)
                 and (not RTriviallyMoveAssignable<T>)
         {
-            _impl.moveAssignValueFromOption(mov(that._impl));
+            _impl.assignValueFromOption(mov(that._impl));
+            return *this;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// Null Constructor.
+        /// ----------------------------------------------------------------------------------------
+        constexpr ctor Option(NullOption):
+            _impl{ _ImplCtorNoVal{} } { }
+
+        /// ----------------------------------------------------------------------------------------
+        /// Null Operator.
+        /// ----------------------------------------------------------------------------------------
+        constexpr fn op=(NullOption) -> Option&
+        {
+            _impl.destroyValueWithChecks();
             return *this;
         }
 
@@ -136,10 +154,20 @@ namespace Atom
             requires(RDestructible<T>)
                 and (not RTriviallyDestructible<T>)
         {
-            _impl.destroyValue();
+            _impl.destroyValueOnDestructor();
         }
 
     public:
+        /// ----------------------------------------------------------------------------------------
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        template <typename... TArgs>
+        constexpr fn emplace(TArgs&&... args)
+            requires(RConstructible<T, TArgs...>)
+        {
+            _impl.emplaceValue(fwd(args)...);
+        }
+
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
@@ -253,6 +281,22 @@ namespace Atom
         constexpr fn isValue() const -> bool
         {
             return _impl.isValue();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        constexpr fn reset()
+        {
+            return _impl.destroyValueWithCheck();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        constexpr fn swap(Option& that)
+        {
+            return _impl.swapValueFromOption(that._impl);
         }
 
     private:
