@@ -15,7 +15,14 @@ enum class EOperation
     MoveConstructorAsThat,
     MoveOperator,
     MoveOperatorAsThat,
-    Destructor
+    Destructor,
+
+    EqualOperator,
+    NotEqualOperator,
+    LessThanOperator,
+    GreaterThanOperator,
+    LessThanOrEqualOperator,
+    GreaterThanOrEqualOperator
 };
 
 /// ------------------------------------------------------------------------------------------------
@@ -23,47 +30,86 @@ enum class EOperation
 /// 
 /// # To Do
 /// 
-/// - Move these utils to separate file, also from TestVariant.cpp.s
+/// - Move these utils to separate file, also from TestVariant.cpp.
 /// ------------------------------------------------------------------------------------------------
 class TestType
 {
-    pub ctor TestType()
+public:
+    ctor TestType()
     {
         lastOp = EOperation::DefaultConstructor;
     }
 
-    pub ctor TestType(const TestType& that)
+    ctor TestType(const TestType& that)
     {
         lastOp = EOperation::CopyConstructor;
         that.lastOp = EOperation::CopyConstructorAsThat;
     }
 
-    pub fn op=(const TestType& that) -> TestType&
+    fn op=(const TestType& that) -> TestType&
     {
         lastOp = EOperation::CopyOperator;
         that.lastOp = EOperation::CopyOperatorAsThat;
         return *this;
     }
 
-    pub ctor TestType(TestType&& that)
+    ctor TestType(TestType&& that)
     {
         lastOp = EOperation::MoveConstructor;
         that.lastOp = EOperation::MoveConstructorAsThat;
     }
 
-    pub fn op=(TestType&& that) -> TestType&
+    fn op=(TestType&& that) -> TestType&
     {
         lastOp = EOperation::MoveOperator;
         that.lastOp = EOperation::MoveOperatorAsThat;
         return *this;
     }
 
-    pub dtor TestType()
+    dtor TestType()
     {
         lastOp = EOperation::Destructor;
     }
 
-    pub mutable EOperation lastOp;
+public:
+    fn op==(const TestType& opt1) const -> bool
+    {
+        lastOp = EOperation::EqualOperator;
+        return true;
+    }
+
+    fn op!=(const TestType& opt1) const -> bool
+    {
+        lastOp = EOperation::NotEqualOperator;
+        return false;
+    }
+
+    fn op<(const TestType& opt1) const -> bool
+    {
+        lastOp = EOperation::LessThanOperator;
+        return true;
+    }
+
+    fn op>(const TestType& opt1) const -> bool
+    {
+        lastOp = EOperation::GreaterThanOperator;
+        return true;
+    }
+
+    fn op<=(const TestType& opt1) const -> bool
+    {
+        lastOp = EOperation::LessThanOrEqualOperator;
+        return true;
+    }
+
+    fn op>=(const TestType& opt1) const -> bool
+    {
+        lastOp = EOperation::GreaterThanOrEqualOperator;
+        return true;
+    }
+
+public:
+    mutable EOperation lastOp;
 };
 
 /// ------------------------------------------------------------------------------------------------
@@ -96,7 +142,7 @@ TEST_CASE("Atom.Core.Option")
     SECTION("Trivial Copy Constructor")
     {
         using Opt = Option<int>;
-        REQUIRE(RTriviallyCopyConstructible<Opt>);
+        STATIC_REQUIRE(RTriviallyCopyConstructible<Opt>);
     }
 
     SECTION("Copy Constructor")
@@ -114,7 +160,7 @@ TEST_CASE("Atom.Core.Option")
     SECTION("Trivial Move Constructor")
     {
         using Opt = Option<int>;
-        REQUIRE(RTriviallyMoveConstructible<Opt>);
+        STATIC_REQUIRE(RTriviallyMoveConstructible<Opt>);
     }
 
     SECTION("Move Constructor")
@@ -132,7 +178,7 @@ TEST_CASE("Atom.Core.Option")
     SECTION("Trivial Copy Assignment")
     {
         using Opt = Option<int>;
-        REQUIRE(RTriviallyCopyAssignable<Opt>);
+        STATIC_REQUIRE(RTriviallyCopyAssignable<Opt>);
     }
 
     SECTION("Copy Assignment")
@@ -156,7 +202,7 @@ TEST_CASE("Atom.Core.Option")
     SECTION("Trivial Move Assignment")
     {
         using Opt = Option<int>;
-        REQUIRE(RTriviallyMoveAssignable<Opt>);
+        STATIC_REQUIRE(RTriviallyMoveAssignable<Opt>);
     }
 
     SECTION("Move Assignment")
@@ -180,7 +226,7 @@ TEST_CASE("Atom.Core.Option")
     SECTION("Trivial Destructor")
     {
         using Opt = Option<int>;
-        REQUIRE(RTriviallyDestructible<Opt>);
+        STATIC_REQUIRE(RTriviallyDestructible<Opt>);
     }
 
     SECTION("Destructor")
@@ -195,7 +241,7 @@ TEST_CASE("Atom.Core.Option")
         REQUIRE(*lastOp == EOperation::Destructor);
     }
 
-    SECTION("Access Value")
+    SECTION("Access Value using value(), op*(), op->()")
     {
         class Overloads
         {
@@ -220,6 +266,82 @@ TEST_CASE("Atom.Core.Option")
         REQUIRE(opt1->lastOp == EOperation::MoveConstructor);
     }
 
+    SECTION("Emplace")
+    {
+        class Type
+        {
+        public:
+            Type(int a, char b, float c):
+                a{ a }, b{ b }, c{ c } { }
+
+        public:
+            int a;
+            char b;
+            float c;
+        };
+
+        Option<Type> opt;
+        opt.emplace(9, 'a', 0.99f);
+
+        REQUIRE(opt.isValue());
+        REQUIRE(opt.value().a == 9);
+        REQUIRE(opt.value().b == 'a');
+        REQUIRE(opt.value().c == 0.99f);
+
+        opt.reset();
+
+        REQUIRE(not opt.isValue());
+    }
+
+    SECTION("Equal Operator")
+    {
+        Option<TestType> opt0;
+        Option<TestType> opt1;
+
+        // They have same state, that is null.
+        REQUIRE(opt0 == opt1);
+
+        opt0 = TestType();
+        opt0.value().lastOp = EOperation::None;
+
+        // They don't have same state anymore.
+        REQUIRE(opt0 != opt1);
+
+        // No comparision is performed as one of the operands has no value.
+        REQUIRE(opt0.value().lastOp == EOperation::None);
+
+        // Now they both have some values.
+        opt1 = TestType();
+
+        REQUIRE(opt0 == opt1);
+
+        // Comparision is performed as both have some value.
+        REQUIRE(opt0.value().lastOp == EOperation::EqualOperator);
+    }
+
+    SECTION("Other Compairision Operators, compairison with Option")
+    {
+        Option<TestType> opt0;
+        Option<TestType> opt1;
+
+        REQUIRE_FALSE(opt0 < opt1);
+        REQUIRE_FALSE(opt0 > opt1);
+        REQUIRE_FALSE(opt0 <= opt1);
+        REQUIRE_FALSE(opt0 >= opt1);
+
+        opt0 = TestType();
+        REQUIRE_FALSE(opt0 < opt1);
+        REQUIRE_FALSE(opt0 > opt1);
+        REQUIRE_FALSE(opt0 <= opt1);
+        REQUIRE_FALSE(opt0 >= opt1);
+
+        opt1 = TestType();
+        REQUIRE(opt0 < opt1);
+        REQUIRE(opt0 > opt1);
+        REQUIRE(opt0 <= opt1);
+        REQUIRE(opt0 >= opt1);
+    }
+
     SECTION("Reference Types")
     {
         TestType val;
@@ -232,11 +354,11 @@ TEST_CASE("Atom.Core.Option")
 
         using Opt = Option<int&>;
 
-        static_assert(RDefaultConstructible<Opt>);
-        static_assert(RCopyConstructible<Opt>);
-        static_assert(RMoveConstructible<Opt>);
-        static_assert(RCopyAssignable<Opt>);
-        static_assert(RMoveAssignable<Opt>);
-        static_assert(RDestructible<Opt>);
+        STATIC_REQUIRE(RDefaultConstructible<Opt>);
+        STATIC_REQUIRE(RCopyConstructible<Opt>);
+        STATIC_REQUIRE(RMoveConstructible<Opt>);
+        STATIC_REQUIRE(RCopyAssignable<Opt>);
+        STATIC_REQUIRE(RMoveAssignable<Opt>);
+        STATIC_REQUIRE(RDestructible<Opt>);
     }
 }
