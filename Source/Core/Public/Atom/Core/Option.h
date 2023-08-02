@@ -643,6 +643,6 @@ namespace Atom
     template <typename T>
     constexpr fn op!=(const Option<T>& opt, NullOption) -> bool
     {
-        return not (opt0 == opt1);
+        return not (opt == nullopt);
     }
 }
