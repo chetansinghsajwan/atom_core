@@ -83,7 +83,9 @@ namespace Atom
         ///     - Else, does nothing.
         /// ----------------------------------------------------------------------------------------
         constexpr fn op=(const Option& that) -> Option&
-            requires(RCopyAssignable<T>)
+            requires(RCopyConstructible<T>)
+                and (RCopyAssignable<T>)
+                and (not RTriviallyCopyConstructible<T>)
                 and (not RTriviallyCopyAssignable<T>)
         {
             _impl.assignValueFromOption(that._impl);
@@ -128,7 +130,9 @@ namespace Atom
         ///     - Else, does nothing.
         /// ----------------------------------------------------------------------------------------
         constexpr fn op=(Option&& that) -> Option&
-            requires(RMoveAssignable<T>)
+            requires(RMoveConstructible<T>)
+                and (RMoveAssignable<T>)
+                and (not RTriviallyMoveConstructible<T>)
                 and (not RTriviallyMoveAssignable<T>)
         {
             _impl.assignValueFromOption(mov(that._impl));
