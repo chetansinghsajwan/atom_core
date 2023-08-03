@@ -32,6 +32,18 @@ namespace Atom::Test
         GreaterThanOrEqualToOperator            = 1 << 18,
     };
 
+    constexpr fn op|(const ECustomTypeFlags& flags, const ECustomTypeFlags& flagsToAdd)
+        -> ECustomTypeFlags
+    {
+        return (ECustomTypeFlags)((uint64)flags | (uint64)flagsToAdd);
+    }
+
+    constexpr fn op&(const ECustomTypeFlags& flags, const ECustomTypeFlags& flagsToAdd)
+        -> ECustomTypeFlags
+    {
+        return (ECustomTypeFlags)((uint64)flags & (uint64)flagsToAdd);
+    }
+
     class EnumFlagUtils
     {
     public:
@@ -48,6 +60,7 @@ namespace Atom::Test
     template <ECustomTypeFlags flags>
     class CustomType
     {
+    public:
         /// ----------------------------------------------------------------------------------------
         /// # Trivial Default Constructor
         /// ----------------------------------------------------------------------------------------
@@ -200,4 +213,72 @@ namespace Atom::Test
             return true;
         }
     };
+
+    class NonDefaultConstructibleMock
+    {
+    public:
+        NonDefaultConstructibleMock() = delete;
+    };
+
+    using CopyConstructibleMock = CustomType<
+        ECustomTypeFlags::CopyConstructor>;
+
+    using CopyAssignableMock = CustomType<
+        ECustomTypeFlags::CopyOperator>;
+
+    using CopyableMock = CustomType<
+        ECustomTypeFlags::CopyConstructor |
+        ECustomTypeFlags::CopyOperator>;
+
+    using MoveConstructibleMock = CustomType<
+        ECustomTypeFlags::MoveConstructor>;
+
+    using MoveAssignableMock = CustomType<
+        ECustomTypeFlags::MoveOperator>;
+
+    using MoveableMock = CustomType<
+        ECustomTypeFlags::CopyConstructor |
+        ECustomTypeFlags::CopyOperator |
+        ECustomTypeFlags::MoveConstructor |
+        ECustomTypeFlags::MoveOperator>;
+
+    using DestructibleMock = CustomType<
+        ECustomTypeFlags::Destructor>;
+
+    using TriviallyCopyConstructibleMock = CustomType<
+        ECustomTypeFlags::TrivialCopyConstructor>;
+
+    using TriviallyCopyAssignableMock = CustomType<
+        ECustomTypeFlags::TrivialCopyOperator>;
+
+    using TriviallyCopyableMock = CustomType<
+        ECustomTypeFlags::TrivialCopyConstructor |
+        ECustomTypeFlags::TrivialCopyOperator>;
+
+    using TriviallyMoveConstructibleMock = CustomType<
+        ECustomTypeFlags::TrivialMoveConstructor>;
+
+    using TriviallyMoveAssignableMock = CustomType<
+        ECustomTypeFlags::TrivialMoveOperator>;
+
+    using TriviallyMoveableMock = CustomType<
+        ECustomTypeFlags::TrivialCopyConstructor |
+        ECustomTypeFlags::TrivialCopyOperator |
+        ECustomTypeFlags::TrivialMoveConstructor |
+        ECustomTypeFlags::TrivialMoveOperator>;
+
+    using TriviallyDestructibleMock = CustomType<
+        ECustomTypeFlags::TrivialDestructor>;
+
+    using EqualityComparableMock = CustomType<
+        ECustomTypeFlags::EqualToOperator |
+        ECustomTypeFlags::NotEqualToOperator>;
+
+    using ComparableMock = CustomType<
+        ECustomTypeFlags::EqualToOperator |
+        ECustomTypeFlags::NotEqualToOperator |
+        ECustomTypeFlags::LessThanToOperator |
+        ECustomTypeFlags::GreaterThanToOperator |
+        ECustomTypeFlags::LessThanOrEqualToOperator |
+        ECustomTypeFlags::GreaterThanOrEqualToOperator>;
 }

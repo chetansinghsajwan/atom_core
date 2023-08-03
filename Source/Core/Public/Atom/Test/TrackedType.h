@@ -119,6 +119,12 @@ namespace Atom::Test
     template <typename T>
     class TrackedTypeOf extends TrackedType
     {
+        using Base = TrackedType;
+
+    public:
+        Base::Base;
+        Base::op=;
+
     public:
         T value;
     };
