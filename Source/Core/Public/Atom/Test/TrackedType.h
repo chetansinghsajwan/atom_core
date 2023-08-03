@@ -28,7 +28,6 @@ namespace Atom::Test
             Destructor,
 
             EqualOperator,
-            NotEqualOperator,
             LessThanOperator,
             GreaterThanOperator,
             LessThanOrEqualOperator,
@@ -73,39 +72,43 @@ namespace Atom::Test
         }
 
     public:
-        constexpr fn op==(const TrackedType& opt1) const -> bool
+        constexpr fn op==(const TrackedType& that) const -> bool
         {
             lastOp = EOperation::EqualOperator;
+            that.lastOp = EOperation::EqualOperator;
             return true;
         }
 
-        constexpr fn op!=(const TrackedType& opt1) const -> bool
+        constexpr fn op!=(const TrackedType& that) const -> bool
         {
-            lastOp = EOperation::NotEqualOperator;
-            return false;
+            return not (*this == that);
         }
 
-        constexpr fn op<(const TrackedType& opt1) const -> bool
+        constexpr fn op<(const TrackedType& that) const -> bool
         {
             lastOp = EOperation::LessThanOperator;
+            that.lastOp = EOperation::LessThanOperator;
             return true;
         }
 
-        constexpr fn op>(const TrackedType& opt1) const -> bool
+        constexpr fn op>(const TrackedType& that) const -> bool
         {
             lastOp = EOperation::GreaterThanOperator;
+            that.lastOp = EOperation::GreaterThanOperator;
             return true;
         }
 
-        constexpr fn op<=(const TrackedType& opt1) const -> bool
+        constexpr fn op<=(const TrackedType& that) const -> bool
         {
             lastOp = EOperation::LessThanOrEqualOperator;
+            that.lastOp = EOperation::LessThanOrEqualOperator;
             return true;
         }
 
-        constexpr fn op>=(const TrackedType& opt1) const -> bool
+        constexpr fn op>=(const TrackedType& that) const -> bool
         {
             lastOp = EOperation::GreaterThanOrEqualOperator;
+            that.lastOp = EOperation::GreaterThanOrEqualOperator;
             return true;
         }
 
@@ -122,8 +125,8 @@ namespace Atom::Test
         using Base = TrackedType;
 
     public:
-        Base::Base;
-        Base::op=;
+        using Base::Base;
+        using Base::op=;
 
     public:
         T value;

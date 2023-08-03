@@ -25,11 +25,10 @@ namespace Atom::Test
         Trivial                                 = 1 << 12,
 
         EqualToOperator                         = 1 << 13,
-        NotEqualToOperator                      = 1 << 14,
-        LessThanToOperator                      = 1 << 15,
-        GreaterThanToOperator                   = 1 << 16,
-        LessThanOrEqualToOperator               = 1 << 17,
-        GreaterThanOrEqualToOperator            = 1 << 18,
+        LessThanToOperator                      = 1 << 14,
+        GreaterThanToOperator                   = 1 << 15,
+        LessThanOrEqualToOperator               = 1 << 16,
+        GreaterThanOrEqualToOperator            = 1 << 17,
     };
 
     constexpr fn op|(const ECustomTypeFlags& flags, const ECustomTypeFlags& flagsToAdd)
@@ -172,9 +171,9 @@ namespace Atom::Test
         /// # Not Equal To Opeartor
         /// ----------------------------------------------------------------------------------------
         constexpr fn op!=(const CustomType& that) -> bool
-            requires(EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::NotEqualToOperator))
+            requires(EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::EqualToOperator))
         {
-            return false;
+            return not (*this == that);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -271,12 +270,10 @@ namespace Atom::Test
         ECustomTypeFlags::TrivialDestructor>;
 
     using EqualityComparableMock = CustomType<
-        ECustomTypeFlags::EqualToOperator |
-        ECustomTypeFlags::NotEqualToOperator>;
+        ECustomTypeFlags::EqualToOperator>;
 
     using ComparableMock = CustomType<
         ECustomTypeFlags::EqualToOperator |
-        ECustomTypeFlags::NotEqualToOperator |
         ECustomTypeFlags::LessThanToOperator |
         ECustomTypeFlags::GreaterThanToOperator |
         ECustomTypeFlags::LessThanOrEqualToOperator |
