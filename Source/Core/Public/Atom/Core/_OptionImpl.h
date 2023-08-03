@@ -55,7 +55,7 @@ namespace Atom
     };
 
     template <tname T>
-    union _OptionStorage <T*>
+    union _OptionStorage<T*>
     {
     public:
         class NoInit{};

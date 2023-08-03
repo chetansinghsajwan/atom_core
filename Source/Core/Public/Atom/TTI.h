@@ -64,6 +64,12 @@ namespace Atom::TTI
 
     template <tname T>
     cexpr bool IsConst = std::is_const_v<T>;
+
+    template <tname T>
+    cexpr bool IsVolatile = std::is_volatile_v<T>;
+
+    template <tname T>
+    cexpr bool IsQualified = IsConst<T> || IsVolatile<T>;
 }
 
 /// ------------------------------------------------------------------------------------------------

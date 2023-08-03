@@ -25,11 +25,11 @@ namespace Atom
     /// - `T`: Type of value to store.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
+    requires(not RIsVoid<T>)
+        and (not TTI::IsQualified<T>)
+        and (not TTI::IsRValueRef<T>)
     class Option
     {
-        template <typename T1>
-        friend class Option;
-
         using _Impl = _OptionImpl<T>;
         using _ImplCtorNoVal = _Impl::CtorNoVal;
 
@@ -48,9 +48,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Trivial Copy Constructor.
         /// ----------------------------------------------------------------------------------------
-        constexpr ctor Option(const Option& that)
-            requires(RTriviallyCopyConstructible<T>)
-            = default;
+        constexpr ctor Option(const Option& that) = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # Copy Constructor
@@ -245,82 +243,83 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Access the value.
-        /// 
-        /// # Returns
-        /// L-Value reference to the value stored.
+        /// Access the value by ref.
         /// ----------------------------------------------------------------------------------------
         constexpr fn value() & -> T&
         {
-            debug_expects(isValue(), "Doesn't contain value.");
+            expects(isValue(), "Doesn't contain value.");
 
             return _impl.getValue();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Access the value.
-        /// 
-        /// # Returns
-        /// Const l-value reference to the value stored.
+        /// Access the value by ref.
         /// ----------------------------------------------------------------------------------------
         constexpr fn value() const& -> const T&
         {
-            debug_expects(isValue(), "Doesn't contain value.");
+            expects(isValue(), "Doesn't contain value.");
 
             return _impl.getValue();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Access the value.
-        /// 
-        /// # Returns
-        /// R-Value reference to the value stored.
+        /// Access the value by ref.
         /// ----------------------------------------------------------------------------------------
         constexpr fn value() && -> T&&
         {
-            debug_expects(isValue(), "Doesn't contain value.");
+            expects(isValue(), "Doesn't contain value.");
 
             return mov(_impl.getValue());
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Calls [`value()`].
+        /// Access the value by ref.
         /// ----------------------------------------------------------------------------------------
         constexpr fn op*() & -> T&
         {
-            return value();
+            debug_expects(isValue(), "Doesn't contain value.");
+            
+            return _impl.getValue();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Calls [`value()`].
+        /// Access the value by ref.
         /// ----------------------------------------------------------------------------------------
         constexpr fn op*() const& -> const T&
         {
-            return value();
+            debug_expects(isValue(), "Doesn't contain value.");
+            
+            return _impl.getValue();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Calls [`value()`].
+        /// Access the value by ref.
         /// ----------------------------------------------------------------------------------------
         constexpr fn op*() && -> T&&
         {
-            return value();
+            debug_expects(isValue(), "Doesn't contain value.");
+            
+            return _impl.getValue();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Calls [`&value()`].
+        /// Access the value by ptr.
         /// ----------------------------------------------------------------------------------------
         constexpr fn op->() -> T*
         {
-            return &value();
+            debug_expects(isValue(), "Doesn't contain value.");
+            
+            return &_impl.getValue();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Calls [`&value()`].
+        /// Access the value by ptr.
         /// ----------------------------------------------------------------------------------------
         constexpr fn op->() const -> const T*
         {
-            return &value();
+            debug_expects(isValue(), "Doesn't contain value.");
+            
+            return &_impl.getValue();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -418,104 +417,253 @@ namespace Atom
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// # To Do: Review this case.
+    /// Specializaion of [`Option`] for ref types.
+    /// 
+    /// - `T`: Type of ref to store.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    class Option<T&> extends Option<T*>
+    class Option<T&>
     {
-        using Base = Option<T*>;
+        using _Impl = _OptionImpl<T*>;
+        using _ImplCtorNoVal = _Impl::CtorNoVal;
 
     public:
-        constexpr ctor Option(T& ref):
-            Base{ &ref } { }
-
-        using Base::Base;
-        using Base::op=;
+        using TValue = T&;
 
     public:
         /// ----------------------------------------------------------------------------------------
+        /// # Default Constructor
         /// 
+        /// Constructs with null state. [`isValue()`] will return false.
+        /// ----------------------------------------------------------------------------------------
+        constexpr ctor Option():
+            _impl{ _ImplCtorNoVal{} } { }
+
+        /// ----------------------------------------------------------------------------------------
+        /// Trivial Copy Constructor.
+        /// ----------------------------------------------------------------------------------------
+        constexpr ctor Option(const Option& that) = default;
+
+        /// ----------------------------------------------------------------------------------------
+        /// # Trivial Copy Operator
+        /// ----------------------------------------------------------------------------------------
+        constexpr fn op=(const Option& that) -> Option& = default;
+
+        /// ----------------------------------------------------------------------------------------
+        /// # Trivial Move Constructor
+        /// ----------------------------------------------------------------------------------------
+        constexpr ctor Option(Option&& that) = default;
+
+        /// ----------------------------------------------------------------------------------------
+        /// # Trivial Move Operator
+        /// ----------------------------------------------------------------------------------------
+        constexpr fn op=(Option&& that) -> Option& = default;
+
+        /// ----------------------------------------------------------------------------------------
+        /// # Null Constructor
+        /// 
+        /// Constructs with null state.
+        /// ----------------------------------------------------------------------------------------
+        constexpr ctor Option(NullOption):
+            _impl{ _ImplCtorNoVal{} } { }
+
+        /// ----------------------------------------------------------------------------------------
+        /// Null Operator.
+        /// 
+        /// Switches to null state.
+        /// ----------------------------------------------------------------------------------------
+        constexpr fn op=(NullOption) -> Option&
+        {
+            _impl.destroyValueWithChecks();
+            return *this;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// # Value Constructor
+        /// 
+        /// Constructs with ref `ref`.
+        /// 
+        /// # Parameters
+        /// - `ref`: Ref to assign.
+        /// ----------------------------------------------------------------------------------------
+        constexpr ctor Option(T& ref):
+            _impl{ &ref } { }
+
+        /// ----------------------------------------------------------------------------------------
+        /// # Value Operator
+        /// 
+        /// Assigns new ref.
+        /// 
+        /// # Parameters
+        /// - `ref`: Ref to assign.
+        /// ----------------------------------------------------------------------------------------
+        constexpr fn op=(T& ref) -> Option&
+        {
+            _impl.assignValue(&ref);
+            return *this;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// # Trivial Destructor
+        /// ----------------------------------------------------------------------------------------
+        constexpr dtor Option() = default;
+
+    public:
+        /// ----------------------------------------------------------------------------------------
+        /// Assigns new ref.
+        /// 
+        /// # Parameters
+        /// - `ref`: Ref to assign.
+        /// ----------------------------------------------------------------------------------------
+        constexpr fn emplace(T& ref)
+        {
+            _impl.emplaceValue(ref);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// Access the ref.
         /// ----------------------------------------------------------------------------------------
         constexpr fn value() & -> T&
         {
-            debug_expects(isValue(), "Doesn't contain value.");
+            expects(isValue(), "Doesn't contain value.");
 
             return *_impl.getValue();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        /// Access the ref.
         /// ----------------------------------------------------------------------------------------
         constexpr fn value() const& -> const T&
         {
-            debug_expects(isValue(), "Doesn't contain value.");
+            expects(isValue(), "Doesn't contain value.");
 
             return *_impl.getValue();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        /// Access the ref.
         /// ----------------------------------------------------------------------------------------
         constexpr fn value() && -> T&&
         {
-            debug_expects(isValue(), "Doesn't contain value.");
+            expects(isValue(), "Doesn't contain value.");
 
             return mov(*_impl.getValue());
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        /// Access the ref.
         /// ----------------------------------------------------------------------------------------
         constexpr fn op*() & -> T&
         {
-            return value();
+            debug_expects(isValue(), "Doesn't contain value.");
+
+            return *_impl.getValue();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        /// Access the ref.
         /// ----------------------------------------------------------------------------------------
         constexpr fn op*() const& -> const T&
         {
-            return value();
+            debug_expects(isValue(), "Doesn't contain value.");
+
+            return *_impl.getValue();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        /// Access the ref.
         /// ----------------------------------------------------------------------------------------
         constexpr fn op*() && -> T&&
         {
-            return value();
+            debug_expects(isValue(), "Doesn't contain value.");
+
+            return *_impl.getValue();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        /// Access the ptr.
         /// ----------------------------------------------------------------------------------------
         constexpr fn op->() -> T*
         {
-            return value();
+            debug_expects(isValue(), "Doesn't contain value.");
+
+            return _impl.getValue();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        /// Access the ptr.
         /// ----------------------------------------------------------------------------------------
         constexpr fn op->() const -> const T*
         {
-            return value();
+            debug_expects(isValue(), "Doesn't contain value.");
+
+            return _impl.getValue();
         }
 
-        using Base::isValue;
-    
-    private:
-        using Base::_impl;
-    };
+        /// ----------------------------------------------------------------------------------------
+        /// # To Do: Update this.
+        /// ----------------------------------------------------------------------------------------
+        template <typename TInvokable>
+        constexpr fn valueOrInvoke(TInvokable&& other) const -> const T&
+            requires RInvokable<TInvokable, const T&()>
+        {
+            if (not _impl.isValue())
+            {
+                return other();
+            }
 
-    /// --------------------------------------------------------------------------------------------
-    /// # To Do: Review this case.
-    /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    class Option<T&&>
-    {
-        static_assert(sizeof(T) == -1, "rvalue reference types are not supported.");
+            return _impl.getValue();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// # To Do: Update this.
+        /// ----------------------------------------------------------------------------------------
+        constexpr fn valueOr(const T& other) const -> const T&
+        {
+            return valueOrInvoke([&other]()
+                {
+                    return other;
+                });
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// # To Do: Update this.
+        /// ----------------------------------------------------------------------------------------
+        constexpr fn valueOrDefault() const -> const T&
+            requires(RDefaultConstructible<T>)
+        {
+            return valueOrInvoke([&]()
+                {
+                    return _impl.GetDefault();
+                });
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// Is `this` contains ref or not.
+        /// ----------------------------------------------------------------------------------------
+        constexpr fn isValue() const -> bool
+        {
+            return _impl.isValue();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// Switches to null state.
+        /// ----------------------------------------------------------------------------------------
+        constexpr fn reset()
+        {
+            return _impl.destroyValueWithCheck();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// Swap refs and state with `that`.
+        /// ----------------------------------------------------------------------------------------
+        constexpr fn swap(Option& that)
+        {
+            return _impl.swapValueFromOption(that._impl);
+        }
+
+    private:
+        _Impl _impl;
     };
 
 //// -----------------------------------------------------------------------------------------------
