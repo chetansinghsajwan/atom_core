@@ -1,116 +1,10 @@
 #include "catch2/catch_all.hpp"
 #include "Atom/Core/Option.h"
+#include "Atom/Test/TrackedType.h"
+#include "Atom/Test/CustomType.h"
 
 using namespace Atom;
-
-enum class EOperation
-{
-    None,
-    DefaultConstructor,
-    CopyConstructor,
-    CopyConstructorAsThat,
-    CopyOperator,
-    CopyOperatorAsThat,
-    MoveConstructor,
-    MoveConstructorAsThat,
-    MoveOperator,
-    MoveOperatorAsThat,
-    Destructor,
-
-    EqualOperator,
-    NotEqualOperator,
-    LessThanOperator,
-    GreaterThanOperator,
-    LessThanOrEqualOperator,
-    GreaterThanOrEqualOperator
-};
-
-/// ------------------------------------------------------------------------------------------------
-/// Type used to test object handling inside variant.
-/// 
-/// # To Do
-/// 
-/// - Move these utils to separate file, also from TestVariant.cpp.
-/// ------------------------------------------------------------------------------------------------
-class TestType
-{
-public:
-    ctor TestType()
-    {
-        lastOp = EOperation::DefaultConstructor;
-    }
-
-    ctor TestType(const TestType& that)
-    {
-        lastOp = EOperation::CopyConstructor;
-        that.lastOp = EOperation::CopyConstructorAsThat;
-    }
-
-    fn op=(const TestType& that) -> TestType&
-    {
-        lastOp = EOperation::CopyOperator;
-        that.lastOp = EOperation::CopyOperatorAsThat;
-        return *this;
-    }
-
-    ctor TestType(TestType&& that)
-    {
-        lastOp = EOperation::MoveConstructor;
-        that.lastOp = EOperation::MoveConstructorAsThat;
-    }
-
-    fn op=(TestType&& that) -> TestType&
-    {
-        lastOp = EOperation::MoveOperator;
-        that.lastOp = EOperation::MoveOperatorAsThat;
-        return *this;
-    }
-
-    dtor TestType()
-    {
-        lastOp = EOperation::Destructor;
-    }
-
-public:
-    fn op==(const TestType& opt1) const -> bool
-    {
-        lastOp = EOperation::EqualOperator;
-        return true;
-    }
-
-    fn op!=(const TestType& opt1) const -> bool
-    {
-        lastOp = EOperation::NotEqualOperator;
-        return false;
-    }
-
-    fn op<(const TestType& opt1) const -> bool
-    {
-        lastOp = EOperation::LessThanOperator;
-        return true;
-    }
-
-    fn op>(const TestType& opt1) const -> bool
-    {
-        lastOp = EOperation::GreaterThanOperator;
-        return true;
-    }
-
-    fn op<=(const TestType& opt1) const -> bool
-    {
-        lastOp = EOperation::LessThanOrEqualOperator;
-        return true;
-    }
-
-    fn op>=(const TestType& opt1) const -> bool
-    {
-        lastOp = EOperation::GreaterThanOrEqualOperator;
-        return true;
-    }
-
-public:
-    mutable EOperation lastOp;
-};
+using namespace Atom::Test;
 
 /// ------------------------------------------------------------------------------------------------
 /// # To Do
@@ -121,22 +15,22 @@ TEST_CASE("Atom.Core.Option")
 {
     SECTION("Default Constructor")
     {
-        Option<TestType> opt;
+        Option<TrackedType> opt;
 
         REQUIRE(not opt.isValue());
     }
 
     SECTION("Value Constructor")
     {
-        Option<TestType> opt = TestType();
+        Option<TrackedType> opt = TrackedType();
 
         REQUIRE(opt.isValue());
-        REQUIRE(opt.value().lastOp == EOperation::MoveConstructor);
+        REQUIRE(opt.value().lastOp == TrackedType::EOperation::MoveConstructor);
 
-        opt = TestType();
+        opt = TrackedType();
 
         REQUIRE(opt.isValue());
-        REQUIRE(opt.value().lastOp == EOperation::MoveOperator);
+        REQUIRE(opt.value().lastOp == TrackedType::EOperation::MoveOperator);
     }
 
     SECTION("Trivial Copy Constructor")
@@ -147,14 +41,14 @@ TEST_CASE("Atom.Core.Option")
 
     SECTION("Copy Constructor")
     {
-        Option<TestType> opt0 = TestType();
-        Option<TestType> opt1 = opt0;
+        Option<TrackedType> opt0 = TrackedType();
+        Option<TrackedType> opt1 = opt0;
 
         REQUIRE(opt0.isValue());
-        REQUIRE(opt0.value().lastOp == EOperation::CopyConstructorAsThat);
+        REQUIRE(opt0.value().lastOp == TrackedType::EOperation::CopyConstructorAsThat);
 
         REQUIRE(opt1.isValue());
-        REQUIRE(opt1.value().lastOp == EOperation::CopyConstructor);
+        REQUIRE(opt1.value().lastOp == TrackedType::EOperation::CopyConstructor);
     }
 
     SECTION("Trivial Move Constructor")
@@ -165,14 +59,14 @@ TEST_CASE("Atom.Core.Option")
 
     SECTION("Move Constructor")
     {
-        Option<TestType> opt0 = TestType();
-        Option<TestType> opt1 = mov(opt0);
+        Option<TrackedType> opt0 = TrackedType();
+        Option<TrackedType> opt1 = mov(opt0);
 
         REQUIRE(opt0.isValue());
-        REQUIRE(opt0.value().lastOp == EOperation::MoveConstructorAsThat);
+        REQUIRE(opt0.value().lastOp == TrackedType::EOperation::MoveConstructorAsThat);
 
         REQUIRE(opt1.isValue());
-        REQUIRE(opt1.value().lastOp == EOperation::MoveConstructor);
+        REQUIRE(opt1.value().lastOp == TrackedType::EOperation::MoveConstructor);
     }
 
     SECTION("Trivial Copy Assignment")
@@ -183,17 +77,17 @@ TEST_CASE("Atom.Core.Option")
 
     SECTION("Copy Assignment")
     {
-        Option<TestType> opt0 = TestType();
-        Option<TestType> opt1 = TestType();
+        Option<TrackedType> opt0 = TrackedType();
+        Option<TrackedType> opt1 = TrackedType();
         opt1 = opt0;
 
         REQUIRE(opt0.isValue());
-        REQUIRE(opt0.value().lastOp == EOperation::CopyOperatorAsThat);
+        REQUIRE(opt0.value().lastOp == TrackedType::EOperation::CopyOperatorAsThat);
 
         REQUIRE(opt1.isValue());
-        REQUIRE(opt1.value().lastOp == EOperation::CopyOperator);
+        REQUIRE(opt1.value().lastOp == TrackedType::EOperation::CopyOperator);
 
-        Option<TestType> opt2;
+        Option<TrackedType> opt2;
         opt1 = opt2;
 
         REQUIRE(not opt1.isValue());
@@ -207,17 +101,17 @@ TEST_CASE("Atom.Core.Option")
 
     SECTION("Move Assignment")
     {
-        Option<TestType> opt0 = TestType();
-        Option<TestType> opt1 = TestType();
+        Option<TrackedType> opt0 = TrackedType();
+        Option<TrackedType> opt1 = TrackedType();
         opt1 = mov(opt0);
 
         REQUIRE(opt0.isValue());
-        REQUIRE(opt0.value().lastOp == EOperation::MoveOperatorAsThat);
+        REQUIRE(opt0.value().lastOp == TrackedType::EOperation::MoveOperatorAsThat);
 
         REQUIRE(opt1.isValue());
-        REQUIRE(opt1.value().lastOp == EOperation::MoveOperator);
+        REQUIRE(opt1.value().lastOp == TrackedType::EOperation::MoveOperator);
 
-        Option<TestType> opt2;
+        Option<TrackedType> opt2;
         opt1 = mov(opt2);
 
         REQUIRE(not opt1.isValue());
@@ -231,14 +125,14 @@ TEST_CASE("Atom.Core.Option")
 
     SECTION("Destructor")
     {
-        EOperation* lastOp;
+        TrackedType::EOperation* lastOp;
 
         {
-            Option<TestType> opt = TestType();
+            Option<TrackedType> opt = TrackedType();
             lastOp = &opt.value().lastOp;
         }
 
-        REQUIRE(*lastOp == EOperation::Destructor);
+        REQUIRE(*lastOp == TrackedType::EOperation::Destructor);
     }
 
     SECTION("Access Value using value(), op*(), op->()")
@@ -246,13 +140,13 @@ TEST_CASE("Atom.Core.Option")
         class Overloads
         {
         public:
-            static constexpr usize Test(TestType&) { return 0; }
-            static constexpr usize Test(const TestType&) { return 1; }
-            static constexpr usize Test(TestType&&) { return 2; }
+            static constexpr usize Test(TrackedType&) { return 0; }
+            static constexpr usize Test(const TrackedType&) { return 1; }
+            static constexpr usize Test(TrackedType&&) { return 2; }
         };
 
-        Option<TestType> opt0 = TestType();
-        const Option<TestType> opt1 = TestType();
+        Option<TrackedType> opt0 = TrackedType();
+        const Option<TrackedType> opt1 = TrackedType();
 
         REQUIRE(Overloads::Test(opt0.value()) == 0);
         REQUIRE(Overloads::Test(opt1.value()) == 1);
@@ -262,8 +156,8 @@ TEST_CASE("Atom.Core.Option")
         REQUIRE(Overloads::Test(*opt1) == 1);
         REQUIRE(Overloads::Test(mov(*opt0)) == 2);
 
-        REQUIRE(opt0->lastOp == EOperation::MoveConstructor);
-        REQUIRE(opt1->lastOp == EOperation::MoveConstructor);
+        REQUIRE(opt0->lastOp == TrackedType::EOperation::MoveConstructor);
+        REQUIRE(opt1->lastOp == TrackedType::EOperation::MoveConstructor);
     }
 
     SECTION("Emplace")
@@ -295,47 +189,47 @@ TEST_CASE("Atom.Core.Option")
 
     SECTION("Equal Operator")
     {
-        Option<TestType> opt0;
-        Option<TestType> opt1;
+        Option<TrackedType> opt0;
+        Option<TrackedType> opt1;
 
         // They have same state, that is null.
         REQUIRE(opt0 == opt1);
 
-        opt0 = TestType();
-        opt0.value().lastOp = EOperation::None;
+        opt0 = TrackedType();
+        opt0.value().lastOp = TrackedType::EOperation::None;
 
         // They don't have same state anymore.
         REQUIRE(opt0 != opt1);
 
         // No comparision is performed as one of the operands has no value.
-        REQUIRE(opt0.value().lastOp == EOperation::None);
+        REQUIRE(opt0.value().lastOp == TrackedType::EOperation::None);
 
         // Now they both have some values.
-        opt1 = TestType();
+        opt1 = TrackedType();
 
         REQUIRE(opt0 == opt1);
 
         // Comparision is performed as both have some value.
-        REQUIRE(opt0.value().lastOp == EOperation::EqualOperator);
+        REQUIRE(opt0.value().lastOp == TrackedType::EOperation::EqualOperator);
     }
 
     SECTION("Other Compairision Operators, compairison with Option")
     {
-        Option<TestType> opt0;
-        Option<TestType> opt1;
+        Option<TrackedType> opt0;
+        Option<TrackedType> opt1;
 
         REQUIRE_FALSE(opt0 < opt1);
         REQUIRE_FALSE(opt0 > opt1);
         REQUIRE_FALSE(opt0 <= opt1);
         REQUIRE_FALSE(opt0 >= opt1);
 
-        opt0 = TestType();
+        opt0 = TrackedType();
         REQUIRE_FALSE(opt0 < opt1);
         REQUIRE_FALSE(opt0 > opt1);
         REQUIRE_FALSE(opt0 <= opt1);
         REQUIRE_FALSE(opt0 >= opt1);
 
-        opt1 = TestType();
+        opt1 = TrackedType();
         REQUIRE(opt0 < opt1);
         REQUIRE(opt0 > opt1);
         REQUIRE(opt0 <= opt1);
@@ -344,13 +238,13 @@ TEST_CASE("Atom.Core.Option")
 
     SECTION("Reference Types")
     {
-        TestType val;
-        Option<TestType&> opt = val;
+        TrackedType val;
+        Option<TrackedType&> opt = val;
 
         REQUIRE(&val == &opt.value());
 
-        opt.value().lastOp = EOperation::Destructor;
-        REQUIRE(val.lastOp == EOperation::Destructor);
+        opt.value().lastOp = TrackedType::EOperation::Destructor;
+        REQUIRE(val.lastOp == TrackedType::EOperation::Destructor);
 
         using Opt = Option<int&>;
 
