@@ -667,108 +667,6 @@ namespace Atom
     };
 
 //// -----------------------------------------------------------------------------------------------
-//// Compairision Operators for [`Option`] with [`Option`].
-//// -----------------------------------------------------------------------------------------------
-
-    /// --------------------------------------------------------------------------------------------
-    /// # Equality Comparision Operator
-    /// 
-    /// - If `opt0` and `opt1` are null, returns `true`.
-    /// - If `opt0` is null and `opt1` is not null or vice versa, returns `false`.
-    /// - If `opt0` and `opt1` are not null, returns `opt0.value() == opt1.value()`.
-    /// --------------------------------------------------------------------------------------------
-    template <typename T0, typename T1>
-    constexpr fn op==(const Option<T0>& opt0, const Option<T1>& opt1) -> bool
-        requires(REqualityComparableWith<T0, T1>)
-    {
-        if (opt0.isValue() != opt1.isValue())
-            // One is null and one has value.
-            return false;
-
-        if (not opt0.isValue())
-            // Both are null.
-            return true;
-
-        return opt0.value() == opt1.value();
-    }
-
-    /// --------------------------------------------------------------------------------------------
-    /// # Not Equality Comparision Operator
-    /// 
-    /// Performs negation of [Equality Comparision Operator].
-    /// --------------------------------------------------------------------------------------------
-    template <typename T0, typename T1>
-    constexpr fn op!=(const Option<T0>& opt0, const Option<T1>& opt1) -> bool
-        requires(REqualityComparableWith<T0, T1>)
-    {
-        return not (opt0 == opt1);
-    }
-
-    /// --------------------------------------------------------------------------------------------
-    /// # Less Than Comparision Operator
-    /// 
-    /// - If `opt0` or `opt1` is null, returns false.
-    /// - Else, returns `opt0.value() < opt1.value()`.
-    /// --------------------------------------------------------------------------------------------
-    template <typename T0, typename T1>
-    constexpr fn op<(const Option<T0>& opt0, const Option<T1>& opt1) -> bool
-        requires(RComparableWith<T0, T1>)
-    {
-        if (not opt0.isValue() or not opt1.isValue())
-            return false;
-
-        return opt0.value() < opt1.value();
-    }
-
-    /// --------------------------------------------------------------------------------------------
-    /// # Greater Than Comparision Operator
-    /// 
-    /// - If `opt0` or `opt1` is null, returns false.
-    /// - Else, returns `opt0.value() > opt1.value()`.
-    /// --------------------------------------------------------------------------------------------
-    template <typename T0, typename T1>
-    constexpr fn op>(const Option<T0>& opt0, const Option<T1>& opt1) -> bool
-        requires(RComparableWith<T0, T1>)
-    {
-        if (not opt0.isValue() or not opt1.isValue())
-            return false;
-
-        return opt0.value() > opt1.value();
-    }
-
-    /// --------------------------------------------------------------------------------------------
-    /// # Less Than or Equal To Comparision Operator
-    /// 
-    /// - If `opt0` or `opt1` is null, returns false.
-    /// - Else, returns `opt0.value() <= opt1.value()`.
-    /// --------------------------------------------------------------------------------------------
-    template <typename T0, typename T1>
-    constexpr fn op<=(const Option<T0>& opt0, const Option<T1>& opt1) -> bool
-        requires(RComparableWith<T0, T1>)
-    {
-        if (not opt0.isValue() or not opt1.isValue())
-            return false;
-
-        return opt0.value() <= opt1.value();
-    }
-
-    /// --------------------------------------------------------------------------------------------
-    /// # Greater Than or Equal To Comparision Operator
-    /// 
-    /// - If `opt0` or `opt1` is null, returns false.
-    /// - Else, returns `opt0.value() >= opt1.value()`.
-    /// --------------------------------------------------------------------------------------------
-    template <typename T0, typename T1>
-    constexpr fn op>=(const Option<T0>& opt0, const Option<T1>& opt1) -> bool
-        requires(RComparableWith<T0, T1>)
-    {
-        if (not opt0.isValue() or not opt1.isValue())
-            return false;
-
-        return opt0.value() >= opt1.value();
-    }
-
-//// -----------------------------------------------------------------------------------------------
 //// Compairision Operators for [`Option`] with [`nullopt`].
 //// -----------------------------------------------------------------------------------------------
 
@@ -792,5 +690,107 @@ namespace Atom
     constexpr fn op!=(const Option<T>& opt, NullOption) -> bool
     {
         return not (opt == nullopt);
+    }
+
+//// -----------------------------------------------------------------------------------------------
+//// Compairision Operators for [`Option`] with [`Option`].
+//// -----------------------------------------------------------------------------------------------
+
+    /// --------------------------------------------------------------------------------------------
+    /// # Equality Comparision Operator
+    /// 
+    /// - If `opt0` and `opt1` are null, returns `true`.
+    /// - If `opt0` is null and `opt1` is not null or vice versa, returns `false`.
+    /// - If `opt0` and `opt1` are not null, returns `*opt0 == *opt1`.
+    /// --------------------------------------------------------------------------------------------
+    template <typename T0, typename T1>
+    constexpr fn op==(const Option<T0>& opt0, const Option<T1>& opt1) -> bool
+        requires(REqualityComparableWith<T0, T1>)
+    {
+        if (opt0.isValue() != opt1.isValue())
+            // One is null and one has value.
+            return false;
+
+        if (opt0 == nullopt)
+            // Both are null.
+            return true;
+
+        return *opt0 == *opt1;
+    }
+
+    /// --------------------------------------------------------------------------------------------
+    /// # Not Equality Comparision Operator
+    /// 
+    /// Performs negation of [Equality Comparision Operator].
+    /// --------------------------------------------------------------------------------------------
+    template <typename T0, typename T1>
+    constexpr fn op!=(const Option<T0>& opt0, const Option<T1>& opt1) -> bool
+        requires(REqualityComparableWith<T0, T1>)
+    {
+        return not (opt0 == opt1);
+    }
+
+    /// --------------------------------------------------------------------------------------------
+    /// # Less Than Comparision Operator
+    /// 
+    /// - If `opt0` or `opt1` is null, returns false.
+    /// - Else, returns `*opt0 < *opt1`.
+    /// --------------------------------------------------------------------------------------------
+    template <typename T0, typename T1>
+    constexpr fn op<(const Option<T0>& opt0, const Option<T1>& opt1) -> bool
+        requires(RComparableWith<T0, T1>)
+    {
+        if (opt0 == nullopt or opt1 == nullopt)
+            return false;
+
+        return *opt0 < *opt1;
+    }
+
+    /// --------------------------------------------------------------------------------------------
+    /// # Greater Than Comparision Operator
+    /// 
+    /// - If `opt0` or `opt1` is null, returns false.
+    /// - Else, returns `*opt0 > *opt1`.
+    /// --------------------------------------------------------------------------------------------
+    template <typename T0, typename T1>
+    constexpr fn op>(const Option<T0>& opt0, const Option<T1>& opt1) -> bool
+        requires(RComparableWith<T0, T1>)
+    {
+        if (opt0 == nullopt or opt1 == nullopt)
+            return false;
+
+        return *opt0 > *opt1;
+    }
+
+    /// --------------------------------------------------------------------------------------------
+    /// # Less Than or Equal To Comparision Operator
+    /// 
+    /// - If `opt0` or `opt1` is null, returns false.
+    /// - Else, returns `*opt0 <= *opt1`.
+    /// --------------------------------------------------------------------------------------------
+    template <typename T0, typename T1>
+    constexpr fn op<=(const Option<T0>& opt0, const Option<T1>& opt1) -> bool
+        requires(RComparableWith<T0, T1>)
+    {
+        if (opt0 == nullopt or opt1 == nullopt)
+            return false;
+
+        return *opt0 <= *opt1;
+    }
+
+    /// --------------------------------------------------------------------------------------------
+    /// # Greater Than or Equal To Comparision Operator
+    /// 
+    /// - If `opt0` or `opt1` is null, returns false.
+    /// - Else, returns `*opt0 >= *opt1`.
+    /// --------------------------------------------------------------------------------------------
+    template <typename T0, typename T1>
+    constexpr fn op>=(const Option<T0>& opt0, const Option<T1>& opt1) -> bool
+        requires(RComparableWith<T0, T1>)
+    {
+        if (opt0 == nullopt or opt1 == nullopt)
+            return false;
+
+        return *opt0 >= *opt1;
     }
 }
