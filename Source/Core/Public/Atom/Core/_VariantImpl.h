@@ -123,7 +123,7 @@ namespace Atom
         template <tname T, tname... TArgs>
         cexpr fn emplaceValueByType(TArgs&&... args)
         {
-            _constructValue<T>(fwd(args)...);
+            _constructValueAs<T>(fwd(args)...);
             _index = GetIndexForType<T>();
         }
 
@@ -151,7 +151,7 @@ namespace Atom
             // The new type to set is same as current.
             if (indexToSet == _index)
             {
-                _assignValue<T>(fwd(value));
+                _assignValueAs<T>(fwd(value));
             }
             else
             {
@@ -233,11 +233,11 @@ namespace Atom
 
             if cexpr (move)
             {
-                _constructValue<TOther>(mov(that.template _getValueAs<TOther>()));
+                _constructValueAs<TOther>(mov(that.template _getValueAs<TOther>()));
             }
             else
             {
-                _constructValue<TOther>(that.template _getValueAs<TOther>());
+                _constructValueAs<TOther>(that.template _getValueAs<TOther>());
             }
 
             _index = GetIndexForType<TOther>();
@@ -269,11 +269,11 @@ namespace Atom
             {
                 if cexpr (move)
                 {
-                    _assignValue<TOther>(mov(that.template _getValueAs<TOther>()));
+                    _assignValueAs<TOther>(mov(that.template _getValueAs<TOther>()));
                 }
                 else
                 {
-                    _assignValue<TOther>(that.template _getValueAs<TOther>());
+                    _assignValueAs<TOther>(that.template _getValueAs<TOther>());
                 }
             }
             else
@@ -282,11 +282,11 @@ namespace Atom
 
                 if cexpr (move)
                 {
-                    _constructValue<TOther>(mov(that.template _getValueAs<TOther>()));
+                    _constructValueAs<TOther>(mov(that.template _getValueAs<TOther>()));
                 }
                 else
                 {
-                    _constructValue<TOther>(that.template _getValueAs<TOther>());
+                    _constructValueAs<TOther>(that.template _getValueAs<TOther>());
                 }
 
                 _index = indexForThis;
@@ -312,23 +312,23 @@ namespace Atom
                 }
             }
 
-            _destructValue<T>();
+            _destructValueAs<T>();
         }
 
         template <typename T>
-        cexpr fn _constructValue(auto&&... args)
+        cexpr fn _constructValueAs(auto&&... args)
         {
             ObjHelper().Construct(_getDataAs<T>(), fwd(args)...);
         }
 
         template <typename T>
-        cexpr fn _assignValue(auto&& val)
+        cexpr fn _assignValueAs(auto&& val)
         {
             ObjHelper().Assign(_getDataAs<T>(), fwd(val));
         }
 
         template <typename T>
-        cexpr fn _destructValue()
+        cexpr fn _destructValueAs()
         {
             ObjHelper().Destruct(_getDataAs<T>());
         }
