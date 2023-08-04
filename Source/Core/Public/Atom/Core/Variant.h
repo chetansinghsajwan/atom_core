@@ -90,7 +90,7 @@ namespace Atom
         cexpr ctor Variant()
             requires(RDefaultConstructible<TAt<0>>)
         {
-            _impl.template emplaceValueByIndex<0>();
+            _impl.template constructValueByIndex<0>();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -105,7 +105,7 @@ namespace Atom
             requires(RCopyConstructibleAll<Ts...>)
                 and (not RTriviallyCopyConstructibleAll<Ts...>)
         {
-            _impl.emplaceValueFromVariant(that._impl);
+            _impl.constructValueFromVariant(that._impl);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -116,7 +116,7 @@ namespace Atom
             requires(Types::template Has<TOthers...>)
                 and (RCopyConstructibleAll<TOthers...>)
         {
-            _impl.emplaceValueFromVariant(that._impl);
+            _impl.constructValueFromVariant(that._impl);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -162,7 +162,7 @@ namespace Atom
             requires(RMoveConstructibleAll<Ts...>)
                 and (not RTriviallyMoveConstructibleAll<Ts...>)
         {
-            _impl.emplaceValueFromVariant(mov(that._impl));
+            _impl.constructValueFromVariant(mov(that._impl));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -173,7 +173,7 @@ namespace Atom
             requires(Types::template Has<TOthers...>)
                 and (RMoveConstructibleAll<TOthers...>)
         {
-            _impl.emplaceValueFromVariant(mov(that._impl));
+            _impl.constructValueFromVariant(mov(that._impl));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -219,7 +219,7 @@ namespace Atom
         cexpr ctor Variant(const T& value)
             requires(Has<T>())
         {
-            _impl.template emplaceValueByType<T>(value);
+            _impl.template constructValueByType<T>(value);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -234,7 +234,7 @@ namespace Atom
         cexpr ctor Variant(T&& value)
             requires(Has<T>())
         {
-            _impl.template emplaceValueByType<T>(mov(value));
+            _impl.template constructValueByType<T>(mov(value));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -301,7 +301,6 @@ namespace Atom
             requires(Has<T>())
                 and (RConstructible<T, TArgs...>)
         {
-            _impl.destroyValue();
             _impl.template emplaceValueByType<T>(fwd(args)...);
         }
 
@@ -316,8 +315,7 @@ namespace Atom
             requires(Has<i>())
                 and (RConstructible<TAt<i>, TArgs...>)
         {
-            _impl.destroyValue();
-            _impl.template emplaceByIndex<i>(fwd(args)...);
+            _impl.template emplaceValueByIndex<i>(fwd(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------

@@ -87,15 +87,15 @@ namespace Atom
         /// - Current value is null.
         /// ----------------------------------------------------------------------------------------
         template <tname... TOthers>
-        cexpr fn emplaceValueFromVariant(const _VariantImpl<TOthers...>& that)
+        cexpr fn constructValueFromVariant(const _VariantImpl<TOthers...>& that)
         {
-            _emplaceValueFromVariantImpl<false, 0, TOthers...>(that, that.getTypeIndex());
+            _constructValueFromVariantImpl<false, 0, TOthers...>(that, that.getTypeIndex());
         }
 
         template <tname... TOthers>
-        cexpr fn emplaceValueFromVariant(_VariantImpl<TOthers...>&& that)
+        cexpr fn constructValueFromVariant(_VariantImpl<TOthers...>&& that)
         {
-            _emplaceValueFromVariantImpl<true, 0, TOthers...>(that, that.getTypeIndex());
+            _constructValueFromVariantImpl<true, 0, TOthers...>(that, that.getTypeIndex());
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -121,8 +121,35 @@ namespace Atom
         /// - Current value is null.
         /// ----------------------------------------------------------------------------------------
         template <tname T, tname... TArgs>
+        cexpr fn constructValueByType(TArgs&&... args)
+        {
+            _constructValueAs<T>(fwd(args)...);
+            _index = GetIndexForType<T>();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// Constructs value of type at index `i` with args `args`.
+        /// 
+        /// # Expects
+        /// - Current value is null.
+        /// ----------------------------------------------------------------------------------------
+        template <usize i, tname... TArgs>
+        cexpr fn constructValueByIndex(TArgs&&... args)
+        {
+            constructValueByType<TypeAtIndex<i>>(fwd(args)...);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// Constructs value of type `T` with args `args`.
+        /// 
+        /// # Expects
+        /// - Current value is null.
+        /// ----------------------------------------------------------------------------------------
+        template <tname T, tname... TArgs>
         cexpr fn emplaceValueByType(TArgs&&... args)
         {
+            destroyValue();
+
             _constructValueAs<T>(fwd(args)...);
             _index = GetIndexForType<T>();
         }
@@ -156,7 +183,7 @@ namespace Atom
             else
             {
                 destroyValue();
-                emplaceValueByType<T>(fwd(value));
+                constructValueByType<T>(fwd(value));
             }
         }
 
@@ -214,7 +241,7 @@ namespace Atom
 
     private:
         template <bool move, usize index, tname TOther, tname... TOthers>
-        cexpr fn _emplaceValueFromVariantImpl(auto& that, usize thatIndex)
+        cexpr fn _constructValueFromVariantImpl(auto& that, usize thatIndex)
         {
             using ThatTypes = TypeList<TOthers...>;
 
@@ -226,7 +253,7 @@ namespace Atom
                 }
                 else
                 {
-                    _emplaceValueFromVariantImpl<move, index + 1, TOthers...>(that, thatIndex);
+                    _constructValueFromVariantImpl<move, index + 1, TOthers...>(that, thatIndex);
                     return;
                 }
             }
