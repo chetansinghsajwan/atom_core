@@ -46,7 +46,7 @@ namespace Atom
             _impl{ _ImplCtorNoVal{} } { }
 
         /// ----------------------------------------------------------------------------------------
-        /// Trivial Copy Constructor.
+        /// # Trivial Copy Constructor.
         /// ----------------------------------------------------------------------------------------
         constexpr ctor Option(const Option& that) = default;
 
@@ -440,7 +440,7 @@ namespace Atom
             _impl{ _ImplCtorNoVal{} } { }
 
         /// ----------------------------------------------------------------------------------------
-        /// Trivial Copy Constructor.
+        /// # Trivial Copy Constructor.
         /// ----------------------------------------------------------------------------------------
         constexpr ctor Option(const Option& that) = default;
 
