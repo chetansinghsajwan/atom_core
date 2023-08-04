@@ -11,16 +11,17 @@ namespace Atom
     template <tname... Ts>
     requires(TypeList<Ts...>::AreUnique)
         and (not TypeList<Ts...>::template Has<void>)
-    class Variant: private _VariantImpl<Ts...>
+    class Variant
     {
     private:
+        using _Impl = _VariantImpl<Ts...>;
+
         template <tname... TOthers>
         requires(TypeList<TOthers...>::AreUnique)
             and (not TypeList<TOthers...>::template Has<void>)
         friend class Variant;
 
         using This = Variant<Ts...>;
-        using ImplBase = _VariantImpl<Ts...>;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -39,7 +40,7 @@ namespace Atom
         template <tname T>
         static ceval fn Has() -> bool
         {
-            return ImplBase::template _HasType<T>();
+            return _Impl::template HasType<T>();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -48,7 +49,7 @@ namespace Atom
         template <usize i>
         static ceval fn Has() -> bool
         {
-            return ImplBase::template _HasIndex<i>();
+            return _Impl::template HasIndex<i>();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -56,7 +57,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <usize i>
         requires(Has<i>())
-        using TAt = tname ImplBase::template _TypeAtIndex<i>;
+        using TAt = tname _Impl::template TypeAtIndex<i>;
 
         /// ----------------------------------------------------------------------------------------
         /// Index of type. This index than can be used to access value of type at that index.
@@ -65,7 +66,7 @@ namespace Atom
         static ceval fn IndexOf() -> usize
             requires(Has<T>())
         {
-            return ImplBase::template _GetIndexForType<T>();
+            return _Impl::template GetIndexForType<T>();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -73,7 +74,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         static ceval fn Count() -> usize
         {
-            return ImplBase::_TypeCount;
+            return _Impl::GetTypeCount();
         }
 
     //// -------------------------------------------------------------------------------------------
@@ -93,7 +94,7 @@ namespace Atom
             requires(RDefaultConstructible<TAt<0>>)
                 and (not RTriviallyDefaultConstructible<TAt<0>>)
         {
-            ImplBase::template _emplaceValueByIndex<0>();
+            _impl.template emplaceValueByIndex<0>();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -108,7 +109,7 @@ namespace Atom
             requires(RCopyConstructibleAll<Ts...>)
                 and (not RTriviallyCopyConstructibleAll<Ts...>)
         {
-            ImplBase::_emplaceValueFromVariant(that);
+            _impl.emplaceValueFromVariant(that._impl);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -119,7 +120,7 @@ namespace Atom
             requires(Types::template Has<TOthers...>)
                 and (RCopyConstructibleAll<TOthers...>)
         {
-            ImplBase::_emplaceValueFromVariant(that);
+            _impl.emplaceValueFromVariant(that._impl);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -136,7 +137,7 @@ namespace Atom
                 and (not RTriviallyCopyConstructibleAll<Ts...>)
                 and (not RTriviallyCopyAssignableAll<Ts...>)
         {
-            ImplBase::_setValueFromVariant(that);
+            _impl.setValueFromVariant(that._impl);
             return *this;
         }
 
@@ -149,7 +150,7 @@ namespace Atom
                 and (RCopyConstructibleAll<TOthers...>)
                 and (RCopyAssignableAll<TOthers...>)
         {
-            ImplBase::_setValueFromVariant(that);
+            _impl.setValueFromVariant(that._impl);
             return *this;
         }
 
@@ -165,7 +166,7 @@ namespace Atom
             requires(RMoveConstructibleAll<Ts...>)
                 and (not RTriviallyMoveConstructibleAll<Ts...>)
         {
-            ImplBase::_emplaceValueFromVariant(mov(that));
+            _impl.emplaceValueFromVariant(mov(that._impl));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -176,7 +177,7 @@ namespace Atom
             requires(Types::template Has<TOthers...>)
                 and (RMoveConstructibleAll<TOthers...>)
         {
-            ImplBase::_emplaceValueFromVariant(mov(that));
+            _impl.emplaceValueFromVariant(mov(that._impl));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -193,7 +194,7 @@ namespace Atom
                 and (not RTriviallyMoveConstructibleAll<Ts...>)
                 and (not RTriviallyMoveAssignableAll<Ts...>)
         {
-            ImplBase::_setValueFromVariant(mov(that));
+            _impl.setValueFromVariant(mov(that._impl));
             return *this;
         }
 
@@ -206,7 +207,7 @@ namespace Atom
                 and (RMoveConstructibleAll<Ts...>)
                 and (RMoveAssignableAll<Ts...>)
         {
-            ImplBase::_setValueFromVariant(mov(that));
+            _impl.setValueFromVariant(mov(that._impl));
             return *this;
         }
 
@@ -220,7 +221,7 @@ namespace Atom
         cexpr ctor Variant(TFwd&& value)
             requires(Has<T>())
         {
-            ImplBase::template _emplaceValueByType<T>(fwd(value));
+            _impl.template emplaceValueByType<T>(fwd(value));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -233,7 +234,7 @@ namespace Atom
         cexpr fn op=(TFwd&& value) -> Variant&
             requires(Has<T>())
         {
-            ImplBase::_setValue(fwd(value));
+            _impl.setValue(fwd(value));
             return *this;
         }
 
@@ -248,7 +249,7 @@ namespace Atom
         cexpr dtor Variant()
             requires(not RTriviallyDestructibleAll<Ts...>)
         {
-            ImplBase::_destroyValue();
+            _impl.destroyValue();
         }
 
     //// -------------------------------------------------------------------------------------------
@@ -267,8 +268,8 @@ namespace Atom
             requires(Has<T>())
                 and (RConstructible<T, TArgs...>)
         {
-            ImplBase::_destroyValue();
-            ImplBase::template _emplaceValueByType<T>(fwd(args)...);
+            _impl.destroyValue();
+            _impl.template emplaceValueByType<T>(fwd(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -282,8 +283,8 @@ namespace Atom
             requires(Has<i>())
                 and (RConstructible<TAt<i>, TArgs...>)
         {
-            ImplBase::_destroyValue();
-            ImplBase::template _emplaceByIndex<i>(fwd(args)...);
+            _impl.destroyValue();
+            _impl.template emplaceByIndex<i>(fwd(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -297,7 +298,7 @@ namespace Atom
             requires(Has<T>())
                 and (RConstructible<T, TFwd>)
         {
-            ImplBase::_setValue(fwd(value));
+            _impl.setValue(fwd(value));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -312,7 +313,7 @@ namespace Atom
         {
             CONTRACTS_EXPECTS(is<T>(), "Access to invalid type.");
 
-            return ImplBase::template _getValueByType<T>();
+            return _impl.template getValueByType<T>();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -327,7 +328,7 @@ namespace Atom
         {
             CONTRACTS_EXPECTS(is<T>(), "Access to invalid type.");
 
-            return ImplBase::template _getValueByType<T>();
+            return _impl.template getValueByType<T>();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -345,7 +346,7 @@ namespace Atom
         {
             CONTRACTS_EXPECTS(is<i>(), "Access to invalid type by index.");
 
-            return ImplBase::template _getValueByIndex<i>();
+            return _impl.template getValueByIndex<i>();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -363,7 +364,7 @@ namespace Atom
         {
             CONTRACTS_EXPECTS(is<i>(), "Access to invalid type by index.");
 
-            return ImplBase::template _getValueByIndex<i>();
+            return _impl.template getValueByIndex<i>();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -373,7 +374,7 @@ namespace Atom
         cexpr fn is() const -> bool
             requires(Has<T>())
         {
-            return ImplBase::template _isType<T>();
+            return _impl.template isType<T>();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -386,7 +387,7 @@ namespace Atom
         cexpr fn is() const -> bool
             requires(Has<i>())
         {
-            return ImplBase::template _isIndex<i>();
+            return _impl.template isIndex<i>();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -394,7 +395,10 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         cexpr fn index() const -> usize
         {
-            return ImplBase::_getTypeIndex();
+            return _impl.getTypeIndex();
         }
+
+    private:
+        _Impl _impl;
     };
 }
