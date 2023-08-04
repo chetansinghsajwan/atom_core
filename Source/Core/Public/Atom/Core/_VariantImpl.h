@@ -123,7 +123,7 @@ namespace Atom
         template <tname T, tname... TArgs>
         cexpr fn emplaceValueByType(TArgs&&... args)
         {
-            ObjHelper().Construct(&_getDataAs<T>(), fwd(args)...);
+            _constructValue<T>(fwd(args)...);
             _index = GetIndexForType<T>();
         }
 
@@ -151,7 +151,7 @@ namespace Atom
             // The new type to set is same as current.
             if (indexToSet == _index)
             {
-                ObjHelper().Assign(&_getDataAs<T>(), fwd(value));
+                _assignValue<T>(fwd(value));
             }
             else
             {
@@ -163,19 +163,19 @@ namespace Atom
         template <tname T>
         cexpr fn getValueByType() const -> const T&
         {
-            CONTRACTS_DEBUG_EXPECTS(GetIndexForType<T>() == getTypeIndex(),
+            debug_expects(GetIndexForType<T>() == getTypeIndex(),
                 "Current type is not same as requested type.");
 
-            return _getDataAs<T>();
+            return _getValueAs<T>();
         }
 
         template <tname T>
         cexpr fn getValueByType() -> T&
         {
-            CONTRACTS_DEBUG_EXPECTS(GetIndexForType<T>() == getTypeIndex(),
+            debug_expects(GetIndexForType<T>() == getTypeIndex(),
                 "Current type is not same as requested type.");
 
-            return _getDataAs<T>();
+            return _getValueAs<T>();
         }
 
         template <usize i>
@@ -213,12 +213,6 @@ namespace Atom
         }
 
     private:
-        /// ----------------------------------------------------------------------------------------
-        /// Copy or move constructs value hold by variant `that`.
-        /// 
-        /// # Expects
-        /// - Current value is null.
-        /// ----------------------------------------------------------------------------------------
         template <bool move, usize index, tname TOther, tname... TOthers>
         cexpr fn _emplaceValueFromVariantImpl(auto& that, usize thatIndex)
         {
@@ -228,7 +222,7 @@ namespace Atom
             {
                 if cexpr (ThatTypes::Count == 0)
                 {
-                    TERMINATE("There is no type for current index.");
+                    panic("There is no type for current index.");
                 }
                 else
                 {
@@ -239,13 +233,11 @@ namespace Atom
 
             if cexpr (move)
             {
-                ObjHelper().Construct(&_getDataAs<TOther>(),
-                    mov(that.template _getDataAs<TOther>()));
+                _constructValue<TOther>(mov(that.template _getValueAs<TOther>()));
             }
             else
             {
-                ObjHelper().Construct(&_getDataAs<TOther>(),
-                    that.template _getDataAs<TOther>());
+                _constructValue<TOther>(that.template _getValueAs<TOther>());
             }
 
             _index = GetIndexForType<TOther>();
@@ -260,7 +252,7 @@ namespace Atom
             {
                 if cexpr (ThatTypes::Count == 0)
                 {
-                    TERMINATE("There is no type for current index.");
+                    panic("There is no type for current index.");
                 }
                 else
                 {
@@ -273,17 +265,15 @@ namespace Atom
             usize indexForThis = GetIndexForType<TOther>();
 
             // We already have this type, so we don't construct it but assign it.
-            if (indexForThis == _index)
+            if (_index == indexForThis)
             {
                 if cexpr (move)
                 {
-                    ObjHelper().Assign(&_getDataAs<TOther>(),
-                        mov(that.template _getDataAs<TOther>()));
+                    _assignValue<TOther>(mov(that.template _getValueAs<TOther>()));
                 }
                 else
                 {
-                    ObjHelper().Assign(&_getDataAs<TOther>(),
-                        that.template _getDataAs<TOther>());
+                    _assignValue<TOther>(that.template _getValueAs<TOther>());
                 }
             }
             else
@@ -292,17 +282,15 @@ namespace Atom
 
                 if cexpr (move)
                 {
-                    ObjHelper().Construct(&_getDataAs<TOther>(),
-                        mov(that.template _getDataAs<TOther>()));
+                    _constructValue<TOther>(mov(that.template _getValueAs<TOther>()));
                 }
                 else
                 {
-                    ObjHelper().Construct(&_getDataAs<TOther>(),
-                        that.template _getDataAs<TOther>());
+                    _constructValue<TOther>(that.template _getValueAs<TOther>());
                 }
-            }
 
-            _index = indexForThis;
+                _index = indexForThis;
+            }
         }
 
         template <usize index, tname T, tname... Ts_>
@@ -314,7 +302,7 @@ namespace Atom
             {
                 if cexpr (Types::Count == 0)
                 {
-                    TERMINATE("There is no type for current index.");
+                    panic("There is no type for current index.");
                 }
                 else
                 {
@@ -324,19 +312,49 @@ namespace Atom
                 }
             }
 
-            ObjHelper().Destruct(&_getDataAs<T>());
+            _destructValue<T>();
+        }
+
+        template <typename T>
+        cexpr fn _constructValue(auto&&... args)
+        {
+            ObjHelper().Construct(_getDataAs<T>(), fwd(args)...);
+        }
+
+        template <typename T>
+        cexpr fn _assignValue(auto&& val)
+        {
+            ObjHelper().Assign(_getDataAs<T>(), fwd(val));
+        }
+
+        template <typename T>
+        cexpr fn _destructValue()
+        {
+            ObjHelper().Destruct(_getDataAs<T>());
         }
 
         template <tname T>
-        cexpr fn _getDataAs() const -> const T&
+        cexpr fn _getValueAs() -> T&
         {
-            return *reinterpret_cast<const T*>(_storage.getData());
+            return *_getDataAs<T>();
         }
 
         template <tname T>
-        cexpr fn _getDataAs() -> T&
+        cexpr fn _getValueAs() const -> const T&
         {
-            return *reinterpret_cast<T*>(_storage.getData());
+            return *_getDataAs<T>();
+        }
+
+        template <tname T>
+        cexpr fn _getDataAs() -> T*
+        {
+            return reinterpret_cast<T*>(_storage.getData());
+        }
+
+        template <tname T>
+        cexpr fn _getDataAs() const -> const T*
+        {
+            return reinterpret_cast<const T*>(_storage.getData());
         }
 
     //// -------------------------------------------------------------------------------------------

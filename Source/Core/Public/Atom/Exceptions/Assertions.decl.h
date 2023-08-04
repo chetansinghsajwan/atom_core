@@ -95,14 +95,13 @@ namespace Atom::Internal
 /// ------------------------------------------------------------------------------------------------
 #define ATOM_DEBUG_ENSURES(assertion) ATOM_DEBUG_ASSERT(assertion)
 
-[[noreturn]]
-void myTerminate(auto& msg)
+noret void myTerminate(auto& msg)
 {
     std::cout << msg << std::endl;
     std::terminate();
 }
 
-#define CONTRACTS_EXPECTS(assert, msg) if (!(assert)) throw 0
-#define CONTRACTS_DEBUG_EXPECTS(assert, msg) if (!(assert)) throw 0
-#define CONTRACTS_DEBUG_ASSERTS(assert) if (!(assert)) throw 0
-#define TERMINATE(...) myTerminate(__VA_ARGS__)
+#define expects(...)
+#define debug_expects(...)
+#define debug_asserts(...)
+#define panic(...) myTerminate(__VA_ARGS__)

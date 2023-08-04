@@ -344,7 +344,7 @@ namespace Atom
         cexpr fn as() const -> const T&
             requires(Has<T>())
         {
-            CONTRACTS_EXPECTS(is<T>(), "Access to invalid type.");
+            expects(is<T>(), "Access to invalid type.");
 
             return _impl.template getValueByType<T>();
         }
@@ -359,7 +359,7 @@ namespace Atom
         cexpr fn as() -> T&
             requires(Has<T>())
         {
-            CONTRACTS_EXPECTS(is<T>(), "Access to invalid type.");
+            expects(is<T>(), "Access to invalid type.");
 
             return _impl.template getValueByType<T>();
         }
@@ -377,7 +377,7 @@ namespace Atom
         cexpr fn at() const -> const TAt<i>&
             requires(Has<i>())
         {
-            CONTRACTS_EXPECTS(is<i>(), "Access to invalid type by index.");
+            expects(is<i>(), "Access to invalid type by index.");
 
             return _impl.template getValueByIndex<i>();
         }
@@ -395,7 +395,7 @@ namespace Atom
         cexpr fn at() -> TAt<i>&
             requires(Has<i>())
         {
-            CONTRACTS_EXPECTS(is<i>(), "Access to invalid type by index.");
+            expects(is<i>(), "Access to invalid type by index.");
 
             return _impl.template getValueByIndex<i>();
         }

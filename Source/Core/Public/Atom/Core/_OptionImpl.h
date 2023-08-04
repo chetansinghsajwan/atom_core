@@ -1,9 +1,7 @@
 #pragma once
 #include "Atom/Core.h"
 #include "Atom/Memory/ObjHelper.h"
-
-#define debug_expects(...)
-#define expects(...)
+#include "Atom/Exceptions/Assertions.h"
 
 namespace Atom
 {
