@@ -2,8 +2,6 @@
 #include "RangeReq.h"
 #include "Atom/TTI.h"
 
-#define old_noex_if(...)
-
 namespace Atom
 {
     /// --------------------------------------------------------------------------------------------
@@ -50,97 +48,97 @@ namespace Atom
 
     public:
         cexpr ctor StdIterWrapForAtomIter(const TIter& iter) noex:
-            _iter{ iter } { }
+            iter{ iter } { }
 
         cexpr ctor StdIterWrapForAtomIter(TIter& iter) noex:
-            _iter{ iter } { }
+            iter{ iter } { }
 
         cexpr ctor StdIterWrapForAtomIter(TIter&& iter) noex:
-            _iter{ mov(iter) } { }
+            iter{ mov(iter) } { }
 
     public:
         template <class = void>
         requires RIter<TIter>
-        cexpr fn op*() const noex_if(*_iter) -> const value_type&
+        cexpr fn op*() const noex_if(*iter) -> const value_type&
         {
-            return *_iter;
+            return *iter;
         }
 
         template <class = void>
         requires RMutIter<TIter>
-        cexpr fn op*() noex_if(*_iter) -> value_type&
+        cexpr fn op*() noex_if(*iter) -> value_type&
         {
-            return *_iter;
+            return *iter;
         }
 
         template <class TIterEnd>
         requires RIterEnd<TIter, TIterEnd>
         cexpr fn op== (const StdIterWrapForAtomIter<TIterEnd>& that)
-            const noex_if(_iter == that._iter) -> bool
+            const noex_if(iter == that.iter) -> bool
         {
-            return _iter == that._iter;
+            return iter == that.iter;
         }
 
         template <class TIterEnd>
         requires RIterEnd<TIter, TIterEnd>
         cexpr fn op!= (const StdIterWrapForAtomIter<TIterEnd>& that)
-            const noex_if(_iter != that._iter) -> bool
+            const noex_if(iter != that.iter) -> bool
         {
-            return _iter != that._iter;
+            return iter != that.iter;
         }
 
         template <class = void>
         requires RIter<TIter>
-        cexpr fn op++() noex_if(++_iter) -> This&
+        cexpr fn op++() noex_if(++iter) -> This&
         {
-            ++_iter;
+            ++iter;
             return *this;
         }
 
         template <class = void>
         requires RIter<TIter>
-        cexpr fn op++(int) noex_if(_iter++) -> This
+        cexpr fn op++(int) noex_if(iter++) -> This
         {
-            return This{ _iter++ };
+            return This{ iter++ };
         }
 
         template <class = void>
         requires RBidiIter<TIter>
-        cexpr fn op--() noex_if(--_iter) -> This&
+        cexpr fn op--() noex_if(--iter) -> This&
         {
-            --_iter;
+            --iter;
             return *this;
         }
 
         template <class = void>
         requires RBidiIter<TIter>
-        cexpr fn op--(int) const noex_if(_iter--) -> This
+        cexpr fn op--(int) const noex_if(iter--) -> This
         {
-            return This{ _iter-- };
+            return This{ iter-- };
         }
 
         template <class = void>
         requires RJumpIter<TIter>
-        cexpr fn op+(difference_type steps) noex_if(_iter + steps) -> This
+        cexpr fn op+(difference_type steps) noex_if(iter + steps) -> This
         {
-            return This{ _iter + steps };
+            return This{ iter + steps };
         }
 
         template <class = void>
         requires RJumpIter<TIter>
-        cexpr fn op-(difference_type steps) noex_if(_iter - steps) -> This
+        cexpr fn op-(difference_type steps) noex_if(iter - steps) -> This
         {
-            return This{ _iter - steps };
+            return This{ iter - steps };
         }
 
         template <class = void>
         requires RJumpIter<TIter>
-        cexpr fn op-(const This& that) noex_if(_iter - that._iter) -> difference_type
+        cexpr fn op-(const This& that) noex_if(iter - that.iter) -> difference_type
         {
-            return _iter - that._iter;
+            return iter - that.iter;
         }
 
-    private:
-        TIter _iter;
+    public:
+        TIter iter;
     };
 }

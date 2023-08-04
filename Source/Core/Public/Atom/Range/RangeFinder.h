@@ -1,5 +1,6 @@
 #pragma once
 #include "RangeReq.h"
+#include "StdIterWrapForAtomIter.h"
 
 #include <algorithm>
 
@@ -16,7 +17,11 @@ namespace Atom
             and RFwdRange<TRange2>
         cexpr fn Find(const TRange1& range1, const TRange2& range2) -> tname TRange1::TIter 
         {
-            return std::find(range1.Iter(), range1.IterEnd(), range2.Iter(), range2.IterEnd());
+            StdIterWrapForAtomIter stdIter1{ range1.Iter() };
+            StdIterWrapForAtomIter stdIterEnd1{ range1.IterEnd() };
+            StdIterWrapForAtomIter stdIter2{ range2.Iter() };
+            StdIterWrapForAtomIter stdIterEnd2{ range2.IterEnd() };
+            return std::find(stdIter1, stdIterEnd1, stdIter2, stdIterEnd2);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -26,7 +31,9 @@ namespace Atom
         requires RFwdRange<TRange>
         cexpr fn Find(const TRange& range, const tname TRange::TElem& el) -> tname TRange::TIter 
         {
-            return std::find(range.Iter(), range.IterEnd(), el);
+            StdIterWrapForAtomIter stdIter{ range.Iter() };
+            StdIterWrapForAtomIter stdIterEnd{ range.IterEnd() };
+            return std::find(stdIter, stdIterEnd, el).iter;
         }
 
         /// ----------------------------------------------------------------------------------------
