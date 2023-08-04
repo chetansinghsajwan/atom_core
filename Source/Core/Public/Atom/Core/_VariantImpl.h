@@ -7,6 +7,24 @@
 
 namespace Atom
 {
+    template <tname... Ts>
+    class _VariantStorage
+    {
+    public:
+        constexpr fn getData() -> void*
+        {
+            return &_storage.storage;
+        }
+
+        constexpr fn getData() const -> const void*
+        {
+            return &_storage.storage;
+        }
+
+    private:
+        AlignedUnionStorageFor<Ts...> _storage;
+    };
+
     /// --------------------------------------------------------------------------------------------
     /// Implementatiion of [`Variant`].
     /// --------------------------------------------------------------------------------------------
@@ -19,6 +37,7 @@ namespace Atom
 
     private:
         using _Types = TypeList<Ts...>;
+        using _Storage = _VariantStorage<Ts...>;
 
     //// -------------------------------------------------------------------------------------------
     //// Static Functions
@@ -92,7 +111,7 @@ namespace Atom
         template <tname... TOthers>
         cexpr fn setValueFromVariant(_VariantImpl<TOthers...>&& that)
         {
-            _setValueFromVariantImpl<true, 0, TOthers...>(mov(that), that.getTypeIndex());
+            _setValueFromVariantImpl<true, 0, TOthers...>(that, that.getTypeIndex());
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -104,7 +123,7 @@ namespace Atom
         template <tname T, tname... TArgs>
         cexpr fn emplaceValueByType(TArgs&&... args)
         {
-            ObjHelper().Construct(&getDataAs<T>(), fwd(args)...);
+            ObjHelper().Construct(&_getDataAs<T>(), fwd(args)...);
             _index = GetIndexForType<T>();
         }
 
@@ -132,7 +151,7 @@ namespace Atom
             // The new type to set is same as current.
             if (indexToSet == _index)
             {
-                ObjHelper().Assign(&getDataAs<T>(), fwd(value));
+                ObjHelper().Assign(&_getDataAs<T>(), fwd(value));
             }
             else
             {
@@ -147,7 +166,7 @@ namespace Atom
             CONTRACTS_DEBUG_EXPECTS(GetIndexForType<T>() == getTypeIndex(),
                 "Current type is not same as requested type.");
 
-            return getDataAs<T>();
+            return _getDataAs<T>();
         }
 
         template <tname T>
@@ -156,7 +175,7 @@ namespace Atom
             CONTRACTS_DEBUG_EXPECTS(GetIndexForType<T>() == getTypeIndex(),
                 "Current type is not same as requested type.");
 
-            return getDataAs<T>();
+            return _getDataAs<T>();
         }
 
         template <usize i>
@@ -190,19 +209,7 @@ namespace Atom
 
         cexpr fn destroyValue()
         {
-            destroyValueImpl<0, Ts...>(getTypeIndex());
-        }
-
-        template <tname T>
-        cexpr fn getDataAs() const -> const T&
-        {
-            return reinterpret_cast<const T&>(*_storage.storage);
-        }
-
-        template <tname T>
-        cexpr fn getDataAs() -> T&
-        {
-            return reinterpret_cast<T&>(*_storage.storage);
+            _destroyValueImpl<0, Ts...>(getTypeIndex());
         }
 
     private:
@@ -232,13 +239,13 @@ namespace Atom
 
             if cexpr (move)
             {
-                ObjHelper().Construct(&getDataAs<TOther>(),
-                    mov(that.template getDataAs<TOther>()));
+                ObjHelper().Construct(&_getDataAs<TOther>(),
+                    mov(that.template _getDataAs<TOther>()));
             }
             else
             {
-                ObjHelper().Construct(&getDataAs<TOther>(),
-                    that.template getDataAs<TOther>());
+                ObjHelper().Construct(&_getDataAs<TOther>(),
+                    that.template _getDataAs<TOther>());
             }
 
             _index = GetIndexForType<TOther>();
@@ -262,7 +269,7 @@ namespace Atom
                 }
             }
 
-            // Index for this variant of type same as that variant' current type.
+            // Index for this variant of type same as that `variant` current type.
             usize indexForThis = GetIndexForType<TOther>();
 
             // We already have this type, so we don't construct it but assign it.
@@ -270,13 +277,13 @@ namespace Atom
             {
                 if cexpr (move)
                 {
-                    ObjHelper().Assign(&getDataAs<TOther>(),
-                        mov(that.template getDataAs<TOther>()));
+                    ObjHelper().Assign(&_getDataAs<TOther>(),
+                        mov(that.template _getDataAs<TOther>()));
                 }
                 else
                 {
-                    ObjHelper().Assign(&getDataAs<TOther>(),
-                        that.template getDataAs<TOther>());
+                    ObjHelper().Assign(&_getDataAs<TOther>(),
+                        that.template _getDataAs<TOther>());
                 }
             }
             else
@@ -285,21 +292,21 @@ namespace Atom
 
                 if cexpr (move)
                 {
-                    ObjHelper().Construct(&getDataAs<TOther>(),
-                        mov(that.template getDataAs<TOther>()));
+                    ObjHelper().Construct(&_getDataAs<TOther>(),
+                        mov(that.template _getDataAs<TOther>()));
                 }
                 else
                 {
-                    ObjHelper().Construct(&getDataAs<TOther>(),
-                        that.template getDataAs<TOther>());
+                    ObjHelper().Construct(&_getDataAs<TOther>(),
+                        that.template _getDataAs<TOther>());
                 }
             }
 
-            _index = GetIndexForType<TOther>();
+            _index = indexForThis;
         }
 
         template <usize index, tname T, tname... Ts_>
-        cexpr fn destroyValueImpl(usize i)
+        cexpr fn _destroyValueImpl(usize i)
         {
             using Types = TypeList<Ts_...>;
 
@@ -312,12 +319,24 @@ namespace Atom
                 else
                 {
                     // Recursion to find type at index i.
-                    destroyValueImpl<index + 1, Ts_...>(i);
+                    _destroyValueImpl<index + 1, Ts_...>(i);
                     return;
                 }
             }
 
-            ObjHelper().Destruct(&getDataAs<T>());
+            ObjHelper().Destruct(&_getDataAs<T>());
+        }
+
+        template <tname T>
+        cexpr fn _getDataAs() const -> const T&
+        {
+            return *reinterpret_cast<const T*>(_storage.getData());
+        }
+
+        template <tname T>
+        cexpr fn _getDataAs() -> T&
+        {
+            return *reinterpret_cast<T*>(_storage.getData());
         }
 
     //// -------------------------------------------------------------------------------------------
@@ -325,7 +344,7 @@ namespace Atom
     //// -------------------------------------------------------------------------------------------
 
     private:
-        AlignedUnionStorageFor<Ts...> _storage;
+        _Storage _storage;
         usize _index = 0;
     };
 }

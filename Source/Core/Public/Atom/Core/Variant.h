@@ -10,6 +10,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <tname... Ts>
     requires(TypeList<Ts...>::AreUnique)
+        and (TypeList<Ts...>::Count > 0)
         and (not TypeList<Ts...>::template Has<void>)
     class Variant
     {
@@ -18,6 +19,7 @@ namespace Atom
 
         template <tname... TOthers>
         requires(TypeList<TOthers...>::AreUnique)
+            and (TypeList<TOthers...>::Count > 0)
             and (not TypeList<TOthers...>::template Has<void>)
         friend class Variant;
 
@@ -83,27 +85,21 @@ namespace Atom
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// Trivial Default Constructor.
-        /// ----------------------------------------------------------------------------------------
-        cexpr ctor Variant() = default;
-
-        /// ----------------------------------------------------------------------------------------
-        /// Default Constructor.
+        /// # Default Constructor
         /// ----------------------------------------------------------------------------------------
         cexpr ctor Variant()
             requires(RDefaultConstructible<TAt<0>>)
-                and (not RTriviallyDefaultConstructible<TAt<0>>)
         {
             _impl.template emplaceValueByIndex<0>();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Trivial Copy Constructor.
+        /// # Trivial Copy Constructor
         /// ----------------------------------------------------------------------------------------
         cexpr ctor Variant(const Variant& that) = default;
 
         /// ----------------------------------------------------------------------------------------
-        /// Copy Constructor.
+        /// # Copy Constructor
         /// ----------------------------------------------------------------------------------------
         cexpr ctor Variant(const Variant& that)
             requires(RCopyConstructibleAll<Ts...>)
@@ -113,7 +109,7 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Copy Constructor Template.
+        /// # Copy Constructor Template
         /// ----------------------------------------------------------------------------------------
         template <tname... TOthers>
         cexpr ctor Variant(const Variant<TOthers...>& that)
@@ -124,12 +120,12 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Trivial Copy Assignment Operator.
+        /// # Trivial Copy Assignment Operator
         /// ----------------------------------------------------------------------------------------
         cexpr fn op=(const Variant& that) -> Variant& = default;
 
         /// ----------------------------------------------------------------------------------------
-        /// Copy Assignment Operator.
+        /// # Copy Assignment Operator
         /// ----------------------------------------------------------------------------------------
         cexpr fn op=(const Variant& that) -> Variant&
             requires(RCopyConstructibleAll<Ts...>)
@@ -142,7 +138,7 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Copy Assignment Operator Template.
+        /// # Copy Assignment Operator Template
         /// ----------------------------------------------------------------------------------------
         template <tname... TOthers>
         cexpr fn op=(const Variant<TOthers...>& that) -> Variant&
@@ -155,12 +151,12 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Trivial Move Constructor.
+        /// # Trivial Move Constructor
         /// ----------------------------------------------------------------------------------------
         cexpr ctor Variant(Variant&& that) = default;
 
         /// ----------------------------------------------------------------------------------------
-        /// Move Constructor.
+        /// # Move Constructor
         /// ----------------------------------------------------------------------------------------
         cexpr ctor Variant(Variant&& that)
             requires(RMoveConstructibleAll<Ts...>)
@@ -170,7 +166,7 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Move Constructor Template.
+        /// # Move Constructor Template
         /// ----------------------------------------------------------------------------------------
         template <tname... TOthers>
         cexpr ctor Variant(Variant<TOthers...>&& that)
@@ -181,12 +177,12 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Trivial Move Assignment Operator.
+        /// # Trivial Move Assignment Operator
         /// ----------------------------------------------------------------------------------------
         cexpr fn op=(Variant&& that) -> Variant& = default;
 
         /// ----------------------------------------------------------------------------------------
-        /// Move Assignment Operator.
+        /// # Move Assignment Operator
         /// ----------------------------------------------------------------------------------------
         cexpr fn op=(Variant&& that) -> Variant&
             requires(RMoveConstructibleAll<Ts...>)
@@ -199,7 +195,7 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Move Assignment Operator Template.
+        /// # Move Assignment Operator Template
         /// ----------------------------------------------------------------------------------------
         template <tname... TOthers>
         cexpr fn op=(Variant<TOthers...>&& that) -> Variant&
@@ -212,39 +208,76 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Constructs variant with value of type T.
+        /// # Value Copy Constructor
+        /// 
+        /// Copy constructs variant with value of type T.
         /// 
         /// # Parameters
         /// - `value`: Value to construct with.
         /// ----------------------------------------------------------------------------------------
-        template <tname TFwd, tname T = TTI::TRemoveQuailfiersRef<TFwd>>
-        cexpr ctor Variant(TFwd&& value)
+        template <tname T>
+        cexpr ctor Variant(const T& value)
             requires(Has<T>())
         {
-            _impl.template emplaceValueByType<T>(fwd(value));
+            _impl.template emplaceValueByType<T>(value);
         }
 
         /// ----------------------------------------------------------------------------------------
+        /// # Value Move Constructor
+        /// 
+        /// Move constructs variant with value of type T.
+        /// 
+        /// # Parameters
+        /// - `value`: Value to construct with.
+        /// ----------------------------------------------------------------------------------------
+        template <tname T>
+        cexpr ctor Variant(T&& value)
+            requires(Has<T>())
+        {
+            _impl.template emplaceValueByType<T>(mov(value));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// # Value Copy Operator
+        /// 
         /// Destroys previous value assigns new value.
         /// 
         /// # Parameters
         /// - `value`: Value to assign.
         /// ----------------------------------------------------------------------------------------
-        template <tname TFwd, tname T = TTI::TRemoveQuailfiersRef<TFwd>>
-        cexpr fn op=(TFwd&& value) -> Variant&
+        template <tname T>
+        cexpr fn op=(const T& value) -> Variant&
             requires(Has<T>())
         {
-            _impl.setValue(fwd(value));
+            _impl.setValue(value);
             return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Trivial Destructor.
+        /// # Value Move Operator
+        /// 
+        /// Destroys previous value assigns new value.
+        /// 
+        /// # Parameters
+        /// - `value`: Value to assign.
+        /// ----------------------------------------------------------------------------------------
+        template <tname T>
+        cexpr fn op=(T&& value) -> Variant&
+            requires(Has<T>())
+        {
+            _impl.setValue(mov(value));
+            return *this;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// # Trivial Destructor
         /// ----------------------------------------------------------------------------------------
         cexpr dtor Variant() = default;
 
         /// ----------------------------------------------------------------------------------------
-        /// Destructor. Destructs value.
+        /// # Destructor
+        /// 
+        /// Destructs value.
         /// ----------------------------------------------------------------------------------------
         cexpr dtor Variant()
             requires(not RTriviallyDestructibleAll<Ts...>)
