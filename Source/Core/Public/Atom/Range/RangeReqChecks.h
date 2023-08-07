@@ -13,7 +13,7 @@
     "{" #TRange "} does not satisfy {" #RRange "} requirements for type {" #T "}.");
 
 #define _ATOM_SATISFIES_RANGE_TEMP(RRange, TRange) \
-    static_assert(RRange<TRange<int>>, \
+    static_assert(RRange<TRange<i32>>, \
     "{" #TRange "} does not satisfy {" #RRange "} requirements.");
 
 #pragma endregion

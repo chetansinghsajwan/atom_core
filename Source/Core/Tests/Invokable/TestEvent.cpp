@@ -5,8 +5,8 @@ using namespace Atom;
 
 TEST_CASE("Invokable/Event")
 {
-    EventSource<int> eventSource;
-    IEvent<int>& event = eventSource;
+    EventSource<i32> eventSource;
+    IEvent<i32>& event = eventSource;
 
-    EventKey key = event += [](int id) {};
+    EventKey key = event += [](i32 id) {};
 }

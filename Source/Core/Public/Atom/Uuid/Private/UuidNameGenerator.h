@@ -55,7 +55,7 @@ namespace Atom::Private
             // Set version.
             // Clear out the relevant bits and apply them
             hash.bytes[6] &= 0x0F;
-            hash.bytes[6] |= ((int)UuidVersion << 4);
+            hash.bytes[6] |= ((i32)UuidVersion << 4);
 
             Uuid uuid;
             for (usize i = 0; i < 16; i++)

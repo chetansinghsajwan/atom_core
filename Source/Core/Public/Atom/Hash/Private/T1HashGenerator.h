@@ -84,8 +84,8 @@ namespace Atom::Private
             ATOM_DEBUG_EXPECTS(data != nullptr);
             ATOM_DEBUG_EXPECTS(dataSize > 0);
 
-            // The implementation accepts size of data in uint32 but we accept in usize,
-            // which could be bigger than uint32, so we pass the data to the implementation 
+            // The implementation accepts size of data in u32 but we accept in usize,
+            // which could be bigger than u32, so we pass the data to the implementation 
             // in parts.
 
             // Max size of input WjCrypt accepts at once.

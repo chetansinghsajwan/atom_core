@@ -7,8 +7,8 @@ using namespace Atom;
 using namespace Atom::Test;
 using namespace Catch;
 
-using TrackedType0 = TrackedTypeOf<int>;
-using TrackedType1 = TrackedTypeOf<float>;
+using TrackedType0 = TrackedTypeOf<i32>;
+using TrackedType1 = TrackedTypeOf<f32>;
 using TrackedType2 = TrackedTypeOf<char>;
 
 TEST_CASE("Atom.Core.Variant")
@@ -35,7 +35,7 @@ TEST_CASE("Atom.Core.Variant")
 
     SECTION("Count")
     {
-        REQUIRE(Variant<int, double, float, bool>::Count() == 4);
+        REQUIRE(Variant<i32, f64, f32, bool>::Count() == 4);
     }
 
     SECTION("Has")
@@ -45,8 +45,8 @@ TEST_CASE("Atom.Core.Variant")
         REQUIRE(Var::Has<TrackedType0>());
         REQUIRE(Var::Has<TrackedType1>());
         REQUIRE(Var::Has<TrackedType2>());
-        REQUIRE(!Var::Has<int>());
-        REQUIRE(!Var::Has<float>());
+        REQUIRE(!Var::Has<i32>());
+        REQUIRE(!Var::Has<f32>());
 
         REQUIRE(Var::Has<0>());
         REQUIRE(Var::Has<1>());
@@ -59,7 +59,7 @@ TEST_CASE("Atom.Core.Variant")
         // # To Do: Fix this. Check _VariantImpl default value for _index.
         // 
         // STATIC_REQUIRE(RTriviallyDefaultConstructible<
-        //     Variant<int, char, float>>);
+        //     Variant<i32, char, f32>>);
     }
 
     SECTION("Default Constructor")
@@ -74,7 +74,7 @@ TEST_CASE("Atom.Core.Variant")
     SECTION("Trivial Copy Constructor")
     {
         STATIC_REQUIRE(RTriviallyCopyConstructible<
-            Variant<int, char, float>>);
+            Variant<i32, char, f32>>);
     }
 
     SECTION("Copy Constructor")
@@ -108,7 +108,7 @@ TEST_CASE("Atom.Core.Variant")
     SECTION("Trivial Copy Assignment Operator")
     {
         STATIC_REQUIRE(RTriviallyCopyAssignable<
-            Variant<int, char, float>>);
+            Variant<i32, char, f32>>);
     }
 
     SECTION("Copy Assignment Operator")
@@ -170,7 +170,7 @@ TEST_CASE("Atom.Core.Variant")
     SECTION("Trivial Move Constructor")
     {
         STATIC_REQUIRE(RTriviallyMoveConstructible<
-            Variant<int, char, float>>);
+            Variant<i32, char, f32>>);
     }
 
     SECTION("Move Constructor")
@@ -204,7 +204,7 @@ TEST_CASE("Atom.Core.Variant")
     SECTION("Trivial Move Assignment Operator")
     {
         STATIC_REQUIRE(RTriviallyMoveAssignable<
-            Variant<int, char, float>>);
+            Variant<i32, char, f32>>);
     }
 
     SECTION("Move Assignment Operator")
@@ -265,7 +265,7 @@ TEST_CASE("Atom.Core.Variant")
 
     SECTION("Param Constructor")
     {
-        Variant<int, double, char> v = 'c';
+        Variant<i32, f64, char> v = 'c';
 
         REQUIRE(v.index() == 2);
         REQUIRE(v.is<char>());
@@ -275,7 +275,7 @@ TEST_CASE("Atom.Core.Variant")
     SECTION("Param Constructor: Non deducible type.")
     {
         // Compilation error.
-        // 99 is an int. Use type explicitly.
+        // 99 is an i32. Use type explicitly.
         // Variant<usize> v = 99;
         Variant<usize> v = usize{ 99 };
 
@@ -286,7 +286,7 @@ TEST_CASE("Atom.Core.Variant")
 
     SECTION("Param Operator")
     {
-        Variant<int, double, char> v;
+        Variant<i32, f64, char> v;
         v = 'c';
 
         REQUIRE(v.index() == 2);
@@ -299,7 +299,7 @@ TEST_CASE("Atom.Core.Variant")
         Variant<usize> v;
 
         // Compilation error.
-        // 99 is an int. Use type explicitly.
+        // 99 is an i32. Use type explicitly.
         // v = 99;
         v = usize{ 99 };
 
@@ -322,7 +322,7 @@ TEST_CASE("Atom.Core.Variant")
 
     SECTION("Value write")
     {
-        Variant<int, double, char> v;
+        Variant<i32, f64, char> v;
 
         v.emplace<char>('h');
 
@@ -333,13 +333,13 @@ TEST_CASE("Atom.Core.Variant")
         v.set(99);
 
         REQUIRE(v.index() == 0);
-        REQUIRE(v.is<int>());
-        REQUIRE(v.as<int>() == 99);
+        REQUIRE(v.is<i32>());
+        REQUIRE(v.as<i32>() == 99);
     }
 
     SECTION("Value Read")
     {
-        Variant<int, double, char> v = 'h';
+        Variant<i32, f64, char> v = 'h';
 
         REQUIRE(v.is<char>());
         REQUIRE(v.as<char>() == 'h');

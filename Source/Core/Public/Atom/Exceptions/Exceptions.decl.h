@@ -17,8 +17,8 @@ namespace Atom
 
         pub static cexpr ExceptionSource Current(TImpl src = TImpl::current()) noex;
 
-        pub uint32 line;
-        pub uint32 column;
+        pub u32 line;
+        pub u32 column;
         pub AsciiStrView fileName;
         pub AsciiStrView funcName;
     };

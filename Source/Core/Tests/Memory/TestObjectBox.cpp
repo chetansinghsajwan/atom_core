@@ -10,17 +10,17 @@ TEST_CASE("ObjectBox.Implementation")
     TBox box0 = 10;
     TBox box1 = 10;
 
-    CHECK(box0.GetObject<int>() == 10);
-    CHECK(box1.GetObject<int>() == 10);
+    CHECK(box0.GetObject<i32>() == 10);
+    CHECK(box1.GetObject<i32>() == 10);
 
     box0 = 20;
 
-    CHECK(box0.GetObject<int>() == 20);
-    CHECK(box1.GetObject<int>() == 10);
+    CHECK(box0.GetObject<i32>() == 20);
+    CHECK(box1.GetObject<i32>() == 10);
 
     box0 = box1;
 
-    CHECK(box0.GetObject<int>() == 10);
+    CHECK(box0.GetObject<i32>() == 10);
 }
 
 TEST_CASE("ObjectBox.Conversion")

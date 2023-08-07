@@ -19,7 +19,7 @@ namespace Atom
     /// 
     /// This is useful when we want to return a value that may or may not exist, without 
     /// using null pointers or exceptions. Or just want to add the ability of being null to a type 
-    /// like `int`.
+    /// like `i32`.
     ///
     /// # Template Parameters
     /// - `T`: Type of value to store.

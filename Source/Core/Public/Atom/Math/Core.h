@@ -12,13 +12,13 @@ namespace Atom
 
 namespace Atom::Math
 {
-    cexpr fn Abs(double value) noex -> double
+    cexpr fn Abs(f64 value) noex -> f64
     {
         // TODO: Improve this, maybe using sign bit flag.
         return value * (value < 0 ? -1 : 1);
     }
 
-    cexpr fn IsApproximatelyZero(double lhs, double rhs) noex -> bool
+    cexpr fn IsApproximatelyZero(f64 lhs, f64 rhs) noex -> bool
     {
         return Abs(lhs - rhs) < 0.0001f;
     }

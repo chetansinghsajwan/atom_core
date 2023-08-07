@@ -37,10 +37,10 @@
     "{" #TIter ", " #TIterEnd "} does not satisfy {" #RMutIterPairOf "} requirement for type {" #T "}.")
 
 #define _ATOM_SATISFIES_ITER_TEMP(RIter, TIterTemp) \
-    _ATOM_SATISFIES_ITER(RIter, TIterTemp<int>)
+    _ATOM_SATISFIES_ITER(RIter, TIterTemp<i32>)
 
 #define _ATOM_SATISFIES_MUT_ITER_TEMP(RIter, TIterTemp) \
-    _ATOM_SATISFIES_MUT_ITER(RIter, TIterTemp<int>)
+    _ATOM_SATISFIES_MUT_ITER(RIter, TIterTemp<i32>)
 
 #pragma endregion
 //// -----------------------------------------------------------------------------------------------

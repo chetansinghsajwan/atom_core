@@ -6,7 +6,7 @@ using namespace Atom;
 
 TEST_CASE("Atom::Containers::DynArr")
 {
-    DynArr<int> arr;
+    DynArr<i32> arr;
 
     REQUIRE(arr.Count() == 0);
     REQUIRE(arr.Data() == nullptr);

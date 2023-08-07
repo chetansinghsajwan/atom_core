@@ -3,15 +3,15 @@
 
 using namespace Atom;
 
-void PrintCmdArgs(int argc, char** argv)
+void PrintCmdArgs(i32 argc, char** argv)
 {
-    for (int i = 1; i < argc; ++i)
+    for (i32 i = 1; i < argc; ++i)
     {
         std::cout << argv[i] << std::endl;
     }
 }
 
-int main(int argc, char **argv)
+i32 main(i32 argc, char **argv)
 {
     PrintCmdArgs(argc, argv);
 

@@ -19,7 +19,7 @@ namespace Atom::Engine
         glfwSetWindowUserPointer(_glfwWindow, this);
 
         glfwSetWindowPosCallback(_glfwWindow,
-            [](GLFWwindow* glfwWindow, int xpos, int ypos)
+            [](GLFWwindow* glfwWindow, i32 xpos, i32 ypos)
             {
                 GLFWWindow& window = *reinterpret_cast<GLFWWindow*>(
                     glfwGetWindowUserPointer(glfwWindow));
@@ -33,7 +33,7 @@ namespace Atom::Engine
             });
 
         glfwSetWindowSizeCallback(_glfwWindow,
-            [](GLFWwindow* glfwWindow, int width, int height)
+            [](GLFWwindow* glfwWindow, i32 width, i32 height)
             {
                 GLFWWindow& window = *reinterpret_cast<GLFWWindow*>(
                     glfwGetWindowUserPointer(glfwWindow));

@@ -5,7 +5,7 @@ namespace Atom
 {
     class SVector1
     {
-        pub float x;
+        pub f32 x;
     };
 
     cexpr fn op+(SVector1 lhs, SVector1 rhs) noex -> SVector1
@@ -18,12 +18,12 @@ namespace Atom
         return { lhs.x - rhs.x };
     }
 
-    cexpr fn op*(SVector1 lhs, float scalar) noex -> SVector1
+    cexpr fn op*(SVector1 lhs, f32 scalar) noex -> SVector1
     {
         return { lhs.x * scalar };
     }
 
-    cexpr fn op/(SVector1 lhs, float scalar) noex -> SVector1
+    cexpr fn op/(SVector1 lhs, f32 scalar) noex -> SVector1
     {
         return { lhs.x / scalar };
     }
@@ -40,13 +40,13 @@ namespace Atom
         return lhs;
     }
 
-    cexpr fn op*=(SVector1& lhs, float scalar) noex -> SVector1&
+    cexpr fn op*=(SVector1& lhs, f32 scalar) noex -> SVector1&
     {
         lhs.x *= scalar;
         return lhs;
     }
 
-    cexpr fn op/=(SVector1& lhs, float scalar) noex -> SVector1&
+    cexpr fn op/=(SVector1& lhs, f32 scalar) noex -> SVector1&
     {
         lhs.x /= scalar;
         return lhs;

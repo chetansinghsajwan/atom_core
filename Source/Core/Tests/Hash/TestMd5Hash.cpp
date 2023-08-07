@@ -88,7 +88,7 @@ TEST_CASE("Atom::Hash::Md5HashGenerator")
     // Tests if the SHA-1 hash of an empty input string is correct.
     SECTION("TestEmptyInput")
     {
-        const char input[] = "";
+        constexpr char input[] = "";
 
         Md5Hash hash = Md5HashGenerator()
             .Generate();
@@ -102,7 +102,7 @@ TEST_CASE("Atom::Hash::Md5HashGenerator")
     // Tests if the SHA-1 hash of a single block input string is correct.
     SECTION("TestSingleBlockInput")
     {
-        const char input[] = "The quick brown fox jumps over the lazy dog";
+        constexpr char input[] = "The quick brown fox jumps over the lazy dog";
 
         Md5Hash hash = Md5HashGenerator()
             .ProcessBytes(input, sizeof(input) - 1)
@@ -117,7 +117,7 @@ TEST_CASE("Atom::Hash::Md5HashGenerator")
     // Tests if the SHA-1 hash of a multi-block input string is correct.
     SECTION("TestMultiBlockInput")
     {
-        const char input[] = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+        constexpr char input[] = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
             "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
             "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris "
             "nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in "

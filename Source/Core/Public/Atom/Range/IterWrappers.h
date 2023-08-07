@@ -63,7 +63,7 @@ namespace Atom
             return &*this->iter;
         }
 
-        pub cexpr fn op++(int) noex -> IterWrap&
+        pub cexpr fn op++(i32) noex -> IterWrap&
         {
             this->iter++;
             return *this;
@@ -142,7 +142,7 @@ namespace Atom
         pub cexpr ctor BidiIterWrap(TIter iter) noex:
             Base{ iter } { }
 
-        pub cexpr fn op--(int) noex -> BidiIterWrap&
+        pub cexpr fn op--(i32) noex -> BidiIterWrap&
         {
             this->iter--;
             return *this;

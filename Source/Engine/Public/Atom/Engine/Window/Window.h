@@ -9,8 +9,8 @@ namespace Atom::Engine
 {
     class SWindowCoords
     {
-        pub int x;
-        pub int y;
+        pub i32 x;
+        pub i32 y;
     };
 
     cexpr fn op-(const SWindowCoords& lhs, const SWindowCoords& rhs) noex -> SWindowCoords

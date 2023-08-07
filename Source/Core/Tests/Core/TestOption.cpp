@@ -167,13 +167,13 @@ TEST_CASE("Atom.Core.Option")
         class Type
         {
         public:
-            Type(int a, char b, float c):
+            Type(i32 a, char b, f32 c):
                 a{ a }, b{ b }, c{ c } { }
 
         public:
-            int a;
+            i32 a;
             char b;
-            float c;
+            f32 c;
         };
 
         Option<Type> opt;
@@ -288,7 +288,7 @@ TEST_CASE("Atom.Core.Option")
         opt.value().lastOp = TrackedType::EOperation::Destructor;
         REQUIRE(val.lastOp == TrackedType::EOperation::Destructor);
 
-        using Opt = Option<int&>;
+        using Opt = Option<i32&>;
 
         STATIC_REQUIRE(RDefaultConstructible<Opt>);
         STATIC_REQUIRE(RCopyConstructible<Opt>);

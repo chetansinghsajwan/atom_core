@@ -6,14 +6,14 @@
 // 
 // TEST_CASE("Atom.Range.IterWrappers", "[.compilation]")
 // {
-//     using IterWrapMock = IterWrap<MutArrIter<int>>;
-//     using MutIterWrapMock = MutIterWrap<MutArrIter<int>>;
-//     using FwdIterWrapMock = FwdIterWrap<MutArrIter<int>>;
-//     using MutFwdIterWrapMock = MutFwdIterWrap<MutArrIter<int>>;
-//     using BidiIterWrapMock = BidiIterWrap<MutArrIter<int>>;
-//     using MutBidiIterWrapMock = MutBidiIterWrap<MutArrIter<int>>;
-//     using JumpIterWrapMock = JumpIterWrap<MutArrIter<int>>;
-//     using MutJumpIterWrapMock = MutJumpIterWrap<MutArrIter<int>>;
+//     using IterWrapMock = IterWrap<MutArrIter<i32>>;
+//     using MutIterWrapMock = MutIterWrap<MutArrIter<i32>>;
+//     using FwdIterWrapMock = FwdIterWrap<MutArrIter<i32>>;
+//     using MutFwdIterWrapMock = MutFwdIterWrap<MutArrIter<i32>>;
+//     using BidiIterWrapMock = BidiIterWrap<MutArrIter<i32>>;
+//     using MutBidiIterWrapMock = MutBidiIterWrap<MutArrIter<i32>>;
+//     using JumpIterWrapMock = JumpIterWrap<MutArrIter<i32>>;
+//     using MutJumpIterWrapMock = MutJumpIterWrap<MutArrIter<i32>>;
 // 
 //     STATIC_CHECK(RIter<IterWrapMock>);
 //     STATIC_CHECK_FALSE(RMutIter<IterWrapMock>);
@@ -46,13 +46,13 @@
 // 
 // TEST_CASE("Atom.Range.IterWrappers", "[.interface]")
 // {
-//     class CustomIter: MutArrIter<int>
+//     class CustomIter: MutArrIter<i32>
 //     {
-//         pub using Base = MutArrIter<int>;
+//         pub using Base = MutArrIter<i32>;
 // 
 //         pub cexpr ctor CustomIter() { }
 // 
-//         pub cexpr ctor CustomIter(int, char, float, const char*) { }
+//         pub cexpr ctor CustomIter(i32, char, f32, const char*) { }
 // 
 //         pub cexpr ctor CustomIter(const Base& base) noex:
 //             Base{ base } { }
@@ -60,7 +60,7 @@
 // 
 //     SECTION("")
 //     {
-//         MutArrIter<int> iter;
+//         MutArrIter<i32> iter;
 // 
 //         IterWrap iterWrap{ iter };
 //         MutIterWrap mutIterWrap{ iter };

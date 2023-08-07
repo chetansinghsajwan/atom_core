@@ -3,10 +3,10 @@
 
 namespace Atom::Test
 {
-    enum class ECustomTypeFlags: uint64
+    enum class ECustomTypeFlags: u64
     {
         None = 0,
-        All = uint64(-1),
+        All = u64(-1),
 
         DefaultConstructor                      = 1 << 0,
         CopyConstructor                         = 1 << 1,
@@ -34,13 +34,13 @@ namespace Atom::Test
     constexpr fn op|(const ECustomTypeFlags& flags, const ECustomTypeFlags& flagsToAdd)
         -> ECustomTypeFlags
     {
-        return (ECustomTypeFlags)((uint64)flags | (uint64)flagsToAdd);
+        return (ECustomTypeFlags)((u64)flags | (u64)flagsToAdd);
     }
 
     constexpr fn op&(const ECustomTypeFlags& flags, const ECustomTypeFlags& flagsToAdd)
         -> ECustomTypeFlags
     {
-        return (ECustomTypeFlags)((uint64)flags & (uint64)flagsToAdd);
+        return (ECustomTypeFlags)((u64)flags & (u64)flagsToAdd);
     }
 
     class EnumFlagUtils

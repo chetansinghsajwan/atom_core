@@ -19,7 +19,7 @@ TEST_CASE("Atom/Invokable/InvokableBox")
             pub fn op=(NotMoveAssignable&& other) -> NotMoveAssignable& = delete;
         };
 
-        InvokableBox<NotMoveAssignable(int)> invokable = [](int value)
+        InvokableBox<NotMoveAssignable(i32)> invokable = [](i32 value)
         {
             return NotMoveAssignable();
         };
@@ -27,7 +27,7 @@ TEST_CASE("Atom/Invokable/InvokableBox")
 
     SECTION("Invocation")
     {
-        InvokableBox<bool(int)> lambdaInvokable = [](int value)
+        InvokableBox<bool(i32)> lambdaInvokable = [](i32 value)
         {
             return value == 1;
         };
@@ -37,7 +37,7 @@ TEST_CASE("Atom/Invokable/InvokableBox")
 
         class Lambda final
         {
-            pub ctor Lambda(int* capturedValue) noex:
+            pub ctor Lambda(i32* capturedValue) noex:
                 _capturedValue(capturedValue) { }
 
             pub ctor Lambda(const Lambda& other) noex
@@ -53,16 +53,16 @@ TEST_CASE("Atom/Invokable/InvokableBox")
 
             pub dtor Lambda() { }
 
-            pub fn op()() -> int
+            pub fn op()() -> i32
             {
                 return *_capturedValue;
             }
 
-            priv int* _capturedValue;
+            priv i32* _capturedValue;
         };
 
-        int capturedValue = 10;
-        InvokableBox<int()> captureLambdaInvokable = Lambda(&capturedValue);
+        i32 capturedValue = 10;
+        InvokableBox<i32()> captureLambdaInvokable = Lambda(&capturedValue);
 
         CHECK(captureLambdaInvokable() != 0);
         CHECK(captureLambdaInvokable() == capturedValue);
@@ -95,7 +95,7 @@ TEST_CASE("Atom/Invokable/InvokableBox", "[Benchmarks]")
 
     BENCHMARK("Atom::InvokableBox [Construction]")
     {
-        InvokableBox<bool(int)> invokable = [](int value)
+        InvokableBox<bool(i32)> invokable = [](i32 value)
         {
             return value == 1;
         };
@@ -105,7 +105,7 @@ TEST_CASE("Atom/Invokable/InvokableBox", "[Benchmarks]")
 
     BENCHMARK("std::function [Construction]")
     {
-        std::function<bool(int)> function = [](int value)
+        std::function<bool(i32)> function = [](i32 value)
         {
             return value == 1;
         };
@@ -113,12 +113,12 @@ TEST_CASE("Atom/Invokable/InvokableBox", "[Benchmarks]")
         return function;
     };
 
-    InvokableBox<bool(int)> invokable = [](int value)
+    InvokableBox<bool(i32)> invokable = [](i32 value)
     {
         return value == 1;
     };
 
-    std::function<bool(int)> function = [](int value)
+    std::function<bool(i32)> function = [](i32 value)
     {
         return value == 1;
     };

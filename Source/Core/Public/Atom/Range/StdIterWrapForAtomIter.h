@@ -97,7 +97,7 @@ namespace Atom
 
         template <class = void>
         requires RIter<TIter>
-        cexpr fn op++(int) noex_if(iter++) -> This
+        cexpr fn op++(i32) noex_if(iter++) -> This
         {
             return This{ iter++ };
         }
@@ -112,7 +112,7 @@ namespace Atom
 
         template <class = void>
         requires RBidiIter<TIter>
-        cexpr fn op--(int) const noex_if(iter--) -> This
+        cexpr fn op--(i32) const noex_if(iter--) -> This
         {
             return This{ iter-- };
         }

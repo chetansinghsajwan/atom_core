@@ -21,12 +21,12 @@ namespace Atom::Engine
     {
         if (s_windowCount == 0)
         {
-            int success = glfwInit();
+            i32 success = glfwInit();
             ATOM_ASSERT(success) << RuntimeException(
                 TEXT("GLFW initialization failed."));
 
             glfwSetErrorCallback(
-                [](int error_code, const char* description)
+                [](i32 error_code, const char* description)
                 {
                     // TODO: Fix this compilation error.
                     // LOG_FATAL(TEXT("GLFW Error: "), description);

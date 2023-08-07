@@ -14,26 +14,32 @@ namespace Atom::Engine
 {
     class GLFW_SWindowCoords
     {
-        pub int x;
-        pub int y;
+        pub i32 x;
+        pub i32 y;
     };
 
     class GLFW_WindowCoordsConverter
     {
         pub static cexpr fn ToGLFW(SWindowCoords coords) -> GLFW_SWindowCoords
         {
-            coords.x = Math::Clamp<int>(coords.x, NumLimits<int>::min(), NumLimits<int>::max());
-            coords.y = Math::Clamp<int>(coords.y, NumLimits<int>::min(), NumLimits<int>::max());
+            static constexpr i32 min = NumLimits<i32>::min();
+            static constexpr i32 max = NumLimits<i32>::max();
 
-            return { (int)coords.x, (int)coords.y };
+            coords.x = Math::Clamp<i32>(coords.x, min, max);
+            coords.y = Math::Clamp<i32>(coords.y, min, max);
+
+            return { coords.x, coords.y };
         };
 
         pub static cexpr fn FromGLFW(GLFW_SWindowCoords coords) -> SWindowCoords
         {
-            coords.x = Math::Clamp<int>(coords.x, NumLimits<int>::min(), NumLimits<int>::max());
-            coords.y = Math::Clamp<int>(coords.y, NumLimits<int>::min(), NumLimits<int>::max());
+            static constexpr i32 min = NumLimits<i32>::min();
+            static constexpr i32 max = NumLimits<i32>::max();
 
-            return { (int)coords.x, (int)coords.y };
+            coords.x = Math::Clamp<i32>(coords.x, min, max);
+            coords.y = Math::Clamp<i32>(coords.y, min, max);
+
+            return { coords.x, coords.y };
         };
     };
 
