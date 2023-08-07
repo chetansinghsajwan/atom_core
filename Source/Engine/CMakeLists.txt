@@ -14,3 +14,11 @@ target_compile_definitions(Atom.Engine PRIVATE ATOM_EXPORT)
 target_link_libraries(Atom.Engine PUBLIC Atom.Core)
 target_link_libraries(Atom.Engine PUBLIC Atom.Logging)
 target_link_libraries(Atom.Engine PUBLIC glfw)
+
+# --------------------------------------------------------------------------------------------------
+# Atom.Engine.Sandbox
+# --------------------------------------------------------------------------------------------------
+
+add_executable(Atom.Engine.Sandbox "Sandbox/Sandbox.cpp")
+target_include_directories(Atom.Engine.Sandbox PRIVATE "Sandbox")
+target_link_libraries(Atom.Engine.Sandbox PUBLIC Atom.Engine)

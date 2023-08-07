@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0.0)
+cmake_minimum_required(VERSION 3.5)
 project(AtomEngine VERSION 0.1.0 LANGUAGES CXX C)
 
 # --------------------------------------------------------------------------------------------------
@@ -29,4 +29,3 @@ add_subdirectory(ThirdParty/Utf-Cpp)
 add_subdirectory(Source/Core)
 add_subdirectory(Source/Logging)
 add_subdirectory(Source/Engine)
-add_subdirectory(Source/Sandbox)
