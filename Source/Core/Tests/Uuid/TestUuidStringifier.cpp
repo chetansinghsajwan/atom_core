@@ -11,7 +11,7 @@ TEST_CASE("Atom::Uuid::UuidStringifier")
     Str str = UuidStringifier()
         .ToStr(uuid);
 
-    cexpr StrView expected = TEXT("00010203-0405-0607-0809-101112131415");
+    cexpr StrView expected = "00010203-0405-0607-0809-101112131415";
 
     CHECK(str == expected);
 }

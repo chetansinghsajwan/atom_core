@@ -1,8 +1,6 @@
 #pragma once
 #include "Atom/Core/Core.h"
 
-#define ATOM_TEXT_UTF8(lit) u8##lit
-
 namespace Atom::Text
 {
     /// --------------------------------------------------------------------------------------------
@@ -13,7 +11,7 @@ namespace Atom::Text
         pub using TChar = char8;
         pub using TRune = char32;
 
-        pub static cexpr TChar Null = ATOM_TEXT_UTF8('\0');
+        pub static cexpr TChar Null = u8('\0');
         pub static cexpr bool IsMultiCharEncoding = true;
 
         /// ----------------------------------------------------------------------------------------

@@ -77,8 +77,8 @@ namespace Atom
             ATOM_DEBUG_EXPECTS(src != nullptr);
             ATOM_DEBUG_EXPECTS(dest != nullptr);
 
-            ATOM_DEBUG_EXPECTS(dest.mem < src.mem) << ATOM_TEXT(
-                "Src mem block overlaps with dest mem block.");
+            ATOM_DEBUG_EXPECTS(dest.mem < src.mem) <<
+                "Src mem block overlaps with dest mem block.";
 
             _FwdCopy(src.mem, src.count, dest.mem);
         }
@@ -94,8 +94,8 @@ namespace Atom
             ATOM_DEBUG_EXPECTS(src != nullptr);
             ATOM_DEBUG_EXPECTS(dest != nullptr);
 
-            ATOM_DEBUG_EXPECTS(dest.mem > (src.mem + src.count)) << ATOM_TEXT(
-                "Src mem block overlaps with dest mem block.");
+            ATOM_DEBUG_EXPECTS(dest.mem > (src.mem + src.count)) <<
+                "Src mem block overlaps with dest mem block.";
 
             _BwdCopy(src.mem, src.count, dest.mem);
         }

@@ -37,7 +37,7 @@ namespace Atom
             {
                 if (j == 8 || j == 13 || j == 18 || j == 23)
                 {
-                    if (*it != TEXT('-'))
+                    if (*it != '-')
                     {
                         return Uuid::Null;
                     }
@@ -78,7 +78,7 @@ namespace Atom
 
                 if (j == 8 || j == 13 || j == 18 || j == 23)
                 {
-                    if (*it != TEXT('-'))
+                    if (*it != '-')
                     {
                         return Uuid::Null;
                     }

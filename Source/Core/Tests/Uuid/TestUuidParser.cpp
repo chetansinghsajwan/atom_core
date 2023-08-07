@@ -6,7 +6,7 @@ using namespace Atom;
 
 TEST_CASE("Atom::Uuid::UuidParser")
 {
-    cexpr Char str[] = TEXT("00010203-0405-0607-0809-0A0B0C0D0E0F");
+    cexpr Char str[] = "00010203-0405-0607-0809-0A0B0C0D0E0F";
 
     Uuid uuid = UuidParser()
         .Parse(Range(str));

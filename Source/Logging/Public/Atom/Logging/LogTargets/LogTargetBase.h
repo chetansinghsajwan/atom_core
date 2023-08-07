@@ -37,10 +37,10 @@ namespace Atom::Logging::Internal
             if (CheckLogLevel(logMsg.lvl))
             {
                 // TODO: Add chrono support for Atom.Fmt.
-                // Str result = StrFmter().Fmt(TEXT("[{}] [{}] {}: {}\n"),
+                // Str result = StrFmter().Fmt("[{}] [{}] {}: {}\n",
                 //     logMsg.time, logMsg.lvl, logMsg.loggerName, logMsg.msg);
 
-                Str result = StrFmter().Fmt(TEXT("[{}] {}: {}\n"),
+                Str result = StrFmter().Fmt("[{}] {}: {}\n",
                     logMsg.lvl, logMsg.loggerName, logMsg.msg);
 
                 _hasWritten = true;

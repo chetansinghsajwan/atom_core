@@ -6,7 +6,7 @@ using namespace Atom;
 
 TEST_CASE("Atom.Str.StrConverter")
 {
-    Str str = TEXT("Hello.");
+    Str str = "Hello.";
     const Str& strRef = str;
 
     StrConverter<Str> converter;

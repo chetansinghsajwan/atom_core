@@ -165,7 +165,7 @@ namespace Atom
         pub fn Invoke(TArgs&&... args) -> TResult
         {
             ATOM_ASSERT(ObjectBox::_HasObject()) << NullPointerException(
-                TEXT("InvokableTarget is null."));
+                "InvokableTarget is null.");
 
             return _invoker.Invoke(ObjectBox::_GetObject(), fwd(args)...);
         }

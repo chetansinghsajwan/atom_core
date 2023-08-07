@@ -48,19 +48,19 @@ namespace Atom::Math
 
     cexpr fn CharToHex(Char ch) noex -> byte
     {
-        if (ch >= TEXT('0') && ch <= TEXT('9'))
-            return byte(ch - TEXT('0'));
-        if (ch >= TEXT('a') && ch <= TEXT('f'))
-            return byte(10 + ch - TEXT('a'));
-        if (ch >= TEXT('A') && ch <= TEXT('F'))
-            return byte(10 + ch - TEXT('A'));
+        if (ch >= '0' && ch <= '9')
+            return byte(ch - '0');
+        if (ch >= 'a' && ch <= 'f')
+            return byte(10 + ch - 'a');
+        if (ch >= 'A' && ch <= 'F')
+            return byte(10 + ch - 'A');
 
         return -1;
     }
 
     cexpr fn HexToChar(byte hex) noex -> StaticStr<2>
     {
-        cexpr const Char chars[] = TEXT("0123456789abcdef");
+        cexpr const Char chars[] = "0123456789abcdef";
 
         byte high = hex >> 4;
         byte low = hex & 0b00001111;
@@ -69,8 +69,8 @@ namespace Atom::Math
 
     cexpr fn IsHexChar(Char ch) noex -> bool
     {
-        return (ch >= TEXT('0') && ch <= TEXT('9')) ||
-            (ch >= TEXT('a') && ch <= TEXT('f')) ||
-            (ch >= TEXT('A') && ch <= TEXT('F'));
+        return (ch >= '0' && ch <= '9') ||
+            (ch >= 'a' && ch <= 'f') ||
+            (ch >= 'A' && ch <= 'F');
     }
 }

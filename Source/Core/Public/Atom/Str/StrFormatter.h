@@ -107,4 +107,4 @@ namespace Atom
 }
 
 #define ATOM_STR_FMT(fmt, ...) \
-    ::Atom::StrFmter(TEXT(fmt), __VA_ARGS__)
+    ::Atom::StrFmter(fmt, __VA_ARGS__)

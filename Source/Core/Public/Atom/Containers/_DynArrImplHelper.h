@@ -16,11 +16,11 @@ namespace Atom
     template <tname T2, tname Req>
     cexpr fn _DynArrImplHelper<TImpl>::InsertAt(TIter pos, T2&& el) -> TMutIter
     {
-        ATOM_DEBUG_EXPECTS(_ValidateIter(pos)) << TEXT("Invalid iter.");
+        ATOM_DEBUG_EXPECTS(_ValidateIter(pos)) << "Invalid iter.";
 
         isize index = _FetchIndex(pos);
         ATOM_ASSERT(_ValidateIndexForInsert(index)) << IndexOutOfRangeException(
-            TEXT("{pos} is out of range."), index, 0, _Count());
+            "{pos} is out of range.", index, 0, _Count());
 
         return MutIter() + _InsertAt(index, fwd(el));
     }
@@ -29,11 +29,11 @@ namespace Atom
     template <tname TRange, tname Req>
     cexpr fn _DynArrImplHelper<TImpl>::InsertAt(TIter pos, const TRange& range) -> TMutIter
     {
-        ATOM_DEBUG_EXPECTS(_ValidateIter(pos)) << TEXT("Invalid iter.");
+        ATOM_DEBUG_EXPECTS(_ValidateIter(pos)) << "Invalid iter.";
 
         isize index = _FetchIndex(pos);
         ATOM_ASSERT(_ValidateIndexForInsert(index)) << IndexOutOfRangeException(
-            TEXT("{pos} is out of range."), index, 0, _Count());
+            "{pos} is out of range.", index, 0, _Count());
 
         if cexpr (_CanGetRangeSize<TRange>())
         {
@@ -196,12 +196,12 @@ namespace Atom
     template <tname TImpl>
     cexpr fn _DynArrImplHelper<TImpl>::RemoveAt(TIter pos) -> TMutIter
     {
-        ATOM_DEBUG_EXPECTS(_ValidateIter(pos)) << TEXT("Invalid iter.");
+        ATOM_DEBUG_EXPECTS(_ValidateIter(pos)) << "Invalid iter.";
 
         isize index = _FetchIndex(pos);
 
         ATOM_ASSERT(_ValidateIndex(index)) << IndexOutOfRangeException(
-            TEXT("{pos} was out of range."), index, 0, _Count() - 1);
+            "{pos} was out of range.", index, 0, _Count() - 1);
 
         return MutIter() + _RemoveAt(index);
     }
@@ -212,20 +212,20 @@ namespace Atom
         TIter rangeBegin = range.MutIter();
         TIterEnd rangeEnd = range.IterEnd();
 
-        ATOM_DEBUG_EXPECTS(_ValidateIter(rangeBegin)) << TEXT("Invalid iter.");
-        ATOM_DEBUG_EXPECTS(_ValidateIter(rangeEnd)) << TEXT("Invalid iter.");
+        ATOM_DEBUG_EXPECTS(_ValidateIter(rangeBegin)) << "Invalid iter.";
+        ATOM_DEBUG_EXPECTS(_ValidateIter(rangeEnd)) << "Invalid iter.";
 
         usize begin = _FetchIndex(rangeBegin);
         usize end = _FetchIndex(rangeEnd);
 
         ATOM_ASSERT(_ValidateIndex(begin)) << IndexOutOfRangeException(
-            TEXT("{range.MutIter()} was out of range."), begin, 0, _Count() - 1);
+            "{range.MutIter()} was out of range.", begin, 0, _Count() - 1);
 
         ATOM_ASSERT(_ValidateIndex(end)) << IndexOutOfRangeException(
-            TEXT("{range.IterEnd()} was out of range."), end, 0, _Count() - 1);
+            "{range.IterEnd()} was out of range.", end, 0, _Count() - 1);
 
         ATOM_ASSERT(begin <= end) << InvalidArgumentException(
-            TEXT("Invalid range passed. {range.MutIter()} is ahead of {range.IterEnd()}"));
+            "Invalid range passed. {range.MutIter()} is ahead of {range.IterEnd()}");
 
         return MutIter() + _RemoveRange(begin, end - begin);
     }

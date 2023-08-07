@@ -26,6 +26,11 @@ namespace Atom
     inline IndexOutOfRangeException::ctor IndexOutOfRangeException(
         Str msg, usize index, usize begin, usize end):
         OutOfRangeException(mov(msg)), index{ index }, begin{ begin }, end{ end } { }
+
+    inline IndexOutOfRangeException::ctor IndexOutOfRangeException(
+        usize index, usize begin, usize end):
+        OutOfRangeException(),
+        index{ index }, begin{ begin }, end{ end } { }
 }
 
 namespace Atom::Ex::Internal

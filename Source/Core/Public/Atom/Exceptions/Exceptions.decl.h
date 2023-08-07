@@ -45,6 +45,11 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Basic constructor with msg.
         /// ----------------------------------------------------------------------------------------
+        pub ctor Exception() = default;
+
+        /// ----------------------------------------------------------------------------------------
+        /// Basic constructor with msg.
+        /// ----------------------------------------------------------------------------------------
         pub ctor Exception(Str msg) noex;
 
         /// ----------------------------------------------------------------------------------------
@@ -119,6 +124,8 @@ namespace Atom
     class IndexOutOfRangeException extends OutOfRangeException
     {
         pub ctor IndexOutOfRangeException(Str msg, usize index, usize begin, usize end);
+
+        pub ctor IndexOutOfRangeException(usize index, usize begin, usize end);
 
         pub usize index;
         pub usize begin;

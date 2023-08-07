@@ -31,7 +31,7 @@ namespace Atom::Internal
         {
             if (!done)
             {
-                *this << AssertException(TEXT("Assertion failed."), assertExpr);
+                *this << AssertException("Assertion failed.", assertExpr);
             }
         }
 
@@ -64,7 +64,7 @@ namespace Atom::Internal
 /// Assertion in all modes.
 /// ------------------------------------------------------------------------------------------------
 #define ATOM_ASSERT(assertion) \
-    if (!(assertion)) ::Atom::Internal::AssertionFailure(TEXT(#assertion))
+    if (!(assertion)) ::Atom::Internal::AssertionFailure(#assertion)
 
 /// ------------------------------------------------------------------------------------------------
 /// Assertion in Debug mode only.

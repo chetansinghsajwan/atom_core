@@ -1,8 +1,6 @@
 #pragma once
 #include "Atom/Core.h"
 
-#define ATOM_TEXT_UTF16(lit) u##lit
-
 namespace Atom
 {
     class Utf16Encoding
@@ -10,7 +8,7 @@ namespace Atom
         pub using TChar = char16;
         pub using TRune = char32;
 
-        pub static cexpr TChar Null = ATOM_TEXT_UTF16('\0');
+        pub static cexpr TChar Null = u'\0';
         pub static cexpr bool IsMultiCharEncoding = true;
 
         pub static cexpr fn IsContinuationChar(TChar ch) noex -> bool

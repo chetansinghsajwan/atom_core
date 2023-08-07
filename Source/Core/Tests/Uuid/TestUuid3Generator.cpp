@@ -8,8 +8,8 @@ using namespace Atom;
 TEST_CASE("Atom::Uuid::Uuid3Generator")
 {
     Uuid3Generator generator(UuidNamespaces::Oid);
-    Uuid uuid1 = generator.Generate(TEXT("Hello"));
-    Uuid uuid2 = generator.Generate(TEXT("Hello"));
+    Uuid uuid1 = generator.Generate("Hello");
+    Uuid uuid2 = generator.Generate("Hello");
 
     CHECK(uuid1 != Uuid::Null);
     CHECK(uuid1 == uuid2);

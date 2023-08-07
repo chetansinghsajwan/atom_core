@@ -46,7 +46,7 @@ TEST_CASE("Atom::Hash::Sha1HashParser")
     SECTION("Str to Hash")
     {
         Sha1Hash hash = Sha1HashParser()
-            .Parse(TEXT("da39a3ee5e6b4b0d3255bfef95601890afd80709"));
+            .Parse("da39a3ee5e6b4b0d3255bfef95601890afd80709");
 
         Sha1Hash expected =
         {
@@ -61,7 +61,7 @@ TEST_CASE("Atom::Hash::Sha1HashParser")
     {
         //! Won't Compile
         // Sha1Hash hash = Sha1HashParser()
-        //     .Parse(TEXT("da3"));
+        //     .Parse("da3");
         // 
         // CHECK(hash == Sha1Hash);
     }
@@ -78,7 +78,7 @@ TEST_CASE("Atom::Hash::Sha1HashStringifier")
     Str str = Sha1HashStringifier()
         .ToStr(hash);
 
-    StrView expected = TEXT("da39a3ee5e6b4b0d3255bfef95601890afd80709");
+    StrView expected = "da39a3ee5e6b4b0d3255bfef95601890afd80709";
 
     CHECK(str == expected);
 }
@@ -94,7 +94,7 @@ TEST_CASE("Atom::Hash::Sha1HashGenerator")
             .Generate();
 
         Sha1Hash expected = Sha1HashParser()
-            .Parse(TEXT("da39a3ee5e6b4b0d3255bfef95601890afd80709"));
+            .Parse("da39a3ee5e6b4b0d3255bfef95601890afd80709");
 
         CHECK(hash == expected);
     }
@@ -109,7 +109,7 @@ TEST_CASE("Atom::Hash::Sha1HashGenerator")
             .Generate();
 
         Sha1Hash expected = Sha1HashParser()
-            .Parse(TEXT("2fd4e1c67a2d28fced849ee1bb76e7391b93eb12"));
+            .Parse("2fd4e1c67a2d28fced849ee1bb76e7391b93eb12");
 
         CHECK(hash == expected);
     }
@@ -130,7 +130,7 @@ TEST_CASE("Atom::Hash::Sha1HashGenerator")
             .Generate();
 
         Sha1Hash expected = Sha1HashParser()
-            .Parse(TEXT("cd36b370758a259b34845084a6cc38473cb95e27"));
+            .Parse("cd36b370758a259b34845084a6cc38473cb95e27");
 
         CHECK(hash == expected);
     }

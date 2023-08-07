@@ -46,7 +46,7 @@ TEST_CASE("Atom::Hash::Md5HashParser")
     SECTION("Str to Hash")
     {
         Md5Hash hash = Md5HashParser()
-            .Parse(TEXT("da39a3ee5e6b4b0d3255bfef95601890"));
+            .Parse("da39a3ee5e6b4b0d3255bfef95601890");
 
         Md5Hash expected =
         {
@@ -61,7 +61,7 @@ TEST_CASE("Atom::Hash::Md5HashParser")
     {
         //! Won't Compile
         // Md5Hash hash = Md5HashParser()
-        //     .Parse(TEXT("da3"));
+        //     .Parse("da3");
         // 
         // CHECK(hash == Md5Hash);
     }
@@ -78,7 +78,7 @@ TEST_CASE("Atom::Hash::Md5HashStringifier")
     Str str = Md5HashStringifier()
         .ToStr(hash);
 
-    StrView expected = TEXT("da39a3ee5e6b4b0d3255bfef95601890");
+    StrView expected = "da39a3ee5e6b4b0d3255bfef95601890";
 
     CHECK(str == expected);
 }
@@ -94,7 +94,7 @@ TEST_CASE("Atom::Hash::Md5HashGenerator")
             .Generate();
 
         Md5Hash expected = Md5HashParser()
-            .Parse(TEXT("d41d8cd98f00b204e9800998ecf8427e"));
+            .Parse("d41d8cd98f00b204e9800998ecf8427e");
 
         CHECK(hash == expected);
     }
@@ -109,7 +109,7 @@ TEST_CASE("Atom::Hash::Md5HashGenerator")
             .Generate();
 
         Md5Hash expected = Md5HashParser()
-            .Parse(TEXT("9e107d9d372bb6826bd81d3542a419d6"));
+            .Parse("9e107d9d372bb6826bd81d3542a419d6");
 
         CHECK(hash == expected);
     }
@@ -130,7 +130,7 @@ TEST_CASE("Atom::Hash::Md5HashGenerator")
             .Generate();
 
         Md5Hash expected = Md5HashParser()
-            .Parse(TEXT("db89bb5ceab87f9c0fcc2ab36c189c2c"));
+            .Parse("db89bb5ceab87f9c0fcc2ab36c189c2c");
 
         CHECK(hash == expected);
     }

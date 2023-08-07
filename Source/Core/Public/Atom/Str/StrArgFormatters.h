@@ -38,7 +38,7 @@ namespace Atom
 		/// @TODO Fix this ugly code.
 		/// ----------------------------------------------------------------------------------------
 		pub ctor StrFmtEx(const _FmtFmtEx& fmtEx) noex:
-			Exception(TEXT("Not implemented.")) { }
+			Exception("Not implemented.") { }
 		// StrFmtEx(const _FmtFmtEx& fmtEx) noex:
 		// 	Exception(CharEncodingConverter<UTF8CharEncoding, CharEncoding>()
 		// 		.Convert(UTF8StrView{ (const char8*)fmtEx.what() }.Iter()).Data()) { }
