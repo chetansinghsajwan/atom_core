@@ -3,57 +3,99 @@
 
 namespace Atom
 {
+    template <typename T>
+    class ArrView;
+
+    /// --------------------------------------------------------------------------------------------
+    /// 
+    /// --------------------------------------------------------------------------------------------
     template <tname T>
-    class _ArrViewImplBase
+    class _ArrViewStorage
     {
-        pub using TElem = T;
+        friend class RangeTraitImpl<ArrView<T>>;
 
-        pub cexpr ctor _ArrViewImplBase() noex = default;
+    public:
+        using TElem = T;
 
-        pub cexpr ctor _ArrViewImplBase(NullPtr) noex:
-            _arr{ nullptr }, _count{ 0 } { }
+    public:
+        constexpr ctor _ArrViewStorage() = default;
 
-        pub cexpr ctor _ArrViewImplBase(const T* arr, usize count) noex:
-            _arr{ arr }, _count{ count } { }
+        constexpr ctor _ArrViewStorage(NullPtr):
+            _data{ nullptr }, _count{ 0 } { }
 
-        pub cexpr fn _Data() const noex -> const T*
+        constexpr ctor _ArrViewStorage(const T* arr, usize count):
+            _data{ arr }, _count{ count } { }
+
+    public:
+        constexpr fn _Data() const -> const T*
         {
-            return _arr;
+            return _data;
         }
 
-        pub cexpr fn _Count() const noex -> usize
+        constexpr fn _Count() const -> usize
         {
             return _count;
         }
 
-        prot const T* _arr;
-        prot usize _count;
+    public:
+        constexpr fn getData() const -> const T*
+        {
+            return _data;
+        }
+
+        constexpr fn getData() -> T*
+        {
+            return _data;
+        }
+
+        constexpr fn setData(T* data)
+        {
+            _data = data;
+        }
+
+        constexpr fn getCount() const -> usize
+        {
+            return _count;
+        }
+
+        constexpr fn setCount(usize count)
+        {
+            _count = count;
+        }
+
+    protected:
+        const T* _data;
+        usize _count;
     };
 
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
     template <tname T>
-    class ArrView extends _ConstArrImplHelper<_ArrViewImplBase<T>>
+    class ArrView:
+        public _ConstArrImplHelper<_ArrViewStorage<T>>,
+        public RangeTrait<ArrView<T>>
     {
-        priv using Base = _ConstArrImplHelper<_ArrViewImplBase<T>>;
-        priv using BaseImpl = _ArrViewImplBase<T>;
+    private:
+        using Base = _ConstArrImplHelper<_ArrViewStorage<T>>;
+        using BaseImpl = _ArrViewStorage<T>;
 
+    public:
         /// ----------------------------------------------------------------------------------------
         /// DefCtor.
         /// ----------------------------------------------------------------------------------------
-        pub cexpr ctor ArrView() noex = default;
+        constexpr ctor ArrView() = default;
 
         /// ----------------------------------------------------------------------------------------
         /// NullCtor.
         /// ----------------------------------------------------------------------------------------
-        pub cexpr ctor ArrView(NullPtr) noex:
+        constexpr ctor ArrView(NullPtr):
             Base{ BaseImpl{ nullptr } } { }
 
         /// ----------------------------------------------------------------------------------------
         /// NullOper.
         /// ----------------------------------------------------------------------------------------
-        pub cexpr fn op=(NullPtr) noex -> ArrView&
+        constexpr fn op=(NullPtr) -> ArrView&
         {
             *this = ArrView(nullptr);
         }
@@ -61,19 +103,50 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// ParamCtor.
         /// ----------------------------------------------------------------------------------------
-        pub template <tname TRange>
-        requires RArrRangeOf<TRange, T>
-        cexpr ctor ArrView(const TRange& range) noex:
+        template <tname TRange>
+        constexpr ctor ArrView(const TRange& range)
+            requires(RArrRangeOf<TRange, T>):
             Base{ BaseImpl{ range.Data(), range.Count() } } { }
 
         /// ----------------------------------------------------------------------------------------
         /// ParamOper.
         /// ----------------------------------------------------------------------------------------
-        pub template <tname TRange>
-        requires RArrRangeOf<TRange, T>
-        cexpr fn op=(const TRange& range) noex -> ArrView&
+        template <tname TRange>
+        constexpr fn op=(const TRange& range) -> ArrView&
+            requires(RArrRangeOf<TRange, T>)
         {
             *this = ArrView{ range.Data(), range.Count() };
+        }
+    };
+
+    /// --------------------------------------------------------------------------------------------
+    /// 
+    /// --------------------------------------------------------------------------------------------
+    template <typename T>
+    class RangeTraitImpl<ArrView<T>>
+    {
+        using _Storage = _ArrViewStorage<T>;
+
+    public:
+        using TElem = T;
+        using TIter = ArrIter<T>;
+        using TIterEnd = TIter;
+
+    public:
+        constexpr fn iter() const -> TIter
+        {
+            return TIter{ _storage().getData() };
+        }
+
+        constexpr fn iterEnd() const -> TIterEnd
+        {
+            return TIterEnd{ _storage().getData() + _storage().getCount() };
+        }
+
+    private:
+        constexpr fn _storage() const -> const _Storage&
+        {
+            return reinterpret_cast<const _Storage&>(*this);
         }
     };
 }

@@ -11,3 +11,6 @@
 #include "Range/RangeModifier.h"
 #include "Range/RangeFinder.h"
 #include "Range/RangeExtensions.h"
+#include "Range/RangeTrait.h"
+#include "Range/MutRangeTrait.h"
+#include "Range/DynamicRangeTrait.h"
