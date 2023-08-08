@@ -1,5 +1,5 @@
 #pragma once
-#include "_ConstArrImplHelper.decl.h"
+#include "Atom/Range.h"
 
 namespace Atom
 {
@@ -12,15 +12,13 @@ namespace Atom
     template <tname T>
     class _ArrViewStorage
     {
-        friend class RangeTraitImpl<ArrView<T>>;
+        friend class ArrRangeTraitImpl<ArrView<T>>;
 
     public:
         using TElem = T;
 
     public:
-        constexpr ctor _ArrViewStorage() = default;
-
-        constexpr ctor _ArrViewStorage(NullPtr):
+        constexpr ctor _ArrViewStorage():
             _data{ nullptr }, _count{ 0 } { }
 
         constexpr ctor _ArrViewStorage(const T* arr, usize count):
@@ -73,12 +71,10 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <tname T>
     class ArrView:
-        public _ConstArrImplHelper<_ArrViewStorage<T>>,
-        public RangeTrait<ArrView<T>>
+        public _ArrViewStorage<T>,
+        public ArrRangeTrait<ArrView<T>>
     {
-    private:
-        using Base = _ConstArrImplHelper<_ArrViewStorage<T>>;
-        using BaseImpl = _ArrViewStorage<T>;
+        using _Storage = _ArrViewStorage<T>;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -87,26 +83,12 @@ namespace Atom
         constexpr ctor ArrView() = default;
 
         /// ----------------------------------------------------------------------------------------
-        /// # Null Constructor
-        /// ----------------------------------------------------------------------------------------
-        constexpr ctor ArrView(NullPtr):
-            Base{ BaseImpl{ nullptr } } { }
-
-        /// ----------------------------------------------------------------------------------------
-        /// # Null Operator
-        /// ----------------------------------------------------------------------------------------
-        constexpr fn op=(NullPtr) -> ArrView&
-        {
-            *this = ArrView(nullptr);
-        }
-
-        /// ----------------------------------------------------------------------------------------
         /// # Range Constructor
         /// ----------------------------------------------------------------------------------------
         template <tname TRange>
         constexpr ctor ArrView(const TRange& range)
             requires(RArrRangeOf<TRange, T>):
-            Base{ BaseImpl{ range.Data(), range.Count() } } { }
+            _Storage{ range.Data(), range.Count() } { }
 
         /// ----------------------------------------------------------------------------------------
         /// # Range Operator
@@ -123,24 +105,22 @@ namespace Atom
     /// 
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    class RangeTraitImpl<ArrView<T>>
+    class ArrRangeTraitImpl<ArrView<T>>
     {
         using _Storage = _ArrViewStorage<T>;
 
     public:
         using TElem = T;
-        using TIter = ArrIter<T>;
-        using TIterEnd = TIter;
 
     public:
-        constexpr fn iter() const -> TIter
+        constexpr fn getData() const -> const T*
         {
-            return TIter{ _storage().getData() };
+            return _storage().getData();
         }
 
-        constexpr fn iterEnd() const -> TIterEnd
+        constexpr fn getCount() const -> usize
         {
-            return TIterEnd{ _storage().getData() + _storage().getCount() };
+            return _storage().getCount();
         }
 
     private:

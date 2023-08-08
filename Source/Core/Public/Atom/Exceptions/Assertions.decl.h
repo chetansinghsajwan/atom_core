@@ -100,8 +100,3 @@ noret void myTerminate(auto& msg)
     std::cout << msg << std::endl;
     std::terminate();
 }
-
-#define expects(...)
-#define debug_expects(...)
-#define debug_asserts(...)
-#define panic(...) myTerminate(__VA_ARGS__)

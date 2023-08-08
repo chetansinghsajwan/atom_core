@@ -27,3 +27,12 @@
     #error "AtomEngine only supports Windows and Linux platform for now."
 
 #endif
+
+//// -----------------------------------------------------------------------------------------------
+//// Assertions
+//// -----------------------------------------------------------------------------------------------
+
+#define expects(...)
+#define debug_expects(...)
+#define debug_asserts(...)
+#define panic(...) myTerminate(__VA_ARGS__)

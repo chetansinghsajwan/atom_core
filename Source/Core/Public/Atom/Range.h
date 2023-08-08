@@ -14,3 +14,4 @@
 #include "Range/RangeTrait.h"
 #include "Range/MutRangeTrait.h"
 #include "Range/DynamicRangeTrait.h"
+#include "Range/ArrRangeTrait.h"
