@@ -1,9 +1,8 @@
 #include "Atom/Core.h"
-#include "Atom/Core/Variant.h"
 
 using namespace Atom;
 
-void PrintCmdArgs(i32 argc, char** argv)
+fn PrintCmdArgs(i32 argc, char** argv)
 {
     for (i32 i = 1; i < argc; ++i)
     {
@@ -11,7 +10,7 @@ void PrintCmdArgs(i32 argc, char** argv)
     }
 }
 
-i32 main(i32 argc, char **argv)
+fn main(i32 argc, char **argv) -> i32
 {
     PrintCmdArgs(argc, argv);
 
