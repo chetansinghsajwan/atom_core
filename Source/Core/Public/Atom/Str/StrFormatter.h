@@ -61,18 +61,18 @@ namespace Atom
             {
                 pub fn op++(i32) -> _OutIterWrap&
                 {
-                    return *this;
+                    return self;
                 }
 
                 pub fn op*() -> _OutIterWrap&
                 {
-                    return *this;
+                    return self;
                 }
 
                 pub fn op=(Char ch) -> _OutIterWrap&
                 {
                     *out+= ch;
-                    return *this;
+                    return self;
                 }
 
                 pub TOut* out;

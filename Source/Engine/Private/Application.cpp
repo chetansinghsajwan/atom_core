@@ -15,7 +15,7 @@ namespace Atom::Engine
 
         _window->OnEvent += [this](const SWindowEvent& event)
         {
-            this->OnWindowEvent(event);
+            self.OnWindowEvent(event);
         };
     }
 

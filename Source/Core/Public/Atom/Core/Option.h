@@ -87,7 +87,7 @@ namespace Atom
                 and (not RTriviallyCopyAssignable<T>)
         {
             _impl.assignValueFromOption(that._impl);
-            return *this;
+            return self;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -134,7 +134,7 @@ namespace Atom
                 and (not RTriviallyMoveAssignable<T>)
         {
             _impl.assignValueFromOption(mov(that._impl));
-            return *this;
+            return self;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -153,7 +153,7 @@ namespace Atom
         constexpr fn op=(NullOption) -> Option&
         {
             _impl.destroyValueWithChecks();
-            return *this;
+            return self;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -179,7 +179,7 @@ namespace Atom
         constexpr fn op=(const T& val) -> Option&
         {
             _impl.assignValue(val);
-            return *this;
+            return self;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -205,7 +205,7 @@ namespace Atom
         constexpr fn op=(T&& val) -> Option&
         {
             _impl.assignValue(mov(val));
-            return *this;
+            return self;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -475,7 +475,7 @@ namespace Atom
         constexpr fn op=(NullOption) -> Option&
         {
             _impl.destroyValueWithChecks();
-            return *this;
+            return self;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -500,7 +500,7 @@ namespace Atom
         constexpr fn op=(T& ref) -> Option&
         {
             _impl.assignValue(&ref);
-            return *this;
+            return self;
         }
 
         /// ----------------------------------------------------------------------------------------

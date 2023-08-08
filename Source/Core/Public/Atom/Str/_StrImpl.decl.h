@@ -32,6 +32,6 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <usize count>
         cexpr ctor _StrImpl(const TChar(&arr)[count]):
-            TContainer(nullptr) { }
+            TContainer() { }
     };
 }

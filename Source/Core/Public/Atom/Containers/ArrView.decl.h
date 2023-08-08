@@ -77,6 +77,9 @@ namespace Atom
         using _Storage = _ArrViewStorage<T>;
 
     public:
+        using TElem = T;
+
+    public:
         /// ----------------------------------------------------------------------------------------
         /// # Default Constructor
         /// ----------------------------------------------------------------------------------------
@@ -97,7 +100,7 @@ namespace Atom
         constexpr fn op=(const TRange& range) -> ArrView&
             requires(RArrRangeOf<TRange, T>)
         {
-            *this = ArrView{ range.Data(), range.Count() };
+            self = ArrView{ range.Data(), range.Count() };
         }
     };
 
@@ -126,7 +129,7 @@ namespace Atom
     private:
         constexpr fn _storage() const -> const _Storage&
         {
-            return reinterpret_cast<const _Storage&>(*this);
+            return reinterpret_cast<const _Storage&>(self);
         }
     };
 }

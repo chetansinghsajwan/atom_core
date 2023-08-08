@@ -118,7 +118,7 @@ namespace Atom
         {
             Clear();
             InsertBack(that);
-            return *this;
+            return self;
         }
 
         /// ----------------------------------------------------------------------------------------

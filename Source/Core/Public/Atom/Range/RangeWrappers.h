@@ -72,12 +72,12 @@ namespace Atom
 
         pub cexpr fn MutIter() noex -> TMutIter
         {
-            return TMutIter{ this->_range.MutIter() };
+            return TMutIter{ self._range.MutIter() };
         }
 
         pub cexpr fn MutIterEnd() noex -> TMutIterEnd
         {
-            return TMutIterEnd{ this->_range.MutIterEnd() };
+            return TMutIterEnd{ self._range.MutIterEnd() };
         }
     };
 

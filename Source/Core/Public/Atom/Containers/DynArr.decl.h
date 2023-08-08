@@ -72,13 +72,13 @@ namespace Atom
         cexpr fn _Swap(_DynArrImplBase& that) noex -> void
         {
             _DynArrImplBase tmp = that;
-            *this = that;
+            self = that;
             that = tmp;
         }
 
         cexpr fn _Move(_DynArrImplBase& that) noex -> void
         {
-            *this = that;
+            self = that;
             that = _DynArrImplBase(nullptr);
         }
 
@@ -114,7 +114,7 @@ namespace Atom
         cexpr ctor DynArr(const TRange& range) noex:
             Base{BaseImpl{ nullptr }}
         {
-            this->InsertBack(range);
+            self.InsertBack(range);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -123,7 +123,7 @@ namespace Atom
         pub cexpr ctor DynArr(const DynArr& that) noex:
             Base{BaseImpl{ nullptr }}
         {
-            this->InsertBack(that);
+            self.InsertBack(that);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -131,9 +131,9 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         pub cexpr fn op=(const DynArr& that) noex -> DynArr&
         {
-            this->Clear();
-            this->InsertBack(that);
-            return *this;
+            self.Clear();
+            self.InsertBack(that);
+            return self;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -148,8 +148,8 @@ namespace Atom
         pub cexpr fn op=(DynArr&& that) noex -> DynArr&
         {
             DynArr tmp = mov(that);
-            this->_Swap(tmp);
-            return *this;
+            self._Swap(tmp);
+            return self;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -157,8 +157,8 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         pub cexpr dtor DynArr() noex
         {
-            this->Clear();
-            this->Release();
+            self.Clear();
+            self.Release();
         }
     };
 }

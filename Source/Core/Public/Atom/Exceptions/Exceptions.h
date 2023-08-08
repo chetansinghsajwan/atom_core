@@ -40,14 +40,14 @@ namespace Atom::Ex::Internal
 
     inline fn Thrower::RecordStack(StackTrace stackTrace) -> Thrower&
     {
-        this->_stackTrace = mov(stackTrace);
-        return *this;
+        self._stackTrace = mov(stackTrace);
+        return self;
     }
 
     inline fn Thrower::RecordSource(ExceptionSource src) -> Thrower&
     {
-        this->_src = mov(src);
-        return *this;
+        self._src = mov(src);
+        return self;
     }
 
     template <tname TEx>

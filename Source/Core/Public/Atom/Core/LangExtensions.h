@@ -41,6 +41,7 @@ namespace Atom
 #define prot protected:
 #define priv private:
 #define op operator
+#define self (*this)
 
 // #define sassert(...) static_assert(__VA_ARGS__)
 // #define scast(...) static_cast(__VA_ARGS__)
@@ -59,6 +60,5 @@ namespace Atom
 // #define null nullptr
 // #define init :
 // #define ret return
-// #define this (*this)
 // #define base ((Base&)this)
 // #define enum enum class

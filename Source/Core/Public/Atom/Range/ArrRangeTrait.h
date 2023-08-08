@@ -64,7 +64,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Get underlying ptr to arr.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn data() const -> const TElem*
+        constexpr fn Data() const -> const TElem*
         {
             return _data();
         }
@@ -130,7 +130,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Get count of elements.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn count() const -> usize
+        constexpr fn Count() const -> usize
         {
             return _count();
         }
@@ -138,7 +138,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Is range empty.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn isEmpty() const -> bool
+        constexpr fn IsEmpty() const -> bool
         {
             return _count() == 0;
         }
@@ -151,7 +151,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr fn iter() const -> TIter
+        constexpr fn Iter() const -> TIter
         {
             return _iter();
         }
@@ -163,7 +163,7 @@ namespace Atom
         /// 
         /// - `i`: Index of the element to get iter at.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn iter(usize i) const -> TIter
+        constexpr fn Iter(usize i) const -> TIter
         {
             debug_expects(isIndexInRange(i), "Index is out of range.");
 

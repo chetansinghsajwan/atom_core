@@ -29,7 +29,7 @@ namespace Atom::Logging::Internal
 
         /// ----------------------------------------------------------------------------------------
         /// Constructs and adds LogTarget objects.
-        /// Constructs {this->targets(targets)}.
+        /// Constructs {targets(targets)}.
         /// 
         /// @PARAM[IN] name Name of this logger.
         /// @PARAM[IN] targets LogTarget objects to add.

@@ -45,7 +45,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         cexpr fn op==(const ArrIter& that) const noex -> bool
         {
-            return this->_it == that._it;
+            return self._it == that._it;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -53,7 +53,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         cexpr fn op!=(const ArrIter& that) const noex -> bool
         {
-            return this->_it != that._it;
+            return self._it != that._it;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -62,7 +62,7 @@ namespace Atom
         cexpr fn op++(i32) noex -> ArrIter&
         {
             _it++;
-            return *this;
+            return self;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -71,7 +71,7 @@ namespace Atom
         cexpr fn op++() noex -> ArrIter&
         {
             _it++;
-            return *this;
+            return self;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -80,7 +80,7 @@ namespace Atom
         cexpr fn op--(i32) noex -> ArrIter&
         {
             _it--;
-            return *this;
+            return self;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -89,7 +89,7 @@ namespace Atom
         cexpr fn op+=(usize steps) noex -> ArrIter&
         {
             _it =+ steps;
-            return *this;
+            return self;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -98,7 +98,7 @@ namespace Atom
         cexpr fn op-=(usize steps) noex -> ArrIter&
         {
             _it =- steps;
-            return *this;
+            return self;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -122,7 +122,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         cexpr fn op-(const ArrIter& that) const noex -> isize
         {
-            return this->_it - that._it;
+            return self._it - that._it;
         }
 
     protected:
@@ -148,7 +148,7 @@ namespace Atom
 
         cexpr fn op*() noex -> T&
         {
-            return *(T*)this->_it;
+            return *(T*)self._it;
         }
 
     public:
@@ -157,7 +157,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         cexpr fn op+(usize steps) const noex -> MutArrIter
         {
-            return MutArrIter(this->_it + steps);
+            return MutArrIter(self._it + steps);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -165,7 +165,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         cexpr fn op-(usize steps) const noex -> MutArrIter
         {
-            return MutArrIter(this->_it - steps);
+            return MutArrIter(self._it - steps);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -173,7 +173,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         cexpr fn op-(const MutArrIter& that) const noex -> isize
         {
-            return this->_it - that._it;
+            return self._it - that._it;
         }
     };
 

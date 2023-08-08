@@ -1,5 +1,6 @@
 #include "Atom/Core.h"
-#include "Atom/Containers/ArrView.h"
+
+#include "Atom/Str/StrArgFormatters.h"
 
 using namespace Atom;
 
@@ -15,25 +16,25 @@ fn main(i32 argc, char **argv) -> i32
 {
     PrintCmdArgs(argc, argv);
 
-    ArrView<int> arr;
+    // ArrView<int> arr;
 
-    arr.find(0);
-    arr.at(0);
-    arr[0];
-    arr.front();
-    arr.back();
-    arr.iter();
-    arr.iterEnd();
-    arr.begin();
-    arr.end();
-    arr.canGetCount();
-    // arr.compare(arr);
-    // arr.contains(arr);
-    arr.count();
-    arr.data();
-    // arr.equals(arr);
-    // arr.find(arr);
-    // arr.findRange(arr);
+    // arr.find(0);
+    // arr.at(0);
+    // arr[0];
+    // arr.front();
+    // arr.back();
+    // arr.iter();
+    // arr.iterEnd();
+    // arr.begin();
+    // arr.end();
+    // arr.canGetCount();
+    // // arr.compare(arr);
+    // // arr.contains(arr);
+    // arr.count();
+    // arr.data();
+    // // arr.equals(arr);
+    // // arr.find(arr);
+    // // arr.findRange(arr);
 
     return 0;
 }

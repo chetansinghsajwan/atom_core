@@ -112,7 +112,7 @@ namespace Atom
         fn op=(NullType null) -> ObjectBox&
         {
             _DisposeObject();
-            return *this;
+            return self;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -141,7 +141,7 @@ namespace Atom
         fn op=(T&& object) -> ObjectBox&
         {
             _SetObject(fwd(object));
-            return *this;
+            return self;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -172,7 +172,7 @@ namespace Atom
             requires Copyable
         {
             _CopyBox(other);
-            return *this;
+            return self;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -185,7 +185,7 @@ namespace Atom
             OtherStackSize, TOtherMemAllocator>& other) -> ObjectBox&
         {
             _CopyBox(other);
-            return *this;
+            return self;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -216,7 +216,7 @@ namespace Atom
             requires Movable
         {
             _MoveBox(mov(other));
-            return *this;
+            return self;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -229,7 +229,7 @@ namespace Atom
             OtherStackSize, TOtherMemAllocator>&& other) -> ObjectBox&
         {
             _MoveBox(mov(other));
-            return *this;
+            return self;
         }
 
         /// ----------------------------------------------------------------------------------------

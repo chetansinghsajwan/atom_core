@@ -90,7 +90,7 @@ namespace Atom
         pub fn op=(NullType null) -> InvokableBox&
         {
             ObjectBox::op=(null);
-            return *this;
+            return self;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -121,7 +121,7 @@ namespace Atom
         {
             ObjectBox::op=(fwd(invokable));
             _SetInvoker<TInvokable>();
-            return *this;
+            return self;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -136,7 +136,7 @@ namespace Atom
         pub fn op=(const InvokableBox& other) -> InvokableBox&
         {
             ObjectBox::op=(other);
-            return *this;
+            return self;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -151,7 +151,7 @@ namespace Atom
         pub fn op=(InvokableBox&& other) -> InvokableBox&
         {
             ObjectBox::op=(mov(other));
-            return *this;
+            return self;
         }
 
         /// ----------------------------------------------------------------------------------------

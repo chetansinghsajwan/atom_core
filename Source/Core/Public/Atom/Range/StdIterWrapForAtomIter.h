@@ -92,7 +92,7 @@ namespace Atom
         cexpr fn op++() noex_if(++iter) -> This&
         {
             ++iter;
-            return *this;
+            return self;
         }
 
         template <class = void>
@@ -107,7 +107,7 @@ namespace Atom
         cexpr fn op--() noex_if(--iter) -> This&
         {
             --iter;
-            return *this;
+            return self;
         }
 
         template <class = void>

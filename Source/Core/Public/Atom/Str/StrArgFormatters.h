@@ -54,7 +54,8 @@ namespace Atom
 
 		pub fn GetRange() noex -> StrView
 		{
-			return StrView{ Range(_fmtCtx.begin(), _fmtCtx.end()) };
+			auto range = Range(_fmtCtx.begin(), _fmtCtx.end());
+			return StrView(range);
 		}
 
 		pub fn AdvanceTo(ArrIter<Char> it) noex
@@ -222,14 +223,14 @@ namespace fmt
 		pub fn parse(Atom::_FmtFmtParseCtx& fmtCtx) -> Atom::_FmtFmtParseCtxIter
 		{
 			Atom::StrFmtParseCtx ctx(fmtCtx);
-			this->fmter.Parse(ctx);
+			self.fmter.Parse(ctx);
 			return fmtCtx.begin();
 		}
 
 		pub fn format(const T& in, Atom::_FmtFmtCtx& fmtCtx) -> Atom::_FmtFmtCtxOut
 		{
 			Atom::StrFmtCtx ctx(fmtCtx);
-			this->fmter.Fmt(in, ctx);
+			self.fmter.Fmt(in, ctx);
 			return fmtCtx.out();
 		}
 

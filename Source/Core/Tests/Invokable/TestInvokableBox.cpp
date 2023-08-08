@@ -47,7 +47,7 @@ TEST_CASE("Atom/Invokable/InvokableBox")
 
             pub ctor Lambda(Lambda&& other) noex
             {
-                this->_capturedValue = other._capturedValue;
+                self._capturedValue = other._capturedValue;
                 other._capturedValue = nullptr;
             }
 

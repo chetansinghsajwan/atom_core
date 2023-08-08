@@ -134,7 +134,7 @@ namespace Atom
                 and (not RTriviallyCopyAssignableAll<Ts...>)
         {
             _impl.setValueFromVariant(that._impl);
-            return *this;
+            return self;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -147,7 +147,7 @@ namespace Atom
                 and (RCopyAssignableAll<TOthers...>)
         {
             _impl.setValueFromVariant(that._impl);
-            return *this;
+            return self;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -191,7 +191,7 @@ namespace Atom
                 and (not RTriviallyMoveAssignableAll<Ts...>)
         {
             _impl.setValueFromVariant(mov(that._impl));
-            return *this;
+            return self;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -204,7 +204,7 @@ namespace Atom
                 and (RMoveAssignableAll<Ts...>)
         {
             _impl.setValueFromVariant(mov(that._impl));
-            return *this;
+            return self;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -250,7 +250,7 @@ namespace Atom
             requires(Has<T>())
         {
             _impl.setValue(value);
-            return *this;
+            return self;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -266,7 +266,7 @@ namespace Atom
             requires(Has<T>())
         {
             _impl.setValue(mov(value));
-            return *this;
+            return self;
         }
 
         /// ----------------------------------------------------------------------------------------
