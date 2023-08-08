@@ -36,7 +36,7 @@ namespace Atom
     template <tname TIter>
     class StdIterWrapForAtomIter
     {
-        using This = StdIterWrapForAtomIter<TIter>;
+        using Self = StdIterWrapForAtomIter<TIter>;
 
     public:
         using value_type = tname TIter::TElem;
@@ -89,7 +89,7 @@ namespace Atom
 
         template <class = void>
         requires RIter<TIter>
-        cexpr fn op++() noex_if(++iter) -> This&
+        cexpr fn op++() noex_if(++iter) -> Self&
         {
             ++iter;
             return self;
@@ -97,14 +97,14 @@ namespace Atom
 
         template <class = void>
         requires RIter<TIter>
-        cexpr fn op++(i32) noex_if(iter++) -> This
+        cexpr fn op++(i32) noex_if(iter++) -> Self
         {
-            return This{ iter++ };
+            return Self{ iter++ };
         }
 
         template <class = void>
         requires RBidiIter<TIter>
-        cexpr fn op--() noex_if(--iter) -> This&
+        cexpr fn op--() noex_if(--iter) -> Self&
         {
             --iter;
             return self;
@@ -112,28 +112,28 @@ namespace Atom
 
         template <class = void>
         requires RBidiIter<TIter>
-        cexpr fn op--(i32) const noex_if(iter--) -> This
+        cexpr fn op--(i32) const noex_if(iter--) -> Self
         {
-            return This{ iter-- };
+            return Self{ iter-- };
         }
 
         template <class = void>
         requires RJumpIter<TIter>
-        cexpr fn op+(difference_type steps) noex_if(iter + steps) -> This
+        cexpr fn op+(difference_type steps) noex_if(iter + steps) -> Self
         {
-            return This{ iter + steps };
+            return Self{ iter + steps };
         }
 
         template <class = void>
         requires RJumpIter<TIter>
-        cexpr fn op-(difference_type steps) noex_if(iter - steps) -> This
+        cexpr fn op-(difference_type steps) noex_if(iter - steps) -> Self
         {
-            return This{ iter - steps };
+            return Self{ iter - steps };
         }
 
         template <class = void>
         requires RJumpIter<TIter>
-        cexpr fn op-(const This& that) noex_if(iter - that.iter) -> difference_type
+        cexpr fn op-(const Self& that) noex_if(iter - that.iter) -> difference_type
         {
             return iter - that.iter;
         }

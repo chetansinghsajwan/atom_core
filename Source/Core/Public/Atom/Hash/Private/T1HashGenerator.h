@@ -13,7 +13,7 @@ namespace Atom::Private
     template <tname T1Hash, tname TImpl>
     class T1HashGenerator
     {
-        using This = T1HashGenerator;
+        using Self = T1HashGenerator;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -40,7 +40,7 @@ namespace Atom::Private
         /// ----------------------------------------------------------------------------------------
         template <tname TRange, usize BufSize = 50>
         requires RRangeOf<TRange, byte>
-        fn ProcessBytes(TRange bytes) -> This&
+        fn ProcessBytes(TRange bytes) -> Self&
         {
             if cexpr (RArrRangeOf<TRange, byte>)
             {
@@ -79,7 +79,7 @@ namespace Atom::Private
         /// @THROWS AssertionException Expects {data != nullptr}.
         /// @THROWS AssertionException Expects {dataSize > 0}.
         /// ----------------------------------------------------------------------------------------
-        fn ProcessBytes(const void* data, usize dataSize) -> This&
+        fn ProcessBytes(const void* data, usize dataSize) -> Self&
         {
             ATOM_DEBUG_EXPECTS(data != nullptr);
             ATOM_DEBUG_EXPECTS(dataSize > 0);
@@ -104,7 +104,7 @@ namespace Atom::Private
         /// 
         /// @PARAM[IN] data Data to process.
         /// ----------------------------------------------------------------------------------------
-        fn ProcessByte(byte data) -> This&
+        fn ProcessByte(byte data) -> Self&
         {
             _impl.Update(&data, 1);
             return self;

@@ -23,7 +23,7 @@ namespace Atom
             and (not TypeList<TOthers...>::template Has<void>)
         friend class Variant;
 
-        using This = Variant<Ts...>;
+        using Self = Variant<Ts...>;
 
     public:
         /// ----------------------------------------------------------------------------------------
