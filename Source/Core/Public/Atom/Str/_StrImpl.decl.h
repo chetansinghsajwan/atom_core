@@ -5,11 +5,11 @@
 
 namespace Atom
 {
-    template <tname _TEncoding, tname TContainer>
+    template <tname TEncoding_, tname TContainer>
     class _StrImpl: public TContainer
     {
     public:
-        using TEncoding            = _TEncoding;
+        using TEncoding            = TEncoding_;
 
         using TChar                = BasicChar<TEncoding>;
         using TIter                = tname TContainer::TIter;
