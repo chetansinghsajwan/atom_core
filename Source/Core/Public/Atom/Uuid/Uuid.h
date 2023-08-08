@@ -35,7 +35,7 @@ namespace Atom
         pub cexpr fn op==(const Uuid& other) const noex -> bool = default;
         pub cexpr fn op!=(const Uuid& other) const noex -> bool = default;
 
-        pub StaArr<byte, 16> bytes;
+        pub StaticArr<byte, 16> bytes;
     };
 
     cexpr inline const Uuid Uuid::Null = Uuid{ 0 };

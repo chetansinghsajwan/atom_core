@@ -1,5 +1,5 @@
 #pragma once
-#include "Atom/Containers/StaArr.h"
+#include "Atom/Containers/StaticArr.h"
 
 namespace Atom::Private
 {
@@ -16,7 +16,7 @@ namespace Atom::Private
         pub cexpr fn op==(const T1Hash& other) const noex -> bool = default;
         pub cexpr fn op!=(const T1Hash& other) const noex -> bool = default;
 
-        pub StaArr<byte, Size> bytes;
+        pub StaticArr<byte, Size> bytes;
     };
 
     // FIX: Compilation error in MSVC, checkout /Zc:externConstexpr

@@ -1,3 +1,3 @@
 #pragma once
-#include "StaArr.decl.h"
+#include "StaticArr.decl.h"
 #include "_ArrImplHelper.h"
