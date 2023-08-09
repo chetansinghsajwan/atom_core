@@ -76,12 +76,12 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// DefaultConstructor.
         /// ----------------------------------------------------------------------------------------
-        pub cexpr ctor InvokableBox() noex { }
+        pub cexpr ctor InvokableBox() { }
 
         /// ----------------------------------------------------------------------------------------
         /// NullConstructor.
         /// ----------------------------------------------------------------------------------------
-        pub ctor InvokableBox(NullType null) noex:
+        pub ctor InvokableBox(NullType null):
             ObjectBox(null) { }
 
         /// ----------------------------------------------------------------------------------------
@@ -96,7 +96,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// NullEqualityOperator.
         /// ----------------------------------------------------------------------------------------
-        pub fn op==(NullType null) const noex -> bool
+        pub fn op==(NullType null) const -> bool
         {
             return ObjectBox::op==(null);
         }
@@ -179,7 +179,7 @@ namespace Atom
         }
 
         pub template <typename T>
-        fn GetInvokable() noex -> T*
+        fn GetInvokable() -> T*
         {
             if (typeid(T) != GetInvokableType())
                 return nullptr;
@@ -187,7 +187,7 @@ namespace Atom
             return ObjectBox::_GetObject<T>();
         }
 
-        pub fn GetInvokableType() const noex -> const TypeInfo&
+        pub fn GetInvokableType() const -> const TypeInfo&
         {
             return ObjectBox::_GetObjectType();
         }

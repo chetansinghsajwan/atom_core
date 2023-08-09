@@ -79,7 +79,7 @@ namespace Atom::Engine
         _windowPos = GLFW_WindowCoordsConverter::FromGLFW(glfwPos);
     }
 
-    fn GLFWWindow::GetPos() const noex -> SWindowCoords
+    fn GLFWWindow::GetPos() const -> SWindowCoords
     {
         return _windowPos;
     }
@@ -100,7 +100,7 @@ namespace Atom::Engine
         _windowSize = GLFW_WindowCoordsConverter::FromGLFW(glfwSize);
     }
 
-    fn GLFWWindow::GetSize() const noex -> SWindowCoords
+    fn GLFWWindow::GetSize() const -> SWindowCoords
     {
         return _windowSize;
     }
@@ -120,12 +120,12 @@ namespace Atom::Engine
         _windowVSync = enable;
     }
 
-    fn GLFWWindow::GetVSync() const noex -> bool
+    fn GLFWWindow::GetVSync() const -> bool
     {
         return _windowVSync;
     }
 
-    fn GLFWWindow::GetNative() const noex -> void*
+    fn GLFWWindow::GetNative() const -> void*
     {
         return _glfwWindow;
     }

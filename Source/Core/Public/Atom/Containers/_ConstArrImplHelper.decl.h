@@ -49,7 +49,7 @@ namespace Atom
         /// 
         /// @TIME_COMPLEXITY Constant.
         /// ----------------------------------------------------------------------------------------
-        cexpr fn op[](usize index) const noex -> const TElem&;
+        cexpr fn op[](usize index) const -> const TElem&;
 
         /// ----------------------------------------------------------------------------------------
         /// Access first element.
@@ -61,7 +61,7 @@ namespace Atom
         /// 
         /// @TIME_COMPLEXITY Constant.
         /// ----------------------------------------------------------------------------------------
-        cexpr fn ElemFront() const noex -> const TElem&;
+        cexpr fn ElemFront() const -> const TElem&;
 
         /// ----------------------------------------------------------------------------------------
         /// Access last element.
@@ -73,7 +73,7 @@ namespace Atom
         /// 
         /// @TIME_COMPLEXITY Constant.
         /// ----------------------------------------------------------------------------------------
-        cexpr fn ElemBack() const noex -> const TElem&;
+        cexpr fn ElemBack() const -> const TElem&;
 
         /// ----------------------------------------------------------------------------------------
         /// Pointer to underlying arr.
@@ -82,7 +82,7 @@ namespace Atom
         /// 
         /// @TIME_COMPLEXITY Constant.
         /// ----------------------------------------------------------------------------------------
-        cexpr fn data() const noex -> const TElem*
+        cexpr fn data() const -> const TElem*
         {
             return _Data();
         }
@@ -90,7 +90,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Get count of elements.
         /// ----------------------------------------------------------------------------------------
-        cexpr fn count() const noex -> usize
+        cexpr fn count() const -> usize
         {
             return _Count();
         }
@@ -98,7 +98,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Is arr empty.
         /// ----------------------------------------------------------------------------------------
-        cexpr fn isEmpty() const noex -> bool
+        cexpr fn isEmpty() const -> bool
         {
             return _Count() == 0;
         }
@@ -111,7 +111,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// {TIter} to the first element.
         /// ----------------------------------------------------------------------------------------
-        cexpr fn iter() const noex -> TIter
+        cexpr fn iter() const -> TIter
         {
             return TIter{ _Data() };
         }
@@ -119,7 +119,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// {TIter} to element following the last element.
         /// ----------------------------------------------------------------------------------------
-        cexpr fn iterEnd() const noex -> TIter
+        cexpr fn iterEnd() const -> TIter
         {
             return TIter{ _Data() + _Count()};
         }
@@ -129,7 +129,7 @@ namespace Atom
     //// -------------------------------------------------------------------------------------------
 
     protected:
-        cexpr fn _ValidateIndexForAccess(isize index) const noex -> bool
+        cexpr fn _ValidateIndexForAccess(isize index) const -> bool
         {
             return index > 0 && index < (isize)_Count();
         }

@@ -10,7 +10,7 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Get the name of the logger.
         /// ----------------------------------------------------------------------------------------
-        virtual fn Name() const noex -> StrView abstract;
+        virtual fn Name() const -> StrView abstract;
 
         /// ----------------------------------------------------------------------------------------
         /// Calls Log(ELogLevel::Trace, msg, fwd(args)...).
@@ -111,7 +111,7 @@ namespace Atom::Logging
         /// 
         /// Check if the message should be passed for logging.
         /// ----------------------------------------------------------------------------------------
-        virtual fn CheckLogLevel(ELogLevel lvl) const noex -> bool abstract;
+        virtual fn CheckLogLevel(ELogLevel lvl) const -> bool abstract;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -124,7 +124,7 @@ namespace Atom::Logging
     /// 
     /// --------------------------------------------------------------------------------------------
     template <RDerivedFrom<Logger> TLogger>
-    LoggerPtr MAKE_LOGGER(auto&&... args) noex
+    LoggerPtr MAKE_LOGGER(auto&&... args)
     {
         return MakeShared<TLogger>(fwd(args)...);
     }

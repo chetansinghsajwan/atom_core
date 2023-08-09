@@ -13,7 +13,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         pub template <class TRange>
         requires RRange<TRange>
-        cexpr fn CanGetCount() const noex -> bool
+        cexpr fn CanGetCount() const -> bool
         {
             return RFwdRange<TRange>;
         }
@@ -23,7 +23,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         pub template <class TRange>
         requires RFwdRange<TRange>
-        cexpr fn GetCount(const TRange& range) const noex -> usize
+        cexpr fn GetCount(const TRange& range) const -> usize
         {
             return _GetCount(range.iter(), range.iterEnd());
         }

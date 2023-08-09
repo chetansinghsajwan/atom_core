@@ -51,17 +51,17 @@ namespace Atom
     template < >
     class StrConverter<Str>
     {
-        pub cexpr fn Convert(Str&& str) noex -> Str
+        pub cexpr fn Convert(Str&& str) -> Str
         {
             return mov(str);
         }
 
-        pub cexpr fn Convert(const Str& str) noex -> Str
+        pub cexpr fn Convert(const Str& str) -> Str
         {
             return Str{ str };
         }
 
-        pub cexpr fn Convert(const Str& str, ROutput<Char> auto out) noex -> void
+        pub cexpr fn Convert(const Str& str, ROutput<Char> auto out) -> void
         {
             out += str;
         }

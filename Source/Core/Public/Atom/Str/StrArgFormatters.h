@@ -31,15 +31,15 @@ namespace Atom
 	/// --------------------------------------------------------------------------------------------
 	class StrFmtEx extends Exception
 	{
-		pub ctor StrFmtEx(Str msg) noex:
+		pub ctor StrFmtEx(Str msg):
 			Exception(mov(msg)) { }
 
 		/// ----------------------------------------------------------------------------------------
 		/// @TODO Fix this ugly code.
 		/// ----------------------------------------------------------------------------------------
-		pub ctor StrFmtEx(const _FmtFmtEx& fmtEx) noex:
+		pub ctor StrFmtEx(const _FmtFmtEx& fmtEx):
 			Exception("Not implemented.") { }
-		// StrFmtEx(const _FmtFmtEx& fmtEx) noex:
+		// StrFmtEx(const _FmtFmtEx& fmtEx):
 		// 	Exception(CharEncodingConverter<UTF8CharEncoding, CharEncoding>()
 		// 		.Convert(UTF8StrView{ (const char8*)fmtEx.what() }.iter()).data()) { }
 	};
@@ -49,16 +49,16 @@ namespace Atom
 	/// --------------------------------------------------------------------------------------------
 	class StrFmtParseCtx
 	{
-		pub cexpr ctor StrFmtParseCtx(_FmtFmtParseCtx& fmtCtx) noex:
+		pub cexpr ctor StrFmtParseCtx(_FmtFmtParseCtx& fmtCtx):
 			_fmtCtx{ fmtCtx } { }
 
-		pub fn GetRange() noex -> StrView
+		pub fn GetRange() -> StrView
 		{
 			auto range = Range(_fmtCtx.begin(), _fmtCtx.end());
 			return StrView(range);
 		}
 
-		pub fn AdvanceTo(ArrIter<Char> it) noex
+		pub fn AdvanceTo(ArrIter<Char> it)
 		{
 			_fmtCtx.advance_to(&*it);
 		}
@@ -71,7 +71,7 @@ namespace Atom
 	/// --------------------------------------------------------------------------------------------
 	class StrFmtCtx
 	{
-		pub cexpr ctor StrFmtCtx(_FmtFmtCtx& fmtCtx) noex:
+		pub cexpr ctor StrFmtCtx(_FmtFmtCtx& fmtCtx):
 			_fmtCtx{ fmtCtx } { }
 
 		pub fn Write(Char ch)
@@ -143,14 +143,14 @@ namespace Atom
 	template < >
 	class StrFmtArgFmterImpl<StrView>
 	{
-		pub fn Parse(StrFmtParseCtx& ctx) noex
+		pub fn Parse(StrFmtParseCtx& ctx)
 		{
 			_FmtFmtParseCtx& fmtCtx = ctx._fmtCtx;
 
 			fmtCtx.advance_to(_fmtFmter.parse(fmtCtx));
 		}
 
-		pub fn Fmt(StrView str, StrFmtCtx& ctx) noex
+		pub fn Fmt(StrView str, StrFmtCtx& ctx)
 		{
 			_FmtFmtCtx& fmtCtx = ctx._fmtCtx;
 
@@ -169,7 +169,7 @@ namespace Atom
 	template <usize N>
 	class StrFmtArgFmterImpl<Char[N]> extends StrFmtArgFmter<StrView>
 	{
-		pub fn Fmt(const Char(&chars)[N], StrFmtCtx& ctx) noex
+		pub fn Fmt(const Char(&chars)[N], StrFmtCtx& ctx)
 		{
 			StrView str{ chars, N };
 			StrFmtArgFmter<StrView>::Fmt(str, ctx);
@@ -183,7 +183,7 @@ namespace Atom
 	requires RStrViewConvertible<T>
 	class StrFmtArgFmterImpl<T> extends StrFmtArgFmter<StrView>
 	{
-		pub cexpr fn Fmt(const T& in, StrFmtCtx& ctx) noex
+		pub cexpr fn Fmt(const T& in, StrFmtCtx& ctx)
 		{
 			StrFmtArgFmter<StrView>::Fmt(
 				convter.Convert(in), ctx);

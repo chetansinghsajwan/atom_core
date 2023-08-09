@@ -14,7 +14,7 @@ namespace Atom
     }
 
     template <typename TImpl>
-    cexpr fn _ConstArrImplHelper<TImpl>::op[](usize index) const noex -> const TElem&
+    cexpr fn _ConstArrImplHelper<TImpl>::op[](usize index) const -> const TElem&
     {
         ATOM_DEBUG_EXPECTS(_ValidateIndexForAccess(index)) <<
             IndexOutOfRangeException(index, 0, _Count() - 1);
@@ -23,7 +23,7 @@ namespace Atom
     }
 
     template <typename TImpl>
-    cexpr fn _ConstArrImplHelper<TImpl>::ElemFront() const noex -> const TElem&
+    cexpr fn _ConstArrImplHelper<TImpl>::ElemFront() const -> const TElem&
     {
         ATOM_DEBUG_EXPECTS(!isEmpty()) <<
             OutOfRangeException("Arr is empty.");
@@ -32,7 +32,7 @@ namespace Atom
     }
 
     template <typename TImpl>
-    cexpr fn _ConstArrImplHelper<TImpl>::ElemBack() const noex -> const TElem&
+    cexpr fn _ConstArrImplHelper<TImpl>::ElemBack() const -> const TElem&
     {
         ATOM_DEBUG_EXPECTS(!isEmpty()) <<
             OutOfRangeException("Arr is empty.");

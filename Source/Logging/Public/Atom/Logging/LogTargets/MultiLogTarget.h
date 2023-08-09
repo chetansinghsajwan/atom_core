@@ -31,7 +31,7 @@ namespace Atom::Logging::Private
         /// ----------------------------------------------------------------------------------------
         /// Default constructor.
         /// ----------------------------------------------------------------------------------------
-        ctor MultiLogTargetTemplate() noex { }
+        ctor MultiLogTargetTemplate() { }
 
         /// ----------------------------------------------------------------------------------------
         /// Constructs with LogTarget objects.
@@ -101,7 +101,7 @@ namespace Atom::Logging::Private
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        fn AddTarget(LogTargetPtr target) noex -> bool
+        fn AddTarget(LogTargetPtr target) -> bool
         {
             if (target == nullptr) return false;
 
@@ -189,7 +189,7 @@ namespace Atom::Logging::Private
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        fn HasTarget(LogTargetPtr target) const noex -> bool
+        fn HasTarget(LogTargetPtr target) const -> bool
         {
             if (target == nullptr)
                 return false;
@@ -211,7 +211,7 @@ namespace Atom::Logging::Private
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
         requires RRangeOf<TRange, LogTargetPtr>
-        fn HasTargets(const TRange& targets) const noex -> usize
+        fn HasTargets(const TRange& targets) const -> usize
         {
             if (!targets.iter() == targets.iterEnd())
                 return 0;
@@ -238,7 +238,7 @@ namespace Atom::Logging::Private
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        fn count() const noex -> usize
+        fn count() const -> usize
         {
             LockGuard guard(_lock);
             return _targets.count();
@@ -256,7 +256,7 @@ namespace Atom::Logging::Private
         /// 
         /// @TODO Make ThreadSafe.
         /// ----------------------------------------------------------------------------------------
-        fn iter() const noex -> TIter
+        fn iter() const -> TIter
         {
             return _targets.iter();
         }
@@ -268,7 +268,7 @@ namespace Atom::Logging::Private
         /// 
         /// @TODO Make ThreadSafe.
         /// ----------------------------------------------------------------------------------------
-        fn iterEnd() const noex -> TIterEnd
+        fn iterEnd() const -> TIterEnd
         {
             return _targets.iterEnd();
         }
@@ -400,11 +400,11 @@ namespace Atom::Logging::Private
         ///     If {target} is null, doesn't searches it.
         /// @RETURNS {true} if found, else {false}.
         /// 
-        /// @EXCEPTION_SAFETY noex
+        /// @EXCEPTION_SAFETY
         /// 
         /// @TIME_COMPLEXITY Linear
         /// ----------------------------------------------------------------------------------------
-        fn _HasTarget(const LogTargetPtr& target) const noex -> bool
+        fn _HasTarget(const LogTargetPtr& target) const -> bool
         {
             ATOM_DEBUG_EXPECTS(target != nullptr);
 
@@ -419,7 +419,7 @@ namespace Atom::Logging::Private
         ///     If range {[it, end]} contains null objects, this doesn't searches them.
         /// @RETURNS Count of LogTarget objects found.
         /// 
-        /// @EXCEPTION_SAFETY noex
+        /// @EXCEPTION_SAFETY
         /// 
         /// @TIME_COMPLEXITY Exponential
         /// ----------------------------------------------------------------------------------------

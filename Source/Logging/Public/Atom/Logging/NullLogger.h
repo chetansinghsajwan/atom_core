@@ -36,13 +36,13 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Default constructs NullLogger.
         /// ----------------------------------------------------------------------------------------
-        cexpr ctor NullLogger() noex { }
+        cexpr ctor NullLogger() { }
 
     public:
         /// ----------------------------------------------------------------------------------------
         /// Returns name of the NullLogger.
         /// ----------------------------------------------------------------------------------------
-        cexpr virtual fn Name() const noex -> StrView override
+        cexpr virtual fn Name() const -> StrView override
         {
             return s_name;
         }
@@ -60,7 +60,7 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Always returns false to avoid constructing log msg.
         /// ----------------------------------------------------------------------------------------
-        cexpr virtual fn CheckLogLevel(ELogLevel lvl) const noex -> bool override
+        cexpr virtual fn CheckLogLevel(ELogLevel lvl) const -> bool override
         {
             return false;
         }

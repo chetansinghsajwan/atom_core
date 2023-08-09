@@ -15,7 +15,7 @@ namespace Atom
     {
         pub using TImpl = std::source_location;
 
-        pub static cexpr ExceptionSource Current(TImpl src = TImpl::current()) noex;
+        pub static cexpr ExceptionSource Current(TImpl src = TImpl::current());
 
         pub u32 line;
         pub u32 column;
@@ -31,7 +31,7 @@ namespace Atom
     // using StackTrace = std::stacktrace;
     class StackTrace
     {
-        pub static cexpr StackTrace current() noex
+        pub static cexpr StackTrace current()
         {
             return StackTrace{ };
         }
@@ -50,12 +50,12 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Basic constructor with msg.
         /// ----------------------------------------------------------------------------------------
-        pub ctor Exception(Str msg) noex;
+        pub ctor Exception(Str msg);
 
         /// ----------------------------------------------------------------------------------------
         /// VirtualDestructor.
         /// ----------------------------------------------------------------------------------------
-        pub virtual dtor Exception() noex;
+        pub virtual dtor Exception();
 
         /// ----------------------------------------------------------------------------------------
         /// Name of the exception.
@@ -138,7 +138,7 @@ namespace Atom::Ex::Internal
     class Thrower
     {
         pub ctor Thrower(ExceptionSource src = ExceptionSource::Current(),
-            StackTrace stackTrace = StackTrace::current()) noex;
+            StackTrace stackTrace = StackTrace::current());
 
         pub fn RecordStack(StackTrace stackTrace = StackTrace::current()) -> Thrower&;
 

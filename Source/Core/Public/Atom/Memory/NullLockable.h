@@ -17,7 +17,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// DefaultConstructor. Does nothing.
         /// ----------------------------------------------------------------------------------------
-        cexpr ctor NullLockable() noex { }
+        cexpr ctor NullLockable() { }
 
         /// ----------------------------------------------------------------------------------------
         /// CopyConstructor is default.
@@ -75,7 +75,7 @@ namespace Atom
         /// 
         /// @PARAM[IN] lock NullLockable reference. (UNUSED).
         /// ----------------------------------------------------------------------------------------
-        cexpr ctor LockGuard(NullLockable& lock) noex { }
+        cexpr ctor LockGuard(NullLockable& lock) { }
 
         /// ----------------------------------------------------------------------------------------
         /// Destructor. Does nothing.

@@ -24,46 +24,46 @@ namespace Atom
         pub using TIter = _TIter;
         pub using TIterEnd = _TIterEnd;
 
-        pub cexpr ctor Range(TIter iter, TIterEnd end) noex:
+        pub cexpr ctor Range(TIter iter, TIterEnd end):
             _iter{ iter }, _end{ end } { }
 
-        pub cexpr fn iter() const noex -> TIter
+        pub cexpr fn iter() const -> TIter
             requires(RIterPair<TIter, TIterEnd>)
         {
             return TIter{ _iter };
         }
 
-        pub cexpr fn iterEnd() const noex -> TIterEnd
+        pub cexpr fn iterEnd() const -> TIterEnd
             requires(RIterPair<TIter, TIterEnd>)
         {
             return TIterEnd{ _end };
         }
 
-        pub cexpr fn mutIter() noex -> TMutIter
+        pub cexpr fn mutIter() -> TMutIter
             requires(RMutIterPair<TMutIter, TMutIterEnd>)
         {
             return _iter;
         }
 
-        pub cexpr fn mutIterEnd() noex -> TMutIterEnd
+        pub cexpr fn mutIterEnd() -> TMutIterEnd
             requires(RMutIterPair<TMutIter, TMutIterEnd>)
         {
             return _end;
         }
 
-        pub cexpr fn count() const noex -> usize
+        pub cexpr fn count() const -> usize
             requires(RJumpIterPair<TIter, TIterEnd>)
         {
             return _end - _iter;
         }
 
-        pub cexpr fn data() const noex -> const TElem*
+        pub cexpr fn data() const -> const TElem*
             requires(RArrIterPair<TIter, TIterEnd>)
         {
             return &*_iter;
         }
 
-        pub cexpr fn data() noex -> TElem*
+        pub cexpr fn data() -> TElem*
             requires(RMutArrIterPair<TIter, TIterEnd>)
         {
             return &*_iter;
@@ -85,14 +85,14 @@ namespace Atom
     {
         pub using Base = Range<ArrIter<T>, ArrIter<T>>;
 
-        pub cexpr ctor Range(const T* arr, const T* end) noex:
+        pub cexpr ctor Range(const T* arr, const T* end):
             Base{ arr, end } { }
 
-        pub cexpr ctor Range(const T* arr, usize count) noex:
+        pub cexpr ctor Range(const T* arr, usize count):
             Base{ arr, arr + count } { }
 
         pub template <usize count>
-        cexpr ctor Range(const T(&arr)[count]) noex:
+        cexpr ctor Range(const T(&arr)[count]):
             Base{ arr, arr + count } { }
     };
 
@@ -104,14 +104,14 @@ namespace Atom
     {
         pub using Base = Range<MutArrIter<T>, MutArrIter<T>>;
 
-        pub cexpr ctor Range(T* arr, T* end) noex:
+        pub cexpr ctor Range(T* arr, T* end):
             Base{ arr, end } { }
 
-        pub cexpr ctor Range(T* arr, usize count) noex:
+        pub cexpr ctor Range(T* arr, usize count):
             Base{ arr, arr + count } { }
 
         pub template <usize count>
-        cexpr ctor Range(T(&arr)[count]) noex:
+        cexpr ctor Range(T(&arr)[count]):
             Base{ arr, arr + count } { }
     };
 
@@ -132,7 +132,7 @@ namespace Atom
     {
         pub using Base = Range<const T*, const T*>;
 
-        pub cexpr ctor Range(const InitList<T>& init) noex:
+        pub cexpr ctor Range(const InitList<T>& init):
             Base{ init.begin(), init.end() } { }
     };
 

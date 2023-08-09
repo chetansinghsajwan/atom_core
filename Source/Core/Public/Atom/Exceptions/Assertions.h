@@ -4,6 +4,6 @@
 
 namespace Atom
 {
-    inline ctor AssertException::AssertException(Str msg, StrView assertExpr) noex:
+    inline ctor AssertException::AssertException(Str msg, StrView assertExpr):
         assertExpr{ assertExpr }, Exception(mov(msg)) { }
 }

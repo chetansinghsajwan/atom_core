@@ -51,19 +51,19 @@ namespace Atom::Engine
         pub virtual fn Update() -> void override;
 
         pub virtual fn SetPos(SWindowCoords size) -> void override;
-        pub virtual fn GetPos() const noex -> SWindowCoords override;
+        pub virtual fn GetPos() const -> SWindowCoords override;
         pub virtual fn UpdatePos() -> SWindowCoords;
 
         pub virtual fn SetSize(SWindowCoords size) -> void override;
-        pub virtual fn GetSize() const noex -> SWindowCoords override;
+        pub virtual fn GetSize() const -> SWindowCoords override;
         pub virtual fn UpdateSize() -> SWindowCoords;
 
-        pub virtual fn GetNative() const noex -> void* ofinal;
+        pub virtual fn GetNative() const -> void* ofinal;
 
         pub fn SetVSync(bool enable) -> void;
-        pub fn GetVSync() const noex -> bool;
+        pub fn GetVSync() const -> bool;
 
-        pub fn GetNativeGLFW() const noex -> GLFWwindow*
+        pub fn GetNativeGLFW() const -> GLFWwindow*
         {
             return _glfwWindow;
         }

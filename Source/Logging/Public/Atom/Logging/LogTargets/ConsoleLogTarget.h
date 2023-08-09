@@ -14,7 +14,7 @@ namespace Atom::Logging
         /// 
         /// ErrorLogLevel is set to ELogLevel::Error.
         /// ----------------------------------------------------------------------------------------
-        ctor ConsoleLogTarget() noex:
+        ctor ConsoleLogTarget():
             _stdout(stdout), _stderr(stderr),
             _errLogLevel(ELogLevel::Error) { }
 
@@ -22,7 +22,7 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Retuns the ELogLevel specified for error logging.
         /// ----------------------------------------------------------------------------------------
-        fn GetErrLogLevel() const noex -> ELogLevel
+        fn GetErrLogLevel() const -> ELogLevel
         {
             return _errLogLevel;
         }
@@ -32,7 +32,7 @@ namespace Atom::Logging
         /// 
         /// Logs of same or above level are written to stderr.
         /// ----------------------------------------------------------------------------------------
-        fn SetErrLogLevel(ELogLevel lvl) noex
+        fn SetErrLogLevel(ELogLevel lvl)
         {
             _errLogLevel = lvl;
         }
@@ -42,7 +42,7 @@ namespace Atom::Logging
         /// 
         /// @RETURNS {true} if {lvl >= GetErrLogLevel()}, else {false}.
         /// ----------------------------------------------------------------------------------------
-        fn ShouldLogAsError(ELogLevel lvl) const noex -> bool
+        fn ShouldLogAsError(ELogLevel lvl) const -> bool
         {
             return lvl >= _errLogLevel;
         }

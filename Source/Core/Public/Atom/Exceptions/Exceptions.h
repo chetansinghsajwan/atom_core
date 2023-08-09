@@ -6,7 +6,7 @@
 
 namespace Atom
 {
-    cexpr ExceptionSource ExceptionSource::Current(TImpl src) noex
+    cexpr ExceptionSource ExceptionSource::Current(TImpl src)
     {
         return ExceptionSource
         {
@@ -18,10 +18,10 @@ namespace Atom
         };
     }
 
-    inline Exception::ctor Exception(Str msg) noex:
+    inline Exception::ctor Exception(Str msg):
         msg(mov(msg)) { }
 
-    inline Exception::dtor Exception() noex { }
+    inline Exception::dtor Exception() { }
 
     inline IndexOutOfRangeException::ctor IndexOutOfRangeException(
         Str msg, usize index, usize begin, usize end):
@@ -35,7 +35,7 @@ namespace Atom
 
 namespace Atom::Ex::Internal
 {
-    inline ctor Thrower::Thrower(ExceptionSource src, StackTrace stackTrace) noex:
+    inline ctor Thrower::Thrower(ExceptionSource src, StackTrace stackTrace):
         _src{ mov(src) }, _stackTrace{ mov(stackTrace) } { }
 
     inline fn Thrower::RecordStack(StackTrace stackTrace) -> Thrower&

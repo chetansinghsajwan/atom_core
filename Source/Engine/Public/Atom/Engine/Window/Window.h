@@ -13,7 +13,7 @@ namespace Atom::Engine
         pub i32 y;
     };
 
-    cexpr fn op-(const SWindowCoords& lhs, const SWindowCoords& rhs) noex -> SWindowCoords
+    cexpr fn op-(const SWindowCoords& lhs, const SWindowCoords& rhs) -> SWindowCoords
     {
         return { lhs.x - rhs.x, lhs.y - rhs.y };
     }
@@ -27,7 +27,7 @@ namespace Atom::Engine
 
     class SWindowEvent
     {
-        pub cexpr ctor SWindowEvent(EWindowEventType eventType) noex:
+        pub cexpr ctor SWindowEvent(EWindowEventType eventType):
             eventType(eventType) { }
 
         pub const EWindowEventType eventType;
@@ -35,7 +35,7 @@ namespace Atom::Engine
 
     class SWindowResizeEvent extends SWindowEvent
     {
-        pub cexpr ctor SWindowResizeEvent(SWindowCoords size, SWindowCoords delta) noex:
+        pub cexpr ctor SWindowResizeEvent(SWindowCoords size, SWindowCoords delta):
             size(size), delta(delta),
             SWindowEvent(EWindowEventType::Resize) { }
 
@@ -45,7 +45,7 @@ namespace Atom::Engine
 
     class SWindowRepositionEvent extends SWindowEvent
     {
-        pub cexpr ctor SWindowRepositionEvent(SWindowCoords position, SWindowCoords delta) noex:
+        pub cexpr ctor SWindowRepositionEvent(SWindowCoords position, SWindowCoords delta):
             position(position), delta(delta),
             SWindowEvent(EWindowEventType::Reposition) { }
 
@@ -55,26 +55,26 @@ namespace Atom::Engine
 
     class SWindowCloseEvent extends SWindowEvent
     {
-        pub cexpr ctor SWindowCloseEvent() noex:
+        pub cexpr ctor SWindowCloseEvent():
             SWindowEvent(EWindowEventType::Close) { }
     };
 
     class Window
     {
-        pub ctor Window(IEvent<const SWindowEvent&>& event) noex:
+        pub ctor Window(IEvent<const SWindowEvent&>& event):
             OnEvent{ event } { }
 
         pub virtual dtor Window() = default;
 
         pub virtual fn Update() -> void abstract;
 
-        pub virtual fn GetSize() const noex -> SWindowCoords abstract;
+        pub virtual fn GetSize() const -> SWindowCoords abstract;
         pub virtual fn SetSize(SWindowCoords size) -> void abstract;
 
-        pub virtual fn GetPos() const noex -> SWindowCoords abstract;
+        pub virtual fn GetPos() const -> SWindowCoords abstract;
         pub virtual fn SetPos(SWindowCoords pos) -> void abstract;
 
-        pub virtual fn GetNative() const noex -> void* abstract;
+        pub virtual fn GetNative() const -> void* abstract;
 
         pub IEvent<const SWindowEvent&>& OnEvent;
     };

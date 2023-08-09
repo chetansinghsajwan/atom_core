@@ -9,7 +9,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
     requires RRange<TRange>
-    cexpr fn begin(const TRange& range) noex -> auto
+    cexpr fn begin(const TRange& range) -> auto
     {
         return range.iter();
     }
@@ -19,7 +19,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
     requires RMutRange<TRange>
-    cexpr fn begin(TRange& range) noex -> auto
+    cexpr fn begin(TRange& range) -> auto
     {
         return range.mutIter();
     }
@@ -29,7 +29,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
     requires RRange<TRange>
-    cexpr fn end(const TRange& range) noex -> auto
+    cexpr fn end(const TRange& range) -> auto
     {
         return range.iterEnd();
     }
@@ -39,7 +39,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
     requires RMutRange<TRange>
-    cexpr fn end(TRange& range) noex -> auto
+    cexpr fn end(TRange& range) -> auto
     {
         return range.mutIterEnd();
     }
@@ -49,7 +49,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <typename TRange1, typename TRange2>
     requires RRange<TRange1> && RRange<TRange2>
-    cexpr fn op==(const TRange1& range1, const TRange2& range2) noex -> bool
+    cexpr fn op==(const TRange1& range1, const TRange2& range2) -> bool
     {
         return RangeComparer().AreEqual(range1, range2);
     }
@@ -59,7 +59,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <typename TRange1, typename TRange2>
     requires RRange<TRange1> && RRange<TRange2>
-    cexpr fn op!=(const TRange1& range1, const TRange2& range2) noex -> bool
+    cexpr fn op!=(const TRange1& range1, const TRange2& range2) -> bool
     {
         return !RangeComparer().AreEqual(range1, range2);
     }

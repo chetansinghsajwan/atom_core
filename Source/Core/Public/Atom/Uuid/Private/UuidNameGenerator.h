@@ -10,7 +10,7 @@ namespace Atom::Private
     class UuidNameGenerator
     {
     public:
-        explicit ctor UuidNameGenerator(const Uuid& nsUuid) noex:
+        explicit ctor UuidNameGenerator(const Uuid& nsUuid):
             _nsUuid(nsUuid) { }
 
     public:

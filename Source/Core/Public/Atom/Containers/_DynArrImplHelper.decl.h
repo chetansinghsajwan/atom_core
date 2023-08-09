@@ -126,7 +126,7 @@ namespace Atom
         template <typename TIter2, typename TIterEnd2>
         cexpr fn _InsertBackUncounted(TIter2 begin, TIterEnd2 end) -> usize;
 
-        cexpr fn _ValidateIndexForInsert(isize index) const noex -> bool;
+        cexpr fn _ValidateIndexForInsert(isize index) const -> bool;
 
     //// -------------------------------------------------------------------------------------------
     //// Remove
@@ -179,7 +179,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        cexpr fn Capacity() const noex -> usize;
+        cexpr fn Capacity() const -> usize;
 
         using Base::iter;
         using Base::iterEnd;
@@ -191,11 +191,11 @@ namespace Atom
     //// -------------------------------------------------------------------------------------------
 
     protected:
-        cexpr fn _ValidateIter(TIter it) const noex -> bool;
-        cexpr fn _UpdateIterDebugId() noex -> void;
-        cexpr fn _ValidateIndex(isize index) const noex -> bool;
-        cexpr fn _FetchIndex(TIter pos) const noex -> isize;
-        cexpr fn _CalcCapGrowth(usize required) const noex -> usize;
+        cexpr fn _ValidateIter(TIter it) const -> bool;
+        cexpr fn _UpdateIterDebugId() -> void;
+        cexpr fn _ValidateIndex(isize index) const -> bool;
+        cexpr fn _FetchIndex(TIter pos) const -> isize;
+        cexpr fn _CalcCapGrowth(usize required) const -> usize;
         cexpr fn _EnsureCapFor(usize count) -> void;
 
         cexpr fn _ConstructAt(usize index, auto&&... args) -> void;
@@ -207,10 +207,10 @@ namespace Atom
         cexpr fn _RotateRangeBack(usize index, usize count) -> void;
 
         template <typename TRange>
-        static cexpr fn _CanGetRangeSize() noex -> bool;
+        static cexpr fn _CanGetRangeSize() -> bool;
 
         template <typename TRange>
-        static cexpr fn _GetRangeSize(const TRange& range) noex -> usize;
+        static cexpr fn _GetRangeSize(const TRange& range) -> usize;
 
         using Base::_Data;
         using Base::_Count;

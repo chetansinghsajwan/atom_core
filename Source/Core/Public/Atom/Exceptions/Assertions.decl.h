@@ -9,7 +9,7 @@ namespace Atom
     class AssertException: public Exception
     {
     public:
-        ctor AssertException(Str msg, StrView assertExpr) noex;
+        ctor AssertException(Str msg, StrView assertExpr);
 
     public:
         StrView assertExpr;

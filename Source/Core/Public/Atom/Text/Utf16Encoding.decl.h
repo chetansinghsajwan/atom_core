@@ -11,17 +11,17 @@ namespace Atom
         pub static cexpr TChar Null = u'\0';
         pub static cexpr bool IsMultiCharEncoding = true;
 
-        pub static cexpr fn IsContinuationChar(TChar ch) noex -> bool
+        pub static cexpr fn IsContinuationChar(TChar ch) -> bool
         {
             return (ch & 0b11000000) == 0b10000000;
         }
 
-        pub static cexpr fn ParseStartingChar(TChar ch) noex -> usize
+        pub static cexpr fn ParseStartingChar(TChar ch) -> usize
         {
             return 0;
         }
 
-        pub static cexpr fn IsStartingChar(TChar ch) noex -> bool
+        pub static cexpr fn IsStartingChar(TChar ch) -> bool
         {
             return ParseStartingChar(ch) != 0;
         }

@@ -13,8 +13,8 @@ namespace Atom::Private
 
         pub static const T1Hash Null;
 
-        pub cexpr fn op==(const T1Hash& other) const noex -> bool = default;
-        pub cexpr fn op!=(const T1Hash& other) const noex -> bool = default;
+        pub cexpr fn op==(const T1Hash& other) const -> bool = default;
+        pub cexpr fn op!=(const T1Hash& other) const -> bool = default;
 
         pub StaticArr<byte, Size> bytes;
     };

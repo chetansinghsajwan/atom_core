@@ -16,7 +16,7 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         /// Default constructs LogTargetBase().
         /// ----------------------------------------------------------------------------------------
-        ctor LogTargetBase() noex:
+        ctor LogTargetBase():
             _logLevel(ELogLevel::Debug), _flushLevel(ELogLevel::Info),
             _hasWritten(false), _alwaysFlush(false) { }
 
@@ -69,7 +69,7 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         /// Get the log level.
         /// ----------------------------------------------------------------------------------------
-        fn GetLogLevel() const noex -> ELogLevel
+        fn GetLogLevel() const -> ELogLevel
         {
             return _logLevel;
         }
@@ -77,7 +77,7 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         /// Sets the log level.
         /// ----------------------------------------------------------------------------------------
-        fn SetLogLevel(ELogLevel lvl) noex
+        fn SetLogLevel(ELogLevel lvl)
         {
             _logLevel = lvl;
         }
@@ -85,7 +85,7 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         /// Checks if we should log the message of specified level.
         /// ----------------------------------------------------------------------------------------
-        fn CheckLogLevel(ELogLevel lvl) const noex -> bool
+        fn CheckLogLevel(ELogLevel lvl) const -> bool
         {
             if (lvl == ELogLevel::OFF) return false;
             if (lvl < _logLevel) return false;
@@ -96,7 +96,7 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         /// Gets the flush level.
         /// ----------------------------------------------------------------------------------------
-        fn GetFlushLevel() const noex -> ELogLevel
+        fn GetFlushLevel() const -> ELogLevel
         {
             return _flushLevel;
         }
@@ -104,7 +104,7 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         /// Sets the flush level.
         /// ----------------------------------------------------------------------------------------
-        fn SetFlushLevel(ELogLevel lvl) noex
+        fn SetFlushLevel(ELogLevel lvl)
         {
             _flushLevel = lvl;
         }
@@ -113,7 +113,7 @@ namespace Atom::Logging::Internal
         /// Checks if should flush after logging the message of specified level.
         /// It also asks ShouldFlush().
         /// ----------------------------------------------------------------------------------------
-        fn CheckFlushLevel(ELogLevel lvl) const noex -> bool
+        fn CheckFlushLevel(ELogLevel lvl) const -> bool
         {
             if (!_hasWritten) return false;
             if (lvl == ELogLevel::OFF) return false;
@@ -127,7 +127,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @RETURNS {true} if there has been a log since last flush, else {false}.
         /// ----------------------------------------------------------------------------------------
-        fn ShouldFlush() const noex -> bool
+        fn ShouldFlush() const -> bool
         {
             return _alwaysFlush || _hasWritten;
         }

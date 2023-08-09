@@ -97,13 +97,13 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// DefaultConstructor.
         /// ----------------------------------------------------------------------------------------
-        cexpr ctor ObjectBox() noex:
+        cexpr ctor ObjectBox():
             _object(), _heapMem(nullptr), _heapMemSize(0), _memAllocator() { }
 
         /// ----------------------------------------------------------------------------------------
         /// NullConstructor.
         /// ----------------------------------------------------------------------------------------
-        cexpr ctor ObjectBox(NullType null) noex:
+        cexpr ctor ObjectBox(NullType null):
             ObjectBox() { }
 
         /// ----------------------------------------------------------------------------------------
@@ -118,7 +118,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// NullEqualityOperator.
         /// ----------------------------------------------------------------------------------------
-        fn op==(NullType null) const noex -> bool
+        fn op==(NullType null) const -> bool
         {
             return _HasObject();
         }
@@ -259,7 +259,7 @@ namespace Atom
         /// Get the object.
         /// ----------------------------------------------------------------------------------------
         template <typename T>
-        fn GetObject() noex -> T&
+        fn GetObject() -> T&
         {
             return *_GetObject<T>();
         }
@@ -268,7 +268,7 @@ namespace Atom
         /// Get the const object.
         /// ----------------------------------------------------------------------------------------
         template <typename T>
-        fn GetObject() const noex -> const T&
+        fn GetObject() const -> const T&
         {
             return *_GetObject<T>();
         }
@@ -429,7 +429,7 @@ namespace Atom
         /// @TPARAM T Type as which to get the object.
         /// ----------------------------------------------------------------------------------------
         template <typename T = void>
-        fn _GetObject() noex -> T*
+        fn _GetObject() -> T*
         {
             return reinterpret_cast<T*>(_object.obj);
         }
@@ -437,7 +437,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Get {TypeInfo} or stored object.
         /// ----------------------------------------------------------------------------------------
-        fn _GetObjectType() const noex -> const TypeInfo&
+        fn _GetObjectType() const -> const TypeInfo&
         {
             return *_object.type;
         }
@@ -445,7 +445,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Checks if object is not {null}.
         /// ----------------------------------------------------------------------------------------
-        fn _HasObject() const noex -> bool
+        fn _HasObject() const -> bool
         {
             return _object.obj != nullptr;
         }
@@ -620,7 +620,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Is object is stored in stack memory.
         /// ----------------------------------------------------------------------------------------
-        fn _IsUsingStackMem() const noex -> bool
+        fn _IsUsingStackMem() const -> bool
         {
             if cexpr (StackSize > 0)
             {

@@ -23,21 +23,6 @@ namespace Atom
             pub static cexpr bool Value = std::is_invocable_r_v<
                 TResult, TInvokable, TArgs...>;
         };
-
-        template <typename TInvokable, typename TResult, typename... TArgs>
-        class IsInvokableImpl<TInvokable, TResult(TArgs...) noex>
-        {
-            pub static cexpr bool Value = std::is_nothrow_invocable_r_v<
-                TResult, TInvokable, TArgs...>;
-        };
-
-        /// @TODO Add impl for const invocable.
-        template <typename TInvokable, typename TResult, typename... TArgs>
-        class IsInvokableImpl<TInvokable, TResult(TArgs...) const noex>
-        {
-            pub static cexpr bool Value = std::is_nothrow_invocable_r_v<
-                TResult, TInvokable, TArgs...>;
-        };
     }
 
     template <typename TInvokable, typename... TSignature>

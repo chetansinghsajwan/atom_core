@@ -9,10 +9,10 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     class EventKey
     {
-        pub ctor EventKey(const TypeInfo& typeInfo) noex:
+        pub ctor EventKey(const TypeInfo& typeInfo):
             _typeInfo(typeInfo) { }
 
-        pub fn GetType() const noex -> const TypeInfo&
+        pub fn GetType() const -> const TypeInfo&
         {
             return _typeInfo;
         }
@@ -33,7 +33,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         pub template <typename TInvokable>
         requires RInvokable<TInvokable, _TSignature>
-        fn op+=(TInvokable&& listener) noex -> EventKey
+        fn op+=(TInvokable&& listener) -> EventKey
         {
             return Subscribe(fwd(listener));
         }
@@ -41,7 +41,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Calls Unsubscribe(key);
         /// ----------------------------------------------------------------------------------------
-        pub fn op-=(EventKey key) noex -> bool
+        pub fn op-=(EventKey key) -> bool
         {
             return Unsubscribe(key);
         }
@@ -51,7 +51,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         pub template <typename TInvokable>
         requires RInvokable<TInvokable, _TSignature>
-        fn Subscribe(TInvokable&& listener) noex -> EventKey
+        fn Subscribe(TInvokable&& listener) -> EventKey
         {
             return Subscribe(InvokableBox<_TSignature>(fwd(listener)));
         }
@@ -59,12 +59,12 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pub virtual fn Subscribe(InvokableBox<_TSignature>&& invokable) noex -> EventKey abstract;
+        pub virtual fn Subscribe(InvokableBox<_TSignature>&& invokable) -> EventKey abstract;
 
         /// ----------------------------------------------------------------------------------------
         /// Calls Unsubscribe(key) on {Source}.
         /// ----------------------------------------------------------------------------------------
-        pub virtual fn Unsubscribe(EventKey key) noex -> usize abstract;
+        pub virtual fn Unsubscribe(EventKey key) -> usize abstract;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -80,7 +80,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pub virtual fn Subscribe(InvokableBox<_TSignature>&& invokable) noex -> EventKey ofinal
+        pub virtual fn Subscribe(InvokableBox<_TSignature>&& invokable) -> EventKey ofinal
         {
             return _AddListener(fwd(invokable));
         }
@@ -88,7 +88,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pub virtual fn Unsubscribe(EventKey key) noex -> usize ofinal
+        pub virtual fn Unsubscribe(EventKey key) -> usize ofinal
         {
             return _RemoveListener(key);
         }
@@ -120,7 +120,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        prot fn _RemoveListener(EventKey key) noex -> usize
+        prot fn _RemoveListener(EventKey key) -> usize
         {
             return RangeModifier().RemoveIf(_listeners, [&](const auto& listener)
                 {
@@ -131,7 +131,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        prot fn _CountListeners(EventKey key) noex -> usize
+        prot fn _CountListeners(EventKey key) -> usize
         {
             usize count = 0;
             for (auto& listener : _listeners)

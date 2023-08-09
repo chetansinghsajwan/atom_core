@@ -54,7 +54,7 @@
 // 
 //         pub cexpr ctor CustomIter(i32, char, f32, const char*) { }
 // 
-//         pub cexpr ctor CustomIter(const Base& base) noex:
+//         pub cexpr ctor CustomIter(const Base& base):
 //             Base{ base } { }
 //     };
 // 

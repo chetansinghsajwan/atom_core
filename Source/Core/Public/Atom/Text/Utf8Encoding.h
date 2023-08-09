@@ -17,7 +17,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pub static cexpr fn IsContinuationChar(TChar ch) noex -> bool
+        pub static cexpr fn IsContinuationChar(TChar ch) -> bool
         {
             return (ch & 0b11000000) == 0b10000000;
         }
@@ -25,7 +25,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pub static cexpr fn ParseStartingChar(TChar ch) noex -> usize
+        pub static cexpr fn ParseStartingChar(TChar ch) -> usize
         {
             if ((ch & 0b10000000) == 0b00000000) return 1;
             if ((ch & 0b11100000) == 0b11000000) return 2;
@@ -38,7 +38,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pub static cexpr fn IsStartingChar(TChar ch) noex -> bool
+        pub static cexpr fn IsStartingChar(TChar ch) -> bool
         {
             return ParseStartingChar(ch) != 0;
         }

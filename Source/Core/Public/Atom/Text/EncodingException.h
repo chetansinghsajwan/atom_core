@@ -4,6 +4,6 @@
 
 namespace Atom::Text
 {
-    EncodingException::EncodingException(DynStr msg) noex:
+    EncodingException::EncodingException(DynStr msg):
         Exception(mov(msg)) { }
 }

@@ -12,13 +12,13 @@ namespace Atom
 
 namespace Atom::Math
 {
-    cexpr fn Abs(f64 value) noex -> f64
+    cexpr fn Abs(f64 value) -> f64
     {
         // TODO: Improve this, maybe using sign bit flag.
         return value * (value < 0 ? -1 : 1);
     }
 
-    cexpr fn IsApproximatelyZero(f64 lhs, f64 rhs) noex -> bool
+    cexpr fn IsApproximatelyZero(f64 lhs, f64 rhs) -> bool
     {
         return Abs(lhs - rhs) < 0.0001f;
     }
@@ -46,7 +46,7 @@ namespace Atom::Math
         return lhs > rhs ? lhs : rhs;
     }
 
-    cexpr fn CharToHex(Char ch) noex -> byte
+    cexpr fn CharToHex(Char ch) -> byte
     {
         if (ch >= '0' && ch <= '9')
             return byte(ch - '0');
@@ -58,7 +58,7 @@ namespace Atom::Math
         return -1;
     }
 
-    cexpr fn HexToChar(byte hex) noex -> StaticStr<2>
+    cexpr fn HexToChar(byte hex) -> StaticStr<2>
     {
         cexpr const Char chars[] = "0123456789abcdef";
 
@@ -67,7 +67,7 @@ namespace Atom::Math
         return { chars[high], chars[low] };
     }
 
-    cexpr fn IsHexChar(Char ch) noex -> bool
+    cexpr fn IsHexChar(Char ch) -> bool
     {
         return (ch >= '0' && ch <= '9') ||
             (ch >= 'a' && ch <= 'f') ||

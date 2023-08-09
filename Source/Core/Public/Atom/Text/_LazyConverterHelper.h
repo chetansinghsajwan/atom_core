@@ -36,22 +36,22 @@ namespace Atom::Text
 
         pub using TIterEnd = _CharEncodingLazyConverterHelperIterEnd;
 
-        pub cexpr fn iter() noex -> TIter
+        pub cexpr fn iter() -> TIter
         {
             return TIter(_impl, _input);
         }
 
-        pub cexpr fn iterEnd() noex -> TIter
+        pub cexpr fn iterEnd() -> TIter
         {
             return TIterEnd();
         }
 
-        pub cexpr fn begin() noex -> TIter
+        pub cexpr fn begin() -> TIter
         {
             return iter();
         }
 
-        pub cexpr fn end() noex -> TIterEnd
+        pub cexpr fn end() -> TIterEnd
         {
             return iterEnd();
         }
@@ -77,7 +77,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pub cexpr ctor _CharEncodingLazyConverterHelperIter(TImpl&& impl, TInput&& in) noex:
+        pub cexpr ctor _CharEncodingLazyConverterHelperIter(TImpl&& impl, TInput&& in):
             _impl{ fwd(impl) }, _input{ fwd(input) }, _out{ 0 }, _outIndex{ -1 }
         {
             _ProcessNextChar();
@@ -86,7 +86,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// Get the current char.
         /// ----------------------------------------------------------------------------------------
-        pub cexpr fn op*() noex -> TOutChar&
+        pub cexpr fn op*() -> TOutChar&
         {
             return _out[_outIndex];
         }
@@ -116,7 +116,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// Checks if the iter has reached its end.
         /// ----------------------------------------------------------------------------------------
-        pub cexpr fn op==(TIterEnd end) const noex -> bool
+        pub cexpr fn op==(TIterEnd end) const -> bool
         {
             return _outIndex > 0 || _input.HasNext();
         }
@@ -124,7 +124,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// Will be removed in CPP2;
         /// ----------------------------------------------------------------------------------------
-        pub cexpr fn op!=(TIterEnd end) const noex -> bool
+        pub cexpr fn op!=(TIterEnd end) const -> bool
         {
             return !(self == end);
         }
@@ -158,10 +158,10 @@ namespace Atom::Text
     {
         priv using TChar = BasicChar<TCharEncoding>;
 
-        pub cexpr ctor _CharEncodingLazyConverterHelper(TInput&& input) noex:
+        pub cexpr ctor _CharEncodingLazyConverterHelper(TInput&& input):
             _input{ input } { }
 
-        pub cexpr fn Get() noex -> TChar
+        pub cexpr fn Get() -> TChar
         {
             return _input.Get();
         }
@@ -171,7 +171,7 @@ namespace Atom::Text
             return _input.Next();
         }
 
-        pub cexpr fn HasNext() const noex -> bool
+        pub cexpr fn HasNext() const -> bool
         {
             return _input.HasNext();
         }
