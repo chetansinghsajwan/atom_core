@@ -9,7 +9,7 @@ namespace Atom
     {
         pub template <tname TOutput>
         requires ROutput<TOutput, Char>
-        cexpr fn WriteStr(const Uuid& uuid, TOutput&& out) const noex
+        cexpr fn writeStr(const Uuid& uuid, TOutput&& out) const noex
         {
             out += Math::HexToChar(uuid.bytes[0]);
             out += Math::HexToChar(uuid.bytes[1]);
@@ -33,10 +33,10 @@ namespace Atom
             out += Math::HexToChar(uuid.bytes[15]);
         }
 
-        pub cexpr fn ToStr(const Uuid& uuid) const noex -> Str
+        pub cexpr fn toStr(const Uuid& uuid) const noex -> Str
         {
             Str out;
-            WriteStr(uuid, out);
+            writeStr(uuid, out);
             return out;
         }
     };

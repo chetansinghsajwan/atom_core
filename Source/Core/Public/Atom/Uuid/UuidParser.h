@@ -10,21 +10,21 @@ namespace Atom
     {
         pub template <tname TRange>
         requires RRangeOf<TRange, Char>
-        cexpr fn Parse(const TRange& range) const noex -> Uuid
+        cexpr fn parse(const TRange& range) const noex -> Uuid
         {
             RangeHelper helper;
-            if cexpr (helper.CanGetCount<TRange>())
+            if constexpr (helper.CanGetCount<TRange>())
             {
-                return _ParseCounted(range.iter(), helper.GetCount(range));
+                return _parseCounted(range.iter(), helper.GetCount(range));
             }
             else
             {
-                return _ParseUncounted(range.iter(), range.iterEnd());
+                return _parseUncounted(range.iter(), range.iterEnd());
             }
         }
 
         priv template <tname TIter>
-        cexpr fn _ParseCounted(TIter it, usize itCount) const noex -> Uuid
+        cexpr fn _parseCounted(TIter it, usize itCount) const noex -> Uuid
         {
             if (itCount != 36)
                 return Uuid::Null;
@@ -65,7 +65,7 @@ namespace Atom
         }
 
         priv template <tname TIter, tname TIterEnd>
-        cexpr fn _ParseUncounted(TIter it, TIterEnd itEnd) const noex -> Uuid
+        cexpr fn _parseUncounted(TIter it, TIterEnd itEnd) const noex -> Uuid
         {
             Uuid uuid;         // output result
             usize i = 0;       // index of byte to write

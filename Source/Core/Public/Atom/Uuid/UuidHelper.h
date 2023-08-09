@@ -5,7 +5,7 @@ namespace Atom
 {
     class UuidHelper
     {
-        pub cexpr fn GetVariant(const Uuid& uuid) const noex -> EUuidVariant
+        pub cexpr fn getVariant(const Uuid& uuid) const noex -> EUuidVariant
         {
             if ((uuid.bytes[8] & 0x80) == 0x00)
                 return EUuidVariant::NCS;
@@ -17,7 +17,7 @@ namespace Atom
             return EUuidVariant::Reserved;
         }
 
-        pub cexpr fn GetVersion(const Uuid& uuid) const noex -> EUuidVersion
+        pub cexpr fn getVersion(const Uuid& uuid) const noex -> EUuidVersion
         {
             if ((uuid.bytes[6] & 0xF0) == 0x10)
                 return EUuidVersion::V1;

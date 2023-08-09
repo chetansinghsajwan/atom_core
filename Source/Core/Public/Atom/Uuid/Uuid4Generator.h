@@ -14,7 +14,7 @@ namespace Atom
             _generator{ seed } { }
 
     public:
-        fn Generate() noex -> Uuid
+        fn generate() noex -> Uuid
         {
             Uuid uuid;
             for (usize i = 0; i < 16; i += 4)
