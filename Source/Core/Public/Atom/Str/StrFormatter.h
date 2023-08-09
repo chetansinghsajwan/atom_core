@@ -35,7 +35,7 @@ namespace Atom
     using FmtStr = _FmtFmtStr<TArgs...>;
 //     class FmtStr
 //     {
-//         pub template <tname T>
+//         pub template <typename T>
 //         ceval FmtStr(const T& strv) noex { }
 //             _fmt{ _FmtStrViewCnvter().ToFmt(strv) } { }
 // 
@@ -53,7 +53,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pub template <tname TOut, RStrFmtArgFmtable... TArgs>
+        pub template <typename TOut, RStrFmtArgFmtable... TArgs>
         requires ROutput<TOut, Char>
         fn FmtTo(TOut out, FmtStr<TArgs...> fmt, TArgs&&... args)
         {

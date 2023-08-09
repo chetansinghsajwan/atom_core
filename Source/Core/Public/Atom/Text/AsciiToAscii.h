@@ -5,7 +5,7 @@ namespace Atom
     template < >
     class _AsciiToAsciiConversionImpl
     {
-        pub template <tname TIn, tname TOut>
+        pub template <typename TIn, typename TOut>
         cexpr void ConvertChar(const TIn& in, TOut& out)
         {
         }
@@ -14,7 +14,7 @@ namespace Atom
     using AsciiToAsciiConverter = _CharEncodingConverterHelper<
         _AsciiToAsciiConversionImpl, AsciiEncoding, AsciiEncoding>;
 
-    template <tname TInput>
+    template <typename TInput>
     using AsciiToAsciiLazyConverter = _CharEncodingLazyConverterHelper<
         _AsciiToAsciiConversionImpl, AsciiEncoding, AsciiEncoding, TInput>;
 }

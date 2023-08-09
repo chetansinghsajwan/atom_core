@@ -5,10 +5,10 @@
 
 namespace Atom
 {
-    template <tname T>
+    template <typename T>
     using UniquePtr = std::unique_ptr<T>;
 
-    template <tname T>
+    template <typename T>
     fn MakeUnique(auto&&... args) noex -> UniquePtr<T>
     {
         return std::make_unique<T>(fwd(args)...);

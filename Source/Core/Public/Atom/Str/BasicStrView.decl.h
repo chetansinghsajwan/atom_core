@@ -4,6 +4,6 @@
 
 namespace Atom
 {
-    template <tname TEncoding>
+    template <typename TEncoding>
     using BasicStrView = ArrView<BasicChar<TEncoding>>;
 }

@@ -6,7 +6,7 @@
 
 namespace Atom
 {
-    template <tname TUniformRandomNumberGenerator>
+    template <typename TUniformRandomNumberGenerator>
     class BasicUuidRandomGenerator
     {
     public:

@@ -4,7 +4,7 @@
 
 namespace Atom
 {
-    template <tname TImpl>
+    template <typename TImpl>
     cexpr fn _ConstArrImplHelper<TImpl>::ElemAt(usize index) const -> const TElem&
     {
         ATOM_EXPECTS(_ValidateIndexForAccess(index)) <<
@@ -13,7 +13,7 @@ namespace Atom
         return _Data()[index];
     }
 
-    template <tname TImpl>
+    template <typename TImpl>
     cexpr fn _ConstArrImplHelper<TImpl>::op[](usize index) const noex -> const TElem&
     {
         ATOM_DEBUG_EXPECTS(_ValidateIndexForAccess(index)) <<
@@ -22,7 +22,7 @@ namespace Atom
         return _Data()[index];
     }
 
-    template <tname TImpl>
+    template <typename TImpl>
     cexpr fn _ConstArrImplHelper<TImpl>::ElemFront() const noex -> const TElem&
     {
         ATOM_DEBUG_EXPECTS(!isEmpty()) <<
@@ -31,7 +31,7 @@ namespace Atom
         return _Data()[0];
     }
 
-    template <tname TImpl>
+    template <typename TImpl>
     cexpr fn _ConstArrImplHelper<TImpl>::ElemBack() const noex -> const TElem&
     {
         ATOM_DEBUG_EXPECTS(!isEmpty()) <<

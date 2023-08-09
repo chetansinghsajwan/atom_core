@@ -3,7 +3,7 @@
 
 namespace Atom
 {
-    template <tname T>
+    template <typename T>
     class ArrLit: public ArrView<T>
     {
     public:

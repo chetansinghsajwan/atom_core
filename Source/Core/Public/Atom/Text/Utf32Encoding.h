@@ -11,6 +11,6 @@ namespace Atom::Text
         pub static cexpr bool IsMultiCharEncoding = false;
     };
 
-    using UTF32Char = tname UTF32Encoding::TChar;
-    using UTF32Rune = tname UTF32Encoding::TRune;
+    using UTF32Char = typename UTF32Encoding::TChar;
+    using UTF32Rune = typename UTF32Encoding::TRune;
 }

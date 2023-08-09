@@ -35,7 +35,7 @@ namespace Atom::Internal
             }
         }
 
-        pub template <tname TEx>
+        pub template <typename TEx>
         requires RDerivedFrom<TEx, Exception>
         noret void op<<(TEx&& ex)
         {
@@ -45,7 +45,7 @@ namespace Atom::Internal
             throw 0;
         }
 
-        pub template <tname TArg>
+        pub template <typename TArg>
         requires RNotDerivedFrom<TArg, Exception>
         noret void op<<(TArg&& arg)
         {

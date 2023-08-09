@@ -8,7 +8,7 @@ namespace Atom
 {
     class UuidParser
     {
-        pub template <tname TRange>
+        pub template <typename TRange>
         requires RRangeOf<TRange, Char>
         cexpr fn parse(const TRange& range) const noex -> Uuid
         {
@@ -23,7 +23,7 @@ namespace Atom
             }
         }
 
-        priv template <tname TIter>
+        priv template <typename TIter>
         cexpr fn _parseCounted(TIter it, usize itCount) const noex -> Uuid
         {
             if (itCount != 36)
@@ -64,7 +64,7 @@ namespace Atom
             return uuid;
         }
 
-        priv template <tname TIter, tname TIterEnd>
+        priv template <typename TIter, typename TIterEnd>
         cexpr fn _parseUncounted(TIter it, TIterEnd itEnd) const noex -> Uuid
         {
             Uuid uuid;         // output result

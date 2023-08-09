@@ -8,7 +8,7 @@ namespace Atom
     /// - Check Requirements for assignments.
     /// - Check if requirements using TypeList functionality can be made concepts.
     /// --------------------------------------------------------------------------------------------
-    template <tname... Ts>
+    template <typename... Ts>
     requires(TypeList<Ts...>::AreUnique)
         and (TypeList<Ts...>::Count > 0)
         and (not TypeList<Ts...>::template Has<void>)
@@ -17,7 +17,7 @@ namespace Atom
     private:
         using _Impl = _VariantImpl<Ts...>;
 
-        template <tname... TOthers>
+        template <typename... TOthers>
         requires(TypeList<TOthers...>::AreUnique)
             and (TypeList<TOthers...>::Count > 0)
             and (not TypeList<TOthers...>::template Has<void>)
@@ -39,7 +39,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Check if this variant supports type `T`.
         /// ----------------------------------------------------------------------------------------
-        template <tname T>
+        template <typename T>
         static ceval fn Has() -> bool
         {
             return _Impl::template HasType<T>();
@@ -59,12 +59,12 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <usize i>
         requires(Has<i>())
-        using TAt = tname _Impl::template TypeAtIndex<i>;
+        using TAt = typename _Impl::template TypeAtIndex<i>;
 
         /// ----------------------------------------------------------------------------------------
         /// Index of type. This index than can be used to access value of type at that index.
         /// ----------------------------------------------------------------------------------------
-        template <tname T>
+        template <typename T>
         static ceval fn IndexOf() -> usize
             requires(Has<T>())
         {
@@ -111,7 +111,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Copy Constructor Template
         /// ----------------------------------------------------------------------------------------
-        template <tname... TOthers>
+        template <typename... TOthers>
         cexpr ctor Variant(const Variant<TOthers...>& that)
             requires(Types::template Has<TOthers...>)
                 and (RCopyConstructibleAll<TOthers...>)
@@ -140,7 +140,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Copy Assignment Operator Template
         /// ----------------------------------------------------------------------------------------
-        template <tname... TOthers>
+        template <typename... TOthers>
         cexpr fn op=(const Variant<TOthers...>& that) -> Variant&
             requires(Types::template Has<TOthers...>)
                 and (RCopyConstructibleAll<TOthers...>)
@@ -168,7 +168,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Move Constructor Template
         /// ----------------------------------------------------------------------------------------
-        template <tname... TOthers>
+        template <typename... TOthers>
         cexpr ctor Variant(Variant<TOthers...>&& that)
             requires(Types::template Has<TOthers...>)
                 and (RMoveConstructibleAll<TOthers...>)
@@ -197,7 +197,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Move Assignment Operator Template
         /// ----------------------------------------------------------------------------------------
-        template <tname... TOthers>
+        template <typename... TOthers>
         cexpr fn op=(Variant<TOthers...>&& that) -> Variant&
             requires(Types::template Has<TOthers...>)
                 and (RMoveConstructibleAll<Ts...>)
@@ -215,7 +215,7 @@ namespace Atom
         /// # Parameters
         /// - `value`: Value to construct with.
         /// ----------------------------------------------------------------------------------------
-        template <tname T>
+        template <typename T>
         cexpr ctor Variant(const T& value)
             requires(Has<T>())
         {
@@ -230,7 +230,7 @@ namespace Atom
         /// # Parameters
         /// - `value`: Value to construct with.
         /// ----------------------------------------------------------------------------------------
-        template <tname T>
+        template <typename T>
         cexpr ctor Variant(T&& value)
             requires(Has<T>())
         {
@@ -245,7 +245,7 @@ namespace Atom
         /// # Parameters
         /// - `value`: Value to assign.
         /// ----------------------------------------------------------------------------------------
-        template <tname T>
+        template <typename T>
         cexpr fn op=(const T& value) -> Variant&
             requires(Has<T>())
         {
@@ -261,7 +261,7 @@ namespace Atom
         /// # Parameters
         /// - `value`: Value to assign.
         /// ----------------------------------------------------------------------------------------
-        template <tname T>
+        template <typename T>
         cexpr fn op=(T&& value) -> Variant&
             requires(Has<T>())
         {
@@ -296,7 +296,7 @@ namespace Atom
         /// # See Also
         /// - [`TAt`]
         /// ----------------------------------------------------------------------------------------
-        template <tname T, tname... TArgs>
+        template <typename T, typename... TArgs>
         cexpr fn emplace(TArgs&&... args)
             requires(Has<T>())
                 and (RConstructible<T, TArgs...>)
@@ -310,7 +310,7 @@ namespace Atom
         /// # See Also
         /// - [`TAt`]
         /// ----------------------------------------------------------------------------------------
-        template <usize i, tname... TArgs>
+        template <usize i, typename... TArgs>
         cexpr fn emplace(TArgs&&... args)
             requires(Has<i>())
                 and (RConstructible<TAt<i>, TArgs...>)
@@ -324,7 +324,7 @@ namespace Atom
         /// # Parameters
         /// - `value`: Value to set.
         /// ----------------------------------------------------------------------------------------
-        template <tname TFwd, tname T = TTI::TRemoveQuailfiersRef<TFwd>>
+        template <typename TFwd, typename T = TTI::TRemoveQuailfiersRef<TFwd>>
         cexpr fn set(TFwd&& value)
             requires(Has<T>())
                 and (RConstructible<T, TFwd>)
@@ -338,7 +338,7 @@ namespace Atom
         /// # Template Parameters
         /// - `T`: Type to access variant's value as.
         /// ----------------------------------------------------------------------------------------
-        template <tname T>
+        template <typename T>
         cexpr fn as() const -> const T&
             requires(Has<T>())
         {
@@ -353,7 +353,7 @@ namespace Atom
         /// # Template Parameters
         /// - `T`: Type to access variant's value as.
         /// ----------------------------------------------------------------------------------------
-        template <tname T>
+        template <typename T>
         cexpr fn as() -> T&
             requires(Has<T>())
         {
@@ -401,7 +401,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Checks if current value is of type `T`.
         /// ----------------------------------------------------------------------------------------
-        template <tname T>
+        template <typename T>
         cexpr fn is() const -> bool
             requires(Has<T>())
         {

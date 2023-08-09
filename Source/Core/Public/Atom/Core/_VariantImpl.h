@@ -7,7 +7,7 @@
 
 namespace Atom
 {
-    template <tname... Ts>
+    template <typename... Ts>
     class _VariantStorage
     {
     public:
@@ -28,11 +28,11 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// Implementatiion of [`Variant`].
     /// --------------------------------------------------------------------------------------------
-    template <tname... Ts>
+    template <typename... Ts>
     class _VariantImpl
     {
     private:
-        template <tname... TOthers>
+        template <typename... TOthers>
         friend class _VariantImpl;
 
     private:
@@ -49,7 +49,7 @@ namespace Atom
             return _Types::Count;
         }
 
-        template <tname T>
+        template <typename T>
         static ceval fn HasType() -> bool
         {
             return _Types::template Has<T>;
@@ -61,7 +61,7 @@ namespace Atom
             return i < _Types::Count;
         }
 
-        template <tname T>
+        template <typename T>
         static ceval fn GetIndexForType() -> usize
         {
             return _Types::template IndexOf<T>;
@@ -73,7 +73,7 @@ namespace Atom
         }
 
         template <usize i>
-        using TypeAtIndex = tname _Types::template At<i>;
+        using TypeAtIndex = typename _Types::template At<i>;
 
     //// -------------------------------------------------------------------------------------------
     //// Funcions
@@ -86,13 +86,13 @@ namespace Atom
         /// # Expects
         /// - Current value is null.
         /// ----------------------------------------------------------------------------------------
-        template <tname... TOthers>
+        template <typename... TOthers>
         cexpr fn constructValueFromVariant(const _VariantImpl<TOthers...>& that)
         {
             _constructValueFromVariantImpl<false, 0, TOthers...>(that, that.getTypeIndex());
         }
 
-        template <tname... TOthers>
+        template <typename... TOthers>
         cexpr fn constructValueFromVariant(_VariantImpl<TOthers...>&& that)
         {
             _constructValueFromVariantImpl<true, 0, TOthers...>(that, that.getTypeIndex());
@@ -102,13 +102,13 @@ namespace Atom
         /// Constructs or assigns value from `that` variant.
         /// Assigns if `that` variant holds the same type else constructs.
         /// ----------------------------------------------------------------------------------------
-        template <tname... TOthers>
+        template <typename... TOthers>
         cexpr fn setValueFromVariant(const _VariantImpl<TOthers...>& that)
         {
             _setValueFromVariantImpl<false, 0, TOthers...>(that, that.getTypeIndex());
         }
 
-        template <tname... TOthers>
+        template <typename... TOthers>
         cexpr fn setValueFromVariant(_VariantImpl<TOthers...>&& that)
         {
             _setValueFromVariantImpl<true, 0, TOthers...>(that, that.getTypeIndex());
@@ -120,7 +120,7 @@ namespace Atom
         /// # Expects
         /// - Current value is null.
         /// ----------------------------------------------------------------------------------------
-        template <tname T, tname... TArgs>
+        template <typename T, typename... TArgs>
         cexpr fn constructValueByType(TArgs&&... args)
         {
             _constructValueAs<T>(fwd(args)...);
@@ -133,7 +133,7 @@ namespace Atom
         /// # Expects
         /// - Current value is null.
         /// ----------------------------------------------------------------------------------------
-        template <usize i, tname... TArgs>
+        template <usize i, typename... TArgs>
         cexpr fn constructValueByIndex(TArgs&&... args)
         {
             constructValueByType<TypeAtIndex<i>>(fwd(args)...);
@@ -145,7 +145,7 @@ namespace Atom
         /// # Expects
         /// - Current value is null.
         /// ----------------------------------------------------------------------------------------
-        template <tname T, tname... TArgs>
+        template <typename T, typename... TArgs>
         cexpr fn emplaceValueByType(TArgs&&... args)
         {
             destroyValue();
@@ -160,7 +160,7 @@ namespace Atom
         /// # Expects
         /// - Current value is null.
         /// ----------------------------------------------------------------------------------------
-        template <usize i, tname... TArgs>
+        template <usize i, typename... TArgs>
         cexpr fn emplaceValueByIndex(TArgs&&... args)
         {
             emplaceValueByType<TypeAtIndex<i>>(fwd(args)...);
@@ -169,7 +169,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Constructs or assigns value of type deduced by `value` with `value`.
         /// ----------------------------------------------------------------------------------------
-        template <tname TFwd>
+        template <typename TFwd>
         cexpr fn setValue(TFwd&& value)
         {
             using T = TTI::TRemoveQuailfiersRef<TFwd>;
@@ -187,7 +187,7 @@ namespace Atom
             }
         }
 
-        template <tname T>
+        template <typename T>
         cexpr fn getValueByType() const -> const T&
         {
             debug_expects(GetIndexForType<T>() == getTypeIndex(),
@@ -196,7 +196,7 @@ namespace Atom
             return _getValueAs<T>();
         }
 
-        template <tname T>
+        template <typename T>
         cexpr fn getValueByType() -> T&
         {
             debug_expects(GetIndexForType<T>() == getTypeIndex(),
@@ -217,7 +217,7 @@ namespace Atom
             return getValueByType<TypeAtIndex<i>>();
         }
 
-        template <tname T>
+        template <typename T>
         cexpr fn isType() const -> bool
         {
             return GetIndexForType<T>() == getTypeIndex();
@@ -240,7 +240,7 @@ namespace Atom
         }
 
     private:
-        template <bool move, usize index, tname TOther, tname... TOthers>
+        template <bool move, usize index, typename TOther, typename... TOthers>
         cexpr fn _constructValueFromVariantImpl(auto& that, usize thatIndex)
         {
             using ThatTypes = TypeList<TOthers...>;
@@ -270,7 +270,7 @@ namespace Atom
             _index = GetIndexForType<TOther>();
         }
 
-        template <bool move, usize index, tname TOther, tname... TOthers>
+        template <bool move, usize index, typename TOther, typename... TOthers>
         cexpr fn _setValueFromVariantImpl(auto&& that, usize thatIndex)
         {
             using ThatTypes = TypeList<TOthers...>;
@@ -320,7 +320,7 @@ namespace Atom
             }
         }
 
-        template <usize index, tname T, tname... Ts_>
+        template <usize index, typename T, typename... Ts_>
         cexpr fn _destroyValueImpl(usize i)
         {
             using Types = TypeList<Ts_...>;
@@ -360,25 +360,25 @@ namespace Atom
             ObjHelper().Destruct(_getDataAs<T>());
         }
 
-        template <tname T>
+        template <typename T>
         cexpr fn _getValueAs() -> T&
         {
             return *_getDataAs<T>();
         }
 
-        template <tname T>
+        template <typename T>
         cexpr fn _getValueAs() const -> const T&
         {
             return *_getDataAs<T>();
         }
 
-        template <tname T>
+        template <typename T>
         cexpr fn _getDataAs() -> T*
         {
             return reinterpret_cast<T*>(_storage.getData());
         }
 
-        template <tname T>
+        template <typename T>
         cexpr fn _getDataAs() const -> const T*
         {
             return reinterpret_cast<const T*>(_storage.getData());

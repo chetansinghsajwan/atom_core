@@ -5,7 +5,7 @@
 
 namespace Atom
 {
-    template <tname T>
+    template <typename T>
     union _OptionStorage
     {
     public:
@@ -52,7 +52,7 @@ namespace Atom
         NoInit _dummy;
     };
 
-    template <tname T>
+    template <typename T>
     union _OptionStorage<T*>
     {
     public:
@@ -81,7 +81,7 @@ namespace Atom
         T* _ptr;
     };
 
-    template <tname T>
+    template <typename T>
     class _OptionImpl
     {
         using _Storage = _OptionStorage<T>;

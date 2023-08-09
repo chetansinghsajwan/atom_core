@@ -9,7 +9,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// Converts {T} object to {Str}.
     /// --------------------------------------------------------------------------------------------
-    template <tname T>
+    template <typename T>
     class StrConverter;
 
     /// --------------------------------------------------------------------------------------------
@@ -18,7 +18,7 @@ namespace Atom
     /// @TPARAM[IN] TConverter Converter type to convert to stirng.
     /// @TPARAM[IN] T Object type to convert to stirng.
     /// --------------------------------------------------------------------------------------------
-    template <tname TStrConverter, tname T>
+    template <typename TStrConverter, typename T>
     concept RStrConverter = requires(TStrConverter converter, T obj, OutputReqMock<Char> out)
     {
         { converter.Convert(obj) }
@@ -31,7 +31,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// Ensures {StrConverter<T>} for {T} is {RStrConverter}.
     /// --------------------------------------------------------------------------------------------
-    template <tname T>
+    template <typename T>
     concept RStrConvertible = RStrConverter<StrConverter<T>, T>;
 
     /// --------------------------------------------------------------------------------------------
@@ -40,7 +40,7 @@ namespace Atom
     /// 
     /// @TODO Needs refactoring.
     /// --------------------------------------------------------------------------------------------
-	template <tname T>
+	template <typename T>
 	requires (!RSameAs<T, TTI::TRemoveCVRef<T>>)
         and RStrConvertible<TTI::TRemoveCVRef<T>>
 	class StrConverter<T>: StrConverter<TTI::TRemoveCVRef<T>> { };

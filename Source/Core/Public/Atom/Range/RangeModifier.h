@@ -10,9 +10,9 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <tname TRange, tname TPred>
+        template <typename TRange, typename TPred>
         requires RRange<TRange>
-            and RInvokable<TPred, bool(const tname TRange::TElem&)>
+            and RInvokable<TPred, bool(const typename TRange::TElem&)>
         cexpr fn RemoveIf(TRange& range, TPred&& pred) -> usize
         {
             usize count = 0;

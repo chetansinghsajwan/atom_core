@@ -7,7 +7,7 @@ namespace Atom
 {
     class UuidStringifier
     {
-        pub template <tname TOutput>
+        pub template <typename TOutput>
         requires ROutput<TOutput, Char>
         cexpr fn writeStr(const Uuid& uuid, TOutput&& out) const noex
         {

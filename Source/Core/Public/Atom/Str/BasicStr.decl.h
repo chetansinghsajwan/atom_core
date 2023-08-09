@@ -3,6 +3,6 @@
 
 namespace Atom
 {
-    template <tname TEncoding, tname TAlloc = DefaultMemAllocator>
+    template <typename TEncoding, typename TAlloc = DefaultMemAllocator>
     using BasicStr = BasicBufStr<TEncoding, 24, TAlloc>;
 }

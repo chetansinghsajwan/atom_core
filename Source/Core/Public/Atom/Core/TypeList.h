@@ -7,7 +7,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
-    template <tname... Ts>
+    template <typename... Ts>
     class TypeList;
 
     /// --------------------------------------------------------------------------------------------
@@ -20,7 +20,7 @@ namespace Atom
     //// Count
     //// -------------------------------------------------------------------------------------------
 
-        template <tname... Ts>
+        template <typename... Ts>
         class Count
         {
             pub static cexpr usize Value = sizeof...(Ts);
@@ -30,10 +30,10 @@ namespace Atom
     //// MaxSize
     //// -------------------------------------------------------------------------------------------
 
-        template <usize max, tname... Ts>
+        template <usize max, typename... Ts>
         class MaxSize;
 
-        template <usize max, tname T, tname... Ts>
+        template <usize max, typename T, typename... Ts>
         class MaxSize<max, T, Ts...>
         {
             priv static cexpr usize _ThisSize = sizeof(T);
@@ -52,10 +52,10 @@ namespace Atom
     //// MinSize
     //// -------------------------------------------------------------------------------------------
 
-        template <usize min, tname... Ts>
+        template <usize min, typename... Ts>
         class MinSize;
 
-        template <usize min, tname T, tname... Ts>
+        template <usize min, typename T, typename... Ts>
         class MinSize<min, T, Ts...>
         {
             priv static cexpr usize _ThisSize = alignof(T);
@@ -74,10 +74,10 @@ namespace Atom
     //// MaxAlign
     //// -------------------------------------------------------------------------------------------
 
-        template <usize max, tname... Ts>
+        template <usize max, typename... Ts>
         class MaxAlign;
 
-        template <usize max, tname T, tname... Ts>
+        template <usize max, typename T, typename... Ts>
         class MaxAlign<max, T, Ts...>
         {
             priv static cexpr usize _ThisAlign = alignof(T);
@@ -96,10 +96,10 @@ namespace Atom
     //// MinAlign
     //// -------------------------------------------------------------------------------------------
 
-        template <usize min, tname... Ts>
+        template <usize min, typename... Ts>
         class MinAlign;
 
-        template <usize min, tname T, tname... Ts>
+        template <usize min, typename T, typename... Ts>
         class MinAlign<min, T, Ts...>
         {
             priv static cexpr usize _ThisAlign = sizeof(T);
@@ -118,14 +118,14 @@ namespace Atom
     //// At
     //// -------------------------------------------------------------------------------------------
 
-        template <usize indexToGet, usize index, tname... Ts>
+        template <usize indexToGet, usize index, typename... Ts>
         class At;
 
-        template <usize indexToGet, usize index, tname T, tname... Ts>
+        template <usize indexToGet, usize index, typename T, typename... Ts>
         class At<indexToGet, index, T, Ts...>
         {
             pub using Type = TTI::TConditional<indexToGet == index, T,
-                tname At<indexToGet, index + 1, Ts...>::Type>;
+                typename At<indexToGet, index + 1, Ts...>::Type>;
         };
 
         template <usize indexToGet, usize index>
@@ -138,17 +138,17 @@ namespace Atom
     //// IndexOf
     //// -------------------------------------------------------------------------------------------
 
-        template <tname TToGet, usize index, tname... Ts>
+        template <typename TToGet, usize index, typename... Ts>
         class IndexOf;
 
-        template <tname TToGet, usize index, tname T, tname... Ts>
+        template <typename TToGet, usize index, typename T, typename... Ts>
         class IndexOf<TToGet, index, T, Ts...>
         {
             pub static cexpr usize Value = RSameAs<TToGet, T> ? index :
                 IndexOf<TToGet, index + 1, Ts...>::Value;
         };
 
-        template <tname TToGet, usize index>
+        template <typename TToGet, usize index>
         class IndexOf<TToGet, index>
         {
             pub static cexpr usize Value = -1;
@@ -158,7 +158,7 @@ namespace Atom
     //// Has
     //// -------------------------------------------------------------------------------------------
 
-        template <tname T, tname... Ts>
+        template <typename T, typename... Ts>
         class Has
         {
             // TODO: try to remove the explicit 0 index.
@@ -169,10 +169,10 @@ namespace Atom
     //// AddFirst
     //// -------------------------------------------------------------------------------------------
 
-        template <tname T, tname TList>
+        template <typename T, typename TList>
         class AddFirst;
 
-        template <tname T, tname... Ts>
+        template <typename T, typename... Ts>
         class AddFirst<T, TypeList<Ts...>>
         {
             using Type = TypeList<T, Ts...>;
@@ -182,10 +182,10 @@ namespace Atom
     //// AddLast
     //// -------------------------------------------------------------------------------------------
 
-        template <tname T, tname TList>
+        template <typename T, typename TList>
         class AddLast;
 
-        template <tname T, tname... Ts>
+        template <typename T, typename... Ts>
         class AddLast<T, TypeList<Ts...>>
         {
             pub using Type = TypeList<Ts..., T>;
@@ -195,23 +195,23 @@ namespace Atom
     //// RemoveIf
     //// -------------------------------------------------------------------------------------------
 
-        template <template <tname T> tname TPred, tname... Ts>
+        template <template <typename T> typename TPred, typename... Ts>
         class RemoveIf;
 
-        template <template <tname T> tname TPred>
+        template <template <typename T> typename TPred>
         class RemoveIf<TPred>
         {
             typedef TypeList<> Type;
         };
 
-        template <template <tname T> tname TPred, tname T, tname... Ts>
+        template <template <typename T> typename TPred, typename T, typename... Ts>
         class RemoveIf<TPred, T, Ts...>
         {
             pub using Type = TTI::TConditional
             <
                 TPred<T>::Value,
-                tname AddFirst<T, tname RemoveIf<TPred, Ts...>::Type>::Type,
-                tname RemoveIf<TPred, Ts...>::Type
+                typename AddFirst<T, typename RemoveIf<TPred, Ts...>::Type>::Type,
+                typename RemoveIf<TPred, Ts...>::Type
             >;
         };
 
@@ -219,26 +219,26 @@ namespace Atom
     //// Remove
     //// -------------------------------------------------------------------------------------------
 
-        template <tname T, tname... Ts>
+        template <typename T, typename... Ts>
         class Remove
         {
-            template <tname TCheck>
+            template <typename TCheck>
             class _Pred
             {
                 static constexpr bool Value = RSameAs<T, TCheck>;
             };
 
-            pub using Type = tname RemoveIf<_Pred, Ts...>::Type;
+            pub using Type = typename RemoveIf<_Pred, Ts...>::Type;
         };
 
     //// -------------------------------------------------------------------------------------------
     //// RemoveFirst
     //// -------------------------------------------------------------------------------------------
 
-        template <tname... Ts>
+        template <typename... Ts>
         class RemoveFirst;
 
-        template <tname T, tname... Ts>
+        template <typename T, typename... Ts>
         class RemoveFirst<T, Ts...>
         {
             pub using Type = TypeList<Ts...>;
@@ -248,16 +248,16 @@ namespace Atom
     //// RemoveLast
     //// -------------------------------------------------------------------------------------------
 
-        template <tname... Ts>
+        template <typename... Ts>
         class RemoveLast;
 
-        template <tname T, tname... Ts>
+        template <typename T, typename... Ts>
         class RemoveLast<T, Ts...>
         {
-            pub using Type = tname AddFirst<T, RemoveLast<Ts...>>::Type;
+            pub using Type = typename AddFirst<T, RemoveLast<Ts...>>::Type;
         };
 
-        template <tname T>
+        template <typename T>
         class RemoveLast<T>
         {
             pub using Type = TypeList<>;
@@ -267,16 +267,16 @@ namespace Atom
     //// AreUnique
     //// -------------------------------------------------------------------------------------------
 
-        template <tname... Ts>
+        template <typename... Ts>
         class AreUnique;
 
-        template <tname T>
+        template <typename T>
         class AreUnique <T>
         {
             pub static cexpr bool Value = true;
         };
 
-        template <tname T, tname... Ts>
+        template <typename T, typename... Ts>
         class AreUnique <T, Ts...>
         {
             pub static cexpr bool Value = !Has<T, Ts...>::Value && AreUnique<Ts...>::Value;
@@ -286,7 +286,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
-    template <tname... Ts>
+    template <typename... Ts>
     class TypeList
     {
     public:
@@ -321,19 +321,19 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <usize i>
         requires (i < Count)
-        using At = tname TypeListOps::template At<i, 0, Ts...>::Type;
+        using At = typename TypeListOps::template At<i, 0, Ts...>::Type;
 
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <tname... TsToCheck>
+        template <typename... TsToCheck>
         static cexpr bool Has = (TypeListOps::template Has<TsToCheck, Ts...>::Value and...);
 
         /// ----------------------------------------------------------------------------------------
         /// # To Do
         /// - Try to remove the explicit 0 index.
         /// ----------------------------------------------------------------------------------------
-        template <tname T>
+        template <typename T>
         requires (Has<T>)
         static cexpr usize IndexOf = TypeListOps::template IndexOf<T, 0, Ts...>::Value;
 

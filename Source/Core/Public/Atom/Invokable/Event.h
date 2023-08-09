@@ -23,7 +23,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// {Event} is just a frontend to {EventSource} to prevent users from dispatching events.
     /// --------------------------------------------------------------------------------------------
-    template <tname... TArgs>
+    template <typename... TArgs>
     class IEvent
     {
         prot using _TSignature = void(TArgs...);
@@ -31,7 +31,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Calls Subscribe(fwd(listener));
         /// ----------------------------------------------------------------------------------------
-        pub template <tname TInvokable>
+        pub template <typename TInvokable>
         requires RInvokable<TInvokable, _TSignature>
         fn op+=(TInvokable&& listener) noex -> EventKey
         {
@@ -49,7 +49,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Calls Subscribe(fwd(listener)) on {Source}.
         /// ----------------------------------------------------------------------------------------
-        pub template <tname TInvokable>
+        pub template <typename TInvokable>
         requires RInvokable<TInvokable, _TSignature>
         fn Subscribe(TInvokable&& listener) noex -> EventKey
         {
@@ -72,10 +72,10 @@ namespace Atom
     /// 
     /// @TODO Add async dispatching.
     /// --------------------------------------------------------------------------------------------
-    template <tname... TArgs>
+    template <typename... TArgs>
     class EventSource extends IEvent<TArgs...>
     {
-        prot using _TSignature = tname IEvent<TArgs...>::_TSignature;
+        prot using _TSignature = typename IEvent<TArgs...>::_TSignature;
         
         /// ----------------------------------------------------------------------------------------
         /// 

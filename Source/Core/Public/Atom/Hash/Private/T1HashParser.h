@@ -7,7 +7,7 @@ namespace Atom::Private
 {
     /// T1Hash Parser.
     /// --------------------------------------------------------------------------------------------
-    template <tname T1Hash>
+    template <typename T1Hash>
     class T1HashParser
     {
         static cexpr usize _Size = T1Hash::_Size;
@@ -47,7 +47,7 @@ namespace Atom::Private
 
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <tname TRange>
+        template <typename TRange>
         requires RRangeOf<TRange, Char>
         cexpr fn Parse(const TRange& range) const noex -> T1Hash
         {
@@ -94,7 +94,7 @@ namespace Atom::Private
 
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <tname TRange>
+        template <typename TRange>
         requires RJumpRangeOf<TRange, Char>
         cexpr fn Parse(const TRange& range) const noex -> T1Hash
         {

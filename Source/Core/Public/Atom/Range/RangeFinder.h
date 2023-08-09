@@ -12,10 +12,10 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// @TODO: Add comparision requirements for TElem of both ranges.
         /// ----------------------------------------------------------------------------------------
-        template <tname TRange1, tname TRange2>
+        template <typename TRange1, typename TRange2>
         requires RFwdRange<TRange1>
             and RFwdRange<TRange2>
-        cexpr fn Find(const TRange1& range1, const TRange2& range2) -> tname TRange1::TIter 
+        cexpr fn Find(const TRange1& range1, const TRange2& range2) -> typename TRange1::TIter 
         {
             StdIterWrapForAtomIter stdIter1{ range1.iter() };
             StdIterWrapForAtomIter stdIterEnd1{ range1.iterEnd() };
@@ -27,9 +27,9 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <tname TRange>
+        template <typename TRange>
         requires RFwdRange<TRange>
-        cexpr fn Find(const TRange& range, const tname TRange::TElem& el) -> tname TRange::TIter 
+        cexpr fn Find(const TRange& range, const typename TRange::TElem& el) -> typename TRange::TIter 
         {
             StdIterWrapForAtomIter stdIter{ range.iter() };
             StdIterWrapForAtomIter stdIterEnd{ range.iterEnd() };
@@ -39,9 +39,9 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <tname TRange>
+        template <typename TRange>
         requires RFwdRange<TRange>
-        cexpr fn Contains(const TRange& range, const tname TRange::TElem& el) -> bool
+        cexpr fn Contains(const TRange& range, const typename TRange::TElem& el) -> bool
         {
             return Find(range, el) != range.iterEnd();
         }
@@ -49,7 +49,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// @TODO: Add comparision requirements for TElem of both ranges.
         /// ----------------------------------------------------------------------------------------
-        template <tname TRange1, tname TRange2>
+        template <typename TRange1, typename TRange2>
         requires RFwdRange<TRange1>
             and RFwdRange<TRange2>
         cexpr fn Contains(const TRange1& range1, const TRange2& range2) -> bool

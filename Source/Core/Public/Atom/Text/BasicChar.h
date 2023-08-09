@@ -3,6 +3,6 @@
 
 namespace Atom
 {
-    template <tname TCharEncoding>
-    using BasicChar = tname TCharEncoding::TChar;
+    template <typename TCharEncoding>
+    using BasicChar = typename TCharEncoding::TChar;
 }

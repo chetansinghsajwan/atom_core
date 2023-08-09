@@ -10,7 +10,7 @@ namespace Atom::Private
     /// 
     /// @TODO: Make this type cexpr.
     /// --------------------------------------------------------------------------------------------
-    template <tname T1Hash, tname TImpl>
+    template <typename T1Hash, typename TImpl>
     class T1HashGenerator
     {
         using Self = T1HashGenerator;
@@ -38,7 +38,7 @@ namespace Atom::Private
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        template <tname TRange, usize BufSize = 50>
+        template <typename TRange, usize BufSize = 50>
         requires RRangeOf<TRange, byte>
         fn ProcessBytes(TRange bytes) -> Self&
         {

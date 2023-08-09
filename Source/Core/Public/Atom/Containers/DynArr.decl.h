@@ -5,7 +5,7 @@
 
 namespace Atom
 {
-    template <tname T, tname TAlloc>
+    template <typename T, typename TAlloc>
     class _DynArrImplBase
     {
     public:
@@ -89,7 +89,7 @@ namespace Atom
         TAlloc _alloc;
     };
 
-    template <tname T, tname TAlloc = DefaultMemAllocator>
+    template <typename T, typename TAlloc = DefaultMemAllocator>
     class DynArr extends _DynArrImplHelper<_DynArrImplBase<T, TAlloc>>
     {
         priv using Base = _DynArrImplHelper<_DynArrImplBase<T, TAlloc>>;
@@ -109,7 +109,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// ParamCtor.
         /// ----------------------------------------------------------------------------------------
-        pub template <tname TRange>
+        pub template <typename TRange>
         requires RRangeOf<TRange, T>
         cexpr ctor DynArr(const TRange& range) noex:
             Base{BaseImpl{ nullptr }}

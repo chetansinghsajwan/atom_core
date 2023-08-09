@@ -3,7 +3,7 @@
 
 namespace Atom
 {
-    template <tname TImpl>
+    template <typename TImpl>
     class _DynArrImplHelper: public _ArrImplHelper<TImpl>
     {
     //// -------------------------------------------------------------------------------------------
@@ -13,11 +13,11 @@ namespace Atom
         using Base = _ArrImplHelper<TImpl>;
 
     public:
-        using TElem = tname Base::TElem;
-        using TIter = tname Base::TIter;
-        using TIterEnd = tname Base::TIterEnd;
-        using TMutIter = tname Base::TMutIter;
-        using TMutIterEnd = tname Base::TMutIterEnd;
+        using TElem = typename Base::TElem;
+        using TIter = typename Base::TIter;
+        using TIterEnd = typename Base::TIterEnd;
+        using TMutIter = typename Base::TMutIter;
+        using TMutIterEnd = typename Base::TMutIterEnd;
 
     //// -------------------------------------------------------------------------------------------
     //// Insert
@@ -32,7 +32,7 @@ namespace Atom
         /// 
         /// @RETURNS {TMutIter} to the inserted element.
         /// ----------------------------------------------------------------------------------------
-        template <tname T2, tname = TTI::TEnableIf<
+        template <typename T2, typename = TTI::TEnableIf<
             RSameAsUnqualified<T2, TElem>>>
         cexpr fn InsertAt(TIter pos, T2&& el) -> TMutIter;
 
@@ -44,7 +44,7 @@ namespace Atom
         /// 
         /// @RETURNS {TMutIter} to the first element of inserted range.
         /// ----------------------------------------------------------------------------------------
-        template <tname TRange, tname = TTI::TEnableIf<
+        template <typename TRange, typename = TTI::TEnableIf<
             RRangeOf<TRange, TElem>>>
         cexpr fn InsertAt(TIter pos, const TRange& range) -> TMutIter;
 
@@ -55,7 +55,7 @@ namespace Atom
         /// 
         /// @RETURNS {TMutIter} to the inserted element.
         /// ----------------------------------------------------------------------------------------
-        template <tname T2, tname = TTI::TEnableIf<
+        template <typename T2, typename = TTI::TEnableIf<
             RSameAsUnqualified<T2, TElem>>>
         cexpr fn InsertFront(T2&& el) -> TMutIter;
 
@@ -66,7 +66,7 @@ namespace Atom
         /// 
         /// @RETURNS {TMutIter} to the first element of inserted range.
         /// ----------------------------------------------------------------------------------------
-        template <tname TRange, tname = TTI::TEnableIf<
+        template <typename TRange, typename = TTI::TEnableIf<
             RRangeOf<TRange, TElem>>>
         cexpr fn InsertFront(const TRange& range) -> TMutIter;
 
@@ -77,7 +77,7 @@ namespace Atom
         /// 
         /// @RETURNS {TMutIter} to the inserted element.
         /// ----------------------------------------------------------------------------------------
-        template <tname T2, tname = TTI::TEnableIf<
+        template <typename T2, typename = TTI::TEnableIf<
             RSameAsUnqualified<T2, TElem>>>
         cexpr fn InsertBack(T2&& el) -> TMutIter;
 
@@ -88,42 +88,42 @@ namespace Atom
         /// 
         /// @RETURNS {TMutIter} to the first element of inserted range.
         /// ----------------------------------------------------------------------------------------
-        template <tname TRange, tname = TTI::TEnableIf<
+        template <typename TRange, typename = TTI::TEnableIf<
             RRangeOf<TRange, TElem>>>
         cexpr fn InsertBack(const TRange& range) -> TMutIter;
 
         /// ----------------------------------------------------------------------------------------
         /// Calls {InsertBack(...)}.
         /// ----------------------------------------------------------------------------------------
-        template <tname T2, tname = TTI::TEnableIf<
+        template <typename T2, typename = TTI::TEnableIf<
             RSameAsUnqualified<T2, TElem>>>
         cexpr fn op+=(T2&& el) -> TMutIter;
 
         /// ----------------------------------------------------------------------------------------
         /// Calls {InsertBack(...)}.
         /// ----------------------------------------------------------------------------------------
-        template <tname TRange, tname = TTI::TEnableIf<
+        template <typename TRange, typename = TTI::TEnableIf<
             RRangeOf<TRange, TElem>>>
         cexpr fn op+=(const TRange& range) -> TMutIter;
 
     private:
-        // TODO: Refactor this. Should we use T2 here to denote other tname?
-        template <tname T2>
+        // TODO: Refactor this. Should we use T2 here to denote other typename?
+        template <typename T2>
         cexpr fn _InsertAt(usize index, T2&& el) -> usize;
 
-        template <tname TIter2>
+        template <typename TIter2>
         cexpr fn _InsertAtCounted(usize index, TIter2 it, usize count) -> usize;
 
-        template <tname TIter2, tname TIterEnd2>
+        template <typename TIter2, typename TIterEnd2>
         cexpr fn _InsertAtUncounted(usize index, TIter2 begin, TIterEnd2 end) -> usize;
 
-        template <tname T2>
+        template <typename T2>
         cexpr fn _InsertBack(T2&& el) -> usize;
 
-        template <tname TIter2>
+        template <typename TIter2>
         cexpr fn _InsertBackCounted(TIter2 it, usize count) -> usize;
 
-        template <tname TIter2, tname TIterEnd2>
+        template <typename TIter2, typename TIterEnd2>
         cexpr fn _InsertBackUncounted(TIter2 begin, TIterEnd2 end) -> usize;
 
         cexpr fn _ValidateIndexForInsert(isize index) const noex -> bool;
@@ -206,10 +206,10 @@ namespace Atom
         cexpr fn _MoveRangeTo(usize index, TElem* dest) -> void;
         cexpr fn _RotateRangeBack(usize index, usize count) -> void;
 
-        template <tname TRange>
+        template <typename TRange>
         static cexpr fn _CanGetRangeSize() noex -> bool;
 
-        template <tname TRange>
+        template <typename TRange>
         static cexpr fn _GetRangeSize(const TRange& range) noex -> usize;
 
         using Base::_Data;

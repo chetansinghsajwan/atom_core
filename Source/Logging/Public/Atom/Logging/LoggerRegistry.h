@@ -18,8 +18,8 @@ namespace Atom::Logging
     class LoggerRegistry
     {
         using TContainer = UnorderedMap<Str, LoggerPtr>;
-        using TIter = tname TContainer::const_iterator;
-        using TIterEnd = tname TContainer::const_iterator;
+        using TIter = typename TContainer::const_iterator;
+        using TIterEnd = typename TContainer::const_iterator;
 
     public:
         ctor LoggerRegistry() noex

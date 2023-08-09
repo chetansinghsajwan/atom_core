@@ -3,7 +3,7 @@
 
 namespace Atom
 {
-    template <tname T, usize BufSize, tname TAlloc>
+    template <typename T, usize BufSize, typename TAlloc>
     class _BufArrImplBase extends _DynArrImplBase<T, TAlloc>
     {
         priv using Base = _DynArrImplBase<T, TAlloc>;
@@ -47,13 +47,13 @@ namespace Atom
         prot T _stackBuf[BufSize];
     };
 
-    template <tname T, usize bufSize, tname TAlloc>
+    template <typename T, usize bufSize, typename TAlloc>
     class BufArr extends _DynArrImplHelper<_BufArrImplBase<T, bufSize, TAlloc>>
     {
         priv using Base = _DynArrImplHelper<_BufArrImplBase<T, bufSize, TAlloc>>;
         priv using BaseImpl = _BufArrImplBase<T, bufSize, TAlloc>;
 
-        pub using TElem = tname Base::TElem;
+        pub using TElem = typename Base::TElem;
 
         /// ----------------------------------------------------------------------------------------
         /// DefCtor.
@@ -78,7 +78,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// ParamCtor for Range.
         /// ----------------------------------------------------------------------------------------
-        pub template <tname TRange>
+        pub template <typename TRange>
         requires RRangeOf<TRange, T>
         cexpr ctor BufArr(TRange&& range) noex:
             Base{ nullptr }
@@ -89,7 +89,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// ParamOper for Range.
         /// ----------------------------------------------------------------------------------------
-        pub template <tname TRange>
+        pub template <typename TRange>
         requires RRangeOf<TRange, T>
         cexpr fn op=(TRange&& range) noex -> BufArr&
         {

@@ -4,7 +4,7 @@
 // 
 // using namespace Atom;
 // 
-// template <tname T>
+// template <typename T>
 // using MutArrRange = Range<T*, T*>;
 // 
 // TEST_CASE("Atom.Range.RangeWrappers", "[.compilation]")

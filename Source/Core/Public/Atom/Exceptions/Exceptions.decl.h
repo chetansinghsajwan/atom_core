@@ -144,7 +144,7 @@ namespace Atom::Ex::Internal
 
         pub fn RecordSource(ExceptionSource src = ExceptionSource::Current()) -> Thrower&;
 
-        pub template <tname TEx>
+        pub template <typename TEx>
         requires RDerivedFrom<TEx, Exception>
         noret fn op<<(TEx&& ex);
 

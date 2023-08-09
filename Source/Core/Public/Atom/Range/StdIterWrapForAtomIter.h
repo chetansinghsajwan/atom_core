@@ -7,7 +7,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
-    template <tname TIter>
+    template <typename TIter>
     using StdIterCatForAtomIter = TTI::TEnableIf
     <
         RIter<TIter>,
@@ -33,13 +33,13 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
-    template <tname TIter>
+    template <typename TIter>
     class StdIterWrapForAtomIter
     {
         using Self = StdIterWrapForAtomIter<TIter>;
 
     public:
-        using value_type = tname TIter::TElem;
+        using value_type = typename TIter::TElem;
         using size_type = usize;
         using difference_type = isize;
         using iterator_category = StdIterCatForAtomIter<TIter>;

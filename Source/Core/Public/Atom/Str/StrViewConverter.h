@@ -7,13 +7,13 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// Converts {T} object to {StrView}.
     /// --------------------------------------------------------------------------------------------
-    template <tname T>
+    template <typename T>
     class StrViewConverter;
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures {TConverter} can convert {T} object to {StrView}.
     /// --------------------------------------------------------------------------------------------
-    template <tname TConverter, tname T>
+    template <typename TConverter, typename T>
     concept RStrViewConverter = requires(TConverter converter)
     {
         { converter.Convert(declval(T)) } -> RSameAs<StrView>;
@@ -22,7 +22,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// Ensures {T} is convertible to {StrView}.
     /// --------------------------------------------------------------------------------------------
-    template <tname T>
+    template <typename T>
     concept RStrViewConvertible = RStrViewConverter<StrViewConverter<T>, T>;
 
     /// --------------------------------------------------------------------------------------------
@@ -43,7 +43,7 @@ namespace Atom
     /// 
     /// @TODO Needs refactoring.
     /// --------------------------------------------------------------------------------------------
-	template <tname T>
+	template <typename T>
 	requires (!RSameAs<T, TTI::TRemoveCVRef<T>>) && RStrViewConvertible<TTI::TRemoveCVRef<T>>
 	class StrViewConverter<T>: StrViewConverter<TTI::TRemoveCVRef<T>> { };
 

@@ -6,7 +6,7 @@
 
 namespace Atom::Private
 {
-    template <tname THash, tname THashGenerator, EUuidVersion UuidVersion>
+    template <typename THash, typename THashGenerator, EUuidVersion UuidVersion>
     class UuidNameGenerator
     {
     public:

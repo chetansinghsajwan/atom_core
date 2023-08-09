@@ -12,10 +12,10 @@ namespace Atom
     {
         class InvokableBoxIdentifier { };
 
-        template <tname TResult, tname... TArgs>
+        template <typename TResult, typename... TArgs>
         class Invoker
         {
-            pub template <tname TInvokable>
+            pub template <typename TInvokable>
             requires RInvokable<TInvokable, TResult(TArgs...)>
             fn Set()
             {
@@ -38,7 +38,7 @@ namespace Atom
             void (*_impl) (void* invokable, TResult& result, TArgs&&... args);
         };
 
-        template <tname... TArgs>
+        template <typename... TArgs>
         class Invoker <void, TArgs...>
         {
             pub template <RInvokable<void(TArgs...)> TInvokable>
@@ -63,12 +63,12 @@ namespace Atom
 
     /// InvokableBox declaration.
     /// --------------------------------------------------------------------------------------------
-    template <tname>
+    template <typename>
     class InvokableBox;
 
     /// 
     /// --------------------------------------------------------------------------------------------
-    template <tname TResult, tname... TArgs>
+    template <typename TResult, typename... TArgs>
     class InvokableBox <TResult(TArgs...)> extends
         ObjectBox<true, true, true, 50, DefaultMemAllocator>,
         public Private::InvokableBoxIdentifier
@@ -178,7 +178,7 @@ namespace Atom
             return Invoke(fwd(args)...);
         }
 
-        pub template <tname T>
+        pub template <typename T>
         fn GetInvokable() noex -> T*
         {
             if (typeid(T) != GetInvokableType())
@@ -195,7 +195,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        prot template <tname TInvokable>
+        prot template <typename TInvokable>
         requires RInvokable<TInvokable, TResult(TArgs...)>
         fn _SetInvoker()
         {

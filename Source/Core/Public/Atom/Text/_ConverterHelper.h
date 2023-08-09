@@ -5,7 +5,7 @@ namespace Atom::Text
     /// --------------------------------------------------------------------------------------------
     /// Requirements for {CharEncodingConverter} API.
     /// --------------------------------------------------------------------------------------------
-    export template <tname TConverter, tname TInEncoding, tname TOutEncoding>
+    export template <typename TConverter, typename TInEncoding, typename TOutEncoding>
     concept RCharEncodingConverter = requires(TConverter converter,
         Internal::RangeMock<BasicChar<TInEncoding>> in,
         Internal::OutputMock<BasicChar<TOutEncoding>> out)
@@ -23,7 +23,7 @@ namespace Atom::Text
     /// Ensures {CharEncodingConverter<TInEncoding, TOutEncoding>} satisfies
     /// {RCharEncodingConverter<TInEncoding, TOutEncoding>}.
     /// --------------------------------------------------------------------------------------------
-    export template <tname TInEncoding, tname TOutEncoding>
+    export template <typename TInEncoding, typename TOutEncoding>
     concept RCharEncodingConvertible = RCharEncodingConverter<
         CharEncodingConverter<TInEncoding, TOutEncoding>,
         TInEncoding, TOutEncoding>;
@@ -38,17 +38,17 @@ namespace Atom::Text
     /// @TPARAM TInEncoding Character encoding to convert data from.
     /// @TPARAM TOutEncoding Character encoding to convert data to.
     /// --------------------------------------------------------------------------------------------
-    template <tname TImpl, tname TInEncoding, tname TOutEncoding>
+    template <typename TImpl, typename TInEncoding, typename TOutEncoding>
     class _CharEncodingConverterHelper
     {
-        pub using TInChar = tname TInEncoding::TChar;
-        pub using TOutChar = tname TOutEncoding::TChar;
+        pub using TInChar = typename TInEncoding::TChar;
+        pub using TOutChar = typename TOutEncoding::TChar;
         pub using TOutStr = Internal::Str<TOutEncoding>;
 
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pub template <tname TInput, tname TOut>
+        pub template <typename TInput, typename TOut>
         requires RRangeOf<TInput, TInChar>
             and ROutput<TOut, TOutChar>
         cexpr fn ConvertTo(const TInput& in, TOut out)
@@ -64,7 +64,7 @@ namespace Atom::Text
     /// --------------------------------------------------------------------------------------------
     /// Specialization for same {CharEncoding}.
     /// --------------------------------------------------------------------------------------------
-    template <tname TImpl, tname TEncoding>
+    template <typename TImpl, typename TEncoding>
     class _CharEncodingConverterHelper<TImpl, TEncoding, TEncoding>
     {
         pub using TChar = BasicChar<TCharEncoding>;
@@ -73,7 +73,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// Writes input to output as is.
         /// ----------------------------------------------------------------------------------------
-        pub template <tname TInput, tname TOut>
+        pub template <typename TInput, typename TOut>
         requires RRangeOf<TInput, const TChar>
             and ROutput<TOut, TChar>
         cexpr fn Convert(TInput&& in, TOut& out)

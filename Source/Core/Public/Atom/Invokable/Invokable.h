@@ -6,10 +6,10 @@ namespace Atom
 {
     namespace Private
     {
-        template <tname TInvokable, tname... TSignature>
+        template <typename TInvokable, typename... TSignature>
         class IsInvokableImpl;
 
-        template <tname TInvokable, tname TResult, tname... TArgs>
+        template <typename TInvokable, typename TResult, typename... TArgs>
         class IsInvokableImpl<TInvokable, TResult(TArgs...)>
         {
             pub static cexpr bool Value = std::is_invocable_r_v<
@@ -17,14 +17,14 @@ namespace Atom
         };
 
         /// @TODO Add impl for const invocable.
-        template <tname TInvokable, tname TResult, tname... TArgs>
+        template <typename TInvokable, typename TResult, typename... TArgs>
         class IsInvokableImpl<TInvokable, TResult(TArgs...) const>
         {
             pub static cexpr bool Value = std::is_invocable_r_v<
                 TResult, TInvokable, TArgs...>;
         };
 
-        template <tname TInvokable, tname TResult, tname... TArgs>
+        template <typename TInvokable, typename TResult, typename... TArgs>
         class IsInvokableImpl<TInvokable, TResult(TArgs...) noex>
         {
             pub static cexpr bool Value = std::is_nothrow_invocable_r_v<
@@ -32,7 +32,7 @@ namespace Atom
         };
 
         /// @TODO Add impl for const invocable.
-        template <tname TInvokable, tname TResult, tname... TArgs>
+        template <typename TInvokable, typename TResult, typename... TArgs>
         class IsInvokableImpl<TInvokable, TResult(TArgs...) const noex>
         {
             pub static cexpr bool Value = std::is_nothrow_invocable_r_v<
@@ -40,6 +40,6 @@ namespace Atom
         };
     }
 
-    template <tname TInvokable, tname... TSignature>
+    template <typename TInvokable, typename... TSignature>
     concept RInvokable = Private::IsInvokableImpl<TInvokable, TSignature...>::Value;
 }

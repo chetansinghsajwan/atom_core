@@ -8,17 +8,17 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
-    template <tname... TArgs>
+    template <typename... TArgs>
     class Range;
 
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
-    template <tname _TIter, tname _TIterEnd>
+    template <typename _TIter, typename _TIterEnd>
     requires(RIterPair<_TIter, _TIterEnd>)
     class Range<_TIter, _TIterEnd>
     {
-        pub using TElem = tname _TIter::TElem;
+        pub using TElem = typename _TIter::TElem;
         pub using TMutIter = _TIter;
         pub using TMutIterEnd = _TIterEnd;
         pub using TIter = _TIter;
@@ -73,14 +73,14 @@ namespace Atom
         prot TIterEnd _end;
     };
 
-    template <tname TIter, tname TIterEnd>
+    template <typename TIter, typename TIterEnd>
     requires(RIterPair<TIter, TIterEnd>)
     Range(TIter iter, TIterEnd end) -> Range<TIter, TIterEnd>;
 
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
-    template <tname T>
+    template <typename T>
     class Range<const T*, const T*> extends Range<ArrIter<T>, ArrIter<T>>
     {
         pub using Base = Range<ArrIter<T>, ArrIter<T>>;
@@ -99,7 +99,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
-    template <tname T>
+    template <typename T>
     class Range<T*, T*> extends Range<MutArrIter<T>, MutArrIter<T>>
     {
         pub using Base = Range<MutArrIter<T>, MutArrIter<T>>;
@@ -115,19 +115,19 @@ namespace Atom
             Base{ arr, arr + count } { }
     };
 
-    template <tname T>
+    template <typename T>
     Range(T* iter, T* end) -> Range<T*, T*>;
 
-    template <tname T>
+    template <typename T>
     Range(T* iter, usize count) -> Range<T*, T*>;
 
-    template <tname T, usize count>
+    template <typename T, usize count>
     Range(T(&arr)[count]) -> Range<T*, T*>;
 
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
-    template <tname T>
+    template <typename T>
     class Range<InitList<T>> extends Range<const T*, const T*>
     {
         pub using Base = Range<const T*, const T*>;
@@ -136,6 +136,6 @@ namespace Atom
             Base{ init.begin(), init.end() } { }
     };
 
-    template <tname T>
+    template <typename T>
     Range(const InitList<T>& init) -> Range<InitList<T>>;
 }

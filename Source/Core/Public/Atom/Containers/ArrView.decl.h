@@ -9,7 +9,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
-    template <tname T>
+    template <typename T>
     class _ArrViewStorage
     {
         friend class ArrRangeTraitImpl<ArrView<T>>;
@@ -69,7 +69,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
-    template <tname T>
+    template <typename T>
     class ArrView:
         public _ArrViewStorage<T>,
         public ArrRangeTrait<ArrView<T>>
@@ -95,7 +95,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Range Constructor
         /// ----------------------------------------------------------------------------------------
-        template <tname TRange>
+        template <typename TRange>
         constexpr ctor ArrView(const TRange& range)
             requires(RArrRangeOf<TRange, T>):
             _Storage{ range.data(), range.count() } { }
@@ -103,7 +103,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Range Operator
         /// ----------------------------------------------------------------------------------------
-        template <tname TRange>
+        template <typename TRange>
         constexpr fn op=(const TRange& range) -> ArrView&
             requires(RArrRangeOf<TRange, T>)
         {

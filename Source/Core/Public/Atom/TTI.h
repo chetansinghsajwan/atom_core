@@ -11,64 +11,64 @@ namespace Atom::TTI
         class Empty { };
     }
 
-    template <bool Condition, tname TTrue, tname TFalse>
+    template <bool Condition, typename TTrue, typename TFalse>
     using TConditional = std::conditional_t<Condition, TTrue, TFalse>;
 
-    template <bool Condition, tname TFalse, tname TTrue>
+    template <bool Condition, typename TFalse, typename TTrue>
     using TNotConditional = std::conditional_t<Condition, TFalse, TTrue>;
 
-    template <bool Condition, tname T>
+    template <bool Condition, typename T>
     using TConditionalField = TConditional<Condition, T, Private::Empty>;
 
-    template <tname TBase, tname TDerived>
+    template <typename TBase, typename TDerived>
     cexpr bool IsBaseOf = std::is_base_of_v<TBase, std::decay_t<TDerived>>;
 
-    template <tname TBase, tname TDerived>
+    template <typename TBase, typename TDerived>
     cexpr bool IsNotBaseOf = !IsBaseOf<TBase, TDerived>;
 
-    template <bool Requirements, tname T = void>
+    template <bool Requirements, typename T = void>
     using TEnableIf = std::enable_if_t<Requirements, T>;
 
-    template <tname T>
+    template <typename T>
     cexpr bool IsCopyConstructible = std::is_copy_constructible_v<T>;
 
-    template <tname T>
+    template <typename T>
     cexpr bool IsMoveConstructible = std::is_copy_constructible_v<T>;
 
-    template <tname T>
+    template <typename T>
     cexpr bool IsCopyAssignable = std::is_copy_assignable_v<T>;
 
-    template <tname T>
+    template <typename T>
     cexpr bool IsMoveAssignable = std::is_move_assignable_v<T>;
 
-    template <tname T1, tname T2>
+    template <typename T1, typename T2>
     cexpr bool IsSame = std::is_same_v<T1, T2>;
 
-    template <tname T1, tname T2>
+    template <typename T1, typename T2>
     cexpr bool IsNotSame = !IsSame<T1, T2>;
 
-    template <tname T>
+    template <typename T>
     using TRemoveConst = std::remove_const_t<T>;
 
-    template <tname T>
+    template <typename T>
     using TRemoveCVRef = std::remove_cvref_t<T>;
 
-    template <tname T>
+    template <typename T>
     using TRemoveQuailfiersRef = std::remove_cvref_t<T>;
 
-    template <tname T>
+    template <typename T>
     using TUnqualified = std::remove_cv_t<T>;
 
-    template <tname T>
+    template <typename T>
     cexpr bool IsRValueRef = std::is_rvalue_reference_v<T>;
 
-    template <tname T>
+    template <typename T>
     cexpr bool IsConst = std::is_const_v<T>;
 
-    template <tname T>
+    template <typename T>
     cexpr bool IsVolatile = std::is_volatile_v<T>;
 
-    template <tname T>
+    template <typename T>
     cexpr bool IsQualified = IsConst<T> || IsVolatile<T>;
 }
 

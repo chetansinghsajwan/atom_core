@@ -33,7 +33,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         pub template <class TRange, class T>
         requires RMutRange<TRange>
-            and RAssignable<tname TRange::TElem, T>
+            and RAssignable<typename TRange::TElem, T>
         cexpr fn Fill(TRange&& range, T&& val) const -> void
         {
             _Fill(range.iter(), range.iterEnd(), fwd(val));
@@ -43,9 +43,9 @@ namespace Atom
         /// 
         /// ----------------------------------------------------------------------------------------
     #pragma optimize("", off)
-        pub template <class TRange, tname T>
+        pub template <class TRange, typename T>
         requires RMutRange<TRange>
-            and RAssignable<tname TRange::TElem, T>
+            and RAssignable<typename TRange::TElem, T>
         cexpr fn FillExplicit(TRange&& range, T&& val) const -> void
         {
             _Fill(range.iter(), range.iterEnd(), fwd(val));
@@ -58,7 +58,7 @@ namespace Atom
         pub template <class TRange1, class TRange2>
         requires RRange<TRange1>
             and RMutRange<TRange2>
-            and RAssignable<tname TRange2::TElem, tname TRange1::TElem>
+            and RAssignable<typename TRange2::TElem, typename TRange1::TElem>
         cexpr fn FwdCopyTo(const TRange1& range1, TRange2&& range2) const -> void
         {
             _FwdCopy(range1.iter(), range1.iterEnd(), range2.iter(), range2.iterEnd());
@@ -70,7 +70,7 @@ namespace Atom
         pub template <class TRange1, class TRange2>
         requires RRange<TRange1>
             and RMutRange<TRange2>
-            and RAssignable<tname TRange2::TElem, tname TRange1::TElem>
+            and RAssignable<typename TRange2::TElem, typename TRange1::TElem>
         cexpr fn BwdCopyTo(const TRange1& range1, TRange2&& range2) const -> void
         {
             _BwdCopy(range1.iter(), range1.iterEnd(), range2.iter(), range2.iterEnd());
@@ -82,7 +82,7 @@ namespace Atom
         pub template <class TRange1, class TRange2>
         requires RMutRange<TRange1>
             and RMutRange<TRange2>
-            and RAssignable<tname TRange2::TElem, tname TRange1::TElem>
+            and RAssignable<typename TRange2::TElem, typename TRange1::TElem>
         cexpr fn FwdMoveTo(TRange1&& range1, TRange2&& range2) const -> void
         {
             _FwdMove(range1.iter(), range1.iterEnd(), range2.iter(), range2.iterEnd());
@@ -94,7 +94,7 @@ namespace Atom
         pub template <class TRange1, class TRange2>
         requires RMutRange<TRange1>
             and RMutRange<TRange2>
-            and RAssignable<tname TRange2::TElem, tname TRange1::TElem>
+            and RAssignable<typename TRange2::TElem, typename TRange1::TElem>
         cexpr fn BwdMoveTo(TRange1&& range1, TRange2&& range2) const -> void
         {
             _BwdMove(range1.iter(), range1.iterEnd(), range2.iter(), range2.iterEnd());
@@ -105,7 +105,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         pub template <class TRange>
         requires RMutFwdRange<TRange>
-            and RMoveAssignable<tname TRange::TElem>
+            and RMoveAssignable<typename TRange::TElem>
         cexpr fn ShiftFwd(TRange&& range, usize steps) const -> void
         {
             _FwdShift(range.iter(), range.iterEnd(), steps);
@@ -116,7 +116,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         pub template <class TRange>
         requires RMutFwdRange<TRange>
-            and RMoveAssignable<tname TRange::TElem>
+            and RMoveAssignable<typename TRange::TElem>
         cexpr fn ShiftBwd(TRange&& range, usize steps) const -> void
         {
             _BwdShift(range.iter(), range.iterEnd(), steps);
@@ -127,7 +127,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         pub template <class TRange>
         requires RMutFwdRange<TRange>
-            and RSwappable<tname TRange::TElem>
+            and RSwappable<typename TRange::TElem>
         cexpr fn ShiftBy(TRange&& range, isize steps) const -> void
         {
             if (steps > 0)
@@ -145,7 +145,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         pub template <class TRange>
         requires RMutRange<TRange>
-            and RSwappable<tname TRange::TElem>
+            and RSwappable<typename TRange::TElem>
         cexpr fn RotateFwd(TRange&& range, usize steps) const -> void
         {
             _FwdRotate(range.iter(), range.iterEnd(), steps);
@@ -156,7 +156,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         pub template <class TRange>
         requires RMutRange<TRange>
-            and RSwappable<tname TRange::TElem>
+            and RSwappable<typename TRange::TElem>
         cexpr fn RotateBwd(TRange&& range, usize steps) const -> void
         {
             _BwdRotate(range.iter(), range.iterEnd(), steps);
@@ -167,7 +167,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         pub template <class TRange>
         requires RMutRange<TRange>
-            and RSwappable<tname TRange::TElem>
+            and RSwappable<typename TRange::TElem>
         cexpr fn RotateBy(TRange&& range, isize steps) const -> void
         {
             if (steps > 0)
@@ -185,7 +185,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         pub template <class TRange>
         requires RMutRange<TRange>
-            and RDestructible<tname TRange::TElem>
+            and RDestructible<typename TRange::TElem>
         cexpr fn Destruct(TRange&& range) const -> void
         {
             _Destruct(range.iter(), range.iterEnd());
@@ -205,7 +205,7 @@ namespace Atom
             return count;
         }
 
-        priv template <class TIter, class TIterEnd, tname T>
+        priv template <class TIter, class TIterEnd, typename T>
         cexpr fn _Fill(TIter iter, TIterEnd iterEnd, T&& val) const -> void
         {
             StdIterWrapForAtomIter stdIter{ iter };

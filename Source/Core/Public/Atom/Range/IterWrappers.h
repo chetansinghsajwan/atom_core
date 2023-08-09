@@ -8,11 +8,11 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
-    template<tname TWrap>
+    template<typename TWrap>
     class _BasicMutIterWrap extends TWrap
     {
         pub using Base = TWrap;
-        pub using TElem = tname Base::TElem;
+        pub using TElem = typename Base::TElem;
 
         pub using Base::Base;
 
@@ -33,22 +33,22 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
-    template <tname TWrap>
+    template <typename TWrap>
     requires (!RIter<TWrap>)
     class _BasicMutIterWrap<TWrap> extends TWrap { };
 
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
-    template <tname TIter>
+    template <typename TIter>
     class IterWrap
     {
-        pub using TElem = TTI::TEnableIf<RIter<TIter>, tname TIter::TElem>;
+        pub using TElem = TTI::TEnableIf<RIter<TIter>, typename TIter::TElem>;
 
         pub cexpr ctor IterWrap(TIter iter) noex:
             iter{ iter } { }
 
-        pub template <tname... TArgs>
+        pub template <typename... TArgs>
         requires RConstructible<TIter, TArgs...>
         cexpr ctor IterWrap(TArgs&&... args) noex:
             iter{ fwd(args)... } { }
@@ -69,7 +69,7 @@ namespace Atom
             return self;
         }
 
-        pub template <tname TIterEnd>
+        pub template <typename TIterEnd>
         cexpr fn op==(const IterWrap<TIterEnd>& end) const noex -> bool
         {
             return self.iter == end.iter;
@@ -81,7 +81,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
-    template <tname TIter>
+    template <typename TIter>
     requires (!RIter<TIter>)
     class IterWrap<TIter>
     {
@@ -91,7 +91,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
-    template <tname TIter>
+    template <typename TIter>
     class MutIterWrap extends _BasicMutIterWrap<IterWrap<TIter>>
     {
         pub using Base = _BasicMutIterWrap<IterWrap<TIter>>;
@@ -104,7 +104,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
-    template <tname TIter>
+    template <typename TIter>
     class FwdIterWrap extends IterWrap<TIter>,
         public MultiPassIterTag
     {
@@ -118,7 +118,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
-    template <tname TIter>
+    template <typename TIter>
     requires RMutFwdIter<TIter>
     class MutFwdIterWrap extends _BasicMutIterWrap<FwdIterWrap<TIter>>
     {
@@ -132,7 +132,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
-    template <tname TIter>
+    template <typename TIter>
     requires RBidiIter<TIter>
     class BidiIterWrap extends FwdIterWrap<TIter>
     {
@@ -152,7 +152,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
-    template <tname TIter>
+    template <typename TIter>
     requires RMutBidiIter<TIter>
     class MutBidiIterWrap extends _BasicMutIterWrap<BidiIterWrap<TIter>>
     {
@@ -166,7 +166,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
-    template <tname TIter>
+    template <typename TIter>
     requires RJumpIter<TIter>
     class JumpIterWrap extends BidiIterWrap<TIter>
     {
@@ -198,7 +198,7 @@ namespace Atom
             return self;
         }
 
-        template <tname TIter2>
+        template <typename TIter2>
         pub cexpr fn op-(const TIter2& iter2) const noex -> isize
         {
             return self.iter - iter2;
@@ -208,7 +208,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
-    template <tname TIter>
+    template <typename TIter>
     requires RMutJumpIter<TIter>
     class MutJumpIterWrap extends _BasicMutIterWrap<JumpIterWrap<TIter>>
     {
@@ -228,7 +228,7 @@ namespace Atom
             return MutJumpIterWrap{ self.iter - steps };
         }
 
-        template <tname TIter2>
+        template <typename TIter2>
         pub cexpr fn op-(const TIter2& iter2) const noex -> isize
         {
             return self.iter - iter2;

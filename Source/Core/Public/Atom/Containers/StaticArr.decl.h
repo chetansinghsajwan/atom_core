@@ -3,7 +3,7 @@
 
 namespace Atom
 {
-    template <tname T, usize Size>
+    template <typename T, usize Size>
     class _StaticArrImplBase
     {
         prot using TElem = T;
@@ -26,6 +26,6 @@ namespace Atom
         pub T _arr[Size];
     };
 
-    template <tname T, usize Size>
+    template <typename T, usize Size>
     using StaticArr = _ArrImplHelper<_StaticArrImplBase<T, Size>>;
 }
