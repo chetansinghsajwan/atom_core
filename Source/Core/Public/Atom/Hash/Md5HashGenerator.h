@@ -23,7 +23,7 @@ namespace Atom::Private
 
         pub fn Calculate(Md5Hash& hash)
         {
-            Md5Finalise(&_context, (MD5_HASH*)hash.bytes.Data());
+            Md5Finalise(&_context, (MD5_HASH*)hash.bytes.data());
         }
 
         pub Md5Context _context;

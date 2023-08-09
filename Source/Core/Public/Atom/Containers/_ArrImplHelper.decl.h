@@ -26,9 +26,9 @@ namespace Atom
         pub using Base::op[];
         pub using Base::ElemFront;
         pub using Base::ElemBack;
-        pub using Base::Data;
-        pub using Base::Count;
-        pub using Base::IsEmpty;
+        pub using Base::data;
+        pub using Base::count;
+        pub using Base::isEmpty;
 
         /// ----------------------------------------------------------------------------------------
         /// Access element at index `index`.
@@ -90,7 +90,7 @@ namespace Atom
         /// # Time Complexity
         ///     Constant
         /// ----------------------------------------------------------------------------------------
-        pub cexpr fn Data() noex -> TElem*
+        pub cexpr fn data() noex -> TElem*
         {
             return _Data();
         }

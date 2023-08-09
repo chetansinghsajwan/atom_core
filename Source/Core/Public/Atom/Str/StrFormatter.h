@@ -15,7 +15,7 @@ namespace Atom
 
         pub cexpr fn ToFmt(StrView strv) noex -> _FmtStrView
         {
-            return _FmtStrView{ strv.Data(), strv.Count() };
+            return _FmtStrView{ strv.data(), strv.count() };
         }
     };
 

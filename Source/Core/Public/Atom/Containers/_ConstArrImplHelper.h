@@ -25,7 +25,7 @@ namespace Atom
     template <tname TImpl>
     cexpr fn _ConstArrImplHelper<TImpl>::ElemFront() const noex -> const TElem&
     {
-        ATOM_DEBUG_EXPECTS(!IsEmpty()) <<
+        ATOM_DEBUG_EXPECTS(!isEmpty()) <<
             OutOfRangeException("Arr is empty.");
 
         return _Data()[0];
@@ -34,7 +34,7 @@ namespace Atom
     template <tname TImpl>
     cexpr fn _ConstArrImplHelper<TImpl>::ElemBack() const noex -> const TElem&
     {
-        ATOM_DEBUG_EXPECTS(!IsEmpty()) <<
+        ATOM_DEBUG_EXPECTS(!isEmpty()) <<
             OutOfRangeException("Arr is empty.");
 
         return _Data()[_Count() - 1];

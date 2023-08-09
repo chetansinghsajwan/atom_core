@@ -25,7 +25,7 @@ namespace Atom::Private
         fn _reset()
         {
             _hashGenerator.Reset();
-            _hashGenerator.ProcessBytes(_nsUuid.bytes.Data(), 16);
+            _hashGenerator.ProcessBytes(_nsUuid.bytes.data(), 16);
         }
 
         fn _processStr(StrView str)

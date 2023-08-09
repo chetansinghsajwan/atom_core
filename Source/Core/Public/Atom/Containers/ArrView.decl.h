@@ -98,7 +98,7 @@ namespace Atom
         template <tname TRange>
         constexpr ctor ArrView(const TRange& range)
             requires(RArrRangeOf<TRange, T>):
-            _Storage{ range.Data(), range.Count() } { }
+            _Storage{ range.data(), range.count() } { }
 
         /// ----------------------------------------------------------------------------------------
         /// # Range Operator
@@ -107,7 +107,7 @@ namespace Atom
         constexpr fn op=(const TRange& range) -> ArrView&
             requires(RArrRangeOf<TRange, T>)
         {
-            self = ArrView{ range.Data(), range.Count() };
+            self = ArrView{ range.data(), range.count() };
         }
     };
 

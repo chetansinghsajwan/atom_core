@@ -19,7 +19,7 @@ namespace Atom
             Uuid uuid;
             for (usize i = 0; i < 16; i += 4)
             {
-                *(u32*)(uuid.bytes.Data() + i) = _distribution(_generator);
+                *(u32*)(uuid.bytes.data() + i) = _distribution(_generator);
             }
 
             // Variant must be 10xxxxxx

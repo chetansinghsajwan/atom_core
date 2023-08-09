@@ -74,7 +74,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Count of types this variant supports.
         /// ----------------------------------------------------------------------------------------
-        static ceval fn Count() -> usize
+        static ceval fn count() -> usize
         {
             return _Impl::GetTypeCount();
         }

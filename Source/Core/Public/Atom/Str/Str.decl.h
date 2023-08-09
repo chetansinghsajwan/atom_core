@@ -17,7 +17,7 @@ namespace std
             using TChar = Atom::BasicChar<Atom::CharEncoding>;
             using StdStirngView = basic_string_view<TChar>;
 
-            return hash<StdStirngView>()(StdStirngView(str.Data(), str.Count()));
+            return hash<StdStirngView>()(StdStirngView(str.data(), str.count()));
         }
     };
 }

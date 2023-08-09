@@ -35,7 +35,7 @@ TEST_CASE("Atom.Core.Variant")
 
     SECTION("Count")
     {
-        REQUIRE(Variant<i32, f64, f32, bool>::Count() == 4);
+        REQUIRE(Variant<i32, f64, f32, bool>::count() == 4);
     }
 
     SECTION("Has")

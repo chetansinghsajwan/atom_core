@@ -41,7 +41,7 @@ namespace Atom
 			Exception("Not implemented.") { }
 		// StrFmtEx(const _FmtFmtEx& fmtEx) noex:
 		// 	Exception(CharEncodingConverter<UTF8CharEncoding, CharEncoding>()
-		// 		.Convert(UTF8StrView{ (const char8*)fmtEx.what() }.iter()).Data()) { }
+		// 		.Convert(UTF8StrView{ (const char8*)fmtEx.what() }.iter()).data()) { }
 	};
 
 	/// --------------------------------------------------------------------------------------------
@@ -154,7 +154,7 @@ namespace Atom
 		{
 			_FmtFmtCtx& fmtCtx = ctx._fmtCtx;
 
-			_FmtStrView fmt_str{ str.Data(), str.Count() };
+			_FmtStrView fmt_str{ str.data(), str.count() };
 			fmtCtx.advance_to(_fmtFmter.format(fmt_str, fmtCtx));
 		}
 

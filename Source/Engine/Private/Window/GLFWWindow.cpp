@@ -13,7 +13,7 @@ namespace Atom::Engine
 
         // TODO: Requires encoding conversion.
         _glfwWindow = glfwCreateWindow(glfwWindowSize.x, glfwWindowSize.y,
-            (const char*)props.windowName.Data(), nullptr, nullptr);
+            (const char*)props.windowName.data(), nullptr, nullptr);
 
         glfwMakeContextCurrent(_glfwWindow);
         glfwSetWindowUserPointer(_glfwWindow, this);

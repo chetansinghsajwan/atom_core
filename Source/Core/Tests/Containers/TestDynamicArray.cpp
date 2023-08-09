@@ -8,8 +8,8 @@ TEST_CASE("Atom::Containers::DynArr")
 {
     DynArr<i32> arr;
 
-    REQUIRE(arr.Count() == 0);
-    REQUIRE(arr.Data() == nullptr);
+    REQUIRE(arr.count() == 0);
+    REQUIRE(arr.data() == nullptr);
 
 //     REQUIRE(arr.Begin()         == arr.End());
 //     REQUIRE(arr.ConstBegin()    == arr.ConstEnd());

@@ -238,10 +238,10 @@ namespace Atom::Logging::Private
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        fn Count() const noex -> usize
+        fn count() const noex -> usize
         {
             LockGuard guard(_lock);
-            return _targets.Count();
+            return _targets.count();
         }
 
     //// -------------------------------------------------------------------------------------------

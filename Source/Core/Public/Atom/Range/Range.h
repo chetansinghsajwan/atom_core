@@ -51,19 +51,19 @@ namespace Atom
             return _end;
         }
 
-        pub cexpr fn Count() const noex -> usize
+        pub cexpr fn count() const noex -> usize
             requires(RJumpIterPair<TIter, TIterEnd>)
         {
             return _end - _iter;
         }
 
-        pub cexpr fn Data() const noex -> const TElem*
+        pub cexpr fn data() const noex -> const TElem*
             requires(RArrIterPair<TIter, TIterEnd>)
         {
             return &*_iter;
         }
 
-        pub cexpr fn Data() noex -> TElem*
+        pub cexpr fn data() noex -> TElem*
             requires(RMutArrIterPair<TIter, TIterEnd>)
         {
             return &*_iter;

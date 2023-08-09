@@ -29,7 +29,7 @@ namespace Atom
         /// 
         /// @RETURNS Const ref to element.
         /// 
-        /// @EXPECTS {index} is in range[0, Count() - 1].
+        /// @EXPECTS {index} is in range[0, count() - 1].
         ///     @THROWS IndexOutOfRangeException.
         /// 
         /// @TIME_COMPLEXITY Constant.
@@ -44,7 +44,7 @@ namespace Atom
         /// 
         /// @RETURNS Const ref to element.
         /// 
-        /// @EXPECTS {index} is in range[0, Count() - 1].
+        /// @EXPECTS {index} is in range[0, count() - 1].
         ///     @THROWS IndexOutOfRangeException: In Debug.
         /// 
         /// @TIME_COMPLEXITY Constant.
@@ -56,7 +56,7 @@ namespace Atom
         /// 
         /// @RETURNS Const ref to element.
         /// 
-        /// @EXPECTS {!IsEmpty()}.
+        /// @EXPECTS {!isEmpty()}.
         ///     @THROWS OutOfRangeException: In Debug.
         /// 
         /// @TIME_COMPLEXITY Constant.
@@ -68,7 +68,7 @@ namespace Atom
         /// 
         /// @RETURNS Const ref to element.
         /// 
-        /// @EXPECTS {!IsEmpty()}.
+        /// @EXPECTS {!isEmpty()}.
         ///     @THROWS OutOfRangeException: In Debug.
         /// 
         /// @TIME_COMPLEXITY Constant.
@@ -82,7 +82,7 @@ namespace Atom
         /// 
         /// @TIME_COMPLEXITY Constant.
         /// ----------------------------------------------------------------------------------------
-        cexpr fn Data() const noex -> const TElem*
+        cexpr fn data() const noex -> const TElem*
         {
             return _Data();
         }
@@ -90,7 +90,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Get count of elements.
         /// ----------------------------------------------------------------------------------------
-        cexpr fn Count() const noex -> usize
+        cexpr fn count() const noex -> usize
         {
             return _Count();
         }
@@ -98,7 +98,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Is arr empty.
         /// ----------------------------------------------------------------------------------------
-        cexpr fn IsEmpty() const noex -> bool
+        cexpr fn isEmpty() const noex -> bool
         {
             return _Count() == 0;
         }

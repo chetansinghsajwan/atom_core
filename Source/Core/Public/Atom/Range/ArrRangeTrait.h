@@ -64,7 +64,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Get underlying ptr to arr.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn Data() const -> const TElem*
+        constexpr fn data() const -> const TElem*
         {
             return _data();
         }
@@ -122,7 +122,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr fn back() const -> const TElem&
         {
-            debug_expects(not IsEmpty(), "Range is empty.");
+            debug_expects(not isEmpty(), "Range is empty.");
 
             return _back();
         }
@@ -130,7 +130,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Get count of elements.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn Count() const -> usize
+        constexpr fn count() const -> usize
         {
             return _count();
         }
@@ -138,7 +138,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Is range empty.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn IsEmpty() const -> bool
+        constexpr fn isEmpty() const -> bool
         {
             return _count() == 0;
         }

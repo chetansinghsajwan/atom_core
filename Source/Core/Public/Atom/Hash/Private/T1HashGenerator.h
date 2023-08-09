@@ -44,7 +44,7 @@ namespace Atom::Private
         {
             if cexpr (RArrRangeOf<TRange, byte>)
             {
-                return ProcessBytes(bytes.Data(), bytes.Size());
+                return ProcessBytes(bytes.data(), bytes.Size());
             }
 
             static_assert(BufSize <= NumLimits<uint32_t>::max() && BufSize > 10,
