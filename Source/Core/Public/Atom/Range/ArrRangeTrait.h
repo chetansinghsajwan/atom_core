@@ -151,7 +151,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr fn Iter() const -> TIter
+        constexpr fn iter() const -> TIter
         {
             return _iter();
         }
@@ -163,7 +163,7 @@ namespace Atom
         /// 
         /// - `i`: Index of the element to get iter at.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn Iter(usize i) const -> TIter
+        constexpr fn iter(usize i) const -> TIter
         {
             debug_expects(isIndexInRange(i), "Index is out of range.");
 

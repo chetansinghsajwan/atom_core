@@ -41,14 +41,14 @@ namespace Atom
         pub cexpr ctor _RangeWrapBase(TRange& range) noex:
             _range{ range } { }
 
-        pub cexpr fn Iter() const noex -> TIter
+        pub cexpr fn iter() const noex -> TIter
         {
-            return TIter{ _range.Iter() };
+            return TIter{ _range.iter() };
         }
 
-        pub cexpr fn IterEnd() const noex -> TIterEnd
+        pub cexpr fn iterEnd() const noex -> TIterEnd
         {
-            return TIterEnd{ _range.IterEnd() };
+            return TIterEnd{ _range.iterEnd() };
         }
 
         TRange& _range;
@@ -70,14 +70,14 @@ namespace Atom
         pub cexpr ctor _MutRangeWrapBase(TRange& range) noex:
             Base{ range } { }
 
-        pub cexpr fn MutIter() noex -> TMutIter
+        pub cexpr fn mutIter() noex -> TMutIter
         {
-            return TMutIter{ self._range.MutIter() };
+            return TMutIter{ self._range.mutIter() };
         }
 
-        pub cexpr fn MutIterEnd() noex -> TMutIterEnd
+        pub cexpr fn mutIterEnd() noex -> TMutIterEnd
         {
-            return TMutIterEnd{ self._range.MutIterEnd() };
+            return TMutIterEnd{ self._range.mutIterEnd() };
         }
     };
 

@@ -36,24 +36,24 @@ namespace Atom::Text
 
         pub using TIterEnd = _CharEncodingLazyConverterHelperIterEnd;
 
-        pub cexpr fn Iter() noex -> TIter
+        pub cexpr fn iter() noex -> TIter
         {
             return TIter(_impl, _input);
         }
 
-        pub cexpr fn IterEnd() noex -> TIter
+        pub cexpr fn iterEnd() noex -> TIter
         {
             return TIterEnd();
         }
 
         pub cexpr fn begin() noex -> TIter
         {
-            return Iter();
+            return iter();
         }
 
         pub cexpr fn end() noex -> TIterEnd
         {
-            return IterEnd();
+            return iterEnd();
         }
 
         prot TImpl _impl;

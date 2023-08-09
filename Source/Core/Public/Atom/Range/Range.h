@@ -15,7 +15,7 @@ namespace Atom
     /// 
     /// --------------------------------------------------------------------------------------------
     template <tname _TIter, tname _TIterEnd>
-    requires RIterPair<_TIter, _TIterEnd>
+    requires(RIterPair<_TIter, _TIterEnd>)
     class Range<_TIter, _TIterEnd>
     {
         pub using TElem = tname _TIter::TElem;
@@ -27,44 +27,44 @@ namespace Atom
         pub cexpr ctor Range(TIter iter, TIterEnd end) noex:
             _iter{ iter }, _end{ end } { }
 
-        pub cexpr fn Iter() const noex -> TIter
-            requires RIterPair<TIter, TIterEnd>
+        pub cexpr fn iter() const noex -> TIter
+            requires(RIterPair<TIter, TIterEnd>)
         {
             return TIter{ _iter };
         }
 
-        pub cexpr fn IterEnd() const noex -> TIterEnd
-            requires RIterPair<TIter, TIterEnd>
+        pub cexpr fn iterEnd() const noex -> TIterEnd
+            requires(RIterPair<TIter, TIterEnd>)
         {
             return TIterEnd{ _end };
         }
 
-        pub cexpr fn MutIter() noex -> TMutIter
-            requires RMutIterPair<TMutIter, TMutIterEnd>
+        pub cexpr fn mutIter() noex -> TMutIter
+            requires(RMutIterPair<TMutIter, TMutIterEnd>)
         {
             return _iter;
         }
 
-        pub cexpr fn MutIterEnd() noex -> TMutIterEnd
-            requires RMutIterPair<TMutIter, TMutIterEnd>
+        pub cexpr fn mutIterEnd() noex -> TMutIterEnd
+            requires(RMutIterPair<TMutIter, TMutIterEnd>)
         {
             return _end;
         }
 
         pub cexpr fn Count() const noex -> usize
-            requires RJumpIterPair<TIter, TIterEnd>
+            requires(RJumpIterPair<TIter, TIterEnd>)
         {
             return _end - _iter;
         }
 
         pub cexpr fn Data() const noex -> const TElem*
-            requires RArrIterPair<TIter, TIterEnd>
+            requires(RArrIterPair<TIter, TIterEnd>)
         {
             return &*_iter;
         }
 
         pub cexpr fn Data() noex -> TElem*
-            requires RMutArrIterPair<TIter, TIterEnd>
+            requires(RMutArrIterPair<TIter, TIterEnd>)
         {
             return &*_iter;
         }
@@ -74,7 +74,7 @@ namespace Atom
     };
 
     template <tname TIter, tname TIterEnd>
-    requires RIterPair<TIter, TIterEnd>
+    requires(RIterPair<TIter, TIterEnd>)
     Range(TIter iter, TIterEnd end) -> Range<TIter, TIterEnd>;
 
     /// --------------------------------------------------------------------------------------------

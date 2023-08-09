@@ -181,10 +181,10 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         cexpr fn Capacity() const noex -> usize;
 
-        using Base::Iter;
-        using Base::IterEnd;
-        using Base::MutIter;
-        using Base::MutIterEnd;
+        using Base::iter;
+        using Base::iterEnd;
+        using Base::mutIter;
+        using Base::mutIterEnd;
 
     //// -------------------------------------------------------------------------------------------
     //// Implementations

@@ -189,7 +189,7 @@ namespace Atom
     //     constexpr fn writeElems(T1& val) const -> void
     //         requires(RAssignable<TElem, T1>)
     //     {
-    //         _Fill(range.Iter(), range.IterEnd(), fwd(val));
+    //         _Fill(range.iter(), range.iterEnd(), fwd(val));
     //     }
 
     //     /// ----------------------------------------------------------------------------------------
@@ -200,7 +200,7 @@ namespace Atom
     //     constexpr fn writeElemsNoOptimize(T1& val) const -> void
     //         requires(RAssignable<TElem, T1>)
     //     {
-    //         _Fill(range.Iter(), range.IterEnd(), fwd(val));
+    //         _Fill(range.iter(), range.iterEnd(), fwd(val));
     //     }
 
     // #pragma optimize("", on)
@@ -211,7 +211,7 @@ namespace Atom
     //     constexpr fn shiftFwd(usize steps)
     //         requires(RMoveAssignable<TElem>)
     //     {
-    //         _FwdShift(range.Iter(), range.IterEnd(), steps);
+    //         _FwdShift(range.iter(), range.iterEnd(), steps);
     //     }
 
     //     /// ----------------------------------------------------------------------------------------
@@ -220,7 +220,7 @@ namespace Atom
     //     constexpr fn shiftBwd(usize steps)
     //         requires(RMoveAssignable<TElem>)
     //     {
-    //         _BwdShift(range.Iter(), range.IterEnd(), steps);
+    //         _BwdShift(range.iter(), range.iterEnd(), steps);
     //     }
 
     //     /// ----------------------------------------------------------------------------------------
@@ -231,11 +231,11 @@ namespace Atom
     //     {
     //         if (steps > 0)
     //         {
-    //             _BwdShift(range.Iter(), range.IterEnd(), steps);
+    //             _BwdShift(range.iter(), range.iterEnd(), steps);
     //         }
     //         else
     //         {
-    //             _FwdShift(range.Iter(), range.IterEnd(), -steps);
+    //             _FwdShift(range.iter(), range.iterEnd(), -steps);
     //         }
     //     }
 
@@ -245,7 +245,7 @@ namespace Atom
     //     constexpr fn rotateFwd(usize steps)
     //         requires(RSwappable<TElem>)
     //     {
-    //         _FwdRotate(range.Iter(), range.IterEnd(), steps);
+    //         _FwdRotate(range.iter(), range.iterEnd(), steps);
     //     }
 
     //     /// ----------------------------------------------------------------------------------------
@@ -254,7 +254,7 @@ namespace Atom
     //     constexpr fn rotateBwd(usize steps)
     //         requires(RSwappable<TElem>)
     //     {
-    //         _BwdRotate(range.Iter(), range.IterEnd(), steps);
+    //         _BwdRotate(range.iter(), range.iterEnd(), steps);
     //     }
 
     //     /// ----------------------------------------------------------------------------------------
@@ -265,11 +265,11 @@ namespace Atom
     //     {
     //         if (steps > 0)
     //         {
-    //             _BwdRotate(range.Iter(), range.IterEnd(), steps);
+    //             _BwdRotate(range.iter(), range.iterEnd(), steps);
     //         }
     //         else
     //         {
-    //             _FwdRotate(range.Iter(), range.IterEnd(), -steps);
+    //             _FwdRotate(range.iter(), range.iterEnd(), -steps);
     //         }
     //     }
 
@@ -279,7 +279,7 @@ namespace Atom
     //     constexpr fn destroyElems()
     //         requires(RDestructible<TElem>)
     //     {
-    //         _Destruct(range.Iter(), range.IterEnd());
+    //         _Destruct(range.iter(), range.iterEnd());
     //     }
     };
 }

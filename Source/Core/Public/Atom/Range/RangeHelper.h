@@ -25,7 +25,7 @@ namespace Atom
         requires RFwdRange<TRange>
         cexpr fn GetCount(const TRange& range) const noex -> usize
         {
-            return _GetCount(range.Iter(), range.IterEnd());
+            return _GetCount(range.iter(), range.iterEnd());
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -36,7 +36,7 @@ namespace Atom
             and RAssignable<tname TRange::TElem, T>
         cexpr fn Fill(TRange&& range, T&& val) const -> void
         {
-            _Fill(range.Iter(), range.IterEnd(), fwd(val));
+            _Fill(range.iter(), range.iterEnd(), fwd(val));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -48,7 +48,7 @@ namespace Atom
             and RAssignable<tname TRange::TElem, T>
         cexpr fn FillExplicit(TRange&& range, T&& val) const -> void
         {
-            _Fill(range.Iter(), range.IterEnd(), fwd(val));
+            _Fill(range.iter(), range.iterEnd(), fwd(val));
         }
     #pragma optimize("", on)
 
@@ -61,7 +61,7 @@ namespace Atom
             and RAssignable<tname TRange2::TElem, tname TRange1::TElem>
         cexpr fn FwdCopyTo(const TRange1& range1, TRange2&& range2) const -> void
         {
-            _FwdCopy(range1.Iter(), range1.IterEnd(), range2.Iter(), range2.IterEnd());
+            _FwdCopy(range1.iter(), range1.iterEnd(), range2.iter(), range2.iterEnd());
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -73,7 +73,7 @@ namespace Atom
             and RAssignable<tname TRange2::TElem, tname TRange1::TElem>
         cexpr fn BwdCopyTo(const TRange1& range1, TRange2&& range2) const -> void
         {
-            _BwdCopy(range1.Iter(), range1.IterEnd(), range2.Iter(), range2.IterEnd());
+            _BwdCopy(range1.iter(), range1.iterEnd(), range2.iter(), range2.iterEnd());
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -85,7 +85,7 @@ namespace Atom
             and RAssignable<tname TRange2::TElem, tname TRange1::TElem>
         cexpr fn FwdMoveTo(TRange1&& range1, TRange2&& range2) const -> void
         {
-            _FwdMove(range1.Iter(), range1.IterEnd(), range2.Iter(), range2.IterEnd());
+            _FwdMove(range1.iter(), range1.iterEnd(), range2.iter(), range2.iterEnd());
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -97,7 +97,7 @@ namespace Atom
             and RAssignable<tname TRange2::TElem, tname TRange1::TElem>
         cexpr fn BwdMoveTo(TRange1&& range1, TRange2&& range2) const -> void
         {
-            _BwdMove(range1.Iter(), range1.IterEnd(), range2.Iter(), range2.IterEnd());
+            _BwdMove(range1.iter(), range1.iterEnd(), range2.iter(), range2.iterEnd());
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -108,7 +108,7 @@ namespace Atom
             and RMoveAssignable<tname TRange::TElem>
         cexpr fn ShiftFwd(TRange&& range, usize steps) const -> void
         {
-            _FwdShift(range.Iter(), range.IterEnd(), steps);
+            _FwdShift(range.iter(), range.iterEnd(), steps);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -119,7 +119,7 @@ namespace Atom
             and RMoveAssignable<tname TRange::TElem>
         cexpr fn ShiftBwd(TRange&& range, usize steps) const -> void
         {
-            _BwdShift(range.Iter(), range.IterEnd(), steps);
+            _BwdShift(range.iter(), range.iterEnd(), steps);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -132,11 +132,11 @@ namespace Atom
         {
             if (steps > 0)
             {
-                _BwdShift(range.Iter(), range.IterEnd(), steps);
+                _BwdShift(range.iter(), range.iterEnd(), steps);
             }
             else
             {
-                _FwdShift(range.Iter(), range.IterEnd(), -steps);
+                _FwdShift(range.iter(), range.iterEnd(), -steps);
             }
         }
 
@@ -148,7 +148,7 @@ namespace Atom
             and RSwappable<tname TRange::TElem>
         cexpr fn RotateFwd(TRange&& range, usize steps) const -> void
         {
-            _FwdRotate(range.Iter(), range.IterEnd(), steps);
+            _FwdRotate(range.iter(), range.iterEnd(), steps);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -159,7 +159,7 @@ namespace Atom
             and RSwappable<tname TRange::TElem>
         cexpr fn RotateBwd(TRange&& range, usize steps) const -> void
         {
-            _BwdRotate(range.Iter(), range.IterEnd(), steps);
+            _BwdRotate(range.iter(), range.iterEnd(), steps);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -172,11 +172,11 @@ namespace Atom
         {
             if (steps > 0)
             {
-                _BwdRotate(range.Iter(), range.IterEnd(), steps);
+                _BwdRotate(range.iter(), range.iterEnd(), steps);
             }
             else
             {
-                _FwdRotate(range.Iter(), range.IterEnd(), -steps);
+                _FwdRotate(range.iter(), range.iterEnd(), -steps);
             }
         }
 
@@ -188,7 +188,7 @@ namespace Atom
             and RDestructible<tname TRange::TElem>
         cexpr fn Destruct(TRange&& range) const -> void
         {
-            _Destruct(range.Iter(), range.IterEnd());
+            _Destruct(range.iter(), range.iterEnd());
         }
 
         priv template <class TIter, class TIterEnd>

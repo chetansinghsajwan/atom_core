@@ -17,10 +17,10 @@ namespace Atom
             RSameAs<tname TRange1::TElem, tname TRange2::TElem>
         fn AreEqual(const TRange1& range1, const TRange2& range2) -> i8
         {
-            StdIterWrapForAtomIter stdIter1{ range1.Iter() };
-            StdIterWrapForAtomIter stdIterEnd1{ range1.IterEnd() };
-            StdIterWrapForAtomIter stdIter2{ range2.Iter() };
-            StdIterWrapForAtomIter stdIterEnd2{ range2.IterEnd() };
+            StdIterWrapForAtomIter stdIter1{ range1.iter() };
+            StdIterWrapForAtomIter stdIterEnd1{ range1.iterEnd() };
+            StdIterWrapForAtomIter stdIter2{ range2.iter() };
+            StdIterWrapForAtomIter stdIterEnd2{ range2.iterEnd() };
 
             return std::equal(stdIter1, stdIterEnd1, stdIter2, stdIterEnd2);
         }

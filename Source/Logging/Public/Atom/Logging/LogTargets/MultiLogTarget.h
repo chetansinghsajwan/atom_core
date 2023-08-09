@@ -126,7 +126,7 @@ namespace Atom::Logging::Private
         requires RRangeOf<TRange, LogTargetPtr>
         usize AddTargets(const TRange& targets)
         {
-            if (!targets.Iter() == targets.IterEnd())
+            if (!targets.iter() == targets.iterEnd())
                 return 0;
 
             LockGuard guard(_lock);
@@ -171,7 +171,7 @@ namespace Atom::Logging::Private
         requires RRangeOf<TRange, LogTargetPtr>
         fn RemoveTargets(const TRange& targets) -> usize
         {
-            if (!targets.Iter() == targets.IterEnd())
+            if (!targets.iter() == targets.iterEnd())
                 return 0;
 
             LockGuard guard(_lock);
@@ -213,7 +213,7 @@ namespace Atom::Logging::Private
         requires RRangeOf<TRange, LogTargetPtr>
         fn HasTargets(const TRange& targets) const noex -> usize
         {
-            if (!targets.Iter() == targets.IterEnd())
+            if (!targets.iter() == targets.iterEnd())
                 return 0;
 
             LockGuard guard(_lock);
@@ -256,9 +256,9 @@ namespace Atom::Logging::Private
         /// 
         /// @TODO Make ThreadSafe.
         /// ----------------------------------------------------------------------------------------
-        fn Iter() const noex -> TIter
+        fn iter() const noex -> TIter
         {
-            return _targets.Iter();
+            return _targets.iter();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -268,9 +268,9 @@ namespace Atom::Logging::Private
         /// 
         /// @TODO Make ThreadSafe.
         /// ----------------------------------------------------------------------------------------
-        fn IterEnd() const noex -> TIterEnd
+        fn iterEnd() const noex -> TIterEnd
         {
-            return _targets.IterEnd();
+            return _targets.iterEnd();
         }
 
     //// -------------------------------------------------------------------------------------------
@@ -297,7 +297,7 @@ namespace Atom::Logging::Private
         {
             ATOM_DEBUG_EXPECTS(target != nullptr);
 
-            return _targets.InsertBack(mov(target)) != _targets.IterEnd();
+            return _targets.InsertBack(mov(target)) != _targets.iterEnd();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -345,7 +345,7 @@ namespace Atom::Logging::Private
         {
             ATOM_DEBUG_EXPECTS(target != nullptr);
 
-            for (auto it = _targets.Iter(); it != _targets.IterEnd(); it++)
+            for (auto it = _targets.iter(); it != _targets.iterEnd(); it++)
             {
                 if (*it == target)
                 {
@@ -379,7 +379,7 @@ namespace Atom::Logging::Private
                 if (target == nullptr)
                     continue;
 
-                for (auto it = _targets.Iter(); it != _targets.IterEnd(); it++)
+                for (auto it = _targets.iter(); it != _targets.iterEnd(); it++)
                 {
                     if (*it == target)
                     {

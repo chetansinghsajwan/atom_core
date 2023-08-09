@@ -15,11 +15,11 @@ namespace Atom
             RangeHelper helper;
             if cexpr (helper.CanGetCount<TRange>())
             {
-                return _ParseCounted(range.Iter(), helper.GetCount(range));
+                return _ParseCounted(range.iter(), helper.GetCount(range));
             }
             else
             {
-                return _ParseUncounted(range.Iter(), range.IterEnd());
+                return _ParseUncounted(range.iter(), range.iterEnd());
             }
         }
 

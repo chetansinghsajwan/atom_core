@@ -22,7 +22,7 @@ namespace Atom
         ATOM_ASSERT(_ValidateIndexForInsert(index)) << IndexOutOfRangeException(
             "{pos} is out of range.", index, 0, _Count());
 
-        return MutIter() + _InsertAt(index, fwd(el));
+        return mutIter() + _InsertAt(index, fwd(el));
     }
 
     template <tname TImpl>
@@ -37,11 +37,11 @@ namespace Atom
 
         if cexpr (_CanGetRangeSize<TRange>())
         {
-            return MutIter() + _InsertAtCounted(index, range.MutIter(), _GetRangeSize(range));
+            return mutIter() + _InsertAtCounted(index, range.mutIter(), _GetRangeSize(range));
         }
         else
         {
-            return MutIter() + _InsertAtUncounted(index, range.MutIter(), range.IterEnd());
+            return mutIter() + _InsertAtUncounted(index, range.mutIter(), range.iterEnd());
         }
     }
 
@@ -49,7 +49,7 @@ namespace Atom
     template <tname T2, tname Req>
     cexpr fn _DynArrImplHelper<TImpl>::InsertFront(T2&& el) -> TMutIter
     {
-        return MutIter() + _InsertAt(0, fwd(el));
+        return mutIter() + _InsertAt(0, fwd(el));
     }
 
     template <tname TImpl>
@@ -58,11 +58,11 @@ namespace Atom
     {
         if cexpr (_CanGetRangeSize<TRange>())
         {
-            return MutIter() + _InsertAt(0, range.MutIter(), _GetRangeSize(range));
+            return mutIter() + _InsertAt(0, range.mutIter(), _GetRangeSize(range));
         }
         else
         {
-            return MutIter() + _InsertAt(0, range.MutIter(), range.IterEnd());
+            return mutIter() + _InsertAt(0, range.mutIter(), range.iterEnd());
         }
     }
 
@@ -70,7 +70,7 @@ namespace Atom
     template <tname T2, tname Req>
     cexpr fn _DynArrImplHelper<TImpl>::InsertBack(T2&& el) -> TMutIter
     {
-        return MutIter() + _InsertBack(fwd(el));
+        return mutIter() + _InsertBack(fwd(el));
     }
 
     template <tname TImpl>
@@ -79,11 +79,11 @@ namespace Atom
     {
         if cexpr (_CanGetRangeSize<TRange>())
         {
-            return MutIter() + _InsertBackCounted(range.Iter(), _GetRangeSize(range));
+            return mutIter() + _InsertBackCounted(range.iter(), _GetRangeSize(range));
         }
         else
         {
-            return MutIter() + _InsertBackUncounted(range.Iter(), range.IterEnd());
+            return mutIter() + _InsertBackUncounted(range.iter(), range.iterEnd());
         }
     }
 
@@ -203,14 +203,14 @@ namespace Atom
         ATOM_ASSERT(_ValidateIndex(index)) << IndexOutOfRangeException(
             "{pos} was out of range.", index, 0, _Count() - 1);
 
-        return MutIter() + _RemoveAt(index);
+        return mutIter() + _RemoveAt(index);
     }
 
     template <tname TImpl>
     cexpr fn _DynArrImplHelper<TImpl>::RemoveRange(Range<TIter, TIterEnd> range) -> TMutIter
     {
-        TIter rangeBegin = range.MutIter();
-        TIterEnd rangeEnd = range.IterEnd();
+        TIter rangeBegin = range.mutIter();
+        TIterEnd rangeEnd = range.iterEnd();
 
         ATOM_DEBUG_EXPECTS(_ValidateIter(rangeBegin)) << "Invalid iter.";
         ATOM_DEBUG_EXPECTS(_ValidateIter(rangeEnd)) << "Invalid iter.";
@@ -219,15 +219,15 @@ namespace Atom
         usize end = _FetchIndex(rangeEnd);
 
         ATOM_ASSERT(_ValidateIndex(begin)) << IndexOutOfRangeException(
-            "{range.MutIter()} was out of range.", begin, 0, _Count() - 1);
+            "{range.mutIter()} was out of range.", begin, 0, _Count() - 1);
 
         ATOM_ASSERT(_ValidateIndex(end)) << IndexOutOfRangeException(
-            "{range.IterEnd()} was out of range.", end, 0, _Count() - 1);
+            "{range.iterEnd()} was out of range.", end, 0, _Count() - 1);
 
         ATOM_ASSERT(begin <= end) << InvalidArgumentException(
-            "Invalid range passed. {range.MutIter()} is ahead of {range.IterEnd()}");
+            "Invalid range passed. {range.mutIter()} is ahead of {range.iterEnd()}");
 
-        return MutIter() + _RemoveRange(begin, end - begin);
+        return mutIter() + _RemoveRange(begin, end - begin);
     }
 
     template <tname TImpl>

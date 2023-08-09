@@ -41,7 +41,7 @@ namespace Atom
 			Exception("Not implemented.") { }
 		// StrFmtEx(const _FmtFmtEx& fmtEx) noex:
 		// 	Exception(CharEncodingConverter<UTF8CharEncoding, CharEncoding>()
-		// 		.Convert(UTF8StrView{ (const char8*)fmtEx.what() }.Iter()).Data()) { }
+		// 		.Convert(UTF8StrView{ (const char8*)fmtEx.what() }.iter()).Data()) { }
 	};
 
 	/// --------------------------------------------------------------------------------------------

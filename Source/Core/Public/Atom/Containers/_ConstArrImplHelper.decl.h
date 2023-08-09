@@ -111,7 +111,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// {TIter} to the first element.
         /// ----------------------------------------------------------------------------------------
-        cexpr fn Iter() const noex -> TIter
+        cexpr fn iter() const noex -> TIter
         {
             return TIter{ _Data() };
         }
@@ -119,7 +119,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// {TIter} to element following the last element.
         /// ----------------------------------------------------------------------------------------
-        cexpr fn IterEnd() const noex -> TIter
+        cexpr fn iterEnd() const noex -> TIter
         {
             return TIter{ _Data() + _Count()};
         }

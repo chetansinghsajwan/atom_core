@@ -102,7 +102,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// [`TMutIter`] to the first element.
         /// ----------------------------------------------------------------------------------------
-        pub cexpr fn MutIter() noex -> TMutIter
+        pub cexpr fn mutIter() noex -> TMutIter
         {
             return TMutIter{ _Data() };
         }
@@ -110,7 +110,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// [`TMutIter`] to element following the last element.
         /// ----------------------------------------------------------------------------------------
-        pub cexpr fn MutIterEnd() noex -> TMutIter
+        pub cexpr fn mutIterEnd() noex -> TMutIter
         {
             return TMutIter{ _Data() + _Count() - 1 };
         }

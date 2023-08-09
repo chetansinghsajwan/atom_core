@@ -15,8 +15,8 @@ namespace Atom
 
         requires RSameAs<tname TRange::TElem, tname TRange::TIter::TElem>;
 
-        { range.Iter() } -> RSameAs<tname TRange::TIter>;
-        { range.IterEnd() } -> RSameAs<tname TRange::TIterEnd>;
+        { range.iter() } -> RSameAs<tname TRange::TIter>;
+        { range.iterEnd() } -> RSameAs<tname TRange::TIterEnd>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -42,8 +42,8 @@ namespace Atom
 
         requires RConvertibleTo<tname TRange::TMutIter, tname TRange::TIter>;
 
-        { range.MutIter() } -> RSameAs<tname TRange::TMutIter>;
-        { range.MutIterEnd() } -> RSameAs<tname TRange::TMutIterEnd>;
+        { range.mutIter() } -> RSameAs<tname TRange::TMutIter>;
+        { range.mutIterEnd() } -> RSameAs<tname TRange::TMutIterEnd>;
     };
 
     /// --------------------------------------------------------------------------------------------

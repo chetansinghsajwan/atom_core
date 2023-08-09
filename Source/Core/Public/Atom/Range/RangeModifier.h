@@ -16,7 +16,7 @@ namespace Atom
         cexpr fn RemoveIf(TRange& range, TPred&& pred) -> usize
         {
             usize count = 0;
-            for (auto it = range.Iter(); it != range.IterEnd(); it++)
+            for (auto it = range.iter(); it != range.iterEnd(); it++)
             {
                 if (pred(*it))
                 {

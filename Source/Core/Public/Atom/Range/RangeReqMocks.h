@@ -14,8 +14,8 @@ namespace Atom
         pub using TIter = _TIter;
         pub using TIterEnd = _TIterEnd;
 
-        pub fn Iter() const -> TIter;
-        pub fn IterEnd() const -> TIterEnd;
+        pub fn iter() const -> TIter;
+        pub fn iterEnd() const -> TIterEnd;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -30,10 +30,10 @@ namespace Atom
         pub using TMutIter = _TIter;
         pub using TMutIterEnd = _TIterEnd;
 
-        pub fn Iter() const -> TIter;
-        pub fn IterEnd() const -> TIterEnd;
-        pub fn MutIter() -> TMutIter;
-        pub fn MutIterEnd() -> TMutIterEnd;
+        pub fn iter() const -> TIter;
+        pub fn iterEnd() const -> TIterEnd;
+        pub fn mutIter() -> TMutIter;
+        pub fn mutIterEnd() -> TMutIterEnd;
     };
 
     /// --------------------------------------------------------------------------------------------

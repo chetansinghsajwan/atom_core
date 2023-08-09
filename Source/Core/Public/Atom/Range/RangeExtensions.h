@@ -11,7 +11,7 @@ namespace Atom
     requires RRange<TRange>
     cexpr fn begin(const TRange& range) noex -> auto
     {
-        return range.Iter();
+        return range.iter();
     }
 
     /// --------------------------------------------------------------------------------------------
@@ -21,7 +21,7 @@ namespace Atom
     requires RMutRange<TRange>
     cexpr fn begin(TRange& range) noex -> auto
     {
-        return range.MutIter();
+        return range.mutIter();
     }
 
     /// --------------------------------------------------------------------------------------------
@@ -31,7 +31,7 @@ namespace Atom
     requires RRange<TRange>
     cexpr fn end(const TRange& range) noex -> auto
     {
-        return range.IterEnd();
+        return range.iterEnd();
     }
 
     /// --------------------------------------------------------------------------------------------
@@ -41,7 +41,7 @@ namespace Atom
     requires RMutRange<TRange>
     cexpr fn end(TRange& range) noex -> auto
     {
-        return range.MutIterEnd();
+        return range.mutIterEnd();
     }
 
     /// --------------------------------------------------------------------------------------------
