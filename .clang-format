@@ -190,9 +190,7 @@ PenaltyReturnTypeOnItsOwnLine: 1000
 # Macros
 # --------------------------------------------------------------------------------------------------
 
-Macros: 
-  - fn=auto
-  - op=operator
+Macros:
 AttributeMacros: ['fn']
 ForEachMacros: []
 IfMacros: []
