@@ -39,7 +39,8 @@ namespace Atom::Internal
 
     public:
         template <typename TEx>
-        noret void operator<<(TEx&& ex)
+        [[noreturn]]
+        void operator<<(TEx&& ex)
             requires(RDerivedFrom<TEx, Exception>)
         {
             done = true;
@@ -49,7 +50,8 @@ namespace Atom::Internal
         }
 
         template <typename TArg>
-        noret void operator<<(TArg&& arg)
+        [[noreturn]]
+        void operator<<(TArg&& arg)
             requires(RNotDerivedFrom<TArg, Exception>)
         {
             done = true;
@@ -99,7 +101,8 @@ namespace Atom::Internal
 /// ------------------------------------------------------------------------------------------------
 #define ATOM_DEBUG_ENSURES(assertion) ATOM_DEBUG_ASSERT(assertion)
 
-noret void myTerminate(auto& msg)
+[[noreturn]]
+void myTerminate(auto& msg)
 {
     std::cout << msg << std::endl;
     std::terminate();

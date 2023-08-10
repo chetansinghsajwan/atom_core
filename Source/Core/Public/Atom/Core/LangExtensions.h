@@ -24,30 +24,9 @@ namespace Atom
 #define fwd(...) static_cast<decltype(__VA_ARGS__)&&>(__VA_ARGS__)
 #define mov(...) static_cast<Atom::_remove_ref_t<decltype(__VA_ARGS__)>&&>(__VA_ARGS__)
 #define declval(T) std::declval<T>()
-#define noret [[noreturn]]
 #define ctor
 #define dtor ~
 #define fn auto
 #define abstract = 0
 #define extends : public
 #define self (*this)
-
-// #define sassert(...) static_assert(__VA_ARGS__)
-// #define scast(...) static_cast(__VA_ARGS__)
-// #define dcast(...) static_cast(__VA_ARGS__)
-// #define rcast(...) static_cast(__VA_ARGS__)
-// #define ccast(...) static_cast(__VA_ARGS__)
-
-// #define use using
-// #define var auto
-// #define let const auto
-// #define inl inline
-// #define finl inline
-// #define and &&
-// #define or ||
-// #define not !
-// #define null nullptr
-// #define init :
-// #define ret return
-// #define base ((Base&)this)
-// #define enum enum class
