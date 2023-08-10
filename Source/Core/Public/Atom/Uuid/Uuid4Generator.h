@@ -10,8 +10,9 @@ namespace Atom
     class BasicUuidRandomGenerator
     {
     public:
-        explicit BasicUuidRandomGenerator(u32 seed = 0):
-            _generator{ seed } { }
+        explicit BasicUuidRandomGenerator(u32 seed = 0)
+            : _generator{ seed }
+        {}
 
     public:
         auto generate() -> Uuid

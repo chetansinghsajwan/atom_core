@@ -1,6 +1,6 @@
 #pragma once
-#include "RangeReq.h"
 #include "Atom/Invokable/Invokable.h"
+#include "RangeReq.h"
 
 namespace Atom
 {
@@ -8,11 +8,10 @@ namespace Atom
     {
     public:
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         template <typename TRange, typename TPred>
-        requires RRange<TRange>
-            and RInvokable<TPred, bool(const typename TRange::TElem&)>
+            requires RRange<TRange> and RInvokable<TPred, bool(const typename TRange::TElem&)>
         constexpr auto RemoveIf(TRange& range, TPred&& pred) -> usize
         {
             usize count = 0;

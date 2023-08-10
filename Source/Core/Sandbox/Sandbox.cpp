@@ -10,7 +10,7 @@ auto PrintCmdArgs(i32 argc, char** argv)
     }
 }
 
-auto main(i32 argc, char **argv) -> i32
+auto main(i32 argc, char** argv) -> i32
 {
     PrintCmdArgs(argc, argv);
 

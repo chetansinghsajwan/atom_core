@@ -4,7 +4,7 @@
 namespace Atom
 {
     template <typename T, usize BufSize, typename TAlloc>
-    class _BufArrImplBase : public _DynArrImplBase<T, TAlloc>
+    class _BufArrImplBase: public _DynArrImplBase<T, TAlloc>
     {
     private:
         using Base = _DynArrImplBase<T, TAlloc>;
@@ -45,15 +45,15 @@ namespace Atom
             return required;
         }
 
-        using Base::_Count;
         using Base::_Capacity;
+        using Base::_Count;
 
     protected:
         T _stackBuf[BufSize];
     };
 
     template <typename T, usize bufSize, typename TAlloc>
-    class BufArr : public _DynArrImplHelper<_BufArrImplBase<T, bufSize, TAlloc>>
+    class BufArr: public _DynArrImplHelper<_BufArrImplBase<T, bufSize, TAlloc>>
     {
     private:
         using Base = _DynArrImplHelper<_BufArrImplBase<T, bufSize, TAlloc>>;
@@ -70,8 +70,9 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// NullCtor.
         /// ----------------------------------------------------------------------------------------
-        constexpr BufArr(NullPtr):
-            Base{ nullptr } { }
+        constexpr BufArr(NullPtr)
+            : Base{ nullptr }
+        {}
 
         /// ----------------------------------------------------------------------------------------
         /// NullOper.
@@ -87,8 +88,8 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
         constexpr BufArr(TRange&& range)
-            requires(RRangeOf<TRange, T>):
-            Base{ nullptr }
+            requires(RRangeOf<TRange, T>)
+            : Base{ nullptr }
         {
             InsertBack(range);
         }
@@ -97,28 +98,26 @@ namespace Atom
         /// ParamOper for Range.
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
-        constexpr auto operator=(TRange&& range) -> BufArr&
-            requires(RRangeOf<TRange, T>)
-        {
+        constexpr auto operator=(TRange&& range) -> BufArr& requires(RRangeOf<TRange, T>) {
             Clear();
             InsertBack(range);
         }
 
         /// ----------------------------------------------------------------------------------------
         /// CopyCtor.
-        /// 
-        /// @TODO: Check if we need this to satisfy std::is_copy_constructible and 
+        ///
+        /// @TODO: Check if we need this to satisfy std::is_copy_constructible and
         ///     RCopyConstructible.
         /// ----------------------------------------------------------------------------------------
-        constexpr BufArr(const BufArr& that):
-            Base{ nullptr }
+        constexpr BufArr(const BufArr& that)
+            : Base{ nullptr }
         {
             // InsertBack(that);
         }
 
         /// ----------------------------------------------------------------------------------------
         /// CopyOper.
-        /// 
+        ///
         /// @TODO: Same as CopyCtor.
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator=(const BufArr& that) -> BufArr&
@@ -131,8 +130,8 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// MoveCtor.
         /// ----------------------------------------------------------------------------------------
-        constexpr BufArr(BufArr&& that):
-            Base{ nullptr }
+        constexpr BufArr(BufArr&& that)
+            : Base{ nullptr }
         {
             _Move(mov(that));
         }
@@ -141,8 +140,8 @@ namespace Atom
         /// TempMoveCtor.
         /// ----------------------------------------------------------------------------------------
         template <usize thatBufSize>
-        constexpr BufArr(BufArr<TElem, thatBufSize, TAlloc>&& that):
-            Base{ nullptr }
+        constexpr BufArr(BufArr<TElem, thatBufSize, TAlloc>&& that)
+            : Base{ nullptr }
         {
             _Move(mov(that));
         }
@@ -150,8 +149,8 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// MoveCtor for DynArr.
         /// ----------------------------------------------------------------------------------------
-        constexpr BufArr(DynArr<TElem, TAlloc>&& that):
-            Base{ nullptr }
+        constexpr BufArr(DynArr<TElem, TAlloc>&& that)
+            : Base{ nullptr }
         {
             BaseImpl::_Move(that);
         }
@@ -197,8 +196,8 @@ namespace Atom
 
     public:
         using Base::Clear;
-        using Base::Release;
         using Base::InsertBack;
+        using Base::Release;
 
     protected:
         /// ----------------------------------------------------------------------------------------
@@ -217,7 +216,7 @@ namespace Atom
             _DynArrImplBase<TElem, TAlloc>::_Move(that);
         }
 
-        using Base::_EnsureCapFor;
         using Base::_Data;
+        using Base::_EnsureCapFor;
     };
 }

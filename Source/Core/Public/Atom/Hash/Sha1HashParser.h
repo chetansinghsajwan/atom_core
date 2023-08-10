@@ -1,6 +1,6 @@
 #pragma once
-#include "Sha1Hash.h"
 #include "Private/T1HashParser.h"
+#include "Sha1Hash.h"
 
 namespace Atom
 {

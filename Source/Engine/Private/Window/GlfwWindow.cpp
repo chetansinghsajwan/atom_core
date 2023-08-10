@@ -1,15 +1,14 @@
-#include "Atom/Logging.h"
 #include "Window/GlfwWindow.h"
+#include "Atom/Logging.h"
 
 using namespace Atom::Logging;
 
 namespace Atom::Engine
 {
-    GlfwWindow::GlfwWindow(const WindowProps& props):
-        Window(_windowEventSource)
+    GlfwWindow::GlfwWindow(const WindowProps& props)
+        : Window(_windowEventSource)
     {
-        GlfwSWindowCoords glfwWindowSize = GlfwWindowCoordsConverter::ToGLFW(
-            props.windowSize);
+        GlfwSWindowCoords glfwWindowSize = GlfwWindowCoordsConverter::ToGLFW(props.windowSize);
 
         // TODO: Requires encoding conversion.
         _glfwWindow = glfwCreateWindow(glfwWindowSize.x, glfwWindowSize.y,
@@ -18,42 +17,34 @@ namespace Atom::Engine
         glfwMakeContextCurrent(_glfwWindow);
         glfwSetWindowUserPointer(_glfwWindow, this);
 
-        glfwSetWindowPosCallback(_glfwWindow,
-            [](GLFWwindow* glfwWindow, i32 xpos, i32 ypos)
-            {
-                GlfwWindow& window = *reinterpret_cast<GlfwWindow*>(
-                    glfwGetWindowUserPointer(glfwWindow));
+        glfwSetWindowPosCallback(_glfwWindow, [](GLFWwindow* glfwWindow, i32 xpos, i32 ypos) {
+            GlfwWindow& window =
+                *reinterpret_cast<GlfwWindow*>(glfwGetWindowUserPointer(glfwWindow));
 
-                SWindowCoords oldPos = window._windowPos;
-                SWindowCoords newPos = GlfwWindowCoordsConverter::FromGLFW({ xpos, ypos });
-                window._windowPos = newPos;
+            SWindowCoords oldPos = window._windowPos;
+            SWindowCoords newPos = GlfwWindowCoordsConverter::FromGLFW({ xpos, ypos });
+            window._windowPos = newPos;
 
-                window._windowEventSource.Dispatch(SWindowRepositionEvent(
-                    newPos, newPos - oldPos));
-            });
+            window._windowEventSource.Dispatch(SWindowRepositionEvent(newPos, newPos - oldPos));
+        });
 
-        glfwSetWindowSizeCallback(_glfwWindow,
-            [](GLFWwindow* glfwWindow, i32 width, i32 height)
-            {
-                GlfwWindow& window = *reinterpret_cast<GlfwWindow*>(
-                    glfwGetWindowUserPointer(glfwWindow));
+        glfwSetWindowSizeCallback(_glfwWindow, [](GLFWwindow* glfwWindow, i32 width, i32 height) {
+            GlfwWindow& window =
+                *reinterpret_cast<GlfwWindow*>(glfwGetWindowUserPointer(glfwWindow));
 
-                SWindowCoords oldSize = window._windowSize;
-                SWindowCoords newSize = GlfwWindowCoordsConverter::FromGLFW({ width, height });
-                window._windowSize = newSize;
+            SWindowCoords oldSize = window._windowSize;
+            SWindowCoords newSize = GlfwWindowCoordsConverter::FromGLFW({ width, height });
+            window._windowSize = newSize;
 
-                window._windowEventSource.Dispatch(SWindowResizeEvent(
-                    newSize, newSize - oldSize));
-            });
+            window._windowEventSource.Dispatch(SWindowResizeEvent(newSize, newSize - oldSize));
+        });
 
-        glfwSetWindowCloseCallback(_glfwWindow,
-            [](GLFWwindow* glfwWindow)
-            {
-                GlfwWindow& window = *reinterpret_cast<GlfwWindow*>(
-                    glfwGetWindowUserPointer(glfwWindow));
+        glfwSetWindowCloseCallback(_glfwWindow, [](GLFWwindow* glfwWindow) {
+            GlfwWindow& window =
+                *reinterpret_cast<GlfwWindow*>(glfwGetWindowUserPointer(glfwWindow));
 
-                window._windowEventSource.Dispatch(SWindowCloseEvent());
-            });
+            window._windowEventSource.Dispatch(SWindowCloseEvent());
+        });
 
         UpdatePos();
         UpdateSize();

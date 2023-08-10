@@ -1,6 +1,6 @@
 #pragma once
-#include "StdIterWrapForAtomIter.h"
 #include "RangeReq.h"
+#include "StdIterWrapForAtomIter.h"
 
 #include <algorithm>
 
@@ -10,125 +10,118 @@ namespace Atom
     {
     public:
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         template <class TRange>
-        requires RRange<TRange>
+            requires RRange<TRange>
         constexpr auto CanGetCount() const -> bool
         {
             return RFwdRange<TRange>;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         template <class TRange>
-        requires RFwdRange<TRange>
+            requires RFwdRange<TRange>
         constexpr auto GetCount(const TRange& range) const -> usize
         {
             return _GetCount(range.iter(), range.iterEnd());
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         template <class TRange, class T>
-        requires RMutRange<TRange>
-            and RAssignable<typename TRange::TElem, T>
+            requires RMutRange<TRange> and RAssignable<typename TRange::TElem, T>
         constexpr auto Fill(TRange&& range, T&& val) const -> void
         {
             _Fill(range.iter(), range.iterEnd(), fwd(val));
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
-    #pragma optimize("", off)
+#pragma optimize("", off)
+
         template <class TRange, typename T>
-        requires RMutRange<TRange>
-            and RAssignable<typename TRange::TElem, T>
+            requires RMutRange<TRange> and RAssignable<typename TRange::TElem, T>
         constexpr auto FillExplicit(TRange&& range, T&& val) const -> void
         {
             _Fill(range.iter(), range.iterEnd(), fwd(val));
         }
-    #pragma optimize("", on)
+
+#pragma optimize("", on)
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         template <class TRange1, class TRange2>
-        requires RRange<TRange1>
-            and RMutRange<TRange2>
-            and RAssignable<typename TRange2::TElem, typename TRange1::TElem>
+            requires RRange<TRange1> and RMutRange<TRange2>
+                     and RAssignable<typename TRange2::TElem, typename TRange1::TElem>
         constexpr auto FwdCopyTo(const TRange1& range1, TRange2&& range2) const -> void
         {
             _FwdCopy(range1.iter(), range1.iterEnd(), range2.iter(), range2.iterEnd());
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         template <class TRange1, class TRange2>
-        requires RRange<TRange1>
-            and RMutRange<TRange2>
-            and RAssignable<typename TRange2::TElem, typename TRange1::TElem>
+            requires RRange<TRange1> and RMutRange<TRange2>
+                     and RAssignable<typename TRange2::TElem, typename TRange1::TElem>
         constexpr auto BwdCopyTo(const TRange1& range1, TRange2&& range2) const -> void
         {
             _BwdCopy(range1.iter(), range1.iterEnd(), range2.iter(), range2.iterEnd());
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         template <class TRange1, class TRange2>
-        requires RMutRange<TRange1>
-            and RMutRange<TRange2>
-            and RAssignable<typename TRange2::TElem, typename TRange1::TElem>
+            requires RMutRange<TRange1> and RMutRange<TRange2>
+                     and RAssignable<typename TRange2::TElem, typename TRange1::TElem>
         constexpr auto FwdMoveTo(TRange1&& range1, TRange2&& range2) const -> void
         {
             _FwdMove(range1.iter(), range1.iterEnd(), range2.iter(), range2.iterEnd());
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         template <class TRange1, class TRange2>
-        requires RMutRange<TRange1>
-            and RMutRange<TRange2>
-            and RAssignable<typename TRange2::TElem, typename TRange1::TElem>
+            requires RMutRange<TRange1> and RMutRange<TRange2>
+                     and RAssignable<typename TRange2::TElem, typename TRange1::TElem>
         constexpr auto BwdMoveTo(TRange1&& range1, TRange2&& range2) const -> void
         {
             _BwdMove(range1.iter(), range1.iterEnd(), range2.iter(), range2.iterEnd());
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         template <class TRange>
-        requires RMutFwdRange<TRange>
-            and RMoveAssignable<typename TRange::TElem>
+            requires RMutFwdRange<TRange> and RMoveAssignable<typename TRange::TElem>
         constexpr auto ShiftFwd(TRange&& range, usize steps) const -> void
         {
             _FwdShift(range.iter(), range.iterEnd(), steps);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         template <class TRange>
-        requires RMutFwdRange<TRange>
-            and RMoveAssignable<typename TRange::TElem>
+            requires RMutFwdRange<TRange> and RMoveAssignable<typename TRange::TElem>
         constexpr auto ShiftBwd(TRange&& range, usize steps) const -> void
         {
             _BwdShift(range.iter(), range.iterEnd(), steps);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         template <class TRange>
-        requires RMutFwdRange<TRange>
-            and RSwappable<typename TRange::TElem>
+            requires RMutFwdRange<TRange> and RSwappable<typename TRange::TElem>
         constexpr auto ShiftBy(TRange&& range, isize steps) const -> void
         {
             if (steps > 0)
@@ -142,33 +135,30 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         template <class TRange>
-        requires RMutRange<TRange>
-            and RSwappable<typename TRange::TElem>
+            requires RMutRange<TRange> and RSwappable<typename TRange::TElem>
         constexpr auto RotateFwd(TRange&& range, usize steps) const -> void
         {
             _FwdRotate(range.iter(), range.iterEnd(), steps);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         template <class TRange>
-        requires RMutRange<TRange>
-            and RSwappable<typename TRange::TElem>
+            requires RMutRange<TRange> and RSwappable<typename TRange::TElem>
         constexpr auto RotateBwd(TRange&& range, usize steps) const -> void
         {
             _BwdRotate(range.iter(), range.iterEnd(), steps);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         template <class TRange>
-        requires RMutRange<TRange>
-            and RSwappable<typename TRange::TElem>
+            requires RMutRange<TRange> and RSwappable<typename TRange::TElem>
         constexpr auto RotateBy(TRange&& range, isize steps) const -> void
         {
             if (steps > 0)
@@ -182,11 +172,10 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         template <class TRange>
-        requires RMutRange<TRange>
-            and RDestructible<typename TRange::TElem>
+            requires RMutRange<TRange> and RDestructible<typename TRange::TElem>
         constexpr auto Destruct(TRange&& range) const -> void
         {
             _Destruct(range.iter(), range.iterEnd());
@@ -202,7 +191,8 @@ namespace Atom
             }
 
             usize count = 0;
-            for (; iter != iterEnd; iter++) count++;
+            for (; iter != iterEnd; iter++)
+                count++;
 
             return count;
         }
@@ -217,8 +207,8 @@ namespace Atom
         }
 
         template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
-        constexpr auto _FwdCopy(const TIter1 iter1, const TIterEnd1 iterEnd1,
-            TIter2 iter2, TIterEnd2 iterEnd2) const -> void
+        constexpr auto _FwdCopy(const TIter1 iter1, const TIterEnd1 iterEnd1, TIter2 iter2,
+            TIterEnd2 iterEnd2) const -> void
         {
             StdIterWrapForAtomIter stdIter1{ iter1 };
             StdIterWrapForAtomIter stdIterEnd1{ iterEnd1 };
@@ -228,8 +218,8 @@ namespace Atom
         }
 
         template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
-        constexpr auto _BwdCopy(const TIter1 iter1, const TIterEnd1 iterEnd1,
-            TIter2 iter2, TIterEnd2 iterEnd2) const -> void
+        constexpr auto _BwdCopy(const TIter1 iter1, const TIterEnd1 iterEnd1, TIter2 iter2,
+            TIterEnd2 iterEnd2) const -> void
         {
             StdIterWrapForAtomIter stdIter1{ iter1 };
             StdIterWrapForAtomIter stdIterEnd1{ iterEnd1 };
@@ -239,8 +229,8 @@ namespace Atom
         }
 
         template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
-        constexpr auto _FwdMove(TIter1 iter1, const TIterEnd1 iterEnd1,
-            TIter2 iter2, TIterEnd2 iterEnd2) const -> void
+        constexpr auto _FwdMove(
+            TIter1 iter1, const TIterEnd1 iterEnd1, TIter2 iter2, TIterEnd2 iterEnd2) const -> void
         {
             StdIterWrapForAtomIter stdIter1{ iter1 };
             StdIterWrapForAtomIter stdIterEnd1{ iterEnd1 };
@@ -250,8 +240,8 @@ namespace Atom
         }
 
         template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
-        constexpr auto _BwdMove(TIter1 iter1, const TIterEnd1 iterEnd1,
-            TIter2 iter2, TIterEnd2 iterEnd2) const -> void
+        constexpr auto _BwdMove(
+            TIter1 iter1, const TIterEnd1 iterEnd1, TIter2 iter2, TIterEnd2 iterEnd2) const -> void
         {
             StdIterWrapForAtomIter stdIter1{ iter1 };
             StdIterWrapForAtomIter stdIterEnd1{ iterEnd1 };

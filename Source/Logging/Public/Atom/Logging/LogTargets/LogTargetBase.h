@@ -6,7 +6,7 @@ namespace Atom::Logging::Internal
     /// --------------------------------------------------------------------------------------------
     /// Base class for LogTargets with base functionality like formatting, thread safety and
     /// level filtering.
-    /// 
+    ///
     /// @TODO Add thread safety.
     /// @TODO Make default log and flush level global.
     /// --------------------------------------------------------------------------------------------
@@ -16,20 +16,25 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         /// Default constructs LogTargetBase().
         /// ----------------------------------------------------------------------------------------
-        LogTargetBase():
-            _logLevel(ELogLevel::Debug), _flushLevel(ELogLevel::Info),
-            _hasWritten(false), _alwaysFlush(false) { }
+        LogTargetBase()
+            : _logLevel(ELogLevel::Debug)
+            , _flushLevel(ELogLevel::Info)
+            , _hasWritten(false)
+            , _alwaysFlush(false)
+        {}
 
-    //// -------------------------------------------------------------------------------------------
-    //// API Functions
-    //// -------------------------------------------------------------------------------------------
+        ////
+        ///-------------------------------------------------------------------------------------------
+        //// API Functions
+        ////
+        ///-------------------------------------------------------------------------------------------
 
     public:
         /// ----------------------------------------------------------------------------------------
         /// Filters and Formats the LogMsg and passes it to write.
-        /// 
+        ///
         /// @EXCEPTION_SAFETY Strong.
-        /// 
+        ///
         /// @SEE _Write().
         /// ----------------------------------------------------------------------------------------
         virtual auto Write(const LogMsg& logMsg) -> void ofinal
@@ -40,8 +45,8 @@ namespace Atom::Logging::Internal
                 // Str result = StrFmter().Fmt("[{}] [{}] {}: {}\n",
                 //     logMsg.time, logMsg.lvl, logMsg.loggerName, logMsg.msg);
 
-                Str result = StrFmter().Fmt("[{}] {}: {}\n",
-                    logMsg.lvl, logMsg.loggerName, logMsg.msg);
+                Str result =
+                    StrFmter().Fmt("[{}] {}: {}\n", logMsg.lvl, logMsg.loggerName, logMsg.msg);
 
                 _hasWritten = true;
                 _Write(logMsg, result);
@@ -55,7 +60,7 @@ namespace Atom::Logging::Internal
 
         /// ----------------------------------------------------------------------------------------
         /// Flushes if {ShouldFlush() == true}.
-        /// 
+        ///
         /// @EXCEPTION_SAFETY Strong.
         /// ----------------------------------------------------------------------------------------
         virtual auto Flush() -> void ofinal
@@ -87,8 +92,10 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         auto CheckLogLevel(ELogLevel lvl) const -> bool
         {
-            if (lvl == ELogLevel::OFF) return false;
-            if (lvl < _logLevel) return false;
+            if (lvl == ELogLevel::OFF)
+                return false;
+            if (lvl < _logLevel)
+                return false;
 
             return true;
         }
@@ -115,16 +122,19 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         auto CheckFlushLevel(ELogLevel lvl) const -> bool
         {
-            if (!_hasWritten) return false;
-            if (lvl == ELogLevel::OFF) return false;
-            if (lvl < _flushLevel) return false;
+            if (!_hasWritten)
+                return false;
+            if (lvl == ELogLevel::OFF)
+                return false;
+            if (lvl < _flushLevel)
+                return false;
 
             return true;
         }
 
         /// ----------------------------------------------------------------------------------------
         /// Checks if we should flush.
-        /// 
+        ///
         /// @RETURNS {true} if there has been a log since last flush, else {false}.
         /// ----------------------------------------------------------------------------------------
         auto ShouldFlush() const -> bool
@@ -132,14 +142,16 @@ namespace Atom::Logging::Internal
             return _alwaysFlush || _hasWritten;
         }
 
-    //// -------------------------------------------------------------------------------------------
-    //// Implementation Functions
-    //// -------------------------------------------------------------------------------------------
+        ////
+        ///-------------------------------------------------------------------------------------------
+        //// Implementation Functions
+        ////
+        ///-------------------------------------------------------------------------------------------
 
     protected:
         /// ----------------------------------------------------------------------------------------
         /// Write implementation.
-        /// 
+        ///
         /// @PARAM[IN] logMsg Log message object passed for logging.
         /// @PARAM[IN] formattedMsg Formatted message generated from {logMsg}.
         /// ----------------------------------------------------------------------------------------
@@ -150,9 +162,11 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         virtual auto _Flush() -> void abstract;
 
-    //// -------------------------------------------------------------------------------------------
-    //// Variables
-    //// -------------------------------------------------------------------------------------------
+        ////
+        ///-------------------------------------------------------------------------------------------
+        //// Variables
+        ////
+        ///-------------------------------------------------------------------------------------------
 
     protected:
         /// ----------------------------------------------------------------------------------------
@@ -172,7 +186,7 @@ namespace Atom::Logging::Internal
 
         /// ----------------------------------------------------------------------------------------
         /// If true always calls underlying flush _Flush(), even if not necessary.
-        /// This doesn't override CheckFlushLevel(ELogLevel lvl) check. It only affects 
+        /// This doesn't override CheckFlushLevel(ELogLevel lvl) check. It only affects
         /// ShouldFlush().
         /// ----------------------------------------------------------------------------------------
         bool _alwaysFlush;

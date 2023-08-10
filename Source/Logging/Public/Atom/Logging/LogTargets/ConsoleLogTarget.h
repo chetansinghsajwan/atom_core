@@ -6,17 +6,19 @@ namespace Atom::Logging
     /// --------------------------------------------------------------------------------------------
     /// ConsoleLogTarget logs to console using stdout and stderr.
     /// --------------------------------------------------------------------------------------------
-    class ConsoleLogTarget : public Internal::LogTargetBase
+    class ConsoleLogTarget: public Internal::LogTargetBase
     {
     public:
         /// ----------------------------------------------------------------------------------------
         /// Default constructs the ConsoleLogTarget.
-        /// 
+        ///
         /// ErrorLogLevel is set to ELogLevel::Error.
         /// ----------------------------------------------------------------------------------------
-        ConsoleLogTarget():
-            _stdout(stdout), _stderr(stderr),
-            _errLogLevel(ELogLevel::Error) { }
+        ConsoleLogTarget()
+            : _stdout(stdout)
+            , _stderr(stderr)
+            , _errLogLevel(ELogLevel::Error)
+        {}
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -29,7 +31,7 @@ namespace Atom::Logging
 
         /// ----------------------------------------------------------------------------------------
         /// Sets the ELogLevel specified for error logging.
-        /// 
+        ///
         /// Logs of same or above level are written to stderr.
         /// ----------------------------------------------------------------------------------------
         auto SetErrLogLevel(ELogLevel lvl)
@@ -39,7 +41,7 @@ namespace Atom::Logging
 
         /// ----------------------------------------------------------------------------------------
         /// Checks if ELogLevel should be written to stderr.
-        /// 
+        ///
         /// @RETURNS {true} if {lvl >= GetErrLogLevel()}, else {false}.
         /// ----------------------------------------------------------------------------------------
         auto ShouldLogAsError(ELogLevel lvl) const -> bool
@@ -50,7 +52,7 @@ namespace Atom::Logging
     protected:
         /// ----------------------------------------------------------------------------------------
         /// Writes the formatted message to stdout or stderr based on log level.
-        /// 
+        ///
         /// If {ShouldLogAsError(logMsg.lvl) == true}, writes the message to stderr else to stdout.
         /// ----------------------------------------------------------------------------------------
         virtual auto _Write(const LogMsg& logMsg, StrView formattedMsg) -> void ofinal

@@ -1,6 +1,6 @@
 #pragma once
-#include "Atom/TTI.h"
 #include "Atom/Containers/OutputReqMock.h"
+#include "Atom/TTI.h"
 
 #include "Atom/Str/Str.h"
 
@@ -14,18 +14,19 @@ namespace Atom
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures {TStrConverter} can convert {T} object to {Str}.
-    /// 
+    ///
     /// @TPARAM[IN] TConverter Converter type to convert to stirng.
     /// @TPARAM[IN] T Object type to convert to stirng.
     /// --------------------------------------------------------------------------------------------
     template <typename TStrConverter, typename T>
-    concept RStrConverter = requires(TStrConverter converter, T obj, OutputReqMock<Char> out)
-    {
-        { converter.Convert(obj) }
-            -> RSameAs<Str>;
+    concept RStrConverter = requires(TStrConverter converter, T obj, OutputReqMock<Char> out) {
+        {
+            converter.Convert(obj)
+        } -> RSameAs<Str>;
 
-        { converter.Convert(obj, out) }
-            -> RSameAs<void>;
+        {
+            converter.Convert(obj, out)
+        } -> RSameAs<void>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -35,20 +36,20 @@ namespace Atom
     concept RStrConvertible = RStrConverter<StrConverter<T>, T>;
 
     /// --------------------------------------------------------------------------------------------
-    /// {StirngConverter} specialization for {T} containing {const}, {volatile} or {lvalue} 
+    /// {StirngConverter} specialization for {T} containing {const}, {volatile} or {lvalue}
     /// and {rvalue} reference.
-    /// 
+    ///
     /// @TODO Needs refactoring.
     /// --------------------------------------------------------------------------------------------
-	template <typename T>
-	requires (!RSameAs<T, TTI::TRemoveCVRef<T>>)
-        and RStrConvertible<TTI::TRemoveCVRef<T>>
-	class StrConverter<T>: StrConverter<TTI::TRemoveCVRef<T>> { };
+    template <typename T>
+        requires(!RSameAs<T, TTI::TRemoveCVRef<T>>) and RStrConvertible<TTI::TRemoveCVRef<T>>
+    class StrConverter<T>: StrConverter<TTI::TRemoveCVRef<T>>
+    {};
 
     /// --------------------------------------------------------------------------------------------
     /// {StrConverter} specialization for {Str}.
     /// --------------------------------------------------------------------------------------------
-    template < >
+    template <>
     class StrConverter<Str>
     {
     public:

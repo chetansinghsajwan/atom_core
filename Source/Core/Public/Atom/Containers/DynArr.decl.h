@@ -1,7 +1,7 @@
 #pragma once
-#include "_DynArrImplHelper.decl.h"
-#include "Atom/Memory/DefaultMemAllocator.h"
 #include "Atom/Invokable/Invokable.h"
+#include "Atom/Memory/DefaultMemAllocator.h"
+#include "_DynArrImplHelper.decl.h"
 
 namespace Atom
 {
@@ -14,8 +14,12 @@ namespace Atom
     public:
         constexpr _DynArrImplBase() = default;
 
-        constexpr _DynArrImplBase(NullPtr):
-            _arr{ nullptr }, _count{ 0 }, _capacity{ 0 }, _alloc{ } { }
+        constexpr _DynArrImplBase(NullPtr)
+            : _arr{ nullptr }
+            , _count{ 0 }
+            , _capacity{ 0 }
+            , _alloc{}
+        {}
 
     protected:
         constexpr auto _Data() const -> const T*
@@ -90,7 +94,7 @@ namespace Atom
     };
 
     template <typename T, typename TAlloc = DefaultMemAllocator>
-    class DynArr : public _DynArrImplHelper<_DynArrImplBase<T, TAlloc>>
+    class DynArr: public _DynArrImplHelper<_DynArrImplBase<T, TAlloc>>
     {
     private:
         using Base = _DynArrImplHelper<_DynArrImplBase<T, TAlloc>>;
@@ -105,16 +109,17 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// NullCtor.
         /// ----------------------------------------------------------------------------------------
-        constexpr DynArr(NullPtr):
-            Base{BaseImpl{ nullptr }} { }
+        constexpr DynArr(NullPtr)
+            : Base{ BaseImpl{ nullptr } }
+        {}
 
         /// ----------------------------------------------------------------------------------------
         /// ParamCtor.
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
         constexpr DynArr(const TRange& range)
-        requires (RRangeOf<TRange, T>):
-            Base{BaseImpl{ nullptr }}
+            requires(RRangeOf<TRange, T>)
+            : Base{ BaseImpl{ nullptr } }
         {
             this->InsertBack(range);
         }
@@ -122,8 +127,8 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// CopyCtor.
         /// ----------------------------------------------------------------------------------------
-        constexpr DynArr(const DynArr& that):
-            Base{BaseImpl{ nullptr }}
+        constexpr DynArr(const DynArr& that)
+            : Base{ BaseImpl{ nullptr } }
         {
             this->InsertBack(that);
         }
@@ -141,8 +146,9 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// MoveCtor.
         /// ----------------------------------------------------------------------------------------
-        constexpr DynArr(DynArr&& that):
-            Base{BaseImpl{ mov(that) }} { }
+        constexpr DynArr(DynArr&& that)
+            : Base{ BaseImpl{ mov(that) } }
+        {}
 
         /// ----------------------------------------------------------------------------------------
         /// MoveOper.

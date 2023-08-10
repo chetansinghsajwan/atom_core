@@ -1,6 +1,6 @@
 #pragma once
-#include "_StrImpl.decl.h"
 #include "Atom/Containers/ArrView.decl.h"
+#include "_StrImpl.decl.h"
 
 namespace Atom
 {

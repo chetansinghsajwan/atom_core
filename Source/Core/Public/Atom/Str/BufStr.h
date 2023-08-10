@@ -1,4 +1,4 @@
 #pragma once
-#include "BufStr.decl.h"
 #include "BasicBufStr.h"
+#include "BufStr.decl.h"
 #include "DefaultEncoding.h"

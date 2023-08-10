@@ -11,11 +11,14 @@ namespace Atom
     class MemBlk
     {
     public:
-        constexpr MemBlk(MemPtr mem, usize count):
-            mem{ mem }, count{ count } { }
+        constexpr MemBlk(MemPtr mem, usize count)
+            : mem{ mem }
+            , count{ count }
+        {}
 
-        constexpr MemBlk(MemPtr begin, MemPtr end):
-            mem{ begin }, count{ (usize)(end - begin) }
+        constexpr MemBlk(MemPtr begin, MemPtr end)
+            : mem{ begin }
+            , count{ (usize)(end - begin) }
         {
             ATOM_DEBUG_EXPECTS(end >= begin);
         }
@@ -38,7 +41,7 @@ namespace Atom
     public:
         /// ----------------------------------------------------------------------------------------
         /// Sets each mem unit of mem block {mem} with value {val}.
-        /// 
+        ///
         /// @PARAM mem: Mem block to write to.
         /// @PARAM val: Value to write.
         /// ----------------------------------------------------------------------------------------
@@ -49,19 +52,21 @@ namespace Atom
             _Fill(mem.mem, mem.count, val);
         }
 
-        /// ----------------------------------------------------------------------------------------
-        /// Same as {Fill(...)}, but the call will not be optimized away.
-        /// ----------------------------------------------------------------------------------------
-        #pragma optimize("", off)
+/// ----------------------------------------------------------------------------------------
+/// Same as {Fill(...)}, but the call will not be optimized away.
+/// ----------------------------------------------------------------------------------------
+#pragma optimize("", off)
+
         constexpr auto FillExplicit(MemBlk mem, MemUnit val) const
         {
             Fill(mem, val);
         }
-        #pragma optimize("", on)
+
+#pragma optimize("", on)
 
         /// ----------------------------------------------------------------------------------------
         /// Copies each mem unit from mem block {src} to mem block {dest} using fwd iteration.
-        /// 
+        ///
         /// @PARAM src: Mem block to copy from.
         /// @PARAM dest: Mem block to copy to.
         /// ----------------------------------------------------------------------------------------
@@ -70,15 +75,14 @@ namespace Atom
             ATOM_DEBUG_EXPECTS(src != nullptr);
             ATOM_DEBUG_EXPECTS(dest != nullptr);
 
-            ATOM_DEBUG_EXPECTS(dest.mem < src.mem) <<
-                "Src mem block overlaps with dest mem block.";
+            ATOM_DEBUG_EXPECTS(dest.mem < src.mem) << "Src mem block overlaps with dest mem block.";
 
             _FwdCopy(src.mem, src.count, dest.mem);
         }
 
         /// ----------------------------------------------------------------------------------------
         /// Copies each mem unit from mem block {src} to mem block {dest} using bwd iteration.
-        /// 
+        ///
         /// @PARAM src: Mem block to copy from.
         /// @PARAM dest: Mem block to copy to.
         /// ----------------------------------------------------------------------------------------
@@ -87,16 +91,16 @@ namespace Atom
             ATOM_DEBUG_EXPECTS(src != nullptr);
             ATOM_DEBUG_EXPECTS(dest != nullptr);
 
-            ATOM_DEBUG_EXPECTS(dest.mem > (src.mem + src.count)) <<
-                "Src mem block overlaps with dest mem block.";
+            ATOM_DEBUG_EXPECTS(dest.mem > (src.mem + src.count))
+                << "Src mem block overlaps with dest mem block.";
 
             _BwdCopy(src.mem, src.count, dest.mem);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Copies each mem unit from mem block {src} to mem block {dest} using appropriate 
+        /// Copies each mem unit from mem block {src} to mem block {dest} using appropriate
         /// iteration. This method is safe even if {src} and {dest} overlaps.
-        /// 
+        ///
         /// @PARAM src: Mem block to copy from.
         /// @PARAM dest: Mem block to copy to.
         /// ----------------------------------------------------------------------------------------
@@ -119,7 +123,7 @@ namespace Atom
 
         /// ----------------------------------------------------------------------------------------
         /// Copies each mem unit from mem block {mem} to mem block outset by {outset}.
-        /// 
+        ///
         /// @PARAM mem: Mem block to copy from.
         /// @PARAM outset: Count of mem units outset from {mem}.
         /// ----------------------------------------------------------------------------------------
@@ -133,7 +137,7 @@ namespace Atom
 
         /// ----------------------------------------------------------------------------------------
         /// Copies each mem unit from mem block {mem} to mem block inset by {inset}.
-        /// 
+        ///
         /// @PARAM mem: Mem block to copy from.
         /// @PARAM inset: Count of mem units inset from {mem}.
         /// ----------------------------------------------------------------------------------------
@@ -148,7 +152,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Copies each mem unit from mem block {mem} to mem block offset by {offset}.
         /// This method is safe even if src and dest overlaps.
-        /// 
+        ///
         /// @PARAM mem: Mem block to copy from.
         /// @PARAM offset: Count of mem units offset from {mem}.
         /// ----------------------------------------------------------------------------------------
@@ -169,7 +173,7 @@ namespace Atom
 
         /// ----------------------------------------------------------------------------------------
         /// Shifts each mem unit fwd in mem block {mem} by {steps} steps.
-        /// 
+        ///
         /// @PARAM mem: Mem block to shift mem units of.
         /// @PARAM steps: Count of mem units to shift by.
         /// ----------------------------------------------------------------------------------------
@@ -183,7 +187,7 @@ namespace Atom
 
         /// ----------------------------------------------------------------------------------------
         /// Shifts each mem unit bwd in mem block {mem} by {steps} steps.
-        /// 
+        ///
         /// @PARAM mem: Mem block to shift mem units of.
         /// @PARAM steps: Count of mem units to shift by.
         /// ----------------------------------------------------------------------------------------
@@ -197,7 +201,7 @@ namespace Atom
 
         /// ----------------------------------------------------------------------------------------
         /// Shifts each mem unit in mem block {mem} by {steps} steps.
-        /// 
+        ///
         /// @PARAM mem: Mem block to shift mem units of.
         /// @PARAM steps: Count of mem units to shift by.
         /// ----------------------------------------------------------------------------------------
@@ -218,7 +222,7 @@ namespace Atom
 
         /// ----------------------------------------------------------------------------------------
         /// Rotates mem block {mem} fwd by {steps} steps.
-        /// 
+        ///
         /// @PARAM mem: Mem block to rotate.
         /// @PARAM steps: Count of mem units to rotate by.
         /// ----------------------------------------------------------------------------------------
@@ -232,7 +236,7 @@ namespace Atom
 
         /// ----------------------------------------------------------------------------------------
         /// Rotates mem block {mem} bwd by {steps} steps.
-        /// 
+        ///
         /// @PARAM mem: Mem block to rotate.
         /// @PARAM steps: Count of mem units to rotate by.
         /// ----------------------------------------------------------------------------------------
@@ -246,7 +250,7 @@ namespace Atom
 
         /// ----------------------------------------------------------------------------------------
         /// Rotates mem block {mem} by {steps} steps.
-        /// 
+        ///
         /// @PARAM mem: Mem block to rotate.
         /// @PARAM steps: Count of mem units to rotate by.
         /// ----------------------------------------------------------------------------------------
@@ -270,7 +274,7 @@ namespace Atom
         {
             std::fill(mem, mem + count, val);
         }
-    
+
         constexpr auto _FwdCopy(const MemPtr src, usize count, MemPtr dest) const -> void
         {
             std::copy(src, src + count, dest);

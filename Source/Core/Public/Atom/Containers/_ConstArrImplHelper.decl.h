@@ -1,85 +1,89 @@
 #pragma once
-#include "OutputReq.h"
-#include "InsertableReq.h"
 #include "Atom/Range.h"
+#include "InsertableReq.h"
+#include "OutputReq.h"
 
 namespace Atom
 {
     template <typename TImpl>
     class _ConstArrImplHelper: public TImpl
     {
-    //// -------------------------------------------------------------------------------------------
-    //// Aliases
-    //// -------------------------------------------------------------------------------------------
+        ////
+        ///-------------------------------------------------------------------------------------------
+        //// Aliases
+        ////
+        ///-------------------------------------------------------------------------------------------
 
     public:
         using TElem = typename TImpl::TElem;
         using TIter = ArrIter<TElem>;
         using TIterEnd = TIter;
 
-    //// -------------------------------------------------------------------------------------------
-    //// Access
-    //// -------------------------------------------------------------------------------------------
+        ////
+        ///-------------------------------------------------------------------------------------------
+        //// Access
+        ////
+        ///-------------------------------------------------------------------------------------------
 
     public:
         /// ----------------------------------------------------------------------------------------
         /// Access element at index{index}.
-        /// 
+        ///
         /// @PARAM index: Index of element to access.
-        /// 
+        ///
         /// @RETURNS Const ref to element.
-        /// 
+        ///
         /// @EXPECTS {index} is in range[0, count() - 1].
         ///     @THROWS IndexOutOfRangeException.
-        /// 
+        ///
         /// @TIME_COMPLEXITY Constant.
         /// ----------------------------------------------------------------------------------------
         constexpr auto ElemAt(usize index) const -> const TElem&;
 
         /// ----------------------------------------------------------------------------------------
-        /// Access element at index{index}. Same as {ElemAt(...)}, but doesn't perform bounds checking
-        /// in Release.
-        /// 
+        /// Access element at index{index}. Same as {ElemAt(...)}, but doesn't perform bounds
+        /// checking in Release.
+        ///
         /// @PARAM index: Index of element to access.
-        /// 
+        ///
         /// @RETURNS Const ref to element.
-        /// 
+        ///
         /// @EXPECTS {index} is in range[0, count() - 1].
         ///     @THROWS IndexOutOfRangeException: In Debug.
-        /// 
+        ///
         /// @TIME_COMPLEXITY Constant.
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator[](usize index) const -> const TElem&;
 
         /// ----------------------------------------------------------------------------------------
         /// Access first element.
-        /// 
+        ///
         /// @RETURNS Const ref to element.
-        /// 
+        ///
         /// @EXPECTS {!isEmpty()}.
         ///     @THROWS OutOfRangeException: In Debug.
-        /// 
+        ///
         /// @TIME_COMPLEXITY Constant.
         /// ----------------------------------------------------------------------------------------
         constexpr auto ElemFront() const -> const TElem&;
 
         /// ----------------------------------------------------------------------------------------
         /// Access last element.
-        /// 
+        ///
         /// @RETURNS Const ref to element.
-        /// 
+        ///
         /// @EXPECTS {!isEmpty()}.
         ///     @THROWS OutOfRangeException: In Debug.
-        /// 
+        ///
         /// @TIME_COMPLEXITY Constant.
         /// ----------------------------------------------------------------------------------------
         constexpr auto ElemBack() const -> const TElem&;
 
         /// ----------------------------------------------------------------------------------------
         /// Pointer to underlying arr.
-        /// 
+        ///
         /// @RETURNS Const ptr to underlying arr.
-        /// 
+        ///
         /// @TIME_COMPLEXITY Constant.
         /// ----------------------------------------------------------------------------------------
         constexpr auto data() const -> const TElem*
@@ -103,9 +107,11 @@ namespace Atom
             return _Count() == 0;
         }
 
-    //// -------------------------------------------------------------------------------------------
-    //// Iteration
-    //// -------------------------------------------------------------------------------------------
+        ////
+        ///-------------------------------------------------------------------------------------------
+        //// Iteration
+        ////
+        ///-------------------------------------------------------------------------------------------
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -121,12 +127,14 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto iterEnd() const -> TIter
         {
-            return TIter{ _Data() + _Count()};
+            return TIter{ _Data() + _Count() };
         }
 
-    //// -------------------------------------------------------------------------------------------
-    //// Implementations
-    //// -------------------------------------------------------------------------------------------
+        ////
+        ///-------------------------------------------------------------------------------------------
+        //// Implementations
+        ////
+        ///-------------------------------------------------------------------------------------------
 
     protected:
         constexpr auto _ValidateIndexForAccess(isize index) const -> bool
@@ -134,7 +142,7 @@ namespace Atom
             return index > 0 && index < (isize)_Count();
         }
 
-        using TImpl::_Data;
         using TImpl::_Count;
+        using TImpl::_Data;
     };
 }

@@ -9,26 +9,26 @@ namespace Atom
     /// exception safety.
     /// --------------------------------------------------------------------------------------------
     template <typename TLockable>
-    requires(RLockable<TLockable>)
+        requires(RLockable<TLockable>)
     class LockGuard
     {
     public:
         /// ----------------------------------------------------------------------------------------
         /// Constructor. Locks the lock.
-        /// 
+        ///
         /// @PARAM[IN] lock Lockable to lock.
-        /// 
+        ///
         /// @THROWS UnkownException Exception thrown by {lock.Lock()}.
         /// ----------------------------------------------------------------------------------------
-        LockGuard(TLockable& lock):
-            _lock(lock)
+        LockGuard(TLockable& lock)
+            : _lock(lock)
         {
             _lock.Lock();
         }
 
         /// ----------------------------------------------------------------------------------------
         /// Destructor. Unlocks the lock.
-        /// 
+        ///
         /// @THROWS UnkownException Exception thrown by {lock.Lock()}.
         /// ----------------------------------------------------------------------------------------
         ~LockGuard()

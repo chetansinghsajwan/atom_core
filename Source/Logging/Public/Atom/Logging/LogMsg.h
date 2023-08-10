@@ -6,13 +6,12 @@
 #include "Atom/Chrono.h"
 #include "Atom/Str.h"
 
-
 namespace Atom::Logging
 {
     /// --------------------------------------------------------------------------------------------
     /// ELogLevel is used to define the level of the log.
     /// --------------------------------------------------------------------------------------------
-    enum class ELogLevel: byte
+    enum class ELogLevel : byte
     {
         Trace,
         Debug,
@@ -20,7 +19,7 @@ namespace Atom::Logging
         Warn,
         Error,
         Fatal,
-        OFF         ///< Used to indicate logging is off.
+        OFF ///< Used to indicate logging is off.
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -46,8 +45,8 @@ namespace Atom::Logging
 
         /// ----------------------------------------------------------------------------------------
         /// Time when this message was logged.
-        /// 
-        /// This is necessary to store as the message may be logged asynchronously or may face 
+        ///
+        /// This is necessary to store as the message may be logged asynchronously or may face
         /// some latency in writing.
         /// ----------------------------------------------------------------------------------------
         TimePoint time;
@@ -56,7 +55,7 @@ namespace Atom::Logging
 
 namespace Atom
 {
-    template < >
+    template <>
     class StrViewConverter<Logging::ELogLevel>
     {
     public:
@@ -64,14 +63,14 @@ namespace Atom
         {
             switch (lvl)
             {
-                case Logging::ELogLevel::Trace : return "Trace"; break;
-                case Logging::ELogLevel::Debug : return "Debug"; break;
-                case Logging::ELogLevel::Info  : return "Info";  break;
-                case Logging::ELogLevel::Warn  : return "Warn";  break;
-                case Logging::ELogLevel::Error : return "Error"; break;
-                case Logging::ELogLevel::Fatal : return "Fatal"; break;
-                case Logging::ELogLevel::OFF   : return "OFF";   break;
-                default                        : return "UNKNOWN";
+                case Logging::ELogLevel::Trace: return "Trace"; break;
+                case Logging::ELogLevel::Debug: return "Debug"; break;
+                case Logging::ELogLevel::Info:  return "Info"; break;
+                case Logging::ELogLevel::Warn:  return "Warn"; break;
+                case Logging::ELogLevel::Error: return "Error"; break;
+                case Logging::ELogLevel::Fatal: return "Fatal"; break;
+                case Logging::ELogLevel::OFF:   return "OFF"; break;
+                default:                        return "UNKNOWN";
             }
         }
     };

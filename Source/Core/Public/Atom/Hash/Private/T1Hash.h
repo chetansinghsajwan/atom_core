@@ -28,5 +28,5 @@ namespace Atom::Private
 #else
     constexpr
 #endif
-    const T1Hash<Size> T1Hash<Size>::Null = T1Hash<Size>{ 0 };
+        const T1Hash<Size> T1Hash<Size>::Null = T1Hash<Size>{ 0 };
 }

@@ -1,5 +1,5 @@
-#include "catch2/catch_all.hpp"
 #include "Atom/Invokable/Event.h"
+#include "catch2/catch_all.hpp"
 
 using namespace Atom;
 

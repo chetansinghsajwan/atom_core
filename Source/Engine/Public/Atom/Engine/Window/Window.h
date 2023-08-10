@@ -1,9 +1,9 @@
 #pragma once
 #include "Atom/Core.h"
-#include "Atom/Str.h"
-#include "Atom/Memory.h"
 #include "Atom/Invokable.h"
 #include "Atom/Math.h"
+#include "Atom/Memory.h"
+#include "Atom/Str.h"
 
 namespace Atom::Engine
 {
@@ -29,49 +29,56 @@ namespace Atom::Engine
     class SWindowEvent
     {
     public:
-        SWindowEvent(EWindowEventType eventType):
-            eventType(eventType) { }
+        SWindowEvent(EWindowEventType eventType)
+            : eventType(eventType)
+        {}
 
     public:
         const EWindowEventType eventType;
     };
 
-    class SWindowResizeEvent : public SWindowEvent
+    class SWindowResizeEvent: public SWindowEvent
     {
     public:
-        SWindowResizeEvent(SWindowCoords size, SWindowCoords delta):
-            size(size), delta(delta),
-            SWindowEvent(EWindowEventType::Resize) { }
+        SWindowResizeEvent(SWindowCoords size, SWindowCoords delta)
+            : size(size)
+            , delta(delta)
+            , SWindowEvent(EWindowEventType::Resize)
+        {}
 
     public:
         SWindowCoords size;
         SWindowCoords delta;
     };
 
-    class SWindowRepositionEvent : public SWindowEvent
+    class SWindowRepositionEvent: public SWindowEvent
     {
     public:
-        SWindowRepositionEvent(SWindowCoords position, SWindowCoords delta):
-            position(position), delta(delta),
-            SWindowEvent(EWindowEventType::Reposition) { }
+        SWindowRepositionEvent(SWindowCoords position, SWindowCoords delta)
+            : position(position)
+            , delta(delta)
+            , SWindowEvent(EWindowEventType::Reposition)
+        {}
 
     public:
         SWindowCoords position;
         SWindowCoords delta;
     };
 
-    class SWindowCloseEvent : public SWindowEvent
+    class SWindowCloseEvent: public SWindowEvent
     {
     public:
-        SWindowCloseEvent():
-            SWindowEvent(EWindowEventType::Close) { }
+        SWindowCloseEvent()
+            : SWindowEvent(EWindowEventType::Close)
+        {}
     };
 
     class Window
     {
     public:
-        Window(IEvent<const SWindowEvent&>& event):
-            OnEvent{ event } { }
+        Window(IEvent<const SWindowEvent&>& event)
+            : OnEvent{ event }
+        {}
 
     public:
         virtual ~Window() = default;

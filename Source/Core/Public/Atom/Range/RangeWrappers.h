@@ -7,19 +7,20 @@
 /// ------------------------------------------------------------------------------------------------
 /// Clang P1814R0: Class template argument deduction for alias templates.
 /// Clang doesn't support that feature yet, so we use this implementation as a workaround.
-/// 
+///
 /// @TODO: Use the commented implementation once that feature is implemented.
 /// ------------------------------------------------------------------------------------------------
-#define _RANGE_REF_WRAP(Wrap, ...)                                \
-    class Wrap: __VA_ARGS__                                      \
-    {                                                             \
+#define _RANGE_REF_WRAP(Wrap, ...)                                                                 \
+    class Wrap: __VA_ARGS__                                                                        \
+    {                                                                                              \
     public:
-        constexpr Wrap(TRange& range):                   \
-            __VA_ARGS__{ range } { }                              \
-    }
+constexpr Wrap(TRange& range)
+    : __VA_ARGS__{ range }
+{}
+}
 
 // Preferred implementation.
-// 
+//
 // #define _RANGE_REF_WRAP(Wrap, ...)\
 //     using Wrap = __VA_ARGS__;
 
@@ -27,12 +28,8 @@
 
 namespace Atom
 {
-    template
-    <
-        typename TRange,
-        template<typename TIter> typename TIterWrap
-    >
-    requires(RRange<TRange>)
+    template <typename TRange, template <typename TIter> typename TIterWrap>
+        requires(RRange<TRange>)
     class _RangeWrapBase
     {
     public:
@@ -41,8 +38,9 @@ namespace Atom
         using TIterEnd = TIterWrap<typename TRange::TIterEnd>;
 
     public:
-        constexpr _RangeWrapBase(TRange& range):
-            _range{ range } { }
+        constexpr _RangeWrapBase(TRange& range)
+            : _range{ range }
+        {}
 
     public:
         constexpr auto iter() const -> TIter
@@ -59,13 +57,9 @@ namespace Atom
         TRange& _range;
     };
 
-    template
-    <
-        typename TRange,
-        template<typename TIter> typename TIterWrap,
-        template<typename TIter> typename TMutIterWrap
-    >
-    requires(RMutRange<TRange>)
+    template <typename TRange, template <typename TIter> typename TIterWrap,
+        template <typename TIter> typename TMutIterWrap>
+        requires(RMutRange<TRange>)
     class _MutRangeWrapBase: _RangeWrapBase<TRange, TIterWrap>
     {
     public:
@@ -74,8 +68,9 @@ namespace Atom
         using TMutIterEnd = TMutIterWrap<typename TRange::TMutIterEnd>;
 
     public:
-        constexpr _MutRangeWrapBase(TRange& range):
-            Base{ range } { }
+        constexpr _MutRangeWrapBase(TRange& range)
+            : Base{ range }
+        {}
 
     public:
         constexpr auto mutIter() -> TMutIter
@@ -90,49 +85,49 @@ namespace Atom
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
     _RANGE_REF_WRAP(RangeRefWrap, _RangeWrapBase<TRange, IterWrap>);
 
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
     _RANGE_REF_WRAP(MutRangeRefWrap, _MutRangeWrapBase<TRange, IterWrap, MutIterWrap>);
 
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
     _RANGE_REF_WRAP(FwdRangeRefWrap, _RangeWrapBase<TRange, FwdIterWrap>);
 
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
     _RANGE_REF_WRAP(MutFwdRangeRefWrap, _MutRangeWrapBase<TRange, FwdIterWrap, MutFwdIterWrap>);
 
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
     _RANGE_REF_WRAP(BidiRangeRefWrap, _RangeWrapBase<TRange, BidiIterWrap>);
 
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
     _RANGE_REF_WRAP(MutBidiRangeRefWrap, _MutRangeWrapBase<TRange, BidiIterWrap, MutBidiIterWrap>);
 
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
     _RANGE_REF_WRAP(JumpRangeRefWrap, _RangeWrapBase<TRange, JumpIterWrap>);
 
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
     _RANGE_REF_WRAP(MutJumpRangeRefWrap, _MutRangeWrapBase<TRange, JumpIterWrap, MutJumpIterWrap>);

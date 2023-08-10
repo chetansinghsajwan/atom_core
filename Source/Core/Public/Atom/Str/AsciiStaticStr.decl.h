@@ -1,6 +1,6 @@
 #pragma once
-#include "BasicStaticStr.decl.h"
 #include "Atom/Text/AsciiEncoding.decl.h"
+#include "BasicStaticStr.decl.h"
 
 namespace Atom
 {

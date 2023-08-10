@@ -1,5 +1,6 @@
 #pragma once
 #include "MutRangeTrait.h"
+#include "Atom/Invokable/Invokable.h"
 
 namespace Atom
 {
@@ -11,13 +12,11 @@ namespace Atom
 
     template <typename T>
     class DynamicRangeTraitImpl
-    {
-    };
+    {};
 
     template <typename T>
     class _DynamicRangeTraitImpl
-    {
-    };
+    {};
 
     template <typename T>
     class DynamicRangeTrait
@@ -29,16 +28,18 @@ namespace Atom
         using TMutIter = typename _Impl::TMutIter;
         using TMutIterEnd = typename _Impl::TMutIterEnd;
 
-        //// -------------------------------------------------------------------------------------------
+        ////
+        ///-------------------------------------------------------------------------------------------
         //// Removal
-        //// -------------------------------------------------------------------------------------------
+        ////
+        ///-------------------------------------------------------------------------------------------
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         template <typename TPred>
-        constexpr auto removeIf(TPred&& pred)->usize
+        constexpr auto removeIf(TPred&& pred) -> usize
             requires(RInvokable<TPred, bool(const TElem&)>)
         {
             usize count = 0;

@@ -1,7 +1,7 @@
-#include "catch2/catch_all.hpp"
 #include "Atom/Core/Option.h"
-#include "Atom/Test/TrackedType.h"
 #include "Atom/Test/CustomType.h"
+#include "Atom/Test/TrackedType.h"
+#include "catch2/catch_all.hpp"
 
 using namespace Atom;
 using namespace Atom::Test;
@@ -10,8 +10,7 @@ TEST_CASE("Atom.Core.Option")
 {
     SECTION("Default Constructor")
     {
-        STATIC_REQUIRE(RDefaultConstructible<
-            Option<NonDefaultConstructibleMock>>);
+        STATIC_REQUIRE(RDefaultConstructible<Option<NonDefaultConstructibleMock>>);
 
         Option<TrackedType> opt;
 
@@ -37,11 +36,9 @@ TEST_CASE("Atom.Core.Option")
 
     SECTION("Copy Constructor")
     {
-        STATIC_REQUIRE(RTriviallyCopyConstructible<
-            Option<TriviallyCopyConstructibleMock>>);
+        STATIC_REQUIRE(RTriviallyCopyConstructible<Option<TriviallyCopyConstructibleMock>>);
 
-        STATIC_REQUIRE(RCopyConstructible<
-            Option<CopyConstructibleMock>>);
+        STATIC_REQUIRE(RCopyConstructible<Option<CopyConstructibleMock>>);
 
         Option<TrackedType> opt0 = TrackedType();
         Option<TrackedType> opt1 = opt0;
@@ -55,11 +52,9 @@ TEST_CASE("Atom.Core.Option")
 
     SECTION("Copy Assignment")
     {
-        STATIC_REQUIRE(RTriviallyCopyAssignable<
-            Option<TriviallyCopyableMock>>);
+        STATIC_REQUIRE(RTriviallyCopyAssignable<Option<TriviallyCopyableMock>>);
 
-        STATIC_REQUIRE(RCopyAssignable<
-            Option<CopyableMock>>);
+        STATIC_REQUIRE(RCopyAssignable<Option<CopyableMock>>);
 
         Option<TrackedType> opt0 = TrackedType();
         Option<TrackedType> opt1 = TrackedType();
@@ -79,11 +74,9 @@ TEST_CASE("Atom.Core.Option")
 
     SECTION("Move Constructor")
     {
-        STATIC_REQUIRE(RTriviallyMoveConstructible<
-            Option<TriviallyMoveConstructibleMock>>);
+        STATIC_REQUIRE(RTriviallyMoveConstructible<Option<TriviallyMoveConstructibleMock>>);
 
-        STATIC_REQUIRE(RMoveConstructible<
-            Option<MoveConstructibleMock>>);
+        STATIC_REQUIRE(RMoveConstructible<Option<MoveConstructibleMock>>);
 
         Option<TrackedType> opt0 = TrackedType();
         Option<TrackedType> opt1 = mov(opt0);
@@ -97,11 +90,9 @@ TEST_CASE("Atom.Core.Option")
 
     SECTION("Move Assignment")
     {
-        STATIC_REQUIRE(RTriviallyMoveAssignable<
-            Option<TriviallyMoveableMock>>);
+        STATIC_REQUIRE(RTriviallyMoveAssignable<Option<TriviallyMoveableMock>>);
 
-        STATIC_REQUIRE(RMoveAssignable<
-            Option<MoveableMock>>);
+        STATIC_REQUIRE(RMoveAssignable<Option<MoveableMock>>);
 
         Option<TrackedType> opt0 = TrackedType();
         Option<TrackedType> opt1 = TrackedType();
@@ -121,11 +112,9 @@ TEST_CASE("Atom.Core.Option")
 
     SECTION("Destructor")
     {
-        STATIC_REQUIRE(RTriviallyDestructible<
-            Option<TriviallyDestructibleMock>>);
+        STATIC_REQUIRE(RTriviallyDestructible<Option<TriviallyDestructibleMock>>);
 
-        STATIC_REQUIRE(RDestructible<
-            Option<DestructibleMock>>);
+        STATIC_REQUIRE(RDestructible<Option<DestructibleMock>>);
 
         TrackedType::EOperation* lastOp;
 
@@ -142,9 +131,20 @@ TEST_CASE("Atom.Core.Option")
         class Overloads
         {
         public:
-            static constexpr usize Test(TrackedType&) { return 0; }
-            static constexpr usize Test(const TrackedType&) { return 1; }
-            static constexpr usize Test(TrackedType&&) { return 2; }
+            static constexpr usize Test(TrackedType&)
+            {
+                return 0;
+            }
+
+            static constexpr usize Test(const TrackedType&)
+            {
+                return 1;
+            }
+
+            static constexpr usize Test(TrackedType&&)
+            {
+                return 2;
+            }
         };
 
         Option<TrackedType> opt0 = TrackedType();
@@ -167,8 +167,11 @@ TEST_CASE("Atom.Core.Option")
         class Type
         {
         public:
-            Type(i32 a, char b, f32 c):
-                a{ a }, b{ b }, c{ c } { }
+            Type(i32 a, char b, f32 c)
+                : a{ a }
+                , b{ b }
+                , c{ c }
+            {}
 
         public:
             i32 a;
@@ -191,11 +194,9 @@ TEST_CASE("Atom.Core.Option")
 
     SECTION("Comparision with `Option`")
     {
-        STATIC_REQUIRE(REqualityComparable<
-            Option<EqualityComparableMock>>);
+        STATIC_REQUIRE(REqualityComparable<Option<EqualityComparableMock>>);
 
-        STATIC_REQUIRE(RComparable<
-            Option<ComparableMock>>);
+        STATIC_REQUIRE(RComparable<Option<ComparableMock>>);
 
         Option<TrackedType> opt0;
         Option<TrackedType> opt1;

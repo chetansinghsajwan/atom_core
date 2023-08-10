@@ -26,8 +26,10 @@ namespace Atom::Math
     template <typename TInt>
     constexpr auto Clamp(const TInt& value, const TInt& lhs, const TInt& rhs) -> TInt
     {
-        if (value < lhs) return lhs;
-        if (value > rhs) return rhs;
+        if (value < lhs)
+            return lhs;
+        if (value > rhs)
+            return rhs;
 
         return value;
     }
@@ -69,8 +71,6 @@ namespace Atom::Math
 
     constexpr auto IsHexChar(Char ch) -> bool
     {
-        return (ch >= '0' && ch <= '9') ||
-            (ch >= 'a' && ch <= 'f') ||
-            (ch >= 'A' && ch <= 'F');
+        return (ch >= '0' && ch <= '9') || (ch >= 'a' && ch <= 'f') || (ch >= 'A' && ch <= 'F');
     }
 }

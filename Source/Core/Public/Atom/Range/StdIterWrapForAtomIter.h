@@ -1,37 +1,22 @@
 #pragma once
-#include "RangeReq.h"
 #include "Atom/TTI.h"
+#include "RangeReq.h"
 
 namespace Atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
     template <typename TIter>
-    using StdIterCatForAtomIter = TTI::TEnableIf
-    <
-        RIter<TIter>,
-        TTI::TNotConditional
-        <
-            RFwdIter<TIter>, std::input_iterator_tag,
-            TTI::TNotConditional
-            <
-                RBidiIter<TIter>, std::forward_iterator_tag,
-                TTI::TNotConditional
-                <
-                    RJumpIter<TIter>, std::bidirectional_iterator_tag,
-                    TTI::TNotConditional
-                    <
-                        RArrIter<TIter>, std::random_access_iterator_tag,
-                        std::contiguous_iterator_tag
-                    >
-                >
-            >
-        >
-    >;
+    using StdIterCatForAtomIter = TTI::TEnableIf<RIter<TIter>,
+        TTI::TNotConditional<RFwdIter<TIter>, std::input_iterator_tag,
+            TTI::TNotConditional<RBidiIter<TIter>, std::forward_iterator_tag,
+                TTI::TNotConditional<RJumpIter<TIter>, std::bidirectional_iterator_tag,
+                    TTI::TNotConditional<RArrIter<TIter>, std::random_access_iterator_tag,
+                        std::contiguous_iterator_tag>>>>>;
 
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
     template <typename TIter>
     class StdIterWrapForAtomIter
@@ -47,14 +32,17 @@ namespace Atom
         using reference = value_type&;
 
     public:
-        constexpr StdIterWrapForAtomIter(const TIter& iter):
-            iter{ iter } { }
+        constexpr StdIterWrapForAtomIter(const TIter& iter)
+            : iter{ iter }
+        {}
 
-        constexpr StdIterWrapForAtomIter(TIter& iter):
-            iter{ iter } { }
+        constexpr StdIterWrapForAtomIter(TIter& iter)
+            : iter{ iter }
+        {}
 
-        constexpr StdIterWrapForAtomIter(TIter&& iter):
-            iter{ mov(iter) } { }
+        constexpr StdIterWrapForAtomIter(TIter&& iter)
+            : iter{ mov(iter) }
+        {}
 
     public:
         template <class = void>
@@ -72,14 +60,14 @@ namespace Atom
         }
 
         template <class TIterEnd>
-        constexpr auto operator== (const StdIterWrapForAtomIter<TIterEnd>& that) const -> bool
+        constexpr auto operator==(const StdIterWrapForAtomIter<TIterEnd>& that) const -> bool
             requires(RIterEnd<TIter, TIterEnd>)
         {
             return iter == that.iter;
         }
 
         template <class TIterEnd>
-        constexpr auto operator!= (const StdIterWrapForAtomIter<TIterEnd>& that) const -> bool
+        constexpr auto operator!=(const StdIterWrapForAtomIter<TIterEnd>& that) const -> bool
             requires(RIterEnd<TIter, TIterEnd>)
         {
             return iter != that.iter;

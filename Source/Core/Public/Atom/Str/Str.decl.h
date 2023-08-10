@@ -9,7 +9,7 @@ namespace Atom
 
 namespace std
 {
-    template < >
+    template <>
     class hash<Atom::Str>
     {
     public:

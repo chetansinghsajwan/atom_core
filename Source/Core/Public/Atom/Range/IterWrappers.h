@@ -6,10 +6,10 @@
 namespace Atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
-    template<typename TWrap>
-    class _BasicMutIterWrap : public TWrap
+    template <typename TWrap>
+    class _BasicMutIterWrap: public TWrap
     {
     public:
         using Base = TWrap;
@@ -34,14 +34,15 @@ namespace Atom
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
     template <typename TWrap>
-    requires (!RIter<TWrap>)
-    class _BasicMutIterWrap<TWrap> : public TWrap { };
+        requires(!RIter<TWrap>)
+    class _BasicMutIterWrap<TWrap>: public TWrap
+    {};
 
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
     template <typename TIter>
     class IterWrap
@@ -50,13 +51,15 @@ namespace Atom
         using TElem = TTI::TEnableIf<RIter<TIter>, typename TIter::TElem>;
 
     public:
-        constexpr IterWrap(TIter iter):
-            iter{ iter } { }
+        constexpr IterWrap(TIter iter)
+            : iter{ iter }
+        {}
 
         template <typename... TArgs>
-        requires RConstructible<TIter, TArgs...>
-        constexpr IterWrap(TArgs&&... args):
-            iter{ fwd(args)... } { }
+            requires RConstructible<TIter, TArgs...>
+        constexpr IterWrap(TArgs&&... args)
+            : iter{ fwd(args)... }
+        {}
 
     public:
         constexpr auto operator*() const -> const TElem&
@@ -86,10 +89,10 @@ namespace Atom
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
     template <typename TIter>
-    requires (!RIter<TIter>)
+        requires(!RIter<TIter>)
     class IterWrap<TIter>
     {
     public:
@@ -97,66 +100,71 @@ namespace Atom
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
     template <typename TIter>
-    class MutIterWrap : public _BasicMutIterWrap<IterWrap<TIter>>
+    class MutIterWrap: public _BasicMutIterWrap<IterWrap<TIter>>
     {
     public:
         using Base = _BasicMutIterWrap<IterWrap<TIter>>;
         using Base::Base;
 
     public:
-        constexpr MutIterWrap(TIter iter):
-            Base{ iter } { }
+        constexpr MutIterWrap(TIter iter)
+            : Base{ iter }
+        {}
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
     template <typename TIter>
-    class FwdIterWrap : public IterWrap<TIter>,
-        public MultiPassIterTag
+    class FwdIterWrap
+        : public IterWrap<TIter>
+        , public MultiPassIterTag
     {
     public:
         using Base = IterWrap<TIter>;
         using Base::Base;
 
     public:
-        constexpr FwdIterWrap(TIter iter):
-            Base{ iter } { }
+        constexpr FwdIterWrap(TIter iter)
+            : Base{ iter }
+        {}
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
     template <typename TIter>
-    requires RMutFwdIter<TIter>
-    class MutFwdIterWrap : public _BasicMutIterWrap<FwdIterWrap<TIter>>
+        requires RMutFwdIter<TIter>
+    class MutFwdIterWrap: public _BasicMutIterWrap<FwdIterWrap<TIter>>
     {
     public:
         using Base = _BasicMutIterWrap<FwdIterWrap<TIter>>;
         using Base::Base;
 
     public:
-        constexpr MutFwdIterWrap(TIter iter):
-            Base{ iter } { }
+        constexpr MutFwdIterWrap(TIter iter)
+            : Base{ iter }
+        {}
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
     template <typename TIter>
-    requires RBidiIter<TIter>
-    class BidiIterWrap : public FwdIterWrap<TIter>
+        requires RBidiIter<TIter>
+    class BidiIterWrap: public FwdIterWrap<TIter>
     {
     public:
         using Base = FwdIterWrap<TIter>;
         using Base::Base;
 
     public:
-        constexpr BidiIterWrap(TIter iter):
-            Base{ iter } { }
+        constexpr BidiIterWrap(TIter iter)
+            : Base{ iter }
+        {}
 
         constexpr auto operator--(i32) -> BidiIterWrap&
         {
@@ -166,35 +174,37 @@ namespace Atom
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
     template <typename TIter>
-    requires RMutBidiIter<TIter>
-    class MutBidiIterWrap : public _BasicMutIterWrap<BidiIterWrap<TIter>>
+        requires RMutBidiIter<TIter>
+    class MutBidiIterWrap: public _BasicMutIterWrap<BidiIterWrap<TIter>>
     {
     public:
         using Base = _BasicMutIterWrap<BidiIterWrap<TIter>>;
         using Base::Base;
 
     public:
-        constexpr MutBidiIterWrap(TIter iter):
-            Base{ iter } { }
+        constexpr MutBidiIterWrap(TIter iter)
+            : Base{ iter }
+        {}
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
     template <typename TIter>
-    requires RJumpIter<TIter>
-    class JumpIterWrap : public BidiIterWrap<TIter>
+        requires RJumpIter<TIter>
+    class JumpIterWrap: public BidiIterWrap<TIter>
     {
     public:
         using Base = BidiIterWrap<TIter>;
         using Base::Base;
 
     public:
-        constexpr JumpIterWrap(TIter iter):
-            Base{ iter } { }
+        constexpr JumpIterWrap(TIter iter)
+            : Base{ iter }
+        {}
 
         constexpr auto operator+(isize steps) const -> JumpIterWrap
         {
@@ -226,19 +236,20 @@ namespace Atom
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
     template <typename TIter>
-    requires RMutJumpIter<TIter>
-    class MutJumpIterWrap : public _BasicMutIterWrap<JumpIterWrap<TIter>>
+        requires RMutJumpIter<TIter>
+    class MutJumpIterWrap: public _BasicMutIterWrap<JumpIterWrap<TIter>>
     {
     public:
         using Base = _BasicMutIterWrap<JumpIterWrap<TIter>>;
         using Base::Base;
 
     public:
-        constexpr MutJumpIterWrap(TIter iter):
-            Base{ iter } { }
+        constexpr MutJumpIterWrap(TIter iter)
+            : Base{ iter }
+        {}
 
         constexpr auto operator+(isize steps) const -> MutJumpIterWrap
         {

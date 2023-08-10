@@ -1,6 +1,7 @@
 #pragma once
 #include "RangeReq.h"
 #include "StdIterWrapForAtomIter.h"
+#include "ArrIter.h"
 
 #include <algorithm>
 
@@ -10,8 +11,7 @@ namespace Atom
     class RangeTraitImpl;
 
     template <typename T>
-    class _RangeTraitImpl:
-        private RangeTraitImpl<T>
+    class _RangeTraitImpl: private RangeTraitImpl<T>
     {
         using _Impl = RangeTraitImpl<T>;
 
@@ -22,7 +22,7 @@ namespace Atom
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         constexpr auto iter() const -> TIter
         {
@@ -30,7 +30,7 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         constexpr auto iterEnd() const -> TIterEnd
         {
@@ -39,7 +39,7 @@ namespace Atom
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         template <typename TElem1>
         constexpr auto findElem(const TElem1& el) -> TIter
@@ -50,7 +50,7 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
         constexpr auto findRange(const TRange& range) -> TIter
@@ -64,7 +64,7 @@ namespace Atom
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
         auto compare(const TRange& range) -> i8
@@ -79,7 +79,7 @@ namespace Atom
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         constexpr auto getCount() const -> usize
         {
@@ -97,8 +97,7 @@ namespace Atom
     };
 
     template <typename TRange>
-    class RangeTrait:
-        private _RangeTraitImpl<TRange>
+    class RangeTrait: private _RangeTraitImpl<TRange>
     {
         using TraitImpl = RangeTraitImpl<TRange>;
         using _Impl = _RangeTraitImpl<TRange>;
@@ -108,12 +107,14 @@ namespace Atom
         using TIter = typename TraitImpl::TIter;
         using TIterEnd = typename TraitImpl::TIterEnd;
 
-    //// -------------------------------------------------------------------------------------------
-    //// Iteration
-    //// -------------------------------------------------------------------------------------------
+        ////
+        ///-------------------------------------------------------------------------------------------
+        //// Iteration
+        ////
+        ///-------------------------------------------------------------------------------------------
 
         /// --------------------------------------------------------------------------------------------
-        /// 
+        ///
         /// --------------------------------------------------------------------------------------------
         constexpr auto iter() const -> TIter
         {
@@ -121,7 +122,7 @@ namespace Atom
         }
 
         /// --------------------------------------------------------------------------------------------
-        /// 
+        ///
         /// --------------------------------------------------------------------------------------------
         constexpr auto iterEnd() const -> TIterEnd
         {
@@ -129,7 +130,7 @@ namespace Atom
         }
 
         /// --------------------------------------------------------------------------------------------
-        /// 
+        ///
         /// --------------------------------------------------------------------------------------------
         constexpr auto begin() const -> TIter
         {
@@ -137,41 +138,43 @@ namespace Atom
         }
 
         /// --------------------------------------------------------------------------------------------
-        /// 
+        ///
         /// --------------------------------------------------------------------------------------------
         constexpr auto end() const -> TIterEnd
         {
             return _Impl::iterEnd();
         }
 
-    //// -------------------------------------------------------------------------------------------
-    //// Search
-    //// -------------------------------------------------------------------------------------------
+        ////
+        ///-------------------------------------------------------------------------------------------
+        //// Search
+        ////
+        ///-------------------------------------------------------------------------------------------
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         template <typename TElem1>
-        constexpr auto find(const TElem1& el) -> TIter 
+        constexpr auto find(const TElem1& el) -> TIter
             requires(REqualityComparableWith<TElem, TElem1>)
         {
             return _Impl::findElem(el);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         template <typename TRange1>
         constexpr auto findRange(const TRange1& range) -> TIter
             requires(RFwdRange<TRange1>)
-                and (REqualityComparableWith<TElem, typename TRange1::TElem>)
+                    and (REqualityComparableWith<TElem, typename TRange1::TElem>)
         {
             return _Impl::findRange(range);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         template <typename TElem1>
         constexpr auto contains(const TElem1& el) -> bool
@@ -181,75 +184,75 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         template <typename TRange1>
         constexpr auto contains(const TRange1& range) -> bool
             requires(RFwdRange<TRange1>)
-                and (REqualityComparableWith<TElem, typename TRange1::TElem>)
+                    and (REqualityComparableWith<TElem, typename TRange1::TElem>)
         {
             return _Impl::findRange(range) != _Impl::iterEnd();
         }
 
-    //// -------------------------------------------------------------------------------------------
-    //// Comparision
-    //// -------------------------------------------------------------------------------------------
+        ////
+        ///-------------------------------------------------------------------------------------------
+        //// Comparision
+        ////
+        ///-------------------------------------------------------------------------------------------
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         template <typename TRange1>
         constexpr auto compare(const TRange1& range) -> i8
-            requires(RRange<TRange1>)
-                and (REqualityComparableWith<TElem, typename TRange1::TElem>)
+            requires(RRange<TRange1>) and (REqualityComparableWith<TElem, typename TRange1::TElem>)
         {
             return _Impl::compare(range);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         template <typename TRange1>
         constexpr auto equals(const TRange1& range) -> bool
-            requires(RRange<TRange1>)
-                and (REqualityComparableWith<TElem, typename TRange1::TElem>)
+            requires(RRange<TRange1>) and (REqualityComparableWith<TElem, typename TRange1::TElem>)
         {
             return _Impl::compare(range) == 0;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         template <typename TRange1>
         constexpr auto operator==(const TRange1& range) -> bool
-            requires(RRange<TRange1>)
-                and (REqualityComparableWith<TElem, typename TRange1::TElem>)
+            requires(RRange<TRange1>) and (REqualityComparableWith<TElem, typename TRange1::TElem>)
         {
             return _Impl::compare(range) == 0;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         template <typename TRange1>
         constexpr auto operator!=(const TRange1& range) -> bool
-            requires(RRange<TRange1>)
-                and (REqualityComparableWith<TElem, typename TRange1::TElem>)
+            requires(RRange<TRange1>) and (REqualityComparableWith<TElem, typename TRange1::TElem>)
         {
             return _Impl::compare(range) != 0;
         }
 
-    //// -------------------------------------------------------------------------------------------
-    //// Helpers
-    //// 
-    //// # To Do
-    //// 
-    //// - Add range helper functions.
-    //// -------------------------------------------------------------------------------------------
+        ////
+        ///-------------------------------------------------------------------------------------------
+        //// Helpers
+        ////
+        //// # To Do
+        ////
+        //// - Add range helper functions.
+        ////
+        ///-------------------------------------------------------------------------------------------
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         constexpr auto canGetCount() const -> bool
         {
@@ -257,7 +260,7 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         constexpr auto getCount() const -> usize
         {

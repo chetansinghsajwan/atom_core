@@ -1,6 +1,6 @@
 #pragma once
-#include "BasicDynamicStr.decl.h"
 #include "Atom/Text/AsciiEncoding.decl.h"
+#include "BasicDynamicStr.decl.h"
 
 namespace Atom
 {

@@ -31,20 +31,18 @@ namespace Atom::Private
 namespace Atom
 {
     template <typename T1Hash>
-    requires(RDefaultConstructible<Private::T1HashStringifier<T1Hash>>)
+        requires(RDefaultConstructible<Private::T1HashStringifier<T1Hash>>)
     class StrConverter<T1Hash>
     {
     public:
         constexpr auto Convert(const T1Hash& hash) -> Str
         {
-            return Private::T1HashStringifier<T1Hash>()
-                .ToStr(hash);
+            return Private::T1HashStringifier<T1Hash>().ToStr(hash);
         }
 
         constexpr auto Convert(const T1Hash& hash, ROutput<Char> auto&& out)
         {
-            return Private::T1HashStringifier<T1Hash>()
-                .WriteStr(hash, out);
+            return Private::T1HashStringifier<T1Hash>().WriteStr(hash, out);
         }
     };
 }

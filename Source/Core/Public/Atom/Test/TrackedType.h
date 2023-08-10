@@ -81,7 +81,7 @@ namespace Atom::Test
 
         constexpr auto operator!=(const TrackedType& that) const -> bool
         {
-            return not (*this == that);
+            return not(*this == that);
         }
 
         constexpr auto operator<(const TrackedType& that) const -> bool
@@ -117,10 +117,10 @@ namespace Atom::Test
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    class TrackedTypeOf : public TrackedType
+    class TrackedTypeOf: public TrackedType
     {
         using Base = TrackedType;
 

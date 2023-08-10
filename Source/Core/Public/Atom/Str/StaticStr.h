@@ -1,4 +1,4 @@
 #pragma once
-#include "StaticStr.decl.h"
 #include "BasicStaticStr.h"
 #include "DefaultEncoding.h"
+#include "StaticStr.decl.h"

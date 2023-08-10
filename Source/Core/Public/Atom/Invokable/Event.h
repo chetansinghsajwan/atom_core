@@ -10,8 +10,9 @@ namespace Atom
     class EventKey
     {
     public:
-        EventKey(const TypeInfo& typeInfo):
-            _typeInfo(typeInfo) { }
+        EventKey(const TypeInfo& typeInfo)
+            : _typeInfo(typeInfo)
+        {}
 
     public:
         auto GetType() const -> const TypeInfo&
@@ -62,7 +63,7 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         virtual auto Subscribe(InvokableBox<_TSignature>&& invokable) -> EventKey abstract;
 
@@ -74,11 +75,11 @@ namespace Atom
 
     /// --------------------------------------------------------------------------------------------
     /// EventSource is used to manage listeners and dispatch event.
-    /// 
+    ///
     /// @TODO Add async dispatching.
     /// --------------------------------------------------------------------------------------------
     template <typename... TArgs>
-    class EventSource : public IEvent<TArgs...>
+    class EventSource: public IEvent<TArgs...>
     {
     protected:
         using _TSignature = typename IEvent<TArgs...>::_TSignature;
@@ -86,7 +87,7 @@ namespace Atom
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         virtual auto Subscribe(InvokableBox<_TSignature>&& invokable) -> EventKey ofinal
         {
@@ -94,7 +95,7 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         virtual auto Unsubscribe(EventKey key) -> usize ofinal
         {
@@ -103,7 +104,7 @@ namespace Atom
 
         /// ----------------------------------------------------------------------------------------
         /// Dispatches the events. Calls each event listener(invokables) with given args.
-        /// 
+        ///
         /// @TODO Add detailed documentation on argument passing.
         /// ----------------------------------------------------------------------------------------
         auto Dispatch(TArgs... args)
@@ -116,7 +117,7 @@ namespace Atom
 
     protected:
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         auto _AddListener(InvokableBox<_TSignature>&& invokable) -> EventKey
         {
@@ -127,18 +128,16 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         auto _RemoveListener(EventKey key) -> usize
         {
-            return RangeModifier().RemoveIf(_listeners, [&](const auto& listener)
-                {
-                    return listener.GetInvokableType() == key.GetType();
-                });
+            return RangeModifier().RemoveIf(_listeners,
+                [&](const auto& listener) { return listener.GetInvokableType() == key.GetType(); });
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         auto _CountListeners(EventKey key) -> usize
         {

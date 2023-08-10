@@ -8,7 +8,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// NullLockable is a stateless object that doesn't has any locking mechanism.
     /// It's used where a Lockable implementation is needed but thread-safety is not needed.
-    /// 
+    ///
     /// @TODO: Should we delete its constructors and operators to match {SimpleMutex}?
     /// --------------------------------------------------------------------------------------------
     class NullLockable
@@ -17,48 +17,57 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// DefaultConstructor. Does nothing.
         /// ----------------------------------------------------------------------------------------
-        constexpr NullLockable() { }
+        constexpr NullLockable() {}
 
         /// ----------------------------------------------------------------------------------------
         /// CopyConstructor is default.
         /// ----------------------------------------------------------------------------------------
-        constexpr NullLockable(const NullLockable& other) { }
+        constexpr NullLockable(const NullLockable& other) {}
 
         /// ----------------------------------------------------------------------------------------
         /// MoveConstructor is default.
         /// ----------------------------------------------------------------------------------------
-        constexpr NullLockable(NullLockable&& other) { }
+        constexpr NullLockable(NullLockable&& other) {}
 
         /// ----------------------------------------------------------------------------------------
         /// CopyOperator is default.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator=(const NullLockable& other) -> NullLockable& { return *this; }
+        constexpr auto operator=(const NullLockable& other) -> NullLockable&
+        {
+            return *this;
+        }
 
         /// ----------------------------------------------------------------------------------------
         /// MoveOperator is default.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator=(NullLockable&& other) -> NullLockable& { return *this; }
+        constexpr auto operator=(NullLockable&& other) -> NullLockable&
+        {
+            return *this;
+        }
 
         /// ----------------------------------------------------------------------------------------
         /// Destructor. Does nothing.
         /// ----------------------------------------------------------------------------------------
-        constexpr ~NullLockable() { }
+        constexpr ~NullLockable() {}
 
     public:
         /// ----------------------------------------------------------------------------------------
         /// Does nothing.
         /// ----------------------------------------------------------------------------------------
-        constexpr void Lock() { }
+        constexpr void Lock() {}
 
         /// ----------------------------------------------------------------------------------------
         /// Always returns true.
         /// ----------------------------------------------------------------------------------------
-        constexpr bool TryLock() { return true; }
+        constexpr bool TryLock()
+        {
+            return true;
+        }
 
         /// ----------------------------------------------------------------------------------------
         /// Does nothing.
         /// ----------------------------------------------------------------------------------------
-        constexpr void Unlock() { }
+        constexpr void Unlock() {}
     };
 
     static_assert(RLockable<NullLockable>);
@@ -67,19 +76,19 @@ namespace Atom
     /// Specialization for NullLockable to avoid any performance overhead.
     /// --------------------------------------------------------------------------------------------
     template <>
-    class LockGuard <NullLockable>
+    class LockGuard<NullLockable>
     {
     public:
         /// ----------------------------------------------------------------------------------------
         /// Constructor. Does nothing.
-        /// 
+        ///
         /// @PARAM[IN] lock NullLockable reference. (UNUSED).
         /// ----------------------------------------------------------------------------------------
-        constexpr LockGuard(NullLockable& lock) { }
+        constexpr LockGuard(NullLockable& lock) {}
 
         /// ----------------------------------------------------------------------------------------
         /// Destructor. Does nothing.
         /// ----------------------------------------------------------------------------------------
-        constexpr ~LockGuard() { }
+        constexpr ~LockGuard() {}
     };
 }

@@ -8,7 +8,7 @@ namespace Atom
 {
     /// --------------------------------------------------------------------------------------------
     /// SimpleMutex implementation.
-    /// 
+    ///
     /// @TODO Implement this class without {std::lock}.
     /// --------------------------------------------------------------------------------------------
     class SimpleMutex
@@ -16,10 +16,10 @@ namespace Atom
     public:
         /// ----------------------------------------------------------------------------------------
         /// DefaultConstructor.
-        /// 
+        ///
         /// @POST Mutex is not locked.
         /// ----------------------------------------------------------------------------------------
-        SimpleMutex() { }
+        SimpleMutex() {}
 
         /// ----------------------------------------------------------------------------------------
         /// CopyConstructor is deleted.
@@ -43,16 +43,16 @@ namespace Atom
 
         /// ----------------------------------------------------------------------------------------
         /// Destructor.
-        /// 
+        ///
         /// @NOTE If lock is locked by some thread and lock is destroyed, behaviour is undefined.
         /// ----------------------------------------------------------------------------------------
-        ~SimpleMutex() { }
+        ~SimpleMutex() {}
 
     public:
         /// ----------------------------------------------------------------------------------------
         /// Locks the lock. If the lock is already locked by some thread then blocks the calling
         /// thread until lock is acquired.
-        /// 
+        ///
         /// @SEE TryLock().
         /// ----------------------------------------------------------------------------------------
         auto Lock()
@@ -61,9 +61,9 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Tries to lock the lock. If the lock is already locked by some thread then returns but 
+        /// Tries to lock the lock. If the lock is already locked by some thread then returns but
         /// doesn't blocks the thread.
-        /// 
+        ///
         /// @RETURNS {true} if lock acquired, else {false}.
         /// ----------------------------------------------------------------------------------------
         auto TryLock() -> bool

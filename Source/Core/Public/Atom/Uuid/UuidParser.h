@@ -1,8 +1,8 @@
 #pragma once
-#include "Uuid.h"
+#include "Atom/Math.h"
 #include "Atom/Range.h"
 #include "Atom/Str.h"
-#include "Atom/Math.h"
+#include "Uuid.h"
 
 namespace Atom
 {
@@ -31,9 +31,9 @@ namespace Atom
             if (itCount != 36)
                 return Uuid::Null;
 
-            Uuid uuid;          // output result
-            usize i = 0;        // index of byte to write
-            usize j = 0;        // index of char to read
+            Uuid uuid;   // output result
+            usize i = 0; // index of byte to write
+            usize j = 0; // index of char to read
 
             while (i < 16)
             {
@@ -44,7 +44,8 @@ namespace Atom
                         return Uuid::Null;
                     }
 
-                    j++; it++;
+                    j++;
+                    it++;
                     continue;
                 }
 
@@ -52,7 +53,8 @@ namespace Atom
                 if (high == byte(-1))
                     return Uuid::Null;
 
-                j++; it++;
+                j++;
+                it++;
 
                 byte low = Math::CharToHex(*it);
                 if (low == byte(-1))
@@ -60,7 +62,8 @@ namespace Atom
 
                 uuid.bytes[i++] = (high << 4) | low;
 
-                j++; it++;
+                j++;
+                it++;
             }
 
             return uuid;
@@ -69,9 +72,9 @@ namespace Atom
         template <typename TIter, typename TIterEnd>
         constexpr auto _parseUncounted(TIter it, TIterEnd itEnd) const -> Uuid
         {
-            Uuid uuid;         // output result
-            usize i = 0;       // index of byte to write
-            usize j = 0;       // index of char to read
+            Uuid uuid;   // output result
+            usize i = 0; // index of byte to write
+            usize j = 0; // index of char to read
 
             while (i < 16)
             {
@@ -85,7 +88,8 @@ namespace Atom
                         return Uuid::Null;
                     }
 
-                    j++; it++;
+                    j++;
+                    it++;
                     continue;
                 }
 
@@ -93,7 +97,8 @@ namespace Atom
                 if (high == byte(-1))
                     return Uuid::Null;
 
-                j++; it++;
+                j++;
+                it++;
                 if (it == itEnd)
                     return Uuid::Null;
 
@@ -103,7 +108,8 @@ namespace Atom
 
                 uuid.bytes[i++] = (high << 4) | low;
 
-                j++; it++;
+                j++;
+                it++;
             }
 
             if (it != itEnd)

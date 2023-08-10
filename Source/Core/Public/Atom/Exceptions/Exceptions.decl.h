@@ -2,9 +2,9 @@
 #include <source_location>
 // #include <stacktrace>
 
+#include "Atom/Str/AsciiStrView.decl.h"
 #include "Atom/Str/Str.decl.h"
 #include "Atom/Str/StrView.decl.h"
-#include "Atom/Str/AsciiStrView.decl.h"
 
 namespace Atom
 {
@@ -28,7 +28,7 @@ namespace Atom
 
     /// --------------------------------------------------------------------------------------------
     /// A record of stack frames.
-    /// 
+    ///
     /// @FIX: GCC doesn't has stacktrace.
     /// --------------------------------------------------------------------------------------------
     // using StackTrace = std::stacktrace;
@@ -37,14 +37,14 @@ namespace Atom
     public:
         static constexpr StackTrace current()
         {
-            return StackTrace{ };
+            return StackTrace{};
         }
     };
 
     /// --------------------------------------------------------------------------------------------
     /// Base class for all exceptions.
     /// --------------------------------------------------------------------------------------------
-    class Exception : public std::exception
+    class Exception: public std::exception
     {
     public:
         /// ----------------------------------------------------------------------------------------
@@ -85,9 +85,9 @@ namespace Atom
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
-    class RuntimeException : public Exception
+    class RuntimeException: public Exception
     {
     public:
         using Exception::Exception;
@@ -96,7 +96,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// Exception represents invalid operation.
     /// --------------------------------------------------------------------------------------------
-    class InvalidOperationException : public Exception
+    class InvalidOperationException: public Exception
     {
     public:
         using Exception::Exception;
@@ -105,7 +105,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// Exception represents invalid argument.
     /// --------------------------------------------------------------------------------------------
-    class InvalidArgumentException : public Exception
+    class InvalidArgumentException: public Exception
     {
     public:
         using Exception::Exception;
@@ -114,7 +114,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// Exception represents null pointer access.
     /// --------------------------------------------------------------------------------------------
-    class NullPointerException : public Exception
+    class NullPointerException: public Exception
     {
     public:
         using Exception::Exception;
@@ -123,7 +123,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// Exception represents an out of range access.
     /// --------------------------------------------------------------------------------------------
-    class OutOfRangeException : public Exception
+    class OutOfRangeException: public Exception
     {
     public:
         using Exception::Exception;
@@ -132,7 +132,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// Exception represents an out of range access, where range is representable using indices.
     /// --------------------------------------------------------------------------------------------
-    class IndexOutOfRangeException : public OutOfRangeException
+    class IndexOutOfRangeException: public OutOfRangeException
     {
     public:
         IndexOutOfRangeException(Str msg, usize index, usize begin, usize end);
@@ -161,7 +161,8 @@ namespace Atom::Ex::Internal
 
         template <typename TEx>
         [[noreturn]]
-        auto operator<<(TEx&& ex)
+        auto
+        operator<<(TEx&& ex)
             requires(RDerivedFrom<TEx, Exception>);
 
     protected:

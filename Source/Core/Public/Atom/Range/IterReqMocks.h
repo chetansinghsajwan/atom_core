@@ -9,7 +9,8 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// Mock object used as IterEnd.
     /// --------------------------------------------------------------------------------------------
-    class IterEndReqMock { };
+    class IterEndReqMock
+    {};
 
     /// --------------------------------------------------------------------------------------------
     /// {RIter} mock object.
@@ -56,7 +57,7 @@ namespace Atom
     /// {RFwdIter} mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    class FwdIterReqMock : public MultiPassIterTag
+    class FwdIterReqMock: public MultiPassIterTag
     {
     public:
         using TElem = T;
@@ -76,7 +77,7 @@ namespace Atom
     /// {RMutFwdIter} mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    class MutFwdIterReqMock : public MultiPassIterTag
+    class MutFwdIterReqMock: public MultiPassIterTag
     {
     public:
         using TElem = T;
@@ -97,7 +98,7 @@ namespace Atom
     /// {RBidiIter} mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    class BidiIterReqMock : public MultiPassIterTag
+    class BidiIterReqMock: public MultiPassIterTag
     {
     public:
         using TElem = T;
@@ -118,7 +119,7 @@ namespace Atom
     /// {RMutBidiIter} mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    class MutBidiIterReqMock : public MultiPassIterTag
+    class MutBidiIterReqMock: public MultiPassIterTag
     {
     public:
         using TElem = T;
@@ -140,7 +141,7 @@ namespace Atom
     /// {RJumpIter} mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    class JumpIterReqMock : public MultiPassIterTag
+    class JumpIterReqMock: public MultiPassIterTag
     {
     public:
         using TElem = T;
@@ -169,7 +170,7 @@ namespace Atom
     /// {RMutJumpIter} mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    class MutJumpIterReqMock : public MultiPassIterTag
+    class MutJumpIterReqMock: public MultiPassIterTag
     {
     public:
         using TElem = T;
@@ -199,7 +200,7 @@ namespace Atom
     /// {RArrIter} mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    class ArrIterReqMock : public ArrIterTag
+    class ArrIterReqMock: public ArrIterTag
     {
     public:
         using TElem = T;
@@ -229,7 +230,7 @@ namespace Atom
     /// {RMutArrIter} mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    class MutArrIterReqMock : public ArrIterTag
+    class MutArrIterReqMock: public ArrIterTag
     {
     public:
         using TElem = T;

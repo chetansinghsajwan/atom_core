@@ -24,10 +24,11 @@ namespace Atom::Internal
         using Thrower = Ex::Internal::Thrower;
 
     public:
-        AssertionFailure(StrView assertExpr, 
-            ExceptionSource src = ExceptionSource::Current(),
-            StackTrace stackTrace = StackTrace::current()):
-            assertExpr{ assertExpr }, Thrower(mov(src), mov(stackTrace)) { }
+        AssertionFailure(StrView assertExpr, ExceptionSource src = ExceptionSource::Current(),
+            StackTrace stackTrace = StackTrace::current())
+            : assertExpr{ assertExpr }
+            , Thrower(mov(src), mov(stackTrace))
+        {}
 
         ~AssertionFailure()
         {
@@ -40,7 +41,8 @@ namespace Atom::Internal
     public:
         template <typename TEx>
         [[noreturn]]
-        void operator<<(TEx&& ex)
+        void
+        operator<<(TEx&& ex)
             requires(RDerivedFrom<TEx, Exception>)
         {
             done = true;
@@ -51,7 +53,8 @@ namespace Atom::Internal
 
         template <typename TArg>
         [[noreturn]]
-        void operator<<(TArg&& arg)
+        void
+        operator<<(TArg&& arg)
             requires(RNotDerivedFrom<TArg, Exception>)
         {
             done = true;
@@ -69,16 +72,17 @@ namespace Atom::Internal
 /// ------------------------------------------------------------------------------------------------
 /// Assertion in all modes.
 /// ------------------------------------------------------------------------------------------------
-#define ATOM_ASSERT(assertion) \
-    if (!(assertion)) ::Atom::Internal::AssertionFailure(#assertion)
+#define ATOM_ASSERT(assertion)                                                                     \
+    if (!(assertion))                                                                              \
+    ::Atom::Internal::AssertionFailure(#assertion)
 
 /// ------------------------------------------------------------------------------------------------
 /// Assertion in Debug mode only.
 /// ------------------------------------------------------------------------------------------------
 #if ATOM_IS_CONFIG_DEBUG
-    #define ATOM_DEBUG_ASSERT(assertion) ATOM_ASSERT(assertion)
+#    define ATOM_DEBUG_ASSERT(assertion) ATOM_ASSERT(assertion)
 #else
-    #define ATOM_DEBUG_ASSERT(assertion) ATOM_ASSERT(true)
+#    define ATOM_DEBUG_ASSERT(assertion) ATOM_ASSERT(true)
 #endif
 
 /// ------------------------------------------------------------------------------------------------

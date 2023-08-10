@@ -1,5 +1,5 @@
-#include "catch2/catch_all.hpp"
 #include "Atom/Logging/Log.h"
+#include "catch2/catch_all.hpp"
 
 using namespace Atom::Logging;
 

@@ -3,13 +3,22 @@
 namespace Atom
 {
     template <typename T>
-    struct _remove_ref { using value = T; };
+    struct _remove_ref
+    {
+        using value = T;
+    };
 
     template <typename T>
-    struct _remove_ref<T&> { using value = T; };
+    struct _remove_ref<T&>
+    {
+        using value = T;
+    };
 
     template <typename T>
-    struct _remove_ref<T&&> { using value = T; };
+    struct _remove_ref<T&&>
+    {
+        using value = T;
+    };
 
     template <typename T>
     using _remove_ref_t = _remove_ref<T>::value;

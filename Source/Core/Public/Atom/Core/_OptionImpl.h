@@ -1,7 +1,7 @@
 #pragma once
 #include "Atom/Core.h"
-#include "Atom/Memory/ObjHelper.h"
 #include "Atom/Exceptions/Assertions.h"
+#include "Atom/Memory/ObjHelper.h"
 
 namespace Atom
 {
@@ -9,16 +9,19 @@ namespace Atom
     union _OptionStorage
     {
     public:
-        class NoInit{};
+        class NoInit
+        {};
 
     public:
-        _OptionStorage() { }
+        _OptionStorage() {}
 
-        _OptionStorage(NoInit):
-            _dummy{ } { }
+        _OptionStorage(NoInit)
+            : _dummy{}
+        {}
 
-        _OptionStorage(auto&&... args):
-            _value{ fwd(args)... } { }
+        _OptionStorage(auto&&... args)
+            : _value{ fwd(args)... }
+        {}
 
         _OptionStorage(const _OptionStorage&) = default;
 
@@ -30,11 +33,11 @@ namespace Atom
 
         ~_OptionStorage()
             requires(RTriviallyDestructible<T>)
-            = default;
+        = default;
 
         ~_OptionStorage()
             requires(not RTriviallyDestructible<T>)
-            { }
+        {}
 
     public:
         constexpr auto getData() -> T*
@@ -56,15 +59,17 @@ namespace Atom
     union _OptionStorage<T*>
     {
     public:
-        class NoInit{};
+        class NoInit
+        {};
 
     public:
         _OptionStorage() = default;
 
-        _OptionStorage(NoInit) { }
+        _OptionStorage(NoInit) {}
 
-        _OptionStorage(T* ptr):
-            _ptr{ ptr } { }
+        _OptionStorage(T* ptr)
+            : _ptr{ ptr }
+        {}
 
     public:
         constexpr auto getData() -> T**
@@ -88,7 +93,8 @@ namespace Atom
         using _StorageCtorNoInit = _Storage::NoInit;
 
     public:
-        class CtorNoVal{};
+        class CtorNoVal
+        {};
 
     public:
         static consteval auto GetDefault() -> const T&
@@ -99,11 +105,15 @@ namespace Atom
     public:
         constexpr _OptionImpl() = default;
 
-        constexpr _OptionImpl(CtorNoVal):
-            _storage{ _StorageCtorNoInit{} }, _isValue{ false } { }
+        constexpr _OptionImpl(CtorNoVal)
+            : _storage{ _StorageCtorNoInit{} }
+            , _isValue{ false }
+        {}
 
-        constexpr _OptionImpl(auto&&... args):
-            _storage{ fwd(args)... }, _isValue{ true } { }
+        constexpr _OptionImpl(auto&&... args)
+            : _storage{ fwd(args)... }
+            , _isValue{ true }
+        {}
 
     public:
         constexpr auto constructValueFromOption(const _OptionImpl& opt)

@@ -8,13 +8,15 @@ namespace Atom::Logging
         return GET_REGISTRY().GetDefaultLogger();
     }
 
-//// -----------------------------------------------------------------------------------------------
-//// RUNTIME LOGGING
-//// -----------------------------------------------------------------------------------------------
+    ////
+    ///-----------------------------------------------------------------------------------------------
+    //// RUNTIME LOGGING
+    ////
+    ///-----------------------------------------------------------------------------------------------
 
     /// ----------------------------------------------------------------------------------------
     /// Checks if RootLogger should log.
-    /// 
+    ///
     /// @PARAM[IN] lvl ELogLevel to check against.
     /// ----------------------------------------------------------------------------------------
     inline auto CHECK_LOG_LEVEL(ELogLevel lvl) -> bool
@@ -90,11 +92,13 @@ namespace Atom::Logging
         GET_ROOT_LOGGER()->Flush();
     }
 
-//// -----------------------------------------------------------------------------------------------
-//// STATIC LOGGING
-//// 
-//// Logging is checked at compile time and hopefully removed at runtime.
-//// -----------------------------------------------------------------------------------------------
+    ////
+    ///-----------------------------------------------------------------------------------------------
+    //// STATIC LOGGING
+    ////
+    //// Logging is checked at compile time and hopefully removed at runtime.
+    ////
+    ///-----------------------------------------------------------------------------------------------
 
     /// --------------------------------------------------------------------------------------------
     /// @TODO Add this as option.
@@ -103,7 +107,7 @@ namespace Atom::Logging
 
     /// --------------------------------------------------------------------------------------------
     /// Checks at compile time if message of specified level {lvl} should be logged.
-    /// 
+    ///
     /// @TPARAM[IN] lvl ELogLevel of the msg to check for.
     /// --------------------------------------------------------------------------------------------
     template <ELogLevel lvl>
@@ -115,10 +119,10 @@ namespace Atom::Logging
     /// --------------------------------------------------------------------------------------------
     /// Checks at compile time if message should be logged. If not it's just an empty function
     /// and hopefully compiler will optimize it away, however it's yet to check.
-    /// 
-    /// This is done to afn the use of macros. But if this approach fails we may fallback to 
+    ///
+    /// This is done to afn the use of macros. But if this approach fails we may fallback to
     /// macros.
-    /// 
+    ///
     /// @TODO Check the overhead of this function when it should not log anything.
     /// --------------------------------------------------------------------------------------------
     template <ELogLevel lvl, RLogArg... TArgs>

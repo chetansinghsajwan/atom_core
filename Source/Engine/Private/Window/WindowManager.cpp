@@ -1,15 +1,15 @@
 #include "Atom/Logging.h"
 
 #if defined(ATOM_PLATFORM_LINUX)
-    #include "Window/LinuxWindow.h"
-    using PlatformSelectedWindow = Atom::Engine::LinuxWindow;
+#    include "Window/LinuxWindow.h"
+using PlatformSelectedWindow = Atom::Engine::LinuxWindow;
 
 #elif defined(ATOM_PLATFORM_WINDOWS)
-    #include "Window/WindowsWindow.h"
-    using PlatformSelectedWindow = Atom::Engine::WindowsWindow;
+#    include "Window/WindowsWindow.h"
+using PlatformSelectedWindow = Atom::Engine::WindowsWindow;
 
 #else
-    #error "Atom::Engine::Window is only supported for Linux and Windows platform for now."
+#    error "Atom::Engine::Window is only supported for Linux and Windows platform for now."
 
 #endif
 
@@ -22,15 +22,12 @@ namespace Atom::Engine
         if (s_windowCount == 0)
         {
             i32 success = glfwInit();
-            ATOM_ASSERT(success) << RuntimeException(
-                "GLFW initialization failed.");
+            ATOM_ASSERT(success) << RuntimeException("GLFW initialization failed.");
 
-            glfwSetErrorCallback(
-                [](i32 error_code, const char* description)
-                {
-                    // TODO: Fix this compilation error.
-                    // LOG_FATAL("GLFW Error: ", description);
-                });
+            glfwSetErrorCallback([](i32 error_code, const char* description) {
+                // TODO: Fix this compilation error.
+                // LOG_FATAL("GLFW Error: ", description);
+            });
         }
 
         s_windowCount++;
@@ -39,8 +36,7 @@ namespace Atom::Engine
 
     auto WindowManger::CloseWindow(Window* window) -> void
     {
-        ATOM_ASSERT(window != nullptr) << NullPointerException(
-            "Cannot close NULL window.");
+        ATOM_ASSERT(window != nullptr) << NullPointerException("Cannot close NULL window.");
 
         delete window;
     }

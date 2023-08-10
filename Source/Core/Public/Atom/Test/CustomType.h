@@ -3,32 +3,32 @@
 
 namespace Atom::Test
 {
-    enum class ECustomTypeFlags: u64
+    enum class ECustomTypeFlags : u64
     {
         None = 0,
         All = u64(-1),
 
-        DefaultConstructor                      = 1 << 0,
-        CopyConstructor                         = 1 << 1,
-        CopyOperator                            = 1 << 2,
-        MoveConstructor                         = 1 << 3,
-        MoveOperator                            = 1 << 4,
-        Destructor                              = 1 << 5,
+        DefaultConstructor = 1 << 0,
+        CopyConstructor = 1 << 1,
+        CopyOperator = 1 << 2,
+        MoveConstructor = 1 << 3,
+        MoveOperator = 1 << 4,
+        Destructor = 1 << 5,
 
-        TrivialDefaultConstructor               = 1 << 6,
-        TrivialCopyConstructor                  = 1 << 7,
-        TrivialCopyOperator                     = 1 << 8,
-        TrivialMoveConstructor                  = 1 << 9,
-        TrivialMoveOperator                     = 1 << 10,
-        TrivialDestructor                       = 1 << 11,
+        TrivialDefaultConstructor = 1 << 6,
+        TrivialCopyConstructor = 1 << 7,
+        TrivialCopyOperator = 1 << 8,
+        TrivialMoveConstructor = 1 << 9,
+        TrivialMoveOperator = 1 << 10,
+        TrivialDestructor = 1 << 11,
 
-        Trivial                                 = 1 << 12,
+        Trivial = 1 << 12,
 
-        EqualToOperator                         = 1 << 13,
-        LessThanToOperator                      = 1 << 14,
-        GreaterThanToOperator                   = 1 << 15,
-        LessThanOrEqualToOperator               = 1 << 16,
-        GreaterThanOrEqualToOperator            = 1 << 17,
+        EqualToOperator = 1 << 13,
+        LessThanToOperator = 1 << 14,
+        GreaterThanToOperator = 1 << 15,
+        LessThanOrEqualToOperator = 1 << 16,
+        GreaterThanOrEqualToOperator = 1 << 17,
     };
 
     constexpr auto operator|(const ECustomTypeFlags& flags, const ECustomTypeFlags& flagsToAdd)
@@ -54,7 +54,7 @@ namespace Atom::Test
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
     template <ECustomTypeFlags flags>
     class CustomType
@@ -72,8 +72,9 @@ namespace Atom::Test
         /// ----------------------------------------------------------------------------------------
         constexpr CustomType()
             requires(EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::DefaultConstructor))
-                and (not EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::TrivialDefaultConstructor))
-        { }
+                    and (not EnumFlagUtils::HasFlag(
+                        flags, ECustomTypeFlags::TrivialDefaultConstructor))
+        {}
 
         /// ----------------------------------------------------------------------------------------
         /// # Trivial Copy Constructor
@@ -87,22 +88,22 @@ namespace Atom::Test
         /// ----------------------------------------------------------------------------------------
         constexpr CustomType(const CustomType& that)
             requires(EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::CopyConstructor))
-                and (not EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::TrivialCopyConstructor))
-        { }
+                    and (not EnumFlagUtils::HasFlag(
+                        flags, ECustomTypeFlags::TrivialCopyConstructor))
+        {}
 
         /// ----------------------------------------------------------------------------------------
         /// # Trivial Copy Operator
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator=(const CustomType& that) -> CustomType&
-            requires(EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::TrivialCopyOperator))
-        = default;
+        constexpr auto operator=(const CustomType& that) -> CustomType& requires(
+            EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::TrivialCopyOperator)) = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # Copy Operator
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator=(const CustomType& that) -> CustomType&
-            requires(EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::CopyOperator))
-                and (not EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::TrivialCopyOperator))
+        constexpr auto operator=(const CustomType& that) -> CustomType& requires(
+            EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::CopyOperator))
+            and (not EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::TrivialCopyOperator))
         {
             return *this;
         }
@@ -119,22 +120,22 @@ namespace Atom::Test
         /// ----------------------------------------------------------------------------------------
         constexpr CustomType(CustomType&& that)
             requires(EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::MoveConstructor))
-                and (not EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::TrivialMoveConstructor))
-        { }
+                    and (not EnumFlagUtils::HasFlag(
+                        flags, ECustomTypeFlags::TrivialMoveConstructor))
+        {}
 
         /// ----------------------------------------------------------------------------------------
         /// # Trivial Move Operator
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator=(CustomType&& that) -> CustomType&
-            requires(EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::TrivialMoveOperator))
-        = default;
+        constexpr auto operator=(CustomType&& that) -> CustomType& requires(
+            EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::TrivialMoveOperator)) = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # Move Operator
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator=(CustomType&& that) -> CustomType&
-            requires(EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::MoveOperator))
-                and (not EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::TrivialMoveOperator))
+        constexpr auto operator=(CustomType&& that) -> CustomType& requires(
+            EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::MoveOperator))
+            and (not EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::TrivialMoveOperator))
         {
             return *this;
         }
@@ -151,12 +152,14 @@ namespace Atom::Test
         /// ----------------------------------------------------------------------------------------
         constexpr CustomType(CustomType&& that)
             requires(EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::Destructor))
-                and (not EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::TrivialDestructor))
-        { }
+                    and (not EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::TrivialDestructor))
+        {}
 
-    //// -------------------------------------------------------------------------------------------
-    //// Compairision Operators
-    //// -------------------------------------------------------------------------------------------
+        ////
+        ///-------------------------------------------------------------------------------------------
+        //// Compairision Operators
+        ////
+        ///-------------------------------------------------------------------------------------------
 
         /// ----------------------------------------------------------------------------------------
         /// # Equal To Opeartor
@@ -173,7 +176,7 @@ namespace Atom::Test
         constexpr auto operator!=(const CustomType& that) -> bool
             requires(EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::EqualToOperator))
         {
-            return not (*this == that);
+            return not(*this == that);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -219,63 +222,46 @@ namespace Atom::Test
         NonDefaultConstructibleMock() = delete;
     };
 
-    using CopyConstructibleMock = CustomType<
-        ECustomTypeFlags::CopyConstructor>;
+    using CopyConstructibleMock = CustomType<ECustomTypeFlags::CopyConstructor>;
 
-    using CopyAssignableMock = CustomType<
-        ECustomTypeFlags::CopyOperator>;
+    using CopyAssignableMock = CustomType<ECustomTypeFlags::CopyOperator>;
 
-    using CopyableMock = CustomType<
-        ECustomTypeFlags::CopyConstructor |
-        ECustomTypeFlags::CopyOperator>;
+    using CopyableMock =
+        CustomType<ECustomTypeFlags::CopyConstructor | ECustomTypeFlags::CopyOperator>;
 
-    using MoveConstructibleMock = CustomType<
-        ECustomTypeFlags::MoveConstructor>;
+    using MoveConstructibleMock = CustomType<ECustomTypeFlags::MoveConstructor>;
 
-    using MoveAssignableMock = CustomType<
-        ECustomTypeFlags::MoveOperator>;
+    using MoveAssignableMock = CustomType<ECustomTypeFlags::MoveOperator>;
 
-    using MoveableMock = CustomType<
-        ECustomTypeFlags::CopyConstructor |
-        ECustomTypeFlags::CopyOperator |
-        ECustomTypeFlags::MoveConstructor |
-        ECustomTypeFlags::MoveOperator>;
+    using MoveableMock =
+        CustomType<ECustomTypeFlags::CopyConstructor | ECustomTypeFlags::CopyOperator
+                   | ECustomTypeFlags::MoveConstructor | ECustomTypeFlags::MoveOperator>;
 
-    using DestructibleMock = CustomType<
-        ECustomTypeFlags::Destructor>;
+    using DestructibleMock = CustomType<ECustomTypeFlags::Destructor>;
 
-    using TriviallyCopyConstructibleMock = CustomType<
-        ECustomTypeFlags::TrivialCopyConstructor>;
+    using TriviallyCopyConstructibleMock = CustomType<ECustomTypeFlags::TrivialCopyConstructor>;
 
-    using TriviallyCopyAssignableMock = CustomType<
-        ECustomTypeFlags::TrivialCopyOperator>;
+    using TriviallyCopyAssignableMock = CustomType<ECustomTypeFlags::TrivialCopyOperator>;
 
-    using TriviallyCopyableMock = CustomType<
-        ECustomTypeFlags::TrivialCopyConstructor |
-        ECustomTypeFlags::TrivialCopyOperator>;
+    using TriviallyCopyableMock = CustomType<ECustomTypeFlags::TrivialCopyConstructor
+                                             | ECustomTypeFlags::TrivialCopyOperator>;
 
-    using TriviallyMoveConstructibleMock = CustomType<
-        ECustomTypeFlags::TrivialMoveConstructor>;
+    using TriviallyMoveConstructibleMock = CustomType<ECustomTypeFlags::TrivialMoveConstructor>;
 
-    using TriviallyMoveAssignableMock = CustomType<
-        ECustomTypeFlags::TrivialMoveOperator>;
+    using TriviallyMoveAssignableMock = CustomType<ECustomTypeFlags::TrivialMoveOperator>;
 
-    using TriviallyMoveableMock = CustomType<
-        ECustomTypeFlags::TrivialCopyConstructor |
-        ECustomTypeFlags::TrivialCopyOperator |
-        ECustomTypeFlags::TrivialMoveConstructor |
-        ECustomTypeFlags::TrivialMoveOperator>;
+    using TriviallyMoveableMock =
+        CustomType<ECustomTypeFlags::TrivialCopyConstructor | ECustomTypeFlags::TrivialCopyOperator
+                   | ECustomTypeFlags::TrivialMoveConstructor
+                   | ECustomTypeFlags::TrivialMoveOperator>;
 
-    using TriviallyDestructibleMock = CustomType<
-        ECustomTypeFlags::TrivialDestructor>;
+    using TriviallyDestructibleMock = CustomType<ECustomTypeFlags::TrivialDestructor>;
 
-    using EqualityComparableMock = CustomType<
-        ECustomTypeFlags::EqualToOperator>;
+    using EqualityComparableMock = CustomType<ECustomTypeFlags::EqualToOperator>;
 
-    using ComparableMock = CustomType<
-        ECustomTypeFlags::EqualToOperator |
-        ECustomTypeFlags::LessThanToOperator |
-        ECustomTypeFlags::GreaterThanToOperator |
-        ECustomTypeFlags::LessThanOrEqualToOperator |
-        ECustomTypeFlags::GreaterThanOrEqualToOperator>;
+    using ComparableMock =
+        CustomType<ECustomTypeFlags::EqualToOperator | ECustomTypeFlags::LessThanToOperator
+                   | ECustomTypeFlags::GreaterThanToOperator
+                   | ECustomTypeFlags::LessThanOrEqualToOperator
+                   | ECustomTypeFlags::GreaterThanOrEqualToOperator>;
 }

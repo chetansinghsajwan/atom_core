@@ -4,19 +4,14 @@ namespace Atom::Engine
 {
     Application::Application()
     {
-        WindowProps windowProps
-        {
-            .windowName = "Sandbox",
-            .windowSize = { 1920, 1080 }
+        WindowProps windowProps{
+            .windowName = "Sandbox", .windowSize = {1920, 1080}
         };
 
         _window = WindowManger::CreateWindow(windowProps);
         ATOM_DEBUG_ASSERT(_window != nullptr);
 
-        _window->OnEvent += [this](const SWindowEvent& event)
-        {
-            this->OnWindowEvent(event);
-        };
+        _window->OnEvent += [this](const SWindowEvent& event) { this->OnWindowEvent(event); };
     }
 
     Application::~Application()
@@ -35,5 +30,5 @@ namespace Atom::Engine
         }
     }
 
-    auto Application::OnWindowEvent(const SWindowEvent& event) -> void { }
+    auto Application::OnWindowEvent(const SWindowEvent& event) -> void {}
 }

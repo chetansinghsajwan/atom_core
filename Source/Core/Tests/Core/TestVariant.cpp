@@ -1,7 +1,7 @@
-#include "catch2/catch_all.hpp"
-#include <catch2/matchers/catch_matchers_floating_point.hpp>
 #include "Atom/Core/Variant.h"
 #include "Atom/Test/TrackedType.h"
+#include "catch2/catch_all.hpp"
+#include <catch2/matchers/catch_matchers_floating_point.hpp>
 
 using namespace Atom;
 using namespace Atom::Test;
@@ -57,7 +57,7 @@ TEST_CASE("Atom.Core.Variant")
     SECTION("Trivial Default Constructor")
     {
         // # To Do: Fix this. Check _VariantImpl default value for _index.
-        // 
+        //
         // STATIC_REQUIRE(RTriviallyDefaultConstructible<
         //     Variant<i32, char, f32>>);
     }
@@ -73,8 +73,7 @@ TEST_CASE("Atom.Core.Variant")
 
     SECTION("Trivial Copy Constructor")
     {
-        STATIC_REQUIRE(RTriviallyCopyConstructible<
-            Variant<i32, char, f32>>);
+        STATIC_REQUIRE(RTriviallyCopyConstructible<Variant<i32, char, f32>>);
     }
 
     SECTION("Copy Constructor")
@@ -107,8 +106,7 @@ TEST_CASE("Atom.Core.Variant")
 
     SECTION("Trivial Copy Assignment Operator")
     {
-        STATIC_REQUIRE(RTriviallyCopyAssignable<
-            Variant<i32, char, f32>>);
+        STATIC_REQUIRE(RTriviallyCopyAssignable<Variant<i32, char, f32>>);
     }
 
     SECTION("Copy Assignment Operator")
@@ -169,8 +167,7 @@ TEST_CASE("Atom.Core.Variant")
 
     SECTION("Trivial Move Constructor")
     {
-        STATIC_REQUIRE(RTriviallyMoveConstructible<
-            Variant<i32, char, f32>>);
+        STATIC_REQUIRE(RTriviallyMoveConstructible<Variant<i32, char, f32>>);
     }
 
     SECTION("Move Constructor")
@@ -203,8 +200,7 @@ TEST_CASE("Atom.Core.Variant")
 
     SECTION("Trivial Move Assignment Operator")
     {
-        STATIC_REQUIRE(RTriviallyMoveAssignable<
-            Variant<i32, char, f32>>);
+        STATIC_REQUIRE(RTriviallyMoveAssignable<Variant<i32, char, f32>>);
     }
 
     SECTION("Move Assignment Operator")

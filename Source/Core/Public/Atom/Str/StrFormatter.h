@@ -4,7 +4,7 @@
 namespace Atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
     class _FmtStrViewCnvter
     {
@@ -21,7 +21,7 @@ namespace Atom
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Wrapper over {StrView} to represent format string. This is done to avoid compile 
+    /// Wrapper over {StrView} to represent format string. This is done to avoid compile
     /// time checks.
     /// --------------------------------------------------------------------------------------------
     class RunFmtStr
@@ -31,35 +31,36 @@ namespace Atom
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
     template <RStrFmtArgFmtable... TArgs>
     using FmtStr = _FmtFmtStr<TArgs...>;
-//     class FmtStr
-//     {
-//     public:
-//         template <typename T>
-//         consteval FmtStr(const T& strv) { }
-//             _fmt{ _FmtStrViewCnvter().ToFmt(strv) } { }
-// 
-//         FmtStr(RunFmtStr str) { }
-//             _fmt{ _FmtRunFmtStr{ _FmtStrViewCnvter().ToFmt(str.str) } } { }
-// 
-//     public:
-//         _FmtFmtStr<TArgs...> _fmt;
-//     };
+
+    //     class FmtStr
+    //     {
+    //     public:
+    //         template <typename T>
+    //         consteval FmtStr(const T& strv) { }
+    //             _fmt{ _FmtStrViewCnvter().ToFmt(strv) } { }
+    //
+    //         FmtStr(RunFmtStr str) { }
+    //             _fmt{ _FmtRunFmtStr{ _FmtStrViewCnvter().ToFmt(str.str) } } { }
+    //
+    //     public:
+    //         _FmtFmtStr<TArgs...> _fmt;
+    //     };
 
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
     class StrFmter
     {
     public:
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         template <typename TOut, RStrFmtArgFmtable... TArgs>
-        requires ROutput<TOut, Char>
+            requires ROutput<TOut, Char>
         auto FmtTo(TOut out, FmtStr<TArgs...> fmt, TArgs&&... args)
         {
             class _OutIterWrap
@@ -77,7 +78,7 @@ namespace Atom
 
                 auto operator=(Char ch) -> _OutIterWrap&
                 {
-                    *out+= ch;
+                    *out += ch;
                     return *this;
                 }
 
@@ -100,7 +101,7 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         template <RStrFmtArgFmtable... TArgs>
         auto Fmt(FmtStr<TArgs...> fmt, TArgs&&... args) -> Str
@@ -113,5 +114,4 @@ namespace Atom
     };
 }
 
-#define ATOM_STR_FMT(fmt, ...) \
-    ::Atom::StrFmter(fmt, __VA_ARGS__)
+#define ATOM_STR_FMT(fmt, ...) ::Atom::StrFmter(fmt, __VA_ARGS__)

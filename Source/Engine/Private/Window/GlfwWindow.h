@@ -14,15 +14,15 @@ namespace Atom::Engine
 {
     class GlfwSWindowCoords
     {
-      public:
+    public:
         i32 x;
         i32 y;
     };
 
     class GlfwWindowCoordsConverter
     {
-      public:
-        static constexpr auto ToGLFW(SWindowCoords coords)->GlfwSWindowCoords
+    public:
+        static constexpr auto ToGLFW(SWindowCoords coords) -> GlfwSWindowCoords
         {
             static constexpr i32 min = NumLimits<i32>::min();
             static constexpr i32 max = NumLimits<i32>::max();
@@ -33,7 +33,7 @@ namespace Atom::Engine
             return { coords.x, coords.y };
         };
 
-        static constexpr auto FromGLFW(GlfwSWindowCoords coords)->SWindowCoords
+        static constexpr auto FromGLFW(GlfwSWindowCoords coords) -> SWindowCoords
         {
             static constexpr i32 min = NumLimits<i32>::min();
             static constexpr i32 max = NumLimits<i32>::max();
@@ -47,31 +47,31 @@ namespace Atom::Engine
 
     class GlfwWindow: public Window
     {
-      public:
+    public:
         GlfwWindow(const WindowProps& props);
         ~GlfwWindow();
 
-        virtual auto Update()->void override;
+        virtual auto Update() -> void override;
 
-        virtual auto SetPos(SWindowCoords size)->void override;
-        virtual auto GetPos() const->SWindowCoords override;
-        virtual auto UpdatePos()->SWindowCoords;
+        virtual auto SetPos(SWindowCoords size) -> void override;
+        virtual auto GetPos() const -> SWindowCoords override;
+        virtual auto UpdatePos() -> SWindowCoords;
 
-        virtual auto SetSize(SWindowCoords size)->void override;
-        virtual auto GetSize() const->SWindowCoords override;
-        virtual auto UpdateSize()->SWindowCoords;
+        virtual auto SetSize(SWindowCoords size) -> void override;
+        virtual auto GetSize() const -> SWindowCoords override;
+        virtual auto UpdateSize() -> SWindowCoords;
 
-        virtual auto GetNative() const->void* ofinal;
+        virtual auto GetNative() const -> void* ofinal;
 
-        auto SetVSync(bool enable)->void;
-        auto GetVSync() const->bool;
+        auto SetVSync(bool enable) -> void;
+        auto GetVSync() const -> bool;
 
-        auto GetNativeGLFW() const->GLFWwindow*
+        auto GetNativeGLFW() const -> GLFWwindow*
         {
             return _glfwWindow;
         }
 
-      protected:
+    protected:
         GLFWwindow* _glfwWindow;
         SWindowCoords _windowPos;
         SWindowCoords _windowSize;

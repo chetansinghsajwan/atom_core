@@ -1,6 +1,6 @@
 #pragma once
-#include "StdIterWrapForAtomIter.h"
 #include "RangeReq.h"
+#include "StdIterWrapForAtomIter.h"
 
 #include <algorithm>
 
@@ -13,8 +13,8 @@ namespace Atom
         /// @TODO: Update comparision requirements for TElem of both ranges.
         /// ----------------------------------------------------------------------------------------
         template <typename TRange1, typename TRange2>
-        requires RFwdRange<TRange1> && RFwdRange<TRange2> &&
-            RSameAs<typename TRange1::TElem, typename TRange2::TElem>
+            requires RFwdRange<TRange1> && RFwdRange<TRange2>
+                     && RSameAs<typename TRange1::TElem, typename TRange2::TElem>
         auto AreEqual(const TRange1& range1, const TRange2& range2) -> i8
         {
             StdIterWrapForAtomIter stdIter1{ range1.iter() };

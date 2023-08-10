@@ -97,8 +97,7 @@ AlignConsecutiveShortCaseStatements:
   Enabled: true
   AcrossEmptyLines: false
   AcrossComments: false
-  AlignCompound: false
-  PadOperators: false
+  AlignCaseColons: false
 AlignEscapedNewlines: Right
 AlignOperands: Align
 AlignTrailingComments:

@@ -1,21 +1,21 @@
 #pragma once
-#include "RangeReq.h"
 #include "ArrIter.h"
 #include "InitList.h"
+#include "RangeReq.h"
 
 namespace Atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
     template <typename... TArgs>
     class Range;
 
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
     template <typename _TIter, typename _TIterEnd>
-    requires(RIterPair<_TIter, _TIterEnd>)
+        requires(RIterPair<_TIter, _TIterEnd>)
     class Range<_TIter, _TIterEnd>
     {
     public:
@@ -26,8 +26,10 @@ namespace Atom
         using TIterEnd = _TIterEnd;
 
     public:
-        constexpr Range(TIter iter, TIterEnd end):
-            _iter{ iter }, _end{ end } { }
+        constexpr Range(TIter iter, TIterEnd end)
+            : _iter{ iter }
+            , _end{ end }
+        {}
 
     public:
         constexpr auto iter() const -> TIter
@@ -60,67 +62,66 @@ namespace Atom
             return _end - _iter;
         }
 
-        constexpr auto data() const -> const TElem*
-            requires(RArrIterPair<TIter, TIterEnd>)
-        {
-            return &*_iter;
-        }
+        constexpr auto data() const
+            -> const TElem* requires(RArrIterPair<TIter, TIterEnd>) { return &*_iter; }
 
-        constexpr auto data() -> TElem*
-            requires(RMutArrIterPair<TIter, TIterEnd>)
-        {
-            return &*_iter;
-        }
+        constexpr auto data()
+            -> TElem* requires(RMutArrIterPair<TIter, TIterEnd>) { return &*_iter; }
 
-    protected:
-        TIter _iter;
+        protected: TIter _iter;
         TIterEnd _end;
     };
 
     template <typename TIter, typename TIterEnd>
-    requires(RIterPair<TIter, TIterEnd>)
+        requires(RIterPair<TIter, TIterEnd>)
     Range(TIter iter, TIterEnd end) -> Range<TIter, TIterEnd>;
 
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    class Range<const T*, const T*> : public Range<ArrIter<T>, ArrIter<T>>
+    class Range<const T*, const T*>: public Range<ArrIter<T>, ArrIter<T>>
     {
     public:
         using Base = Range<ArrIter<T>, ArrIter<T>>;
 
     public:
-        constexpr Range(const T* arr, const T* end):
-            Base{ arr, end } { }
+        constexpr Range(const T* arr, const T* end)
+            : Base{ arr, end }
+        {}
 
-        constexpr Range(const T* arr, usize count):
-            Base{ arr, arr + count } { }
+        constexpr Range(const T* arr, usize count)
+            : Base{ arr, arr + count }
+        {}
 
         template <usize count>
-        constexpr Range(const T(&arr)[count]):
-            Base{ arr, arr + count } { }
+        constexpr Range(const T (&arr)[count])
+            : Base{ arr, arr + count }
+        {}
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    class Range<T*, T*> : public Range<MutArrIter<T>, MutArrIter<T>>
+    class Range<T*, T*>: public Range<MutArrIter<T>, MutArrIter<T>>
     {
     public:
         using Base = Range<MutArrIter<T>, MutArrIter<T>>;
 
     public:
-        constexpr Range(T* arr, T* end):
-            Base{ arr, end } { }
+        constexpr Range(T* arr, T* end)
+            : Base{ arr, end }
+        {}
 
-        constexpr Range(T* arr, usize count):
-            Base{ arr, arr + count } { }
+        constexpr Range(T* arr, usize count)
+            : Base{ arr, arr + count }
+        {}
 
         template <usize count>
-        constexpr Range(T(&arr)[count]):
-            Base{ arr, arr + count } { }
+        constexpr Range(T (&arr)[count])
+            : Base{ arr, arr + count }
+        {}
     };
 
     template <typename T>
@@ -130,20 +131,21 @@ namespace Atom
     Range(T* iter, usize count) -> Range<T*, T*>;
 
     template <typename T, usize count>
-    Range(T(&arr)[count]) -> Range<T*, T*>;
+    Range(T (&arr)[count]) -> Range<T*, T*>;
 
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    class Range<InitList<T>> : public Range<const T*, const T*>
+    class Range<InitList<T>>: public Range<const T*, const T*>
     {
     public:
         using Base = Range<const T*, const T*>;
 
     public:
-        constexpr Range(const InitList<T>& init):
-            Base{ init.begin(), init.end() } { }
+        constexpr Range(const InitList<T>& init)
+            : Base{ init.begin(), init.end() }
+        {}
     };
 
     template <typename T>

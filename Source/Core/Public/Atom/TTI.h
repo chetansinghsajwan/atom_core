@@ -1,14 +1,15 @@
 #pragma once
 #include <type_traits>
 
-#include "Atom/Core/LangExtensions.h"
 #include "Atom/Core/Compiler.h"
+#include "Atom/Core/LangExtensions.h"
 
 namespace Atom::TTI
 {
     namespace Private
     {
-        class Empty { };
+        class Empty
+        {};
     }
 
     template <bool Condition, typename TTrue, typename TFalse>
@@ -76,23 +77,23 @@ namespace Atom::TTI
 /// ATOM_ATTR_NO_UNIQUE_ADDRESS
 /// ------------------------------------------------------------------------------------------------
 #if defined(ATOM_COMPILER_CLANG)
-    #define ATOM_ATTR_NO_UNIQUE_ADDRESS
+#    define ATOM_ATTR_NO_UNIQUE_ADDRESS
 
-#elif defined(ATOM_COMPILER_MSVC) 
-    #if (ATOM_COMPILER_MSVC_VER >= 1929)
-        #define ATOM_ATTR_NO_UNIQUE_ADDRESS [[msvc::no_unique_address]]
-    #else
-        #define ATOM_ATTR_NO_UNIQUE_ADDRESS [[no_unique_address]]
-    #endif
+#elif defined(ATOM_COMPILER_MSVC)
+#    if (ATOM_COMPILER_MSVC_VER >= 1929)
+#        define ATOM_ATTR_NO_UNIQUE_ADDRESS [[msvc::no_unique_address]]
+#    else
+#        define ATOM_ATTR_NO_UNIQUE_ADDRESS [[no_unique_address]]
+#    endif
 
 #else
-    #define ATOM_ATTR_NO_UNIQUE_ADDRESS [[no_unique_address]]
+#    define ATOM_ATTR_NO_UNIQUE_ADDRESS [[no_unique_address]]
 
 #endif
 
 /// ------------------------------------------------------------------------------------------------
 /// ATOM_CONDITIONAL_FIELD
 /// ------------------------------------------------------------------------------------------------
-#define ATOM_CONDITIONAL_FIELD(Condition, T) \
-    ATOM_ATTR_NO_UNIQUE_ADDRESS \
+#define ATOM_CONDITIONAL_FIELD(Condition, T)                                                       \
+    ATOM_ATTR_NO_UNIQUE_ADDRESS                                                                    \
     ::Atom::TTI::TConditionalField<(Condition), T>

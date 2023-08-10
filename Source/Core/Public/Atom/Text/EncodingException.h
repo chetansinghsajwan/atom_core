@@ -1,9 +1,10 @@
 #pragma once
-#include "EncodingException.decl.h"
 #include "Atom/Core/Exceptions/Exception.h"
+#include "EncodingException.decl.h"
 
 namespace Atom::Text
 {
-    EncodingException::EncodingException(DynStr msg):
-        Exception(mov(msg)) { }
+    EncodingException::EncodingException(DynStr msg)
+        : Exception(mov(msg))
+    {}
 }

@@ -1,8 +1,8 @@
 #pragma once
 #include "_DynArrImplHelper.decl.h"
 #include "_ArrImplHelper.h"
-#include "Atom/Memory/ObjHelper.h"
 #include "Atom/Math/Core.h"
+#include "Atom/Memory/ObjHelper.h"
 
 namespace Atom
 {
@@ -19,8 +19,8 @@ namespace Atom
         ATOM_DEBUG_EXPECTS(_ValidateIter(pos)) << "Invalid iter.";
 
         isize index = _FetchIndex(pos);
-        ATOM_ASSERT(_ValidateIndexForInsert(index)) << IndexOutOfRangeException(
-            "{pos} is out of range.", index, 0, _Count());
+        ATOM_ASSERT(_ValidateIndexForInsert(index))
+            << IndexOutOfRangeException("{pos} is out of range.", index, 0, _Count());
 
         return mutIter() + _InsertAt(index, fwd(el));
     }
@@ -32,8 +32,8 @@ namespace Atom
         ATOM_DEBUG_EXPECTS(_ValidateIter(pos)) << "Invalid iter.";
 
         isize index = _FetchIndex(pos);
-        ATOM_ASSERT(_ValidateIndexForInsert(index)) << IndexOutOfRangeException(
-            "{pos} is out of range.", index, 0, _Count());
+        ATOM_ASSERT(_ValidateIndexForInsert(index))
+            << IndexOutOfRangeException("{pos} is out of range.", index, 0, _Count());
 
         if constexpr (_CanGetRangeSize<TRange>())
         {
@@ -103,8 +103,7 @@ namespace Atom
 
     template <typename TImpl>
     template <typename T2>
-    constexpr auto _DynArrImplHelper<TImpl>::_InsertAt(
-        usize index, T2&& el) -> usize
+    constexpr auto _DynArrImplHelper<TImpl>::_InsertAt(usize index, T2&& el) -> usize
     {
         _EnsureCapFor(1);
         _MoveRangeBack(index, 1);
@@ -115,8 +114,8 @@ namespace Atom
 
     template <typename TImpl>
     template <typename TIter2>
-    constexpr auto _DynArrImplHelper<TImpl>::_InsertAtCounted(
-        usize index, TIter2 it, usize count) -> usize
+    constexpr auto _DynArrImplHelper<TImpl>::_InsertAtCounted(usize index, TIter2 it, usize count)
+        -> usize
     {
         if (count == 0)
             return index;
@@ -146,7 +145,7 @@ namespace Atom
     }
 
     template <typename TImpl>
-    template <typename  T2>
+    template <typename T2>
     constexpr auto _DynArrImplHelper<TImpl>::_InsertBack(T2&& el) -> usize
     {
         _EnsureCapFor(1);
@@ -158,8 +157,7 @@ namespace Atom
 
     template <typename TImpl>
     template <typename TIter2>
-    constexpr auto _DynArrImplHelper<TImpl>::_InsertBackCounted(
-        TIter2 it, usize count) -> usize
+    constexpr auto _DynArrImplHelper<TImpl>::_InsertBackCounted(TIter2 it, usize count) -> usize
     {
         usize index = _Count();
 
@@ -179,8 +177,8 @@ namespace Atom
 
     template <typename TImpl>
     template <typename TIter2, typename TIterEnd2>
-    constexpr auto _DynArrImplHelper<TImpl>::_InsertBackUncounted(
-        TIter2 begin, TIterEnd2 end) -> usize
+    constexpr auto _DynArrImplHelper<TImpl>::_InsertBackUncounted(TIter2 begin, TIterEnd2 end)
+        -> usize
     {
         usize index = _Count();
         for (auto&& el : Range(begin, end))
@@ -200,8 +198,8 @@ namespace Atom
 
         isize index = _FetchIndex(pos);
 
-        ATOM_ASSERT(_ValidateIndex(index)) << IndexOutOfRangeException(
-            "{pos} was out of range.", index, 0, _Count() - 1);
+        ATOM_ASSERT(_ValidateIndex(index))
+            << IndexOutOfRangeException("{pos} was out of range.", index, 0, _Count() - 1);
 
         return mutIter() + _RemoveAt(index);
     }
@@ -255,20 +253,17 @@ namespace Atom
     }
 
     template <typename TImpl>
-    constexpr auto _DynArrImplHelper<TImpl>::Reserve(
-        usize count)
+    constexpr auto _DynArrImplHelper<TImpl>::Reserve(usize count)
     {
         _EnsureCapFor(count);
     }
 
     template <typename TImpl>
     constexpr auto _DynArrImplHelper<TImpl>::Release() -> void
-    {
-    }
+    {}
 
     template <typename TImpl>
-    constexpr auto _DynArrImplHelper<TImpl>::_ValidateIter(
-        TIter it) const -> bool
+    constexpr auto _DynArrImplHelper<TImpl>::_ValidateIter(TIter it) const -> bool
     {
         // TODO: Implement this.
         // return it.debugId == _iterValidDebugId;
@@ -282,36 +277,32 @@ namespace Atom
     }
 
     template <typename TImpl>
-    constexpr auto _DynArrImplHelper<TImpl>::_ValidateIndex(
-        isize index) const -> bool
+    constexpr auto _DynArrImplHelper<TImpl>::_ValidateIndex(isize index) const -> bool
     {
         return index >= 0 && (usize)index <= _Count() - 1;
     }
 
     template <typename TImpl>
-    constexpr auto _DynArrImplHelper<TImpl>::_ValidateIndexForInsert(
-        isize index) const -> bool
+    constexpr auto _DynArrImplHelper<TImpl>::_ValidateIndexForInsert(isize index) const -> bool
     {
         return index >= 0 && index <= _Count();
     }
 
     template <typename TImpl>
-    constexpr auto _DynArrImplHelper<TImpl>::_FetchIndex(
-        TIter pos) const -> isize
+    constexpr auto _DynArrImplHelper<TImpl>::_FetchIndex(TIter pos) const -> isize
     {
         return &*pos - _Data();
     }
 
     template <typename TImpl>
-    constexpr auto _DynArrImplHelper<TImpl>::_CalcCapGrowth(
-        usize required) const -> usize
+    constexpr auto _DynArrImplHelper<TImpl>::_CalcCapGrowth(usize required) const -> usize
     {
-        return Math::Max(_Count() + required, _Capacity() * 2);
+        // return Math::Max(_Count() + required, _Capacity() * 2);
+        return required;
     }
 
     template <typename TImpl>
-    constexpr auto _DynArrImplHelper<TImpl>::_EnsureCapFor(
-        usize count) -> void
+    constexpr auto _DynArrImplHelper<TImpl>::_EnsureCapFor(usize count) -> void
     {
         _UpdateIterDebugId();
 
@@ -329,63 +320,47 @@ namespace Atom
     }
 
     template <typename TImpl>
-    constexpr auto _DynArrImplHelper<TImpl>::_ConstructAt(
-        usize index, auto&&... args) -> void
+    constexpr auto _DynArrImplHelper<TImpl>::_ConstructAt(usize index, auto&&... args) -> void
     {
         ObjHelper().Construct(_Data() + index, fwd(args)...);
     }
 
     template <typename TImpl>
-    constexpr auto _DynArrImplHelper<TImpl>::_DestructAt(
-        usize index) -> void
+    constexpr auto _DynArrImplHelper<TImpl>::_DestructAt(usize index) -> void
     {
         ObjHelper().Destruct(_Data() + index);
     }
 
     template <typename TImpl>
-    constexpr auto _DynArrImplHelper<TImpl>::_DestructRange(
-        usize index, usize count) -> void
+    constexpr auto _DynArrImplHelper<TImpl>::_DestructRange(usize index, usize count) -> void
     {
         RangeHelper().Destruct(Range(_Data() + index, count - index));
     }
 
     template <typename TImpl>
-    constexpr auto _DynArrImplHelper<TImpl>::_MoveRangeFront(
-        usize index, usize count) -> void
+    constexpr auto _DynArrImplHelper<TImpl>::_MoveRangeFront(usize index, usize count) -> void
     {
-        RangeHelper().FwdMoveTo(
-            Range(_Data() + index, _Count() - 1 - index), 
+        RangeHelper().FwdMoveTo(Range(_Data() + index, _Count() - 1 - index),
             Range(_Data() + count, _Data() + _Count()));
     }
 
     template <typename TImpl>
-    constexpr auto _DynArrImplHelper<TImpl>::_MoveRangeBack(
-        usize index, usize count) -> void
+    constexpr auto _DynArrImplHelper<TImpl>::_MoveRangeBack(usize index, usize count) -> void
     {
-        RangeHelper().BwdMoveTo
-        (
-            Range(_Data() + index, _Count() - 1 - index), 
-            Range(_Data() + count, _Data() + _Count())
-        );
+        RangeHelper().BwdMoveTo(Range(_Data() + index, _Count() - 1 - index),
+            Range(_Data() + count, _Data() + _Count()));
     }
 
     template <typename TImpl>
-    constexpr auto _DynArrImplHelper<TImpl>::_MoveRangeTo(
-        usize index, TElem* dest) -> void
+    constexpr auto _DynArrImplHelper<TImpl>::_MoveRangeTo(usize index, TElem* dest) -> void
     {
-        RangeHelper().FwdMoveTo
-        (
-            Range(_Data() + index, _Data() + _Count()),
-            Range(dest, _Count())
-        );
+        RangeHelper().FwdMoveTo(Range(_Data() + index, _Data() + _Count()), Range(dest, _Count()));
     }
 
     template <typename TImpl>
-    constexpr auto _DynArrImplHelper<TImpl>::_RotateRangeBack(
-        usize index, usize count) -> void
+    constexpr auto _DynArrImplHelper<TImpl>::_RotateRangeBack(usize index, usize count) -> void
     {
-        RangeHelper().RotateBwd(
-            Range(_Data() + index, _Count() - 1 - index), count);
+        RangeHelper().RotateBwd(Range(_Data() + index, _Count() - 1 - index), count);
     }
 
     template <typename TImpl>
@@ -397,8 +372,7 @@ namespace Atom
 
     template <typename TImpl>
     template <typename TRange>
-    constexpr auto _DynArrImplHelper<TImpl>::_GetRangeSize(
-        const TRange& range) -> usize
+    constexpr auto _DynArrImplHelper<TImpl>::_GetRangeSize(const TRange& range) -> usize
     {
         return RangeHelper().GetCount(range);
     }

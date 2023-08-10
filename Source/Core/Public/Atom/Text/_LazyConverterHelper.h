@@ -6,20 +6,21 @@ namespace Atom::Text
     /// Requirements for {_CharEncodingLazyConverterHelper} API.
     /// --------------------------------------------------------------------------------------------
     template <typename TConverter, typename TInEncoding, typename TOutEncoding>
-    concept RCharEncodingLazyConverter = requires
-    {
-        requires RRangeOf<TConverter, BasicChar<TOutEncoding>>;
-        requires RMultiPassRangeOf<TConverter, BasicChar<TOutEncoding>>;
-    }
+    concept RCharEncodingLazyConverter =
+        requires {
+            requires RRangeOf<TConverter, BasicChar<TOutEncoding>>;
+            requires RMultiPassRangeOf<TConverter, BasicChar<TOutEncoding>>;
+        }
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures {_CharEncodingLazyConverterHelper<TInEncoding, TOutEncoding>} satisfies
     /// {RCharEncodingLazyConverter<TInEncoding, TOutEncoding>}.
     /// --------------------------------------------------------------------------------------------
     template <typename TInEncoding, typename TOutEncoding>
-    concept RCharEncodingLazyConvertible = RCharEncodingLazyConverter<
-        _CharEncodingLazyConverterHelper<TInEncoding, TOutEncoding, Internal::FwdIterMock<BasicChar<TInEncoding>>>,
-        TInEncoding, TOutEncoding>;
+    concept RCharEncodingLazyConvertible =
+        RCharEncodingLazyConverter<_CharEncodingLazyConverterHelper<TInEncoding, TOutEncoding,
+                                       Internal::FwdIterMock<BasicChar<TInEncoding>>>,
+            TInEncoding, TOutEncoding>;
 }
 
 namespace Atom::Text
@@ -32,8 +33,8 @@ namespace Atom::Text
     class _CharEncodingLazyConverterHelper
     {
     public:
-        using TIter = _CharEncodingLazyConverterHelperIter<
-            TImpl, TInEncoding, TOutEncoding, TInput>;
+        using TIter =
+            _CharEncodingLazyConverterHelperIter<TImpl, TInEncoding, TOutEncoding, TInput>;
 
         using TIterEnd = _CharEncodingLazyConverterHelperIterEnd;
 
@@ -63,7 +64,8 @@ namespace Atom::Text
         TInput& _input;
     };
 
-    class _CharEncodingLazyConverterHelperIterEnd { };
+    class _CharEncodingLazyConverterHelperIterEnd
+    {};
 
     /// --------------------------------------------------------------------------------------------
     /// Converts data from {TInEncoding} character encoding to {TOutEncoding} on demand.
@@ -80,10 +82,13 @@ namespace Atom::Text
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
-        constexpr _CharEncodingLazyConverterHelperIter(TImpl&& impl, TInput&& in):
-            _impl{ fwd(impl) }, _input{ fwd(input) }, _out{ 0 }, _outIndex{ -1 }
+        constexpr _CharEncodingLazyConverterHelperIter(TImpl&& impl, TInput&& in)
+            : _impl{ fwd(impl) }
+            , _input{ fwd(input) }
+            , _out{ 0 }
+            , _outIndex{ -1 }
         {
             _ProcessNextChar();
         }
@@ -136,7 +141,7 @@ namespace Atom::Text
 
     protected:
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         auto _ProcessNextChar()
         {
@@ -167,8 +172,9 @@ namespace Atom::Text
         using TChar = BasicChar<TCharEncoding>;
 
     public:
-        constexpr _CharEncodingLazyConverterHelper(TInput&& input):
-            _input{ input } { }
+        constexpr _CharEncodingLazyConverterHelper(TInput&& input)
+            : _input{ input }
+        {}
 
     public:
         constexpr auto Get() -> TChar

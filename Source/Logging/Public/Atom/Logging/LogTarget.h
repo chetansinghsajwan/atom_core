@@ -1,5 +1,6 @@
 #pragma once
 #include "Atom/Logging/LogMsg.h"
+#include "Atom/Memory/SharedPtr.h"
 
 namespace Atom::Logging
 {
@@ -21,7 +22,7 @@ namespace Atom::Logging
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ptr type used to manage LogTarget in this logging api. It's recommended to use this 
+    /// Ptr type used to manage LogTarget in this logging api. It's recommended to use this
     /// to type to store LogTarget instance. This keeps compatibility with the logging api.
     /// --------------------------------------------------------------------------------------------
     using LogTargetPtr = SharedPtr<LogTarget>;

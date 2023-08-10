@@ -7,7 +7,7 @@ namespace Atom
     class ArrView;
 
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
     template <typename T>
     class _ArrViewStorage
@@ -18,11 +18,15 @@ namespace Atom
         using TElem = T;
 
     public:
-        constexpr _ArrViewStorage():
-            _data{ nullptr }, _count{ 0 } { }
+        constexpr _ArrViewStorage()
+            : _data{ nullptr }
+            , _count{ 0 }
+        {}
 
-        constexpr _ArrViewStorage(const T* arr, usize count):
-            _data{ arr }, _count{ count } { }
+        constexpr _ArrViewStorage(const T* arr, usize count)
+            : _data{ arr }
+            , _count{ count }
+        {}
 
     public:
         constexpr auto _Data() const -> const T*
@@ -67,12 +71,12 @@ namespace Atom
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    class ArrView:
-        public _ArrViewStorage<T>,
-        public ArrRangeTrait<ArrView<T>>
+    class ArrView
+        : public _ArrViewStorage<T>
+        , public ArrRangeTrait<ArrView<T>>
     {
         using _Storage = _ArrViewStorage<T>;
 
@@ -89,30 +93,30 @@ namespace Atom
         /// # Arr Constructor
         /// ----------------------------------------------------------------------------------------
         template <usize size>
-        constexpr ArrView(const T(&range)[size]):
-            _Storage() { }
+        constexpr ArrView(const T (&range)[size])
+            : _Storage()
+        {}
 
         /// ----------------------------------------------------------------------------------------
         /// # Range Constructor
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
         constexpr ArrView(const TRange& range)
-            requires(RArrRangeOf<TRange, T>):
-            _Storage{ range.data(), range.count() } { }
+            requires(RArrRangeOf<TRange, T>)
+            : _Storage{ range.data(), range.count() }
+        {}
 
         /// ----------------------------------------------------------------------------------------
         /// # Range Operator
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
-        constexpr auto operator=(const TRange& range) -> ArrView&
-            requires(RArrRangeOf<TRange, T>)
-        {
+        constexpr auto operator=(const TRange& range) -> ArrView& requires(RArrRangeOf<TRange, T>) {
             *this = ArrView{ range.data(), range.count() };
         }
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
     template <typename T>
     class ArrRangeTraitImpl<ArrView<T>>

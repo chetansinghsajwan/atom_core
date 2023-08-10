@@ -4,8 +4,8 @@ extern "C"
 #include "WjCryptLib_Sha1.h"
 }
 
-#include "Sha1Hash.h"
 #include "Private/T1HashGenerator.h"
+#include "Sha1Hash.h"
 
 namespace Atom::Private
 {

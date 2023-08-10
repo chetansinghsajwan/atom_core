@@ -9,15 +9,15 @@ namespace Atom
     class _StrImpl: public TContainer
     {
     public:
-        using TEncoding            = TEncoding_;
+        using TEncoding = TEncoding_;
 
-        using TChar                = BasicChar<TEncoding>;
-        using TIter                = typename TContainer::TIter;
-        using TIterEnd             = typename TContainer::TIterEnd;
+        using TChar = BasicChar<TEncoding>;
+        using TIter = typename TContainer::TIter;
+        using TIterEnd = typename TContainer::TIterEnd;
         // using TMutIter             = typename TContainer::TMutIter;
         // using TMutIterEnd          = typename TContainer::TMutIterEnd;
 
-        using TRune                = BasicRune<TEncoding>;
+        using TRune = BasicRune<TEncoding>;
         // using TRuneIter            = typename TContainer::TRuneIter;
         // using TRuneIterEnd         = typename TContainer::TRuneIterEnd;
         // using TMutRuneIter         = typename TContainer::TMutRuneIter;
@@ -28,10 +28,11 @@ namespace Atom
         using TContainer::operator=;
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         template <usize count>
-        constexpr _StrImpl(const TChar(&arr)[count]):
-            TContainer() { }
+        constexpr _StrImpl(const TChar (&arr)[count])
+            : TContainer()
+        {}
     };
 }

@@ -1,6 +1,6 @@
 #pragma once
-#include "StrView.h"
 #include "StrConverter.h"
+#include "StrView.h"
 
 namespace Atom
 {
@@ -14,9 +14,10 @@ namespace Atom
     /// Ensures {TConverter} can convert {T} object to {StrView}.
     /// --------------------------------------------------------------------------------------------
     template <typename TConverter, typename T>
-    concept RStrViewConverter = requires(TConverter converter, T arg)
-    {
-        { converter.Convert(arg) } -> RSameAs<StrView>;
+    concept RStrViewConverter = requires(TConverter converter, T arg) {
+        {
+            converter.Convert(arg)
+        } -> RSameAs<StrView>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -28,7 +29,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// {StrViewConverter} specialization for {StrView}.
     /// --------------------------------------------------------------------------------------------
-    template < >
+    template <>
     class StrViewConverter<StrView>
     {
         constexpr StrView Convert(StrView in)
@@ -38,14 +39,15 @@ namespace Atom
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// {StirngViewConverter} specialization for {T} containing {const}, {volatile} or {lvalue} 
+    /// {StirngViewConverter} specialization for {T} containing {const}, {volatile} or {lvalue}
     /// and {rvalue} reference.
-    /// 
+    ///
     /// @TODO Needs refactoring.
     /// --------------------------------------------------------------------------------------------
-	template <typename T>
-	requires (!RSameAs<T, TTI::TRemoveCVRef<T>>) && RStrViewConvertible<TTI::TRemoveCVRef<T>>
-	class StrViewConverter<T>: StrViewConverter<TTI::TRemoveCVRef<T>> { };
+    template <typename T>
+        requires(!RSameAs<T, TTI::TRemoveCVRef<T>>) && RStrViewConvertible<TTI::TRemoveCVRef<T>>
+    class StrViewConverter<T>: StrViewConverter<TTI::TRemoveCVRef<T>>
+    {};
 
     /// --------------------------------------------------------------------------------------------
     /// {StrConverter} specialization for types which are {StrViewConvertible}.

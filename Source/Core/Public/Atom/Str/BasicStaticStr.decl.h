@@ -1,6 +1,6 @@
 #pragma once
-#include "_StrImpl.decl.h"
 #include "Atom/Containers/StaticArr.decl.h"
+#include "_StrImpl.decl.h"
 
 namespace Atom
 {

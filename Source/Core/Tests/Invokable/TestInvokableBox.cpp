@@ -1,6 +1,6 @@
-#include <functional>
-#include "catch2/catch_all.hpp"
 #include "Atom/Invokable.h"
+#include "catch2/catch_all.hpp"
+#include <functional>
 
 using namespace Atom;
 
@@ -20,18 +20,14 @@ TEST_CASE("Atom/Invokable/InvokableBox")
             auto operator=(NotMoveAssignable&& other) -> NotMoveAssignable& = delete;
         };
 
-        InvokableBox<NotMoveAssignable(i32)> invokable = [](i32 value)
-        {
+        InvokableBox<NotMoveAssignable(i32)> invokable = [](i32 value) {
             return NotMoveAssignable();
         };
     }
 
     SECTION("Invocation")
     {
-        InvokableBox<bool(i32)> lambdaInvokable = [](i32 value)
-        {
-            return value == 1;
-        };
+        InvokableBox<bool(i32)> lambdaInvokable = [](i32 value) { return value == 1; };
 
         CHECK(lambdaInvokable(0) == false);
         CHECK(lambdaInvokable(1) == true);
@@ -39,8 +35,9 @@ TEST_CASE("Atom/Invokable/InvokableBox")
         class Lambda final
         {
         public:
-            Lambda(i32* capturedValue):
-                _capturedValue(capturedValue) { }
+            Lambda(i32* capturedValue)
+                : _capturedValue(capturedValue)
+            {}
 
             Lambda(const Lambda& other)
             {
@@ -53,7 +50,7 @@ TEST_CASE("Atom/Invokable/InvokableBox")
                 other._capturedValue = nullptr;
             }
 
-            ~Lambda() { }
+            ~Lambda() {}
 
         public:
             auto operator()() -> i32
@@ -99,33 +96,21 @@ TEST_CASE("Atom/Invokable/InvokableBox", "[Benchmarks]")
 
     BENCHMARK("Atom::InvokableBox [Construction]")
     {
-        InvokableBox<bool(i32)> invokable = [](i32 value)
-        {
-            return value == 1;
-        };
+        InvokableBox<bool(i32)> invokable = [](i32 value) { return value == 1; };
 
         return invokable;
     };
 
     BENCHMARK("std::function [Construction]")
     {
-        std::function<bool(i32)> function = [](i32 value)
-        {
-            return value == 1;
-        };
+        std::function<bool(i32)> function = [](i32 value) { return value == 1; };
 
         return function;
     };
 
-    InvokableBox<bool(i32)> invokable = [](i32 value)
-    {
-        return value == 1;
-    };
+    InvokableBox<bool(i32)> invokable = [](i32 value) { return value == 1; };
 
-    std::function<bool(i32)> function = [](i32 value)
-    {
-        return value == 1;
-    };
+    std::function<bool(i32)> function = [](i32 value) { return value == 1; };
 
     BENCHMARK("Atom::InvokableBox [Invocation]")
     {

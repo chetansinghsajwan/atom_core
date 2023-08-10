@@ -11,7 +11,7 @@ namespace Atom
         class InvokablePtrImpl<TResult(TArgs...)>
         {
         public:
-            using Type = TResult(*) (TArgs...);
+            using Type = TResult (*)(TArgs...);
         };
     }
 

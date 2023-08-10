@@ -1,7 +1,7 @@
 #pragma once
+#include "Atom/Exceptions.h"
 #include "Atom/Hash/Private/T1Hash.h"
 #include "Atom/Math.h"
-#include "Atom/Exceptions.h"
 
 namespace Atom::Private
 {
@@ -15,13 +15,13 @@ namespace Atom::Private
     public:
         /// ----------------------------------------------------------------------------------------
         /// # Requires
-        /// 
-        /// - `count == (_Size * 2) + 1`:  _Size * 2 (1 byte represents 2 hex values and 1 char 
+        ///
+        /// - `count == (_Size * 2) + 1`:  _Size * 2 (1 byte represents 2 hex values and 1 char
         /// represents one hex value) + 1 (null terminator).
         /// ----------------------------------------------------------------------------------------
-        template <usize count> 
-        constexpr auto Parse(const Char(&str)[count]) const -> T1Hash
-            requires (count == (_Size * 2) + 1)
+        template <usize count>
+        constexpr auto Parse(const Char (&str)[count]) const -> T1Hash
+            requires(count == (_Size * 2) + 1)
         {
             T1Hash hash;
             for (usize i = 0; i < _Size * 2; i += 2)
@@ -47,7 +47,7 @@ namespace Atom::Private
             return hash;
         }
 
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
         constexpr auto Parse(const TRange& range) const -> T1Hash
@@ -94,7 +94,7 @@ namespace Atom::Private
             return hash;
         }
 
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
         constexpr auto Parse(const TRange& range) const -> T1Hash
