@@ -17,7 +17,7 @@ namespace Atom
         {
         public:
             template <typename TInvokable>
-            fn Set()
+            auto Set()
                 requires(RInvokable<TInvokable, TResult(TArgs...)>)
             {
                 _impl = [](void* obj, TResult& result, TArgs&&... args)
@@ -27,7 +27,7 @@ namespace Atom
                 };
             }
 
-            fn Invoke(void* invokable, TArgs&&... args) -> TResult
+            auto Invoke(void* invokable, TArgs&&... args) -> TResult
             {
                 TResult result;
                 _impl(invokable, result, fwd(args)...);
@@ -44,7 +44,7 @@ namespace Atom
         {
         public:
             template <RInvokable<void(TArgs...)> TInvokable>
-            fn Set()
+            auto Set()
             {
                 _impl = [](void* obj, TArgs&&... args)
                 {
@@ -53,7 +53,7 @@ namespace Atom
                 };
             }
 
-            fn Invoke(void* invokable, TArgs&&... args)
+            auto Invoke(void* invokable, TArgs&&... args)
             {
                 _impl(invokable, fwd(args)...);
             }
@@ -90,7 +90,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// NullAssignmentOperator.
         /// ----------------------------------------------------------------------------------------
-        fn operator=(NullType null) -> InvokableBox&
+        auto operator=(NullType null) -> InvokableBox&
         {
             ObjectBox::operator=(null);
             return self;
@@ -99,7 +99,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// NullEqualityOperator.
         /// ----------------------------------------------------------------------------------------
-        fn operator==(NullType null) const -> bool
+        auto operator==(NullType null) const -> bool
         {
             return ObjectBox::operator==(null);
         }
@@ -119,7 +119,7 @@ namespace Atom
         /// 
         /// ----------------------------------------------------------------------------------------
         template <RInvokable<TResult(TArgs...)> TInvokable>
-        fn operator=(TInvokable&& invokable) -> InvokableBox&
+        auto operator=(TInvokable&& invokable) -> InvokableBox&
             requires(RNotDerivedFrom<TInvokable, Private::InvokableBoxIdentifier>)
         {
             ObjectBox::operator=(fwd(invokable));
@@ -136,7 +136,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        fn operator=(const InvokableBox& other) -> InvokableBox&
+        auto operator=(const InvokableBox& other) -> InvokableBox&
         {
             ObjectBox::operator=(other);
             return self;
@@ -151,7 +151,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        fn operator=(InvokableBox&& other) -> InvokableBox&
+        auto operator=(InvokableBox&& other) -> InvokableBox&
         {
             ObjectBox::operator=(mov(other));
             return self;
@@ -166,7 +166,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        fn Invoke(TArgs&&... args) -> TResult
+        auto Invoke(TArgs&&... args) -> TResult
         {
             ATOM_ASSERT(ObjectBox::_HasObject()) << NullPointerException(
                 "InvokableTarget is null.");
@@ -177,13 +177,13 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        fn operator()(TArgs&&... args) -> TResult
+        auto operator()(TArgs&&... args) -> TResult
         {
             return Invoke(fwd(args)...);
         }
 
         template <typename T>
-        fn GetInvokable() -> T*
+        auto GetInvokable() -> T*
         {
             if (typeid(T) != GetInvokableType())
                 return nullptr;
@@ -191,7 +191,7 @@ namespace Atom
             return ObjectBox::_GetObject<T>();
         }
 
-        fn GetInvokableType() const -> const TypeInfo&
+        auto GetInvokableType() const -> const TypeInfo&
         {
             return ObjectBox::_GetObjectType();
         }
@@ -201,7 +201,7 @@ namespace Atom
         /// 
         /// ----------------------------------------------------------------------------------------
         template <typename TInvokable>
-        fn _SetInvoker()
+        auto _SetInvoker()
             requires(RInvokable<TInvokable, TResult(TArgs...)>)
         {
             _invoker.template Set<TInvokable>();
@@ -210,7 +210,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        fn _InvokeInvokable(TArgs&&... args) -> TResult
+        auto _InvokeInvokable(TArgs&&... args) -> TResult
         {
             return _invoker.Invoke(fwd(args)...);
         }

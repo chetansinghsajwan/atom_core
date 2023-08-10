@@ -16,8 +16,8 @@ TEST_CASE("Atom/Invokable/InvokableBox")
             NotMoveAssignable(const NotMoveAssignable& other) = default;
             NotMoveAssignable(NotMoveAssignable&& other) = default;
 
-            fn operator=(const NotMoveAssignable& other) -> NotMoveAssignable& = delete;
-            fn operator=(NotMoveAssignable&& other) -> NotMoveAssignable& = delete;
+            auto operator=(const NotMoveAssignable& other) -> NotMoveAssignable& = delete;
+            auto operator=(NotMoveAssignable&& other) -> NotMoveAssignable& = delete;
         };
 
         InvokableBox<NotMoveAssignable(i32)> invokable = [](i32 value)
@@ -56,7 +56,7 @@ TEST_CASE("Atom/Invokable/InvokableBox")
             ~Lambda() { }
 
         public:
-            fn operator()() -> i32
+            auto operator()() -> i32
             {
                 return *_capturedValue;
             }

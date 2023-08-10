@@ -22,7 +22,7 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Retuns the ELogLevel specified for error logging.
         /// ----------------------------------------------------------------------------------------
-        fn GetErrLogLevel() const -> ELogLevel
+        auto GetErrLogLevel() const -> ELogLevel
         {
             return _errLogLevel;
         }
@@ -32,7 +32,7 @@ namespace Atom::Logging
         /// 
         /// Logs of same or above level are written to stderr.
         /// ----------------------------------------------------------------------------------------
-        fn SetErrLogLevel(ELogLevel lvl)
+        auto SetErrLogLevel(ELogLevel lvl)
         {
             _errLogLevel = lvl;
         }
@@ -42,7 +42,7 @@ namespace Atom::Logging
         /// 
         /// @RETURNS {true} if {lvl >= GetErrLogLevel()}, else {false}.
         /// ----------------------------------------------------------------------------------------
-        fn ShouldLogAsError(ELogLevel lvl) const -> bool
+        auto ShouldLogAsError(ELogLevel lvl) const -> bool
         {
             return lvl >= _errLogLevel;
         }
@@ -53,7 +53,7 @@ namespace Atom::Logging
         /// 
         /// If {ShouldLogAsError(logMsg.lvl) == true}, writes the message to stderr else to stdout.
         /// ----------------------------------------------------------------------------------------
-        virtual fn _Write(const LogMsg& logMsg, StrView formattedMsg) -> void ofinal
+        virtual auto _Write(const LogMsg& logMsg, StrView formattedMsg) -> void ofinal
         {
             FILE* file = _stdout;
 
@@ -68,7 +68,7 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Flushes both stdout and stderr.
         /// ----------------------------------------------------------------------------------------
-        virtual fn _Flush() -> void ofinal
+        virtual auto _Flush() -> void ofinal
         {
             fflush(_stdout);
             fflush(_stderr);

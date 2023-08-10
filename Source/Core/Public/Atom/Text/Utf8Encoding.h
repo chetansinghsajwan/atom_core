@@ -20,7 +20,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        static constexpr fn IsContinuationChar(TChar ch) -> bool
+        static constexpr auto IsContinuationChar(TChar ch) -> bool
         {
             return (ch & 0b11000000) == 0b10000000;
         }
@@ -28,7 +28,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        static constexpr fn ParseStartingChar(TChar ch) -> usize
+        static constexpr auto ParseStartingChar(TChar ch) -> usize
         {
             if ((ch & 0b10000000) == 0b00000000) return 1;
             if ((ch & 0b11100000) == 0b11000000) return 2;
@@ -41,7 +41,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        static constexpr fn IsStartingChar(TChar ch) -> bool
+        static constexpr auto IsStartingChar(TChar ch) -> bool
         {
             return ParseStartingChar(ch) != 0;
         }

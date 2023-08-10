@@ -31,13 +31,13 @@ namespace Atom::Test
         GreaterThanOrEqualToOperator            = 1 << 17,
     };
 
-    constexpr fn operator|(const ECustomTypeFlags& flags, const ECustomTypeFlags& flagsToAdd)
+    constexpr auto operator|(const ECustomTypeFlags& flags, const ECustomTypeFlags& flagsToAdd)
         -> ECustomTypeFlags
     {
         return (ECustomTypeFlags)((u64)flags | (u64)flagsToAdd);
     }
 
-    constexpr fn operator&(const ECustomTypeFlags& flags, const ECustomTypeFlags& flagsToAdd)
+    constexpr auto operator&(const ECustomTypeFlags& flags, const ECustomTypeFlags& flagsToAdd)
         -> ECustomTypeFlags
     {
         return (ECustomTypeFlags)((u64)flags & (u64)flagsToAdd);
@@ -47,7 +47,7 @@ namespace Atom::Test
     {
     public:
         template <typename TEnum>
-        static constexpr fn HasFlag(const TEnum& e, const TEnum& flag) -> bool
+        static constexpr auto HasFlag(const TEnum& e, const TEnum& flag) -> bool
         {
             return (e & flag) == flag;
         }
@@ -93,14 +93,14 @@ namespace Atom::Test
         /// ----------------------------------------------------------------------------------------
         /// # Trivial Copy Operator
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator=(const CustomType& that) -> CustomType&
+        constexpr auto operator=(const CustomType& that) -> CustomType&
             requires(EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::TrivialCopyOperator))
         = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # Copy Operator
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator=(const CustomType& that) -> CustomType&
+        constexpr auto operator=(const CustomType& that) -> CustomType&
             requires(EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::CopyOperator))
                 and (not EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::TrivialCopyOperator))
         {
@@ -125,14 +125,14 @@ namespace Atom::Test
         /// ----------------------------------------------------------------------------------------
         /// # Trivial Move Operator
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator=(CustomType&& that) -> CustomType&
+        constexpr auto operator=(CustomType&& that) -> CustomType&
             requires(EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::TrivialMoveOperator))
         = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # Move Operator
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator=(CustomType&& that) -> CustomType&
+        constexpr auto operator=(CustomType&& that) -> CustomType&
             requires(EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::MoveOperator))
                 and (not EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::TrivialMoveOperator))
         {
@@ -161,7 +161,7 @@ namespace Atom::Test
         /// ----------------------------------------------------------------------------------------
         /// # Equal To Opeartor
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator==(const CustomType& that) -> bool
+        constexpr auto operator==(const CustomType& that) -> bool
             requires(EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::EqualToOperator))
         {
             return true;
@@ -170,7 +170,7 @@ namespace Atom::Test
         /// ----------------------------------------------------------------------------------------
         /// # Not Equal To Opeartor
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator!=(const CustomType& that) -> bool
+        constexpr auto operator!=(const CustomType& that) -> bool
             requires(EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::EqualToOperator))
         {
             return not (self == that);
@@ -179,7 +179,7 @@ namespace Atom::Test
         /// ----------------------------------------------------------------------------------------
         /// # Less Than Opeartor
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator<(const CustomType& that) -> bool
+        constexpr auto operator<(const CustomType& that) -> bool
             requires(EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::LessThanToOperator))
         {
             return true;
@@ -188,7 +188,7 @@ namespace Atom::Test
         /// ----------------------------------------------------------------------------------------
         /// # Greater Than Opeartor
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator>(const CustomType& that) -> bool
+        constexpr auto operator>(const CustomType& that) -> bool
             requires(EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::GreaterThanToOperator))
         {
             return true;
@@ -197,7 +197,7 @@ namespace Atom::Test
         /// ----------------------------------------------------------------------------------------
         /// # Less Than Or Equal To Opeartor
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator<=(const CustomType& that) -> bool
+        constexpr auto operator<=(const CustomType& that) -> bool
             requires(EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::LessThanOrEqualToOperator))
         {
             return true;
@@ -206,7 +206,7 @@ namespace Atom::Test
         /// ----------------------------------------------------------------------------------------
         /// # Greater Than Or Equal To Opeartor
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator>=(const CustomType& that) -> bool
+        constexpr auto operator>=(const CustomType& that) -> bool
             requires(EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::GreaterThanOrEqualToOperator))
         {
             return true;

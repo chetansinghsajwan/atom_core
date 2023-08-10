@@ -12,12 +12,12 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Writes the message into underlying target.
         /// ----------------------------------------------------------------------------------------
-        virtual fn Write(const LogMsg& logMsg) -> void abstract;
+        virtual auto Write(const LogMsg& logMsg) -> void abstract;
 
         /// ----------------------------------------------------------------------------------------
         /// If storing messages in a buffer, flushes it.
         /// ----------------------------------------------------------------------------------------
-        virtual fn Flush() -> void abstract;
+        virtual auto Flush() -> void abstract;
     };
 
     /// --------------------------------------------------------------------------------------------

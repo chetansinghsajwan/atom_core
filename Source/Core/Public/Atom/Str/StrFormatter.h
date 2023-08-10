@@ -9,12 +9,12 @@ namespace Atom
     class _FmtStrViewCnvter
     {
     public:
-        constexpr fn FromFmt(_FmtStrView strv) -> StrView
+        constexpr auto FromFmt(_FmtStrView strv) -> StrView
         {
             return StrView{ Range(strv.data(), strv.size()) };
         }
 
-        constexpr fn ToFmt(StrView strv) -> _FmtStrView
+        constexpr auto ToFmt(StrView strv) -> _FmtStrView
         {
             return _FmtStrView{ strv.data(), strv.count() };
         }
@@ -60,22 +60,22 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <typename TOut, RStrFmtArgFmtable... TArgs>
         requires ROutput<TOut, Char>
-        fn FmtTo(TOut out, FmtStr<TArgs...> fmt, TArgs&&... args)
+        auto FmtTo(TOut out, FmtStr<TArgs...> fmt, TArgs&&... args)
         {
             class _OutIterWrap
             {
             public:
-                fn operator++(i32) -> _OutIterWrap&
+                auto operator++(i32) -> _OutIterWrap&
                 {
                     return self;
                 }
 
-                fn operator*() -> _OutIterWrap&
+                auto operator*() -> _OutIterWrap&
                 {
                     return self;
                 }
 
-                fn operator=(Char ch) -> _OutIterWrap&
+                auto operator=(Char ch) -> _OutIterWrap&
                 {
                     *out+= ch;
                     return self;
@@ -103,7 +103,7 @@ namespace Atom
         /// 
         /// ----------------------------------------------------------------------------------------
         template <RStrFmtArgFmtable... TArgs>
-        fn Fmt(FmtStr<TArgs...> fmt, TArgs&&... args) -> Str
+        auto Fmt(FmtStr<TArgs...> fmt, TArgs&&... args) -> Str
         {
             Str out;
             FmtTo(out, fmt, fwd(args)...);

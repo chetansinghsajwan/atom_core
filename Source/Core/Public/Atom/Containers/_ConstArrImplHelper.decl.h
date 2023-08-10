@@ -34,7 +34,7 @@ namespace Atom
         /// 
         /// @TIME_COMPLEXITY Constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn ElemAt(usize index) const -> const TElem&;
+        constexpr auto ElemAt(usize index) const -> const TElem&;
 
         /// ----------------------------------------------------------------------------------------
         /// Access element at index{index}. Same as {ElemAt(...)}, but doesn't perform bounds checking
@@ -49,7 +49,7 @@ namespace Atom
         /// 
         /// @TIME_COMPLEXITY Constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator[](usize index) const -> const TElem&;
+        constexpr auto operator[](usize index) const -> const TElem&;
 
         /// ----------------------------------------------------------------------------------------
         /// Access first element.
@@ -61,7 +61,7 @@ namespace Atom
         /// 
         /// @TIME_COMPLEXITY Constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn ElemFront() const -> const TElem&;
+        constexpr auto ElemFront() const -> const TElem&;
 
         /// ----------------------------------------------------------------------------------------
         /// Access last element.
@@ -73,7 +73,7 @@ namespace Atom
         /// 
         /// @TIME_COMPLEXITY Constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn ElemBack() const -> const TElem&;
+        constexpr auto ElemBack() const -> const TElem&;
 
         /// ----------------------------------------------------------------------------------------
         /// Pointer to underlying arr.
@@ -82,7 +82,7 @@ namespace Atom
         /// 
         /// @TIME_COMPLEXITY Constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn data() const -> const TElem*
+        constexpr auto data() const -> const TElem*
         {
             return _Data();
         }
@@ -90,7 +90,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Get count of elements.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn count() const -> usize
+        constexpr auto count() const -> usize
         {
             return _Count();
         }
@@ -98,7 +98,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Is arr empty.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn isEmpty() const -> bool
+        constexpr auto isEmpty() const -> bool
         {
             return _Count() == 0;
         }
@@ -111,7 +111,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// {TIter} to the first element.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn iter() const -> TIter
+        constexpr auto iter() const -> TIter
         {
             return TIter{ _Data() };
         }
@@ -119,7 +119,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// {TIter} to element following the last element.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn iterEnd() const -> TIter
+        constexpr auto iterEnd() const -> TIter
         {
             return TIter{ _Data() + _Count()};
         }
@@ -129,7 +129,7 @@ namespace Atom
     //// -------------------------------------------------------------------------------------------
 
     protected:
-        constexpr fn _ValidateIndexForAccess(isize index) const -> bool
+        constexpr auto _ValidateIndexForAccess(isize index) const -> bool
         {
             return index > 0 && index < (isize)_Count();
         }

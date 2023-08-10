@@ -40,7 +40,7 @@ namespace Atom
         /// Check if this variant supports type `T`.
         /// ----------------------------------------------------------------------------------------
         template <typename T>
-        static consteval fn Has() -> bool
+        static consteval auto Has() -> bool
         {
             return _Impl::template HasType<T>();
         }
@@ -49,7 +49,7 @@ namespace Atom
         /// Check if index `i` can be used to access value.
         /// ----------------------------------------------------------------------------------------
         template <usize i>
-        static consteval fn Has() -> bool
+        static consteval auto Has() -> bool
         {
             return _Impl::template HasIndex<i>();
         }
@@ -65,7 +65,7 @@ namespace Atom
         /// Index of type. This index than can be used to access value of type at that index.
         /// ----------------------------------------------------------------------------------------
         template <typename T>
-        static consteval fn IndexOf() -> usize
+        static consteval auto IndexOf() -> usize
             requires(Has<T>())
         {
             return _Impl::template GetIndexForType<T>();
@@ -74,7 +74,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Count of types this variant supports.
         /// ----------------------------------------------------------------------------------------
-        static consteval fn count() -> usize
+        static consteval auto count() -> usize
         {
             return _Impl::GetTypeCount();
         }
@@ -122,12 +122,12 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Trivial Copy Assignment Operator
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator=(const Variant& that) -> Variant& = default;
+        constexpr auto operator=(const Variant& that) -> Variant& = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # Copy Assignment Operator
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator=(const Variant& that) -> Variant&
+        constexpr auto operator=(const Variant& that) -> Variant&
             requires(RCopyConstructibleAll<Ts...>)
                 and (RCopyAssignableAll<Ts...>)
                 and (not RTriviallyCopyConstructibleAll<Ts...>)
@@ -141,7 +141,7 @@ namespace Atom
         /// # Copy Assignment Operator Template
         /// ----------------------------------------------------------------------------------------
         template <typename... TOthers>
-        constexpr fn operator=(const Variant<TOthers...>& that) -> Variant&
+        constexpr auto operator=(const Variant<TOthers...>& that) -> Variant&
             requires(Types::template Has<TOthers...>)
                 and (RCopyConstructibleAll<TOthers...>)
                 and (RCopyAssignableAll<TOthers...>)
@@ -179,12 +179,12 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Trivial Move Assignment Operator
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator=(Variant&& that) -> Variant& = default;
+        constexpr auto operator=(Variant&& that) -> Variant& = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # Move Assignment Operator
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator=(Variant&& that) -> Variant&
+        constexpr auto operator=(Variant&& that) -> Variant&
             requires(RMoveConstructibleAll<Ts...>)
                 and (RMoveAssignableAll<Ts...>)
                 and (not RTriviallyMoveConstructibleAll<Ts...>)
@@ -198,7 +198,7 @@ namespace Atom
         /// # Move Assignment Operator Template
         /// ----------------------------------------------------------------------------------------
         template <typename... TOthers>
-        constexpr fn operator=(Variant<TOthers...>&& that) -> Variant&
+        constexpr auto operator=(Variant<TOthers...>&& that) -> Variant&
             requires(Types::template Has<TOthers...>)
                 and (RMoveConstructibleAll<Ts...>)
                 and (RMoveAssignableAll<Ts...>)
@@ -246,7 +246,7 @@ namespace Atom
         /// - `value`: Value to assign.
         /// ----------------------------------------------------------------------------------------
         template <typename T>
-        constexpr fn operator=(const T& value) -> Variant&
+        constexpr auto operator=(const T& value) -> Variant&
             requires(Has<T>())
         {
             _impl.setValue(value);
@@ -262,7 +262,7 @@ namespace Atom
         /// - `value`: Value to assign.
         /// ----------------------------------------------------------------------------------------
         template <typename T>
-        constexpr fn operator=(T&& value) -> Variant&
+        constexpr auto operator=(T&& value) -> Variant&
             requires(Has<T>())
         {
             _impl.setValue(mov(value));
@@ -297,7 +297,7 @@ namespace Atom
         /// - [`TAt`]
         /// ----------------------------------------------------------------------------------------
         template <typename T, typename... TArgs>
-        constexpr fn emplace(TArgs&&... args)
+        constexpr auto emplace(TArgs&&... args)
             requires(Has<T>())
                 and (RConstructible<T, TArgs...>)
         {
@@ -311,7 +311,7 @@ namespace Atom
         /// - [`TAt`]
         /// ----------------------------------------------------------------------------------------
         template <usize i, typename... TArgs>
-        constexpr fn emplace(TArgs&&... args)
+        constexpr auto emplace(TArgs&&... args)
             requires(Has<i>())
                 and (RConstructible<TAt<i>, TArgs...>)
         {
@@ -325,7 +325,7 @@ namespace Atom
         /// - `value`: Value to set.
         /// ----------------------------------------------------------------------------------------
         template <typename TFwd, typename T = TTI::TRemoveQuailfiersRef<TFwd>>
-        constexpr fn set(TFwd&& value)
+        constexpr auto set(TFwd&& value)
             requires(Has<T>())
                 and (RConstructible<T, TFwd>)
         {
@@ -339,7 +339,7 @@ namespace Atom
         /// - `T`: Type to access variant's value as.
         /// ----------------------------------------------------------------------------------------
         template <typename T>
-        constexpr fn as() const -> const T&
+        constexpr auto as() const -> const T&
             requires(Has<T>())
         {
             expects(is<T>(), "Access to invalid type.");
@@ -354,7 +354,7 @@ namespace Atom
         /// - `T`: Type to access variant's value as.
         /// ----------------------------------------------------------------------------------------
         template <typename T>
-        constexpr fn as() -> T&
+        constexpr auto as() -> T&
             requires(Has<T>())
         {
             expects(is<T>(), "Access to invalid type.");
@@ -372,7 +372,7 @@ namespace Atom
         /// - [`TAt`]
         /// ----------------------------------------------------------------------------------------
         template <usize i>
-        constexpr fn at() const -> const TAt<i>&
+        constexpr auto at() const -> const TAt<i>&
             requires(Has<i>())
         {
             expects(is<i>(), "Access to invalid type by index.");
@@ -390,7 +390,7 @@ namespace Atom
         /// - [`TAt`]
         /// ----------------------------------------------------------------------------------------
         template <usize i>
-        constexpr fn at() -> TAt<i>&
+        constexpr auto at() -> TAt<i>&
             requires(Has<i>())
         {
             expects(is<i>(), "Access to invalid type by index.");
@@ -402,7 +402,7 @@ namespace Atom
         /// Checks if current value is of type `T`.
         /// ----------------------------------------------------------------------------------------
         template <typename T>
-        constexpr fn is() const -> bool
+        constexpr auto is() const -> bool
             requires(Has<T>())
         {
             return _impl.template isType<T>();
@@ -415,7 +415,7 @@ namespace Atom
         /// - [`TAt`]
         /// ----------------------------------------------------------------------------------------
         template <usize i>
-        constexpr fn is() const -> bool
+        constexpr auto is() const -> bool
             requires(Has<i>())
         {
             return _impl.template isIndex<i>();
@@ -424,7 +424,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Get the index to current type.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn index() const -> usize
+        constexpr auto index() const -> usize
         {
             return _impl.getTypeIndex();
         }

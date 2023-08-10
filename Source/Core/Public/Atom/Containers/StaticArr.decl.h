@@ -10,17 +10,17 @@ namespace Atom
         using TElem = T;
 
     protected:
-        constexpr fn _Data() -> T*
+        constexpr auto _Data() -> T*
         {
             return _arr;
         }
 
-        constexpr fn _Data() const -> const T*
+        constexpr auto _Data() const -> const T*
         {
             return _arr;
         }
 
-        constexpr fn _Count() const -> usize
+        constexpr auto _Count() const -> usize
         {
             return Size;
         }

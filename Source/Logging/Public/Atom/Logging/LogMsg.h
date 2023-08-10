@@ -60,7 +60,7 @@ namespace Atom
     class StrViewConverter<Logging::ELogLevel>
     {
     public:
-        constexpr fn Convert(Logging::ELogLevel lvl) -> StrView
+        constexpr auto Convert(Logging::ELogLevel lvl) -> StrView
         {
             switch (lvl)
             {

@@ -2,7 +2,7 @@
 
 using namespace Atom;
 
-fn PrintCmdArgs(i32 argc, char** argv)
+auto PrintCmdArgs(i32 argc, char** argv)
 {
     for (i32 i = 1; i < argc; ++i)
     {
@@ -10,7 +10,7 @@ fn PrintCmdArgs(i32 argc, char** argv)
     }
 }
 
-fn main(i32 argc, char **argv) -> i32
+auto main(i32 argc, char **argv) -> i32
 {
     PrintCmdArgs(argc, argv);
 

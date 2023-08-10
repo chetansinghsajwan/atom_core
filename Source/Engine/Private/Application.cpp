@@ -27,7 +27,7 @@ namespace Atom::Engine
         }
     }
 
-    fn Application::Run() -> void
+    auto Application::Run() -> void
     {
         while (true)
         {
@@ -35,5 +35,5 @@ namespace Atom::Engine
         }
     }
 
-    fn Application::OnWindowEvent(const SWindowEvent& event) -> void { }
+    auto Application::OnWindowEvent(const SWindowEvent& event) -> void { }
 }

@@ -12,17 +12,17 @@ namespace Atom::Private
     class Sha1GeneratorImpl
     {
     public:
-        fn Initialize()
+        auto Initialize()
         {
             Sha1Initialise(&_context);
         }
 
-        fn Update(const void* data, uint32_t dataSize)
+        auto Update(const void* data, uint32_t dataSize)
         {
             Sha1Update(&_context, data, dataSize);
         }
 
-        fn Calculate(Sha1Hash& hash)
+        auto Calculate(Sha1Hash& hash)
         {
             Sha1Finalise(&_context, (SHA1_HASH*)hash.bytes.data());
         }

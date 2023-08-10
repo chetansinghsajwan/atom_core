@@ -37,12 +37,12 @@ namespace Atom
             { }
 
     public:
-        constexpr fn getData() -> T*
+        constexpr auto getData() -> T*
         {
             return &_value;
         }
 
-        constexpr fn getData() const -> const T*
+        constexpr auto getData() const -> const T*
         {
             return &_value;
         }
@@ -67,12 +67,12 @@ namespace Atom
             _ptr{ ptr } { }
 
     public:
-        constexpr fn getData() -> T**
+        constexpr auto getData() -> T**
         {
             return &_ptr;
         }
 
-        constexpr fn getData() const -> const T**
+        constexpr auto getData() const -> const T**
         {
             return &_ptr;
         }
@@ -91,7 +91,7 @@ namespace Atom
         class CtorNoVal{};
 
     public:
-        static consteval fn GetDefault() -> const T&
+        static consteval auto GetDefault() -> const T&
         {
             return T();
         }
@@ -106,32 +106,32 @@ namespace Atom
             _storage{ fwd(args)... }, _isValue{ true } { }
 
     public:
-        constexpr fn constructValueFromOption(const _OptionImpl& opt)
+        constexpr auto constructValueFromOption(const _OptionImpl& opt)
         {
             _constructValueFromOption<false>(opt);
         }
 
-        constexpr fn constructValueFromOption(_OptionImpl&& opt)
+        constexpr auto constructValueFromOption(_OptionImpl&& opt)
         {
             _constructValueFromOption<true>(opt);
         }
 
-        constexpr fn assignValueFromOption(const _OptionImpl& opt)
+        constexpr auto assignValueFromOption(const _OptionImpl& opt)
         {
             _assignValueFromOption<false>(opt);
         }
 
-        constexpr fn assignValueFromOption(_OptionImpl&& opt)
+        constexpr auto assignValueFromOption(_OptionImpl&& opt)
         {
             _assignValueFromOption<true>(opt);
         }
 
-        constexpr fn swapValueFromOption(_OptionImpl& opt)
+        constexpr auto swapValueFromOption(_OptionImpl& opt)
         {
             _swapValueFromOption(opt);
         }
 
-        constexpr fn constructValue(auto&&... args)
+        constexpr auto constructValue(auto&&... args)
         {
             debug_expects(not _isValue);
 
@@ -139,7 +139,7 @@ namespace Atom
             _isValue = true;
         }
 
-        constexpr fn emplaceValue(auto&&... args)
+        constexpr auto emplaceValue(auto&&... args)
         {
             if (_isValue)
             {
@@ -153,13 +153,13 @@ namespace Atom
             }
         }
 
-        constexpr fn assignValue(auto&& val)
+        constexpr auto assignValue(auto&& val)
         {
             _assignValue(fwd(val));
             _isValue = true;
         }
 
-        constexpr fn destroyValue()
+        constexpr auto destroyValue()
         {
             debug_expects(_isValue);
 
@@ -167,7 +167,7 @@ namespace Atom
             _isValue = false;
         }
 
-        constexpr fn destroyValueWithCheck()
+        constexpr auto destroyValueWithCheck()
         {
             if (_isValue)
             {
@@ -176,7 +176,7 @@ namespace Atom
             }
         }
 
-        constexpr fn destroyValueOnDestructor()
+        constexpr auto destroyValueOnDestructor()
         {
             if (_isValue)
             {
@@ -184,28 +184,28 @@ namespace Atom
             }
         }
 
-        constexpr fn getValue() -> T&
+        constexpr auto getValue() -> T&
         {
             debug_expects(_isValue);
 
             return _getValue();
         }
 
-        constexpr fn getValue() const -> const T&
+        constexpr auto getValue() const -> const T&
         {
             debug_expects(_isValue);
 
             return _getValue();
         }
 
-        constexpr fn isValue() const -> bool
+        constexpr auto isValue() const -> bool
         {
             return _isValue;
         }
 
     private:
         template <bool move>
-        constexpr fn _constructValueFromOption(auto&& opt)
+        constexpr auto _constructValueFromOption(auto&& opt)
         {
             if (opt._isValue)
             {
@@ -219,7 +219,7 @@ namespace Atom
         }
 
         template <bool move>
-        constexpr fn _assignValueFromOption(auto&& opt)
+        constexpr auto _assignValueFromOption(auto&& opt)
         {
             if (opt._isValue)
             {
@@ -250,7 +250,7 @@ namespace Atom
             }
         }
 
-        constexpr fn _swapValueFromOption(_OptionImpl& opt)
+        constexpr auto _swapValueFromOption(_OptionImpl& opt)
         {
             if (opt._isValue)
             {
@@ -276,32 +276,32 @@ namespace Atom
             }
         }
 
-        constexpr fn _constructValue(auto&&... args)
+        constexpr auto _constructValue(auto&&... args)
         {
             ObjHelper().Construct<T>(_storage.getData(), fwd(args)...);
         }
 
-        constexpr fn _assignValue(auto&& val)
+        constexpr auto _assignValue(auto&& val)
         {
             ObjHelper().Assign<T>(_storage.getData(), fwd(val));
         }
 
-        constexpr fn _swapValue(T& that)
+        constexpr auto _swapValue(T& that)
         {
             ObjHelper().Swap(_getValue(), that);
         }
 
-        constexpr fn _destroyValue()
+        constexpr auto _destroyValue()
         {
             ObjHelper().Destruct<T>(_storage.getData());
         }
 
-        constexpr fn _getValue() -> T&
+        constexpr auto _getValue() -> T&
         {
             return *_storage.getData();
         }
 
-        constexpr fn _getValue() const -> const T&
+        constexpr auto _getValue() const -> const T&
         {
             return *_storage.getData();
         }

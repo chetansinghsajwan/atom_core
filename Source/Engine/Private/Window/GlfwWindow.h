@@ -22,7 +22,7 @@ namespace Atom::Engine
     class GlfwWindowCoordsConverter
     {
       public:
-        static constexpr fn ToGLFW(SWindowCoords coords)->GlfwSWindowCoords
+        static constexpr auto ToGLFW(SWindowCoords coords)->GlfwSWindowCoords
         {
             static constexpr i32 min = NumLimits<i32>::min();
             static constexpr i32 max = NumLimits<i32>::max();
@@ -33,7 +33,7 @@ namespace Atom::Engine
             return { coords.x, coords.y };
         };
 
-        static constexpr fn FromGLFW(GlfwSWindowCoords coords)->SWindowCoords
+        static constexpr auto FromGLFW(GlfwSWindowCoords coords)->SWindowCoords
         {
             static constexpr i32 min = NumLimits<i32>::min();
             static constexpr i32 max = NumLimits<i32>::max();
@@ -51,22 +51,22 @@ namespace Atom::Engine
         GlfwWindow(const WindowProps& props);
         ~GlfwWindow();
 
-        virtual fn Update()->void override;
+        virtual auto Update()->void override;
 
-        virtual fn SetPos(SWindowCoords size)->void override;
-        virtual fn GetPos() const->SWindowCoords override;
-        virtual fn UpdatePos()->SWindowCoords;
+        virtual auto SetPos(SWindowCoords size)->void override;
+        virtual auto GetPos() const->SWindowCoords override;
+        virtual auto UpdatePos()->SWindowCoords;
 
-        virtual fn SetSize(SWindowCoords size)->void override;
-        virtual fn GetSize() const->SWindowCoords override;
-        virtual fn UpdateSize()->SWindowCoords;
+        virtual auto SetSize(SWindowCoords size)->void override;
+        virtual auto GetSize() const->SWindowCoords override;
+        virtual auto UpdateSize()->SWindowCoords;
 
-        virtual fn GetNative() const->void* ofinal;
+        virtual auto GetNative() const->void* ofinal;
 
-        fn SetVSync(bool enable)->void;
-        fn GetVSync() const->bool;
+        auto SetVSync(bool enable)->void;
+        auto GetVSync() const->bool;
 
-        fn GetNativeGLFW() const->GLFWwindow*
+        auto GetNativeGLFW() const->GLFWwindow*
         {
             return _glfwWindow;
         }

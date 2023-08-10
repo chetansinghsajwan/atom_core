@@ -13,7 +13,7 @@ namespace std
     class hash<Atom::Str>
     {
     public:
-        fn operator()(const Atom::Str& str) const -> size_t
+        auto operator()(const Atom::Str& str) const -> size_t
         {
             using TChar = Atom::BasicChar<Atom::CharEncoding>;
             using StdStirngView = basic_string_view<TChar>;

@@ -10,7 +10,7 @@ namespace Atom
     {
     public:
         template <typename TRange>
-        constexpr fn parse(const TRange& range) const -> Uuid
+        constexpr auto parse(const TRange& range) const -> Uuid
             requires(RRangeOf<TRange, Char>)
         {
             RangeHelper helper;
@@ -26,7 +26,7 @@ namespace Atom
 
     private:
         template <typename TIter>
-        constexpr fn _parseCounted(TIter it, usize itCount) const -> Uuid
+        constexpr auto _parseCounted(TIter it, usize itCount) const -> Uuid
         {
             if (itCount != 36)
                 return Uuid::Null;
@@ -67,7 +67,7 @@ namespace Atom
         }
 
         template <typename TIter, typename TIterEnd>
-        constexpr fn _parseUncounted(TIter it, TIterEnd itEnd) const -> Uuid
+        constexpr auto _parseUncounted(TIter it, TIterEnd itEnd) const -> Uuid
         {
             Uuid uuid;         // output result
             usize i = 0;       // index of byte to write

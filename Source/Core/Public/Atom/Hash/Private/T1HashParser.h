@@ -20,7 +20,7 @@ namespace Atom::Private
         /// represents one hex value) + 1 (null terminator).
         /// ----------------------------------------------------------------------------------------
         template <usize count> 
-        constexpr fn Parse(const Char(&str)[count]) const -> T1Hash
+        constexpr auto Parse(const Char(&str)[count]) const -> T1Hash
             requires (count == (_Size * 2) + 1)
         {
             T1Hash hash;
@@ -50,7 +50,7 @@ namespace Atom::Private
         /// 
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
-        constexpr fn Parse(const TRange& range) const -> T1Hash
+        constexpr auto Parse(const TRange& range) const -> T1Hash
             requires(RRangeOf<TRange, Char>)
         {
             T1Hash hash;
@@ -97,7 +97,7 @@ namespace Atom::Private
         /// 
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
-        constexpr fn Parse(const TRange& range) const -> T1Hash
+        constexpr auto Parse(const TRange& range) const -> T1Hash
             requires(RJumpRangeOf<TRange, Char>)
         {
             if (range.Size() != _Size * 2)

@@ -30,7 +30,7 @@ namespace Atom::Private
         /// ----------------------------------------------------------------------------------------
         /// Resets the {T1HashGenerator} to its initial state.
         /// ----------------------------------------------------------------------------------------
-        fn Reset()
+        auto Reset()
         {
             _impl.Initialize();
         }
@@ -39,7 +39,7 @@ namespace Atom::Private
         /// 
         /// ----------------------------------------------------------------------------------------
         template <typename TRange, usize BufSize = 50>
-        fn ProcessBytes(TRange bytes) -> Self&
+        auto ProcessBytes(TRange bytes) -> Self&
             requires RRangeOf<TRange, byte>
         {
             if constexpr (RArrRangeOf<TRange, byte>)
@@ -79,7 +79,7 @@ namespace Atom::Private
         /// @THROWS AssertionException Expects {data != nullptr}.
         /// @THROWS AssertionException Expects {dataSize > 0}.
         /// ----------------------------------------------------------------------------------------
-        fn ProcessBytes(const void* data, usize dataSize) -> Self&
+        auto ProcessBytes(const void* data, usize dataSize) -> Self&
         {
             ATOM_DEBUG_EXPECTS(data != nullptr);
             ATOM_DEBUG_EXPECTS(dataSize > 0);
@@ -104,7 +104,7 @@ namespace Atom::Private
         /// 
         /// @PARAM[IN] data Data to process.
         /// ----------------------------------------------------------------------------------------
-        fn ProcessByte(byte data) -> Self&
+        auto ProcessByte(byte data) -> Self&
         {
             _impl.Update(&data, 1);
             return self;
@@ -115,7 +115,7 @@ namespace Atom::Private
         /// 
         /// @RETURNS {T1Hash} object.
         /// ----------------------------------------------------------------------------------------
-        fn Generate() -> T1Hash
+        auto Generate() -> T1Hash
         {
             T1Hash hash;
             _impl.Calculate(hash);

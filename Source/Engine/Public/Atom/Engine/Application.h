@@ -10,9 +10,9 @@ namespace Atom::Engine
         virtual ~Application();
 
     public:
-        virtual fn Run() -> void;
+        virtual auto Run() -> void;
 
-        virtual fn OnWindowEvent(const SWindowEvent& event) -> void;
+        virtual auto OnWindowEvent(const SWindowEvent& event) -> void;
 
     protected:
         Window* _window;

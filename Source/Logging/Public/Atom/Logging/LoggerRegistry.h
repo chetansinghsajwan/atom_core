@@ -39,7 +39,7 @@ namespace Atom::Logging
         /// 
         /// @EXCEPTION_SAFETY VeryStrong
         /// ----------------------------------------------------------------------------------------
-        fn RegisterLogger(LoggerPtr logger)
+        auto RegisterLogger(LoggerPtr logger)
         {
             ATOM_ASSERT(logger != nullptr) << NullPointerException(
                 "Cannot register NULL Logger.");
@@ -71,7 +71,7 @@ namespace Atom::Logging
         /// 
         /// @EXCEPTION_SAFETY VeryStrong
         /// ----------------------------------------------------------------------------------------
-        fn RegisterLogger(LoggerPtr logger, StrView key)
+        auto RegisterLogger(LoggerPtr logger, StrView key)
         {
             ATOM_ASSERT(logger != nullptr) << NullPointerException(
                 "Cannot register NULL Logger.");
@@ -90,7 +90,7 @@ namespace Atom::Logging
         /// 
         /// @PARAM[IN] key RValue reference to Str, to avoid allocating memory to store the key.
         /// ----------------------------------------------------------------------------------------
-        fn RegisterLogger(LoggerPtr logger, Str&& key)
+        auto RegisterLogger(LoggerPtr logger, Str&& key)
         {
             ATOM_ASSERT(logger != nullptr) << NullPointerException(
                 "Cannot register NULL Logger.");
@@ -113,7 +113,7 @@ namespace Atom::Logging
         /// 
         /// @EXCEPTION_SAFETY VeryStrong
         /// ----------------------------------------------------------------------------------------
-        fn ForceRegisterLogger(LoggerPtr logger)
+        auto ForceRegisterLogger(LoggerPtr logger)
         {
             ATOM_ASSERT(logger != nullptr) << NullPointerException(
                 "Cannot register NULL Logger.");
@@ -138,7 +138,7 @@ namespace Atom::Logging
         /// 
         /// @EXCEPTION_SAFETY VeryStrong
         /// ----------------------------------------------------------------------------------------
-        fn ForceRegisterLogger(LoggerPtr logger, StrView key)
+        auto ForceRegisterLogger(LoggerPtr logger, StrView key)
         {
             ATOM_ASSERT(logger != nullptr) << NullPointerException(
                 "Cannot register NULL Logger.");
@@ -154,7 +154,7 @@ namespace Atom::Logging
         /// 
         /// @PARAM[IN] key RValue reference to Str, to avoid allocating memory to store the key.
         /// ----------------------------------------------------------------------------------------
-        fn ForceRegisterLogger(LoggerPtr logger, Str&& key)
+        auto ForceRegisterLogger(LoggerPtr logger, Str&& key)
         {
             ATOM_ASSERT(logger != nullptr) << NullPointerException(
                 "Cannot register NULL Logger.");
@@ -170,7 +170,7 @@ namespace Atom::Logging
         /// 
         /// @PARAM[IN] logger Logger to register.
         /// ----------------------------------------------------------------------------------------
-        fn TryRegisterLogger(LoggerPtr logger) -> bool
+        auto TryRegisterLogger(LoggerPtr logger) -> bool
         {
             if (logger == nullptr)
                 return false;
@@ -192,7 +192,7 @@ namespace Atom::Logging
         /// @PARAM[IN] logger Logger to register.
         /// @PARAM[IN] key Str used as key to register logger.
         /// ----------------------------------------------------------------------------------------
-        fn TryRegisterLogger(LoggerPtr logger, StrView key) -> bool
+        auto TryRegisterLogger(LoggerPtr logger, StrView key) -> bool
         {
             if (logger == nullptr)
                 return false;
@@ -213,7 +213,7 @@ namespace Atom::Logging
         /// 
         /// @PARAM[IN] key RValue reference to Str, to avoid allocating memory to store the key.
         /// ----------------------------------------------------------------------------------------
-        fn TryRegisterLogger(LoggerPtr logger, Str&& key) -> bool
+        auto TryRegisterLogger(LoggerPtr logger, Str&& key) -> bool
         {
             if (logger == nullptr)
                 return false;
@@ -235,7 +235,7 @@ namespace Atom::Logging
         /// 
         /// @EXCEPTION_SAFETY VeryStrong
         /// ----------------------------------------------------------------------------------------
-        fn UnregisterLogger(StrView key) -> bool
+        auto UnregisterLogger(StrView key) -> bool
         {
             ATOM_ASSERT(!key.isEmpty()) << InvalidArgumentException(
                 "Cannot access logger with NULL key.");
@@ -246,7 +246,7 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Unregisters all loggers.
         /// ----------------------------------------------------------------------------------------
-        fn UnregisterAllLoggers()
+        auto UnregisterAllLoggers()
         {
             _loggers.clear();
         }
@@ -261,7 +261,7 @@ namespace Atom::Logging
         /// 
         /// @EXCEPTION_SAFETY VeryStrong
         /// ----------------------------------------------------------------------------------------
-        fn UnregisterAndGetLogger(StrView key) -> LoggerPtr
+        auto UnregisterAndGetLogger(StrView key) -> LoggerPtr
         {
             ATOM_ASSERT(!key.isEmpty()) << InvalidArgumentException(
                 "Cannot access logger with NULL key.");
@@ -272,7 +272,7 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Get the logger registered with key {key}.
         /// ----------------------------------------------------------------------------------------
-        fn GetLogger(StrView key) const -> LoggerPtr
+        auto GetLogger(StrView key) const -> LoggerPtr
         {
             for (auto pair : _loggers)
             {
@@ -288,7 +288,7 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Checks if a logger for key {key} is registered.
         /// ----------------------------------------------------------------------------------------
-        fn HasLogger(StrView key) const -> bool
+        auto HasLogger(StrView key) const -> bool
         {
             return _HasLogger(key);
         }
@@ -307,7 +307,7 @@ namespace Atom::Logging
         /// 
         /// DefaultLogger is used to log global logs or when categorization is not necessary.
         /// ----------------------------------------------------------------------------------------
-        fn GetDefaultLogger() const -> LoggerPtr
+        auto GetDefaultLogger() const -> LoggerPtr
         {
             return _defaultLogger;
         }
@@ -317,7 +317,7 @@ namespace Atom::Logging
         /// 
         /// @PARAM[IN] logger Logger to set as default logger. If null sets a fake logger instead.
         /// ----------------------------------------------------------------------------------------
-        fn SetDefaultLogger(LoggerPtr logger) -> void
+        auto SetDefaultLogger(LoggerPtr logger) -> void
         {
             if (logger == nullptr)
             {
@@ -335,7 +335,7 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// @RETURNS TIter to first Key-Logger pair.
         /// ----------------------------------------------------------------------------------------
-        fn iter() const -> TIter
+        auto iter() const -> TIter
         {
             return _loggers.begin();
         }
@@ -343,7 +343,7 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// @RETURNS TIter to last Key-Logger pair. 
         /// ----------------------------------------------------------------------------------------
-        fn iterEnd() const -> TIter
+        auto iterEnd() const -> TIter
         {
             return _loggers.cend();
         }
@@ -365,7 +365,7 @@ namespace Atom::Logging
         /// 
         /// @EXCEPTION_SAFETY VeryStrong
         /// ----------------------------------------------------------------------------------------
-        fn _RegisterLogger(LoggerPtr logger, Str key) -> void
+        auto _RegisterLogger(LoggerPtr logger, Str key) -> void
         {
             ATOM_DEBUG_EXPECTS(logger != nullptr);
             ATOM_DEBUG_EXPECTS(!key.isEmpty());
@@ -378,7 +378,7 @@ namespace Atom::Logging
         /// 
         /// @EXCEPTION_SAFETY VeryStrong
         /// ----------------------------------------------------------------------------------------
-        fn _ForceRegisterLogger(LoggerPtr logger, Str key) -> void
+        auto _ForceRegisterLogger(LoggerPtr logger, Str key) -> void
         {
             ATOM_DEBUG_EXPECTS(logger != nullptr);
             ATOM_DEBUG_EXPECTS(!key.isEmpty());
@@ -390,7 +390,7 @@ namespace Atom::Logging
         /// 
         /// @EXCEPTION_SAFETY VeryStrong
         /// ----------------------------------------------------------------------------------------
-        fn _UnregisterLogger(StrView key) -> LoggerPtr
+        auto _UnregisterLogger(StrView key) -> LoggerPtr
         {
             auto it = _FindEntry(key);
             if (it == iterEnd())
@@ -406,7 +406,7 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        fn _HasLogger(StrView key) const -> bool
+        auto _HasLogger(StrView key) const -> bool
         {
             for (auto pair : _loggers)
             {
@@ -422,7 +422,7 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        fn _FindEntry(StrView key) const -> TIter
+        auto _FindEntry(StrView key) const -> TIter
         {
             auto it = iter();
             for (; it != iterEnd(); it++)
@@ -441,7 +441,7 @@ namespace Atom::Logging
         LoggerPtr _defaultLogger;
     };
 
-    inline fn GET_REGISTRY() -> LoggerRegistry&
+    inline auto GET_REGISTRY() -> LoggerRegistry&
     {
         static LoggerRegistry s_instance;
         return s_instance;

@@ -16,8 +16,8 @@ namespace Atom
         using TIterEnd = _TIterEnd;
 
     public:
-        fn iter() const -> TIter;
-        fn iterEnd() const -> TIterEnd;
+        auto iter() const -> TIter;
+        auto iterEnd() const -> TIterEnd;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -34,10 +34,10 @@ namespace Atom
         using TMutIterEnd = _TIterEnd;
 
     public:
-        fn iter() const -> TIter;
-        fn iterEnd() const -> TIterEnd;
-        fn mutIter() -> TMutIter;
-        fn mutIterEnd() -> TMutIterEnd;
+        auto iter() const -> TIter;
+        auto iterEnd() const -> TIterEnd;
+        auto mutIter() -> TMutIter;
+        auto mutIterEnd() -> TMutIterEnd;
     };
 
     /// --------------------------------------------------------------------------------------------

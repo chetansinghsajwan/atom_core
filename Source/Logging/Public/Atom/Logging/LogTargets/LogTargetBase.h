@@ -32,7 +32,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @SEE _Write().
         /// ----------------------------------------------------------------------------------------
-        virtual fn Write(const LogMsg& logMsg) -> void ofinal
+        virtual auto Write(const LogMsg& logMsg) -> void ofinal
         {
             if (CheckLogLevel(logMsg.lvl))
             {
@@ -58,7 +58,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @EXCEPTION_SAFETY Strong.
         /// ----------------------------------------------------------------------------------------
-        virtual fn Flush() -> void ofinal
+        virtual auto Flush() -> void ofinal
         {
             if (ShouldFlush())
             {
@@ -69,7 +69,7 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         /// Get the log level.
         /// ----------------------------------------------------------------------------------------
-        fn GetLogLevel() const -> ELogLevel
+        auto GetLogLevel() const -> ELogLevel
         {
             return _logLevel;
         }
@@ -77,7 +77,7 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         /// Sets the log level.
         /// ----------------------------------------------------------------------------------------
-        fn SetLogLevel(ELogLevel lvl)
+        auto SetLogLevel(ELogLevel lvl)
         {
             _logLevel = lvl;
         }
@@ -85,7 +85,7 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         /// Checks if we should log the message of specified level.
         /// ----------------------------------------------------------------------------------------
-        fn CheckLogLevel(ELogLevel lvl) const -> bool
+        auto CheckLogLevel(ELogLevel lvl) const -> bool
         {
             if (lvl == ELogLevel::OFF) return false;
             if (lvl < _logLevel) return false;
@@ -96,7 +96,7 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         /// Gets the flush level.
         /// ----------------------------------------------------------------------------------------
-        fn GetFlushLevel() const -> ELogLevel
+        auto GetFlushLevel() const -> ELogLevel
         {
             return _flushLevel;
         }
@@ -104,7 +104,7 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         /// Sets the flush level.
         /// ----------------------------------------------------------------------------------------
-        fn SetFlushLevel(ELogLevel lvl)
+        auto SetFlushLevel(ELogLevel lvl)
         {
             _flushLevel = lvl;
         }
@@ -113,7 +113,7 @@ namespace Atom::Logging::Internal
         /// Checks if should flush after logging the message of specified level.
         /// It also asks ShouldFlush().
         /// ----------------------------------------------------------------------------------------
-        fn CheckFlushLevel(ELogLevel lvl) const -> bool
+        auto CheckFlushLevel(ELogLevel lvl) const -> bool
         {
             if (!_hasWritten) return false;
             if (lvl == ELogLevel::OFF) return false;
@@ -127,7 +127,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @RETURNS {true} if there has been a log since last flush, else {false}.
         /// ----------------------------------------------------------------------------------------
-        fn ShouldFlush() const -> bool
+        auto ShouldFlush() const -> bool
         {
             return _alwaysFlush || _hasWritten;
         }
@@ -143,12 +143,12 @@ namespace Atom::Logging::Internal
         /// @PARAM[IN] logMsg Log message object passed for logging.
         /// @PARAM[IN] formattedMsg Formatted message generated from {logMsg}.
         /// ----------------------------------------------------------------------------------------
-        virtual fn _Write(const LogMsg& logMsg, StrView formattedMsg) -> void abstract;
+        virtual auto _Write(const LogMsg& logMsg, StrView formattedMsg) -> void abstract;
 
         /// ----------------------------------------------------------------------------------------
         /// Flush implementation.
         /// ----------------------------------------------------------------------------------------
-        virtual fn _Flush() -> void abstract;
+        virtual auto _Flush() -> void abstract;
 
     //// -------------------------------------------------------------------------------------------
     //// Variables

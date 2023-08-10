@@ -13,7 +13,7 @@ namespace Atom
         template <typename TRange, typename TPred>
         requires RRange<TRange>
             and RInvokable<TPred, bool(const typename TRange::TElem&)>
-        constexpr fn RemoveIf(TRange& range, TPred&& pred) -> usize
+        constexpr auto RemoveIf(TRange& range, TPred&& pred) -> usize
         {
             usize count = 0;
             for (auto it = range.iter(); it != range.iterEnd(); it++)

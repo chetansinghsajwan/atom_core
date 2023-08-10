@@ -13,7 +13,7 @@ namespace Atom
     {
     private:
         // template <class TIter, class TIterEnd, typename T>
-        // constexpr fn _Fill(TIter iter, TIterEnd iterEnd, T&& val) const -> void
+        // constexpr auto _Fill(TIter iter, TIterEnd iterEnd, T&& val) const -> void
         // {
         //     StdIterWrapForAtomIter stdIter{ iter };
         //     StdIterWrapForAtomIter stdIterEnd{ iterEnd };
@@ -22,7 +22,7 @@ namespace Atom
         // }
 
         // template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
-        // constexpr fn _FwdCopy(const TIter1 iter1, const TIterEnd1 iterEnd1,
+        // constexpr auto _FwdCopy(const TIter1 iter1, const TIterEnd1 iterEnd1,
         //     TIter2 iter2, TIterEnd2 iterEnd2) const -> void
         // {
         //     StdIterWrapForAtomIter stdIter1{ iter1 };
@@ -33,7 +33,7 @@ namespace Atom
         // }
 
         // template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
-        // constexpr fn _BwdCopy(const TIter1 iter1, const TIterEnd1 iterEnd1,
+        // constexpr auto _BwdCopy(const TIter1 iter1, const TIterEnd1 iterEnd1,
         //     TIter2 iter2, TIterEnd2 iterEnd2) const -> void
         // {
         //     StdIterWrapForAtomIter stdIter1{ iter1 };
@@ -44,7 +44,7 @@ namespace Atom
         // }
 
         // template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
-        // constexpr fn _FwdMove(TIter1 iter1, const TIterEnd1 iterEnd1,
+        // constexpr auto _FwdMove(TIter1 iter1, const TIterEnd1 iterEnd1,
         //     TIter2 iter2, TIterEnd2 iterEnd2) const -> void
         // {
         //     StdIterWrapForAtomIter stdIter1{ iter1 };
@@ -55,7 +55,7 @@ namespace Atom
         // }
 
         // template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
-        // constexpr fn _BwdMove(TIter1 iter1, const TIterEnd1 iterEnd1,
+        // constexpr auto _BwdMove(TIter1 iter1, const TIterEnd1 iterEnd1,
         //     TIter2 iter2, TIterEnd2 iterEnd2) const -> void
         // {
         //     StdIterWrapForAtomIter stdIter1{ iter1 };
@@ -66,7 +66,7 @@ namespace Atom
         // }
 
         // template <class TIter, class TIterEnd>
-        // constexpr fn _FwdShift(TIter iter, TIterEnd iterEnd, usize steps) const -> void
+        // constexpr auto _FwdShift(TIter iter, TIterEnd iterEnd, usize steps) const -> void
         // {
         //     if constexpr (RArrIterPair<TIter, TIterEnd>)
         //     {
@@ -81,7 +81,7 @@ namespace Atom
         // }
 
         // template <class TIter, class TIterEnd>
-        // constexpr fn _BwdShift(TIter iter, TIterEnd iterEnd, usize steps) const -> void
+        // constexpr auto _BwdShift(TIter iter, TIterEnd iterEnd, usize steps) const -> void
         // {
         //     if constexpr (RArrIterPair<TIter, TIterEnd>)
         //     {
@@ -96,7 +96,7 @@ namespace Atom
         // }
 
         // template <class TIter, class TIterEnd>
-        // constexpr fn _BwdRotate(TIter iter, TIterEnd iterEnd, usize steps) const -> void
+        // constexpr auto _BwdRotate(TIter iter, TIterEnd iterEnd, usize steps) const -> void
         // {
         //     if constexpr (RArrIterPair<TIter, TIterEnd>)
         //     {
@@ -111,7 +111,7 @@ namespace Atom
         // }
 
         // template <class TIter, class TIterEnd>
-        // constexpr fn _FwdRotate(TIter iter, TIterEnd iterEnd, isize steps) const -> void
+        // constexpr auto _FwdRotate(TIter iter, TIterEnd iterEnd, isize steps) const -> void
         // {
         //     if constexpr (RArrIterPair<TIter, TIterEnd>)
         //     {
@@ -126,7 +126,7 @@ namespace Atom
         // }
 
         // template <class TIter, class TIterEnd>
-        // constexpr fn _Destruct(TIter iter, TIterEnd iterEnd) const -> void
+        // constexpr auto _Destruct(TIter iter, TIterEnd iterEnd) const -> void
         // {
         //     if constexpr (RArrIterPair<TIter, TIterEnd>)
         //     {
@@ -161,7 +161,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr fn begin() -> TMutIter
+        constexpr auto begin() -> TMutIter
         {
             return _Impl::mutIter();
         }
@@ -171,7 +171,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr fn end() -> TMutIterEnd
+        constexpr auto end() -> TMutIterEnd
         {
             return _Impl::mutIterEnd();
         }
@@ -186,7 +186,7 @@ namespace Atom
     //     /// 
     //     /// ----------------------------------------------------------------------------------------
     //     template <typename T1>
-    //     constexpr fn writeElems(T1& val) const -> void
+    //     constexpr auto writeElems(T1& val) const -> void
     //         requires(RAssignable<TElem, T1>)
     //     {
     //         _Fill(range.iter(), range.iterEnd(), fwd(val));
@@ -197,7 +197,7 @@ namespace Atom
     //     /// ----------------------------------------------------------------------------------------
     // #pragma optimize("", off)
     //     template <typename T1>
-    //     constexpr fn writeElemsNoOptimize(T1& val) const -> void
+    //     constexpr auto writeElemsNoOptimize(T1& val) const -> void
     //         requires(RAssignable<TElem, T1>)
     //     {
     //         _Fill(range.iter(), range.iterEnd(), fwd(val));
@@ -208,7 +208,7 @@ namespace Atom
     //     /// ----------------------------------------------------------------------------------------
     //     /// 
     //     /// ----------------------------------------------------------------------------------------
-    //     constexpr fn shiftFwd(usize steps)
+    //     constexpr auto shiftFwd(usize steps)
     //         requires(RMoveAssignable<TElem>)
     //     {
     //         _FwdShift(range.iter(), range.iterEnd(), steps);
@@ -217,7 +217,7 @@ namespace Atom
     //     /// ----------------------------------------------------------------------------------------
     //     /// 
     //     /// ----------------------------------------------------------------------------------------
-    //     constexpr fn shiftBwd(usize steps)
+    //     constexpr auto shiftBwd(usize steps)
     //         requires(RMoveAssignable<TElem>)
     //     {
     //         _BwdShift(range.iter(), range.iterEnd(), steps);
@@ -226,7 +226,7 @@ namespace Atom
     //     /// ----------------------------------------------------------------------------------------
     //     /// 
     //     /// ----------------------------------------------------------------------------------------
-    //     constexpr fn shiftBy(isize steps)
+    //     constexpr auto shiftBy(isize steps)
     //         requires(RSwappable<TElem>)
     //     {
     //         if (steps > 0)
@@ -242,7 +242,7 @@ namespace Atom
     //     /// ----------------------------------------------------------------------------------------
     //     /// 
     //     /// ----------------------------------------------------------------------------------------
-    //     constexpr fn rotateFwd(usize steps)
+    //     constexpr auto rotateFwd(usize steps)
     //         requires(RSwappable<TElem>)
     //     {
     //         _FwdRotate(range.iter(), range.iterEnd(), steps);
@@ -251,7 +251,7 @@ namespace Atom
     //     /// ----------------------------------------------------------------------------------------
     //     /// 
     //     /// ----------------------------------------------------------------------------------------
-    //     constexpr fn rotateBwd(usize steps)
+    //     constexpr auto rotateBwd(usize steps)
     //         requires(RSwappable<TElem>)
     //     {
     //         _BwdRotate(range.iter(), range.iterEnd(), steps);
@@ -260,7 +260,7 @@ namespace Atom
     //     /// ----------------------------------------------------------------------------------------
     //     /// 
     //     /// ----------------------------------------------------------------------------------------
-    //     constexpr fn rotateBy(isize steps)
+    //     constexpr auto rotateBy(isize steps)
     //         requires(RSwappable<TElem>)
     //     {
     //         if (steps > 0)
@@ -276,7 +276,7 @@ namespace Atom
     //     /// ----------------------------------------------------------------------------------------
     //     /// 
     //     /// ----------------------------------------------------------------------------------------
-    //     constexpr fn destroyElems()
+    //     constexpr auto destroyElems()
     //         requires(RDestructible<TElem>)
     //     {
     //         _Destruct(range.iter(), range.iterEnd());

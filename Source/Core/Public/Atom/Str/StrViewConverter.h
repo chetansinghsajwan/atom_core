@@ -54,12 +54,12 @@ namespace Atom
     class StrConverter<T>
     {
     public:
-        constexpr fn Convert(const T& in) -> Str
+        constexpr auto Convert(const T& in) -> Str
         {
             return converter.Convert();
         }
 
-        constexpr fn Convert(const T& in, ROutput<Char> auto out) -> void
+        constexpr auto Convert(const T& in, ROutput<Char> auto out) -> void
         {
             StrView strView = converter.Convert(in);
             out.InsertBack(in);

@@ -14,12 +14,12 @@ namespace Atom
         using Base::Base;
 
     protected:
-        constexpr fn _StackBuf() const -> const T*
+        constexpr auto _StackBuf() const -> const T*
         {
             return _stackBuf;
         }
 
-        constexpr fn _AllocMem(usize size) -> T*
+        constexpr auto _AllocMem(usize size) -> T*
         {
             if (BufSize <= size)
             {
@@ -29,7 +29,7 @@ namespace Atom
             return Base::_AllocMem(size);
         }
 
-        constexpr fn _DeallocMem(T* mem) -> void
+        constexpr auto _DeallocMem(T* mem) -> void
         {
             if (mem == _stackBuf)
             {
@@ -39,7 +39,7 @@ namespace Atom
             return Base::_DeallocMem(mem);
         }
 
-        constexpr fn _CalcCapGrowth(usize required) const -> usize
+        constexpr auto _CalcCapGrowth(usize required) const -> usize
         {
             // return Math::Max(_Count() + required, _Capacity() * 2);
             return required;
@@ -76,7 +76,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// NullOper.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator=(NullPtr) -> BufArr&
+        constexpr auto operator=(NullPtr) -> BufArr&
         {
             Clear();
             Release();
@@ -97,7 +97,7 @@ namespace Atom
         /// ParamOper for Range.
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
-        constexpr fn operator=(TRange&& range) -> BufArr&
+        constexpr auto operator=(TRange&& range) -> BufArr&
             requires(RRangeOf<TRange, T>)
         {
             Clear();
@@ -121,7 +121,7 @@ namespace Atom
         /// 
         /// @TODO: Same as CopyCtor.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator=(const BufArr& that) -> BufArr&
+        constexpr auto operator=(const BufArr& that) -> BufArr&
         {
             Clear();
             InsertBack(that);
@@ -159,7 +159,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// MoveOper.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator=(BufArr&& that) -> BufArr&
+        constexpr auto operator=(BufArr&& that) -> BufArr&
         {
             Clear();
             _Move(mov(that));
@@ -169,7 +169,7 @@ namespace Atom
         /// TempMoveOper.
         /// ----------------------------------------------------------------------------------------
         template <usize thatBufSize>
-        constexpr fn operator=(BufArr<TElem, thatBufSize, TAlloc>&& that) -> BufArr&
+        constexpr auto operator=(BufArr<TElem, thatBufSize, TAlloc>&& that) -> BufArr&
         {
             Clear();
             _Move(mov(that));
@@ -178,7 +178,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// MoveOper for DynArr.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator=(DynArr<TElem, TAlloc>&& that) -> BufArr&
+        constexpr auto operator=(DynArr<TElem, TAlloc>&& that) -> BufArr&
         {
             Clear();
             Release();
@@ -205,7 +205,7 @@ namespace Atom
         /// @EXPECTS Empty().
         /// ----------------------------------------------------------------------------------------
         template <usize thatBufSize>
-        fn _Move(BufArr<TElem, thatBufSize, TAlloc>&& that)
+        auto _Move(BufArr<TElem, thatBufSize, TAlloc>&& that)
         {
             if (that._Data() == that._StackBuf())
             {

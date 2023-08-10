@@ -27,7 +27,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr fn getCount() const -> usize
+        constexpr auto getCount() const -> usize
         {
             return _Impl::getCount();
         }
@@ -35,7 +35,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr fn getData() const -> const TElem*
+        constexpr auto getData() const -> const TElem*
         {
             return _Impl::getData();
         }
@@ -64,7 +64,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Get underlying ptr to arr.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn data() const -> const TElem*
+        constexpr auto data() const -> const TElem*
         {
             return _data();
         }
@@ -78,7 +78,7 @@ namespace Atom
         /// # Time Complexity
         /// Constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn at(usize i) const -> const TElem&
+        constexpr auto at(usize i) const -> const TElem&
         {
             expects(isIndexInRange(i), "Index is out of range.");
 
@@ -94,7 +94,7 @@ namespace Atom
         /// # Time Complexity
         /// Constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator[](usize i) const -> const TElem&
+        constexpr auto operator[](usize i) const -> const TElem&
         {
             debug_expects(isIndexInRange(i), "Index is out of range.");
 
@@ -107,7 +107,7 @@ namespace Atom
         /// # Time Complexity
         /// Constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn front() const -> const TElem&
+        constexpr auto front() const -> const TElem&
         {
             debug_expects(not isEmpty(), "Range is empty.");
 
@@ -120,7 +120,7 @@ namespace Atom
         /// # Time Complexity
         /// Constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn back() const -> const TElem&
+        constexpr auto back() const -> const TElem&
         {
             debug_expects(not isEmpty(), "Range is empty.");
 
@@ -130,7 +130,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Get count of elements.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn count() const -> usize
+        constexpr auto count() const -> usize
         {
             return _count();
         }
@@ -138,7 +138,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Is range empty.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn isEmpty() const -> bool
+        constexpr auto isEmpty() const -> bool
         {
             return _count() == 0;
         }
@@ -151,7 +151,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr fn iter() const -> TIter
+        constexpr auto iter() const -> TIter
         {
             return _iter();
         }
@@ -163,7 +163,7 @@ namespace Atom
         /// 
         /// - `i`: Index of the element to get iter at.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn iter(usize i) const -> TIter
+        constexpr auto iter(usize i) const -> TIter
         {
             debug_expects(isIndexInRange(i), "Index is out of range.");
 
@@ -178,21 +178,21 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # To Do: Review this.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn range(usize from, usize to) const
+        constexpr auto range(usize from, usize to) const
         {
         }
 
         /// ----------------------------------------------------------------------------------------
         /// # To Do: Review this.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn rangeFrom(usize from) const
+        constexpr auto rangeFrom(usize from) const
         {
         }
 
         /// ----------------------------------------------------------------------------------------
         /// # To Do: Review this.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn rangeTo(usize to) const
+        constexpr auto rangeTo(usize to) const
         {
         }
 
@@ -201,7 +201,7 @@ namespace Atom
     //// -------------------------------------------------------------------------------------------
 
     public:
-        constexpr fn isIndexInRange(usize i) const -> bool
+        constexpr auto isIndexInRange(usize i) const -> bool
         {
             return i < _count();
         }
@@ -211,39 +211,39 @@ namespace Atom
     //// -------------------------------------------------------------------------------------------
 
     private:
-        constexpr fn _data() const -> const TElem*
+        constexpr auto _data() const -> const TElem*
         {
             return _Impl::getData();
         }
 
-        constexpr fn _count() const -> usize
+        constexpr auto _count() const -> usize
         {
             return _Impl::getCount();
         }
 
-        constexpr fn _at(usize i) const -> const TElem&
+        constexpr auto _at(usize i) const -> const TElem&
         {
             return _data()[i];
         }
 
-        constexpr fn _front() const -> const TElem&
+        constexpr auto _front() const -> const TElem&
         {
             return _at(0);
         }
 
-        constexpr fn _back() const -> const TElem&
+        constexpr auto _back() const -> const TElem&
         {
             debug_expects(_count() > 0);
 
             return _at(_count() - 1);
         }
 
-        constexpr fn _iter() const -> TIter
+        constexpr auto _iter() const -> TIter
         {
             return TIter{ _data() };
         }
 
-        constexpr fn _iterEnd() const -> TIterEnd
+        constexpr auto _iterEnd() const -> TIterEnd
         {
             return TIter{ _data() + _count() };
         }
@@ -264,12 +264,12 @@ namespace Atom
         using TIterEnd = TIter;
 
     public:
-        constexpr fn iter() const -> TIter
+        constexpr auto iter() const -> TIter
         {
             return TIter{ _Impl::getData() };
         }
 
-        constexpr fn iterEnd() const -> TIterEnd
+        constexpr auto iterEnd() const -> TIterEnd
         {
             return TIterEnd{ _Impl::getData() + _Impl::getCount() };
         }

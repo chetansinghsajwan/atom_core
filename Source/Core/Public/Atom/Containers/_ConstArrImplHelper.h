@@ -5,7 +5,7 @@
 namespace Atom
 {
     template <typename TImpl>
-    constexpr fn _ConstArrImplHelper<TImpl>::ElemAt(usize index) const -> const TElem&
+    constexpr auto _ConstArrImplHelper<TImpl>::ElemAt(usize index) const -> const TElem&
     {
         ATOM_EXPECTS(_ValidateIndexForAccess(index)) <<
             IndexOutOfRangeException(index, 0, _Count() - 1);
@@ -14,7 +14,7 @@ namespace Atom
     }
 
     template <typename TImpl>
-    constexpr fn _ConstArrImplHelper<TImpl>::operator[](usize index) const -> const TElem&
+    constexpr auto _ConstArrImplHelper<TImpl>::operator[](usize index) const -> const TElem&
     {
         ATOM_DEBUG_EXPECTS(_ValidateIndexForAccess(index)) <<
             IndexOutOfRangeException(index, 0, _Count() - 1);
@@ -23,7 +23,7 @@ namespace Atom
     }
 
     template <typename TImpl>
-    constexpr fn _ConstArrImplHelper<TImpl>::ElemFront() const -> const TElem&
+    constexpr auto _ConstArrImplHelper<TImpl>::ElemFront() const -> const TElem&
     {
         ATOM_DEBUG_EXPECTS(!isEmpty()) <<
             OutOfRangeException("Arr is empty.");
@@ -32,7 +32,7 @@ namespace Atom
     }
 
     template <typename TImpl>
-    constexpr fn _ConstArrImplHelper<TImpl>::ElemBack() const -> const TElem&
+    constexpr auto _ConstArrImplHelper<TImpl>::ElemBack() const -> const TElem&
     {
         ATOM_DEBUG_EXPECTS(!isEmpty()) <<
             OutOfRangeException("Arr is empty.");

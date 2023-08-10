@@ -38,22 +38,22 @@ namespace Atom::Text
         using TIterEnd = _CharEncodingLazyConverterHelperIterEnd;
 
     public:
-        constexpr fn iter() -> TIter
+        constexpr auto iter() -> TIter
         {
             return TIter(_impl, _input);
         }
 
-        constexpr fn iterEnd() -> TIter
+        constexpr auto iterEnd() -> TIter
         {
             return TIterEnd();
         }
 
-        constexpr fn begin() -> TIter
+        constexpr auto begin() -> TIter
         {
             return iter();
         }
 
-        constexpr fn end() -> TIterEnd
+        constexpr auto end() -> TIterEnd
         {
             return iterEnd();
         }
@@ -91,7 +91,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// Get the current char.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator*() -> TOutChar&
+        constexpr auto operator*() -> TOutChar&
         {
             return _out[_outIndex];
         }
@@ -99,7 +99,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// Advances the iter.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator++() -> TSelf&
+        constexpr auto operator++() -> TSelf&
         {
             if (_outIndex == -1)
             {
@@ -113,7 +113,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// Will be removed in CPP2;
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator++(i32) -> TSelf&
+        constexpr auto operator++(i32) -> TSelf&
         {
             return ++self;
         }
@@ -121,7 +121,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// Checks if the iter has reached its end.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator==(TIterEnd end) const -> bool
+        constexpr auto operator==(TIterEnd end) const -> bool
         {
             return _outIndex > 0 || _input.HasNext();
         }
@@ -129,7 +129,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// Will be removed in CPP2;
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator!=(TIterEnd end) const -> bool
+        constexpr auto operator!=(TIterEnd end) const -> bool
         {
             return !(self == end);
         }
@@ -138,7 +138,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        fn _ProcessNextChar()
+        auto _ProcessNextChar()
         {
             if (_inIter == _inIterEnd)
             {
@@ -171,17 +171,17 @@ namespace Atom::Text
             _input{ input } { }
 
     public:
-        constexpr fn Get() -> TChar
+        constexpr auto Get() -> TChar
         {
             return _input.Get();
         }
 
-        constexpr fn Next() -> bool
+        constexpr auto Next() -> bool
         {
             return _input.Next();
         }
 
-        constexpr fn HasNext() const -> bool
+        constexpr auto HasNext() const -> bool
         {
             return _input.HasNext();
         }

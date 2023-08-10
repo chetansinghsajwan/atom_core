@@ -110,7 +110,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// NullAssignmentOperator.
         /// ----------------------------------------------------------------------------------------
-        fn operator=(NullType null) -> ObjectBox&
+        auto operator=(NullType null) -> ObjectBox&
         {
             _DisposeObject();
             return self;
@@ -119,7 +119,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// NullEqualityOperator.
         /// ----------------------------------------------------------------------------------------
-        fn operator==(NullType null) const -> bool
+        auto operator==(NullType null) const -> bool
         {
             return _HasObject();
         }
@@ -139,7 +139,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <typename T>
         requires RObject<T>
-        fn operator=(T&& object) -> ObjectBox&
+        auto operator=(T&& object) -> ObjectBox&
         {
             _SetObject(fwd(object));
             return self;
@@ -169,7 +169,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// CopyAssignmentOperator.
         /// ----------------------------------------------------------------------------------------
-        fn operator=(const ObjectBox& other) -> ObjectBox&
+        auto operator=(const ObjectBox& other) -> ObjectBox&
             requires Copyable
         {
             _CopyBox(other);
@@ -182,7 +182,7 @@ namespace Atom
         template <bool OtherMovable, bool OtherAllowNonMovableObject, 
             usize OtherStackSize, typename TOtherMemAllocator>
         requires Copyable && ROtherBox<Copyable, OtherMovable, OtherAllowNonMovableObject>
-        fn operator=(const ObjectBox<Copyable, OtherMovable, OtherAllowNonMovableObject,
+        auto operator=(const ObjectBox<Copyable, OtherMovable, OtherAllowNonMovableObject,
             OtherStackSize, TOtherMemAllocator>& other) -> ObjectBox&
         {
             _CopyBox(other);
@@ -213,7 +213,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// MoveAssignmentOperator.
         /// ----------------------------------------------------------------------------------------
-        fn operator=(ObjectBox&& other) -> ObjectBox&
+        auto operator=(ObjectBox&& other) -> ObjectBox&
             requires Movable
         {
             _MoveBox(mov(other));
@@ -226,7 +226,7 @@ namespace Atom
         template <bool OtherCopyable, bool OtherMovable, bool OtherAllowNonMovableObject,
             usize OtherStackSize, typename TOtherMemAllocator>
         requires Movable && ROtherBox<OtherCopyable, OtherMovable, OtherAllowNonMovableObject>
-        fn operator=(ObjectBox<OtherCopyable, OtherMovable, OtherAllowNonMovableObject,
+        auto operator=(ObjectBox<OtherCopyable, OtherMovable, OtherAllowNonMovableObject,
             OtherStackSize, TOtherMemAllocator>&& other) -> ObjectBox&
         {
             _MoveBox(mov(other));
@@ -251,7 +251,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <typename T>
         requires RObject<T>
-        fn SetObject(T&& obj)
+        auto SetObject(T&& obj)
         {
             _SetObject(fwd(obj));
         }
@@ -260,7 +260,7 @@ namespace Atom
         /// Get the object.
         /// ----------------------------------------------------------------------------------------
         template <typename T>
-        fn GetObject() -> T&
+        auto GetObject() -> T&
         {
             return *_GetObject<T>();
         }
@@ -269,7 +269,7 @@ namespace Atom
         /// Get the const object.
         /// ----------------------------------------------------------------------------------------
         template <typename T>
-        fn GetObject() const -> const T&
+        auto GetObject() const -> const T&
         {
             return *_GetObject<T>();
         }
@@ -285,7 +285,7 @@ namespace Atom
         template <bool OtherMovable, bool OtherAllowNonMovableObject,
             usize OtherStackSize, typename TOtherMemAllocator>
         requires Copyable && ROtherBox<Copyable, OtherMovable, OtherAllowNonMovableObject>
-        fn _CopyBox(const ObjectBox<Copyable, OtherMovable, OtherAllowNonMovableObject,
+        auto _CopyBox(const ObjectBox<Copyable, OtherMovable, OtherAllowNonMovableObject,
             OtherStackSize, TOtherMemAllocator>& other)
         {
             _CopyObject(other);
@@ -297,7 +297,7 @@ namespace Atom
         template <bool OtherCopyable, bool OtherMovable, bool OtherAllowNonMovableObject,
             usize OtherStackSize, typename TOtherMemAllocator>
         requires Movable && ROtherBox<OtherCopyable, OtherMovable, OtherAllowNonMovableObject>
-        fn _MoveBox(ObjectBox<OtherCopyable, OtherMovable, OtherAllowNonMovableObject,
+        auto _MoveBox(ObjectBox<OtherCopyable, OtherMovable, OtherAllowNonMovableObject,
             OtherStackSize, TOtherMemAllocator>&& other)
         {
             // When allocator type is different, we cannot handle heap memory.
@@ -341,7 +341,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Destroy stored object and releases any allocated memory.
         /// ----------------------------------------------------------------------------------------
-        fn _DisposeBox()
+        auto _DisposeBox()
         {
             _DisposeObject();
             _ReleaseMem();
@@ -364,7 +364,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <typename T>
         requires RObject<T>
-        fn _InitObject(T&& obj, bool forceHeap = false)
+        auto _InitObject(T&& obj, bool forceHeap = false)
         {
             _object.size = sizeof(T);
             _object.type = &typeid(T);
@@ -418,7 +418,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <typename T>
         requires RObject<T>
-        fn _SetObject(T&& obj, bool forceHeap = false)
+        auto _SetObject(T&& obj, bool forceHeap = false)
         {
             _DisposeObject();
             _InitObject(fwd(obj));
@@ -430,7 +430,7 @@ namespace Atom
         /// @TPARAM T Type as which to get the object.
         /// ----------------------------------------------------------------------------------------
         template <typename T = void>
-        fn _GetObject() -> T*
+        auto _GetObject() -> T*
         {
             return reinterpret_cast<T*>(_object.obj);
         }
@@ -438,7 +438,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Get {TypeInfo} or stored object.
         /// ----------------------------------------------------------------------------------------
-        fn _GetObjectType() const -> const TypeInfo&
+        auto _GetObjectType() const -> const TypeInfo&
         {
             return *_object.type;
         }
@@ -446,7 +446,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Checks if object is not {null}.
         /// ----------------------------------------------------------------------------------------
-        fn _HasObject() const -> bool
+        auto _HasObject() const -> bool
         {
             return _object.obj != nullptr;
         }
@@ -460,7 +460,7 @@ namespace Atom
         template <bool OtherMovable, bool OtherAllowNonMovableObject,
             usize OtherStackSize, typename TOtherMemAllocator>
         requires Copyable && ROtherBox<Copyable, OtherMovable, OtherAllowNonMovableObject>
-        fn _CopyObject(const ObjectBox<Copyable, OtherMovable, OtherAllowNonMovableObject,    
+        auto _CopyObject(const ObjectBox<Copyable, OtherMovable, OtherAllowNonMovableObject,    
             OtherStackSize, TOtherMemAllocator>& other, bool forceHeap = false)
         {
             _DisposeObject();
@@ -491,7 +491,7 @@ namespace Atom
         template <bool OtherCopyable, bool OtherMovable, bool OtherAllowNoneMovableObject,
             usize OtherStackSize, typename TOtherMemAllocator>
         requires Movable && ROtherBox<OtherCopyable, OtherMovable, OtherAllowNoneMovableObject>
-        fn _MoveObject(ObjectBox<OtherCopyable, OtherMovable, OtherAllowNoneMovableObject,
+        auto _MoveObject(ObjectBox<OtherCopyable, OtherMovable, OtherAllowNoneMovableObject,
             OtherStackSize, TOtherMemAllocator>&& other, bool forceHeap = false)
         {
             _DisposeObject();
@@ -510,7 +510,7 @@ namespace Atom
         /// 
         /// @SEE _ReleaseMem().
         /// ----------------------------------------------------------------------------------------
-        fn _DisposeObject()
+        auto _DisposeObject()
         {
             if (_object.obj != nullptr)
             {
@@ -527,7 +527,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <bool OtherCopyable, bool OtherMovable, bool OtherAllowNonMovableObject,
             usize OtherStackSize, typename TOtherMemAllocator>
-        fn _CopyObjectData(const ObjectBox<OtherCopyable, OtherMovable,
+        auto _CopyObjectData(const ObjectBox<OtherCopyable, OtherMovable,
             OtherAllowNonMovableObject, OtherStackSize, TOtherMemAllocator>& otherBox)
         {
             auto& other = otherBox._object;
@@ -575,7 +575,7 @@ namespace Atom
         /// 
         /// @RETURNS Pointer to the allocated memory.
         /// ----------------------------------------------------------------------------------------
-        fn _AllocMem(usize size, bool forceHeap = false) -> void*
+        auto _AllocMem(usize size, bool forceHeap = false) -> void*
         {
             if constexpr (StackSize > 0)
             {
@@ -608,7 +608,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Deallocates any allocated memory.
         /// ----------------------------------------------------------------------------------------
-        fn _ReleaseMem()
+        auto _ReleaseMem()
         {
             if (_heapMem != nullptr)
             {
@@ -621,7 +621,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Is object is stored in stack memory.
         /// ----------------------------------------------------------------------------------------
-        fn _IsUsingStackMem() const -> bool
+        auto _IsUsingStackMem() const -> bool
         {
             if constexpr (StackSize > 0)
             {

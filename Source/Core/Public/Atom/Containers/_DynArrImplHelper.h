@@ -7,14 +7,14 @@
 namespace Atom
 {
     template <typename TImpl>
-    constexpr fn _DynArrImplHelper<TImpl>::Capacity() const -> usize
+    constexpr auto _DynArrImplHelper<TImpl>::Capacity() const -> usize
     {
         return _Capacity();
     }
 
     template <typename TImpl>
     template <typename T2, typename Req>
-    constexpr fn _DynArrImplHelper<TImpl>::InsertAt(TIter pos, T2&& el) -> TMutIter
+    constexpr auto _DynArrImplHelper<TImpl>::InsertAt(TIter pos, T2&& el) -> TMutIter
     {
         ATOM_DEBUG_EXPECTS(_ValidateIter(pos)) << "Invalid iter.";
 
@@ -27,7 +27,7 @@ namespace Atom
 
     template <typename TImpl>
     template <typename TRange, typename Req>
-    constexpr fn _DynArrImplHelper<TImpl>::InsertAt(TIter pos, const TRange& range) -> TMutIter
+    constexpr auto _DynArrImplHelper<TImpl>::InsertAt(TIter pos, const TRange& range) -> TMutIter
     {
         ATOM_DEBUG_EXPECTS(_ValidateIter(pos)) << "Invalid iter.";
 
@@ -47,14 +47,14 @@ namespace Atom
 
     template <typename TImpl>
     template <typename T2, typename Req>
-    constexpr fn _DynArrImplHelper<TImpl>::InsertFront(T2&& el) -> TMutIter
+    constexpr auto _DynArrImplHelper<TImpl>::InsertFront(T2&& el) -> TMutIter
     {
         return mutIter() + _InsertAt(0, fwd(el));
     }
 
     template <typename TImpl>
     template <typename TRange, typename Req>
-    constexpr fn _DynArrImplHelper<TImpl>::InsertFront(const TRange& range) -> TMutIter
+    constexpr auto _DynArrImplHelper<TImpl>::InsertFront(const TRange& range) -> TMutIter
     {
         if constexpr (_CanGetRangeSize<TRange>())
         {
@@ -68,14 +68,14 @@ namespace Atom
 
     template <typename TImpl>
     template <typename T2, typename Req>
-    constexpr fn _DynArrImplHelper<TImpl>::InsertBack(T2&& el) -> TMutIter
+    constexpr auto _DynArrImplHelper<TImpl>::InsertBack(T2&& el) -> TMutIter
     {
         return mutIter() + _InsertBack(fwd(el));
     }
 
     template <typename TImpl>
     template <typename TRange, typename Req>
-    constexpr fn _DynArrImplHelper<TImpl>::InsertBack(const TRange& range) -> TMutIter
+    constexpr auto _DynArrImplHelper<TImpl>::InsertBack(const TRange& range) -> TMutIter
     {
         if constexpr (_CanGetRangeSize<TRange>())
         {
@@ -89,21 +89,21 @@ namespace Atom
 
     template <typename TImpl>
     template <typename T2, typename Req>
-    constexpr fn _DynArrImplHelper<TImpl>::operator+=(T2&& el) -> TMutIter
+    constexpr auto _DynArrImplHelper<TImpl>::operator+=(T2&& el) -> TMutIter
     {
         return InsertBack(fwd(el));
     }
 
     template <typename TImpl>
     template <typename TRange, typename Req>
-    constexpr fn _DynArrImplHelper<TImpl>::operator+=(const TRange& range) -> TMutIter
+    constexpr auto _DynArrImplHelper<TImpl>::operator+=(const TRange& range) -> TMutIter
     {
         return InsertBack(range);
     }
 
     template <typename TImpl>
     template <typename T2>
-    constexpr fn _DynArrImplHelper<TImpl>::_InsertAt(
+    constexpr auto _DynArrImplHelper<TImpl>::_InsertAt(
         usize index, T2&& el) -> usize
     {
         _EnsureCapFor(1);
@@ -115,7 +115,7 @@ namespace Atom
 
     template <typename TImpl>
     template <typename TIter2>
-    constexpr fn _DynArrImplHelper<TImpl>::_InsertAtCounted(
+    constexpr auto _DynArrImplHelper<TImpl>::_InsertAtCounted(
         usize index, TIter2 it, usize count) -> usize
     {
         if (count == 0)
@@ -135,7 +135,7 @@ namespace Atom
 
     template <typename TImpl>
     template <typename TIter2, typename TIterEnd2>
-    constexpr fn _DynArrImplHelper<TImpl>::_InsertAtUncounted(
+    constexpr auto _DynArrImplHelper<TImpl>::_InsertAtUncounted(
         usize index, TIter2 begin, TIterEnd2 end) -> usize
     {
         usize rotateSize = _Count() - index;
@@ -147,7 +147,7 @@ namespace Atom
 
     template <typename TImpl>
     template <typename  T2>
-    constexpr fn _DynArrImplHelper<TImpl>::_InsertBack(T2&& el) -> usize
+    constexpr auto _DynArrImplHelper<TImpl>::_InsertBack(T2&& el) -> usize
     {
         _EnsureCapFor(1);
         _ConstructAt(_Count(), fwd(el));
@@ -158,7 +158,7 @@ namespace Atom
 
     template <typename TImpl>
     template <typename TIter2>
-    constexpr fn _DynArrImplHelper<TImpl>::_InsertBackCounted(
+    constexpr auto _DynArrImplHelper<TImpl>::_InsertBackCounted(
         TIter2 it, usize count) -> usize
     {
         usize index = _Count();
@@ -179,7 +179,7 @@ namespace Atom
 
     template <typename TImpl>
     template <typename TIter2, typename TIterEnd2>
-    constexpr fn _DynArrImplHelper<TImpl>::_InsertBackUncounted(
+    constexpr auto _DynArrImplHelper<TImpl>::_InsertBackUncounted(
         TIter2 begin, TIterEnd2 end) -> usize
     {
         usize index = _Count();
@@ -194,7 +194,7 @@ namespace Atom
     }
 
     template <typename TImpl>
-    constexpr fn _DynArrImplHelper<TImpl>::RemoveAt(TIter pos) -> TMutIter
+    constexpr auto _DynArrImplHelper<TImpl>::RemoveAt(TIter pos) -> TMutIter
     {
         ATOM_DEBUG_EXPECTS(_ValidateIter(pos)) << "Invalid iter.";
 
@@ -207,7 +207,7 @@ namespace Atom
     }
 
     template <typename TImpl>
-    constexpr fn _DynArrImplHelper<TImpl>::RemoveRange(Range<TIter, TIterEnd> range) -> TMutIter
+    constexpr auto _DynArrImplHelper<TImpl>::RemoveRange(Range<TIter, TIterEnd> range) -> TMutIter
     {
         TIter rangeBegin = range.mutIter();
         TIterEnd rangeEnd = range.iterEnd();
@@ -231,13 +231,13 @@ namespace Atom
     }
 
     template <typename TImpl>
-    constexpr fn _DynArrImplHelper<TImpl>::Clear() -> void
+    constexpr auto _DynArrImplHelper<TImpl>::Clear() -> void
     {
         _RemoveRange(0, _Count() - 1);
     }
 
     template <typename TImpl>
-    constexpr fn _DynArrImplHelper<TImpl>::_RemoveAt(usize index) -> usize
+    constexpr auto _DynArrImplHelper<TImpl>::_RemoveAt(usize index) -> usize
     {
         _DestructAt(index);
         _MoveRangeFront(index, 1);
@@ -246,7 +246,7 @@ namespace Atom
     }
 
     template <typename TImpl>
-    constexpr fn _DynArrImplHelper<TImpl>::_RemoveRange(usize begin, usize count) -> usize
+    constexpr auto _DynArrImplHelper<TImpl>::_RemoveRange(usize begin, usize count) -> usize
     {
         _DestructRange(begin, count);
         _MoveRangeFront(begin, count);
@@ -255,19 +255,19 @@ namespace Atom
     }
 
     template <typename TImpl>
-    constexpr fn _DynArrImplHelper<TImpl>::Reserve(
+    constexpr auto _DynArrImplHelper<TImpl>::Reserve(
         usize count)
     {
         _EnsureCapFor(count);
     }
 
     template <typename TImpl>
-    constexpr fn _DynArrImplHelper<TImpl>::Release() -> void
+    constexpr auto _DynArrImplHelper<TImpl>::Release() -> void
     {
     }
 
     template <typename TImpl>
-    constexpr fn _DynArrImplHelper<TImpl>::_ValidateIter(
+    constexpr auto _DynArrImplHelper<TImpl>::_ValidateIter(
         TIter it) const -> bool
     {
         // TODO: Implement this.
@@ -276,41 +276,41 @@ namespace Atom
     }
 
     template <typename TImpl>
-    constexpr fn _DynArrImplHelper<TImpl>::_UpdateIterDebugId() -> void
+    constexpr auto _DynArrImplHelper<TImpl>::_UpdateIterDebugId() -> void
     {
         // _iterValidDebugId++;
     }
 
     template <typename TImpl>
-    constexpr fn _DynArrImplHelper<TImpl>::_ValidateIndex(
+    constexpr auto _DynArrImplHelper<TImpl>::_ValidateIndex(
         isize index) const -> bool
     {
         return index >= 0 && (usize)index <= _Count() - 1;
     }
 
     template <typename TImpl>
-    constexpr fn _DynArrImplHelper<TImpl>::_ValidateIndexForInsert(
+    constexpr auto _DynArrImplHelper<TImpl>::_ValidateIndexForInsert(
         isize index) const -> bool
     {
         return index >= 0 && index <= _Count();
     }
 
     template <typename TImpl>
-    constexpr fn _DynArrImplHelper<TImpl>::_FetchIndex(
+    constexpr auto _DynArrImplHelper<TImpl>::_FetchIndex(
         TIter pos) const -> isize
     {
         return &*pos - _Data();
     }
 
     template <typename TImpl>
-    constexpr fn _DynArrImplHelper<TImpl>::_CalcCapGrowth(
+    constexpr auto _DynArrImplHelper<TImpl>::_CalcCapGrowth(
         usize required) const -> usize
     {
         return Math::Max(_Count() + required, _Capacity() * 2);
     }
 
     template <typename TImpl>
-    constexpr fn _DynArrImplHelper<TImpl>::_EnsureCapFor(
+    constexpr auto _DynArrImplHelper<TImpl>::_EnsureCapFor(
         usize count) -> void
     {
         _UpdateIterDebugId();
@@ -329,28 +329,28 @@ namespace Atom
     }
 
     template <typename TImpl>
-    constexpr fn _DynArrImplHelper<TImpl>::_ConstructAt(
+    constexpr auto _DynArrImplHelper<TImpl>::_ConstructAt(
         usize index, auto&&... args) -> void
     {
         ObjHelper().Construct(_Data() + index, fwd(args)...);
     }
 
     template <typename TImpl>
-    constexpr fn _DynArrImplHelper<TImpl>::_DestructAt(
+    constexpr auto _DynArrImplHelper<TImpl>::_DestructAt(
         usize index) -> void
     {
         ObjHelper().Destruct(_Data() + index);
     }
 
     template <typename TImpl>
-    constexpr fn _DynArrImplHelper<TImpl>::_DestructRange(
+    constexpr auto _DynArrImplHelper<TImpl>::_DestructRange(
         usize index, usize count) -> void
     {
         RangeHelper().Destruct(Range(_Data() + index, count - index));
     }
 
     template <typename TImpl>
-    constexpr fn _DynArrImplHelper<TImpl>::_MoveRangeFront(
+    constexpr auto _DynArrImplHelper<TImpl>::_MoveRangeFront(
         usize index, usize count) -> void
     {
         RangeHelper().FwdMoveTo(
@@ -359,7 +359,7 @@ namespace Atom
     }
 
     template <typename TImpl>
-    constexpr fn _DynArrImplHelper<TImpl>::_MoveRangeBack(
+    constexpr auto _DynArrImplHelper<TImpl>::_MoveRangeBack(
         usize index, usize count) -> void
     {
         RangeHelper().BwdMoveTo
@@ -370,7 +370,7 @@ namespace Atom
     }
 
     template <typename TImpl>
-    constexpr fn _DynArrImplHelper<TImpl>::_MoveRangeTo(
+    constexpr auto _DynArrImplHelper<TImpl>::_MoveRangeTo(
         usize index, TElem* dest) -> void
     {
         RangeHelper().FwdMoveTo
@@ -381,7 +381,7 @@ namespace Atom
     }
 
     template <typename TImpl>
-    constexpr fn _DynArrImplHelper<TImpl>::_RotateRangeBack(
+    constexpr auto _DynArrImplHelper<TImpl>::_RotateRangeBack(
         usize index, usize count) -> void
     {
         RangeHelper().RotateBwd(
@@ -390,14 +390,14 @@ namespace Atom
 
     template <typename TImpl>
     template <typename TRange>
-    constexpr fn _DynArrImplHelper<TImpl>::_CanGetRangeSize() -> bool
+    constexpr auto _DynArrImplHelper<TImpl>::_CanGetRangeSize() -> bool
     {
         return RangeHelper().CanGetCount<TRange>();
     }
 
     template <typename TImpl>
     template <typename TRange>
-    constexpr fn _DynArrImplHelper<TImpl>::_GetRangeSize(
+    constexpr auto _DynArrImplHelper<TImpl>::_GetRangeSize(
         const TRange& range) -> usize
     {
         return RangeHelper().GetCount(range);

@@ -14,7 +14,7 @@ namespace Atom
             _typeInfo(typeInfo) { }
 
     public:
-        fn GetType() const -> const TypeInfo&
+        auto GetType() const -> const TypeInfo&
         {
             return _typeInfo;
         }
@@ -37,7 +37,7 @@ namespace Atom
         /// Calls Subscribe(fwd(listener));
         /// ----------------------------------------------------------------------------------------
         template <typename TInvokable>
-        fn operator+=(TInvokable&& listener) -> EventKey
+        auto operator+=(TInvokable&& listener) -> EventKey
             requires(RInvokable<TInvokable, _TSignature>)
         {
             return Subscribe(fwd(listener));
@@ -46,7 +46,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Calls Unsubscribe(key);
         /// ----------------------------------------------------------------------------------------
-        fn operator-=(EventKey key) -> bool
+        auto operator-=(EventKey key) -> bool
         {
             return Unsubscribe(key);
         }
@@ -55,7 +55,7 @@ namespace Atom
         /// Calls Subscribe(fwd(listener)) on {Source}.
         /// ----------------------------------------------------------------------------------------
         template <typename TInvokable>
-        fn Subscribe(TInvokable&& listener) -> EventKey
+        auto Subscribe(TInvokable&& listener) -> EventKey
             requires(RInvokable<TInvokable, _TSignature>)
         {
             return Subscribe(InvokableBox<_TSignature>(fwd(listener)));
@@ -64,12 +64,12 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        virtual fn Subscribe(InvokableBox<_TSignature>&& invokable) -> EventKey abstract;
+        virtual auto Subscribe(InvokableBox<_TSignature>&& invokable) -> EventKey abstract;
 
         /// ----------------------------------------------------------------------------------------
         /// Calls Unsubscribe(key) on {Source}.
         /// ----------------------------------------------------------------------------------------
-        virtual fn Unsubscribe(EventKey key) -> usize abstract;
+        virtual auto Unsubscribe(EventKey key) -> usize abstract;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -88,7 +88,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        virtual fn Subscribe(InvokableBox<_TSignature>&& invokable) -> EventKey ofinal
+        virtual auto Subscribe(InvokableBox<_TSignature>&& invokable) -> EventKey ofinal
         {
             return _AddListener(fwd(invokable));
         }
@@ -96,7 +96,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        virtual fn Unsubscribe(EventKey key) -> usize ofinal
+        virtual auto Unsubscribe(EventKey key) -> usize ofinal
         {
             return _RemoveListener(key);
         }
@@ -106,7 +106,7 @@ namespace Atom
         /// 
         /// @TODO Add detailed documentation on argument passing.
         /// ----------------------------------------------------------------------------------------
-        fn Dispatch(TArgs... args)
+        auto Dispatch(TArgs... args)
         {
             for (auto& listener : _listeners)
             {
@@ -118,7 +118,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        fn _AddListener(InvokableBox<_TSignature>&& invokable) -> EventKey
+        auto _AddListener(InvokableBox<_TSignature>&& invokable) -> EventKey
         {
             EventKey key = invokable.GetInvokableType();
 
@@ -129,7 +129,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        fn _RemoveListener(EventKey key) -> usize
+        auto _RemoveListener(EventKey key) -> usize
         {
             return RangeModifier().RemoveIf(_listeners, [&](const auto& listener)
                 {
@@ -140,7 +140,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        fn _CountListeners(EventKey key) -> usize
+        auto _CountListeners(EventKey key) -> usize
         {
             usize count = 0;
             for (auto& listener : _listeners)

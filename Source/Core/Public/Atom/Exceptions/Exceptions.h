@@ -38,20 +38,20 @@ namespace Atom::Ex::Internal
     inline Thrower::Thrower(ExceptionSource src, StackTrace stackTrace):
         _src{ mov(src) }, _stackTrace{ mov(stackTrace) } { }
 
-    inline fn Thrower::RecordStack(StackTrace stackTrace) -> Thrower&
+    inline auto Thrower::RecordStack(StackTrace stackTrace) -> Thrower&
     {
         self._stackTrace = mov(stackTrace);
         return self;
     }
 
-    inline fn Thrower::RecordSource(ExceptionSource src) -> Thrower&
+    inline auto Thrower::RecordSource(ExceptionSource src) -> Thrower&
     {
         self._src = mov(src);
         return self;
     }
 
     template <typename TEx>
-    inline fn Thrower::operator<<(TEx&& ex)
+    inline auto Thrower::operator<<(TEx&& ex)
         requires(RDerivedFrom<TEx, Exception>)
     {
         ex.src = mov(_src);

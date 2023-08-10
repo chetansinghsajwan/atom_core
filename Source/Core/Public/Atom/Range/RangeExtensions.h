@@ -9,7 +9,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
     requires RRange<TRange>
-    constexpr fn begin(const TRange& range) -> auto
+    constexpr auto begin(const TRange& range) -> auto
     {
         return range.iter();
     }
@@ -19,7 +19,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
     requires RMutRange<TRange>
-    constexpr fn begin(TRange& range) -> auto
+    constexpr auto begin(TRange& range) -> auto
     {
         return range.mutIter();
     }
@@ -29,7 +29,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
     requires RRange<TRange>
-    constexpr fn end(const TRange& range) -> auto
+    constexpr auto end(const TRange& range) -> auto
     {
         return range.iterEnd();
     }
@@ -39,7 +39,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
     requires RMutRange<TRange>
-    constexpr fn end(TRange& range) -> auto
+    constexpr auto end(TRange& range) -> auto
     {
         return range.mutIterEnd();
     }
@@ -49,7 +49,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <typename TRange1, typename TRange2>
     requires RRange<TRange1> && RRange<TRange2>
-    constexpr fn operator==(const TRange1& range1, const TRange2& range2) -> bool
+    constexpr auto operator==(const TRange1& range1, const TRange2& range2) -> bool
     {
         return RangeComparer().AreEqual(range1, range2);
     }
@@ -59,7 +59,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <typename TRange1, typename TRange2>
     requires RRange<TRange1> && RRange<TRange2>
-    constexpr fn operator!=(const TRange1& range1, const TRange2& range2) -> bool
+    constexpr auto operator!=(const TRange1& range1, const TRange2& range2) -> bool
     {
         return !RangeComparer().AreEqual(range1, range2);
     }

@@ -14,7 +14,7 @@ namespace Atom::Engine
         i32 y;
     };
 
-    inline fn operator-(const SWindowCoords& lhs, const SWindowCoords& rhs) -> SWindowCoords
+    inline auto operator-(const SWindowCoords& lhs, const SWindowCoords& rhs) -> SWindowCoords
     {
         return { lhs.x - rhs.x, lhs.y - rhs.y };
     }
@@ -76,15 +76,15 @@ namespace Atom::Engine
     public:
         virtual ~Window() = default;
 
-        virtual fn Update() -> void abstract;
+        virtual auto Update() -> void abstract;
 
-        virtual fn GetSize() const -> SWindowCoords abstract;
-        virtual fn SetSize(SWindowCoords size) -> void abstract;
+        virtual auto GetSize() const -> SWindowCoords abstract;
+        virtual auto SetSize(SWindowCoords size) -> void abstract;
 
-        virtual fn GetPos() const -> SWindowCoords abstract;
-        virtual fn SetPos(SWindowCoords pos) -> void abstract;
+        virtual auto GetPos() const -> SWindowCoords abstract;
+        virtual auto SetPos(SWindowCoords pos) -> void abstract;
 
-        virtual fn GetNative() const -> void* abstract;
+        virtual auto GetNative() const -> void* abstract;
 
     public:
         IEvent<const SWindowEvent&>& OnEvent;

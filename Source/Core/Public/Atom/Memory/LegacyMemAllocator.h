@@ -6,17 +6,17 @@ namespace Atom
     class LegacyMemAllocator
     {
     public:
-        fn Alloc(usize size) -> void*
+        auto Alloc(usize size) -> void*
         {
             return std::malloc(size);
         }
 
-        fn Realloc(void* mem, usize size) -> void*
+        auto Realloc(void* mem, usize size) -> void*
         {
             return std::realloc(mem, size);
         }
 
-        fn Dealloc(void* mem)
+        auto Dealloc(void* mem)
         {
             std::free(mem);
         }

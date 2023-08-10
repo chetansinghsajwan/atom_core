@@ -10,13 +10,13 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Get the name of the logger.
         /// ----------------------------------------------------------------------------------------
-        virtual fn Name() const -> StrView abstract;
+        virtual auto Name() const -> StrView abstract;
 
         /// ----------------------------------------------------------------------------------------
         /// Calls Log(ELogLevel::Trace, msg, fwd(args)...).
         /// ----------------------------------------------------------------------------------------
         template <RLogArg... TArgs>
-        fn LogTrace(LogStr<TArgs...> msg, TArgs&&... args)
+        auto LogTrace(LogStr<TArgs...> msg, TArgs&&... args)
         {
             Log(ELogLevel::Trace, msg, fwd(args)...);
         }
@@ -25,7 +25,7 @@ namespace Atom::Logging
         /// Calls Log(ELogLevel::Debug, msg, fwd(args)...).
         /// ----------------------------------------------------------------------------------------
         template <RLogArg... TArgs>
-        fn LogDebug(LogStr<TArgs...> msg, TArgs&&... args)
+        auto LogDebug(LogStr<TArgs...> msg, TArgs&&... args)
         {
             Log(ELogLevel::Debug, msg, fwd(args)...);
         }
@@ -34,7 +34,7 @@ namespace Atom::Logging
         /// Calls Log(ELogLevel::Info, msg, fwd(args)...).
         /// ----------------------------------------------------------------------------------------
         template <RLogArg... TArgs>
-        fn LogInfo(LogStr<TArgs...> msg, TArgs&&... args)
+        auto LogInfo(LogStr<TArgs...> msg, TArgs&&... args)
         {
             Log(ELogLevel::Info, msg, fwd(args)...);
         }
@@ -43,7 +43,7 @@ namespace Atom::Logging
         /// Calls Log(ELogLevel::Warn, msg, fwd(args)...).
         /// ----------------------------------------------------------------------------------------
         template <RLogArg... TArgs>
-        fn LogWarn(LogStr<TArgs...> msg, TArgs&&... args)
+        auto LogWarn(LogStr<TArgs...> msg, TArgs&&... args)
         {
             Log(ELogLevel::Warn, msg, fwd(args)...);
         }
@@ -52,7 +52,7 @@ namespace Atom::Logging
         /// Calls Log(ELogLevel::Error, msg, fwd(args)...).
         /// ----------------------------------------------------------------------------------------
         template <RLogArg... TArgs>
-        fn LogError(LogStr<TArgs...> msg, TArgs&&... args)
+        auto LogError(LogStr<TArgs...> msg, TArgs&&... args)
         {
             Log(ELogLevel::Error, msg, fwd(args)...);
         }
@@ -61,7 +61,7 @@ namespace Atom::Logging
         /// Calls Log(ELogLevel::Fatal, msg, fwd(args)...).
         /// ----------------------------------------------------------------------------------------
         template <RLogArg... TArgs>
-        fn LogFatal(LogStr<TArgs...> msg, TArgs&&... args)
+        auto LogFatal(LogStr<TArgs...> msg, TArgs&&... args)
         {
             Log(ELogLevel::Fatal, msg, fwd(args)...);
         }
@@ -75,7 +75,7 @@ namespace Atom::Logging
         /// @PARAM[IN] args... Arguments used with {msg} to construct the formatted message.
         /// ----------------------------------------------------------------------------------------
         template <RLogArg... TArgs>
-        fn Log(ELogLevel lvl, LogStr<TArgs...> msg, TArgs&&... args)
+        auto Log(ELogLevel lvl, LogStr<TArgs...> msg, TArgs&&... args)
         {
             if (CheckLogLevel(lvl))
             {
@@ -97,21 +97,21 @@ namespace Atom::Logging
         /// 
         /// Logs the LogMsg object.
         /// ----------------------------------------------------------------------------------------
-        virtual fn Log(LogMsg& logMsg) -> void abstract;
+        virtual auto Log(LogMsg& logMsg) -> void abstract;
 
         /// ----------------------------------------------------------------------------------------
         /// Pure virtual function.
         /// 
         /// Flushes the logs of this logger.
         /// ----------------------------------------------------------------------------------------
-        virtual fn Flush() -> void abstract;
+        virtual auto Flush() -> void abstract;
 
         /// ----------------------------------------------------------------------------------------
         /// Pure virtual function.
         /// 
         /// Check if the message should be passed for logging.
         /// ----------------------------------------------------------------------------------------
-        virtual fn CheckLogLevel(ELogLevel lvl) const -> bool abstract;
+        virtual auto CheckLogLevel(ELogLevel lvl) const -> bool abstract;
     };
 
     /// --------------------------------------------------------------------------------------------

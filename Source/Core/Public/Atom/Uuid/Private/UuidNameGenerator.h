@@ -14,7 +14,7 @@ namespace Atom::Private
             _nsUuid(nsUuid) { }
 
     public:
-        fn generate(StrView name) -> Uuid
+        auto generate(StrView name) -> Uuid
         {
             _reset();
             _processStr(name);
@@ -22,13 +22,13 @@ namespace Atom::Private
         }
 
     private:
-        fn _reset()
+        auto _reset()
         {
             _hashGenerator.Reset();
             _hashGenerator.ProcessBytes(_nsUuid.bytes.data(), 16);
         }
 
-        fn _processStr(StrView str)
+        auto _processStr(StrView str)
         {
             for (uint32_t c : str)
             {
@@ -44,7 +44,7 @@ namespace Atom::Private
             }
         }
 
-        fn _makeUuid() -> Uuid
+        auto _makeUuid() -> Uuid
         {
             THash hash = _hashGenerator.Generate();
 

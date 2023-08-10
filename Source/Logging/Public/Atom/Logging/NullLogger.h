@@ -42,7 +42,7 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Returns name of the NullLogger.
         /// ----------------------------------------------------------------------------------------
-        constexpr virtual fn Name() const -> StrView override
+        constexpr virtual auto Name() const -> StrView override
         {
             return s_name;
         }
@@ -50,17 +50,17 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Does nothing.
         /// ----------------------------------------------------------------------------------------
-        constexpr virtual fn Log(LogMsg& logMsg) -> void override { }
+        constexpr virtual auto Log(LogMsg& logMsg) -> void override { }
 
         /// ----------------------------------------------------------------------------------------
         /// Does nothing.
         /// ----------------------------------------------------------------------------------------
-        constexpr virtual fn Flush() -> void override { }
+        constexpr virtual auto Flush() -> void override { }
 
         /// ----------------------------------------------------------------------------------------
         /// Always returns false to avoid constructing log msg.
         /// ----------------------------------------------------------------------------------------
-        constexpr virtual fn CheckLogLevel(ELogLevel lvl) const -> bool override
+        constexpr virtual auto CheckLogLevel(ELogLevel lvl) const -> bool override
         {
             return false;
         }

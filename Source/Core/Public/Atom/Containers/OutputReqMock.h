@@ -8,12 +8,12 @@ namespace Atom
     {
     public:
         template <typename U>
-        fn operator+=(U&& el)
+        auto operator+=(U&& el)
             requires(RSameAsUnqualified<U, T>);
 
     public:
         template <typename TRange>
-        fn operator+=(const TRange& range)
+        auto operator+=(const TRange& range)
             requires(RRangeOf<TRange, T>);
     };
 }

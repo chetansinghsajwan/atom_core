@@ -45,7 +45,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        fn Name() const -> StrView ofinal
+        auto Name() const -> StrView ofinal
         {
             return _name;
         }
@@ -55,7 +55,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        fn Log(LogMsg& logMsg) -> void override
+        auto Log(LogMsg& logMsg) -> void override
         {
             targets.Write(logMsg);
         }
@@ -65,7 +65,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        fn Flush() -> void override
+        auto Flush() -> void override
         {
             targets.Flush();
         }
@@ -75,7 +75,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        fn SetLogLevel(ELogLevel lvl)
+        auto SetLogLevel(ELogLevel lvl)
         {
             _logLevel = lvl;
         }
@@ -85,7 +85,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        fn GetLogLevel(ELogLevel lvl) -> ELogLevel
+        auto GetLogLevel(ELogLevel lvl) -> ELogLevel
         {
             return _logLevel;
         }
@@ -95,7 +95,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        fn CheckLogLevel(ELogLevel lvl) const -> bool ofinal
+        auto CheckLogLevel(ELogLevel lvl) const -> bool ofinal
         {
             return lvl != ELogLevel::OFF && lvl >= _logLevel;
         }
@@ -105,7 +105,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        fn SetFlushLevel(ELogLevel lvl)
+        auto SetFlushLevel(ELogLevel lvl)
         {
             _flushLevel = lvl;
         }
@@ -115,7 +115,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        fn GetFlushLevel() const -> ELogLevel
+        auto GetFlushLevel() const -> ELogLevel
         {
             return _flushLevel;
         }
@@ -125,7 +125,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        fn CheckFlushLevel(ELogLevel lvl) const -> bool
+        auto CheckFlushLevel(ELogLevel lvl) const -> bool
         {
             return lvl != ELogLevel::OFF && lvl >= _flushLevel;
         }

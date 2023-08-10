@@ -9,14 +9,14 @@ namespace Atom::Private
     class T1HashStringifier
     {
     public:
-        constexpr fn ToStr(const T1Hash& hash) -> Str
+        constexpr auto ToStr(const T1Hash& hash) -> Str
         {
             Str str;
             WriteStr(hash, str);
             return str;
         };
 
-        constexpr fn WriteStr(const T1Hash& hash, ROutput<Char> auto&& out)
+        constexpr auto WriteStr(const T1Hash& hash, ROutput<Char> auto&& out)
         {
             for (byte b : hash.bytes)
             {
@@ -35,13 +35,13 @@ namespace Atom
     class StrConverter<T1Hash>
     {
     public:
-        constexpr fn Convert(const T1Hash& hash) -> Str
+        constexpr auto Convert(const T1Hash& hash) -> Str
         {
             return Private::T1HashStringifier<T1Hash>()
                 .ToStr(hash);
         }
 
-        constexpr fn Convert(const T1Hash& hash, ROutput<Char> auto&& out)
+        constexpr auto Convert(const T1Hash& hash, ROutput<Char> auto&& out)
         {
             return Private::T1HashStringifier<T1Hash>()
                 .WriteStr(hash, out);

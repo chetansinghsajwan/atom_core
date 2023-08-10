@@ -25,38 +25,38 @@ namespace Atom
             _data{ arr }, _count{ count } { }
 
     public:
-        constexpr fn _Data() const -> const T*
+        constexpr auto _Data() const -> const T*
         {
             return _data;
         }
 
-        constexpr fn _Count() const -> usize
+        constexpr auto _Count() const -> usize
         {
             return _count;
         }
 
     public:
-        constexpr fn getData() const -> const T*
+        constexpr auto getData() const -> const T*
         {
             return _data;
         }
 
-        constexpr fn getData() -> T*
+        constexpr auto getData() -> T*
         {
             return _data;
         }
 
-        constexpr fn setData(T* data)
+        constexpr auto setData(T* data)
         {
             _data = data;
         }
 
-        constexpr fn getCount() const -> usize
+        constexpr auto getCount() const -> usize
         {
             return _count;
         }
 
-        constexpr fn setCount(usize count)
+        constexpr auto setCount(usize count)
         {
             _count = count;
         }
@@ -104,7 +104,7 @@ namespace Atom
         /// # Range Operator
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
-        constexpr fn operator=(const TRange& range) -> ArrView&
+        constexpr auto operator=(const TRange& range) -> ArrView&
             requires(RArrRangeOf<TRange, T>)
         {
             self = ArrView{ range.data(), range.count() };
@@ -123,18 +123,18 @@ namespace Atom
         using TElem = T;
 
     public:
-        constexpr fn getData() const -> const T*
+        constexpr auto getData() const -> const T*
         {
             return _storage().getData();
         }
 
-        constexpr fn getCount() const -> usize
+        constexpr auto getCount() const -> usize
         {
             return _storage().getCount();
         }
 
     private:
-        constexpr fn _storage() const -> const _Storage&
+        constexpr auto _storage() const -> const _Storage&
         {
             return reinterpret_cast<const _Storage&>(self);
         }

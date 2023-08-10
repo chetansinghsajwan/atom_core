@@ -45,12 +45,12 @@ namespace Atom
             _range{ range } { }
 
     public:
-        constexpr fn iter() const -> TIter
+        constexpr auto iter() const -> TIter
         {
             return TIter{ _range.iter() };
         }
 
-        constexpr fn iterEnd() const -> TIterEnd
+        constexpr auto iterEnd() const -> TIterEnd
         {
             return TIterEnd{ _range.iterEnd() };
         }
@@ -78,12 +78,12 @@ namespace Atom
             Base{ range } { }
 
     public:
-        constexpr fn mutIter() -> TMutIter
+        constexpr auto mutIter() -> TMutIter
         {
             return TMutIter{ self._range.mutIter() };
         }
 
-        constexpr fn mutIterEnd() -> TMutIterEnd
+        constexpr auto mutIterEnd() -> TMutIterEnd
         {
             return TMutIterEnd{ self._range.mutIterEnd() };
         }

@@ -56,13 +56,13 @@ namespace Atom
 			_fmtCtx{ fmtCtx } { }
 
     public:
-		fn GetRange() -> StrView
+		auto GetRange() -> StrView
 		{
 			auto range = Range(_fmtCtx.begin(), _fmtCtx.end());
 			return StrView(range);
 		}
 
-		fn AdvanceTo(ArrIter<Char> it)
+		auto AdvanceTo(ArrIter<Char> it)
 		{
 			_fmtCtx.advance_to(&*it);
 		}
@@ -80,7 +80,7 @@ namespace Atom
 		constexpr StrFmtCtx(_FmtFmtCtx& fmtCtx):
 			_fmtCtx{ fmtCtx } { }
 
-		fn Write(Char ch)
+		auto Write(Char ch)
 		{
 			auto out = _fmtCtx.out();
 			*out++ = ch;
@@ -88,7 +88,7 @@ namespace Atom
 		}
 
 		template <typename TRange>
-		fn Write(const TRange& chars)
+		auto Write(const TRange& chars)
 			requires(RRangeOf<TRange, Char>)
 		{
 			auto out = _fmtCtx.out();
@@ -151,14 +151,14 @@ namespace Atom
 	class StrFmtArgFmterImpl<StrView>
 	{
     public:
-		fn Parse(StrFmtParseCtx& ctx)
+		auto Parse(StrFmtParseCtx& ctx)
 		{
 			_FmtFmtParseCtx& fmtCtx = ctx._fmtCtx;
 
 			fmtCtx.advance_to(_fmtFmter.parse(fmtCtx));
 		}
 
-		fn Fmt(StrView str, StrFmtCtx& ctx)
+		auto Fmt(StrView str, StrFmtCtx& ctx)
 		{
 			_FmtFmtCtx& fmtCtx = ctx._fmtCtx;
 
@@ -179,7 +179,7 @@ namespace Atom
 	class StrFmtArgFmterImpl<Char[N]> : public StrFmtArgFmter<StrView>
 	{
     public:
-		fn Fmt(const Char(&chars)[N], StrFmtCtx& ctx)
+		auto Fmt(const Char(&chars)[N], StrFmtCtx& ctx)
 		{
 			StrView str{ chars, N };
 			StrFmtArgFmter<StrView>::Fmt(str, ctx);
@@ -194,7 +194,7 @@ namespace Atom
 	class StrFmtArgFmterImpl<T> : public StrFmtArgFmter<StrView>
 	{
     public:
-		constexpr fn Fmt(const T& in, StrFmtCtx& ctx)
+		constexpr auto Fmt(const T& in, StrFmtCtx& ctx)
 		{
 			StrFmtArgFmter<StrView>::Fmt(
 				convter.Convert(in), ctx);
@@ -235,14 +235,14 @@ namespace fmt
 	class formatter <T, Atom::Char>
 	{
     public:
-		fn parse(Atom::_FmtFmtParseCtx& fmtCtx) -> Atom::_FmtFmtParseCtxIter
+		auto parse(Atom::_FmtFmtParseCtx& fmtCtx) -> Atom::_FmtFmtParseCtxIter
 		{
 			Atom::StrFmtParseCtx ctx(fmtCtx);
 			self.fmter.Parse(ctx);
 			return fmtCtx.begin();
 		}
 
-		fn format(const T& in, Atom::_FmtFmtCtx& fmtCtx) -> Atom::_FmtFmtCtxOut
+		auto format(const T& in, Atom::_FmtFmtCtx& fmtCtx) -> Atom::_FmtFmtCtxOut
 		{
 			Atom::StrFmtCtx ctx(fmtCtx);
 			self.fmter.Fmt(in, ctx);

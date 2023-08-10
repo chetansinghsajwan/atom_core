@@ -11,12 +11,12 @@ namespace Atom
     class _VariantStorage
     {
     public:
-        constexpr fn getData() -> void*
+        constexpr auto getData() -> void*
         {
             return &_storage.storage;
         }
 
-        constexpr fn getData() const -> const void*
+        constexpr auto getData() const -> const void*
         {
             return &_storage.storage;
         }
@@ -44,30 +44,30 @@ namespace Atom
     //// -------------------------------------------------------------------------------------------
 
     public:
-        static constexpr fn GetTypeCount() -> usize
+        static constexpr auto GetTypeCount() -> usize
         {
             return _Types::Count;
         }
 
         template <typename T>
-        static consteval fn HasType() -> bool
+        static consteval auto HasType() -> bool
         {
             return _Types::template Has<T>;
         }
 
         template <usize i>
-        static consteval fn HasIndex() -> bool
+        static consteval auto HasIndex() -> bool
         {
             return i < _Types::Count;
         }
 
         template <typename T>
-        static consteval fn GetIndexForType() -> usize
+        static consteval auto GetIndexForType() -> usize
         {
             return _Types::template IndexOf<T>;
         }
 
-        static consteval fn GetNullTypeIndex() -> usize
+        static consteval auto GetNullTypeIndex() -> usize
         {
             return -1;
         }
@@ -87,13 +87,13 @@ namespace Atom
         /// - Current value is null.
         /// ----------------------------------------------------------------------------------------
         template <typename... TOthers>
-        constexpr fn constructValueFromVariant(const _VariantImpl<TOthers...>& that)
+        constexpr auto constructValueFromVariant(const _VariantImpl<TOthers...>& that)
         {
             _constructValueFromVariantImpl<false, 0, TOthers...>(that, that.getTypeIndex());
         }
 
         template <typename... TOthers>
-        constexpr fn constructValueFromVariant(_VariantImpl<TOthers...>&& that)
+        constexpr auto constructValueFromVariant(_VariantImpl<TOthers...>&& that)
         {
             _constructValueFromVariantImpl<true, 0, TOthers...>(that, that.getTypeIndex());
         }
@@ -103,13 +103,13 @@ namespace Atom
         /// Assigns if `that` variant holds the same type else constructs.
         /// ----------------------------------------------------------------------------------------
         template <typename... TOthers>
-        constexpr fn setValueFromVariant(const _VariantImpl<TOthers...>& that)
+        constexpr auto setValueFromVariant(const _VariantImpl<TOthers...>& that)
         {
             _setValueFromVariantImpl<false, 0, TOthers...>(that, that.getTypeIndex());
         }
 
         template <typename... TOthers>
-        constexpr fn setValueFromVariant(_VariantImpl<TOthers...>&& that)
+        constexpr auto setValueFromVariant(_VariantImpl<TOthers...>&& that)
         {
             _setValueFromVariantImpl<true, 0, TOthers...>(that, that.getTypeIndex());
         }
@@ -121,7 +121,7 @@ namespace Atom
         /// - Current value is null.
         /// ----------------------------------------------------------------------------------------
         template <typename T, typename... TArgs>
-        constexpr fn constructValueByType(TArgs&&... args)
+        constexpr auto constructValueByType(TArgs&&... args)
         {
             _constructValueAs<T>(fwd(args)...);
             _index = GetIndexForType<T>();
@@ -134,7 +134,7 @@ namespace Atom
         /// - Current value is null.
         /// ----------------------------------------------------------------------------------------
         template <usize i, typename... TArgs>
-        constexpr fn constructValueByIndex(TArgs&&... args)
+        constexpr auto constructValueByIndex(TArgs&&... args)
         {
             constructValueByType<TypeAtIndex<i>>(fwd(args)...);
         }
@@ -146,7 +146,7 @@ namespace Atom
         /// - Current value is null.
         /// ----------------------------------------------------------------------------------------
         template <typename T, typename... TArgs>
-        constexpr fn emplaceValueByType(TArgs&&... args)
+        constexpr auto emplaceValueByType(TArgs&&... args)
         {
             destroyValue();
 
@@ -161,7 +161,7 @@ namespace Atom
         /// - Current value is null.
         /// ----------------------------------------------------------------------------------------
         template <usize i, typename... TArgs>
-        constexpr fn emplaceValueByIndex(TArgs&&... args)
+        constexpr auto emplaceValueByIndex(TArgs&&... args)
         {
             emplaceValueByType<TypeAtIndex<i>>(fwd(args)...);
         }
@@ -170,7 +170,7 @@ namespace Atom
         /// Constructs or assigns value of type deduced by `value` with `value`.
         /// ----------------------------------------------------------------------------------------
         template <typename TFwd>
-        constexpr fn setValue(TFwd&& value)
+        constexpr auto setValue(TFwd&& value)
         {
             using T = TTI::TRemoveQuailfiersRef<TFwd>;
             usize indexToSet = GetIndexForType<T>();
@@ -188,7 +188,7 @@ namespace Atom
         }
 
         template <typename T>
-        constexpr fn getValueByType() const -> const T&
+        constexpr auto getValueByType() const -> const T&
         {
             debug_expects(GetIndexForType<T>() == getTypeIndex(),
                 "Current type is not same as requested type.");
@@ -197,7 +197,7 @@ namespace Atom
         }
 
         template <typename T>
-        constexpr fn getValueByType() -> T&
+        constexpr auto getValueByType() -> T&
         {
             debug_expects(GetIndexForType<T>() == getTypeIndex(),
                 "Current type is not same as requested type.");
@@ -206,42 +206,42 @@ namespace Atom
         }
 
         template <usize i>
-        constexpr fn getValueByIndex() const -> const TypeAtIndex<i>&
+        constexpr auto getValueByIndex() const -> const TypeAtIndex<i>&
         {
             return getValueByType<TypeAtIndex<i>>();
         }
 
         template <usize i>
-        constexpr fn getValueByIndex() -> TypeAtIndex<i>&
+        constexpr auto getValueByIndex() -> TypeAtIndex<i>&
         {
             return getValueByType<TypeAtIndex<i>>();
         }
 
         template <typename T>
-        constexpr fn isType() const -> bool
+        constexpr auto isType() const -> bool
         {
             return GetIndexForType<T>() == getTypeIndex();
         }
 
         template <usize i>
-        constexpr fn isIndex() const -> bool
+        constexpr auto isIndex() const -> bool
         {
             return i == getTypeIndex();
         }
 
-        constexpr fn getTypeIndex() const -> usize
+        constexpr auto getTypeIndex() const -> usize
         {
             return _index;
         }
 
-        constexpr fn destroyValue()
+        constexpr auto destroyValue()
         {
             _destroyValueImpl<0, Ts...>(getTypeIndex());
         }
 
     private:
         template <bool move, usize index, typename TOther, typename... TOthers>
-        constexpr fn _constructValueFromVariantImpl(auto& that, usize thatIndex)
+        constexpr auto _constructValueFromVariantImpl(auto& that, usize thatIndex)
         {
             using ThatTypes = TypeList<TOthers...>;
 
@@ -271,7 +271,7 @@ namespace Atom
         }
 
         template <bool move, usize index, typename TOther, typename... TOthers>
-        constexpr fn _setValueFromVariantImpl(auto&& that, usize thatIndex)
+        constexpr auto _setValueFromVariantImpl(auto&& that, usize thatIndex)
         {
             using ThatTypes = TypeList<TOthers...>;
 
@@ -321,7 +321,7 @@ namespace Atom
         }
 
         template <usize index, typename T, typename... Ts_>
-        constexpr fn _destroyValueImpl(usize i)
+        constexpr auto _destroyValueImpl(usize i)
         {
             using Types = TypeList<Ts_...>;
 
@@ -343,43 +343,43 @@ namespace Atom
         }
 
         template <typename T>
-        constexpr fn _constructValueAs(auto&&... args)
+        constexpr auto _constructValueAs(auto&&... args)
         {
             ObjHelper().Construct(_getDataAs<T>(), fwd(args)...);
         }
 
         template <typename T>
-        constexpr fn _assignValueAs(auto&& val)
+        constexpr auto _assignValueAs(auto&& val)
         {
             ObjHelper().Assign(_getDataAs<T>(), fwd(val));
         }
 
         template <typename T>
-        constexpr fn _destructValueAs()
+        constexpr auto _destructValueAs()
         {
             ObjHelper().Destruct(_getDataAs<T>());
         }
 
         template <typename T>
-        constexpr fn _getValueAs() -> T&
+        constexpr auto _getValueAs() -> T&
         {
             return *_getDataAs<T>();
         }
 
         template <typename T>
-        constexpr fn _getValueAs() const -> const T&
+        constexpr auto _getValueAs() const -> const T&
         {
             return *_getDataAs<T>();
         }
 
         template <typename T>
-        constexpr fn _getDataAs() -> T*
+        constexpr auto _getDataAs() -> T*
         {
             return reinterpret_cast<T*>(_storage.getData());
         }
 
         template <typename T>
-        constexpr fn _getDataAs() const -> const T*
+        constexpr auto _getDataAs() const -> const T*
         {
             return reinterpret_cast<const T*>(_storage.getData());
         }

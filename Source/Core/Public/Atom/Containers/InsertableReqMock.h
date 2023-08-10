@@ -11,11 +11,11 @@ namespace Atom
     {
     public:
         template <typename U>
-        fn Insert(U&& el)
+        auto Insert(U&& el)
             requires(RSameAsUnqualified<U, T>);
 
         template <typename TRange>
-        fn Insert(const TRange& range)
+        auto Insert(const TRange& range)
             requires(RRangeOf<TRange, T>);
     };
 
@@ -27,11 +27,11 @@ namespace Atom
     {
     public:
         template <typename U>
-        fn InsertFront(U&& el)
+        auto InsertFront(U&& el)
             requires(RSameAsUnqualified<U, T>);
 
         template <typename TRange>
-        fn InsertFront(const TRange& range)
+        auto InsertFront(const TRange& range)
             requires(RRangeOf<TRange, T>);
     };
 
@@ -43,11 +43,11 @@ namespace Atom
     {
     public:
         template <typename U>
-        fn InsertBack(U&& el)
+        auto InsertBack(U&& el)
             requires(RSameAsUnqualified<U, T>);
 
         template <typename TRange>
-        fn InsertBack(const TRange& range)
+        auto InsertBack(const TRange& range)
             requires(RRangeOf<TRange, T>);
     };
 
@@ -59,11 +59,11 @@ namespace Atom
     {
     public:
         template <typename U>
-        fn Insert(TKey key, U&& el)
+        auto Insert(TKey key, U&& el)
             requires(RSameAsUnqualified<U, T>);
 
         template <typename TRange>
-        fn Insert(TKey key, const TRange& range)
+        auto Insert(TKey key, const TRange& range)
             requires(RRangeOf<TRange, T>);
     };
 

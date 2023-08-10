@@ -7,7 +7,7 @@ namespace Atom
     {
     public:
         template <typename TPtr>
-        constexpr fn Construct(TPtr&& mem, auto&&... args) const
+        constexpr auto Construct(TPtr&& mem, auto&&... args) const
         {
             ATOM_DEBUG_EXPECTS(mem != nullptr);
 
@@ -15,7 +15,7 @@ namespace Atom
         }
 
         template <typename TPtr>
-        constexpr fn Construct(TPtr* mem, auto&&... args) const
+        constexpr auto Construct(TPtr* mem, auto&&... args) const
         {
             ATOM_DEBUG_EXPECTS(mem != nullptr);
 
@@ -23,7 +23,7 @@ namespace Atom
         }
 
         template <typename TPtr>
-        constexpr fn Assign(TPtr* mem, auto&& arg) const
+        constexpr auto Assign(TPtr* mem, auto&& arg) const
         {
             ATOM_DEBUG_EXPECTS(mem != nullptr);
 
@@ -31,7 +31,7 @@ namespace Atom
         }
 
         template <typename T>
-        constexpr fn Swap(T& t1, T& t2) const
+        constexpr auto Swap(T& t1, T& t2) const
         {
             T tmp = mov(t1);
             t1 = mov(t2);
@@ -39,7 +39,7 @@ namespace Atom
         }
 
         template <typename TPtr>
-        constexpr fn Destruct(TPtr&& mem) const
+        constexpr auto Destruct(TPtr&& mem) const
         {
             ATOM_DEBUG_EXPECTS(mem != nullptr);
 
@@ -47,7 +47,7 @@ namespace Atom
         }
 
         template <typename TPtr>
-        constexpr fn Destruct(TPtr* mem) const
+        constexpr auto Destruct(TPtr* mem) const
         {
             ATOM_DEBUG_EXPECTS(mem != nullptr);
 

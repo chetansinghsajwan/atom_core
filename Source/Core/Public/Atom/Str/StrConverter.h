@@ -52,17 +52,17 @@ namespace Atom
     class StrConverter<Str>
     {
     public:
-        constexpr fn Convert(Str&& str) -> Str
+        constexpr auto Convert(Str&& str) -> Str
         {
             return mov(str);
         }
 
-        constexpr fn Convert(const Str& str) -> Str
+        constexpr auto Convert(const Str& str) -> Str
         {
             return Str{ str };
         }
 
-        constexpr fn Convert(const Str& str, ROutput<Char> auto out) -> void
+        constexpr auto Convert(const Str& str, ROutput<Char> auto out) -> void
         {
             out += str;
         }

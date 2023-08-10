@@ -60,7 +60,7 @@ namespace Atom::Logging::Private
         /// 
         /// @EXCEPTION_SAFETY STRONG
         /// ----------------------------------------------------------------------------------------
-        virtual fn Write(const LogMsg& logMsg) -> void ofinal
+        virtual auto Write(const LogMsg& logMsg) -> void ofinal
         {
             LockGuard guard(_lock);
             for (auto& target : _targets)
@@ -74,7 +74,7 @@ namespace Atom::Logging::Private
         /// 
         /// @EXCEPTION_SAFETY STRONG
         /// ----------------------------------------------------------------------------------------
-        virtual fn Flush() -> void ofinal
+        virtual auto Flush() -> void ofinal
         {
             LockGuard guard(_lock);
             for (auto& target : _targets)
@@ -101,7 +101,7 @@ namespace Atom::Logging::Private
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        fn AddTarget(LogTargetPtr target) -> bool
+        auto AddTarget(LogTargetPtr target) -> bool
         {
             if (target == nullptr) return false;
 
@@ -146,7 +146,7 @@ namespace Atom::Logging::Private
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        fn RemoveTarget(LogTargetPtr target) -> bool
+        auto RemoveTarget(LogTargetPtr target) -> bool
         {
             if (target == nullptr) return false;
 
@@ -169,7 +169,7 @@ namespace Atom::Logging::Private
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
         requires RRangeOf<TRange, LogTargetPtr>
-        fn RemoveTargets(const TRange& targets) -> usize
+        auto RemoveTargets(const TRange& targets) -> usize
         {
             if (!targets.iter() == targets.iterEnd())
                 return 0;
@@ -189,7 +189,7 @@ namespace Atom::Logging::Private
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        fn HasTarget(LogTargetPtr target) const -> bool
+        auto HasTarget(LogTargetPtr target) const -> bool
         {
             if (target == nullptr)
                 return false;
@@ -211,7 +211,7 @@ namespace Atom::Logging::Private
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
         requires RRangeOf<TRange, LogTargetPtr>
-        fn HasTargets(const TRange& targets) const -> usize
+        auto HasTargets(const TRange& targets) const -> usize
         {
             if (!targets.iter() == targets.iterEnd())
                 return 0;
@@ -227,7 +227,7 @@ namespace Atom::Logging::Private
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        fn Reserve(usize capacity)
+        auto Reserve(usize capacity)
         {
             LockGuard guard(_lock);
             _Reserve(capacity);
@@ -238,7 +238,7 @@ namespace Atom::Logging::Private
         /// 
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        fn count() const -> usize
+        auto count() const -> usize
         {
             LockGuard guard(_lock);
             return _targets.count();
@@ -256,7 +256,7 @@ namespace Atom::Logging::Private
         /// 
         /// @TODO Make ThreadSafe.
         /// ----------------------------------------------------------------------------------------
-        fn iter() const -> TIter
+        auto iter() const -> TIter
         {
             return _targets.iter();
         }
@@ -268,7 +268,7 @@ namespace Atom::Logging::Private
         /// 
         /// @TODO Make ThreadSafe.
         /// ----------------------------------------------------------------------------------------
-        fn iterEnd() const -> TIterEnd
+        auto iterEnd() const -> TIterEnd
         {
             return _targets.iterEnd();
         }
@@ -293,7 +293,7 @@ namespace Atom::Logging::Private
         /// 
         /// @THREAD_SAFETY NONE
         /// ----------------------------------------------------------------------------------------
-        fn _AddTarget(LogTargetPtr target) -> bool
+        auto _AddTarget(LogTargetPtr target) -> bool
         {
             ATOM_DEBUG_EXPECTS(target != nullptr);
 
@@ -315,7 +315,7 @@ namespace Atom::Logging::Private
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
         requires RRangeOf<TRange, LogTargetPtr>
-        fn _AddTargets(const TRange& targets) -> usize
+        auto _AddTargets(const TRange& targets) -> usize
         {
             usize count = 0;
             for (LogTargetPtr target : targets)
@@ -341,7 +341,7 @@ namespace Atom::Logging::Private
         /// 
         /// @TIME_COMPLEXITY @COPY_FROM ${_TContainer}::Remove(LogTarget& target)
         /// ----------------------------------------------------------------------------------------
-        fn _RemoveTarget(LogTargetPtr target) -> bool
+        auto _RemoveTarget(LogTargetPtr target) -> bool
         {
             ATOM_DEBUG_EXPECTS(target != nullptr);
 
@@ -371,7 +371,7 @@ namespace Atom::Logging::Private
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
         requires RRangeOf<TRange, LogTargetPtr>
-        fn _RemoveTargets(const TRange& targets) -> usize
+        auto _RemoveTargets(const TRange& targets) -> usize
         {
             usize count = 0;
             for (auto target : targets)
@@ -404,7 +404,7 @@ namespace Atom::Logging::Private
         /// 
         /// @TIME_COMPLEXITY Linear
         /// ----------------------------------------------------------------------------------------
-        fn _HasTarget(const LogTargetPtr& target) const -> bool
+        auto _HasTarget(const LogTargetPtr& target) const -> bool
         {
             ATOM_DEBUG_EXPECTS(target != nullptr);
 
@@ -425,7 +425,7 @@ namespace Atom::Logging::Private
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
         requires RRangeOf<TRange, LogTargetPtr>
-        fn _HasTargets(const TRange& targets) -> usize
+        auto _HasTargets(const TRange& targets) -> usize
         {
             return RangeFinder().Contains(_targets, targets);
         }
@@ -435,7 +435,7 @@ namespace Atom::Logging::Private
         /// 
         /// @EXCEPTION_SAFETY @COPY_FROM ${_TContainer}::Reserve(usize capacity).
         /// ----------------------------------------------------------------------------------------
-        fn _Reserve(usize capacity)
+        auto _Reserve(usize capacity)
         {
             _targets.Reserve(capacity);
         }

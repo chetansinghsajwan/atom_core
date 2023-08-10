@@ -24,7 +24,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr fn iter() const -> TIter
+        constexpr auto iter() const -> TIter
         {
             return _Impl::iter();
         }
@@ -32,7 +32,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr fn iterEnd() const -> TIterEnd
+        constexpr auto iterEnd() const -> TIterEnd
         {
             return _Impl::iterEnd();
         }
@@ -42,7 +42,7 @@ namespace Atom
         /// 
         /// ----------------------------------------------------------------------------------------
         template <typename TElem1>
-        constexpr fn findElem(const TElem1& el) -> TIter
+        constexpr auto findElem(const TElem1& el) -> TIter
         {
             StdIterWrapForAtomIter stdIter{ iter() };
             StdIterWrapForAtomIter stdIterEnd{ iterEnd() };
@@ -53,7 +53,7 @@ namespace Atom
         /// 
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
-        constexpr fn findRange(const TRange& range) -> TIter
+        constexpr auto findRange(const TRange& range) -> TIter
         {
             StdIterWrapForAtomIter stdIter1{ iter() };
             StdIterWrapForAtomIter stdIterEnd1{ iterEnd() };
@@ -67,7 +67,7 @@ namespace Atom
         /// 
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
-        fn compare(const TRange& range) -> i8
+        auto compare(const TRange& range) -> i8
         {
             StdIterWrapForAtomIter stdIter1{ iter() };
             StdIterWrapForAtomIter stdIterEnd1{ iterEnd() };
@@ -81,7 +81,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr fn getCount() const -> usize
+        constexpr auto getCount() const -> usize
         {
             if constexpr (RJumpIterPair<TIter, TIterEnd>)
             {
@@ -115,7 +115,7 @@ namespace Atom
         /// --------------------------------------------------------------------------------------------
         /// 
         /// --------------------------------------------------------------------------------------------
-        constexpr fn iter() const -> TIter
+        constexpr auto iter() const -> TIter
         {
             return _Impl::iter();
         }
@@ -123,7 +123,7 @@ namespace Atom
         /// --------------------------------------------------------------------------------------------
         /// 
         /// --------------------------------------------------------------------------------------------
-        constexpr fn iterEnd() const -> TIterEnd
+        constexpr auto iterEnd() const -> TIterEnd
         {
             return _Impl::iterEnd();
         }
@@ -131,7 +131,7 @@ namespace Atom
         /// --------------------------------------------------------------------------------------------
         /// 
         /// --------------------------------------------------------------------------------------------
-        constexpr fn begin() const -> TIter
+        constexpr auto begin() const -> TIter
         {
             return _Impl::iter();
         }
@@ -139,7 +139,7 @@ namespace Atom
         /// --------------------------------------------------------------------------------------------
         /// 
         /// --------------------------------------------------------------------------------------------
-        constexpr fn end() const -> TIterEnd
+        constexpr auto end() const -> TIterEnd
         {
             return _Impl::iterEnd();
         }
@@ -153,7 +153,7 @@ namespace Atom
         /// 
         /// ----------------------------------------------------------------------------------------
         template <typename TElem1>
-        constexpr fn find(const TElem1& el) -> TIter 
+        constexpr auto find(const TElem1& el) -> TIter 
             requires(REqualityComparableWith<TElem, TElem1>)
         {
             return _Impl::findElem(el);
@@ -163,7 +163,7 @@ namespace Atom
         /// 
         /// ----------------------------------------------------------------------------------------
         template <typename TRange1>
-        constexpr fn findRange(const TRange1& range) -> TIter
+        constexpr auto findRange(const TRange1& range) -> TIter
             requires(RFwdRange<TRange1>)
                 and (REqualityComparableWith<TElem, typename TRange1::TElem>)
         {
@@ -174,7 +174,7 @@ namespace Atom
         /// 
         /// ----------------------------------------------------------------------------------------
         template <typename TElem1>
-        constexpr fn contains(const TElem1& el) -> bool
+        constexpr auto contains(const TElem1& el) -> bool
             requires(REqualityComparableWith<TElem, TElem1>)
         {
             return _Impl::findElem(el) != _Impl::iterEnd();
@@ -184,7 +184,7 @@ namespace Atom
         /// 
         /// ----------------------------------------------------------------------------------------
         template <typename TRange1>
-        constexpr fn contains(const TRange1& range) -> bool
+        constexpr auto contains(const TRange1& range) -> bool
             requires(RFwdRange<TRange1>)
                 and (REqualityComparableWith<TElem, typename TRange1::TElem>)
         {
@@ -200,7 +200,7 @@ namespace Atom
         /// 
         /// ----------------------------------------------------------------------------------------
         template <typename TRange1>
-        constexpr fn compare(const TRange1& range) -> i8
+        constexpr auto compare(const TRange1& range) -> i8
             requires(RRange<TRange1>)
                 and (REqualityComparableWith<TElem, typename TRange1::TElem>)
         {
@@ -211,7 +211,7 @@ namespace Atom
         /// 
         /// ----------------------------------------------------------------------------------------
         template <typename TRange1>
-        constexpr fn equals(const TRange1& range) -> bool
+        constexpr auto equals(const TRange1& range) -> bool
             requires(RRange<TRange1>)
                 and (REqualityComparableWith<TElem, typename TRange1::TElem>)
         {
@@ -222,7 +222,7 @@ namespace Atom
         /// 
         /// ----------------------------------------------------------------------------------------
         template <typename TRange1>
-        constexpr fn operator==(const TRange1& range) -> bool
+        constexpr auto operator==(const TRange1& range) -> bool
             requires(RRange<TRange1>)
                 and (REqualityComparableWith<TElem, typename TRange1::TElem>)
         {
@@ -233,7 +233,7 @@ namespace Atom
         /// 
         /// ----------------------------------------------------------------------------------------
         template <typename TRange1>
-        constexpr fn operator!=(const TRange1& range) -> bool
+        constexpr auto operator!=(const TRange1& range) -> bool
             requires(RRange<TRange1>)
                 and (REqualityComparableWith<TElem, typename TRange1::TElem>)
         {
@@ -251,7 +251,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr fn canGetCount() const -> bool
+        constexpr auto canGetCount() const -> bool
         {
             return RFwdIterPair<TIter, TIterEnd>;
         }
@@ -259,7 +259,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr fn getCount() const -> usize
+        constexpr auto getCount() const -> usize
         {
             return _Impl::getCount();
         }

@@ -155,13 +155,13 @@ namespace Atom::Ex::Internal
             StackTrace stackTrace = StackTrace::current());
 
     public:
-        fn RecordStack(StackTrace stackTrace = StackTrace::current()) -> Thrower&;
+        auto RecordStack(StackTrace stackTrace = StackTrace::current()) -> Thrower&;
 
-        fn RecordSource(ExceptionSource src = ExceptionSource::Current()) -> Thrower&;
+        auto RecordSource(ExceptionSource src = ExceptionSource::Current()) -> Thrower&;
 
         template <typename TEx>
         [[noreturn]]
-        fn operator<<(TEx&& ex)
+        auto operator<<(TEx&& ex)
             requires(RDerivedFrom<TEx, Exception>);
 
     protected:

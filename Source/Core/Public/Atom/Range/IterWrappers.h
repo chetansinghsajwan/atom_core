@@ -22,12 +22,12 @@ namespace Atom
         using Base::operator*;
         using Base::operator->;
 
-        constexpr fn operator*() -> TElem&
+        constexpr auto operator*() -> TElem&
         {
             return &self->iter;
         }
 
-        constexpr fn operator->() -> TElem*
+        constexpr auto operator->() -> TElem*
         {
             return &self->iter;
         }
@@ -59,24 +59,24 @@ namespace Atom
             iter{ fwd(args)... } { }
 
     public:
-        constexpr fn operator*() const -> const TElem&
+        constexpr auto operator*() const -> const TElem&
         {
             return self->iter;
         }
 
-        constexpr fn operator->() const -> const TElem*
+        constexpr auto operator->() const -> const TElem*
         {
             return &self->iter;
         }
 
-        constexpr fn operator++(i32) -> IterWrap&
+        constexpr auto operator++(i32) -> IterWrap&
         {
             self.iter++;
             return self;
         }
 
         template <typename TIterEnd>
-        constexpr fn operator==(const IterWrap<TIterEnd>& end) const -> bool
+        constexpr auto operator==(const IterWrap<TIterEnd>& end) const -> bool
         {
             return self.iter == end.iter;
         }
@@ -158,7 +158,7 @@ namespace Atom
         constexpr BidiIterWrap(TIter iter):
             Base{ iter } { }
 
-        constexpr fn operator--(i32) -> BidiIterWrap&
+        constexpr auto operator--(i32) -> BidiIterWrap&
         {
             self.iter--;
             return self;
@@ -196,30 +196,30 @@ namespace Atom
         constexpr JumpIterWrap(TIter iter):
             Base{ iter } { }
 
-        constexpr fn operator+(isize steps) const -> JumpIterWrap
+        constexpr auto operator+(isize steps) const -> JumpIterWrap
         {
             return JumpIterWrap{ self.iter + steps };
         }
 
-        constexpr fn operator-(isize steps) const -> JumpIterWrap
+        constexpr auto operator-(isize steps) const -> JumpIterWrap
         {
             return JumpIterWrap{ self.iter - steps };
         }
 
-        constexpr fn operator+=(isize steps) -> JumpIterWrap&
+        constexpr auto operator+=(isize steps) -> JumpIterWrap&
         {
             self.iter += steps;
             return self;
         }
 
-        constexpr fn operator-=(isize steps) -> JumpIterWrap&
+        constexpr auto operator-=(isize steps) -> JumpIterWrap&
         {
             self.iter -= steps;
             return self;
         }
 
         template <typename TIter2>
-        constexpr fn operator-(const TIter2& iter2) const -> isize
+        constexpr auto operator-(const TIter2& iter2) const -> isize
         {
             return self.iter - iter2;
         }
@@ -240,18 +240,18 @@ namespace Atom
         constexpr MutJumpIterWrap(TIter iter):
             Base{ iter } { }
 
-        constexpr fn operator+(isize steps) const -> MutJumpIterWrap
+        constexpr auto operator+(isize steps) const -> MutJumpIterWrap
         {
             return MutJumpIterWrap{ self.iter + steps };
         }
 
-        constexpr fn operator-(isize steps) const -> MutJumpIterWrap
+        constexpr auto operator-(isize steps) const -> MutJumpIterWrap
         {
             return MutJumpIterWrap{ self.iter - steps };
         }
 
         template <typename TIter2>
-        constexpr fn operator-(const TIter2& iter2) const -> isize
+        constexpr auto operator-(const TIter2& iter2) const -> isize
         {
             return self.iter - iter2;
         }

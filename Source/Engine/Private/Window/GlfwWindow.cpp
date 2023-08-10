@@ -65,13 +65,13 @@ namespace Atom::Engine
         glfwDestroyWindow(_glfwWindow);
     }
 
-    fn GlfwWindow::Update() -> void
+    auto GlfwWindow::Update() -> void
     {
         glfwPollEvents();
         glfwSwapBuffers(_glfwWindow);
     }
 
-    fn GlfwWindow::SetPos(SWindowCoords pos) -> void
+    auto GlfwWindow::SetPos(SWindowCoords pos) -> void
     {
         GlfwSWindowCoords glfwPos = GlfwWindowCoordsConverter::ToGLFW(pos);
 
@@ -79,12 +79,12 @@ namespace Atom::Engine
         _windowPos = GlfwWindowCoordsConverter::FromGLFW(glfwPos);
     }
 
-    fn GlfwWindow::GetPos() const -> SWindowCoords
+    auto GlfwWindow::GetPos() const -> SWindowCoords
     {
         return _windowPos;
     }
 
-    fn GlfwWindow::UpdatePos() -> SWindowCoords
+    auto GlfwWindow::UpdatePos() -> SWindowCoords
     {
         GlfwSWindowCoords glfwPos;
         glfwGetWindowPos(_glfwWindow, &glfwPos.x, &glfwPos.y);
@@ -92,7 +92,7 @@ namespace Atom::Engine
         return GlfwWindowCoordsConverter::FromGLFW(glfwPos);
     }
 
-    fn GlfwWindow::SetSize(SWindowCoords size) -> void
+    auto GlfwWindow::SetSize(SWindowCoords size) -> void
     {
         GlfwSWindowCoords glfwSize = GlfwWindowCoordsConverter::ToGLFW(size);
 
@@ -100,12 +100,12 @@ namespace Atom::Engine
         _windowSize = GlfwWindowCoordsConverter::FromGLFW(glfwSize);
     }
 
-    fn GlfwWindow::GetSize() const -> SWindowCoords
+    auto GlfwWindow::GetSize() const -> SWindowCoords
     {
         return _windowSize;
     }
 
-    fn GlfwWindow::UpdateSize() -> SWindowCoords
+    auto GlfwWindow::UpdateSize() -> SWindowCoords
     {
         GlfwSWindowCoords glfwSize;
         glfwGetWindowSize(_glfwWindow, &glfwSize.x, &glfwSize.y);
@@ -114,18 +114,18 @@ namespace Atom::Engine
         return _windowSize;
     }
 
-    fn GlfwWindow::SetVSync(bool enable) -> void
+    auto GlfwWindow::SetVSync(bool enable) -> void
     {
         glfwSwapInterval(enable ? 1 : 0);
         _windowVSync = enable;
     }
 
-    fn GlfwWindow::GetVSync() const -> bool
+    auto GlfwWindow::GetVSync() const -> bool
     {
         return _windowVSync;
     }
 
-    fn GlfwWindow::GetNative() const -> void*
+    auto GlfwWindow::GetNative() const -> void*
     {
         return _glfwWindow;
     }

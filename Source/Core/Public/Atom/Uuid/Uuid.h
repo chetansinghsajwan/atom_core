@@ -34,8 +34,8 @@ namespace Atom
         static const Uuid Null;
 
     public:
-        constexpr fn operator==(const Uuid& other) const -> bool = default;
-        constexpr fn operator!=(const Uuid& other) const -> bool = default;
+        constexpr auto operator==(const Uuid& other) const -> bool = default;
+        constexpr auto operator!=(const Uuid& other) const -> bool = default;
 
     public:
         StaticArr<byte, 16> bytes;

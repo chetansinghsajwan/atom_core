@@ -14,17 +14,17 @@ namespace Atom
         static constexpr bool IsMultiCharEncoding = true;
 
     public:
-        static constexpr fn IsContinuationChar(TChar ch) -> bool
+        static constexpr auto IsContinuationChar(TChar ch) -> bool
         {
             return (ch & 0b11000000) == 0b10000000;
         }
 
-        static constexpr fn ParseStartingChar(TChar ch) -> usize
+        static constexpr auto ParseStartingChar(TChar ch) -> usize
         {
             return 0;
         }
 
-        static constexpr fn IsStartingChar(TChar ch) -> bool
+        static constexpr auto IsStartingChar(TChar ch) -> bool
         {
             return ParseStartingChar(ch) != 0;
         }

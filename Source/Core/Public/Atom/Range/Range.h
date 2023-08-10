@@ -30,43 +30,43 @@ namespace Atom
             _iter{ iter }, _end{ end } { }
 
     public:
-        constexpr fn iter() const -> TIter
+        constexpr auto iter() const -> TIter
             requires(RIterPair<TIter, TIterEnd>)
         {
             return TIter{ _iter };
         }
 
-        constexpr fn iterEnd() const -> TIterEnd
+        constexpr auto iterEnd() const -> TIterEnd
             requires(RIterPair<TIter, TIterEnd>)
         {
             return TIterEnd{ _end };
         }
 
-        constexpr fn mutIter() -> TMutIter
+        constexpr auto mutIter() -> TMutIter
             requires(RMutIterPair<TMutIter, TMutIterEnd>)
         {
             return _iter;
         }
 
-        constexpr fn mutIterEnd() -> TMutIterEnd
+        constexpr auto mutIterEnd() -> TMutIterEnd
             requires(RMutIterPair<TMutIter, TMutIterEnd>)
         {
             return _end;
         }
 
-        constexpr fn count() const -> usize
+        constexpr auto count() const -> usize
             requires(RJumpIterPair<TIter, TIterEnd>)
         {
             return _end - _iter;
         }
 
-        constexpr fn data() const -> const TElem*
+        constexpr auto data() const -> const TElem*
             requires(RArrIterPair<TIter, TIterEnd>)
         {
             return &*_iter;
         }
 
-        constexpr fn data() -> TElem*
+        constexpr auto data() -> TElem*
             requires(RMutArrIterPair<TIter, TIterEnd>)
         {
             return &*_iter;

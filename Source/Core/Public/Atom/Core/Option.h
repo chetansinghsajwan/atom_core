@@ -66,7 +66,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Trivial Copy Operator
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator=(const Option& that) -> Option&
+        constexpr auto operator=(const Option& that) -> Option&
             requires(RTriviallyCopyAssignable<T>)
             = default;
 
@@ -80,7 +80,7 @@ namespace Atom
         ///     - If `this` contains value, destroys `this` value.
         ///     - Else, does nothing.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator=(const Option& that) -> Option&
+        constexpr auto operator=(const Option& that) -> Option&
             requires(RCopyConstructible<T>)
                 and (RCopyAssignable<T>)
                 and (not RTriviallyCopyConstructible<T>)
@@ -113,7 +113,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Trivial Move Operator
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator=(Option&& that) -> Option&
+        constexpr auto operator=(Option&& that) -> Option&
             requires(RTriviallyMoveAssignable<T>)
             = default;
 
@@ -127,7 +127,7 @@ namespace Atom
         ///     - If `this` contains value, destroys `this` value.
         ///     - Else, does nothing.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator=(Option&& that) -> Option&
+        constexpr auto operator=(Option&& that) -> Option&
             requires(RMoveConstructible<T>)
                 and (RMoveAssignable<T>)
                 and (not RTriviallyMoveConstructible<T>)
@@ -150,7 +150,7 @@ namespace Atom
         /// 
         /// If `this` contains value, destroys it.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator=(NullOption) -> Option&
+        constexpr auto operator=(NullOption) -> Option&
         {
             _impl.destroyValueWithChecks();
             return self;
@@ -176,7 +176,7 @@ namespace Atom
         /// # Parameters
         /// - `val`: Value to assign or construct with.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator=(const T& val) -> Option&
+        constexpr auto operator=(const T& val) -> Option&
         {
             _impl.assignValue(val);
             return self;
@@ -202,7 +202,7 @@ namespace Atom
         /// # Parameters
         /// - `val`: Value to assign or construct with.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator=(T&& val) -> Option&
+        constexpr auto operator=(T&& val) -> Option&
         {
             _impl.assignValue(mov(val));
             return self;
@@ -236,7 +236,7 @@ namespace Atom
         /// - `args`: Arguments to construct the new value with.
         /// ----------------------------------------------------------------------------------------
         template <typename... TArgs>
-        constexpr fn emplace(TArgs&&... args)
+        constexpr auto emplace(TArgs&&... args)
             requires(RConstructible<T, TArgs...>)
         {
             _impl.emplaceValue(fwd(args)...);
@@ -245,7 +245,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Access the value by ref.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn value() & -> T&
+        constexpr auto value() & -> T&
         {
             expects(isValue(), "Doesn't contain value.");
 
@@ -255,7 +255,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Access the value by ref.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn value() const& -> const T&
+        constexpr auto value() const& -> const T&
         {
             expects(isValue(), "Doesn't contain value.");
 
@@ -265,7 +265,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Access the value by ref.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn value() && -> T&&
+        constexpr auto value() && -> T&&
         {
             expects(isValue(), "Doesn't contain value.");
 
@@ -275,7 +275,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Access the value by ref.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator*() & -> T&
+        constexpr auto operator*() & -> T&
         {
             debug_expects(isValue(), "Doesn't contain value.");
             
@@ -285,7 +285,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Access the value by ref.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator*() const& -> const T&
+        constexpr auto operator*() const& -> const T&
         {
             debug_expects(isValue(), "Doesn't contain value.");
             
@@ -295,7 +295,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Access the value by ref.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator*() && -> T&&
+        constexpr auto operator*() && -> T&&
         {
             debug_expects(isValue(), "Doesn't contain value.");
             
@@ -305,7 +305,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Access the value by ptr.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator->() -> T*
+        constexpr auto operator->() -> T*
         {
             debug_expects(isValue(), "Doesn't contain value.");
             
@@ -315,7 +315,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Access the value by ptr.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator->() const -> const T*
+        constexpr auto operator->() const -> const T*
         {
             debug_expects(isValue(), "Doesn't contain value.");
             
@@ -335,7 +335,7 @@ namespace Atom
         /// Const reference to `this` value or other value returned by invokable `other`.
         /// ----------------------------------------------------------------------------------------
         template <typename TInvokable>
-        constexpr fn valueOrInvoke(TInvokable&& other) const -> const T&
+        constexpr auto valueOrInvoke(TInvokable&& other) const -> const T&
             requires RInvokable<TInvokable, const T&()>
         {
             if (not _impl.isValue())
@@ -358,7 +358,7 @@ namespace Atom
         /// # Returns
         /// Const reference to `this` value or `other`.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn valueOr(const T& other) const -> const T&
+        constexpr auto valueOr(const T& other) const -> const T&
         {
             return valueOrInvoke([&other]()
                 {
@@ -372,7 +372,7 @@ namespace Atom
         /// - If `this` contains value, get `this` value.
         /// - Else, get default constructed value.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn valueOrDefault() const -> const T&
+        constexpr auto valueOrDefault() const -> const T&
             requires(RDefaultConstructible<T>)
         {
             return valueOrInvoke([&]()
@@ -384,7 +384,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Is `this` contains value or not.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn isValue() const -> bool
+        constexpr auto isValue() const -> bool
         {
             return _impl.isValue();
         }
@@ -392,7 +392,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Destroys value if stored.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn reset()
+        constexpr auto reset()
         {
             return _impl.destroyValueWithCheck();
         }
@@ -407,7 +407,7 @@ namespace Atom
         ///     - If `this` contains value, move constructs `that` value with `this` value.
         ///     - Else, does nothing.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn swap(Option& that)
+        constexpr auto swap(Option& that)
         {
             return _impl.swapValueFromOption(that._impl);
         }
@@ -447,7 +447,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Trivial Copy Operator
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator=(const Option& that) -> Option& = default;
+        constexpr auto operator=(const Option& that) -> Option& = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # Trivial Move Constructor
@@ -457,7 +457,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Trivial Move Operator
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator=(Option&& that) -> Option& = default;
+        constexpr auto operator=(Option&& that) -> Option& = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # Null Constructor
@@ -472,7 +472,7 @@ namespace Atom
         /// 
         /// Switches to null state.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator=(NullOption) -> Option&
+        constexpr auto operator=(NullOption) -> Option&
         {
             _impl.destroyValueWithChecks();
             return self;
@@ -497,7 +497,7 @@ namespace Atom
         /// # Parameters
         /// - `ref`: Ref to assign.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator=(T& ref) -> Option&
+        constexpr auto operator=(T& ref) -> Option&
         {
             _impl.assignValue(&ref);
             return self;
@@ -515,7 +515,7 @@ namespace Atom
         /// # Parameters
         /// - `ref`: Ref to assign.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn emplace(T& ref)
+        constexpr auto emplace(T& ref)
         {
             _impl.emplaceValue(ref);
         }
@@ -523,7 +523,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Access the ref.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn value() & -> T&
+        constexpr auto value() & -> T&
         {
             expects(isValue(), "Doesn't contain value.");
 
@@ -533,7 +533,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Access the ref.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn value() const& -> const T&
+        constexpr auto value() const& -> const T&
         {
             expects(isValue(), "Doesn't contain value.");
 
@@ -543,7 +543,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Access the ref.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn value() && -> T&&
+        constexpr auto value() && -> T&&
         {
             expects(isValue(), "Doesn't contain value.");
 
@@ -553,7 +553,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Access the ref.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator*() & -> T&
+        constexpr auto operator*() & -> T&
         {
             debug_expects(isValue(), "Doesn't contain value.");
 
@@ -563,7 +563,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Access the ref.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator*() const& -> const T&
+        constexpr auto operator*() const& -> const T&
         {
             debug_expects(isValue(), "Doesn't contain value.");
 
@@ -573,7 +573,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Access the ref.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator*() && -> T&&
+        constexpr auto operator*() && -> T&&
         {
             debug_expects(isValue(), "Doesn't contain value.");
 
@@ -583,7 +583,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Access the ptr.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator->() -> T*
+        constexpr auto operator->() -> T*
         {
             debug_expects(isValue(), "Doesn't contain value.");
 
@@ -593,7 +593,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Access the ptr.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn operator->() const -> const T*
+        constexpr auto operator->() const -> const T*
         {
             debug_expects(isValue(), "Doesn't contain value.");
 
@@ -604,7 +604,7 @@ namespace Atom
         /// # To Do: Update this.
         /// ----------------------------------------------------------------------------------------
         template <typename TInvokable>
-        constexpr fn valueOrInvoke(TInvokable&& other) const -> const T&
+        constexpr auto valueOrInvoke(TInvokable&& other) const -> const T&
             requires RInvokable<TInvokable, const T&()>
         {
             if (not _impl.isValue())
@@ -618,7 +618,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # To Do: Update this.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn valueOr(const T& other) const -> const T&
+        constexpr auto valueOr(const T& other) const -> const T&
         {
             return valueOrInvoke([&other]()
                 {
@@ -629,7 +629,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # To Do: Update this.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn valueOrDefault() const -> const T&
+        constexpr auto valueOrDefault() const -> const T&
             requires(RDefaultConstructible<T>)
         {
             return valueOrInvoke([&]()
@@ -641,7 +641,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Is `this` contains ref or not.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn isValue() const -> bool
+        constexpr auto isValue() const -> bool
         {
             return _impl.isValue();
         }
@@ -649,7 +649,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Switches to null state.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn reset()
+        constexpr auto reset()
         {
             return _impl.destroyValueWithCheck();
         }
@@ -657,7 +657,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Swap refs and state with `that`.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn swap(Option& that)
+        constexpr auto swap(Option& that)
         {
             return _impl.swapValueFromOption(that._impl);
         }
@@ -676,7 +676,7 @@ namespace Atom
     /// Returns `true` if `opt` is null.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    constexpr fn operator==(const Option<T>& opt, NullOption) -> bool
+    constexpr auto operator==(const Option<T>& opt, NullOption) -> bool
     {
         return not opt.isValue();
     }
@@ -687,7 +687,7 @@ namespace Atom
     /// Performs negation of [Equality Comparision Operator].
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    constexpr fn operator!=(const Option<T>& opt, NullOption) -> bool
+    constexpr auto operator!=(const Option<T>& opt, NullOption) -> bool
     {
         return not (opt == nullopt);
     }
@@ -704,7 +704,7 @@ namespace Atom
     /// - If `opt0` and `opt1` are not null, returns `*opt0 == *opt1`.
     /// --------------------------------------------------------------------------------------------
     template <typename T0, typename T1>
-    constexpr fn operator==(const Option<T0>& opt0, const Option<T1>& opt1) -> bool
+    constexpr auto operator==(const Option<T0>& opt0, const Option<T1>& opt1) -> bool
         requires(REqualityComparableWith<T0, T1>)
     {
         if (opt0.isValue() != opt1.isValue())
@@ -724,7 +724,7 @@ namespace Atom
     /// Performs negation of [Equality Comparision Operator].
     /// --------------------------------------------------------------------------------------------
     template <typename T0, typename T1>
-    constexpr fn operator!=(const Option<T0>& opt0, const Option<T1>& opt1) -> bool
+    constexpr auto operator!=(const Option<T0>& opt0, const Option<T1>& opt1) -> bool
         requires(REqualityComparableWith<T0, T1>)
     {
         return not (opt0 == opt1);
@@ -737,7 +737,7 @@ namespace Atom
     /// - Else, returns `*opt0 < *opt1`.
     /// --------------------------------------------------------------------------------------------
     template <typename T0, typename T1>
-    constexpr fn operator<(const Option<T0>& opt0, const Option<T1>& opt1) -> bool
+    constexpr auto operator<(const Option<T0>& opt0, const Option<T1>& opt1) -> bool
         requires(RComparableWith<T0, T1>)
     {
         if (opt0 == nullopt or opt1 == nullopt)
@@ -753,7 +753,7 @@ namespace Atom
     /// - Else, returns `*opt0 > *opt1`.
     /// --------------------------------------------------------------------------------------------
     template <typename T0, typename T1>
-    constexpr fn operator>(const Option<T0>& opt0, const Option<T1>& opt1) -> bool
+    constexpr auto operator>(const Option<T0>& opt0, const Option<T1>& opt1) -> bool
         requires(RComparableWith<T0, T1>)
     {
         if (opt0 == nullopt or opt1 == nullopt)
@@ -769,7 +769,7 @@ namespace Atom
     /// - Else, returns `*opt0 <= *opt1`.
     /// --------------------------------------------------------------------------------------------
     template <typename T0, typename T1>
-    constexpr fn operator<=(const Option<T0>& opt0, const Option<T1>& opt1) -> bool
+    constexpr auto operator<=(const Option<T0>& opt0, const Option<T1>& opt1) -> bool
         requires(RComparableWith<T0, T1>)
     {
         if (opt0 == nullopt or opt1 == nullopt)
@@ -785,7 +785,7 @@ namespace Atom
     /// - Else, returns `*opt0 >= *opt1`.
     /// --------------------------------------------------------------------------------------------
     template <typename T0, typename T1>
-    constexpr fn operator>=(const Option<T0>& opt0, const Option<T1>& opt1) -> bool
+    constexpr auto operator>=(const Option<T0>& opt0, const Option<T1>& opt1) -> bool
         requires(RComparableWith<T0, T1>)
     {
         if (opt0 == nullopt or opt1 == nullopt)

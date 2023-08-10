@@ -15,7 +15,7 @@ namespace Atom
         template <typename TRange1, typename TRange2>
         requires RFwdRange<TRange1>
             and RFwdRange<TRange2>
-        constexpr fn Find(const TRange1& range1, const TRange2& range2) -> typename TRange1::TIter 
+        constexpr auto Find(const TRange1& range1, const TRange2& range2) -> typename TRange1::TIter 
         {
             StdIterWrapForAtomIter stdIter1{ range1.iter() };
             StdIterWrapForAtomIter stdIterEnd1{ range1.iterEnd() };
@@ -29,7 +29,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
         requires RFwdRange<TRange>
-        constexpr fn Find(const TRange& range, const typename TRange::TElem& el) -> typename TRange::TIter 
+        constexpr auto Find(const TRange& range, const typename TRange::TElem& el) -> typename TRange::TIter 
         {
             StdIterWrapForAtomIter stdIter{ range.iter() };
             StdIterWrapForAtomIter stdIterEnd{ range.iterEnd() };
@@ -41,7 +41,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
         requires RFwdRange<TRange>
-        constexpr fn Contains(const TRange& range, const typename TRange::TElem& el) -> bool
+        constexpr auto Contains(const TRange& range, const typename TRange::TElem& el) -> bool
         {
             return Find(range, el) != range.iterEnd();
         }
@@ -52,7 +52,7 @@ namespace Atom
         template <typename TRange1, typename TRange2>
         requires RFwdRange<TRange1>
             and RFwdRange<TRange2>
-        constexpr fn Contains(const TRange1& range1, const TRange2& range2) -> bool
+        constexpr auto Contains(const TRange1& range1, const TRange2& range2) -> bool
         {
             return Find(range1, range2) != range1.iterEnd();
         }
