@@ -104,7 +104,7 @@ namespace Atom
         /// # Range Operator
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
-        constexpr fn op=(const TRange& range) -> ArrView&
+        constexpr fn operator=(const TRange& range) -> ArrView&
             requires(RArrRangeOf<TRange, T>)
         {
             self = ArrView{ range.data(), range.count() };

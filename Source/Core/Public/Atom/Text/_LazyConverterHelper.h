@@ -86,7 +86,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// Get the current char.
         /// ----------------------------------------------------------------------------------------
-        pub constexpr fn op*() -> TOutChar&
+        pub constexpr fn operator*() -> TOutChar&
         {
             return _out[_outIndex];
         }
@@ -94,7 +94,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// Advances the iter.
         /// ----------------------------------------------------------------------------------------
-        pub constexpr fn op++() -> TSelf&
+        pub constexpr fn operator++() -> TSelf&
         {
             if (_outIndex == -1)
             {
@@ -108,7 +108,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// Will be removed in CPP2;
         /// ----------------------------------------------------------------------------------------
-        pub constexpr fn op++(i32) -> TSelf&
+        pub constexpr fn operator++(i32) -> TSelf&
         {
             return ++self;
         }
@@ -116,7 +116,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// Checks if the iter has reached its end.
         /// ----------------------------------------------------------------------------------------
-        pub constexpr fn op==(TIterEnd end) const -> bool
+        pub constexpr fn operator==(TIterEnd end) const -> bool
         {
             return _outIndex > 0 || _input.HasNext();
         }
@@ -124,7 +124,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// Will be removed in CPP2;
         /// ----------------------------------------------------------------------------------------
-        pub constexpr fn op!=(TIterEnd end) const -> bool
+        pub constexpr fn operator!=(TIterEnd end) const -> bool
         {
             return !(self == end);
         }

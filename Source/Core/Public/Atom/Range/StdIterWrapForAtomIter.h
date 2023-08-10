@@ -59,35 +59,35 @@ namespace Atom
     public:
         template <class = void>
         requires RIter<TIter>
-        constexpr fn op*() const -> const value_type&
+        constexpr fn operator*() const -> const value_type&
         {
             return *iter;
         }
 
         template <class = void>
         requires RMutIter<TIter>
-        constexpr fn op*() -> value_type&
+        constexpr fn operator*() -> value_type&
         {
             return *iter;
         }
 
         template <class TIterEnd>
         requires RIterEnd<TIter, TIterEnd>
-        constexpr fn op== (const StdIterWrapForAtomIter<TIterEnd>& that) const -> bool
+        constexpr fn operator== (const StdIterWrapForAtomIter<TIterEnd>& that) const -> bool
         {
             return iter == that.iter;
         }
 
         template <class TIterEnd>
         requires RIterEnd<TIter, TIterEnd>
-        constexpr fn op!= (const StdIterWrapForAtomIter<TIterEnd>& that) const -> bool
+        constexpr fn operator!= (const StdIterWrapForAtomIter<TIterEnd>& that) const -> bool
         {
             return iter != that.iter;
         }
 
         template <class = void>
         requires RIter<TIter>
-        constexpr fn op++() -> Self&
+        constexpr fn operator++() -> Self&
         {
             ++iter;
             return self;
@@ -95,14 +95,14 @@ namespace Atom
 
         template <class = void>
         requires RIter<TIter>
-        constexpr fn op++(i32) -> Self
+        constexpr fn operator++(i32) -> Self
         {
             return Self{ iter++ };
         }
 
         template <class = void>
         requires RBidiIter<TIter>
-        constexpr fn op--() -> Self&
+        constexpr fn operator--() -> Self&
         {
             --iter;
             return self;
@@ -110,28 +110,28 @@ namespace Atom
 
         template <class = void>
         requires RBidiIter<TIter>
-        constexpr fn op--(i32) const -> Self
+        constexpr fn operator--(i32) const -> Self
         {
             return Self{ iter-- };
         }
 
         template <class = void>
         requires RJumpIter<TIter>
-        constexpr fn op+(difference_type steps) -> Self
+        constexpr fn operator+(difference_type steps) -> Self
         {
             return Self{ iter + steps };
         }
 
         template <class = void>
         requires RJumpIter<TIter>
-        constexpr fn op-(difference_type steps) -> Self
+        constexpr fn operator-(difference_type steps) -> Self
         {
             return Self{ iter - steps };
         }
 
         template <class = void>
         requires RJumpIter<TIter>
-        constexpr fn op-(const Self& that) -> difference_type
+        constexpr fn operator-(const Self& that) -> difference_type
         {
             return iter - that.iter;
         }

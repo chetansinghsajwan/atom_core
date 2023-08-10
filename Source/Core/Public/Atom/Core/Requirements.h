@@ -13,14 +13,14 @@ namespace Atom
     template <typename TCheck, typename T, typename... Ts>
     class _CheckAllImpl
     {
-        pub static constexpr bool Value = TCheck().template op()<T>() && 
+        pub static constexpr bool Value = TCheck().template operator()<T>() && 
             _CheckAllImpl<TCheck, Ts...>::Value;
     };
 
     template <typename TCheck, typename T>
     class _CheckAllImpl<TCheck, T>
     {
-        pub static constexpr bool Value = TCheck().template op()<T>();
+        pub static constexpr bool Value = TCheck().template operator()<T>();
     };
 
     template <typename TCheck, typename T, typename... Ts>

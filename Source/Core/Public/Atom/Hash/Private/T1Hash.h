@@ -13,8 +13,8 @@ namespace Atom::Private
 
         pub static const T1Hash Null;
 
-        pub constexpr fn op==(const T1Hash& other) const -> bool = default;
-        pub constexpr fn op!=(const T1Hash& other) const -> bool = default;
+        pub constexpr fn operator==(const T1Hash& other) const -> bool = default;
+        pub constexpr fn operator!=(const T1Hash& other) const -> bool = default;
 
         pub StaticArr<byte, Size> bytes;
     };

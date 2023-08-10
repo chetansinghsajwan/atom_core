@@ -32,12 +32,12 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// CopyOperator is default.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn op=(const NullLockable& other) -> NullLockable& { return self; }
+        constexpr fn operator=(const NullLockable& other) -> NullLockable& { return self; }
 
         /// ----------------------------------------------------------------------------------------
         /// MoveOperator is default.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn op=(NullLockable&& other) -> NullLockable& { return self; }
+        constexpr fn operator=(NullLockable&& other) -> NullLockable& { return self; }
 
         /// ----------------------------------------------------------------------------------------
         /// Destructor. Does nothing.

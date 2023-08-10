@@ -49,7 +49,7 @@ namespace Atom
         /// 
         /// @TIME_COMPLEXITY Constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn op[](usize index) const -> const TElem&;
+        constexpr fn operator[](usize index) const -> const TElem&;
 
         /// ----------------------------------------------------------------------------------------
         /// Access first element.

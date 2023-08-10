@@ -222,7 +222,7 @@ namespace Atom
         /// 
         /// ----------------------------------------------------------------------------------------
         template <typename TRange1>
-        constexpr fn op==(const TRange1& range) -> bool
+        constexpr fn operator==(const TRange1& range) -> bool
             requires(RRange<TRange1>)
                 and (REqualityComparableWith<TElem, typename TRange1::TElem>)
         {
@@ -233,7 +233,7 @@ namespace Atom
         /// 
         /// ----------------------------------------------------------------------------------------
         template <typename TRange1>
-        constexpr fn op!=(const TRange1& range) -> bool
+        constexpr fn operator!=(const TRange1& range) -> bool
             requires(RRange<TRange1>)
                 and (REqualityComparableWith<TElem, typename TRange1::TElem>)
         {

@@ -122,12 +122,12 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Trivial Copy Assignment Operator
         /// ----------------------------------------------------------------------------------------
-        constexpr fn op=(const Variant& that) -> Variant& = default;
+        constexpr fn operator=(const Variant& that) -> Variant& = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # Copy Assignment Operator
         /// ----------------------------------------------------------------------------------------
-        constexpr fn op=(const Variant& that) -> Variant&
+        constexpr fn operator=(const Variant& that) -> Variant&
             requires(RCopyConstructibleAll<Ts...>)
                 and (RCopyAssignableAll<Ts...>)
                 and (not RTriviallyCopyConstructibleAll<Ts...>)
@@ -141,7 +141,7 @@ namespace Atom
         /// # Copy Assignment Operator Template
         /// ----------------------------------------------------------------------------------------
         template <typename... TOthers>
-        constexpr fn op=(const Variant<TOthers...>& that) -> Variant&
+        constexpr fn operator=(const Variant<TOthers...>& that) -> Variant&
             requires(Types::template Has<TOthers...>)
                 and (RCopyConstructibleAll<TOthers...>)
                 and (RCopyAssignableAll<TOthers...>)
@@ -179,12 +179,12 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Trivial Move Assignment Operator
         /// ----------------------------------------------------------------------------------------
-        constexpr fn op=(Variant&& that) -> Variant& = default;
+        constexpr fn operator=(Variant&& that) -> Variant& = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # Move Assignment Operator
         /// ----------------------------------------------------------------------------------------
-        constexpr fn op=(Variant&& that) -> Variant&
+        constexpr fn operator=(Variant&& that) -> Variant&
             requires(RMoveConstructibleAll<Ts...>)
                 and (RMoveAssignableAll<Ts...>)
                 and (not RTriviallyMoveConstructibleAll<Ts...>)
@@ -198,7 +198,7 @@ namespace Atom
         /// # Move Assignment Operator Template
         /// ----------------------------------------------------------------------------------------
         template <typename... TOthers>
-        constexpr fn op=(Variant<TOthers...>&& that) -> Variant&
+        constexpr fn operator=(Variant<TOthers...>&& that) -> Variant&
             requires(Types::template Has<TOthers...>)
                 and (RMoveConstructibleAll<Ts...>)
                 and (RMoveAssignableAll<Ts...>)
@@ -246,7 +246,7 @@ namespace Atom
         /// - `value`: Value to assign.
         /// ----------------------------------------------------------------------------------------
         template <typename T>
-        constexpr fn op=(const T& value) -> Variant&
+        constexpr fn operator=(const T& value) -> Variant&
             requires(Has<T>())
         {
             _impl.setValue(value);
@@ -262,7 +262,7 @@ namespace Atom
         /// - `value`: Value to assign.
         /// ----------------------------------------------------------------------------------------
         template <typename T>
-        constexpr fn op=(T&& value) -> Variant&
+        constexpr fn operator=(T&& value) -> Variant&
             requires(Has<T>())
         {
             _impl.setValue(mov(value));

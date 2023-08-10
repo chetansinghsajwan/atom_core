@@ -46,7 +46,7 @@ namespace Atom::Test
             that.lastOp = EOperation::CopyConstructorAsThat;
         }
 
-        constexpr fn op=(const TrackedType& that) -> TrackedType&
+        constexpr fn operator=(const TrackedType& that) -> TrackedType&
         {
             lastOp = EOperation::CopyOperator;
             that.lastOp = EOperation::CopyOperatorAsThat;
@@ -59,7 +59,7 @@ namespace Atom::Test
             that.lastOp = EOperation::MoveConstructorAsThat;
         }
 
-        constexpr fn op=(TrackedType&& that) -> TrackedType&
+        constexpr fn operator=(TrackedType&& that) -> TrackedType&
         {
             lastOp = EOperation::MoveOperator;
             that.lastOp = EOperation::MoveOperatorAsThat;
@@ -72,40 +72,40 @@ namespace Atom::Test
         }
 
     public:
-        constexpr fn op==(const TrackedType& that) const -> bool
+        constexpr fn operator==(const TrackedType& that) const -> bool
         {
             lastOp = EOperation::EqualOperator;
             that.lastOp = EOperation::EqualOperator;
             return true;
         }
 
-        constexpr fn op!=(const TrackedType& that) const -> bool
+        constexpr fn operator!=(const TrackedType& that) const -> bool
         {
             return not (self == that);
         }
 
-        constexpr fn op<(const TrackedType& that) const -> bool
+        constexpr fn operator<(const TrackedType& that) const -> bool
         {
             lastOp = EOperation::LessThanOperator;
             that.lastOp = EOperation::LessThanOperator;
             return true;
         }
 
-        constexpr fn op>(const TrackedType& that) const -> bool
+        constexpr fn operator>(const TrackedType& that) const -> bool
         {
             lastOp = EOperation::GreaterThanOperator;
             that.lastOp = EOperation::GreaterThanOperator;
             return true;
         }
 
-        constexpr fn op<=(const TrackedType& that) const -> bool
+        constexpr fn operator<=(const TrackedType& that) const -> bool
         {
             lastOp = EOperation::LessThanOrEqualOperator;
             that.lastOp = EOperation::LessThanOrEqualOperator;
             return true;
         }
 
-        constexpr fn op>=(const TrackedType& that) const -> bool
+        constexpr fn operator>=(const TrackedType& that) const -> bool
         {
             lastOp = EOperation::GreaterThanOrEqualOperator;
             that.lastOp = EOperation::GreaterThanOrEqualOperator;
@@ -126,7 +126,7 @@ namespace Atom::Test
 
     public:
         using Base::Base;
-        using Base::op=;
+        using Base::operator=;
 
     public:
         T value;

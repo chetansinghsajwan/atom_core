@@ -33,7 +33,6 @@ namespace Atom
 #define pub public:
 #define prot protected:
 #define priv private:
-#define op operator
 #define self (*this)
 
 // #define sassert(...) static_assert(__VA_ARGS__)

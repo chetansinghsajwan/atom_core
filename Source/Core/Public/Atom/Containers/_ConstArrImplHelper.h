@@ -14,7 +14,7 @@ namespace Atom
     }
 
     template <typename TImpl>
-    constexpr fn _ConstArrImplHelper<TImpl>::op[](usize index) const -> const TElem&
+    constexpr fn _ConstArrImplHelper<TImpl>::operator[](usize index) const -> const TElem&
     {
         ATOM_DEBUG_EXPECTS(_ValidateIndexForAccess(index)) <<
             IndexOutOfRangeException(index, 0, _Count() - 1);

@@ -87,18 +87,18 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// NullAssignmentOperator.
         /// ----------------------------------------------------------------------------------------
-        pub fn op=(NullType null) -> InvokableBox&
+        pub fn operator=(NullType null) -> InvokableBox&
         {
-            ObjectBox::op=(null);
+            ObjectBox::operator=(null);
             return self;
         }
 
         /// ----------------------------------------------------------------------------------------
         /// NullEqualityOperator.
         /// ----------------------------------------------------------------------------------------
-        pub fn op==(NullType null) const -> bool
+        pub fn operator==(NullType null) const -> bool
         {
-            return ObjectBox::op==(null);
+            return ObjectBox::operator==(null);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -117,9 +117,9 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         pub template <RInvokable<TResult(TArgs...)> TInvokable>
         requires RNotDerivedFrom<TInvokable, Private::InvokableBoxIdentifier>
-        fn op=(TInvokable&& invokable) -> InvokableBox&
+        fn operator=(TInvokable&& invokable) -> InvokableBox&
         {
-            ObjectBox::op=(fwd(invokable));
+            ObjectBox::operator=(fwd(invokable));
             _SetInvoker<TInvokable>();
             return self;
         }
@@ -133,9 +133,9 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pub fn op=(const InvokableBox& other) -> InvokableBox&
+        pub fn operator=(const InvokableBox& other) -> InvokableBox&
         {
-            ObjectBox::op=(other);
+            ObjectBox::operator=(other);
             return self;
         }
 
@@ -148,9 +148,9 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pub fn op=(InvokableBox&& other) -> InvokableBox&
+        pub fn operator=(InvokableBox&& other) -> InvokableBox&
         {
-            ObjectBox::op=(mov(other));
+            ObjectBox::operator=(mov(other));
             return self;
         }
 
@@ -173,7 +173,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pub fn op()(TArgs&&... args) -> TResult
+        pub fn operator()(TArgs&&... args) -> TResult
         {
             return Invoke(fwd(args)...);
         }

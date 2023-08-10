@@ -97,14 +97,14 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <typename T2, typename = TTI::TEnableIf<
             RSameAsUnqualified<T2, TElem>>>
-        constexpr fn op+=(T2&& el) -> TMutIter;
+        constexpr fn operator+=(T2&& el) -> TMutIter;
 
         /// ----------------------------------------------------------------------------------------
         /// Calls {InsertBack(...)}.
         /// ----------------------------------------------------------------------------------------
         template <typename TRange, typename = TTI::TEnableIf<
             RRangeOf<TRange, TElem>>>
-        constexpr fn op+=(const TRange& range) -> TMutIter;
+        constexpr fn operator+=(const TRange& range) -> TMutIter;
 
     private:
         // TODO: Refactor this. Should we use T2 here to denote other typename?

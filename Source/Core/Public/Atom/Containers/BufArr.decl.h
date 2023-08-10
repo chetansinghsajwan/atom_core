@@ -69,7 +69,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// NullOper.
         /// ----------------------------------------------------------------------------------------
-        pub constexpr fn op=(NullPtr) -> BufArr&
+        pub constexpr fn operator=(NullPtr) -> BufArr&
         {
             Clear();
             Release();
@@ -91,7 +91,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         pub template <typename TRange>
         requires RRangeOf<TRange, T>
-        constexpr fn op=(TRange&& range) -> BufArr&
+        constexpr fn operator=(TRange&& range) -> BufArr&
         {
             Clear();
             InsertBack(range);
@@ -114,7 +114,7 @@ namespace Atom
         /// 
         /// @TODO: Same as CopyCtor.
         /// ----------------------------------------------------------------------------------------
-        pub constexpr fn op=(const BufArr& that) -> BufArr&
+        pub constexpr fn operator=(const BufArr& that) -> BufArr&
         {
             Clear();
             InsertBack(that);
@@ -152,7 +152,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// MoveOper.
         /// ----------------------------------------------------------------------------------------
-        pub constexpr fn op=(BufArr&& that) -> BufArr&
+        pub constexpr fn operator=(BufArr&& that) -> BufArr&
         {
             Clear();
             _Move(mov(that));
@@ -162,7 +162,7 @@ namespace Atom
         /// TempMoveOper.
         /// ----------------------------------------------------------------------------------------
         pub template <usize thatBufSize>
-        constexpr fn op=(BufArr<TElem, thatBufSize, TAlloc>&& that) -> BufArr&
+        constexpr fn operator=(BufArr<TElem, thatBufSize, TAlloc>&& that) -> BufArr&
         {
             Clear();
             _Move(mov(that));
@@ -171,7 +171,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// MoveOper for DynArr.
         /// ----------------------------------------------------------------------------------------
-        pub constexpr fn op=(DynArr<TElem, TAlloc>&& that) -> BufArr&
+        pub constexpr fn operator=(DynArr<TElem, TAlloc>&& that) -> BufArr&
         {
             Clear();
             Release();

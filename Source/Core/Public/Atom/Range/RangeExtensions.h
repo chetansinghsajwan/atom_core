@@ -49,7 +49,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <typename TRange1, typename TRange2>
     requires RRange<TRange1> && RRange<TRange2>
-    constexpr fn op==(const TRange1& range1, const TRange2& range2) -> bool
+    constexpr fn operator==(const TRange1& range1, const TRange2& range2) -> bool
     {
         return RangeComparer().AreEqual(range1, range2);
     }
@@ -59,7 +59,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <typename TRange1, typename TRange2>
     requires RRange<TRange1> && RRange<TRange2>
-    constexpr fn op!=(const TRange1& range1, const TRange2& range2) -> bool
+    constexpr fn operator!=(const TRange1& range1, const TRange2& range2) -> bool
     {
         return !RangeComparer().AreEqual(range1, range2);
     }

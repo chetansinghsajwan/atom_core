@@ -25,7 +25,7 @@ namespace Atom
 
     public:
         using TContainer::TContainer;
-        using TContainer::op=;
+        using TContainer::operator=;
 
         /// ----------------------------------------------------------------------------------------
         /// 

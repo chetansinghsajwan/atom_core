@@ -94,7 +94,7 @@ namespace Atom
         /// # Time Complexity
         /// Constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr fn op[](usize i) const -> const TElem&
+        constexpr fn operator[](usize i) const -> const TElem&
         {
             debug_expects(isIndexInRange(i), "Index is out of range.");
 

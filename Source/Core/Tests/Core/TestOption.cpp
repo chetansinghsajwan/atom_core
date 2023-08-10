@@ -137,7 +137,7 @@ TEST_CASE("Atom.Core.Option")
         REQUIRE(*lastOp == TrackedType::EOperation::Destructor);
     }
 
-    SECTION("Access Value using value(), op*(), op->()")
+    SECTION("Access Value using value(), operator*(), operator->()")
     {
         class Overloads
         {

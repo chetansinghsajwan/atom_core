@@ -22,11 +22,11 @@ namespace Atom
 
         _OptionStorage(const _OptionStorage&) = default;
 
-        _OptionStorage& op=(const _OptionStorage&) = default;
+        _OptionStorage& operator=(const _OptionStorage&) = default;
 
         _OptionStorage(_OptionStorage&&) = default;
 
-        _OptionStorage& op=(_OptionStorage&&) = default;
+        _OptionStorage& operator=(_OptionStorage&&) = default;
 
         ~_OptionStorage()
             requires(RTriviallyDestructible<T>)

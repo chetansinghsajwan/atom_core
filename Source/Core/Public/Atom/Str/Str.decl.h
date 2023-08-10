@@ -12,7 +12,7 @@ namespace std
     template < >
     class hash<Atom::Str>
     {
-        pub fn op()(const Atom::Str& str) const -> size_t
+        pub fn operator()(const Atom::Str& str) const -> size_t
         {
             using TChar = Atom::BasicChar<Atom::CharEncoding>;
             using StdStirngView = basic_string_view<TChar>;

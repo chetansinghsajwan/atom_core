@@ -8,10 +8,10 @@ namespace Atom
     {
         pub template <typename U>
         requires RSameAsUnqualified<U, T>
-        fn op+=(U&& el);
+        fn operator+=(U&& el);
 
         pub template <typename TRange>
         requires RRangeOf<TRange, T>
-        fn op+=(const TRange& range);
+        fn operator+=(const TRange& range);
     };
 }

@@ -23,7 +23,7 @@ namespace Atom
     //// -------------------------------------------------------------------------------------------
 
         pub using Base::ElemAt;
-        pub using Base::op[];
+        pub using Base::operator[];
         pub using Base::ElemFront;
         pub using Base::ElemBack;
         pub using Base::data;
@@ -57,7 +57,7 @@ namespace Atom
         /// # Time Complexity
         ///     Constant
         /// ----------------------------------------------------------------------------------------
-        pub constexpr fn op[](usize index) -> TElem&;
+        pub constexpr fn operator[](usize index) -> TElem&;
 
         /// ----------------------------------------------------------------------------------------
         /// Access first element.

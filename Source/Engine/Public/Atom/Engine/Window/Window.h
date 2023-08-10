@@ -13,7 +13,7 @@ namespace Atom::Engine
         pub i32 y;
     };
 
-    inline fn op-(const SWindowCoords& lhs, const SWindowCoords& rhs) -> SWindowCoords
+    inline fn operator-(const SWindowCoords& lhs, const SWindowCoords& rhs) -> SWindowCoords
     {
         return { lhs.x - rhs.x, lhs.y - rhs.y };
     }

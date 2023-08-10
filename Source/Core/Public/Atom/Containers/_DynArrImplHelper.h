@@ -89,14 +89,14 @@ namespace Atom
 
     template <typename TImpl>
     template <typename T2, typename Req>
-    constexpr fn _DynArrImplHelper<TImpl>::op+=(T2&& el) -> TMutIter
+    constexpr fn _DynArrImplHelper<TImpl>::operator+=(T2&& el) -> TMutIter
     {
         return InsertBack(fwd(el));
     }
 
     template <typename TImpl>
     template <typename TRange, typename Req>
-    constexpr fn _DynArrImplHelper<TImpl>::op+=(const TRange& range) -> TMutIter
+    constexpr fn _DynArrImplHelper<TImpl>::operator+=(const TRange& range) -> TMutIter
     {
         return InsertBack(range);
     }

@@ -33,7 +33,7 @@ namespace Atom
         pub usize count;
     };
 
-    constexpr fn op==(const MemBlk& lhs, NullPtr) -> bool
+    constexpr fn operator==(const MemBlk& lhs, NullPtr) -> bool
     {
         return lhs.mem == nullptr && lhs.count > 0;
     }

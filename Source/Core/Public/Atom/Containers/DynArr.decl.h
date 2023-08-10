@@ -129,7 +129,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// CopyOper.
         /// ----------------------------------------------------------------------------------------
-        pub constexpr fn op=(const DynArr& that) -> DynArr&
+        pub constexpr fn operator=(const DynArr& that) -> DynArr&
         {
             self.Clear();
             self.InsertBack(that);
@@ -145,7 +145,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// MoveOper.
         /// ----------------------------------------------------------------------------------------
-        pub constexpr fn op=(DynArr&& that) -> DynArr&
+        pub constexpr fn operator=(DynArr&& that) -> DynArr&
         {
             DynArr tmp = mov(that);
             self._Swap(tmp);

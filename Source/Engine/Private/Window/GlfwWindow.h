@@ -3,9 +3,9 @@
 /// # To Do
 ///
 /// - Refactor this.
-#undef op
+#undef operator
 #include "GLFW/glfw3.h"
-#define op operator
+#define operator operator
 
 #include "Atom/Engine/Window/WindowManager.h"
 #include "Atom/Math.h"
