@@ -9,7 +9,7 @@ namespace Atom
     /// 
     /// --------------------------------------------------------------------------------------------
     template<typename TWrap>
-    class _BasicMutIterWrap extends TWrap
+    class _BasicMutIterWrap : public TWrap
     {
     public:
         using Base = TWrap;
@@ -38,7 +38,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <typename TWrap>
     requires (!RIter<TWrap>)
-    class _BasicMutIterWrap<TWrap> extends TWrap { };
+    class _BasicMutIterWrap<TWrap> : public TWrap { };
 
     /// --------------------------------------------------------------------------------------------
     /// 
@@ -100,7 +100,7 @@ namespace Atom
     /// 
     /// --------------------------------------------------------------------------------------------
     template <typename TIter>
-    class MutIterWrap extends _BasicMutIterWrap<IterWrap<TIter>>
+    class MutIterWrap : public _BasicMutIterWrap<IterWrap<TIter>>
     {
     public:
         using Base = _BasicMutIterWrap<IterWrap<TIter>>;
@@ -115,7 +115,7 @@ namespace Atom
     /// 
     /// --------------------------------------------------------------------------------------------
     template <typename TIter>
-    class FwdIterWrap extends IterWrap<TIter>,
+    class FwdIterWrap : public IterWrap<TIter>,
         public MultiPassIterTag
     {
     public:
@@ -132,7 +132,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <typename TIter>
     requires RMutFwdIter<TIter>
-    class MutFwdIterWrap extends _BasicMutIterWrap<FwdIterWrap<TIter>>
+    class MutFwdIterWrap : public _BasicMutIterWrap<FwdIterWrap<TIter>>
     {
     public:
         using Base = _BasicMutIterWrap<FwdIterWrap<TIter>>;
@@ -148,7 +148,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <typename TIter>
     requires RBidiIter<TIter>
-    class BidiIterWrap extends FwdIterWrap<TIter>
+    class BidiIterWrap : public FwdIterWrap<TIter>
     {
     public:
         using Base = FwdIterWrap<TIter>;
@@ -170,7 +170,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <typename TIter>
     requires RMutBidiIter<TIter>
-    class MutBidiIterWrap extends _BasicMutIterWrap<BidiIterWrap<TIter>>
+    class MutBidiIterWrap : public _BasicMutIterWrap<BidiIterWrap<TIter>>
     {
     public:
         using Base = _BasicMutIterWrap<BidiIterWrap<TIter>>;
@@ -186,7 +186,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <typename TIter>
     requires RJumpIter<TIter>
-    class JumpIterWrap extends BidiIterWrap<TIter>
+    class JumpIterWrap : public BidiIterWrap<TIter>
     {
     public:
         using Base = BidiIterWrap<TIter>;
@@ -230,7 +230,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <typename TIter>
     requires RMutJumpIter<TIter>
-    class MutJumpIterWrap extends _BasicMutIterWrap<JumpIterWrap<TIter>>
+    class MutJumpIterWrap : public _BasicMutIterWrap<JumpIterWrap<TIter>>
     {
     public:
         using Base = _BasicMutIterWrap<JumpIterWrap<TIter>>;

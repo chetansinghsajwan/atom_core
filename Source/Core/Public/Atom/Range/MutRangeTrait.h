@@ -142,7 +142,7 @@ namespace Atom
     };
 
     template <typename T>
-    class MutRangeTrait extends RangeTrait<T>
+    class MutRangeTrait : public RangeTrait<T>
     {
         using Base = RangeTrait<T>;
         using _Impl = _MutRangeTraitImpl<T>;

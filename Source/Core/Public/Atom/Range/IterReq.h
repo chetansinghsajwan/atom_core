@@ -62,7 +62,7 @@ namespace Atom
 
     class MultiPassIterTag { };
 
-    class ArrIterTag extends MultiPassIterTag { };
+    class ArrIterTag : public MultiPassIterTag { };
 
 #pragma endregion
 //// -----------------------------------------------------------------------------------------------

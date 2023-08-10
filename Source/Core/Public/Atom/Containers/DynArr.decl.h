@@ -90,7 +90,7 @@ namespace Atom
     };
 
     template <typename T, typename TAlloc = DefaultMemAllocator>
-    class DynArr extends _DynArrImplHelper<_DynArrImplBase<T, TAlloc>>
+    class DynArr : public _DynArrImplHelper<_DynArrImplBase<T, TAlloc>>
     {
     private:
         using Base = _DynArrImplHelper<_DynArrImplBase<T, TAlloc>>;

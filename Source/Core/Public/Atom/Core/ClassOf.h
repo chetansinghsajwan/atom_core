@@ -6,7 +6,7 @@ namespace Atom
     /// 
     /// --------------------------------------------------------------------------------------------
     template <typename T, typename... Ts>
-    class ClassOf extends ClassOf<Ts...>
+    class ClassOf : public ClassOf<Ts...>
     {
     public:
         T value;

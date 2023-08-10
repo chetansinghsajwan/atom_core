@@ -44,7 +44,7 @@ namespace Atom
     /// {RRange} mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    class RangeReqMock extends
+    class RangeReqMock : public
         _RangeReqMock<IterReqMock<T>, IterEndReqMock, T> { };
 
     ATOM_SATISFIES_RANGE_TEMP(RangeReqMock);
@@ -53,7 +53,7 @@ namespace Atom
     /// {RMutRange} mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    class MutRangeReqMock extends
+    class MutRangeReqMock : public
         _MutRangeReqMock<MutIterReqMock<T>, IterEndReqMock, T> { };
 
     ATOM_SATISFIES_MUT_RANGE_TEMP(MutRangeReqMock);
@@ -62,7 +62,7 @@ namespace Atom
     /// {RFwdRange} mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    class FwdRangeReqMock extends
+    class FwdRangeReqMock : public
         _RangeReqMock<FwdIterReqMock<T>, IterEndReqMock, T> { };
 
     ATOM_SATISFIES_FWD_RANGE_TEMP(FwdRangeReqMock);
@@ -71,7 +71,7 @@ namespace Atom
     /// {RMutFwdRange} mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    class MutFwdRangeReqMock extends
+    class MutFwdRangeReqMock : public
         _MutRangeReqMock<MutFwdIterReqMock<T>, IterEndReqMock, T> { };
 
     ATOM_SATISFIES_MUT_FWD_RANGE_TEMP(MutFwdRangeReqMock);
@@ -80,7 +80,7 @@ namespace Atom
     /// {RBidiRange} mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    class BidiRangeReqMock extends
+    class BidiRangeReqMock : public
         _RangeReqMock<BidiIterReqMock<T>, IterEndReqMock, T> { };
 
     ATOM_SATISFIES_BIDI_RANGE_TEMP(BidiRangeReqMock);
@@ -89,7 +89,7 @@ namespace Atom
     /// {RMutBidiRange} mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    class MutBidiRangeReqMock extends
+    class MutBidiRangeReqMock : public
         _MutRangeReqMock<MutBidiIterReqMock<T>, IterEndReqMock, T> { };
 
     ATOM_SATISFIES_MUT_BIDI_RANGE_TEMP(MutBidiRangeReqMock);
@@ -98,7 +98,7 @@ namespace Atom
     /// {RJumpRange} mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    class JumpRangeReqMock extends
+    class JumpRangeReqMock : public
         _RangeReqMock<JumpIterReqMock<T>, IterEndReqMock, T> { };
 
     ATOM_SATISFIES_JUMP_RANGE_TEMP(JumpRangeReqMock);
@@ -107,7 +107,7 @@ namespace Atom
     /// {RMutJumpRange} mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    class MutJumpRangeReqMock extends
+    class MutJumpRangeReqMock : public
         _MutRangeReqMock<MutJumpIterReqMock<T>, IterEndReqMock, T> { };
 
     ATOM_SATISFIES_MUT_JUMP_RANGE_TEMP(MutJumpRangeReqMock);
@@ -116,7 +116,7 @@ namespace Atom
     /// {RArrRange} mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    class ArrRangeReqMock extends
+    class ArrRangeReqMock : public
         _RangeReqMock<ArrIterReqMock<T>, ArrIterReqMock<T>, T> { };
 
     ATOM_SATISFIES_ARR_RANGE_TEMP(ArrRangeReqMock);
@@ -125,7 +125,7 @@ namespace Atom
     /// {RMutArrRange} mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    class MutArrRangeReqMock extends
+    class MutArrRangeReqMock : public
         _MutRangeReqMock<MutArrIterReqMock<T>, MutArrIterReqMock<T>, T> { };
 
     ATOM_SATISFIES_MUT_ARR_RANGE_TEMP(MutArrRangeReqMock);
@@ -134,7 +134,7 @@ namespace Atom
     /// {RCommonRange} mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    class CommonRangeReqMock extends 
+    class CommonRangeReqMock : public 
         _RangeReqMock<IterReqMock<T>, IterReqMock<T>, T> { };
 
     ATOM_SATISFIES_COMMON_RANGE_TEMP(CommonRangeReqMock);
@@ -143,7 +143,7 @@ namespace Atom
     /// {RMutCommonRange} mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    class MutCommonRangeReqMock extends
+    class MutCommonRangeReqMock : public
         _MutRangeReqMock<MutFwdIterReqMock<T>, MutFwdIterReqMock<T>, T> { };
 
     ATOM_SATISFIES_MUT_COMMON_RANGE_TEMP(MutCommonRangeReqMock);

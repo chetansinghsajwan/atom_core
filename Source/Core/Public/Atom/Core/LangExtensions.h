@@ -28,5 +28,4 @@ namespace Atom
 #define dtor ~
 #define fn auto
 #define abstract = 0
-#define extends : public
 #define self (*this)

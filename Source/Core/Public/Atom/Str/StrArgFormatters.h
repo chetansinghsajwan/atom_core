@@ -29,7 +29,7 @@ namespace Atom
 	/// --------------------------------------------------------------------------------------------
 	/// Exception thrown during formatting error.
 	/// --------------------------------------------------------------------------------------------
-	class StrFmtEx extends Exception
+	class StrFmtEx : public Exception
 	{
     public:
 		ctor StrFmtEx(Str msg):
@@ -176,7 +176,7 @@ namespace Atom
 	/// {StrFmtArgFmter} specialization for {Char} arr.
 	/// --------------------------------------------------------------------------------------------
 	template <usize N>
-	class StrFmtArgFmterImpl<Char[N]> extends StrFmtArgFmter<StrView>
+	class StrFmtArgFmterImpl<Char[N]> : public StrFmtArgFmter<StrView>
 	{
     public:
 		fn Fmt(const Char(&chars)[N], StrFmtCtx& ctx)
@@ -191,7 +191,7 @@ namespace Atom
 	/// --------------------------------------------------------------------------------------------
 	template <typename T>
 	requires(RStrViewConvertible<T>)
-	class StrFmtArgFmterImpl<T> extends StrFmtArgFmter<StrView>
+	class StrFmtArgFmterImpl<T> : public StrFmtArgFmter<StrView>
 	{
     public:
 		constexpr fn Fmt(const T& in, StrFmtCtx& ctx)

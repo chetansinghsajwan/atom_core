@@ -3,7 +3,7 @@
 
 namespace Atom::Engine
 {
-    class LinuxWindow extends GlfwWindow
+    class LinuxWindow : public GlfwWindow
     {
     public:
         ctor LinuxWindow(const WindowProps& props):

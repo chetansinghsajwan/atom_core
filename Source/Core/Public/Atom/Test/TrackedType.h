@@ -120,7 +120,7 @@ namespace Atom::Test
     /// 
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    class TrackedTypeOf extends TrackedType
+    class TrackedTypeOf : public TrackedType
     {
         using Base = TrackedType;
 

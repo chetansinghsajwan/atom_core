@@ -4,7 +4,7 @@
 namespace Atom
 {
     template <typename T, usize BufSize, typename TAlloc>
-    class _BufArrImplBase extends _DynArrImplBase<T, TAlloc>
+    class _BufArrImplBase : public _DynArrImplBase<T, TAlloc>
     {
     private:
         using Base = _DynArrImplBase<T, TAlloc>;
@@ -53,7 +53,7 @@ namespace Atom
     };
 
     template <typename T, usize bufSize, typename TAlloc>
-    class BufArr extends _DynArrImplHelper<_BufArrImplBase<T, bufSize, TAlloc>>
+    class BufArr : public _DynArrImplHelper<_BufArrImplBase<T, bufSize, TAlloc>>
     {
     private:
         using Base = _DynArrImplHelper<_BufArrImplBase<T, bufSize, TAlloc>>;

@@ -4,7 +4,7 @@
 namespace Atom
 {
     template <typename TImpl>
-    class _ArrImplHelper extends _ConstArrImplHelper<TImpl>
+    class _ArrImplHelper : public _ConstArrImplHelper<TImpl>
     {
     //// -------------------------------------------------------------------------------------------
     //// Aliases

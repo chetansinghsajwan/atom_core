@@ -44,7 +44,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// Base class for all exceptions.
     /// --------------------------------------------------------------------------------------------
-    class Exception extends std::exception
+    class Exception : public std::exception
     {
     public:
         /// ----------------------------------------------------------------------------------------
@@ -87,7 +87,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
-    class RuntimeException extends Exception
+    class RuntimeException : public Exception
     {
     public:
         using Exception::Exception;
@@ -96,7 +96,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// Exception represents invalid operation.
     /// --------------------------------------------------------------------------------------------
-    class InvalidOperationException extends Exception
+    class InvalidOperationException : public Exception
     {
     public:
         using Exception::Exception;
@@ -105,7 +105,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// Exception represents invalid argument.
     /// --------------------------------------------------------------------------------------------
-    class InvalidArgumentException extends Exception
+    class InvalidArgumentException : public Exception
     {
     public:
         using Exception::Exception;
@@ -114,7 +114,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// Exception represents null pointer access.
     /// --------------------------------------------------------------------------------------------
-    class NullPointerException extends Exception
+    class NullPointerException : public Exception
     {
     public:
         using Exception::Exception;
@@ -123,7 +123,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// Exception represents an out of range access.
     /// --------------------------------------------------------------------------------------------
-    class OutOfRangeException extends Exception
+    class OutOfRangeException : public Exception
     {
     public:
         using Exception::Exception;
@@ -132,7 +132,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// Exception represents an out of range access, where range is representable using indices.
     /// --------------------------------------------------------------------------------------------
-    class IndexOutOfRangeException extends OutOfRangeException
+    class IndexOutOfRangeException : public OutOfRangeException
     {
     public:
         ctor IndexOutOfRangeException(Str msg, usize index, usize begin, usize end);

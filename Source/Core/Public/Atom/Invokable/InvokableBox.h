@@ -71,7 +71,7 @@ namespace Atom
     /// 
     /// --------------------------------------------------------------------------------------------
     template <typename TResult, typename... TArgs>
-    class InvokableBox <TResult(TArgs...)> extends
+    class InvokableBox <TResult(TArgs...)> : public
         ObjectBox<true, true, true, 50, DefaultMemAllocator>,
         public Private::InvokableBoxIdentifier
     {

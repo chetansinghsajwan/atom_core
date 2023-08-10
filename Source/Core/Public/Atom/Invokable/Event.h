@@ -78,7 +78,7 @@ namespace Atom
     /// @TODO Add async dispatching.
     /// --------------------------------------------------------------------------------------------
     template <typename... TArgs>
-    class EventSource extends IEvent<TArgs...>
+    class EventSource : public IEvent<TArgs...>
     {
     protected:
         using _TSignature = typename IEvent<TArgs...>::_TSignature;

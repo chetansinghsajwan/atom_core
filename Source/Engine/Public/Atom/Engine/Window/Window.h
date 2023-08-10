@@ -36,7 +36,7 @@ namespace Atom::Engine
         const EWindowEventType eventType;
     };
 
-    class SWindowResizeEvent extends SWindowEvent
+    class SWindowResizeEvent : public SWindowEvent
     {
     public:
         ctor SWindowResizeEvent(SWindowCoords size, SWindowCoords delta):
@@ -48,7 +48,7 @@ namespace Atom::Engine
         SWindowCoords delta;
     };
 
-    class SWindowRepositionEvent extends SWindowEvent
+    class SWindowRepositionEvent : public SWindowEvent
     {
     public:
         ctor SWindowRepositionEvent(SWindowCoords position, SWindowCoords delta):
@@ -60,7 +60,7 @@ namespace Atom::Engine
         SWindowCoords delta;
     };
 
-    class SWindowCloseEvent extends SWindowEvent
+    class SWindowCloseEvent : public SWindowEvent
     {
     public:
         ctor SWindowCloseEvent():

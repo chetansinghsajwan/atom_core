@@ -85,7 +85,7 @@ namespace Atom
     /// 
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    class Range<const T*, const T*> extends Range<ArrIter<T>, ArrIter<T>>
+    class Range<const T*, const T*> : public Range<ArrIter<T>, ArrIter<T>>
     {
     public:
         using Base = Range<ArrIter<T>, ArrIter<T>>;
@@ -106,7 +106,7 @@ namespace Atom
     /// 
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    class Range<T*, T*> extends Range<MutArrIter<T>, MutArrIter<T>>
+    class Range<T*, T*> : public Range<MutArrIter<T>, MutArrIter<T>>
     {
     public:
         using Base = Range<MutArrIter<T>, MutArrIter<T>>;
@@ -136,7 +136,7 @@ namespace Atom
     /// 
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    class Range<InitList<T>> extends Range<const T*, const T*>
+    class Range<InitList<T>> : public Range<const T*, const T*>
     {
     public:
         using Base = Range<const T*, const T*>;
