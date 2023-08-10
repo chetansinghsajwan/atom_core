@@ -11,22 +11,24 @@ namespace Atom::Private
 {
     class Sha1GeneratorImpl
     {
-        pub fn Initialize()
+    public:
+        fn Initialize()
         {
             Sha1Initialise(&_context);
         }
 
-        pub fn Update(const void* data, uint32_t dataSize)
+        fn Update(const void* data, uint32_t dataSize)
         {
             Sha1Update(&_context, data, dataSize);
         }
 
-        pub fn Calculate(Sha1Hash& hash)
+        fn Calculate(Sha1Hash& hash)
         {
             Sha1Finalise(&_context, (SHA1_HASH*)hash.bytes.data());
         }
 
-        pub Sha1Context _context;
+    public:
+        Sha1Context _context;
     };
 }
 

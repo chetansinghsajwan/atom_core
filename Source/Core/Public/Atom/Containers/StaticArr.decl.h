@@ -6,24 +6,27 @@ namespace Atom
     template <typename T, usize Size>
     class _StaticArrImplBase
     {
-        prot using TElem = T;
+    protected:
+        using TElem = T;
 
-        prot constexpr fn _Data() -> T*
+    protected:
+        constexpr fn _Data() -> T*
         {
             return _arr;
         }
 
-        prot constexpr fn _Data() const -> const T*
+        constexpr fn _Data() const -> const T*
         {
             return _arr;
         }
 
-        prot constexpr fn _Count() const -> usize
+        constexpr fn _Count() const -> usize
         {
             return Size;
         }
 
-        pub T _arr[Size];
+    public:
+        T _arr[Size];
     };
 
     template <typename T, usize Size>

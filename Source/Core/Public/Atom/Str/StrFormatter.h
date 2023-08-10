@@ -8,12 +8,13 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     class _FmtStrViewCnvter
     {
-        pub constexpr fn FromFmt(_FmtStrView strv) -> StrView
+    public:
+        constexpr fn FromFmt(_FmtStrView strv) -> StrView
         {
             return StrView{ Range(strv.data(), strv.size()) };
         }
 
-        pub constexpr fn ToFmt(StrView strv) -> _FmtStrView
+        constexpr fn ToFmt(StrView strv) -> _FmtStrView
         {
             return _FmtStrView{ strv.data(), strv.count() };
         }
@@ -25,7 +26,8 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     class RunFmtStr
     {
-        pub StrView str;
+    public:
+        StrView str;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -35,14 +37,16 @@ namespace Atom
     using FmtStr = _FmtFmtStr<TArgs...>;
 //     class FmtStr
 //     {
-//         pub template <typename T>
+//     public:
+//         template <typename T>
 //         consteval FmtStr(const T& strv) { }
 //             _fmt{ _FmtStrViewCnvter().ToFmt(strv) } { }
 // 
-//         pub FmtStr(RunFmtStr str) { }
+//         FmtStr(RunFmtStr str) { }
 //             _fmt{ _FmtRunFmtStr{ _FmtStrViewCnvter().ToFmt(str.str) } } { }
 // 
-//         pub _FmtFmtStr<TArgs...> _fmt;
+//     public:
+//         _FmtFmtStr<TArgs...> _fmt;
 //     };
 
     /// --------------------------------------------------------------------------------------------
@@ -50,32 +54,35 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     class StrFmter
     {
+    public:
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pub template <typename TOut, RStrFmtArgFmtable... TArgs>
+        template <typename TOut, RStrFmtArgFmtable... TArgs>
         requires ROutput<TOut, Char>
         fn FmtTo(TOut out, FmtStr<TArgs...> fmt, TArgs&&... args)
         {
             class _OutIterWrap
             {
-                pub fn operator++(i32) -> _OutIterWrap&
+            public:
+                fn operator++(i32) -> _OutIterWrap&
                 {
                     return self;
                 }
 
-                pub fn operator*() -> _OutIterWrap&
+                fn operator*() -> _OutIterWrap&
                 {
                     return self;
                 }
 
-                pub fn operator=(Char ch) -> _OutIterWrap&
+                fn operator=(Char ch) -> _OutIterWrap&
                 {
                     *out+= ch;
                     return self;
                 }
 
-                pub TOut* out;
+            public:
+                TOut* out;
             };
 
             fmt::detail::iterator_buffer<_OutIterWrap, Char> buf{ _OutIterWrap{ &out } };
@@ -95,7 +102,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pub template <RStrFmtArgFmtable... TArgs>
+        template <RStrFmtArgFmtable... TArgs>
         fn Fmt(FmtStr<TArgs...> fmt, TArgs&&... args) -> Str
         {
             Str out;

@@ -41,14 +41,16 @@ namespace Atom::Text
     template <typename TImpl, typename TInEncoding, typename TOutEncoding>
     class _CharEncodingConverterHelper
     {
-        pub using TInChar = typename TInEncoding::TChar;
-        pub using TOutChar = typename TOutEncoding::TChar;
-        pub using TOutStr = Internal::Str<TOutEncoding>;
+    public:
+        using TInChar = typename TInEncoding::TChar;
+        using TOutChar = typename TOutEncoding::TChar;
+        using TOutStr = Internal::Str<TOutEncoding>;
 
+    public:
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pub template <typename TInput, typename TOut>
+        template <typename TInput, typename TOut>
         requires RRangeOf<TInput, TInChar>
             and ROutput<TOut, TOutChar>
         constexpr fn ConvertTo(const TInput& in, TOut out)
@@ -67,13 +69,15 @@ namespace Atom::Text
     template <typename TImpl, typename TEncoding>
     class _CharEncodingConverterHelper<TImpl, TEncoding, TEncoding>
     {
-        pub using TChar = BasicChar<TCharEncoding>;
-        pub using TStr = BasicStr<TCharEncoding>;
+    public:
+        using TChar = BasicChar<TCharEncoding>;
+        using TStr = BasicStr<TCharEncoding>;
 
+    public:
         /// ----------------------------------------------------------------------------------------
         /// Writes input to output as is.
         /// ----------------------------------------------------------------------------------------
-        pub template <typename TInput, typename TOut>
+        template <typename TInput, typename TOut>
         requires RRangeOf<TInput, const TChar>
             and ROutput<TOut, TChar>
         constexpr fn Convert(TInput&& in, TOut& out)

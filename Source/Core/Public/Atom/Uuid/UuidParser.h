@@ -8,7 +8,8 @@ namespace Atom
 {
     class UuidParser
     {
-        pub template <typename TRange>
+    public:
+        template <typename TRange>
         requires RRangeOf<TRange, Char>
         constexpr fn parse(const TRange& range) const -> Uuid
         {
@@ -23,7 +24,8 @@ namespace Atom
             }
         }
 
-        priv template <typename TIter>
+    private:
+        template <typename TIter>
         constexpr fn _parseCounted(TIter it, usize itCount) const -> Uuid
         {
             if (itCount != 36)
@@ -64,7 +66,7 @@ namespace Atom
             return uuid;
         }
 
-        priv template <typename TIter, typename TIterEnd>
+        template <typename TIter, typename TIterEnd>
         constexpr fn _parseUncounted(TIter it, TIterEnd itEnd) const -> Uuid
         {
             Uuid uuid;         // output result

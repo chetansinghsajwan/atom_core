@@ -14,8 +14,9 @@ namespace Atom
     template <typename T, typename... Ts>
     union UnionOf<T, Ts...>
     {
-        pub T value;
-        pub UnionOf<Ts...> next;
+    public:
+        T value;
+        UnionOf<Ts...> next;
     };
 
     /// --------------------------------------------------------------------------------------------

@@ -5,7 +5,8 @@ namespace Atom
 {
     class UuidHelper
     {
-        pub constexpr fn getVariant(const Uuid& uuid) const -> EUuidVariant
+    public:
+        constexpr fn getVariant(const Uuid& uuid) const -> EUuidVariant
         {
             if ((uuid.bytes[8] & 0x80) == 0x00)
                 return EUuidVariant::NCS;
@@ -17,7 +18,7 @@ namespace Atom
             return EUuidVariant::Reserved;
         }
 
-        pub constexpr fn getVersion(const Uuid& uuid) const -> EUuidVersion
+        constexpr fn getVersion(const Uuid& uuid) const -> EUuidVersion
         {
             if ((uuid.bytes[6] & 0xF0) == 0x10)
                 return EUuidVersion::V1;

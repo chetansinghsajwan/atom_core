@@ -5,23 +5,26 @@ namespace Atom
 {
     class Utf16Encoding
     {
-        pub using TChar = char16;
-        pub using TRune = char32;
+    public:
+        using TChar = char16;
+        using TRune = char32;
 
-        pub static constexpr TChar Null = u'\0';
-        pub static constexpr bool IsMultiCharEncoding = true;
+    public:
+        static constexpr TChar Null = u'\0';
+        static constexpr bool IsMultiCharEncoding = true;
 
-        pub static constexpr fn IsContinuationChar(TChar ch) -> bool
+    public:
+        static constexpr fn IsContinuationChar(TChar ch) -> bool
         {
             return (ch & 0b11000000) == 0b10000000;
         }
 
-        pub static constexpr fn ParseStartingChar(TChar ch) -> usize
+        static constexpr fn ParseStartingChar(TChar ch) -> usize
         {
             return 0;
         }
 
-        pub static constexpr fn IsStartingChar(TChar ch) -> bool
+        static constexpr fn IsStartingChar(TChar ch) -> bool
         {
             return ParseStartingChar(ch) != 0;
         }

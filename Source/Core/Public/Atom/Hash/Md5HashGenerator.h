@@ -11,22 +11,24 @@ namespace Atom::Private
 {
     class Md5GeneratorImpl
     {
-        pub fn Initialize()
+    public:
+        fn Initialize()
         {
             Md5Initialise(&_context);
         }
 
-        pub fn Update(const void* data, uint32_t dataSize)
+        fn Update(const void* data, uint32_t dataSize)
         {
             Md5Update(&_context, data, dataSize);
         }
 
-        pub fn Calculate(Md5Hash& hash)
+        fn Calculate(Md5Hash& hash)
         {
             Md5Finalise(&_context, (MD5_HASH*)hash.bytes.data());
         }
 
-        pub Md5Context _context;
+    public:
+        Md5Context _context;
     };
 }
 

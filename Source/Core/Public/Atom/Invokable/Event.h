@@ -9,15 +9,18 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     class EventKey
     {
-        pub ctor EventKey(const TypeInfo& typeInfo):
+    public:
+        ctor EventKey(const TypeInfo& typeInfo):
             _typeInfo(typeInfo) { }
 
-        pub fn GetType() const -> const TypeInfo&
+    public:
+        fn GetType() const -> const TypeInfo&
         {
             return _typeInfo;
         }
 
-        priv const TypeInfo& _typeInfo;
+    private:
+        const TypeInfo& _typeInfo;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -26,12 +29,14 @@ namespace Atom
     template <typename... TArgs>
     class IEvent
     {
-        prot using _TSignature = void(TArgs...);
+    protected:
+        using _TSignature = void(TArgs...);
 
+    public:
         /// ----------------------------------------------------------------------------------------
         /// Calls Subscribe(fwd(listener));
         /// ----------------------------------------------------------------------------------------
-        pub template <typename TInvokable>
+        template <typename TInvokable>
         requires RInvokable<TInvokable, _TSignature>
         fn operator+=(TInvokable&& listener) -> EventKey
         {
@@ -41,7 +46,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Calls Unsubscribe(key);
         /// ----------------------------------------------------------------------------------------
-        pub fn operator-=(EventKey key) -> bool
+        fn operator-=(EventKey key) -> bool
         {
             return Unsubscribe(key);
         }
@@ -49,7 +54,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Calls Subscribe(fwd(listener)) on {Source}.
         /// ----------------------------------------------------------------------------------------
-        pub template <typename TInvokable>
+        template <typename TInvokable>
         requires RInvokable<TInvokable, _TSignature>
         fn Subscribe(TInvokable&& listener) -> EventKey
         {
@@ -59,12 +64,12 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pub virtual fn Subscribe(InvokableBox<_TSignature>&& invokable) -> EventKey abstract;
+        virtual fn Subscribe(InvokableBox<_TSignature>&& invokable) -> EventKey abstract;
 
         /// ----------------------------------------------------------------------------------------
         /// Calls Unsubscribe(key) on {Source}.
         /// ----------------------------------------------------------------------------------------
-        pub virtual fn Unsubscribe(EventKey key) -> usize abstract;
+        virtual fn Unsubscribe(EventKey key) -> usize abstract;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -75,12 +80,15 @@ namespace Atom
     template <typename... TArgs>
     class EventSource extends IEvent<TArgs...>
     {
-        prot using _TSignature = typename IEvent<TArgs...>::_TSignature;
-        
+    protected:
+        using _TSignature = typename IEvent<TArgs...>::_TSignature;
+        using _TListener = InvokableBox<_TSignature>;
+
+    public:
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pub virtual fn Subscribe(InvokableBox<_TSignature>&& invokable) -> EventKey ofinal
+        virtual fn Subscribe(InvokableBox<_TSignature>&& invokable) -> EventKey ofinal
         {
             return _AddListener(fwd(invokable));
         }
@@ -88,7 +96,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pub virtual fn Unsubscribe(EventKey key) -> usize ofinal
+        virtual fn Unsubscribe(EventKey key) -> usize ofinal
         {
             return _RemoveListener(key);
         }
@@ -98,7 +106,7 @@ namespace Atom
         /// 
         /// @TODO Add detailed documentation on argument passing.
         /// ----------------------------------------------------------------------------------------
-        pub fn Dispatch(TArgs... args)
+        fn Dispatch(TArgs... args)
         {
             for (auto& listener : _listeners)
             {
@@ -106,10 +114,11 @@ namespace Atom
             }
         }
 
+    protected:
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        prot fn _AddListener(InvokableBox<_TSignature>&& invokable) -> EventKey
+        fn _AddListener(InvokableBox<_TSignature>&& invokable) -> EventKey
         {
             EventKey key = invokable.GetInvokableType();
 
@@ -120,7 +129,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        prot fn _RemoveListener(EventKey key) -> usize
+        fn _RemoveListener(EventKey key) -> usize
         {
             return RangeModifier().RemoveIf(_listeners, [&](const auto& listener)
                 {
@@ -131,7 +140,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        prot fn _CountListeners(EventKey key) -> usize
+        fn _CountListeners(EventKey key) -> usize
         {
             usize count = 0;
             for (auto& listener : _listeners)
@@ -145,11 +154,10 @@ namespace Atom
             return count;
         }
 
-        prot using TListener = InvokableBox<_TSignature>;
-
+    protected:
         /// ----------------------------------------------------------------------------------------
         /// List of event listeners.
         /// ----------------------------------------------------------------------------------------
-        prot DynArr<TListener> _listeners;
+        DynArr<_TListener> _listeners;
     };
 }

@@ -40,17 +40,18 @@ namespace Atom
         /// --------------------------------------------------------------------------------------------
         class ObjectData
         {
-            pub ATOM_CONDITIONAL_FIELD(Copyable,
+        public:
+            ATOM_CONDITIONAL_FIELD(Copyable,
                 InvokablePtr<void(void*, const void*)>) copy;
 
-            pub ATOM_CONDITIONAL_FIELD(Movable,
+            ATOM_CONDITIONAL_FIELD(Movable,
                 InvokablePtr<void(void*, void*)>) move;
 
-            pub InvokablePtr<void(void* obj)> dtor_;
+            InvokablePtr<void(void* obj)> dtor_;
 
-            pub usize size;
-            pub void* obj;
-            pub const TypeInfo* type;
+            usize size;
+            void* obj;
+            const TypeInfo* type;
         };
 
         /// ----------------------------------------------------------------------------------------

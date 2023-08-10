@@ -8,10 +8,11 @@ namespace Atom
 {
     class RangeHelper
     {
+    public:
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pub template <class TRange>
+        template <class TRange>
         requires RRange<TRange>
         constexpr fn CanGetCount() const -> bool
         {
@@ -21,7 +22,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pub template <class TRange>
+        template <class TRange>
         requires RFwdRange<TRange>
         constexpr fn GetCount(const TRange& range) const -> usize
         {
@@ -31,7 +32,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pub template <class TRange, class T>
+        template <class TRange, class T>
         requires RMutRange<TRange>
             and RAssignable<typename TRange::TElem, T>
         constexpr fn Fill(TRange&& range, T&& val) const -> void
@@ -43,7 +44,7 @@ namespace Atom
         /// 
         /// ----------------------------------------------------------------------------------------
     #pragma optimize("", off)
-        pub template <class TRange, typename T>
+        template <class TRange, typename T>
         requires RMutRange<TRange>
             and RAssignable<typename TRange::TElem, T>
         constexpr fn FillExplicit(TRange&& range, T&& val) const -> void
@@ -55,7 +56,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pub template <class TRange1, class TRange2>
+        template <class TRange1, class TRange2>
         requires RRange<TRange1>
             and RMutRange<TRange2>
             and RAssignable<typename TRange2::TElem, typename TRange1::TElem>
@@ -67,7 +68,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pub template <class TRange1, class TRange2>
+        template <class TRange1, class TRange2>
         requires RRange<TRange1>
             and RMutRange<TRange2>
             and RAssignable<typename TRange2::TElem, typename TRange1::TElem>
@@ -79,7 +80,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pub template <class TRange1, class TRange2>
+        template <class TRange1, class TRange2>
         requires RMutRange<TRange1>
             and RMutRange<TRange2>
             and RAssignable<typename TRange2::TElem, typename TRange1::TElem>
@@ -91,7 +92,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pub template <class TRange1, class TRange2>
+        template <class TRange1, class TRange2>
         requires RMutRange<TRange1>
             and RMutRange<TRange2>
             and RAssignable<typename TRange2::TElem, typename TRange1::TElem>
@@ -103,7 +104,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pub template <class TRange>
+        template <class TRange>
         requires RMutFwdRange<TRange>
             and RMoveAssignable<typename TRange::TElem>
         constexpr fn ShiftFwd(TRange&& range, usize steps) const -> void
@@ -114,7 +115,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pub template <class TRange>
+        template <class TRange>
         requires RMutFwdRange<TRange>
             and RMoveAssignable<typename TRange::TElem>
         constexpr fn ShiftBwd(TRange&& range, usize steps) const -> void
@@ -125,7 +126,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pub template <class TRange>
+        template <class TRange>
         requires RMutFwdRange<TRange>
             and RSwappable<typename TRange::TElem>
         constexpr fn ShiftBy(TRange&& range, isize steps) const -> void
@@ -143,7 +144,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pub template <class TRange>
+        template <class TRange>
         requires RMutRange<TRange>
             and RSwappable<typename TRange::TElem>
         constexpr fn RotateFwd(TRange&& range, usize steps) const -> void
@@ -154,7 +155,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pub template <class TRange>
+        template <class TRange>
         requires RMutRange<TRange>
             and RSwappable<typename TRange::TElem>
         constexpr fn RotateBwd(TRange&& range, usize steps) const -> void
@@ -165,7 +166,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pub template <class TRange>
+        template <class TRange>
         requires RMutRange<TRange>
             and RSwappable<typename TRange::TElem>
         constexpr fn RotateBy(TRange&& range, isize steps) const -> void
@@ -183,7 +184,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pub template <class TRange>
+        template <class TRange>
         requires RMutRange<TRange>
             and RDestructible<typename TRange::TElem>
         constexpr fn Destruct(TRange&& range) const -> void
@@ -191,7 +192,8 @@ namespace Atom
             _Destruct(range.iter(), range.iterEnd());
         }
 
-        priv template <class TIter, class TIterEnd>
+    private:
+        template <class TIter, class TIterEnd>
         constexpr fn _GetCount(TIter iter, TIterEnd iterEnd) const -> usize
         {
             if constexpr (RJumpIterPair<TIter, TIterEnd>)
@@ -205,7 +207,7 @@ namespace Atom
             return count;
         }
 
-        priv template <class TIter, class TIterEnd, typename T>
+        template <class TIter, class TIterEnd, typename T>
         constexpr fn _Fill(TIter iter, TIterEnd iterEnd, T&& val) const -> void
         {
             StdIterWrapForAtomIter stdIter{ iter };
@@ -214,7 +216,7 @@ namespace Atom
             std::fill(stdIter, stdIterEnd, fwd(val));
         }
 
-        priv template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
+        template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
         constexpr fn _FwdCopy(const TIter1 iter1, const TIterEnd1 iterEnd1,
             TIter2 iter2, TIterEnd2 iterEnd2) const -> void
         {
@@ -225,7 +227,7 @@ namespace Atom
             std::copy(stdIter1, stdIterEnd1, stdIter2);
         }
 
-        priv template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
+        template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
         constexpr fn _BwdCopy(const TIter1 iter1, const TIterEnd1 iterEnd1,
             TIter2 iter2, TIterEnd2 iterEnd2) const -> void
         {
@@ -236,7 +238,7 @@ namespace Atom
             std::copy_backward(stdIter1, stdIterEnd1, stdIter2);
         }
 
-        priv template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
+        template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
         constexpr fn _FwdMove(TIter1 iter1, const TIterEnd1 iterEnd1,
             TIter2 iter2, TIterEnd2 iterEnd2) const -> void
         {
@@ -247,7 +249,7 @@ namespace Atom
             std::move(stdIter1, stdIterEnd1, stdIter2);
         }
 
-        priv template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
+        template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
         constexpr fn _BwdMove(TIter1 iter1, const TIterEnd1 iterEnd1,
             TIter2 iter2, TIterEnd2 iterEnd2) const -> void
         {
@@ -258,7 +260,7 @@ namespace Atom
             std::move_backward(stdIter1, stdIterEnd1, stdIter2);
         }
 
-        priv template <class TIter, class TIterEnd>
+        template <class TIter, class TIterEnd>
         constexpr fn _FwdShift(TIter iter, TIterEnd iterEnd, usize steps) const -> void
         {
             if constexpr (RArrIterPair<TIter, TIterEnd>)
@@ -273,7 +275,7 @@ namespace Atom
             std::shift_right(stdIter, stdIterEnd, steps);
         }
 
-        priv template <class TIter, class TIterEnd>
+        template <class TIter, class TIterEnd>
         constexpr fn _BwdShift(TIter iter, TIterEnd iterEnd, usize steps) const -> void
         {
             if constexpr (RArrIterPair<TIter, TIterEnd>)
@@ -288,7 +290,7 @@ namespace Atom
             std::shift_left(stdIter, stdIterEnd, steps);
         }
 
-        priv template <class TIter, class TIterEnd>
+        template <class TIter, class TIterEnd>
         constexpr fn _BwdRotate(TIter iter, TIterEnd iterEnd, usize steps) const -> void
         {
             if constexpr (RArrIterPair<TIter, TIterEnd>)
@@ -303,7 +305,7 @@ namespace Atom
             std::rotate(stdIter, stdIter + steps, stdIterEnd);
         }
 
-        priv template <class TIter, class TIterEnd>
+        template <class TIter, class TIterEnd>
         constexpr fn _FwdRotate(TIter iter, TIterEnd iterEnd, isize steps) const -> void
         {
             if constexpr (RArrIterPair<TIter, TIterEnd>)
@@ -318,7 +320,7 @@ namespace Atom
             std::rotate(stdIter, stdIterEnd - steps, stdIterEnd);
         }
 
-        priv template <class TIter, class TIterEnd>
+        template <class TIter, class TIterEnd>
         constexpr fn _Destruct(TIter iter, TIterEnd iterEnd) const -> void
         {
             if constexpr (RArrIterPair<TIter, TIterEnd>)

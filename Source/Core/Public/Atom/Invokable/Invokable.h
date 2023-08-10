@@ -12,7 +12,8 @@ namespace Atom
         template <typename TInvokable, typename TResult, typename... TArgs>
         class IsInvokableImpl<TInvokable, TResult(TArgs...)>
         {
-            pub static constexpr bool Value = std::is_invocable_r_v<
+        public:
+            static constexpr bool Value = std::is_invocable_r_v<
                 TResult, TInvokable, TArgs...>;
         };
 
@@ -20,7 +21,8 @@ namespace Atom
         template <typename TInvokable, typename TResult, typename... TArgs>
         class IsInvokableImpl<TInvokable, TResult(TArgs...) const>
         {
-            pub static constexpr bool Value = std::is_invocable_r_v<
+        public:
+            static constexpr bool Value = std::is_invocable_r_v<
                 TResult, TInvokable, TArgs...>;
         };
     }

@@ -18,59 +18,63 @@ namespace Atom
     requires(RIterPair<_TIter, _TIterEnd>)
     class Range<_TIter, _TIterEnd>
     {
-        pub using TElem = typename _TIter::TElem;
-        pub using TMutIter = _TIter;
-        pub using TMutIterEnd = _TIterEnd;
-        pub using TIter = _TIter;
-        pub using TIterEnd = _TIterEnd;
+    public:
+        using TElem = typename _TIter::TElem;
+        using TMutIter = _TIter;
+        using TMutIterEnd = _TIterEnd;
+        using TIter = _TIter;
+        using TIterEnd = _TIterEnd;
 
-        pub constexpr ctor Range(TIter iter, TIterEnd end):
+    public:
+        constexpr ctor Range(TIter iter, TIterEnd end):
             _iter{ iter }, _end{ end } { }
 
-        pub constexpr fn iter() const -> TIter
+    public:
+        constexpr fn iter() const -> TIter
             requires(RIterPair<TIter, TIterEnd>)
         {
             return TIter{ _iter };
         }
 
-        pub constexpr fn iterEnd() const -> TIterEnd
+        constexpr fn iterEnd() const -> TIterEnd
             requires(RIterPair<TIter, TIterEnd>)
         {
             return TIterEnd{ _end };
         }
 
-        pub constexpr fn mutIter() -> TMutIter
+        constexpr fn mutIter() -> TMutIter
             requires(RMutIterPair<TMutIter, TMutIterEnd>)
         {
             return _iter;
         }
 
-        pub constexpr fn mutIterEnd() -> TMutIterEnd
+        constexpr fn mutIterEnd() -> TMutIterEnd
             requires(RMutIterPair<TMutIter, TMutIterEnd>)
         {
             return _end;
         }
 
-        pub constexpr fn count() const -> usize
+        constexpr fn count() const -> usize
             requires(RJumpIterPair<TIter, TIterEnd>)
         {
             return _end - _iter;
         }
 
-        pub constexpr fn data() const -> const TElem*
+        constexpr fn data() const -> const TElem*
             requires(RArrIterPair<TIter, TIterEnd>)
         {
             return &*_iter;
         }
 
-        pub constexpr fn data() -> TElem*
+        constexpr fn data() -> TElem*
             requires(RMutArrIterPair<TIter, TIterEnd>)
         {
             return &*_iter;
         }
 
-        prot TIter _iter;
-        prot TIterEnd _end;
+    protected:
+        TIter _iter;
+        TIterEnd _end;
     };
 
     template <typename TIter, typename TIterEnd>
@@ -83,15 +87,17 @@ namespace Atom
     template <typename T>
     class Range<const T*, const T*> extends Range<ArrIter<T>, ArrIter<T>>
     {
-        pub using Base = Range<ArrIter<T>, ArrIter<T>>;
+    public:
+        using Base = Range<ArrIter<T>, ArrIter<T>>;
 
-        pub constexpr ctor Range(const T* arr, const T* end):
+    public:
+        constexpr ctor Range(const T* arr, const T* end):
             Base{ arr, end } { }
 
-        pub constexpr ctor Range(const T* arr, usize count):
+        constexpr ctor Range(const T* arr, usize count):
             Base{ arr, arr + count } { }
 
-        pub template <usize count>
+        template <usize count>
         constexpr ctor Range(const T(&arr)[count]):
             Base{ arr, arr + count } { }
     };
@@ -102,15 +108,17 @@ namespace Atom
     template <typename T>
     class Range<T*, T*> extends Range<MutArrIter<T>, MutArrIter<T>>
     {
-        pub using Base = Range<MutArrIter<T>, MutArrIter<T>>;
+    public:
+        using Base = Range<MutArrIter<T>, MutArrIter<T>>;
 
-        pub constexpr ctor Range(T* arr, T* end):
+    public:
+        constexpr ctor Range(T* arr, T* end):
             Base{ arr, end } { }
 
-        pub constexpr ctor Range(T* arr, usize count):
+        constexpr ctor Range(T* arr, usize count):
             Base{ arr, arr + count } { }
 
-        pub template <usize count>
+        template <usize count>
         constexpr ctor Range(T(&arr)[count]):
             Base{ arr, arr + count } { }
     };
@@ -130,9 +138,11 @@ namespace Atom
     template <typename T>
     class Range<InitList<T>> extends Range<const T*, const T*>
     {
-        pub using Base = Range<const T*, const T*>;
+    public:
+        using Base = Range<const T*, const T*>;
 
-        pub constexpr ctor Range(const InitList<T>& init):
+    public:
+        constexpr ctor Range(const InitList<T>& init):
             Base{ init.begin(), init.end() } { }
     };
 

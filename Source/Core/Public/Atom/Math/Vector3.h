@@ -5,9 +5,10 @@ namespace Atom
 {
     class SVector3
     {
-        pub f32 x;
-        pub f32 y;
-        pub f32 z;
+    public:
+        f32 x;
+        f32 y;
+        f32 z;
     };
 
     constexpr fn operator+(SVector3 lhs, SVector3 rhs) -> SVector3

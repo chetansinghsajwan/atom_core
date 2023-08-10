@@ -23,7 +23,8 @@ namespace Atom
         template <typename... Ts>
         class Count
         {
-            pub static constexpr usize Value = sizeof...(Ts);
+        public:
+            static constexpr usize Value = sizeof...(Ts);
         };
 
     //// -------------------------------------------------------------------------------------------
@@ -36,16 +37,22 @@ namespace Atom
         template <usize max, typename T, typename... Ts>
         class MaxSize<max, T, Ts...>
         {
-            priv static constexpr usize _ThisSize = sizeof(T);
-            pub static constexpr usize Value = MaxSize<(_ThisSize > max ? _ThisSize : max),
+        private:
+            static constexpr usize _ThisSize = sizeof(T);
+
+        public:
+            static constexpr usize Value = MaxSize<(_ThisSize > max ? _ThisSize : max),
                 Ts...>::Value;
         };
 
         template <usize max>
         class MaxSize<max>
         {
-            priv static constexpr usize _ThisSize = 0;
-            pub static constexpr usize Value = _ThisSize > max ? _ThisSize : max;
+        private:
+            static constexpr usize _ThisSize = 0;
+
+        public:
+            static constexpr usize Value = _ThisSize > max ? _ThisSize : max;
         };
 
     //// -------------------------------------------------------------------------------------------
@@ -58,16 +65,22 @@ namespace Atom
         template <usize min, typename T, typename... Ts>
         class MinSize<min, T, Ts...>
         {
-            priv static constexpr usize _ThisSize = alignof(T);
-            pub static constexpr usize Value = MinSize<(_ThisSize < min ? _ThisSize : min),
+        private:
+            static constexpr usize _ThisSize = alignof(T);
+
+        public:
+            static constexpr usize Value = MinSize<(_ThisSize < min ? _ThisSize : min),
                 Ts...>::Value;
         };
 
         template <usize min>
         class MinSize<min>
         {
-            priv static constexpr usize _ThisSize = 0;
-            pub static constexpr usize Value = _ThisSize < min ? _ThisSize : min;
+        private:
+            static constexpr usize _ThisSize = 0;
+
+        public:
+            static constexpr usize Value = _ThisSize < min ? _ThisSize : min;
         };
 
     //// -------------------------------------------------------------------------------------------
@@ -80,16 +93,22 @@ namespace Atom
         template <usize max, typename T, typename... Ts>
         class MaxAlign<max, T, Ts...>
         {
-            priv static constexpr usize _ThisAlign = alignof(T);
-            pub static constexpr usize Value = MaxAlign<(_ThisAlign > max ? _ThisAlign : max),
+        private:
+            static constexpr usize _ThisAlign = alignof(T);
+
+        public:
+            static constexpr usize Value = MaxAlign<(_ThisAlign > max ? _ThisAlign : max),
                 Ts...>::Value;
         };
 
         template <usize max>
         class MaxAlign<max>
         {
-            priv static constexpr usize _ThisAlign = 0;
-            pub static constexpr usize Value = _ThisAlign > max ? _ThisAlign : max;
+        private:
+            static constexpr usize _ThisAlign = 0;
+
+        public:
+            static constexpr usize Value = _ThisAlign > max ? _ThisAlign : max;
         };
 
     //// -------------------------------------------------------------------------------------------
@@ -102,16 +121,22 @@ namespace Atom
         template <usize min, typename T, typename... Ts>
         class MinAlign<min, T, Ts...>
         {
-            priv static constexpr usize _ThisAlign = sizeof(T);
-            pub static constexpr usize Value = MinAlign<(_ThisAlign < min ? _ThisAlign : min),
+        private:
+            static constexpr usize _ThisAlign = sizeof(T);
+
+        public:
+            static constexpr usize Value = MinAlign<(_ThisAlign < min ? _ThisAlign : min),
                 Ts...>::Value;
         };
 
         template <usize min>
         class MinAlign<min>
         {
-            priv static constexpr usize _ThisAlign = 0;
-            pub static constexpr usize Value = _ThisAlign < min ? _ThisAlign : min;
+        private:
+            static constexpr usize _ThisAlign = 0;
+
+        public:
+            static constexpr usize Value = _ThisAlign < min ? _ThisAlign : min;
         };
 
     //// -------------------------------------------------------------------------------------------
@@ -124,14 +149,16 @@ namespace Atom
         template <usize indexToGet, usize index, typename T, typename... Ts>
         class At<indexToGet, index, T, Ts...>
         {
-            pub using Type = TTI::TConditional<indexToGet == index, T,
+        public:
+            using Type = TTI::TConditional<indexToGet == index, T,
                 typename At<indexToGet, index + 1, Ts...>::Type>;
         };
 
         template <usize indexToGet, usize index>
         class At<indexToGet, index>
         {
-            pub using Type = void;
+        public:
+            using Type = void;
         };
 
     //// -------------------------------------------------------------------------------------------
@@ -144,14 +171,16 @@ namespace Atom
         template <typename TToGet, usize index, typename T, typename... Ts>
         class IndexOf<TToGet, index, T, Ts...>
         {
-            pub static constexpr usize Value = RSameAs<TToGet, T> ? index :
+        public:
+            static constexpr usize Value = RSameAs<TToGet, T> ? index :
                 IndexOf<TToGet, index + 1, Ts...>::Value;
         };
 
         template <typename TToGet, usize index>
         class IndexOf<TToGet, index>
         {
-            pub static constexpr usize Value = -1;
+        public:
+            static constexpr usize Value = -1;
         };
 
     //// -------------------------------------------------------------------------------------------
@@ -162,7 +191,8 @@ namespace Atom
         class Has
         {
             // TODO: try to remove the explicit 0 index.
-            pub static constexpr bool Value = IndexOf<T, 0, Ts...>::Value != -1;
+        public:
+            static constexpr bool Value = IndexOf<T, 0, Ts...>::Value != -1;
         };
 
     //// -------------------------------------------------------------------------------------------
@@ -175,6 +205,7 @@ namespace Atom
         template <typename T, typename... Ts>
         class AddFirst<T, TypeList<Ts...>>
         {
+        private:
             using Type = TypeList<T, Ts...>;
         };
 
@@ -188,7 +219,8 @@ namespace Atom
         template <typename T, typename... Ts>
         class AddLast<T, TypeList<Ts...>>
         {
-            pub using Type = TypeList<Ts..., T>;
+        public:
+            using Type = TypeList<Ts..., T>;
         };
 
     //// -------------------------------------------------------------------------------------------
@@ -207,7 +239,8 @@ namespace Atom
         template <template <typename T> typename TPred, typename T, typename... Ts>
         class RemoveIf<TPred, T, Ts...>
         {
-            pub using Type = TTI::TConditional
+        public:
+            using Type = TTI::TConditional
             <
                 TPred<T>::Value,
                 typename AddFirst<T, typename RemoveIf<TPred, Ts...>::Type>::Type,
@@ -228,7 +261,8 @@ namespace Atom
                 static constexpr bool Value = RSameAs<T, TCheck>;
             };
 
-            pub using Type = typename RemoveIf<_Pred, Ts...>::Type;
+        public:
+            using Type = typename RemoveIf<_Pred, Ts...>::Type;
         };
 
     //// -------------------------------------------------------------------------------------------
@@ -241,7 +275,8 @@ namespace Atom
         template <typename T, typename... Ts>
         class RemoveFirst<T, Ts...>
         {
-            pub using Type = TypeList<Ts...>;
+        public:
+            using Type = TypeList<Ts...>;
         };
 
     //// -------------------------------------------------------------------------------------------
@@ -254,13 +289,15 @@ namespace Atom
         template <typename T, typename... Ts>
         class RemoveLast<T, Ts...>
         {
-            pub using Type = typename AddFirst<T, RemoveLast<Ts...>>::Type;
+        public:
+            using Type = typename AddFirst<T, RemoveLast<Ts...>>::Type;
         };
 
         template <typename T>
         class RemoveLast<T>
         {
-            pub using Type = TypeList<>;
+        public:
+            using Type = TypeList<>;
         };
 
     //// -------------------------------------------------------------------------------------------
@@ -273,13 +310,15 @@ namespace Atom
         template <typename T>
         class AreUnique <T>
         {
-            pub static constexpr bool Value = true;
+        public:
+            static constexpr bool Value = true;
         };
 
         template <typename T, typename... Ts>
         class AreUnique <T, Ts...>
         {
-            pub static constexpr bool Value = !Has<T, Ts...>::Value && AreUnique<Ts...>::Value;
+        public:
+            static constexpr bool Value = !Has<T, Ts...>::Value && AreUnique<Ts...>::Value;
         };
     };
 

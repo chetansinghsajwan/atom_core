@@ -11,8 +11,8 @@ namespace Atom
     template <typename T>
     class _MutRangeTraitImpl
     {
-    public:
-        // priv template <class TIter, class TIterEnd, typename T>
+    private:
+        // template <class TIter, class TIterEnd, typename T>
         // constexpr fn _Fill(TIter iter, TIterEnd iterEnd, T&& val) const -> void
         // {
         //     StdIterWrapForAtomIter stdIter{ iter };
@@ -21,7 +21,7 @@ namespace Atom
         //     std::fill(stdIter, stdIterEnd, fwd(val));
         // }
 
-        // priv template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
+        // template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
         // constexpr fn _FwdCopy(const TIter1 iter1, const TIterEnd1 iterEnd1,
         //     TIter2 iter2, TIterEnd2 iterEnd2) const -> void
         // {
@@ -32,7 +32,7 @@ namespace Atom
         //     std::copy(stdIter1, stdIterEnd1, stdIter2);
         // }
 
-        // priv template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
+        // template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
         // constexpr fn _BwdCopy(const TIter1 iter1, const TIterEnd1 iterEnd1,
         //     TIter2 iter2, TIterEnd2 iterEnd2) const -> void
         // {
@@ -43,7 +43,7 @@ namespace Atom
         //     std::copy_backward(stdIter1, stdIterEnd1, stdIter2);
         // }
 
-        // priv template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
+        // template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
         // constexpr fn _FwdMove(TIter1 iter1, const TIterEnd1 iterEnd1,
         //     TIter2 iter2, TIterEnd2 iterEnd2) const -> void
         // {
@@ -54,7 +54,7 @@ namespace Atom
         //     std::move(stdIter1, stdIterEnd1, stdIter2);
         // }
 
-        // priv template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
+        // template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
         // constexpr fn _BwdMove(TIter1 iter1, const TIterEnd1 iterEnd1,
         //     TIter2 iter2, TIterEnd2 iterEnd2) const -> void
         // {
@@ -65,7 +65,7 @@ namespace Atom
         //     std::move_backward(stdIter1, stdIterEnd1, stdIter2);
         // }
 
-        // priv template <class TIter, class TIterEnd>
+        // template <class TIter, class TIterEnd>
         // constexpr fn _FwdShift(TIter iter, TIterEnd iterEnd, usize steps) const -> void
         // {
         //     if constexpr (RArrIterPair<TIter, TIterEnd>)
@@ -80,7 +80,7 @@ namespace Atom
         //     std::shift_right(stdIter, stdIterEnd, steps);
         // }
 
-        // priv template <class TIter, class TIterEnd>
+        // template <class TIter, class TIterEnd>
         // constexpr fn _BwdShift(TIter iter, TIterEnd iterEnd, usize steps) const -> void
         // {
         //     if constexpr (RArrIterPair<TIter, TIterEnd>)
@@ -95,7 +95,7 @@ namespace Atom
         //     std::shift_left(stdIter, stdIterEnd, steps);
         // }
 
-        // priv template <class TIter, class TIterEnd>
+        // template <class TIter, class TIterEnd>
         // constexpr fn _BwdRotate(TIter iter, TIterEnd iterEnd, usize steps) const -> void
         // {
         //     if constexpr (RArrIterPair<TIter, TIterEnd>)
@@ -110,7 +110,7 @@ namespace Atom
         //     std::rotate(stdIter, stdIter + steps, stdIterEnd);
         // }
 
-        // priv template <class TIter, class TIterEnd>
+        // template <class TIter, class TIterEnd>
         // constexpr fn _FwdRotate(TIter iter, TIterEnd iterEnd, isize steps) const -> void
         // {
         //     if constexpr (RArrIterPair<TIter, TIterEnd>)
@@ -125,7 +125,7 @@ namespace Atom
         //     std::rotate(stdIter, stdIterEnd - steps, stdIterEnd);
         // }
 
-        // priv template <class TIter, class TIterEnd>
+        // template <class TIter, class TIterEnd>
         // constexpr fn _Destruct(TIter iter, TIterEnd iterEnd) const -> void
         // {
         //     if constexpr (RArrIterPair<TIter, TIterEnd>)

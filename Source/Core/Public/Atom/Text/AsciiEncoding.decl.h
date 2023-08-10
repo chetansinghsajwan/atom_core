@@ -7,11 +7,13 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     class AsciiEncoding
     {
-        pub using TChar = char;
-        pub using TRune = char;
+    public:
+        using TChar = char;
+        using TRune = char;
 
-        pub static constexpr TChar Null = '\0';
-        pub static constexpr bool IsMultiCharEncoding = false;
+    public:
+        static constexpr TChar Null = '\0';
+        static constexpr bool IsMultiCharEncoding = false;
     };
 
     /// --------------------------------------------------------------------------------------------

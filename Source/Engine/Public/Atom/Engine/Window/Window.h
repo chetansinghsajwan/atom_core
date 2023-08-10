@@ -9,8 +9,9 @@ namespace Atom::Engine
 {
     class SWindowCoords
     {
-        pub i32 x;
-        pub i32 y;
+    public:
+        i32 x;
+        i32 y;
     };
 
     inline fn operator-(const SWindowCoords& lhs, const SWindowCoords& rhs) -> SWindowCoords
@@ -27,55 +28,65 @@ namespace Atom::Engine
 
     class SWindowEvent
     {
-        pub ctor SWindowEvent(EWindowEventType eventType):
+    public:
+        ctor SWindowEvent(EWindowEventType eventType):
             eventType(eventType) { }
 
-        pub const EWindowEventType eventType;
+    public:
+        const EWindowEventType eventType;
     };
 
     class SWindowResizeEvent extends SWindowEvent
     {
-        pub ctor SWindowResizeEvent(SWindowCoords size, SWindowCoords delta):
+    public:
+        ctor SWindowResizeEvent(SWindowCoords size, SWindowCoords delta):
             size(size), delta(delta),
             SWindowEvent(EWindowEventType::Resize) { }
 
-        pub SWindowCoords size;
-        pub SWindowCoords delta;
+    public:
+        SWindowCoords size;
+        SWindowCoords delta;
     };
 
     class SWindowRepositionEvent extends SWindowEvent
     {
-        pub ctor SWindowRepositionEvent(SWindowCoords position, SWindowCoords delta):
+    public:
+        ctor SWindowRepositionEvent(SWindowCoords position, SWindowCoords delta):
             position(position), delta(delta),
             SWindowEvent(EWindowEventType::Reposition) { }
 
-        pub SWindowCoords position;
-        pub SWindowCoords delta;
+    public:
+        SWindowCoords position;
+        SWindowCoords delta;
     };
 
     class SWindowCloseEvent extends SWindowEvent
     {
-        pub ctor SWindowCloseEvent():
+    public:
+        ctor SWindowCloseEvent():
             SWindowEvent(EWindowEventType::Close) { }
     };
 
     class Window
     {
-        pub ctor Window(IEvent<const SWindowEvent&>& event):
+    public:
+        ctor Window(IEvent<const SWindowEvent&>& event):
             OnEvent{ event } { }
 
-        pub virtual dtor Window() = default;
+    public:
+        virtual dtor Window() = default;
 
-        pub virtual fn Update() -> void abstract;
+        virtual fn Update() -> void abstract;
 
-        pub virtual fn GetSize() const -> SWindowCoords abstract;
-        pub virtual fn SetSize(SWindowCoords size) -> void abstract;
+        virtual fn GetSize() const -> SWindowCoords abstract;
+        virtual fn SetSize(SWindowCoords size) -> void abstract;
 
-        pub virtual fn GetPos() const -> SWindowCoords abstract;
-        pub virtual fn SetPos(SWindowCoords pos) -> void abstract;
+        virtual fn GetPos() const -> SWindowCoords abstract;
+        virtual fn SetPos(SWindowCoords pos) -> void abstract;
 
-        pub virtual fn GetNative() const -> void* abstract;
+        virtual fn GetNative() const -> void* abstract;
 
-        pub IEvent<const SWindowEvent&>& OnEvent;
+    public:
+        IEvent<const SWindowEvent&>& OnEvent;
     };
 }

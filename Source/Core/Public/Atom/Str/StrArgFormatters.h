@@ -31,13 +31,15 @@ namespace Atom
 	/// --------------------------------------------------------------------------------------------
 	class StrFmtEx extends Exception
 	{
-		pub ctor StrFmtEx(Str msg):
+    public:
+		ctor StrFmtEx(Str msg):
 			Exception(mov(msg)) { }
 
 		/// ----------------------------------------------------------------------------------------
 		/// @TODO Fix this ugly code.
 		/// ----------------------------------------------------------------------------------------
-		pub ctor StrFmtEx(const _FmtFmtEx& fmtEx):
+    public:
+		ctor StrFmtEx(const _FmtFmtEx& fmtEx):
 			Exception("Not implemented.") { }
 		// StrFmtEx(const _FmtFmtEx& fmtEx):
 		// 	Exception(CharEncodingConverter<UTF8CharEncoding, CharEncoding>()
@@ -49,21 +51,24 @@ namespace Atom
 	/// --------------------------------------------------------------------------------------------
 	class StrFmtParseCtx
 	{
-		pub constexpr ctor StrFmtParseCtx(_FmtFmtParseCtx& fmtCtx):
+    public:
+		constexpr ctor StrFmtParseCtx(_FmtFmtParseCtx& fmtCtx):
 			_fmtCtx{ fmtCtx } { }
 
-		pub fn GetRange() -> StrView
+    public:
+		fn GetRange() -> StrView
 		{
 			auto range = Range(_fmtCtx.begin(), _fmtCtx.end());
 			return StrView(range);
 		}
 
-		pub fn AdvanceTo(ArrIter<Char> it)
+		fn AdvanceTo(ArrIter<Char> it)
 		{
 			_fmtCtx.advance_to(&*it);
 		}
 
-		pub _FmtFmtParseCtx& _fmtCtx;
+    public:
+		_FmtFmtParseCtx& _fmtCtx;
 	};
 
 	/// --------------------------------------------------------------------------------------------
@@ -71,17 +76,18 @@ namespace Atom
 	/// --------------------------------------------------------------------------------------------
 	class StrFmtCtx
 	{
-		pub constexpr ctor StrFmtCtx(_FmtFmtCtx& fmtCtx):
+    public:
+		constexpr ctor StrFmtCtx(_FmtFmtCtx& fmtCtx):
 			_fmtCtx{ fmtCtx } { }
 
-		pub fn Write(Char ch)
+		fn Write(Char ch)
 		{
 			auto out = _fmtCtx.out();
 			*out++ = ch;
 			_fmtCtx.advance_to(mov(out));
 		}
 
-		pub template <typename TRange>
+		template <typename TRange>
 		requires RRangeOf<TRange, Char>
 		fn Write(const TRange& chars)
 		{
@@ -94,7 +100,8 @@ namespace Atom
 			_fmtCtx.advance_to(mov(out));
 		}
 
-		pub _FmtFmtCtx& _fmtCtx;
+    public:
+		_FmtFmtCtx& _fmtCtx;
 	};
 
 	/// --------------------------------------------------------------------------------------------
@@ -143,14 +150,15 @@ namespace Atom
 	template < >
 	class StrFmtArgFmterImpl<StrView>
 	{
-		pub fn Parse(StrFmtParseCtx& ctx)
+    public:
+		fn Parse(StrFmtParseCtx& ctx)
 		{
 			_FmtFmtParseCtx& fmtCtx = ctx._fmtCtx;
 
 			fmtCtx.advance_to(_fmtFmter.parse(fmtCtx));
 		}
 
-		pub fn Fmt(StrView str, StrFmtCtx& ctx)
+		fn Fmt(StrView str, StrFmtCtx& ctx)
 		{
 			_FmtFmtCtx& fmtCtx = ctx._fmtCtx;
 
@@ -158,7 +166,8 @@ namespace Atom
 			fmtCtx.advance_to(_fmtFmter.format(fmt_str, fmtCtx));
 		}
 
-		pub _FmtFmter<_FmtStrView> _fmtFmter;
+    public:
+		_FmtFmter<_FmtStrView> _fmtFmter;
 	};
 
 	static_assert(RStrFmtArgFmtable<StrView>, "StrView is not formattable.");
@@ -169,7 +178,8 @@ namespace Atom
 	template <usize N>
 	class StrFmtArgFmterImpl<Char[N]> extends StrFmtArgFmter<StrView>
 	{
-		pub fn Fmt(const Char(&chars)[N], StrFmtCtx& ctx)
+    public:
+		fn Fmt(const Char(&chars)[N], StrFmtCtx& ctx)
 		{
 			StrView str{ chars, N };
 			StrFmtArgFmter<StrView>::Fmt(str, ctx);
@@ -183,25 +193,29 @@ namespace Atom
 	requires RStrViewConvertible<T>
 	class StrFmtArgFmterImpl<T> extends StrFmtArgFmter<StrView>
 	{
-		pub constexpr fn Fmt(const T& in, StrFmtCtx& ctx)
+    public:
+		constexpr fn Fmt(const T& in, StrFmtCtx& ctx)
 		{
 			StrFmtArgFmter<StrView>::Fmt(
 				convter.Convert(in), ctx);
 		}
 
-		pub StrViewConverter<T> convter;
+    public:
+		StrViewConverter<T> convter;
 	};
 
 	template <typename T>
 	class _FmtFmtfierFilter
 	{
-		pub static constexpr bool Enable = true;
+    public:
+		static constexpr bool Enable = true;
 	};
 
 	template <usize N>
 	class _FmtFmtfierFilter<Char[N]>
 	{
-		pub static constexpr bool Enable = false;
+    public:
+		static constexpr bool Enable = false;
 	};
 }
 
@@ -220,23 +234,25 @@ namespace fmt
 	requires Atom::_FmtFmtfierFilter<T>::Enable
 	class formatter <T, Atom::Char>
 	{
-		pub fn parse(Atom::_FmtFmtParseCtx& fmtCtx) -> Atom::_FmtFmtParseCtxIter
+    public:
+		fn parse(Atom::_FmtFmtParseCtx& fmtCtx) -> Atom::_FmtFmtParseCtxIter
 		{
 			Atom::StrFmtParseCtx ctx(fmtCtx);
 			self.fmter.Parse(ctx);
 			return fmtCtx.begin();
 		}
 
-		pub fn format(const T& in, Atom::_FmtFmtCtx& fmtCtx) -> Atom::_FmtFmtCtxOut
+		fn format(const T& in, Atom::_FmtFmtCtx& fmtCtx) -> Atom::_FmtFmtCtxOut
 		{
 			Atom::StrFmtCtx ctx(fmtCtx);
 			self.fmter.Fmt(in, ctx);
 			return fmtCtx.out();
 		}
 
+    public:
 		/// ----------------------------------------------------------------------------------------
 		/// This contains actual implementation.
 		/// ----------------------------------------------------------------------------------------
-		pub Atom::StrFmtArgFmter<T> fmter;
+		Atom::StrFmtArgFmter<T> fmter;
 	};
 }

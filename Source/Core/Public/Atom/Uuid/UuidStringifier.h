@@ -7,7 +7,8 @@ namespace Atom
 {
     class UuidStringifier
     {
-        pub template <typename TOutput>
+    public:
+        template <typename TOutput>
         requires ROutput<TOutput, Char>
         constexpr fn writeStr(const Uuid& uuid, TOutput&& out) const
         {
@@ -33,7 +34,7 @@ namespace Atom
             out += Math::HexToChar(uuid.bytes[15]);
         }
 
-        pub constexpr fn toStr(const Uuid& uuid) const -> Str
+        constexpr fn toStr(const Uuid& uuid) const -> Str
         {
             Str out;
             writeStr(uuid, out);

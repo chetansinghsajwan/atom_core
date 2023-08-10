@@ -8,7 +8,8 @@ namespace Atom
     template <typename T, typename... Ts>
     class ClassOf extends ClassOf<Ts...>
     {
-        pub T value;
+    public:
+        T value;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -17,6 +18,7 @@ namespace Atom
     template <typename T>
     class ClassOf<T>
     {
-        pub T value;
+    public:
+        T value;
     };
 }

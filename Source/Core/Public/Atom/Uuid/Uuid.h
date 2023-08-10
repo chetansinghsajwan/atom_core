@@ -30,12 +30,15 @@ namespace Atom
 
     class Uuid
     {
-        pub static const Uuid Null;
+    public:
+        static const Uuid Null;
 
-        pub constexpr fn operator==(const Uuid& other) const -> bool = default;
-        pub constexpr fn operator!=(const Uuid& other) const -> bool = default;
+    public:
+        constexpr fn operator==(const Uuid& other) const -> bool = default;
+        constexpr fn operator!=(const Uuid& other) const -> bool = default;
 
-        pub StaticArr<byte, 16> bytes;
+    public:
+        StaticArr<byte, 16> bytes;
     };
 
     constexpr inline const Uuid Uuid::Null = Uuid{ 0 };

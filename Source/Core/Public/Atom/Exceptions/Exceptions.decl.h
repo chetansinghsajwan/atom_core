@@ -13,14 +13,17 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     class ExceptionSource
     {
-        pub using TImpl = std::source_location;
+    public:
+        using TImpl = std::source_location;
 
-        pub static constexpr ExceptionSource Current(TImpl src = TImpl::current());
+    public:
+        static constexpr ExceptionSource Current(TImpl src = TImpl::current());
 
-        pub u32 line;
-        pub u32 column;
-        pub AsciiStrView fileName;
-        pub AsciiStrView funcName;
+    public:
+        u32 line;
+        u32 column;
+        AsciiStrView fileName;
+        AsciiStrView funcName;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -31,7 +34,8 @@ namespace Atom
     // using StackTrace = std::stacktrace;
     class StackTrace
     {
-        pub static constexpr StackTrace current()
+    public:
+        static constexpr StackTrace current()
         {
             return StackTrace{ };
         }
@@ -42,40 +46,42 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     class Exception extends std::exception
     {
+    public:
         /// ----------------------------------------------------------------------------------------
         /// Basic constructor with msg.
         /// ----------------------------------------------------------------------------------------
-        pub ctor Exception() = default;
+        ctor Exception() = default;
 
         /// ----------------------------------------------------------------------------------------
         /// Basic constructor with msg.
         /// ----------------------------------------------------------------------------------------
-        pub ctor Exception(Str msg);
+        ctor Exception(Str msg);
 
         /// ----------------------------------------------------------------------------------------
         /// VirtualDestructor.
         /// ----------------------------------------------------------------------------------------
-        pub virtual dtor Exception();
+        virtual dtor Exception();
 
+    public:
         /// ----------------------------------------------------------------------------------------
         /// Name of the exception.
         /// ----------------------------------------------------------------------------------------
-        pub StrView exName;
+        StrView exName;
 
         /// ----------------------------------------------------------------------------------------
         /// Message explaining what went wrong.
         /// ----------------------------------------------------------------------------------------
-        pub Str msg;
+        Str msg;
 
         /// ----------------------------------------------------------------------------------------
         /// Origin of the exception.
         /// ----------------------------------------------------------------------------------------
-        pub ExceptionSource src;
+        ExceptionSource src;
 
         /// ----------------------------------------------------------------------------------------
         /// StackTrace when exception was thrown.
         /// ----------------------------------------------------------------------------------------
-        pub StackTrace stackTrace;
+        StackTrace stackTrace;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -83,7 +89,8 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     class RuntimeException extends Exception
     {
-        pub using Exception::Exception;
+    public:
+        using Exception::Exception;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -91,7 +98,8 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     class InvalidOperationException extends Exception
     {
-        pub using Exception::Exception;
+    public:
+        using Exception::Exception;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -99,7 +107,8 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     class InvalidArgumentException extends Exception
     {
-        pub using Exception::Exception;
+    public:
+        using Exception::Exception;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -107,7 +116,8 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     class NullPointerException extends Exception
     {
-        pub using Exception::Exception;
+    public:
+        using Exception::Exception;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -115,7 +125,8 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     class OutOfRangeException extends Exception
     {
-        pub using Exception::Exception;
+    public:
+        using Exception::Exception;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -123,13 +134,15 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     class IndexOutOfRangeException extends OutOfRangeException
     {
-        pub ctor IndexOutOfRangeException(Str msg, usize index, usize begin, usize end);
+    public:
+        ctor IndexOutOfRangeException(Str msg, usize index, usize begin, usize end);
 
-        pub ctor IndexOutOfRangeException(usize index, usize begin, usize end);
+        ctor IndexOutOfRangeException(usize index, usize begin, usize end);
 
-        pub usize index;
-        pub usize begin;
-        pub usize end;
+    public:
+        usize index;
+        usize begin;
+        usize end;
     };
 }
 
@@ -137,19 +150,22 @@ namespace Atom::Ex::Internal
 {
     class Thrower
     {
-        pub ctor Thrower(ExceptionSource src = ExceptionSource::Current(),
+    public:
+        ctor Thrower(ExceptionSource src = ExceptionSource::Current(),
             StackTrace stackTrace = StackTrace::current());
 
-        pub fn RecordStack(StackTrace stackTrace = StackTrace::current()) -> Thrower&;
+    public:
+        fn RecordStack(StackTrace stackTrace = StackTrace::current()) -> Thrower&;
 
-        pub fn RecordSource(ExceptionSource src = ExceptionSource::Current()) -> Thrower&;
+        fn RecordSource(ExceptionSource src = ExceptionSource::Current()) -> Thrower&;
 
-        pub template <typename TEx>
+        template <typename TEx>
         requires RDerivedFrom<TEx, Exception>
         noret fn operator<<(TEx&& ex);
 
-        prot ExceptionSource _src;
-        prot StackTrace _stackTrace;
+    protected:
+        ExceptionSource _src;
+        StackTrace _stackTrace;
     };
 }
 

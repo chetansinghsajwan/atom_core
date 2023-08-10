@@ -53,17 +53,19 @@ namespace Atom
     template <RStrViewConvertible T>
     class StrConverter<T>
     {
-        pub constexpr fn Convert(const T& in) -> Str
+    public:
+        constexpr fn Convert(const T& in) -> Str
         {
             return converter.Convert();
         }
 
-        pub constexpr fn Convert(const T& in, ROutput<Char> auto out) -> void
+        constexpr fn Convert(const T& in, ROutput<Char> auto out) -> void
         {
             StrView strView = converter.Convert(in);
             out.InsertBack(in);
         }
 
-        pub StrViewConverter<T> converter;
+    public:
+        StrViewConverter<T> converter;
     };
 }

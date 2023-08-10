@@ -9,14 +9,16 @@ namespace Atom::Private
     template <usize Size>
     class T1Hash
     {
-        pub static constexpr usize _Size = Size;
+    public:
+        static constexpr usize _Size = Size;
+        static const T1Hash Null;
 
-        pub static const T1Hash Null;
+    public:
+        constexpr fn operator==(const T1Hash& other) const -> bool = default;
+        constexpr fn operator!=(const T1Hash& other) const -> bool = default;
 
-        pub constexpr fn operator==(const T1Hash& other) const -> bool = default;
-        pub constexpr fn operator!=(const T1Hash& other) const -> bool = default;
-
-        pub StaticArr<byte, Size> bytes;
+    public:
+        StaticArr<byte, Size> bytes;
     };
 
     // FIX: Compilation error in MSVC, checkout /Zc:externConstexpr

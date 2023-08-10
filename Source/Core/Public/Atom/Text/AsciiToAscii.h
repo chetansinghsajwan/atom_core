@@ -5,7 +5,8 @@ namespace Atom
     template < >
     class _AsciiToAsciiConversionImpl
     {
-        pub template <typename TIn, typename TOut>
+    public:
+        template <typename TIn, typename TOut>
         constexpr void ConvertChar(const TIn& in, TOut& out)
         {
         }

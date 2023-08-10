@@ -10,25 +10,28 @@ namespace Atom
     //// Aliases
     //// -------------------------------------------------------------------------------------------
 
-        priv using Base = _ConstArrImplHelper<TImpl>;
+    private:
+        using Base = _ConstArrImplHelper<TImpl>;
 
-        pub using TElem = typename Base::TElem;
-        pub using TIter = typename Base::TIter;
-        pub using TIterEnd = typename Base::TIterEnd;
-        pub using TMutIter = MutArrIter<TElem>;
-        pub using TMutIterEnd = TMutIter;
+    public:
+        using TElem = typename Base::TElem;
+        using TIter = typename Base::TIter;
+        using TIterEnd = typename Base::TIterEnd;
+        using TMutIter = MutArrIter<TElem>;
+        using TMutIterEnd = TMutIter;
 
     //// -------------------------------------------------------------------------------------------
     //// Access
     //// -------------------------------------------------------------------------------------------
 
-        pub using Base::ElemAt;
-        pub using Base::operator[];
-        pub using Base::ElemFront;
-        pub using Base::ElemBack;
-        pub using Base::data;
-        pub using Base::count;
-        pub using Base::isEmpty;
+    public:
+        using Base::ElemAt;
+        using Base::operator[];
+        using Base::ElemFront;
+        using Base::ElemBack;
+        using Base::data;
+        using Base::count;
+        using Base::isEmpty;
 
         /// ----------------------------------------------------------------------------------------
         /// Access element at index `index`.
@@ -42,7 +45,7 @@ namespace Atom
         /// # Time Complexity
         ///     Constant
         /// ----------------------------------------------------------------------------------------
-        pub constexpr fn ElemAt(usize index) -> TElem&;
+        constexpr fn ElemAt(usize index) -> TElem&;
 
         /// ----------------------------------------------------------------------------------------
         /// Access element at index `index`. Same as [`ElemAt(usize index)`], but doesn't perform 
@@ -57,7 +60,7 @@ namespace Atom
         /// # Time Complexity
         ///     Constant
         /// ----------------------------------------------------------------------------------------
-        pub constexpr fn operator[](usize index) -> TElem&;
+        constexpr fn operator[](usize index) -> TElem&;
 
         /// ----------------------------------------------------------------------------------------
         /// Access first element.
@@ -68,7 +71,7 @@ namespace Atom
         /// # Time Complexity
         ///     Constant
         /// ----------------------------------------------------------------------------------------
-        pub constexpr fn ElemFront() -> TElem&;
+        constexpr fn ElemFront() -> TElem&;
 
         /// ----------------------------------------------------------------------------------------
         /// Access last element.
@@ -79,7 +82,7 @@ namespace Atom
         /// # Time Complexity
         ///     Constant
         /// ----------------------------------------------------------------------------------------
-        pub constexpr fn ElemBack() -> TElem&;
+        constexpr fn ElemBack() -> TElem&;
 
         /// ----------------------------------------------------------------------------------------
         /// Pointer to underlying arr.
@@ -90,7 +93,7 @@ namespace Atom
         /// # Time Complexity
         ///     Constant
         /// ----------------------------------------------------------------------------------------
-        pub constexpr fn data() -> TElem*
+        constexpr fn data() -> TElem*
         {
             return _Data();
         }
@@ -102,7 +105,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// [`TMutIter`] to the first element.
         /// ----------------------------------------------------------------------------------------
-        pub constexpr fn mutIter() -> TMutIter
+        constexpr fn mutIter() -> TMutIter
         {
             return TMutIter{ _Data() };
         }
@@ -110,7 +113,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// [`TMutIter`] to element following the last element.
         /// ----------------------------------------------------------------------------------------
-        pub constexpr fn mutIterEnd() -> TMutIter
+        constexpr fn mutIterEnd() -> TMutIter
         {
             return TMutIter{ _Data() + _Count() - 1 };
         }
@@ -119,11 +122,12 @@ namespace Atom
     //// Implementations
     //// -------------------------------------------------------------------------------------------
 
-        prot using Base::_Data;
-        prot using Base::_Count;
-        prot using Base::_ValidateIndexForAccess;
+    protected:
+        using Base::_Data;
+        using Base::_Count;
+        using Base::_ValidateIndexForAccess;
 
-        prot constexpr fn _Data() -> TElem*
+        constexpr fn _Data() -> TElem*
         {
             return TImpl::_Data();
         }

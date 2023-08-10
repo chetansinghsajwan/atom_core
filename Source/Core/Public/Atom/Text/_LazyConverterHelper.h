@@ -31,33 +31,36 @@ namespace Atom::Text
     template <typename TImpl, typename TInEncoding, typename TOutEncoding, typename TInput>
     class _CharEncodingLazyConverterHelper
     {
-        pub using TIter = _CharEncodingLazyConverterHelperIter<
+    public:
+        using TIter = _CharEncodingLazyConverterHelperIter<
             TImpl, TInEncoding, TOutEncoding, TInput>;
 
-        pub using TIterEnd = _CharEncodingLazyConverterHelperIterEnd;
+        using TIterEnd = _CharEncodingLazyConverterHelperIterEnd;
 
-        pub constexpr fn iter() -> TIter
+    public:
+        constexpr fn iter() -> TIter
         {
             return TIter(_impl, _input);
         }
 
-        pub constexpr fn iterEnd() -> TIter
+        constexpr fn iterEnd() -> TIter
         {
             return TIterEnd();
         }
 
-        pub constexpr fn begin() -> TIter
+        constexpr fn begin() -> TIter
         {
             return iter();
         }
 
-        pub constexpr fn end() -> TIterEnd
+        constexpr fn end() -> TIterEnd
         {
             return iterEnd();
         }
 
-        prot TImpl _impl;
-        prot TInput& _input;
+    protected:
+        TImpl _impl;
+        TInput& _input;
     };
 
     class _CharEncodingLazyConverterHelperIterEnd { };
@@ -69,15 +72,17 @@ namespace Atom::Text
     template <typename TImpl, typename TInEncoding, typename TOutEncoding, typename TInput>
     class _CharEncodingLazyConverterHelperIter
     {
-        pub using TThis = _CharEncodingLazyConverterHelperIter;
-        pub using TIterEnd = _CharEncodingLazyConverterHelperIterEnd;
-        pub using TInChar = typename TInEncoding::TChar;
-        pub using TOutChar = typename TOutEncoding::TChar;
+    public:
+        using TThis = _CharEncodingLazyConverterHelperIter;
+        using TIterEnd = _CharEncodingLazyConverterHelperIterEnd;
+        using TInChar = typename TInEncoding::TChar;
+        using TOutChar = typename TOutEncoding::TChar;
 
+    public:
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pub constexpr ctor _CharEncodingLazyConverterHelperIter(TImpl&& impl, TInput&& in):
+        constexpr ctor _CharEncodingLazyConverterHelperIter(TImpl&& impl, TInput&& in):
             _impl{ fwd(impl) }, _input{ fwd(input) }, _out{ 0 }, _outIndex{ -1 }
         {
             _ProcessNextChar();
@@ -86,7 +91,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// Get the current char.
         /// ----------------------------------------------------------------------------------------
-        pub constexpr fn operator*() -> TOutChar&
+        constexpr fn operator*() -> TOutChar&
         {
             return _out[_outIndex];
         }
@@ -94,7 +99,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// Advances the iter.
         /// ----------------------------------------------------------------------------------------
-        pub constexpr fn operator++() -> TSelf&
+        constexpr fn operator++() -> TSelf&
         {
             if (_outIndex == -1)
             {
@@ -108,7 +113,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// Will be removed in CPP2;
         /// ----------------------------------------------------------------------------------------
-        pub constexpr fn operator++(i32) -> TSelf&
+        constexpr fn operator++(i32) -> TSelf&
         {
             return ++self;
         }
@@ -116,7 +121,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// Checks if the iter has reached its end.
         /// ----------------------------------------------------------------------------------------
-        pub constexpr fn operator==(TIterEnd end) const -> bool
+        constexpr fn operator==(TIterEnd end) const -> bool
         {
             return _outIndex > 0 || _input.HasNext();
         }
@@ -124,15 +129,16 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// Will be removed in CPP2;
         /// ----------------------------------------------------------------------------------------
-        pub constexpr fn operator!=(TIterEnd end) const -> bool
+        constexpr fn operator!=(TIterEnd end) const -> bool
         {
             return !(self == end);
         }
 
+    protected:
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        prot fn _ProcessNextChar()
+        fn _ProcessNextChar()
         {
             if (_inIter == _inIterEnd)
             {
@@ -142,12 +148,13 @@ namespace Atom::Text
             _outRune = TImpl::ConvertChar(*_inIter);
         }
 
-        prot TImpl _impl;
-        prot TInIter _inIter;
-        prot TInIterEnd _inIterEnd;
+    protected:
+        TImpl _impl;
+        TInIter _inIter;
+        TInIterEnd _inIterEnd;
 
-        prot TInRune _inRune;
-        prot TOutRune _outRune;
+        TInRune _inRune;
+        TOutRune _outRune;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -156,26 +163,30 @@ namespace Atom::Text
     template <typename TImpl, typename TCharEncoding, typename TInput>
     class _CharEncodingLazyConverterHelper<TImpl, TCharEncoding, TCharEncoding, TInput>
     {
-        priv using TChar = BasicChar<TCharEncoding>;
+    private:
+        using TChar = BasicChar<TCharEncoding>;
 
-        pub constexpr ctor _CharEncodingLazyConverterHelper(TInput&& input):
+    public:
+        constexpr ctor _CharEncodingLazyConverterHelper(TInput&& input):
             _input{ input } { }
 
-        pub constexpr fn Get() -> TChar
+    public:
+        constexpr fn Get() -> TChar
         {
             return _input.Get();
         }
 
-        pub constexpr fn Next() -> bool
+        constexpr fn Next() -> bool
         {
             return _input.Next();
         }
 
-        pub constexpr fn HasNext() const -> bool
+        constexpr fn HasNext() const -> bool
         {
             return _input.HasNext();
         }
 
-        prot TInput _input;
+    protected:
+        TInput _input;
     };
 };

@@ -10,7 +10,8 @@ namespace Atom
         template <typename TResult, typename... TArgs>
         class InvokablePtrImpl<TResult(TArgs...)>
         {
-            pub using Type = TResult(*) (TArgs...);
+        public:
+            using Type = TResult(*) (TArgs...);
         };
     }
 

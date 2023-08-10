@@ -8,16 +8,19 @@ namespace Atom::Text
     /// --------------------------------------------------------------------------------------------
     export class Utf8Encoding
     {
-        pub using TChar = char8;
-        pub using TRune = char32;
+    public:
+        using TChar = char8;
+        using TRune = char32;
 
-        pub static constexpr TChar Null = u8('\0');
-        pub static constexpr bool IsMultiCharEncoding = true;
+    public:
+        static constexpr TChar Null = u8('\0');
+        static constexpr bool IsMultiCharEncoding = true;
 
+    public:
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pub static constexpr fn IsContinuationChar(TChar ch) -> bool
+        static constexpr fn IsContinuationChar(TChar ch) -> bool
         {
             return (ch & 0b11000000) == 0b10000000;
         }
@@ -25,7 +28,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pub static constexpr fn ParseStartingChar(TChar ch) -> usize
+        static constexpr fn ParseStartingChar(TChar ch) -> usize
         {
             if ((ch & 0b10000000) == 0b00000000) return 1;
             if ((ch & 0b11100000) == 0b11000000) return 2;
@@ -38,7 +41,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pub static constexpr fn IsStartingChar(TChar ch) -> bool
+        static constexpr fn IsStartingChar(TChar ch) -> bool
         {
             return ParseStartingChar(ch) != 0;
         }

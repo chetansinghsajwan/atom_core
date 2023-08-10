@@ -30,9 +30,6 @@ namespace Atom
 #define fn auto
 #define abstract = 0
 #define extends : public
-#define pub public:
-#define prot protected:
-#define priv private:
 #define self (*this)
 
 // #define sassert(...) static_assert(__VA_ARGS__)

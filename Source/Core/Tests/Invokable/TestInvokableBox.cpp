@@ -10,13 +10,14 @@ TEST_CASE("Atom/Invokable/InvokableBox")
     {
         class NotMoveAssignable
         {
-            pub ctor NotMoveAssignable() = default;
+        public:
+            ctor NotMoveAssignable() = default;
 
-            pub ctor NotMoveAssignable(const NotMoveAssignable& other) = default;
-            pub ctor NotMoveAssignable(NotMoveAssignable&& other) = default;
+            ctor NotMoveAssignable(const NotMoveAssignable& other) = default;
+            ctor NotMoveAssignable(NotMoveAssignable&& other) = default;
 
-            pub fn operator=(const NotMoveAssignable& other) -> NotMoveAssignable& = delete;
-            pub fn operator=(NotMoveAssignable&& other) -> NotMoveAssignable& = delete;
+            fn operator=(const NotMoveAssignable& other) -> NotMoveAssignable& = delete;
+            fn operator=(NotMoveAssignable&& other) -> NotMoveAssignable& = delete;
         };
 
         InvokableBox<NotMoveAssignable(i32)> invokable = [](i32 value)
@@ -37,28 +38,31 @@ TEST_CASE("Atom/Invokable/InvokableBox")
 
         class Lambda final
         {
-            pub ctor Lambda(i32* capturedValue):
+        public:
+            ctor Lambda(i32* capturedValue):
                 _capturedValue(capturedValue) { }
 
-            pub ctor Lambda(const Lambda& other)
+            ctor Lambda(const Lambda& other)
             {
                 _capturedValue = other._capturedValue;
             }
 
-            pub ctor Lambda(Lambda&& other)
+            ctor Lambda(Lambda&& other)
             {
                 self._capturedValue = other._capturedValue;
                 other._capturedValue = nullptr;
             }
 
-            pub dtor Lambda() { }
+            dtor Lambda() { }
 
-            pub fn operator()() -> i32
+        public:
+            fn operator()() -> i32
             {
                 return *_capturedValue;
             }
 
-            priv i32* _capturedValue;
+        private:
+            i32* _capturedValue;
         };
 
         i32 capturedValue = 10;

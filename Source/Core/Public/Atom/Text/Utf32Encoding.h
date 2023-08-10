@@ -4,11 +4,13 @@ namespace Atom::Text
 {
     class UTF32Encoding
     {
-        pub using TChar = char32;
-        pub using TRune = char32;
+    public:
+        using TChar = char32;
+        using TRune = char32;
 
-        pub static constexpr TChar Null = U'\0';
-        pub static constexpr bool IsMultiCharEncoding = false;
+    public:
+        static constexpr TChar Null = U'\0';
+        static constexpr bool IsMultiCharEncoding = false;
     };
 
     using UTF32Char = typename UTF32Encoding::TChar;

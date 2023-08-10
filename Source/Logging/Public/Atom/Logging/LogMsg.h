@@ -28,20 +28,21 @@ namespace Atom::Logging
     /// --------------------------------------------------------------------------------------------
     class LogMsg
     {
+    public:
         /// ----------------------------------------------------------------------------------------
         /// Message of the log.
         /// ----------------------------------------------------------------------------------------
-        pub StrView msg;
+        StrView msg;
 
         /// ----------------------------------------------------------------------------------------
         /// Name of the logger through which this message was logged.
         /// ----------------------------------------------------------------------------------------
-        pub StrView loggerName;
+        StrView loggerName;
 
         /// ----------------------------------------------------------------------------------------
         /// Level of this message.
         /// ----------------------------------------------------------------------------------------
-        pub ELogLevel lvl;
+        ELogLevel lvl;
 
         /// ----------------------------------------------------------------------------------------
         /// Time when this message was logged.
@@ -49,7 +50,7 @@ namespace Atom::Logging
         /// This is necessary to store as the message may be logged asynchronously or may face 
         /// some latency in writing.
         /// ----------------------------------------------------------------------------------------
-        pub TimePoint time;
+        TimePoint time;
     };
 }
 
@@ -58,7 +59,8 @@ namespace Atom
     template < >
     class StrViewConverter<Logging::ELogLevel>
     {
-        pub constexpr fn Convert(Logging::ELogLevel lvl) -> StrView
+    public:
+        constexpr fn Convert(Logging::ELogLevel lvl) -> StrView
         {
             switch (lvl)
             {

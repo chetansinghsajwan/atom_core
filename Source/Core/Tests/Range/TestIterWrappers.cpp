@@ -48,13 +48,15 @@
 // {
 //     class CustomIter: MutArrIter<i32>
 //     {
-//         pub using Base = MutArrIter<i32>;
+//     public:
+//         using Base = MutArrIter<i32>;
 // 
-//         pub constexpr ctor CustomIter() { }
+//     public:
+//         constexpr ctor CustomIter() { }
 // 
-//         pub constexpr ctor CustomIter(i32, char, f32, const char*) { }
+//         constexpr ctor CustomIter(i32, char, f32, const char*) { }
 // 
-//         pub constexpr ctor CustomIter(const Base& base):
+//         constexpr ctor CustomIter(const Base& base):
 //             Base{ base } { }
 //     };
 // 

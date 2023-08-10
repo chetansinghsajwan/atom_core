@@ -15,7 +15,8 @@ namespace Atom
         template <typename TResult, typename... TArgs>
         class Invoker
         {
-            pub template <typename TInvokable>
+        public:
+            template <typename TInvokable>
             requires RInvokable<TInvokable, TResult(TArgs...)>
             fn Set()
             {
@@ -26,7 +27,7 @@ namespace Atom
                 };
             }
 
-            pub fn Invoke(void* invokable, TArgs&&... args) -> TResult
+            fn Invoke(void* invokable, TArgs&&... args) -> TResult
             {
                 TResult result;
                 _impl(invokable, result, fwd(args)...);
@@ -41,7 +42,8 @@ namespace Atom
         template <typename... TArgs>
         class Invoker <void, TArgs...>
         {
-            pub template <RInvokable<void(TArgs...)> TInvokable>
+        public:
+            template <RInvokable<void(TArgs...)> TInvokable>
             fn Set()
             {
                 _impl = [](void* obj, TArgs&&... args)
@@ -51,7 +53,7 @@ namespace Atom
                 };
             }
 
-            pub fn Invoke(void* invokable, TArgs&&... args)
+            fn Invoke(void* invokable, TArgs&&... args)
             {
                 _impl(invokable, fwd(args)...);
             }
@@ -73,21 +75,22 @@ namespace Atom
         ObjectBox<true, true, true, 50, DefaultMemAllocator>,
         public Private::InvokableBoxIdentifier
     {
+    public:
         /// ----------------------------------------------------------------------------------------
         /// DefaultConstructor.
         /// ----------------------------------------------------------------------------------------
-        pub constexpr ctor InvokableBox() { }
+        constexpr ctor InvokableBox() { }
 
         /// ----------------------------------------------------------------------------------------
         /// NullConstructor.
         /// ----------------------------------------------------------------------------------------
-        pub ctor InvokableBox(NullType null):
+        ctor InvokableBox(NullType null):
             ObjectBox(null) { }
 
         /// ----------------------------------------------------------------------------------------
         /// NullAssignmentOperator.
         /// ----------------------------------------------------------------------------------------
-        pub fn operator=(NullType null) -> InvokableBox&
+        fn operator=(NullType null) -> InvokableBox&
         {
             ObjectBox::operator=(null);
             return self;
@@ -96,7 +99,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// NullEqualityOperator.
         /// ----------------------------------------------------------------------------------------
-        pub fn operator==(NullType null) const -> bool
+        fn operator==(NullType null) const -> bool
         {
             return ObjectBox::operator==(null);
         }
@@ -104,7 +107,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pub template <RInvokable<TResult(TArgs...)> TInvokable>
+        template <RInvokable<TResult(TArgs...)> TInvokable>
         requires RNotDerivedFrom<TInvokable, Private::InvokableBoxIdentifier>
         ctor InvokableBox(TInvokable&& invokable) :
             ObjectBox(fwd(invokable))
@@ -115,7 +118,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pub template <RInvokable<TResult(TArgs...)> TInvokable>
+        template <RInvokable<TResult(TArgs...)> TInvokable>
         requires RNotDerivedFrom<TInvokable, Private::InvokableBoxIdentifier>
         fn operator=(TInvokable&& invokable) -> InvokableBox&
         {
@@ -127,13 +130,13 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pub ctor InvokableBox(const InvokableBox& other) :
+        ctor InvokableBox(const InvokableBox& other) :
             ObjectBox(other) { }
 
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pub fn operator=(const InvokableBox& other) -> InvokableBox&
+        fn operator=(const InvokableBox& other) -> InvokableBox&
         {
             ObjectBox::operator=(other);
             return self;
@@ -142,13 +145,13 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pub ctor InvokableBox(InvokableBox&& other) :
+        ctor InvokableBox(InvokableBox&& other) :
             ObjectBox(mov(other)) { }
 
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pub fn operator=(InvokableBox&& other) -> InvokableBox&
+        fn operator=(InvokableBox&& other) -> InvokableBox&
         {
             ObjectBox::operator=(mov(other));
             return self;
@@ -157,12 +160,13 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pub dtor InvokableBox() { }
+        dtor InvokableBox() { }
 
+    public:
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pub fn Invoke(TArgs&&... args) -> TResult
+        fn Invoke(TArgs&&... args) -> TResult
         {
             ATOM_ASSERT(ObjectBox::_HasObject()) << NullPointerException(
                 "InvokableTarget is null.");
@@ -173,12 +177,12 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pub fn operator()(TArgs&&... args) -> TResult
+        fn operator()(TArgs&&... args) -> TResult
         {
             return Invoke(fwd(args)...);
         }
 
-        pub template <typename T>
+        template <typename T>
         fn GetInvokable() -> T*
         {
             if (typeid(T) != GetInvokableType())
@@ -187,15 +191,16 @@ namespace Atom
             return ObjectBox::_GetObject<T>();
         }
 
-        pub fn GetInvokableType() const -> const TypeInfo&
+        fn GetInvokableType() const -> const TypeInfo&
         {
             return ObjectBox::_GetObjectType();
         }
 
+    protected:
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        prot template <typename TInvokable>
+        template <typename TInvokable>
         requires RInvokable<TInvokable, TResult(TArgs...)>
         fn _SetInvoker()
         {
@@ -205,13 +210,13 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        prot fn _InvokeInvokable(TArgs&&... args) -> TResult
+        fn _InvokeInvokable(TArgs&&... args) -> TResult
         {
             return _invoker.Invoke(fwd(args)...);
         }
 
-        prot using TInvoker = Private::Invoker<TResult, TArgs...>;
+        using TInvoker = Private::Invoker<TResult, TArgs...>;
 
-        prot TInvoker _invoker;
+        TInvoker _invoker;
     };
 }

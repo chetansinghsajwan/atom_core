@@ -51,17 +51,18 @@ namespace Atom
     template < >
     class StrConverter<Str>
     {
-        pub constexpr fn Convert(Str&& str) -> Str
+    public:
+        constexpr fn Convert(Str&& str) -> Str
         {
             return mov(str);
         }
 
-        pub constexpr fn Convert(const Str& str) -> Str
+        constexpr fn Convert(const Str& str) -> Str
         {
             return Str{ str };
         }
 
-        pub constexpr fn Convert(const Str& str, ROutput<Char> auto out) -> void
+        constexpr fn Convert(const Str& str, ROutput<Char> auto out) -> void
         {
             out += str;
         }

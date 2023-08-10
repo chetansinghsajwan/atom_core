@@ -13,7 +13,8 @@
 #define _RANGE_REF_WRAP(Wrap, ...)                                \
     class Wrap: __VA_ARGS__                                      \
     {                                                             \
-        pub pub constexpr ctor Wrap(TRange& range):                   \
+    public:
+        constexpr ctor Wrap(TRange& range):                   \
             __VA_ARGS__{ range } { }                              \
     }
 
@@ -34,23 +35,27 @@ namespace Atom
     requires RRange<TRange>
     class _RangeWrapBase
     {
-        pub using TElem = typename TRange::TElem;
-        pub using TIter = TIterWrap<typename TRange::TIter>;
-        pub using TIterEnd = TIterWrap<typename TRange::TIterEnd>;
+    public:
+        using TElem = typename TRange::TElem;
+        using TIter = TIterWrap<typename TRange::TIter>;
+        using TIterEnd = TIterWrap<typename TRange::TIterEnd>;
 
-        pub constexpr ctor _RangeWrapBase(TRange& range):
+    public:
+        constexpr ctor _RangeWrapBase(TRange& range):
             _range{ range } { }
 
-        pub constexpr fn iter() const -> TIter
+    public:
+        constexpr fn iter() const -> TIter
         {
             return TIter{ _range.iter() };
         }
 
-        pub constexpr fn iterEnd() const -> TIterEnd
+        constexpr fn iterEnd() const -> TIterEnd
         {
             return TIterEnd{ _range.iterEnd() };
         }
 
+    private:
         TRange& _range;
     };
 
@@ -63,19 +68,22 @@ namespace Atom
     requires RMutRange<TRange>
     class _MutRangeWrapBase: _RangeWrapBase<TRange, TIterWrap>
     {
-        pub using Base = _RangeWrapBase<TRange, TIterWrap>;
-        pub using TMutIter = TMutIterWrap<typename TRange::TMutIter>;
-        pub using TMutIterEnd = TMutIterWrap<typename TRange::TMutIterEnd>;
+    public:
+        using Base = _RangeWrapBase<TRange, TIterWrap>;
+        using TMutIter = TMutIterWrap<typename TRange::TMutIter>;
+        using TMutIterEnd = TMutIterWrap<typename TRange::TMutIterEnd>;
 
-        pub constexpr ctor _MutRangeWrapBase(TRange& range):
+    public:
+        constexpr ctor _MutRangeWrapBase(TRange& range):
             Base{ range } { }
 
-        pub constexpr fn mutIter() -> TMutIter
+    public:
+        constexpr fn mutIter() -> TMutIter
         {
             return TMutIter{ self._range.mutIter() };
         }
 
-        pub constexpr fn mutIterEnd() -> TMutIterEnd
+        constexpr fn mutIterEnd() -> TMutIterEnd
         {
             return TMutIterEnd{ self._range.mutIterEnd() };
         }

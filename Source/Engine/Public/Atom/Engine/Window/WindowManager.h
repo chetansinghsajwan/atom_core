@@ -7,16 +7,19 @@ namespace Atom::Engine
 {
     class WindowProps
     {
-        pub Str windowName;
-        pub SWindowCoords windowSize;
+    public:
+        Str windowName;
+        SWindowCoords windowSize;
     };
 
     class WindowManger
     {
-        pub static fn CreateWindow(WindowProps props) -> Window*;
+    public:
+        static fn CreateWindow(WindowProps props) -> Window*;
 
-        pub static fn CloseWindow(Window* window) -> void;
+        static fn CloseWindow(Window* window) -> void;
 
-        prot static usize s_windowCount;
+    protected:
+        static usize s_windowCount;
     };
 }

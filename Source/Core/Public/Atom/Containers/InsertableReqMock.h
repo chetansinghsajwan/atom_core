@@ -9,11 +9,12 @@ namespace Atom
     template <typename T>
     class InsertableReqMock
     {
-        pub template <typename U>
+    public:
+        template <typename U>
         requires RSameAsUnqualified<U, T>
         fn Insert(U&& el);
 
-        pub template <typename TRange>
+        template <typename TRange>
         requires RRangeOf<TRange, T>
         fn Insert(const TRange& range);
     };
@@ -24,11 +25,12 @@ namespace Atom
     template <typename T>
     class FrontInsertableReqMock
     {
-        pub template <typename U>
+    public:
+        template <typename U>
         requires RSameAsUnqualified<U, T>
         fn InsertFront(U&& el);
 
-        pub template <typename TRange>
+        template <typename TRange>
         requires RRangeOf<TRange, T>
         fn InsertFront(const TRange& range);
     };
@@ -39,11 +41,12 @@ namespace Atom
     template <typename T>
     class BackInsertableReqMock
     {
-        pub template <typename U>
+    public:
+        template <typename U>
         requires RSameAsUnqualified<U, T>
         fn InsertBack(U&& el);
 
-        pub template <typename TRange>
+        template <typename TRange>
         requires RRangeOf<TRange, T>
         fn InsertBack(const TRange& range);
     };
@@ -54,11 +57,12 @@ namespace Atom
     template <typename TKey, typename T>
     class KeyInsertableReqMock
     {
-        pub template <typename U>
+    public:
+        template <typename U>
         requires RSameAsUnqualified<U, T>
         fn Insert(TKey key, U&& el);
 
-        pub template <typename TRange>
+        template <typename TRange>
         requires RRangeOf<TRange, T>
         fn Insert(TKey key, const TRange& range);
     };

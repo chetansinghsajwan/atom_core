@@ -10,12 +10,14 @@ namespace Atom
     template <typename _TIter, typename _TIterEnd, typename T>
     class _RangeReqMock
     {
-        pub using TElem = T;
-        pub using TIter = _TIter;
-        pub using TIterEnd = _TIterEnd;
+    public:
+        using TElem = T;
+        using TIter = _TIter;
+        using TIterEnd = _TIterEnd;
 
-        pub fn iter() const -> TIter;
-        pub fn iterEnd() const -> TIterEnd;
+    public:
+        fn iter() const -> TIter;
+        fn iterEnd() const -> TIterEnd;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -24,16 +26,18 @@ namespace Atom
     template <typename _TIter, typename _TIterEnd, typename T>
     class _MutRangeReqMock
     {
-        pub using TElem = T;
-        pub using TIter = _TIter;
-        pub using TIterEnd = _TIterEnd;
-        pub using TMutIter = _TIter;
-        pub using TMutIterEnd = _TIterEnd;
+    public:
+        using TElem = T;
+        using TIter = _TIter;
+        using TIterEnd = _TIterEnd;
+        using TMutIter = _TIter;
+        using TMutIterEnd = _TIterEnd;
 
-        pub fn iter() const -> TIter;
-        pub fn iterEnd() const -> TIterEnd;
-        pub fn mutIter() -> TMutIter;
-        pub fn mutIterEnd() -> TMutIterEnd;
+    public:
+        fn iter() const -> TIter;
+        fn iterEnd() const -> TIterEnd;
+        fn mutIter() -> TMutIter;
+        fn mutIterEnd() -> TMutIterEnd;
     };
 
     /// --------------------------------------------------------------------------------------------
