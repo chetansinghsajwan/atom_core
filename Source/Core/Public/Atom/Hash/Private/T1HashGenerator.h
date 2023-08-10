@@ -39,8 +39,8 @@ namespace Atom::Private
         /// 
         /// ----------------------------------------------------------------------------------------
         template <typename TRange, usize BufSize = 50>
-        requires RRangeOf<TRange, byte>
         fn ProcessBytes(TRange bytes) -> Self&
+            requires RRangeOf<TRange, byte>
         {
             if constexpr (RArrRangeOf<TRange, byte>)
             {

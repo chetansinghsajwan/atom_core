@@ -86,8 +86,8 @@ namespace Atom
         /// ParamCtor for Range.
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
-        requires RRangeOf<TRange, T>
-        constexpr ctor BufArr(TRange&& range):
+        constexpr ctor BufArr(TRange&& range)
+            requires(RRangeOf<TRange, T>):
             Base{ nullptr }
         {
             InsertBack(range);
@@ -97,8 +97,8 @@ namespace Atom
         /// ParamOper for Range.
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
-        requires RRangeOf<TRange, T>
         constexpr fn operator=(TRange&& range) -> BufArr&
+            requires(RRangeOf<TRange, T>)
         {
             Clear();
             InsertBack(range);

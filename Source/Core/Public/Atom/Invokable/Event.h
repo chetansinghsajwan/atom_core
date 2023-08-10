@@ -37,8 +37,8 @@ namespace Atom
         /// Calls Subscribe(fwd(listener));
         /// ----------------------------------------------------------------------------------------
         template <typename TInvokable>
-        requires RInvokable<TInvokable, _TSignature>
         fn operator+=(TInvokable&& listener) -> EventKey
+            requires(RInvokable<TInvokable, _TSignature>)
         {
             return Subscribe(fwd(listener));
         }
@@ -55,8 +55,8 @@ namespace Atom
         /// Calls Subscribe(fwd(listener)) on {Source}.
         /// ----------------------------------------------------------------------------------------
         template <typename TInvokable>
-        requires RInvokable<TInvokable, _TSignature>
         fn Subscribe(TInvokable&& listener) -> EventKey
+            requires(RInvokable<TInvokable, _TSignature>)
         {
             return Subscribe(InvokableBox<_TSignature>(fwd(listener)));
         }

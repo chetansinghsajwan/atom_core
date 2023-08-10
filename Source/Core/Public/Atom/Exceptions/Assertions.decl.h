@@ -39,8 +39,8 @@ namespace Atom::Internal
 
     public:
         template <typename TEx>
-        requires RDerivedFrom<TEx, Exception>
         noret void operator<<(TEx&& ex)
+            requires(RDerivedFrom<TEx, Exception>)
         {
             done = true;
 
@@ -49,8 +49,8 @@ namespace Atom::Internal
         }
 
         template <typename TArg>
-        requires RNotDerivedFrom<TArg, Exception>
         noret void operator<<(TArg&& arg)
+            requires(RNotDerivedFrom<TArg, Exception>)
         {
             done = true;
 

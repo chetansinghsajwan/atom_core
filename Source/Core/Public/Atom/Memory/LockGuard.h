@@ -9,7 +9,7 @@ namespace Atom
     /// exception safety.
     /// --------------------------------------------------------------------------------------------
     template <typename TLockable>
-    requires RLockable<TLockable>
+    requires(RLockable<TLockable>)
     class LockGuard
     {
     public:

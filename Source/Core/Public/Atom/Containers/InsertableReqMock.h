@@ -11,12 +11,12 @@ namespace Atom
     {
     public:
         template <typename U>
-        requires RSameAsUnqualified<U, T>
-        fn Insert(U&& el);
+        fn Insert(U&& el)
+            requires(RSameAsUnqualified<U, T>);
 
         template <typename TRange>
-        requires RRangeOf<TRange, T>
-        fn Insert(const TRange& range);
+        fn Insert(const TRange& range)
+            requires(RRangeOf<TRange, T>);
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -27,12 +27,12 @@ namespace Atom
     {
     public:
         template <typename U>
-        requires RSameAsUnqualified<U, T>
-        fn InsertFront(U&& el);
+        fn InsertFront(U&& el)
+            requires(RSameAsUnqualified<U, T>);
 
         template <typename TRange>
-        requires RRangeOf<TRange, T>
-        fn InsertFront(const TRange& range);
+        fn InsertFront(const TRange& range)
+            requires(RRangeOf<TRange, T>);
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -43,12 +43,12 @@ namespace Atom
     {
     public:
         template <typename U>
-        requires RSameAsUnqualified<U, T>
-        fn InsertBack(U&& el);
+        fn InsertBack(U&& el)
+            requires(RSameAsUnqualified<U, T>);
 
         template <typename TRange>
-        requires RRangeOf<TRange, T>
-        fn InsertBack(const TRange& range);
+        fn InsertBack(const TRange& range)
+            requires(RRangeOf<TRange, T>);
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -59,12 +59,12 @@ namespace Atom
     {
     public:
         template <typename U>
-        requires RSameAsUnqualified<U, T>
-        fn Insert(TKey key, U&& el);
+        fn Insert(TKey key, U&& el)
+            requires(RSameAsUnqualified<U, T>);
 
         template <typename TRange>
-        requires RRangeOf<TRange, T>
-        fn Insert(TKey key, const TRange& range);
+        fn Insert(TKey key, const TRange& range)
+            requires(RRangeOf<TRange, T>);
     };
 
     /// --------------------------------------------------------------------------------------------

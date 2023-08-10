@@ -31,7 +31,7 @@ namespace Atom::Private
 namespace Atom
 {
     template <typename T1Hash>
-    requires RDefaultConstructible<Private::T1HashStringifier<T1Hash>>
+    requires(RDefaultConstructible<Private::T1HashStringifier<T1Hash>>)
     class StrConverter<T1Hash>
     {
     public:

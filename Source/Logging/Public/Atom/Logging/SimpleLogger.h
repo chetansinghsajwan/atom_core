@@ -35,8 +35,8 @@ namespace Atom::Logging::Internal
         /// @PARAM[IN] targets LogTarget objects to add.
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
-        requires RRangeOf<TRange, LogTargetPtr>
-        ctor SimpleLoggerTemplate(Str name, const TRange& targets):
+        ctor SimpleLoggerTemplate(Str name, const TRange& targets)
+            requires(RRangeOf<TRange, LogTargetPtr>):
             _name(mov(name)), targets(targets) { }
 
     public:

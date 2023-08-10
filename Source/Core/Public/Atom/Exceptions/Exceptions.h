@@ -51,8 +51,8 @@ namespace Atom::Ex::Internal
     }
 
     template <typename TEx>
-    requires RDerivedFrom<TEx, Exception>
     inline fn Thrower::operator<<(TEx&& ex)
+        requires(RDerivedFrom<TEx, Exception>)
     {
         ex.src = mov(_src);
         ex.stackTrace = mov(_stackTrace);

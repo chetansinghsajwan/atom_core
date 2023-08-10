@@ -10,8 +10,8 @@ namespace Atom
     {
     public:
         template <typename TRange>
-        requires RRangeOf<TRange, Char>
         constexpr fn parse(const TRange& range) const -> Uuid
+            requires(RRangeOf<TRange, Char>)
         {
             RangeHelper helper;
             if constexpr (helper.CanGetCount<TRange>())

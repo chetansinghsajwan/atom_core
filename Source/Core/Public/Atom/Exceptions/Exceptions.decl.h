@@ -160,8 +160,8 @@ namespace Atom::Ex::Internal
         fn RecordSource(ExceptionSource src = ExceptionSource::Current()) -> Thrower&;
 
         template <typename TEx>
-        requires RDerivedFrom<TEx, Exception>
-        noret fn operator<<(TEx&& ex);
+        noret fn operator<<(TEx&& ex)
+            requires(RDerivedFrom<TEx, Exception>);
 
     protected:
         ExceptionSource _src;

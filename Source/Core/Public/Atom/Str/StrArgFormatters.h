@@ -88,8 +88,8 @@ namespace Atom
 		}
 
 		template <typename TRange>
-		requires RRangeOf<TRange, Char>
 		fn Write(const TRange& chars)
+			requires(RRangeOf<TRange, Char>)
 		{
 			auto out = _fmtCtx.out();
 			for (Char ch : chars)
@@ -190,7 +190,7 @@ namespace Atom
 	/// {StrFmtArgFmter} specialization for types which satisfy {RStrViewConvertible} requirement.
 	/// --------------------------------------------------------------------------------------------
 	template <typename T>
-	requires RStrViewConvertible<T>
+	requires(RStrViewConvertible<T>)
 	class StrFmtArgFmterImpl<T> extends StrFmtArgFmter<StrView>
 	{
     public:
@@ -231,7 +231,7 @@ namespace fmt
 	/// character representation.
 	/// --------------------------------------------------------------------------------------------
 	template <Atom::RStrFmtArgFmtable T>
-	requires Atom::_FmtFmtfierFilter<T>::Enable
+	requires(Atom::_FmtFmtfierFilter<T>::Enable)
 	class formatter <T, Atom::Char>
 	{
     public:

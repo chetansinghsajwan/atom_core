@@ -112,8 +112,8 @@ namespace Atom
         /// ParamCtor.
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
-        requires RRangeOf<TRange, T>
-        constexpr ctor DynArr(const TRange& range):
+        constexpr ctor DynArr(const TRange& range)
+        requires (RRangeOf<TRange, T>):
             Base{BaseImpl{ nullptr }}
         {
             self.InsertBack(range);

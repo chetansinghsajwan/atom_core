@@ -17,8 +17,8 @@ namespace Atom
         {
         public:
             template <typename TInvokable>
-            requires RInvokable<TInvokable, TResult(TArgs...)>
             fn Set()
+                requires(RInvokable<TInvokable, TResult(TArgs...)>)
             {
                 _impl = [](void* obj, TResult& result, TArgs&&... args)
                 {
@@ -108,8 +108,8 @@ namespace Atom
         /// 
         /// ----------------------------------------------------------------------------------------
         template <RInvokable<TResult(TArgs...)> TInvokable>
-        requires RNotDerivedFrom<TInvokable, Private::InvokableBoxIdentifier>
-        ctor InvokableBox(TInvokable&& invokable) :
+        ctor InvokableBox(TInvokable&& invokable) 
+            requires(RNotDerivedFrom<TInvokable, Private::InvokableBoxIdentifier>):
             ObjectBox(fwd(invokable))
         {
             _SetInvoker<TInvokable>();
@@ -119,8 +119,8 @@ namespace Atom
         /// 
         /// ----------------------------------------------------------------------------------------
         template <RInvokable<TResult(TArgs...)> TInvokable>
-        requires RNotDerivedFrom<TInvokable, Private::InvokableBoxIdentifier>
         fn operator=(TInvokable&& invokable) -> InvokableBox&
+            requires(RNotDerivedFrom<TInvokable, Private::InvokableBoxIdentifier>)
         {
             ObjectBox::operator=(fwd(invokable));
             _SetInvoker<TInvokable>();
@@ -201,8 +201,8 @@ namespace Atom
         /// 
         /// ----------------------------------------------------------------------------------------
         template <typename TInvokable>
-        requires RInvokable<TInvokable, TResult(TArgs...)>
         fn _SetInvoker()
+            requires(RInvokable<TInvokable, TResult(TArgs...)>)
         {
             _invoker.template Set<TInvokable>();
         }

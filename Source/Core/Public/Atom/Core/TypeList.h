@@ -359,7 +359,7 @@ namespace Atom
         /// - Try to remove the explicit 0 index.
         /// ----------------------------------------------------------------------------------------
         template <usize i>
-        requires (i < Count)
+        requires(i < Count)
         using At = typename TypeListOps::template At<i, 0, Ts...>::Type;
 
         /// ----------------------------------------------------------------------------------------
@@ -373,7 +373,7 @@ namespace Atom
         /// - Try to remove the explicit 0 index.
         /// ----------------------------------------------------------------------------------------
         template <typename T>
-        requires (Has<T>)
+        requires(Has<T>)
         static constexpr usize IndexOf = TypeListOps::template IndexOf<T, 0, Ts...>::Value;
 
         /// ----------------------------------------------------------------------------------------

@@ -9,8 +9,8 @@ namespace Atom
     {
     public:
         template <typename TOutput>
-        requires ROutput<TOutput, Char>
         constexpr fn writeStr(const Uuid& uuid, TOutput&& out) const
+            requires(ROutput<TOutput, Char>)
         {
             out += Math::HexToChar(uuid.bytes[0]);
             out += Math::HexToChar(uuid.bytes[1]);

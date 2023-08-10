@@ -32,7 +32,7 @@ namespace Atom
         typename TRange,
         template<typename TIter> typename TIterWrap
     >
-    requires RRange<TRange>
+    requires(RRange<TRange>)
     class _RangeWrapBase
     {
     public:
@@ -65,7 +65,7 @@ namespace Atom
         template<typename TIter> typename TIterWrap,
         template<typename TIter> typename TMutIterWrap
     >
-    requires RMutRange<TRange>
+    requires(RMutRange<TRange>)
     class _MutRangeWrapBase: _RangeWrapBase<TRange, TIterWrap>
     {
     public:
