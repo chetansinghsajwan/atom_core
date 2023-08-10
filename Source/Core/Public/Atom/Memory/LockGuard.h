@@ -20,7 +20,7 @@ namespace Atom
         /// 
         /// @THROWS UnkownException Exception thrown by {lock.Lock()}.
         /// ----------------------------------------------------------------------------------------
-        ctor LockGuard(TLockable& lock):
+        LockGuard(TLockable& lock):
             _lock(lock)
         {
             _lock.Lock();
@@ -31,7 +31,7 @@ namespace Atom
         /// 
         /// @THROWS UnkownException Exception thrown by {lock.Lock()}.
         /// ----------------------------------------------------------------------------------------
-        dtor LockGuard()
+        ~LockGuard()
         {
             _lock.Unlock();
         }

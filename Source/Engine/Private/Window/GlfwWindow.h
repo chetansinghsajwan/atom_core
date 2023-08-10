@@ -48,8 +48,8 @@ namespace Atom::Engine
     class GlfwWindow: public Window
     {
       public:
-        ctor GlfwWindow(const WindowProps& props);
-        dtor GlfwWindow();
+        GlfwWindow(const WindowProps& props);
+        ~GlfwWindow();
 
         virtual fn Update()->void override;
 

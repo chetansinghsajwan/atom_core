@@ -17,17 +17,17 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// DefaultConstructor. Does nothing.
         /// ----------------------------------------------------------------------------------------
-        constexpr ctor NullLockable() { }
+        constexpr NullLockable() { }
 
         /// ----------------------------------------------------------------------------------------
         /// CopyConstructor is default.
         /// ----------------------------------------------------------------------------------------
-        constexpr ctor NullLockable(const NullLockable& other) { }
+        constexpr NullLockable(const NullLockable& other) { }
 
         /// ----------------------------------------------------------------------------------------
         /// MoveConstructor is default.
         /// ----------------------------------------------------------------------------------------
-        constexpr ctor NullLockable(NullLockable&& other) { }
+        constexpr NullLockable(NullLockable&& other) { }
 
         /// ----------------------------------------------------------------------------------------
         /// CopyOperator is default.
@@ -42,7 +42,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Destructor. Does nothing.
         /// ----------------------------------------------------------------------------------------
-        constexpr dtor NullLockable() { }
+        constexpr ~NullLockable() { }
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -75,11 +75,11 @@ namespace Atom
         /// 
         /// @PARAM[IN] lock NullLockable reference. (UNUSED).
         /// ----------------------------------------------------------------------------------------
-        constexpr ctor LockGuard(NullLockable& lock) { }
+        constexpr LockGuard(NullLockable& lock) { }
 
         /// ----------------------------------------------------------------------------------------
         /// Destructor. Does nothing.
         /// ----------------------------------------------------------------------------------------
-        constexpr dtor LockGuard() { }
+        constexpr ~LockGuard() { }
     };
 }

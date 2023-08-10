@@ -42,13 +42,13 @@ namespace Atom
         /// 
         /// Constructs with no value. [`isValue()`] will return false.
         /// ----------------------------------------------------------------------------------------
-        constexpr ctor Option():
+        constexpr Option():
             _impl{ _ImplCtorNoVal{} } { }
 
         /// ----------------------------------------------------------------------------------------
         /// # Trivial Copy Constructor.
         /// ----------------------------------------------------------------------------------------
-        constexpr ctor Option(const Option& that) = default;
+        constexpr Option(const Option& that) = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # Copy Constructor
@@ -56,7 +56,7 @@ namespace Atom
         /// - If `that` contains value, copy constructs `this` value with `that` value.
         /// - Else constructs wih no value.
         /// ----------------------------------------------------------------------------------------
-        constexpr ctor Option(const Option& that)
+        constexpr Option(const Option& that)
             requires(RCopyConstructible<T>)
                 and (not RTriviallyCopyConstructible<T>)
         {
@@ -93,7 +93,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Trivial Move Constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr ctor Option(Option&& that)
+        constexpr Option(Option&& that)
             requires(RTriviallyMoveConstructible<T>)
             = default;
 
@@ -103,7 +103,7 @@ namespace Atom
         /// If `that` contains value, move constructs `this` value with `that` value.
         /// Else constructs wih no value.
         /// ----------------------------------------------------------------------------------------
-        constexpr ctor Option(Option&& that)
+        constexpr Option(Option&& that)
             requires(RMoveConstructible<T>)
                 and (not RTriviallyMoveConstructible<T>)
         {
@@ -142,7 +142,7 @@ namespace Atom
         /// 
         /// Constructs with no value.
         /// ----------------------------------------------------------------------------------------
-        constexpr ctor Option(NullOption):
+        constexpr Option(NullOption):
             _impl{ _ImplCtorNoVal{} } { }
 
         /// ----------------------------------------------------------------------------------------
@@ -164,7 +164,7 @@ namespace Atom
         /// # Parameters
         /// - `val`: Value to construct with.
         /// ----------------------------------------------------------------------------------------
-        constexpr ctor Option(const T& val):
+        constexpr Option(const T& val):
             _impl{ val } { }
 
         /// ----------------------------------------------------------------------------------------
@@ -190,7 +190,7 @@ namespace Atom
         /// # Parameters
         /// - `val`: Value to construct with.
         /// ----------------------------------------------------------------------------------------
-        constexpr ctor Option(T&& val):
+        constexpr Option(T&& val):
             _impl{ mov(val) } { }
 
         /// ----------------------------------------------------------------------------------------
@@ -211,7 +211,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Trivial Destructor
         /// ----------------------------------------------------------------------------------------
-        constexpr dtor Option()
+        constexpr ~Option()
             requires(RTriviallyDestructible<T>)
             = default;
 
@@ -220,7 +220,7 @@ namespace Atom
         /// 
         /// Destroys value if stored.
         /// ----------------------------------------------------------------------------------------
-        constexpr dtor Option()
+        constexpr ~Option()
             requires(RDestructible<T>)
                 and (not RTriviallyDestructible<T>)
         {
@@ -436,13 +436,13 @@ namespace Atom
         /// 
         /// Constructs with null state. [`isValue()`] will return false.
         /// ----------------------------------------------------------------------------------------
-        constexpr ctor Option():
+        constexpr Option():
             _impl{ _ImplCtorNoVal{} } { }
 
         /// ----------------------------------------------------------------------------------------
         /// # Trivial Copy Constructor.
         /// ----------------------------------------------------------------------------------------
-        constexpr ctor Option(const Option& that) = default;
+        constexpr Option(const Option& that) = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # Trivial Copy Operator
@@ -452,7 +452,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Trivial Move Constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr ctor Option(Option&& that) = default;
+        constexpr Option(Option&& that) = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # Trivial Move Operator
@@ -464,7 +464,7 @@ namespace Atom
         /// 
         /// Constructs with null state.
         /// ----------------------------------------------------------------------------------------
-        constexpr ctor Option(NullOption):
+        constexpr Option(NullOption):
             _impl{ _ImplCtorNoVal{} } { }
 
         /// ----------------------------------------------------------------------------------------
@@ -486,7 +486,7 @@ namespace Atom
         /// # Parameters
         /// - `ref`: Ref to assign.
         /// ----------------------------------------------------------------------------------------
-        constexpr ctor Option(T& ref):
+        constexpr Option(T& ref):
             _impl{ &ref } { }
 
         /// ----------------------------------------------------------------------------------------
@@ -506,7 +506,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Trivial Destructor
         /// ----------------------------------------------------------------------------------------
-        constexpr dtor Option() = default;
+        constexpr ~Option() = default;
 
     public:
         /// ----------------------------------------------------------------------------------------

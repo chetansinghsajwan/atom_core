@@ -14,7 +14,7 @@ namespace Atom::Logging
         /// 
         /// ErrorLogLevel is set to ELogLevel::Error.
         /// ----------------------------------------------------------------------------------------
-        ctor ConsoleLogTarget():
+        ConsoleLogTarget():
             _stdout(stdout), _stderr(stderr),
             _errLogLevel(ELogLevel::Error) { }
 

@@ -10,7 +10,7 @@ namespace Atom
     class EventKey
     {
     public:
-        ctor EventKey(const TypeInfo& typeInfo):
+        EventKey(const TypeInfo& typeInfo):
             _typeInfo(typeInfo) { }
 
     public:

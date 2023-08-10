@@ -21,7 +21,7 @@ namespace Atom::Private
         /// 
         /// Same as calling Reset.
         /// ----------------------------------------------------------------------------------------
-        ctor T1HashGenerator()
+        T1HashGenerator()
         {
             Reset();
         }

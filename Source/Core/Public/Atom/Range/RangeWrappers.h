@@ -14,7 +14,7 @@
     class Wrap: __VA_ARGS__                                      \
     {                                                             \
     public:
-        constexpr ctor Wrap(TRange& range):                   \
+        constexpr Wrap(TRange& range):                   \
             __VA_ARGS__{ range } { }                              \
     }
 
@@ -41,7 +41,7 @@ namespace Atom
         using TIterEnd = TIterWrap<typename TRange::TIterEnd>;
 
     public:
-        constexpr ctor _RangeWrapBase(TRange& range):
+        constexpr _RangeWrapBase(TRange& range):
             _range{ range } { }
 
     public:
@@ -74,7 +74,7 @@ namespace Atom
         using TMutIterEnd = TMutIterWrap<typename TRange::TMutIterEnd>;
 
     public:
-        constexpr ctor _MutRangeWrapBase(TRange& range):
+        constexpr _MutRangeWrapBase(TRange& range):
             Base{ range } { }
 
     public:

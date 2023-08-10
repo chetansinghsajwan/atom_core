@@ -82,7 +82,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr ctor _CharEncodingLazyConverterHelperIter(TImpl&& impl, TInput&& in):
+        constexpr _CharEncodingLazyConverterHelperIter(TImpl&& impl, TInput&& in):
             _impl{ fwd(impl) }, _input{ fwd(input) }, _out{ 0 }, _outIndex{ -1 }
         {
             _ProcessNextChar();
@@ -167,7 +167,7 @@ namespace Atom::Text
         using TChar = BasicChar<TCharEncoding>;
 
     public:
-        constexpr ctor _CharEncodingLazyConverterHelper(TInput&& input):
+        constexpr _CharEncodingLazyConverterHelper(TInput&& input):
             _input{ input } { }
 
     public:

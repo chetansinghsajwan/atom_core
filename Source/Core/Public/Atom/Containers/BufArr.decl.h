@@ -65,12 +65,12 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// DefCtor.
         /// ----------------------------------------------------------------------------------------
-        constexpr ctor BufArr() = default;
+        constexpr BufArr() = default;
 
         /// ----------------------------------------------------------------------------------------
         /// NullCtor.
         /// ----------------------------------------------------------------------------------------
-        constexpr ctor BufArr(NullPtr):
+        constexpr BufArr(NullPtr):
             Base{ nullptr } { }
 
         /// ----------------------------------------------------------------------------------------
@@ -86,7 +86,7 @@ namespace Atom
         /// ParamCtor for Range.
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
-        constexpr ctor BufArr(TRange&& range)
+        constexpr BufArr(TRange&& range)
             requires(RRangeOf<TRange, T>):
             Base{ nullptr }
         {
@@ -107,10 +107,10 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// CopyCtor.
         /// 
-        /// @TODO: Check if we need this ctor to satisfy std::is_copy_constructible and 
+        /// @TODO: Check if we need this to satisfy std::is_copy_constructible and 
         ///     RCopyConstructible.
         /// ----------------------------------------------------------------------------------------
-        constexpr ctor BufArr(const BufArr& that):
+        constexpr BufArr(const BufArr& that):
             Base{ nullptr }
         {
             // InsertBack(that);
@@ -131,7 +131,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// MoveCtor.
         /// ----------------------------------------------------------------------------------------
-        constexpr ctor BufArr(BufArr&& that):
+        constexpr BufArr(BufArr&& that):
             Base{ nullptr }
         {
             _Move(mov(that));
@@ -141,7 +141,7 @@ namespace Atom
         /// TempMoveCtor.
         /// ----------------------------------------------------------------------------------------
         template <usize thatBufSize>
-        constexpr ctor BufArr(BufArr<TElem, thatBufSize, TAlloc>&& that):
+        constexpr BufArr(BufArr<TElem, thatBufSize, TAlloc>&& that):
             Base{ nullptr }
         {
             _Move(mov(that));
@@ -150,7 +150,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// MoveCtor for DynArr.
         /// ----------------------------------------------------------------------------------------
-        constexpr ctor BufArr(DynArr<TElem, TAlloc>&& that):
+        constexpr BufArr(DynArr<TElem, TAlloc>&& that):
             Base{ nullptr }
         {
             BaseImpl::_Move(that);
@@ -189,7 +189,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Dtor.
         /// ----------------------------------------------------------------------------------------
-        constexpr dtor BufArr()
+        constexpr ~BufArr()
         {
             Clear();
             Release();

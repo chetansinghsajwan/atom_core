@@ -50,12 +50,12 @@ namespace Atom
         using TElem = TTI::TEnableIf<RIter<TIter>, typename TIter::TElem>;
 
     public:
-        constexpr ctor IterWrap(TIter iter):
+        constexpr IterWrap(TIter iter):
             iter{ iter } { }
 
         template <typename... TArgs>
         requires RConstructible<TIter, TArgs...>
-        constexpr ctor IterWrap(TArgs&&... args):
+        constexpr IterWrap(TArgs&&... args):
             iter{ fwd(args)... } { }
 
     public:
@@ -107,7 +107,7 @@ namespace Atom
         using Base::Base;
 
     public:
-        constexpr ctor MutIterWrap(TIter iter):
+        constexpr MutIterWrap(TIter iter):
             Base{ iter } { }
     };
 
@@ -123,7 +123,7 @@ namespace Atom
         using Base::Base;
 
     public:
-        constexpr ctor FwdIterWrap(TIter iter):
+        constexpr FwdIterWrap(TIter iter):
             Base{ iter } { }
     };
 
@@ -139,7 +139,7 @@ namespace Atom
         using Base::Base;
 
     public:
-        constexpr ctor MutFwdIterWrap(TIter iter):
+        constexpr MutFwdIterWrap(TIter iter):
             Base{ iter } { }
     };
 
@@ -155,7 +155,7 @@ namespace Atom
         using Base::Base;
 
     public:
-        constexpr ctor BidiIterWrap(TIter iter):
+        constexpr BidiIterWrap(TIter iter):
             Base{ iter } { }
 
         constexpr fn operator--(i32) -> BidiIterWrap&
@@ -177,7 +177,7 @@ namespace Atom
         using Base::Base;
 
     public:
-        constexpr ctor MutBidiIterWrap(TIter iter):
+        constexpr MutBidiIterWrap(TIter iter):
             Base{ iter } { }
     };
 
@@ -193,7 +193,7 @@ namespace Atom
         using Base::Base;
 
     public:
-        constexpr ctor JumpIterWrap(TIter iter):
+        constexpr JumpIterWrap(TIter iter):
             Base{ iter } { }
 
         constexpr fn operator+(isize steps) const -> JumpIterWrap
@@ -237,7 +237,7 @@ namespace Atom
         using Base::Base;
 
     public:
-        constexpr ctor MutJumpIterWrap(TIter iter):
+        constexpr MutJumpIterWrap(TIter iter):
             Base{ iter } { }
 
         constexpr fn operator+(isize steps) const -> MutJumpIterWrap

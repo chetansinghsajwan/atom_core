@@ -97,12 +97,12 @@ namespace Atom
         }
 
     public:
-        constexpr ctor _OptionImpl() = default;
+        constexpr _OptionImpl() = default;
 
-        constexpr ctor _OptionImpl(CtorNoVal):
+        constexpr _OptionImpl(CtorNoVal):
             _storage{ _StorageCtorNoInit{} }, _isValue{ false } { }
 
-        constexpr ctor _OptionImpl(auto&&... args):
+        constexpr _OptionImpl(auto&&... args):
             _storage{ fwd(args)... }, _isValue{ true } { }
 
     public:

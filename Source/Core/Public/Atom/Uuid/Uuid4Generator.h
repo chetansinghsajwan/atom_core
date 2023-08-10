@@ -10,7 +10,7 @@ namespace Atom
     class BasicUuidRandomGenerator
     {
     public:
-        explicit ctor BasicUuidRandomGenerator(u32 seed = 0):
+        explicit BasicUuidRandomGenerator(u32 seed = 0):
             _generator{ seed } { }
 
     public:

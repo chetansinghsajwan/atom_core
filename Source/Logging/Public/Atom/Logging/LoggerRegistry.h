@@ -22,7 +22,7 @@ namespace Atom::Logging
         using TIterEnd = typename TContainer::const_iterator;
 
     public:
-        ctor LoggerRegistry()
+        LoggerRegistry()
         {
             SetDefaultLogger(GET_LOGGER_FACTORY().CreateLogger("DefaultLogger"));
         }

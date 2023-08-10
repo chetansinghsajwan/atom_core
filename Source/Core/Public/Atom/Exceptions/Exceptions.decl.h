@@ -50,17 +50,17 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Basic constructor with msg.
         /// ----------------------------------------------------------------------------------------
-        ctor Exception() = default;
+        Exception() = default;
 
         /// ----------------------------------------------------------------------------------------
         /// Basic constructor with msg.
         /// ----------------------------------------------------------------------------------------
-        ctor Exception(Str msg);
+        Exception(Str msg);
 
         /// ----------------------------------------------------------------------------------------
         /// VirtualDestructor.
         /// ----------------------------------------------------------------------------------------
-        virtual dtor Exception();
+        virtual ~Exception();
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -135,9 +135,9 @@ namespace Atom
     class IndexOutOfRangeException : public OutOfRangeException
     {
     public:
-        ctor IndexOutOfRangeException(Str msg, usize index, usize begin, usize end);
+        IndexOutOfRangeException(Str msg, usize index, usize begin, usize end);
 
-        ctor IndexOutOfRangeException(usize index, usize begin, usize end);
+        IndexOutOfRangeException(usize index, usize begin, usize end);
 
     public:
         usize index;
@@ -151,7 +151,7 @@ namespace Atom::Ex::Internal
     class Thrower
     {
     public:
-        ctor Thrower(ExceptionSource src = ExceptionSource::Current(),
+        Thrower(ExceptionSource src = ExceptionSource::Current(),
             StackTrace stackTrace = StackTrace::current());
 
     public:

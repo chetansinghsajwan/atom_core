@@ -26,7 +26,7 @@ namespace Atom
         using TIterEnd = _TIterEnd;
 
     public:
-        constexpr ctor Range(TIter iter, TIterEnd end):
+        constexpr Range(TIter iter, TIterEnd end):
             _iter{ iter }, _end{ end } { }
 
     public:
@@ -91,14 +91,14 @@ namespace Atom
         using Base = Range<ArrIter<T>, ArrIter<T>>;
 
     public:
-        constexpr ctor Range(const T* arr, const T* end):
+        constexpr Range(const T* arr, const T* end):
             Base{ arr, end } { }
 
-        constexpr ctor Range(const T* arr, usize count):
+        constexpr Range(const T* arr, usize count):
             Base{ arr, arr + count } { }
 
         template <usize count>
-        constexpr ctor Range(const T(&arr)[count]):
+        constexpr Range(const T(&arr)[count]):
             Base{ arr, arr + count } { }
     };
 
@@ -112,14 +112,14 @@ namespace Atom
         using Base = Range<MutArrIter<T>, MutArrIter<T>>;
 
     public:
-        constexpr ctor Range(T* arr, T* end):
+        constexpr Range(T* arr, T* end):
             Base{ arr, end } { }
 
-        constexpr ctor Range(T* arr, usize count):
+        constexpr Range(T* arr, usize count):
             Base{ arr, arr + count } { }
 
         template <usize count>
-        constexpr ctor Range(T(&arr)[count]):
+        constexpr Range(T(&arr)[count]):
             Base{ arr, arr + count } { }
     };
 
@@ -142,7 +142,7 @@ namespace Atom
         using Base = Range<const T*, const T*>;
 
     public:
-        constexpr ctor Range(const InitList<T>& init):
+        constexpr Range(const InitList<T>& init):
             Base{ init.begin(), init.end() } { }
     };
 

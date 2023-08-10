@@ -12,9 +12,9 @@ namespace Atom
         using TElem = T;
 
     public:
-        constexpr ctor _DynArrImplBase() = default;
+        constexpr _DynArrImplBase() = default;
 
-        constexpr ctor _DynArrImplBase(NullPtr):
+        constexpr _DynArrImplBase(NullPtr):
             _arr{ nullptr }, _count{ 0 }, _capacity{ 0 }, _alloc{ } { }
 
     protected:
@@ -100,19 +100,19 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// DefCtor.
         /// ----------------------------------------------------------------------------------------
-        constexpr ctor DynArr() = default;
+        constexpr DynArr() = default;
 
         /// ----------------------------------------------------------------------------------------
         /// NullCtor.
         /// ----------------------------------------------------------------------------------------
-        constexpr ctor DynArr(NullPtr):
+        constexpr DynArr(NullPtr):
             Base{BaseImpl{ nullptr }} { }
 
         /// ----------------------------------------------------------------------------------------
         /// ParamCtor.
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
-        constexpr ctor DynArr(const TRange& range)
+        constexpr DynArr(const TRange& range)
         requires (RRangeOf<TRange, T>):
             Base{BaseImpl{ nullptr }}
         {
@@ -122,7 +122,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// CopyCtor.
         /// ----------------------------------------------------------------------------------------
-        constexpr ctor DynArr(const DynArr& that):
+        constexpr DynArr(const DynArr& that):
             Base{BaseImpl{ nullptr }}
         {
             self.InsertBack(that);
@@ -141,7 +141,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// MoveCtor.
         /// ----------------------------------------------------------------------------------------
-        constexpr ctor DynArr(DynArr&& that):
+        constexpr DynArr(DynArr&& that):
             Base{BaseImpl{ mov(that) }} { }
 
         /// ----------------------------------------------------------------------------------------
@@ -157,7 +157,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Dtor.
         /// ----------------------------------------------------------------------------------------
-        constexpr dtor DynArr()
+        constexpr ~DynArr()
         {
             self.Clear();
             self.Release();

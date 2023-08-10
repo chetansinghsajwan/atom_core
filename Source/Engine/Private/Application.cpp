@@ -2,7 +2,7 @@
 
 namespace Atom::Engine
 {
-    ctor Application::Application()
+    Application::Application()
     {
         WindowProps windowProps
         {
@@ -19,7 +19,7 @@ namespace Atom::Engine
         };
     }
 
-    Application::dtor Application()
+    Application::~Application()
     {
         if (_window != nullptr)
         {

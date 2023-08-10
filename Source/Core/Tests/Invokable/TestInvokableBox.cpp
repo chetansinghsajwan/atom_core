@@ -11,10 +11,10 @@ TEST_CASE("Atom/Invokable/InvokableBox")
         class NotMoveAssignable
         {
         public:
-            ctor NotMoveAssignable() = default;
+            NotMoveAssignable() = default;
 
-            ctor NotMoveAssignable(const NotMoveAssignable& other) = default;
-            ctor NotMoveAssignable(NotMoveAssignable&& other) = default;
+            NotMoveAssignable(const NotMoveAssignable& other) = default;
+            NotMoveAssignable(NotMoveAssignable&& other) = default;
 
             fn operator=(const NotMoveAssignable& other) -> NotMoveAssignable& = delete;
             fn operator=(NotMoveAssignable&& other) -> NotMoveAssignable& = delete;
@@ -39,21 +39,21 @@ TEST_CASE("Atom/Invokable/InvokableBox")
         class Lambda final
         {
         public:
-            ctor Lambda(i32* capturedValue):
+            Lambda(i32* capturedValue):
                 _capturedValue(capturedValue) { }
 
-            ctor Lambda(const Lambda& other)
+            Lambda(const Lambda& other)
             {
                 _capturedValue = other._capturedValue;
             }
 
-            ctor Lambda(Lambda&& other)
+            Lambda(Lambda&& other)
             {
                 self._capturedValue = other._capturedValue;
                 other._capturedValue = nullptr;
             }
 
-            dtor Lambda() { }
+            ~Lambda() { }
 
         public:
             fn operator()() -> i32

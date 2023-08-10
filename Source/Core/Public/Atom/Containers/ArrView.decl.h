@@ -18,10 +18,10 @@ namespace Atom
         using TElem = T;
 
     public:
-        constexpr ctor _ArrViewStorage():
+        constexpr _ArrViewStorage():
             _data{ nullptr }, _count{ 0 } { }
 
-        constexpr ctor _ArrViewStorage(const T* arr, usize count):
+        constexpr _ArrViewStorage(const T* arr, usize count):
             _data{ arr }, _count{ count } { }
 
     public:
@@ -83,20 +83,20 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Default Constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr ctor ArrView() = default;
+        constexpr ArrView() = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # Arr Constructor
         /// ----------------------------------------------------------------------------------------
         template <usize size>
-        constexpr ctor ArrView(const T(&range)[size]):
+        constexpr ArrView(const T(&range)[size]):
             _Storage() { }
 
         /// ----------------------------------------------------------------------------------------
         /// # Range Constructor
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
-        constexpr ctor ArrView(const TRange& range)
+        constexpr ArrView(const TRange& range)
             requires(RArrRangeOf<TRange, T>):
             _Storage{ range.data(), range.count() } { }
 

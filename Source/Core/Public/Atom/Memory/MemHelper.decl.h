@@ -11,10 +11,10 @@ namespace Atom
     class MemBlk
     {
     public:
-        constexpr ctor MemBlk(MemPtr mem, usize count):
+        constexpr MemBlk(MemPtr mem, usize count):
             mem{ mem }, count{ count } { }
 
-        constexpr ctor MemBlk(MemPtr begin, MemPtr end):
+        constexpr MemBlk(MemPtr begin, MemPtr end):
             mem{ begin }, count{ (usize)(end - begin) }
         {
             ATOM_DEBUG_EXPECTS(end >= begin);

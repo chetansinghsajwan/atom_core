@@ -31,7 +31,7 @@ namespace Atom::Logging::Private
         /// ----------------------------------------------------------------------------------------
         /// Default constructor.
         /// ----------------------------------------------------------------------------------------
-        ctor MultiLogTargetTemplate() { }
+        MultiLogTargetTemplate() { }
 
         /// ----------------------------------------------------------------------------------------
         /// Constructs with LogTarget objects.
@@ -45,7 +45,7 @@ namespace Atom::Logging::Private
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
         requires RRangeOf<TRange, LogTargetPtr>
-        ctor MultiLogTargetTemplate(const TRange& targets)
+        MultiLogTargetTemplate(const TRange& targets)
         {
             _AddTargets(mov(targets));
         }

@@ -87,7 +87,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Default Constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr ctor Variant()
+        constexpr Variant()
             requires(RDefaultConstructible<TAt<0>>)
         {
             _impl.template constructValueByIndex<0>();
@@ -96,12 +96,12 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Trivial Copy Constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr ctor Variant(const Variant& that) = default;
+        constexpr Variant(const Variant& that) = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # Copy Constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr ctor Variant(const Variant& that)
+        constexpr Variant(const Variant& that)
             requires(RCopyConstructibleAll<Ts...>)
                 and (not RTriviallyCopyConstructibleAll<Ts...>)
         {
@@ -112,7 +112,7 @@ namespace Atom
         /// # Copy Constructor Template
         /// ----------------------------------------------------------------------------------------
         template <typename... TOthers>
-        constexpr ctor Variant(const Variant<TOthers...>& that)
+        constexpr Variant(const Variant<TOthers...>& that)
             requires(Types::template Has<TOthers...>)
                 and (RCopyConstructibleAll<TOthers...>)
         {
@@ -153,12 +153,12 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Trivial Move Constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr ctor Variant(Variant&& that) = default;
+        constexpr Variant(Variant&& that) = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # Move Constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr ctor Variant(Variant&& that)
+        constexpr Variant(Variant&& that)
             requires(RMoveConstructibleAll<Ts...>)
                 and (not RTriviallyMoveConstructibleAll<Ts...>)
         {
@@ -169,7 +169,7 @@ namespace Atom
         /// # Move Constructor Template
         /// ----------------------------------------------------------------------------------------
         template <typename... TOthers>
-        constexpr ctor Variant(Variant<TOthers...>&& that)
+        constexpr Variant(Variant<TOthers...>&& that)
             requires(Types::template Has<TOthers...>)
                 and (RMoveConstructibleAll<TOthers...>)
         {
@@ -216,7 +216,7 @@ namespace Atom
         /// - `value`: Value to construct with.
         /// ----------------------------------------------------------------------------------------
         template <typename T>
-        constexpr ctor Variant(const T& value)
+        constexpr Variant(const T& value)
             requires(Has<T>())
         {
             _impl.template constructValueByType<T>(value);
@@ -231,7 +231,7 @@ namespace Atom
         /// - `value`: Value to construct with.
         /// ----------------------------------------------------------------------------------------
         template <typename T>
-        constexpr ctor Variant(T&& value)
+        constexpr Variant(T&& value)
             requires(Has<T>())
         {
             _impl.template constructValueByType<T>(mov(value));
@@ -272,14 +272,14 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Trivial Destructor
         /// ----------------------------------------------------------------------------------------
-        constexpr dtor Variant() = default;
+        constexpr ~Variant() = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # Destructor
         /// 
         /// Destructs value.
         /// ----------------------------------------------------------------------------------------
-        constexpr dtor Variant()
+        constexpr ~Variant()
             requires(not RTriviallyDestructibleAll<Ts...>)
         {
             _impl.destroyValue();

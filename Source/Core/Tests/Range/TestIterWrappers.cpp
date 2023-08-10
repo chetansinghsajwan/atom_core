@@ -52,11 +52,11 @@
 //         using Base = MutArrIter<i32>;
 // 
 //     public:
-//         constexpr ctor CustomIter() { }
+//         constexpr CustomIter() { }
 // 
-//         constexpr ctor CustomIter(i32, char, f32, const char*) { }
+//         constexpr CustomIter(i32, char, f32, const char*) { }
 // 
-//         constexpr ctor CustomIter(const Base& base):
+//         constexpr CustomIter(const Base& base):
 //             Base{ base } { }
 //     };
 // 

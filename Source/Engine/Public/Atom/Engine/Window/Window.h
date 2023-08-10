@@ -29,7 +29,7 @@ namespace Atom::Engine
     class SWindowEvent
     {
     public:
-        ctor SWindowEvent(EWindowEventType eventType):
+        SWindowEvent(EWindowEventType eventType):
             eventType(eventType) { }
 
     public:
@@ -39,7 +39,7 @@ namespace Atom::Engine
     class SWindowResizeEvent : public SWindowEvent
     {
     public:
-        ctor SWindowResizeEvent(SWindowCoords size, SWindowCoords delta):
+        SWindowResizeEvent(SWindowCoords size, SWindowCoords delta):
             size(size), delta(delta),
             SWindowEvent(EWindowEventType::Resize) { }
 
@@ -51,7 +51,7 @@ namespace Atom::Engine
     class SWindowRepositionEvent : public SWindowEvent
     {
     public:
-        ctor SWindowRepositionEvent(SWindowCoords position, SWindowCoords delta):
+        SWindowRepositionEvent(SWindowCoords position, SWindowCoords delta):
             position(position), delta(delta),
             SWindowEvent(EWindowEventType::Reposition) { }
 
@@ -63,18 +63,18 @@ namespace Atom::Engine
     class SWindowCloseEvent : public SWindowEvent
     {
     public:
-        ctor SWindowCloseEvent():
+        SWindowCloseEvent():
             SWindowEvent(EWindowEventType::Close) { }
     };
 
     class Window
     {
     public:
-        ctor Window(IEvent<const SWindowEvent&>& event):
+        Window(IEvent<const SWindowEvent&>& event):
             OnEvent{ event } { }
 
     public:
-        virtual dtor Window() = default;
+        virtual ~Window() = default;
 
         virtual fn Update() -> void abstract;
 

@@ -47,7 +47,7 @@ namespace Atom
             ATOM_CONDITIONAL_FIELD(Movable,
                 InvokablePtr<void(void*, void*)>) move;
 
-            InvokablePtr<void(void* obj)> dtor_;
+            InvokablePtr<void(void* obj)> dtor;
 
             usize size;
             void* obj;
@@ -98,13 +98,13 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// DefaultConstructor.
         /// ----------------------------------------------------------------------------------------
-        constexpr ctor ObjectBox():
+        constexpr ObjectBox():
             _object(), _heapMem(nullptr), _heapMemSize(0), _memAllocator() { }
 
         /// ----------------------------------------------------------------------------------------
         /// NullConstructor.
         /// ----------------------------------------------------------------------------------------
-        constexpr ctor ObjectBox(NullType null):
+        constexpr ObjectBox(NullType null):
             ObjectBox() { }
 
         /// ----------------------------------------------------------------------------------------
@@ -129,7 +129,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <typename T>
         requires RObject<T>
-        ctor ObjectBox(T&& obj): ObjectBox()
+        ObjectBox(T&& obj): ObjectBox()
         {
             _InitObject(fwd(obj));
         }
@@ -148,7 +148,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// CopyConstructor.
         /// ----------------------------------------------------------------------------------------
-        ctor ObjectBox(const ObjectBox& other)
+        ObjectBox(const ObjectBox& other)
             requires Copyable : ObjectBox()
         {
             _CopyBox(other);
@@ -160,7 +160,7 @@ namespace Atom
         template <bool OtherMovable, bool OtherAllowNonMovableObject,
             usize OtherStackSize, typename TOtherMemAllocator>
         requires Copyable && ROtherBox<Copyable, OtherMovable, OtherAllowNonMovableObject>
-        ctor ObjectBox(const ObjectBox<Copyable, OtherMovable, OtherAllowNonMovableObject, 
+        ObjectBox(const ObjectBox<Copyable, OtherMovable, OtherAllowNonMovableObject, 
             OtherStackSize, TOtherMemAllocator>& other): ObjectBox()
         {
             _CopyBox(other);
@@ -192,7 +192,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// MoveConstructor.
         /// ----------------------------------------------------------------------------------------
-        ctor ObjectBox(ObjectBox&& other)
+        ObjectBox(ObjectBox&& other)
             requires Movable : ObjectBox()
         {
             _MoveBox(mov(other));
@@ -204,7 +204,7 @@ namespace Atom
         template <bool OtherCopyable, bool OtherMovable, bool OtherAllowNonMovableObject,
             usize OtherStackSize, typename TOtherMemAllocator>
         requires Movable && ROtherBox<OtherCopyable, OtherMovable, OtherAllowNonMovableObject>
-        ctor ObjectBox(ObjectBox<OtherCopyable, OtherMovable, OtherAllowNonMovableObject,
+        ObjectBox(ObjectBox<OtherCopyable, OtherMovable, OtherAllowNonMovableObject,
             OtherStackSize, TOtherMemAllocator>&& other): ObjectBox()
         {
             _MoveBox(mov(other));
@@ -236,7 +236,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Destructor.
         /// ----------------------------------------------------------------------------------------
-        dtor ObjectBox()
+        ~ObjectBox()
         {
             _DisposeBox();
         }
@@ -369,7 +369,7 @@ namespace Atom
             _object.size = sizeof(T);
             _object.type = &typeid(T);
 
-            _object.dtor_ = [](void* obj)
+            _object.dtor = [](void* obj)
             {
                 reinterpret_cast<T*>(obj)->T::~T();
             };
@@ -514,7 +514,7 @@ namespace Atom
         {
             if (_object.obj != nullptr)
             {
-                _object.dtor_(_object.obj);
+                _object.dtor(_object.obj);
                 _object = {};
             }
         }
@@ -535,7 +535,7 @@ namespace Atom
             _object.obj = other.obj;
             _object.size = other.size;
             _object.type = other.type;
-            _object.dtor_ = other.dtor_;
+            _object.dtor = other.dtor;
 
             if constexpr (Copyable)
             {

@@ -47,13 +47,13 @@ namespace Atom
         using reference = value_type&;
 
     public:
-        constexpr ctor StdIterWrapForAtomIter(const TIter& iter):
+        constexpr StdIterWrapForAtomIter(const TIter& iter):
             iter{ iter } { }
 
-        constexpr ctor StdIterWrapForAtomIter(TIter& iter):
+        constexpr StdIterWrapForAtomIter(TIter& iter):
             iter{ iter } { }
 
-        constexpr ctor StdIterWrapForAtomIter(TIter&& iter):
+        constexpr StdIterWrapForAtomIter(TIter&& iter):
             iter{ mov(iter) } { }
 
     public:

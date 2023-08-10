@@ -35,12 +35,12 @@ namespace Atom::Test
         };
 
     public:
-        constexpr ctor TrackedType()
+        constexpr TrackedType()
         {
             lastOp = EOperation::DefaultConstructor;
         }
 
-        constexpr ctor TrackedType(const TrackedType& that)
+        constexpr TrackedType(const TrackedType& that)
         {
             lastOp = EOperation::CopyConstructor;
             that.lastOp = EOperation::CopyConstructorAsThat;
@@ -53,7 +53,7 @@ namespace Atom::Test
             return self;
         }
 
-        constexpr ctor TrackedType(TrackedType&& that)
+        constexpr TrackedType(TrackedType&& that)
         {
             lastOp = EOperation::MoveConstructor;
             that.lastOp = EOperation::MoveConstructorAsThat;
@@ -66,7 +66,7 @@ namespace Atom::Test
             return self;
         }
 
-        constexpr dtor TrackedType()
+        constexpr ~TrackedType()
         {
             lastOp = EOperation::Destructor;
         }

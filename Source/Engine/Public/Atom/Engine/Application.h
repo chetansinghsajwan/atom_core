@@ -6,8 +6,8 @@ namespace Atom::Engine
     class Application
     {
     public:
-        ctor Application();
-        virtual dtor Application();
+        Application();
+        virtual ~Application();
 
     public:
         virtual fn Run() -> void;

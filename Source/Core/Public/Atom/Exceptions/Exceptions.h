@@ -18,16 +18,16 @@ namespace Atom
         };
     }
 
-    inline Exception::ctor Exception(Str msg):
+    inline Exception::Exception(Str msg):
         msg(mov(msg)) { }
 
-    inline Exception::dtor Exception() { }
+    inline Exception::~Exception() { }
 
-    inline IndexOutOfRangeException::ctor IndexOutOfRangeException(
+    inline IndexOutOfRangeException::IndexOutOfRangeException(
         Str msg, usize index, usize begin, usize end):
         OutOfRangeException(mov(msg)), index{ index }, begin{ begin }, end{ end } { }
 
-    inline IndexOutOfRangeException::ctor IndexOutOfRangeException(
+    inline IndexOutOfRangeException::IndexOutOfRangeException(
         usize index, usize begin, usize end):
         OutOfRangeException(),
         index{ index }, begin{ begin }, end{ end } { }
@@ -35,7 +35,7 @@ namespace Atom
 
 namespace Atom::Ex::Internal
 {
-    inline ctor Thrower::Thrower(ExceptionSource src, StackTrace stackTrace):
+    inline Thrower::Thrower(ExceptionSource src, StackTrace stackTrace):
         _src{ mov(src) }, _stackTrace{ mov(stackTrace) } { }
 
     inline fn Thrower::RecordStack(StackTrace stackTrace) -> Thrower&

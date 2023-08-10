@@ -16,7 +16,7 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         /// Default constructs LogTargetBase().
         /// ----------------------------------------------------------------------------------------
-        ctor LogTargetBase():
+        LogTargetBase():
             _logLevel(ELogLevel::Debug), _flushLevel(ELogLevel::Info),
             _hasWritten(false), _alwaysFlush(false) { }
 

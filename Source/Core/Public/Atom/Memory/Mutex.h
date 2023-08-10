@@ -19,17 +19,17 @@ namespace Atom
         /// 
         /// @POST Mutex is not locked.
         /// ----------------------------------------------------------------------------------------
-        ctor SimpleMutex() { }
+        SimpleMutex() { }
 
         /// ----------------------------------------------------------------------------------------
         /// CopyConstructor is deleted.
         /// ----------------------------------------------------------------------------------------
-        ctor SimpleMutex(const SimpleMutex& other) = delete;
+        SimpleMutex(const SimpleMutex& other) = delete;
 
         /// ----------------------------------------------------------------------------------------
         /// MoveConstructor is delete.
         /// ----------------------------------------------------------------------------------------
-        ctor SimpleMutex(SimpleMutex&& other) = delete;
+        SimpleMutex(SimpleMutex&& other) = delete;
 
         /// ----------------------------------------------------------------------------------------
         /// CopyOperator is deleted.
@@ -46,7 +46,7 @@ namespace Atom
         /// 
         /// @NOTE If lock is locked by some thread and lock is destroyed, behaviour is undefined.
         /// ----------------------------------------------------------------------------------------
-        dtor SimpleMutex() { }
+        ~SimpleMutex() { }
 
     public:
         /// ----------------------------------------------------------------------------------------

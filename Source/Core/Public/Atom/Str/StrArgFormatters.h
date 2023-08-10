@@ -32,14 +32,14 @@ namespace Atom
 	class StrFmtEx : public Exception
 	{
     public:
-		ctor StrFmtEx(Str msg):
+		StrFmtEx(Str msg):
 			Exception(mov(msg)) { }
 
 		/// ----------------------------------------------------------------------------------------
 		/// @TODO Fix this ugly code.
 		/// ----------------------------------------------------------------------------------------
     public:
-		ctor StrFmtEx(const _FmtFmtEx& fmtEx):
+		StrFmtEx(const _FmtFmtEx& fmtEx):
 			Exception("Not implemented.") { }
 		// StrFmtEx(const _FmtFmtEx& fmtEx):
 		// 	Exception(CharEncodingConverter<UTF8CharEncoding, CharEncoding>()
@@ -52,7 +52,7 @@ namespace Atom
 	class StrFmtParseCtx
 	{
     public:
-		constexpr ctor StrFmtParseCtx(_FmtFmtParseCtx& fmtCtx):
+		constexpr StrFmtParseCtx(_FmtFmtParseCtx& fmtCtx):
 			_fmtCtx{ fmtCtx } { }
 
     public:
@@ -77,7 +77,7 @@ namespace Atom
 	class StrFmtCtx
 	{
     public:
-		constexpr ctor StrFmtCtx(_FmtFmtCtx& fmtCtx):
+		constexpr StrFmtCtx(_FmtFmtCtx& fmtCtx):
 			_fmtCtx{ fmtCtx } { }
 
 		fn Write(Char ch)

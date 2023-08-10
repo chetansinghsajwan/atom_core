@@ -24,7 +24,7 @@ namespace Atom::Logging::Internal
         /// 
         /// @PARAM[IN] name Name of this logger.
         /// ----------------------------------------------------------------------------------------
-        explicit ctor SimpleLoggerTemplate(Str name):
+        explicit SimpleLoggerTemplate(Str name):
             _name(mov(name)), targets() { }
 
         /// ----------------------------------------------------------------------------------------
@@ -35,7 +35,7 @@ namespace Atom::Logging::Internal
         /// @PARAM[IN] targets LogTarget objects to add.
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
-        ctor SimpleLoggerTemplate(Str name, const TRange& targets)
+        SimpleLoggerTemplate(Str name, const TRange& targets)
             requires(RRangeOf<TRange, LogTargetPtr>):
             _name(mov(name)), targets(targets) { }
 
