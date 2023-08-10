@@ -33,7 +33,7 @@ namespace Atom::Internal
         {
             if (!done)
             {
-                self << AssertException("Assertion failed.", assertExpr);
+                *this << AssertException("Assertion failed.", assertExpr);
             }
         }
 

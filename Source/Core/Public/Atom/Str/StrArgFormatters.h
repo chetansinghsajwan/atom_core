@@ -238,14 +238,14 @@ namespace fmt
 		auto parse(Atom::_FmtFmtParseCtx& fmtCtx) -> Atom::_FmtFmtParseCtxIter
 		{
 			Atom::StrFmtParseCtx ctx(fmtCtx);
-			self.fmter.Parse(ctx);
+			this->fmter.Parse(ctx);
 			return fmtCtx.begin();
 		}
 
 		auto format(const T& in, Atom::_FmtFmtCtx& fmtCtx) -> Atom::_FmtFmtCtxOut
 		{
 			Atom::StrFmtCtx ctx(fmtCtx);
-			self.fmter.Fmt(in, ctx);
+			this->fmter.Fmt(in, ctx);
 			return fmtCtx.out();
 		}
 

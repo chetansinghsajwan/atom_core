@@ -80,12 +80,12 @@ namespace Atom
     public:
         constexpr auto mutIter() -> TMutIter
         {
-            return TMutIter{ self._range.mutIter() };
+            return TMutIter{ this->_range.mutIter() };
         }
 
         constexpr auto mutIterEnd() -> TMutIterEnd
         {
-            return TMutIterEnd{ self._range.mutIterEnd() };
+            return TMutIterEnd{ this->_range.mutIterEnd() };
         }
     };
 

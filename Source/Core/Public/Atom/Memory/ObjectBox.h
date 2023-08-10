@@ -113,7 +113,7 @@ namespace Atom
         auto operator=(NullType null) -> ObjectBox&
         {
             _DisposeObject();
-            return self;
+            return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -142,7 +142,7 @@ namespace Atom
         auto operator=(T&& object) -> ObjectBox&
         {
             _SetObject(fwd(object));
-            return self;
+            return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -173,7 +173,7 @@ namespace Atom
             requires Copyable
         {
             _CopyBox(other);
-            return self;
+            return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -186,7 +186,7 @@ namespace Atom
             OtherStackSize, TOtherMemAllocator>& other) -> ObjectBox&
         {
             _CopyBox(other);
-            return self;
+            return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -217,7 +217,7 @@ namespace Atom
             requires Movable
         {
             _MoveBox(mov(other));
-            return self;
+            return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -230,7 +230,7 @@ namespace Atom
             OtherStackSize, TOtherMemAllocator>&& other) -> ObjectBox&
         {
             _MoveBox(mov(other));
-            return self;
+            return *this;
         }
 
         /// ----------------------------------------------------------------------------------------

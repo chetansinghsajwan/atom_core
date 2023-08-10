@@ -67,18 +67,18 @@ namespace Atom
             public:
                 auto operator++(i32) -> _OutIterWrap&
                 {
-                    return self;
+                    return *this;
                 }
 
                 auto operator*() -> _OutIterWrap&
                 {
-                    return self;
+                    return *this;
                 }
 
                 auto operator=(Char ch) -> _OutIterWrap&
                 {
                     *out+= ch;
-                    return self;
+                    return *this;
                 }
 
             public:

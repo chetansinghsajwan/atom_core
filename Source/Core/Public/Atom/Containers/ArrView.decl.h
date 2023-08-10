@@ -107,7 +107,7 @@ namespace Atom
         constexpr auto operator=(const TRange& range) -> ArrView&
             requires(RArrRangeOf<TRange, T>)
         {
-            self = ArrView{ range.data(), range.count() };
+            *this = ArrView{ range.data(), range.count() };
         }
     };
 
@@ -136,7 +136,7 @@ namespace Atom
     private:
         constexpr auto _storage() const -> const _Storage&
         {
-            return reinterpret_cast<const _Storage&>(self);
+            return reinterpret_cast<const _Storage&>(*this);
         }
     };
 }

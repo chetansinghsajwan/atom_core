@@ -49,7 +49,7 @@ TEST_CASE("Atom/Invokable/InvokableBox")
 
             Lambda(Lambda&& other)
             {
-                self._capturedValue = other._capturedValue;
+                this->_capturedValue = other._capturedValue;
                 other._capturedValue = nullptr;
             }
 

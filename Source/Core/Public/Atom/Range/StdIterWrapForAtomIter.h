@@ -90,7 +90,7 @@ namespace Atom
             requires(RIter<TIter>)
         {
             ++iter;
-            return self;
+            return *this;
         }
 
         template <class = void>
@@ -105,7 +105,7 @@ namespace Atom
             requires(RBidiIter<TIter>)
         {
             --iter;
-            return self;
+            return *this;
         }
 
         template <class = void>

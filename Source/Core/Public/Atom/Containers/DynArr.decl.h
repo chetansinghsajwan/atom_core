@@ -72,13 +72,13 @@ namespace Atom
         constexpr auto _Swap(_DynArrImplBase& that) -> void
         {
             _DynArrImplBase tmp = that;
-            self = that;
+            *this = that;
             that = tmp;
         }
 
         constexpr auto _Move(_DynArrImplBase& that) -> void
         {
-            self = that;
+            *this = that;
             that = _DynArrImplBase(nullptr);
         }
 
@@ -116,7 +116,7 @@ namespace Atom
         requires (RRangeOf<TRange, T>):
             Base{BaseImpl{ nullptr }}
         {
-            self.InsertBack(range);
+            this->InsertBack(range);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -125,7 +125,7 @@ namespace Atom
         constexpr DynArr(const DynArr& that):
             Base{BaseImpl{ nullptr }}
         {
-            self.InsertBack(that);
+            this->InsertBack(that);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -133,9 +133,9 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator=(const DynArr& that) -> DynArr&
         {
-            self.Clear();
-            self.InsertBack(that);
-            return self;
+            this->Clear();
+            this->InsertBack(that);
+            return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -150,8 +150,8 @@ namespace Atom
         constexpr auto operator=(DynArr&& that) -> DynArr&
         {
             DynArr tmp = mov(that);
-            self._Swap(tmp);
-            return self;
+            this->_Swap(tmp);
+            return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -159,8 +159,8 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr ~DynArr()
         {
-            self.Clear();
-            self.Release();
+            this->Clear();
+            this->Release();
         }
     };
 }

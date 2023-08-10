@@ -93,7 +93,7 @@ namespace Atom
         auto operator=(NullType null) -> InvokableBox&
         {
             ObjectBox::operator=(null);
-            return self;
+            return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -124,7 +124,7 @@ namespace Atom
         {
             ObjectBox::operator=(fwd(invokable));
             _SetInvoker<TInvokable>();
-            return self;
+            return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -139,7 +139,7 @@ namespace Atom
         auto operator=(const InvokableBox& other) -> InvokableBox&
         {
             ObjectBox::operator=(other);
-            return self;
+            return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -154,7 +154,7 @@ namespace Atom
         auto operator=(InvokableBox&& other) -> InvokableBox&
         {
             ObjectBox::operator=(mov(other));
-            return self;
+            return *this;
         }
 
         /// ----------------------------------------------------------------------------------------

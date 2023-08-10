@@ -104,7 +104,7 @@ namespace Atom::Test
             requires(EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::CopyOperator))
                 and (not EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::TrivialCopyOperator))
         {
-            return self;
+            return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -136,7 +136,7 @@ namespace Atom::Test
             requires(EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::MoveOperator))
                 and (not EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::TrivialMoveOperator))
         {
-            return self;
+            return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -173,7 +173,7 @@ namespace Atom::Test
         constexpr auto operator!=(const CustomType& that) -> bool
             requires(EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::EqualToOperator))
         {
-            return not (self == that);
+            return not (*this == that);
         }
 
         /// ----------------------------------------------------------------------------------------

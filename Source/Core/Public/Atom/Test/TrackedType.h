@@ -50,7 +50,7 @@ namespace Atom::Test
         {
             lastOp = EOperation::CopyOperator;
             that.lastOp = EOperation::CopyOperatorAsThat;
-            return self;
+            return *this;
         }
 
         constexpr TrackedType(TrackedType&& that)
@@ -63,7 +63,7 @@ namespace Atom::Test
         {
             lastOp = EOperation::MoveOperator;
             that.lastOp = EOperation::MoveOperatorAsThat;
-            return self;
+            return *this;
         }
 
         constexpr ~TrackedType()
@@ -81,7 +81,7 @@ namespace Atom::Test
 
         constexpr auto operator!=(const TrackedType& that) const -> bool
         {
-            return not (self == that);
+            return not (*this == that);
         }
 
         constexpr auto operator<(const TrackedType& that) const -> bool

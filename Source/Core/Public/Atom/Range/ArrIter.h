@@ -45,7 +45,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator==(const ArrIter& that) const -> bool
         {
-            return self._it == that._it;
+            return this->_it == that._it;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -53,7 +53,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator!=(const ArrIter& that) const -> bool
         {
-            return self._it != that._it;
+            return this->_it != that._it;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -62,7 +62,7 @@ namespace Atom
         constexpr auto operator++(i32) -> ArrIter&
         {
             _it++;
-            return self;
+            return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -71,7 +71,7 @@ namespace Atom
         constexpr auto operator++() -> ArrIter&
         {
             _it++;
-            return self;
+            return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -80,7 +80,7 @@ namespace Atom
         constexpr auto operator--(i32) -> ArrIter&
         {
             _it--;
-            return self;
+            return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -89,7 +89,7 @@ namespace Atom
         constexpr auto operator+=(usize steps) -> ArrIter&
         {
             _it =+ steps;
-            return self;
+            return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -98,7 +98,7 @@ namespace Atom
         constexpr auto operator-=(usize steps) -> ArrIter&
         {
             _it =- steps;
-            return self;
+            return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -122,7 +122,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator-(const ArrIter& that) const -> isize
         {
-            return self._it - that._it;
+            return this->_it - that._it;
         }
 
     protected:
@@ -148,7 +148,7 @@ namespace Atom
 
         constexpr auto operator*() -> T&
         {
-            return *(T*)self._it;
+            return *(T*)this->_it;
         }
 
     public:
@@ -157,7 +157,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator+(usize steps) const -> MutArrIter
         {
-            return MutArrIter(self._it + steps);
+            return MutArrIter(this->_it + steps);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -165,7 +165,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator-(usize steps) const -> MutArrIter
         {
-            return MutArrIter(self._it - steps);
+            return MutArrIter(this->_it - steps);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -173,7 +173,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator-(const MutArrIter& that) const -> isize
         {
-            return self._it - that._it;
+            return this->_it - that._it;
         }
     };
 

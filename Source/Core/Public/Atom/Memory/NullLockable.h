@@ -32,12 +32,12 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// CopyOperator is default.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator=(const NullLockable& other) -> NullLockable& { return self; }
+        constexpr auto operator=(const NullLockable& other) -> NullLockable& { return *this; }
 
         /// ----------------------------------------------------------------------------------------
         /// MoveOperator is default.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator=(NullLockable&& other) -> NullLockable& { return self; }
+        constexpr auto operator=(NullLockable&& other) -> NullLockable& { return *this; }
 
         /// ----------------------------------------------------------------------------------------
         /// Destructor. Does nothing.

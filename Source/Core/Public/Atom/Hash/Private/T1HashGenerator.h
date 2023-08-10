@@ -64,7 +64,7 @@ namespace Atom::Private
                 }
             }
 
-            return self;
+            return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -96,7 +96,7 @@ namespace Atom::Private
                     (uint32_t)Math::Min(maxInput, dataSize - processed));
             }
 
-            return self;
+            return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -107,7 +107,7 @@ namespace Atom::Private
         auto ProcessByte(byte data) -> Self&
         {
             _impl.Update(&data, 1);
-            return self;
+            return *this;
         }
 
         /// ----------------------------------------------------------------------------------------

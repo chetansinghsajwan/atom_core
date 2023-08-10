@@ -18,10 +18,7 @@ namespace Atom
 #define ATOM_IS_CONFIG_DEBUG true
 #define ATOM_IF_DEBUG if constexpr (ATOM_IS_CONFIG_DEBUG)
 
-#define ATOM_FUNCTION __func__
-
-#define ofinal override final
 #define fwd(...) static_cast<decltype(__VA_ARGS__)&&>(__VA_ARGS__)
 #define mov(...) static_cast<Atom::_remove_ref_t<decltype(__VA_ARGS__)>&&>(__VA_ARGS__)
+#define ofinal override final
 #define abstract = 0
-#define self (*this)

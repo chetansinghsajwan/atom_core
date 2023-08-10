@@ -87,7 +87,7 @@ namespace Atom
                 and (not RTriviallyCopyAssignable<T>)
         {
             _impl.assignValueFromOption(that._impl);
-            return self;
+            return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -134,7 +134,7 @@ namespace Atom
                 and (not RTriviallyMoveAssignable<T>)
         {
             _impl.assignValueFromOption(mov(that._impl));
-            return self;
+            return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -153,7 +153,7 @@ namespace Atom
         constexpr auto operator=(NullOption) -> Option&
         {
             _impl.destroyValueWithChecks();
-            return self;
+            return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -179,7 +179,7 @@ namespace Atom
         constexpr auto operator=(const T& val) -> Option&
         {
             _impl.assignValue(val);
-            return self;
+            return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -205,7 +205,7 @@ namespace Atom
         constexpr auto operator=(T&& val) -> Option&
         {
             _impl.assignValue(mov(val));
-            return self;
+            return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -475,7 +475,7 @@ namespace Atom
         constexpr auto operator=(NullOption) -> Option&
         {
             _impl.destroyValueWithChecks();
-            return self;
+            return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -500,7 +500,7 @@ namespace Atom
         constexpr auto operator=(T& ref) -> Option&
         {
             _impl.assignValue(&ref);
-            return self;
+            return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
