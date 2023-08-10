@@ -12,19 +12,19 @@ namespace Atom
 
 namespace Atom::Math
 {
-    cexpr fn Abs(f64 value) -> f64
+    constexpr fn Abs(f64 value) -> f64
     {
         // TODO: Improve this, maybe using sign bit flag.
         return value * (value < 0 ? -1 : 1);
     }
 
-    cexpr fn IsApproximatelyZero(f64 lhs, f64 rhs) -> bool
+    constexpr fn IsApproximatelyZero(f64 lhs, f64 rhs) -> bool
     {
         return Abs(lhs - rhs) < 0.0001f;
     }
 
     template <typename TInt>
-    cexpr fn Clamp(const TInt& value, const TInt& lhs, const TInt& rhs) -> TInt
+    constexpr fn Clamp(const TInt& value, const TInt& lhs, const TInt& rhs) -> TInt
     {
         if (value < lhs) return lhs;
         if (value > rhs) return rhs;
@@ -34,19 +34,19 @@ namespace Atom::Math
 
     // TODO: Implement with template args
     template <typename TInt>
-    cexpr fn Min(const TInt& lhs, const TInt& rhs) -> TInt
+    constexpr fn Min(const TInt& lhs, const TInt& rhs) -> TInt
     {
         return lhs < rhs ? lhs : rhs;
     }
 
     // TODO: Implement with template args
     template <typename TInt>
-    cexpr fn Max(const TInt& lhs, const TInt& rhs) -> TInt
+    constexpr fn Max(const TInt& lhs, const TInt& rhs) -> TInt
     {
         return lhs > rhs ? lhs : rhs;
     }
 
-    cexpr fn CharToHex(Char ch) -> byte
+    constexpr fn CharToHex(Char ch) -> byte
     {
         if (ch >= '0' && ch <= '9')
             return byte(ch - '0');
@@ -58,16 +58,16 @@ namespace Atom::Math
         return -1;
     }
 
-    cexpr fn HexToChar(byte hex) -> StaticStr<2>
+    constexpr fn HexToChar(byte hex) -> StaticStr<2>
     {
-        cexpr const Char chars[] = "0123456789abcdef";
+        constexpr const Char chars[] = "0123456789abcdef";
 
         byte high = hex >> 4;
         byte low = hex & 0b00001111;
         return { chars[high], chars[low] };
     }
 
-    cexpr fn IsHexChar(Char ch) -> bool
+    constexpr fn IsHexChar(Char ch) -> bool
     {
         return (ch >= '0' && ch <= '9') ||
             (ch >= 'a' && ch <= 'f') ||

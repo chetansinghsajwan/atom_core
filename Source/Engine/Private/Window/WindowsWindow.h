@@ -1,12 +1,12 @@
 #pragma once
-#include "Window/GLFWWindow.h"
+#include "Window/GlfwWindow.h"
 
 namespace Atom::Engine
 {
-    class WindowsWindow: public GLFWWindow
+    class WindowsWindow: public GlfwWindow
     {
     public:
         ctor WindowsWindow(const WindowProps& props):
-            GLFWWindow(props) { }
+            GlfwWindow(props) { }
     };
 }

@@ -11,13 +11,13 @@ namespace Atom::Text
         pub using TChar = char8;
         pub using TRune = char32;
 
-        pub static cexpr TChar Null = u8('\0');
-        pub static cexpr bool IsMultiCharEncoding = true;
+        pub static constexpr TChar Null = u8('\0');
+        pub static constexpr bool IsMultiCharEncoding = true;
 
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pub static cexpr fn IsContinuationChar(TChar ch) -> bool
+        pub static constexpr fn IsContinuationChar(TChar ch) -> bool
         {
             return (ch & 0b11000000) == 0b10000000;
         }
@@ -25,7 +25,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pub static cexpr fn ParseStartingChar(TChar ch) -> usize
+        pub static constexpr fn ParseStartingChar(TChar ch) -> usize
         {
             if ((ch & 0b10000000) == 0b00000000) return 1;
             if ((ch & 0b11100000) == 0b11000000) return 2;
@@ -38,7 +38,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pub static cexpr fn IsStartingChar(TChar ch) -> bool
+        pub static constexpr fn IsStartingChar(TChar ch) -> bool
         {
             return ParseStartingChar(ch) != 0;
         }

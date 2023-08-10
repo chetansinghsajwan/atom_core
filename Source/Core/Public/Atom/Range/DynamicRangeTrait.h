@@ -38,7 +38,7 @@ namespace Atom
         /// 
         /// ----------------------------------------------------------------------------------------
         template <typename TPred>
-        cexpr fn removeIf(TPred&& pred)->usize
+        constexpr fn removeIf(TPred&& pred)->usize
             requires(RInvokable<TPred, bool(const TElem&)>)
         {
             usize count = 0;

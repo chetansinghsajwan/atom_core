@@ -1,11 +1,11 @@
 #pragma once
-#include "Window/GLFWWindow.h"
+#include "Window/GlfwWindow.h"
 
 namespace Atom::Engine
 {
-    class LinuxWindow extends GLFWWindow
+    class LinuxWindow extends GlfwWindow
     {
         pub ctor LinuxWindow(const WindowProps& props):
-            GLFWWindow(props) { }
+            GlfwWindow(props) { }
     };
 }

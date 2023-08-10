@@ -9,12 +9,12 @@ namespace Atom::Private
     template <usize Size>
     class T1Hash
     {
-        pub static cexpr usize _Size = Size;
+        pub static constexpr usize _Size = Size;
 
         pub static const T1Hash Null;
 
-        pub cexpr fn op==(const T1Hash& other) const -> bool = default;
-        pub cexpr fn op!=(const T1Hash& other) const -> bool = default;
+        pub constexpr fn op==(const T1Hash& other) const -> bool = default;
+        pub constexpr fn op!=(const T1Hash& other) const -> bool = default;
 
         pub StaticArr<byte, Size> bytes;
     };
@@ -24,7 +24,7 @@ namespace Atom::Private
 #ifdef ATOM_COMP_MSVC
     inline
 #else
-    cexpr
+    constexpr
 #endif
     const T1Hash<Size> T1Hash<Size>::Null = T1Hash<Size>{ 0 };
 }

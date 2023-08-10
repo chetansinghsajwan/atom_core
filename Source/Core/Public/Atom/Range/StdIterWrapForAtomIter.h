@@ -47,47 +47,47 @@ namespace Atom
         using reference = value_type&;
 
     public:
-        cexpr ctor StdIterWrapForAtomIter(const TIter& iter):
+        constexpr ctor StdIterWrapForAtomIter(const TIter& iter):
             iter{ iter } { }
 
-        cexpr ctor StdIterWrapForAtomIter(TIter& iter):
+        constexpr ctor StdIterWrapForAtomIter(TIter& iter):
             iter{ iter } { }
 
-        cexpr ctor StdIterWrapForAtomIter(TIter&& iter):
+        constexpr ctor StdIterWrapForAtomIter(TIter&& iter):
             iter{ mov(iter) } { }
 
     public:
         template <class = void>
         requires RIter<TIter>
-        cexpr fn op*() const -> const value_type&
+        constexpr fn op*() const -> const value_type&
         {
             return *iter;
         }
 
         template <class = void>
         requires RMutIter<TIter>
-        cexpr fn op*() -> value_type&
+        constexpr fn op*() -> value_type&
         {
             return *iter;
         }
 
         template <class TIterEnd>
         requires RIterEnd<TIter, TIterEnd>
-        cexpr fn op== (const StdIterWrapForAtomIter<TIterEnd>& that) const -> bool
+        constexpr fn op== (const StdIterWrapForAtomIter<TIterEnd>& that) const -> bool
         {
             return iter == that.iter;
         }
 
         template <class TIterEnd>
         requires RIterEnd<TIter, TIterEnd>
-        cexpr fn op!= (const StdIterWrapForAtomIter<TIterEnd>& that) const -> bool
+        constexpr fn op!= (const StdIterWrapForAtomIter<TIterEnd>& that) const -> bool
         {
             return iter != that.iter;
         }
 
         template <class = void>
         requires RIter<TIter>
-        cexpr fn op++() -> Self&
+        constexpr fn op++() -> Self&
         {
             ++iter;
             return self;
@@ -95,14 +95,14 @@ namespace Atom
 
         template <class = void>
         requires RIter<TIter>
-        cexpr fn op++(i32) -> Self
+        constexpr fn op++(i32) -> Self
         {
             return Self{ iter++ };
         }
 
         template <class = void>
         requires RBidiIter<TIter>
-        cexpr fn op--() -> Self&
+        constexpr fn op--() -> Self&
         {
             --iter;
             return self;
@@ -110,28 +110,28 @@ namespace Atom
 
         template <class = void>
         requires RBidiIter<TIter>
-        cexpr fn op--(i32) const -> Self
+        constexpr fn op--(i32) const -> Self
         {
             return Self{ iter-- };
         }
 
         template <class = void>
         requires RJumpIter<TIter>
-        cexpr fn op+(difference_type steps) -> Self
+        constexpr fn op+(difference_type steps) -> Self
         {
             return Self{ iter + steps };
         }
 
         template <class = void>
         requires RJumpIter<TIter>
-        cexpr fn op-(difference_type steps) -> Self
+        constexpr fn op-(difference_type steps) -> Self
         {
             return Self{ iter - steps };
         }
 
         template <class = void>
         requires RJumpIter<TIter>
-        cexpr fn op-(const Self& that) -> difference_type
+        constexpr fn op-(const Self& that) -> difference_type
         {
             return iter - that.iter;
         }

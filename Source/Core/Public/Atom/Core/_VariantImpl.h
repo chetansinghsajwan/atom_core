@@ -44,30 +44,30 @@ namespace Atom
     //// -------------------------------------------------------------------------------------------
 
     public:
-        static cexpr fn GetTypeCount() -> usize
+        static constexpr fn GetTypeCount() -> usize
         {
             return _Types::Count;
         }
 
         template <typename T>
-        static ceval fn HasType() -> bool
+        static consteval fn HasType() -> bool
         {
             return _Types::template Has<T>;
         }
 
         template <usize i>
-        static ceval fn HasIndex() -> bool
+        static consteval fn HasIndex() -> bool
         {
             return i < _Types::Count;
         }
 
         template <typename T>
-        static ceval fn GetIndexForType() -> usize
+        static consteval fn GetIndexForType() -> usize
         {
             return _Types::template IndexOf<T>;
         }
 
-        static ceval fn GetNullTypeIndex() -> usize
+        static consteval fn GetNullTypeIndex() -> usize
         {
             return -1;
         }
@@ -87,13 +87,13 @@ namespace Atom
         /// - Current value is null.
         /// ----------------------------------------------------------------------------------------
         template <typename... TOthers>
-        cexpr fn constructValueFromVariant(const _VariantImpl<TOthers...>& that)
+        constexpr fn constructValueFromVariant(const _VariantImpl<TOthers...>& that)
         {
             _constructValueFromVariantImpl<false, 0, TOthers...>(that, that.getTypeIndex());
         }
 
         template <typename... TOthers>
-        cexpr fn constructValueFromVariant(_VariantImpl<TOthers...>&& that)
+        constexpr fn constructValueFromVariant(_VariantImpl<TOthers...>&& that)
         {
             _constructValueFromVariantImpl<true, 0, TOthers...>(that, that.getTypeIndex());
         }
@@ -103,13 +103,13 @@ namespace Atom
         /// Assigns if `that` variant holds the same type else constructs.
         /// ----------------------------------------------------------------------------------------
         template <typename... TOthers>
-        cexpr fn setValueFromVariant(const _VariantImpl<TOthers...>& that)
+        constexpr fn setValueFromVariant(const _VariantImpl<TOthers...>& that)
         {
             _setValueFromVariantImpl<false, 0, TOthers...>(that, that.getTypeIndex());
         }
 
         template <typename... TOthers>
-        cexpr fn setValueFromVariant(_VariantImpl<TOthers...>&& that)
+        constexpr fn setValueFromVariant(_VariantImpl<TOthers...>&& that)
         {
             _setValueFromVariantImpl<true, 0, TOthers...>(that, that.getTypeIndex());
         }
@@ -121,7 +121,7 @@ namespace Atom
         /// - Current value is null.
         /// ----------------------------------------------------------------------------------------
         template <typename T, typename... TArgs>
-        cexpr fn constructValueByType(TArgs&&... args)
+        constexpr fn constructValueByType(TArgs&&... args)
         {
             _constructValueAs<T>(fwd(args)...);
             _index = GetIndexForType<T>();
@@ -134,7 +134,7 @@ namespace Atom
         /// - Current value is null.
         /// ----------------------------------------------------------------------------------------
         template <usize i, typename... TArgs>
-        cexpr fn constructValueByIndex(TArgs&&... args)
+        constexpr fn constructValueByIndex(TArgs&&... args)
         {
             constructValueByType<TypeAtIndex<i>>(fwd(args)...);
         }
@@ -146,7 +146,7 @@ namespace Atom
         /// - Current value is null.
         /// ----------------------------------------------------------------------------------------
         template <typename T, typename... TArgs>
-        cexpr fn emplaceValueByType(TArgs&&... args)
+        constexpr fn emplaceValueByType(TArgs&&... args)
         {
             destroyValue();
 
@@ -161,7 +161,7 @@ namespace Atom
         /// - Current value is null.
         /// ----------------------------------------------------------------------------------------
         template <usize i, typename... TArgs>
-        cexpr fn emplaceValueByIndex(TArgs&&... args)
+        constexpr fn emplaceValueByIndex(TArgs&&... args)
         {
             emplaceValueByType<TypeAtIndex<i>>(fwd(args)...);
         }
@@ -170,7 +170,7 @@ namespace Atom
         /// Constructs or assigns value of type deduced by `value` with `value`.
         /// ----------------------------------------------------------------------------------------
         template <typename TFwd>
-        cexpr fn setValue(TFwd&& value)
+        constexpr fn setValue(TFwd&& value)
         {
             using T = TTI::TRemoveQuailfiersRef<TFwd>;
             usize indexToSet = GetIndexForType<T>();
@@ -188,7 +188,7 @@ namespace Atom
         }
 
         template <typename T>
-        cexpr fn getValueByType() const -> const T&
+        constexpr fn getValueByType() const -> const T&
         {
             debug_expects(GetIndexForType<T>() == getTypeIndex(),
                 "Current type is not same as requested type.");
@@ -197,7 +197,7 @@ namespace Atom
         }
 
         template <typename T>
-        cexpr fn getValueByType() -> T&
+        constexpr fn getValueByType() -> T&
         {
             debug_expects(GetIndexForType<T>() == getTypeIndex(),
                 "Current type is not same as requested type.");
@@ -206,48 +206,48 @@ namespace Atom
         }
 
         template <usize i>
-        cexpr fn getValueByIndex() const -> const TypeAtIndex<i>&
+        constexpr fn getValueByIndex() const -> const TypeAtIndex<i>&
         {
             return getValueByType<TypeAtIndex<i>>();
         }
 
         template <usize i>
-        cexpr fn getValueByIndex() -> TypeAtIndex<i>&
+        constexpr fn getValueByIndex() -> TypeAtIndex<i>&
         {
             return getValueByType<TypeAtIndex<i>>();
         }
 
         template <typename T>
-        cexpr fn isType() const -> bool
+        constexpr fn isType() const -> bool
         {
             return GetIndexForType<T>() == getTypeIndex();
         }
 
         template <usize i>
-        cexpr fn isIndex() const -> bool
+        constexpr fn isIndex() const -> bool
         {
             return i == getTypeIndex();
         }
 
-        cexpr fn getTypeIndex() const -> usize
+        constexpr fn getTypeIndex() const -> usize
         {
             return _index;
         }
 
-        cexpr fn destroyValue()
+        constexpr fn destroyValue()
         {
             _destroyValueImpl<0, Ts...>(getTypeIndex());
         }
 
     private:
         template <bool move, usize index, typename TOther, typename... TOthers>
-        cexpr fn _constructValueFromVariantImpl(auto& that, usize thatIndex)
+        constexpr fn _constructValueFromVariantImpl(auto& that, usize thatIndex)
         {
             using ThatTypes = TypeList<TOthers...>;
 
             if (index != thatIndex)
             {
-                if cexpr (ThatTypes::Count == 0)
+                if constexpr (ThatTypes::Count == 0)
                 {
                     panic("There is no type for current index.");
                 }
@@ -258,7 +258,7 @@ namespace Atom
                 }
             }
 
-            if cexpr (move)
+            if constexpr (move)
             {
                 _constructValueAs<TOther>(mov(that.template _getValueAs<TOther>()));
             }
@@ -271,13 +271,13 @@ namespace Atom
         }
 
         template <bool move, usize index, typename TOther, typename... TOthers>
-        cexpr fn _setValueFromVariantImpl(auto&& that, usize thatIndex)
+        constexpr fn _setValueFromVariantImpl(auto&& that, usize thatIndex)
         {
             using ThatTypes = TypeList<TOthers...>;
 
             if (index != thatIndex)
             {
-                if cexpr (ThatTypes::Count == 0)
+                if constexpr (ThatTypes::Count == 0)
                 {
                     panic("There is no type for current index.");
                 }
@@ -294,7 +294,7 @@ namespace Atom
             // We already have this type, so we don't construct it but assign it.
             if (_index == indexForThis)
             {
-                if cexpr (move)
+                if constexpr (move)
                 {
                     _assignValueAs<TOther>(mov(that.template _getValueAs<TOther>()));
                 }
@@ -307,7 +307,7 @@ namespace Atom
             {
                 destroyValue();
 
-                if cexpr (move)
+                if constexpr (move)
                 {
                     _constructValueAs<TOther>(mov(that.template _getValueAs<TOther>()));
                 }
@@ -321,13 +321,13 @@ namespace Atom
         }
 
         template <usize index, typename T, typename... Ts_>
-        cexpr fn _destroyValueImpl(usize i)
+        constexpr fn _destroyValueImpl(usize i)
         {
             using Types = TypeList<Ts_...>;
 
             if (i != index)
             {
-                if cexpr (Types::Count == 0)
+                if constexpr (Types::Count == 0)
                 {
                     panic("There is no type for current index.");
                 }
@@ -343,43 +343,43 @@ namespace Atom
         }
 
         template <typename T>
-        cexpr fn _constructValueAs(auto&&... args)
+        constexpr fn _constructValueAs(auto&&... args)
         {
             ObjHelper().Construct(_getDataAs<T>(), fwd(args)...);
         }
 
         template <typename T>
-        cexpr fn _assignValueAs(auto&& val)
+        constexpr fn _assignValueAs(auto&& val)
         {
             ObjHelper().Assign(_getDataAs<T>(), fwd(val));
         }
 
         template <typename T>
-        cexpr fn _destructValueAs()
+        constexpr fn _destructValueAs()
         {
             ObjHelper().Destruct(_getDataAs<T>());
         }
 
         template <typename T>
-        cexpr fn _getValueAs() -> T&
+        constexpr fn _getValueAs() -> T&
         {
             return *_getDataAs<T>();
         }
 
         template <typename T>
-        cexpr fn _getValueAs() const -> const T&
+        constexpr fn _getValueAs() const -> const T&
         {
             return *_getDataAs<T>();
         }
 
         template <typename T>
-        cexpr fn _getDataAs() -> T*
+        constexpr fn _getDataAs() -> T*
         {
             return reinterpret_cast<T*>(_storage.getData());
         }
 
         template <typename T>
-        cexpr fn _getDataAs() const -> const T*
+        constexpr fn _getDataAs() const -> const T*
         {
             return reinterpret_cast<const T*>(_storage.getData());
         }

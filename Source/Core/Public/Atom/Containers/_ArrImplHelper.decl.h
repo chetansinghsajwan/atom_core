@@ -42,7 +42,7 @@ namespace Atom
         /// # Time Complexity
         ///     Constant
         /// ----------------------------------------------------------------------------------------
-        pub cexpr fn ElemAt(usize index) -> TElem&;
+        pub constexpr fn ElemAt(usize index) -> TElem&;
 
         /// ----------------------------------------------------------------------------------------
         /// Access element at index `index`. Same as [`ElemAt(usize index)`], but doesn't perform 
@@ -57,7 +57,7 @@ namespace Atom
         /// # Time Complexity
         ///     Constant
         /// ----------------------------------------------------------------------------------------
-        pub cexpr fn op[](usize index) -> TElem&;
+        pub constexpr fn op[](usize index) -> TElem&;
 
         /// ----------------------------------------------------------------------------------------
         /// Access first element.
@@ -68,7 +68,7 @@ namespace Atom
         /// # Time Complexity
         ///     Constant
         /// ----------------------------------------------------------------------------------------
-        pub cexpr fn ElemFront() -> TElem&;
+        pub constexpr fn ElemFront() -> TElem&;
 
         /// ----------------------------------------------------------------------------------------
         /// Access last element.
@@ -79,7 +79,7 @@ namespace Atom
         /// # Time Complexity
         ///     Constant
         /// ----------------------------------------------------------------------------------------
-        pub cexpr fn ElemBack() -> TElem&;
+        pub constexpr fn ElemBack() -> TElem&;
 
         /// ----------------------------------------------------------------------------------------
         /// Pointer to underlying arr.
@@ -90,7 +90,7 @@ namespace Atom
         /// # Time Complexity
         ///     Constant
         /// ----------------------------------------------------------------------------------------
-        pub cexpr fn data() -> TElem*
+        pub constexpr fn data() -> TElem*
         {
             return _Data();
         }
@@ -102,7 +102,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// [`TMutIter`] to the first element.
         /// ----------------------------------------------------------------------------------------
-        pub cexpr fn mutIter() -> TMutIter
+        pub constexpr fn mutIter() -> TMutIter
         {
             return TMutIter{ _Data() };
         }
@@ -110,7 +110,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// [`TMutIter`] to element following the last element.
         /// ----------------------------------------------------------------------------------------
-        pub cexpr fn mutIterEnd() -> TMutIter
+        pub constexpr fn mutIterEnd() -> TMutIter
         {
             return TMutIter{ _Data() + _Count() - 1 };
         }
@@ -123,7 +123,7 @@ namespace Atom
         prot using Base::_Count;
         prot using Base::_ValidateIndexForAccess;
 
-        prot cexpr fn _Data() -> TElem*
+        prot constexpr fn _Data() -> TElem*
         {
             return TImpl::_Data();
         }

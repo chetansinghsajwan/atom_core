@@ -11,7 +11,7 @@ TEST_CASE("Atom::Uuid::UuidStringifier")
     Str str = UuidStringifier()
         .toStr(uuid);
 
-    cexpr StrView expected = "00010203-0405-0607-0809-101112131415";
+    constexpr StrView expected = "00010203-0405-0607-0809-101112131415";
 
     CHECK(str == expected);
 }

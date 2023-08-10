@@ -57,7 +57,7 @@ namespace Atom
         /// Requirements for {Object} accepted by this {ObjectBox}.
         /// ----------------------------------------------------------------------------------------
         template <typename T>
-        static cexpr bool RObject = requires
+        static constexpr bool RObject = requires
         {
             // {ObjectBox} variants are not stored inside {ObjectBox} variants.
             requires RNotDerivedFrom<T, Internal::ObjectBoxIdentifier>;
@@ -75,7 +75,7 @@ namespace Atom
         /// For example, {CopyConstructor} and {MoveConstructor}.
         /// ----------------------------------------------------------------------------------------
         template <bool OtherCopyable, bool OtherMovable, bool OtherAllowNonMovableObject>
-        static cexpr bool ROtherBox = requires
+        static constexpr bool ROtherBox = requires
         {
             // If this {Box} is {Copyable} the {OtherBox} should also be {Copyable}.
             requires !Copyable || OtherCopyable;
@@ -97,13 +97,13 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// DefaultConstructor.
         /// ----------------------------------------------------------------------------------------
-        cexpr ctor ObjectBox():
+        constexpr ctor ObjectBox():
             _object(), _heapMem(nullptr), _heapMemSize(0), _memAllocator() { }
 
         /// ----------------------------------------------------------------------------------------
         /// NullConstructor.
         /// ----------------------------------------------------------------------------------------
-        cexpr ctor ObjectBox(NullType null):
+        constexpr ctor ObjectBox(NullType null):
             ObjectBox() { }
 
         /// ----------------------------------------------------------------------------------------
@@ -301,7 +301,7 @@ namespace Atom
         {
             // When allocator type is different, we cannot handle heap memory.
             // So we only move the object.
-            if cexpr (!RSameAs<TMemAllocator, TOtherMemAllocator>)
+            if constexpr (!RSameAs<TMemAllocator, TOtherMemAllocator>)
             {
                 _MoveObject(other);
                 other._DisposeBox();
@@ -373,7 +373,7 @@ namespace Atom
                 reinterpret_cast<T*>(obj)->T::~T();
             };
 
-            if cexpr (Copyable)
+            if constexpr (Copyable)
             {
                 _object.copy = [](void* obj, const void* other)
                 {
@@ -381,9 +381,9 @@ namespace Atom
                 };
             }
 
-            if cexpr (Movable)
+            if constexpr (Movable)
             {
-                if cexpr (RMoveConstructible<T>)
+                if constexpr (RMoveConstructible<T>)
                 {
                     _object.move = [](void* obj, void* other)
                     {
@@ -398,7 +398,7 @@ namespace Atom
 
             // If the object is not movable but AllowNonMovableObject is allowed,
             // we allocate it on heap to avoid object's move constructor.
-            if cexpr (Movable && AllowNonMovableObject && !RMoveConstructible<T>)
+            if constexpr (Movable && AllowNonMovableObject && !RMoveConstructible<T>)
             {
                 forceHeap = true;
             }
@@ -466,7 +466,7 @@ namespace Atom
 
             _CopyObjectData(other);
 
-            if cexpr (Movable)
+            if constexpr (Movable)
             {
                 forceHeap = forceHeap || _object.move == nullptr;
             }
@@ -536,9 +536,9 @@ namespace Atom
             _object.type = other.type;
             _object.dtor_ = other.dtor_;
 
-            if cexpr (Copyable)
+            if constexpr (Copyable)
             {
-                if cexpr (Movable)
+                if constexpr (Movable)
                 {
                     _object.copy = other.copy;
                 }
@@ -548,9 +548,9 @@ namespace Atom
                 }
             }
 
-            if cexpr (Movable)
+            if constexpr (Movable)
             {
-                if cexpr (OtherMovable)
+                if constexpr (OtherMovable)
                 {
                     _object.move = other.move;
                 }
@@ -576,7 +576,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         fn _AllocMem(usize size, bool forceHeap = false) -> void*
         {
-            if cexpr (StackSize > 0)
+            if constexpr (StackSize > 0)
             {
                 // Check if stack memory is big enough.
                 if (!forceHeap && size <= StackSize)
@@ -622,7 +622,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         fn _IsUsingStackMem() const -> bool
         {
-            if cexpr (StackSize > 0)
+            if constexpr (StackSize > 0)
             {
                 return _object.obj == _stackMem;
             }

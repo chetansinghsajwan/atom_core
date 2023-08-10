@@ -10,8 +10,8 @@ namespace Atom
         pub using TChar = char;
         pub using TRune = char;
 
-        pub static cexpr TChar Null = '\0';
-        pub static cexpr bool IsMultiCharEncoding = false;
+        pub static constexpr TChar Null = '\0';
+        pub static constexpr bool IsMultiCharEncoding = false;
     };
 
     /// --------------------------------------------------------------------------------------------

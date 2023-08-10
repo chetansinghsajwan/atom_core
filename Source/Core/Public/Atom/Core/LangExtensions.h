@@ -16,7 +16,7 @@ namespace Atom
 }
 
 #define ATOM_IS_CONFIG_DEBUG true
-#define ATOM_IF_DEBUG if cexpr (ATOM_IS_CONFIG_DEBUG)
+#define ATOM_IF_DEBUG if constexpr (ATOM_IS_CONFIG_DEBUG)
 
 #define ATOM_FUNCTION __func__
 
@@ -29,9 +29,6 @@ namespace Atom
 #define dtor ~
 #define fn auto
 #define abstract = 0
-#define cexpr constexpr
-#define ceval consteval
-#define cinit constinit
 #define extends : public
 #define pub public:
 #define prot protected:

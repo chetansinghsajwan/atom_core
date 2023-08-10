@@ -58,7 +58,7 @@ namespace Atom
     template < >
     class StrViewConverter<Logging::ELogLevel>
     {
-        pub cexpr fn Convert(Logging::ELogLevel lvl) -> StrView
+        pub constexpr fn Convert(Logging::ELogLevel lvl) -> StrView
         {
             switch (lvl)
             {

@@ -13,7 +13,7 @@
 #define _RANGE_REF_WRAP(Wrap, ...)                                \
     class Wrap: __VA_ARGS__                                      \
     {                                                             \
-        pub pub cexpr ctor Wrap(TRange& range):                   \
+        pub pub constexpr ctor Wrap(TRange& range):                   \
             __VA_ARGS__{ range } { }                              \
     }
 
@@ -38,15 +38,15 @@ namespace Atom
         pub using TIter = TIterWrap<typename TRange::TIter>;
         pub using TIterEnd = TIterWrap<typename TRange::TIterEnd>;
 
-        pub cexpr ctor _RangeWrapBase(TRange& range):
+        pub constexpr ctor _RangeWrapBase(TRange& range):
             _range{ range } { }
 
-        pub cexpr fn iter() const -> TIter
+        pub constexpr fn iter() const -> TIter
         {
             return TIter{ _range.iter() };
         }
 
-        pub cexpr fn iterEnd() const -> TIterEnd
+        pub constexpr fn iterEnd() const -> TIterEnd
         {
             return TIterEnd{ _range.iterEnd() };
         }
@@ -67,15 +67,15 @@ namespace Atom
         pub using TMutIter = TMutIterWrap<typename TRange::TMutIter>;
         pub using TMutIterEnd = TMutIterWrap<typename TRange::TMutIterEnd>;
 
-        pub cexpr ctor _MutRangeWrapBase(TRange& range):
+        pub constexpr ctor _MutRangeWrapBase(TRange& range):
             Base{ range } { }
 
-        pub cexpr fn mutIter() -> TMutIter
+        pub constexpr fn mutIter() -> TMutIter
         {
             return TMutIter{ self._range.mutIter() };
         }
 
-        pub cexpr fn mutIterEnd() -> TMutIterEnd
+        pub constexpr fn mutIterEnd() -> TMutIterEnd
         {
             return TMutIterEnd{ self._range.mutIterEnd() };
         }

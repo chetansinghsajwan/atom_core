@@ -7,8 +7,8 @@ namespace Atom::Text
         pub using TChar = char32;
         pub using TRune = char32;
 
-        pub static cexpr TChar Null = U'\0';
-        pub static cexpr bool IsMultiCharEncoding = false;
+        pub static constexpr TChar Null = U'\0';
+        pub static constexpr bool IsMultiCharEncoding = false;
     };
 
     using UTF32Char = typename UTF32Encoding::TChar;

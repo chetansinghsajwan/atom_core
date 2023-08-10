@@ -26,7 +26,7 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Name of the NullLogger.
         /// ----------------------------------------------------------------------------------------
-        static cexpr StrView s_name = "NullLogger";
+        static constexpr StrView s_name = "NullLogger";
 
     //// -------------------------------------------------------------------------------------------
     //// NonStatic Members
@@ -36,13 +36,13 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Default constructs NullLogger.
         /// ----------------------------------------------------------------------------------------
-        cexpr ctor NullLogger() { }
+        constexpr ctor NullLogger() { }
 
     public:
         /// ----------------------------------------------------------------------------------------
         /// Returns name of the NullLogger.
         /// ----------------------------------------------------------------------------------------
-        cexpr virtual fn Name() const -> StrView override
+        constexpr virtual fn Name() const -> StrView override
         {
             return s_name;
         }
@@ -50,17 +50,17 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Does nothing.
         /// ----------------------------------------------------------------------------------------
-        cexpr virtual fn Log(LogMsg& logMsg) -> void override { }
+        constexpr virtual fn Log(LogMsg& logMsg) -> void override { }
 
         /// ----------------------------------------------------------------------------------------
         /// Does nothing.
         /// ----------------------------------------------------------------------------------------
-        cexpr virtual fn Flush() -> void override { }
+        constexpr virtual fn Flush() -> void override { }
 
         /// ----------------------------------------------------------------------------------------
         /// Always returns false to avoid constructing log msg.
         /// ----------------------------------------------------------------------------------------
-        cexpr virtual fn CheckLogLevel(ELogLevel lvl) const -> bool override
+        constexpr virtual fn CheckLogLevel(ELogLevel lvl) const -> bool override
         {
             return false;
         }

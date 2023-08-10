@@ -21,31 +21,31 @@ namespace Atom::TTI
     using TConditionalField = TConditional<Condition, T, Private::Empty>;
 
     template <typename TBase, typename TDerived>
-    cexpr bool IsBaseOf = std::is_base_of_v<TBase, std::decay_t<TDerived>>;
+    constexpr bool IsBaseOf = std::is_base_of_v<TBase, std::decay_t<TDerived>>;
 
     template <typename TBase, typename TDerived>
-    cexpr bool IsNotBaseOf = !IsBaseOf<TBase, TDerived>;
+    constexpr bool IsNotBaseOf = !IsBaseOf<TBase, TDerived>;
 
     template <bool Requirements, typename T = void>
     using TEnableIf = std::enable_if_t<Requirements, T>;
 
     template <typename T>
-    cexpr bool IsCopyConstructible = std::is_copy_constructible_v<T>;
+    constexpr bool IsCopyConstructible = std::is_copy_constructible_v<T>;
 
     template <typename T>
-    cexpr bool IsMoveConstructible = std::is_copy_constructible_v<T>;
+    constexpr bool IsMoveConstructible = std::is_copy_constructible_v<T>;
 
     template <typename T>
-    cexpr bool IsCopyAssignable = std::is_copy_assignable_v<T>;
+    constexpr bool IsCopyAssignable = std::is_copy_assignable_v<T>;
 
     template <typename T>
-    cexpr bool IsMoveAssignable = std::is_move_assignable_v<T>;
+    constexpr bool IsMoveAssignable = std::is_move_assignable_v<T>;
 
     template <typename T1, typename T2>
-    cexpr bool IsSame = std::is_same_v<T1, T2>;
+    constexpr bool IsSame = std::is_same_v<T1, T2>;
 
     template <typename T1, typename T2>
-    cexpr bool IsNotSame = !IsSame<T1, T2>;
+    constexpr bool IsNotSame = !IsSame<T1, T2>;
 
     template <typename T>
     using TRemoveConst = std::remove_const_t<T>;
@@ -60,16 +60,16 @@ namespace Atom::TTI
     using TUnqualified = std::remove_cv_t<T>;
 
     template <typename T>
-    cexpr bool IsRValueRef = std::is_rvalue_reference_v<T>;
+    constexpr bool IsRValueRef = std::is_rvalue_reference_v<T>;
 
     template <typename T>
-    cexpr bool IsConst = std::is_const_v<T>;
+    constexpr bool IsConst = std::is_const_v<T>;
 
     template <typename T>
-    cexpr bool IsVolatile = std::is_volatile_v<T>;
+    constexpr bool IsVolatile = std::is_volatile_v<T>;
 
     template <typename T>
-    cexpr bool IsQualified = IsConst<T> || IsVolatile<T>;
+    constexpr bool IsQualified = IsConst<T> || IsVolatile<T>;
 }
 
 /// ------------------------------------------------------------------------------------------------

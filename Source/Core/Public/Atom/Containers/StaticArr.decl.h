@@ -8,17 +8,17 @@ namespace Atom
     {
         prot using TElem = T;
 
-        prot cexpr fn _Data() -> T*
+        prot constexpr fn _Data() -> T*
         {
             return _arr;
         }
 
-        prot cexpr fn _Data() const -> const T*
+        prot constexpr fn _Data() const -> const T*
         {
             return _arr;
         }
 
-        prot cexpr fn _Count() const -> usize
+        prot constexpr fn _Count() const -> usize
         {
             return Size;
         }

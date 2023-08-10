@@ -6,7 +6,7 @@ namespace Atom
     class ObjHelper
     {
         pub template <typename TPtr>
-        cexpr fn Construct(TPtr&& mem, auto&&... args) const
+        constexpr fn Construct(TPtr&& mem, auto&&... args) const
         {
             ATOM_DEBUG_EXPECTS(mem != nullptr);
 
@@ -14,7 +14,7 @@ namespace Atom
         }
 
         pub template <typename TPtr>
-        cexpr fn Construct(TPtr* mem, auto&&... args) const
+        constexpr fn Construct(TPtr* mem, auto&&... args) const
         {
             ATOM_DEBUG_EXPECTS(mem != nullptr);
 
@@ -22,7 +22,7 @@ namespace Atom
         }
 
         pub template <typename TPtr>
-        cexpr fn Assign(TPtr* mem, auto&& arg) const
+        constexpr fn Assign(TPtr* mem, auto&& arg) const
         {
             ATOM_DEBUG_EXPECTS(mem != nullptr);
 
@@ -30,7 +30,7 @@ namespace Atom
         }
 
         pub template <typename T>
-        cexpr fn Swap(T& t1, T& t2) const
+        constexpr fn Swap(T& t1, T& t2) const
         {
             T tmp = mov(t1);
             t1 = mov(t2);
@@ -38,7 +38,7 @@ namespace Atom
         }
 
         pub template <typename TPtr>
-        cexpr fn Destruct(TPtr&& mem) const
+        constexpr fn Destruct(TPtr&& mem) const
         {
             ATOM_DEBUG_EXPECTS(mem != nullptr);
 
@@ -46,7 +46,7 @@ namespace Atom
         }
 
         pub template <typename TPtr>
-        cexpr fn Destruct(TPtr* mem) const
+        constexpr fn Destruct(TPtr* mem) const
         {
             ATOM_DEBUG_EXPECTS(mem != nullptr);
 

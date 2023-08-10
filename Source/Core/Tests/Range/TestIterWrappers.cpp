@@ -50,11 +50,11 @@
 //     {
 //         pub using Base = MutArrIter<i32>;
 // 
-//         pub cexpr ctor CustomIter() { }
+//         pub constexpr ctor CustomIter() { }
 // 
-//         pub cexpr ctor CustomIter(i32, char, f32, const char*) { }
+//         pub constexpr ctor CustomIter(i32, char, f32, const char*) { }
 // 
-//         pub cexpr ctor CustomIter(const Base& base):
+//         pub constexpr ctor CustomIter(const Base& base):
 //             Base{ base } { }
 //     };
 // 

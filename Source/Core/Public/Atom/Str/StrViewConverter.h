@@ -31,7 +31,7 @@ namespace Atom
     template < >
     class StrViewConverter<StrView>
     {
-        cexpr StrView Convert(StrView in)
+        constexpr StrView Convert(StrView in)
         {
             return in;
         }
@@ -53,12 +53,12 @@ namespace Atom
     template <RStrViewConvertible T>
     class StrConverter<T>
     {
-        pub cexpr fn Convert(const T& in) -> Str
+        pub constexpr fn Convert(const T& in) -> Str
         {
             return converter.Convert();
         }
 
-        pub cexpr fn Convert(const T& in, ROutput<Char> auto out) -> void
+        pub constexpr fn Convert(const T& in, ROutput<Char> auto out) -> void
         {
             StrView strView = converter.Convert(in);
             out.InsertBack(in);

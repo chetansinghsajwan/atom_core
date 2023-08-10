@@ -40,7 +40,7 @@ namespace Atom
         /// Check if this variant supports type `T`.
         /// ----------------------------------------------------------------------------------------
         template <typename T>
-        static ceval fn Has() -> bool
+        static consteval fn Has() -> bool
         {
             return _Impl::template HasType<T>();
         }
@@ -49,7 +49,7 @@ namespace Atom
         /// Check if index `i` can be used to access value.
         /// ----------------------------------------------------------------------------------------
         template <usize i>
-        static ceval fn Has() -> bool
+        static consteval fn Has() -> bool
         {
             return _Impl::template HasIndex<i>();
         }
@@ -65,7 +65,7 @@ namespace Atom
         /// Index of type. This index than can be used to access value of type at that index.
         /// ----------------------------------------------------------------------------------------
         template <typename T>
-        static ceval fn IndexOf() -> usize
+        static consteval fn IndexOf() -> usize
             requires(Has<T>())
         {
             return _Impl::template GetIndexForType<T>();
@@ -74,7 +74,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Count of types this variant supports.
         /// ----------------------------------------------------------------------------------------
-        static ceval fn count() -> usize
+        static consteval fn count() -> usize
         {
             return _Impl::GetTypeCount();
         }
@@ -87,7 +87,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Default Constructor
         /// ----------------------------------------------------------------------------------------
-        cexpr ctor Variant()
+        constexpr ctor Variant()
             requires(RDefaultConstructible<TAt<0>>)
         {
             _impl.template constructValueByIndex<0>();
@@ -96,12 +96,12 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Trivial Copy Constructor
         /// ----------------------------------------------------------------------------------------
-        cexpr ctor Variant(const Variant& that) = default;
+        constexpr ctor Variant(const Variant& that) = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # Copy Constructor
         /// ----------------------------------------------------------------------------------------
-        cexpr ctor Variant(const Variant& that)
+        constexpr ctor Variant(const Variant& that)
             requires(RCopyConstructibleAll<Ts...>)
                 and (not RTriviallyCopyConstructibleAll<Ts...>)
         {
@@ -112,7 +112,7 @@ namespace Atom
         /// # Copy Constructor Template
         /// ----------------------------------------------------------------------------------------
         template <typename... TOthers>
-        cexpr ctor Variant(const Variant<TOthers...>& that)
+        constexpr ctor Variant(const Variant<TOthers...>& that)
             requires(Types::template Has<TOthers...>)
                 and (RCopyConstructibleAll<TOthers...>)
         {
@@ -122,12 +122,12 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Trivial Copy Assignment Operator
         /// ----------------------------------------------------------------------------------------
-        cexpr fn op=(const Variant& that) -> Variant& = default;
+        constexpr fn op=(const Variant& that) -> Variant& = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # Copy Assignment Operator
         /// ----------------------------------------------------------------------------------------
-        cexpr fn op=(const Variant& that) -> Variant&
+        constexpr fn op=(const Variant& that) -> Variant&
             requires(RCopyConstructibleAll<Ts...>)
                 and (RCopyAssignableAll<Ts...>)
                 and (not RTriviallyCopyConstructibleAll<Ts...>)
@@ -141,7 +141,7 @@ namespace Atom
         /// # Copy Assignment Operator Template
         /// ----------------------------------------------------------------------------------------
         template <typename... TOthers>
-        cexpr fn op=(const Variant<TOthers...>& that) -> Variant&
+        constexpr fn op=(const Variant<TOthers...>& that) -> Variant&
             requires(Types::template Has<TOthers...>)
                 and (RCopyConstructibleAll<TOthers...>)
                 and (RCopyAssignableAll<TOthers...>)
@@ -153,12 +153,12 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Trivial Move Constructor
         /// ----------------------------------------------------------------------------------------
-        cexpr ctor Variant(Variant&& that) = default;
+        constexpr ctor Variant(Variant&& that) = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # Move Constructor
         /// ----------------------------------------------------------------------------------------
-        cexpr ctor Variant(Variant&& that)
+        constexpr ctor Variant(Variant&& that)
             requires(RMoveConstructibleAll<Ts...>)
                 and (not RTriviallyMoveConstructibleAll<Ts...>)
         {
@@ -169,7 +169,7 @@ namespace Atom
         /// # Move Constructor Template
         /// ----------------------------------------------------------------------------------------
         template <typename... TOthers>
-        cexpr ctor Variant(Variant<TOthers...>&& that)
+        constexpr ctor Variant(Variant<TOthers...>&& that)
             requires(Types::template Has<TOthers...>)
                 and (RMoveConstructibleAll<TOthers...>)
         {
@@ -179,12 +179,12 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Trivial Move Assignment Operator
         /// ----------------------------------------------------------------------------------------
-        cexpr fn op=(Variant&& that) -> Variant& = default;
+        constexpr fn op=(Variant&& that) -> Variant& = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # Move Assignment Operator
         /// ----------------------------------------------------------------------------------------
-        cexpr fn op=(Variant&& that) -> Variant&
+        constexpr fn op=(Variant&& that) -> Variant&
             requires(RMoveConstructibleAll<Ts...>)
                 and (RMoveAssignableAll<Ts...>)
                 and (not RTriviallyMoveConstructibleAll<Ts...>)
@@ -198,7 +198,7 @@ namespace Atom
         /// # Move Assignment Operator Template
         /// ----------------------------------------------------------------------------------------
         template <typename... TOthers>
-        cexpr fn op=(Variant<TOthers...>&& that) -> Variant&
+        constexpr fn op=(Variant<TOthers...>&& that) -> Variant&
             requires(Types::template Has<TOthers...>)
                 and (RMoveConstructibleAll<Ts...>)
                 and (RMoveAssignableAll<Ts...>)
@@ -216,7 +216,7 @@ namespace Atom
         /// - `value`: Value to construct with.
         /// ----------------------------------------------------------------------------------------
         template <typename T>
-        cexpr ctor Variant(const T& value)
+        constexpr ctor Variant(const T& value)
             requires(Has<T>())
         {
             _impl.template constructValueByType<T>(value);
@@ -231,7 +231,7 @@ namespace Atom
         /// - `value`: Value to construct with.
         /// ----------------------------------------------------------------------------------------
         template <typename T>
-        cexpr ctor Variant(T&& value)
+        constexpr ctor Variant(T&& value)
             requires(Has<T>())
         {
             _impl.template constructValueByType<T>(mov(value));
@@ -246,7 +246,7 @@ namespace Atom
         /// - `value`: Value to assign.
         /// ----------------------------------------------------------------------------------------
         template <typename T>
-        cexpr fn op=(const T& value) -> Variant&
+        constexpr fn op=(const T& value) -> Variant&
             requires(Has<T>())
         {
             _impl.setValue(value);
@@ -262,7 +262,7 @@ namespace Atom
         /// - `value`: Value to assign.
         /// ----------------------------------------------------------------------------------------
         template <typename T>
-        cexpr fn op=(T&& value) -> Variant&
+        constexpr fn op=(T&& value) -> Variant&
             requires(Has<T>())
         {
             _impl.setValue(mov(value));
@@ -272,14 +272,14 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Trivial Destructor
         /// ----------------------------------------------------------------------------------------
-        cexpr dtor Variant() = default;
+        constexpr dtor Variant() = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # Destructor
         /// 
         /// Destructs value.
         /// ----------------------------------------------------------------------------------------
-        cexpr dtor Variant()
+        constexpr dtor Variant()
             requires(not RTriviallyDestructibleAll<Ts...>)
         {
             _impl.destroyValue();
@@ -297,7 +297,7 @@ namespace Atom
         /// - [`TAt`]
         /// ----------------------------------------------------------------------------------------
         template <typename T, typename... TArgs>
-        cexpr fn emplace(TArgs&&... args)
+        constexpr fn emplace(TArgs&&... args)
             requires(Has<T>())
                 and (RConstructible<T, TArgs...>)
         {
@@ -311,7 +311,7 @@ namespace Atom
         /// - [`TAt`]
         /// ----------------------------------------------------------------------------------------
         template <usize i, typename... TArgs>
-        cexpr fn emplace(TArgs&&... args)
+        constexpr fn emplace(TArgs&&... args)
             requires(Has<i>())
                 and (RConstructible<TAt<i>, TArgs...>)
         {
@@ -325,7 +325,7 @@ namespace Atom
         /// - `value`: Value to set.
         /// ----------------------------------------------------------------------------------------
         template <typename TFwd, typename T = TTI::TRemoveQuailfiersRef<TFwd>>
-        cexpr fn set(TFwd&& value)
+        constexpr fn set(TFwd&& value)
             requires(Has<T>())
                 and (RConstructible<T, TFwd>)
         {
@@ -339,7 +339,7 @@ namespace Atom
         /// - `T`: Type to access variant's value as.
         /// ----------------------------------------------------------------------------------------
         template <typename T>
-        cexpr fn as() const -> const T&
+        constexpr fn as() const -> const T&
             requires(Has<T>())
         {
             expects(is<T>(), "Access to invalid type.");
@@ -354,7 +354,7 @@ namespace Atom
         /// - `T`: Type to access variant's value as.
         /// ----------------------------------------------------------------------------------------
         template <typename T>
-        cexpr fn as() -> T&
+        constexpr fn as() -> T&
             requires(Has<T>())
         {
             expects(is<T>(), "Access to invalid type.");
@@ -372,7 +372,7 @@ namespace Atom
         /// - [`TAt`]
         /// ----------------------------------------------------------------------------------------
         template <usize i>
-        cexpr fn at() const -> const TAt<i>&
+        constexpr fn at() const -> const TAt<i>&
             requires(Has<i>())
         {
             expects(is<i>(), "Access to invalid type by index.");
@@ -390,7 +390,7 @@ namespace Atom
         /// - [`TAt`]
         /// ----------------------------------------------------------------------------------------
         template <usize i>
-        cexpr fn at() -> TAt<i>&
+        constexpr fn at() -> TAt<i>&
             requires(Has<i>())
         {
             expects(is<i>(), "Access to invalid type by index.");
@@ -402,7 +402,7 @@ namespace Atom
         /// Checks if current value is of type `T`.
         /// ----------------------------------------------------------------------------------------
         template <typename T>
-        cexpr fn is() const -> bool
+        constexpr fn is() const -> bool
             requires(Has<T>())
         {
             return _impl.template isType<T>();
@@ -415,7 +415,7 @@ namespace Atom
         /// - [`TAt`]
         /// ----------------------------------------------------------------------------------------
         template <usize i>
-        cexpr fn is() const -> bool
+        constexpr fn is() const -> bool
             requires(Has<i>())
         {
             return _impl.template isIndex<i>();
@@ -424,7 +424,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Get the index to current type.
         /// ----------------------------------------------------------------------------------------
-        cexpr fn index() const -> usize
+        constexpr fn index() const -> usize
         {
             return _impl.getTypeIndex();
         }

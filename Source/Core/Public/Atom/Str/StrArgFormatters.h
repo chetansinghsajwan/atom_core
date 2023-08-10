@@ -49,7 +49,7 @@ namespace Atom
 	/// --------------------------------------------------------------------------------------------
 	class StrFmtParseCtx
 	{
-		pub cexpr ctor StrFmtParseCtx(_FmtFmtParseCtx& fmtCtx):
+		pub constexpr ctor StrFmtParseCtx(_FmtFmtParseCtx& fmtCtx):
 			_fmtCtx{ fmtCtx } { }
 
 		pub fn GetRange() -> StrView
@@ -71,7 +71,7 @@ namespace Atom
 	/// --------------------------------------------------------------------------------------------
 	class StrFmtCtx
 	{
-		pub cexpr ctor StrFmtCtx(_FmtFmtCtx& fmtCtx):
+		pub constexpr ctor StrFmtCtx(_FmtFmtCtx& fmtCtx):
 			_fmtCtx{ fmtCtx } { }
 
 		pub fn Write(Char ch)
@@ -183,7 +183,7 @@ namespace Atom
 	requires RStrViewConvertible<T>
 	class StrFmtArgFmterImpl<T> extends StrFmtArgFmter<StrView>
 	{
-		pub cexpr fn Fmt(const T& in, StrFmtCtx& ctx)
+		pub constexpr fn Fmt(const T& in, StrFmtCtx& ctx)
 		{
 			StrFmtArgFmter<StrView>::Fmt(
 				convter.Convert(in), ctx);
@@ -195,13 +195,13 @@ namespace Atom
 	template <typename T>
 	class _FmtFmtfierFilter
 	{
-		pub static cexpr bool Enable = true;
+		pub static constexpr bool Enable = true;
 	};
 
 	template <usize N>
 	class _FmtFmtfierFilter<Char[N]>
 	{
-		pub static cexpr bool Enable = false;
+		pub static constexpr bool Enable = false;
 	};
 }
 

@@ -8,12 +8,12 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     class _FmtStrViewCnvter
     {
-        pub cexpr fn FromFmt(_FmtStrView strv) -> StrView
+        pub constexpr fn FromFmt(_FmtStrView strv) -> StrView
         {
             return StrView{ Range(strv.data(), strv.size()) };
         }
 
-        pub cexpr fn ToFmt(StrView strv) -> _FmtStrView
+        pub constexpr fn ToFmt(StrView strv) -> _FmtStrView
         {
             return _FmtStrView{ strv.data(), strv.count() };
         }
@@ -36,7 +36,7 @@ namespace Atom
 //     class FmtStr
 //     {
 //         pub template <typename T>
-//         ceval FmtStr(const T& strv) { }
+//         consteval FmtStr(const T& strv) { }
 //             _fmt{ _FmtStrViewCnvter().ToFmt(strv) } { }
 // 
 //         pub FmtStr(RunFmtStr str) { }

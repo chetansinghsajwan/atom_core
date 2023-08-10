@@ -33,13 +33,13 @@ namespace Atom
 namespace Atom
 {
     using NullPtr = std::nullptr_t;
-    // static cexpr NullPtr nullptr;
+    // static constexpr NullPtr nullptr;
 
     using NullVal = std::nullptr_t;
-    static cexpr NullVal nullval = NullVal();
+    static constexpr NullVal nullval = NullVal();
 
     using NullPos = std::nullptr_t;
-    static cexpr NullPos nullpos = NullPos();
+    static constexpr NullPos nullpos = NullPos();
 
     using NullType = std::nullptr_t;
     using TypeInfo = std::type_info;

@@ -13,18 +13,18 @@ namespace Atom
     template <typename TCheck, typename T, typename... Ts>
     class _CheckAllImpl
     {
-        pub static cexpr bool Value = TCheck().template op()<T>() && 
+        pub static constexpr bool Value = TCheck().template op()<T>() && 
             _CheckAllImpl<TCheck, Ts...>::Value;
     };
 
     template <typename TCheck, typename T>
     class _CheckAllImpl<TCheck, T>
     {
-        pub static cexpr bool Value = TCheck().template op()<T>();
+        pub static constexpr bool Value = TCheck().template op()<T>();
     };
 
     template <typename TCheck, typename T, typename... Ts>
-    cexpr bool _CheckAll = _CheckAllImpl<TCheck, T, Ts...>::Value;
+    constexpr bool _CheckAll = _CheckAllImpl<TCheck, T, Ts...>::Value;
 
 #define _WRAP_REQ(...) decltype([]<typename T> { return __VA_ARGS__; })
 

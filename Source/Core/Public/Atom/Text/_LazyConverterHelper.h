@@ -36,22 +36,22 @@ namespace Atom::Text
 
         pub using TIterEnd = _CharEncodingLazyConverterHelperIterEnd;
 
-        pub cexpr fn iter() -> TIter
+        pub constexpr fn iter() -> TIter
         {
             return TIter(_impl, _input);
         }
 
-        pub cexpr fn iterEnd() -> TIter
+        pub constexpr fn iterEnd() -> TIter
         {
             return TIterEnd();
         }
 
-        pub cexpr fn begin() -> TIter
+        pub constexpr fn begin() -> TIter
         {
             return iter();
         }
 
-        pub cexpr fn end() -> TIterEnd
+        pub constexpr fn end() -> TIterEnd
         {
             return iterEnd();
         }
@@ -77,7 +77,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        pub cexpr ctor _CharEncodingLazyConverterHelperIter(TImpl&& impl, TInput&& in):
+        pub constexpr ctor _CharEncodingLazyConverterHelperIter(TImpl&& impl, TInput&& in):
             _impl{ fwd(impl) }, _input{ fwd(input) }, _out{ 0 }, _outIndex{ -1 }
         {
             _ProcessNextChar();
@@ -86,7 +86,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// Get the current char.
         /// ----------------------------------------------------------------------------------------
-        pub cexpr fn op*() -> TOutChar&
+        pub constexpr fn op*() -> TOutChar&
         {
             return _out[_outIndex];
         }
@@ -94,7 +94,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// Advances the iter.
         /// ----------------------------------------------------------------------------------------
-        pub cexpr fn op++() -> TSelf&
+        pub constexpr fn op++() -> TSelf&
         {
             if (_outIndex == -1)
             {
@@ -108,7 +108,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// Will be removed in CPP2;
         /// ----------------------------------------------------------------------------------------
-        pub cexpr fn op++(i32) -> TSelf&
+        pub constexpr fn op++(i32) -> TSelf&
         {
             return ++self;
         }
@@ -116,7 +116,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// Checks if the iter has reached its end.
         /// ----------------------------------------------------------------------------------------
-        pub cexpr fn op==(TIterEnd end) const -> bool
+        pub constexpr fn op==(TIterEnd end) const -> bool
         {
             return _outIndex > 0 || _input.HasNext();
         }
@@ -124,7 +124,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// Will be removed in CPP2;
         /// ----------------------------------------------------------------------------------------
-        pub cexpr fn op!=(TIterEnd end) const -> bool
+        pub constexpr fn op!=(TIterEnd end) const -> bool
         {
             return !(self == end);
         }
@@ -158,20 +158,20 @@ namespace Atom::Text
     {
         priv using TChar = BasicChar<TCharEncoding>;
 
-        pub cexpr ctor _CharEncodingLazyConverterHelper(TInput&& input):
+        pub constexpr ctor _CharEncodingLazyConverterHelper(TInput&& input):
             _input{ input } { }
 
-        pub cexpr fn Get() -> TChar
+        pub constexpr fn Get() -> TChar
         {
             return _input.Get();
         }
 
-        pub cexpr fn Next() -> bool
+        pub constexpr fn Next() -> bool
         {
             return _input.Next();
         }
 
-        pub cexpr fn HasNext() const -> bool
+        pub constexpr fn HasNext() const -> bool
         {
             return _input.HasNext();
         }

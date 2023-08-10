@@ -51,7 +51,7 @@ namespace Atom::Text
         pub template <typename TInput, typename TOut>
         requires RRangeOf<TInput, TInChar>
             and ROutput<TOut, TOutChar>
-        cexpr fn ConvertTo(const TInput& in, TOut out)
+        constexpr fn ConvertTo(const TInput& in, TOut out)
         {
             auto end = in.end();
             for (auto it = in.begin(); it != end; it++)
@@ -76,7 +76,7 @@ namespace Atom::Text
         pub template <typename TInput, typename TOut>
         requires RRangeOf<TInput, const TChar>
             and ROutput<TOut, TChar>
-        cexpr fn Convert(TInput&& in, TOut& out)
+        constexpr fn Convert(TInput&& in, TOut& out)
         {
             out += fwd(in);
         }

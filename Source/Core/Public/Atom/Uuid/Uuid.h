@@ -32,11 +32,11 @@ namespace Atom
     {
         pub static const Uuid Null;
 
-        pub cexpr fn op==(const Uuid& other) const -> bool = default;
-        pub cexpr fn op!=(const Uuid& other) const -> bool = default;
+        pub constexpr fn op==(const Uuid& other) const -> bool = default;
+        pub constexpr fn op!=(const Uuid& other) const -> bool = default;
 
         pub StaticArr<byte, 16> bytes;
     };
 
-    cexpr inline const Uuid Uuid::Null = Uuid{ 0 };
+    constexpr inline const Uuid Uuid::Null = Uuid{ 0 };
 }

@@ -9,7 +9,7 @@ namespace Atom
     {
         pub template <typename TOutput>
         requires ROutput<TOutput, Char>
-        cexpr fn writeStr(const Uuid& uuid, TOutput&& out) const
+        constexpr fn writeStr(const Uuid& uuid, TOutput&& out) const
         {
             out += Math::HexToChar(uuid.bytes[0]);
             out += Math::HexToChar(uuid.bytes[1]);
@@ -33,7 +33,7 @@ namespace Atom
             out += Math::HexToChar(uuid.bytes[15]);
         }
 
-        pub cexpr fn toStr(const Uuid& uuid) const -> Str
+        pub constexpr fn toStr(const Uuid& uuid) const -> Str
         {
             Str out;
             writeStr(uuid, out);

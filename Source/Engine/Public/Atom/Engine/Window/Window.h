@@ -13,7 +13,7 @@ namespace Atom::Engine
         pub i32 y;
     };
 
-    cexpr fn op-(const SWindowCoords& lhs, const SWindowCoords& rhs) -> SWindowCoords
+    inline fn op-(const SWindowCoords& lhs, const SWindowCoords& rhs) -> SWindowCoords
     {
         return { lhs.x - rhs.x, lhs.y - rhs.y };
     }
@@ -27,7 +27,7 @@ namespace Atom::Engine
 
     class SWindowEvent
     {
-        pub cexpr ctor SWindowEvent(EWindowEventType eventType):
+        pub ctor SWindowEvent(EWindowEventType eventType):
             eventType(eventType) { }
 
         pub const EWindowEventType eventType;
@@ -35,7 +35,7 @@ namespace Atom::Engine
 
     class SWindowResizeEvent extends SWindowEvent
     {
-        pub cexpr ctor SWindowResizeEvent(SWindowCoords size, SWindowCoords delta):
+        pub ctor SWindowResizeEvent(SWindowCoords size, SWindowCoords delta):
             size(size), delta(delta),
             SWindowEvent(EWindowEventType::Resize) { }
 
@@ -45,7 +45,7 @@ namespace Atom::Engine
 
     class SWindowRepositionEvent extends SWindowEvent
     {
-        pub cexpr ctor SWindowRepositionEvent(SWindowCoords position, SWindowCoords delta):
+        pub ctor SWindowRepositionEvent(SWindowCoords position, SWindowCoords delta):
             position(position), delta(delta),
             SWindowEvent(EWindowEventType::Reposition) { }
 
@@ -55,7 +55,7 @@ namespace Atom::Engine
 
     class SWindowCloseEvent extends SWindowEvent
     {
-        pub cexpr ctor SWindowCloseEvent():
+        pub ctor SWindowCloseEvent():
             SWindowEvent(EWindowEventType::Close) { }
     };
 

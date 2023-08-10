@@ -15,7 +15,7 @@ namespace Atom
     {
         pub using TImpl = std::source_location;
 
-        pub static cexpr ExceptionSource Current(TImpl src = TImpl::current());
+        pub static constexpr ExceptionSource Current(TImpl src = TImpl::current());
 
         pub u32 line;
         pub u32 column;
@@ -31,7 +31,7 @@ namespace Atom
     // using StackTrace = std::stacktrace;
     class StackTrace
     {
-        pub static cexpr StackTrace current()
+        pub static constexpr StackTrace current()
         {
             return StackTrace{ };
         }

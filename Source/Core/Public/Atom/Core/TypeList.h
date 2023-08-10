@@ -23,7 +23,7 @@ namespace Atom
         template <typename... Ts>
         class Count
         {
-            pub static cexpr usize Value = sizeof...(Ts);
+            pub static constexpr usize Value = sizeof...(Ts);
         };
 
     //// -------------------------------------------------------------------------------------------
@@ -36,16 +36,16 @@ namespace Atom
         template <usize max, typename T, typename... Ts>
         class MaxSize<max, T, Ts...>
         {
-            priv static cexpr usize _ThisSize = sizeof(T);
-            pub static cexpr usize Value = MaxSize<(_ThisSize > max ? _ThisSize : max),
+            priv static constexpr usize _ThisSize = sizeof(T);
+            pub static constexpr usize Value = MaxSize<(_ThisSize > max ? _ThisSize : max),
                 Ts...>::Value;
         };
 
         template <usize max>
         class MaxSize<max>
         {
-            priv static cexpr usize _ThisSize = 0;
-            pub static cexpr usize Value = _ThisSize > max ? _ThisSize : max;
+            priv static constexpr usize _ThisSize = 0;
+            pub static constexpr usize Value = _ThisSize > max ? _ThisSize : max;
         };
 
     //// -------------------------------------------------------------------------------------------
@@ -58,16 +58,16 @@ namespace Atom
         template <usize min, typename T, typename... Ts>
         class MinSize<min, T, Ts...>
         {
-            priv static cexpr usize _ThisSize = alignof(T);
-            pub static cexpr usize Value = MinSize<(_ThisSize < min ? _ThisSize : min),
+            priv static constexpr usize _ThisSize = alignof(T);
+            pub static constexpr usize Value = MinSize<(_ThisSize < min ? _ThisSize : min),
                 Ts...>::Value;
         };
 
         template <usize min>
         class MinSize<min>
         {
-            priv static cexpr usize _ThisSize = 0;
-            pub static cexpr usize Value = _ThisSize < min ? _ThisSize : min;
+            priv static constexpr usize _ThisSize = 0;
+            pub static constexpr usize Value = _ThisSize < min ? _ThisSize : min;
         };
 
     //// -------------------------------------------------------------------------------------------
@@ -80,16 +80,16 @@ namespace Atom
         template <usize max, typename T, typename... Ts>
         class MaxAlign<max, T, Ts...>
         {
-            priv static cexpr usize _ThisAlign = alignof(T);
-            pub static cexpr usize Value = MaxAlign<(_ThisAlign > max ? _ThisAlign : max),
+            priv static constexpr usize _ThisAlign = alignof(T);
+            pub static constexpr usize Value = MaxAlign<(_ThisAlign > max ? _ThisAlign : max),
                 Ts...>::Value;
         };
 
         template <usize max>
         class MaxAlign<max>
         {
-            priv static cexpr usize _ThisAlign = 0;
-            pub static cexpr usize Value = _ThisAlign > max ? _ThisAlign : max;
+            priv static constexpr usize _ThisAlign = 0;
+            pub static constexpr usize Value = _ThisAlign > max ? _ThisAlign : max;
         };
 
     //// -------------------------------------------------------------------------------------------
@@ -102,16 +102,16 @@ namespace Atom
         template <usize min, typename T, typename... Ts>
         class MinAlign<min, T, Ts...>
         {
-            priv static cexpr usize _ThisAlign = sizeof(T);
-            pub static cexpr usize Value = MinAlign<(_ThisAlign < min ? _ThisAlign : min),
+            priv static constexpr usize _ThisAlign = sizeof(T);
+            pub static constexpr usize Value = MinAlign<(_ThisAlign < min ? _ThisAlign : min),
                 Ts...>::Value;
         };
 
         template <usize min>
         class MinAlign<min>
         {
-            priv static cexpr usize _ThisAlign = 0;
-            pub static cexpr usize Value = _ThisAlign < min ? _ThisAlign : min;
+            priv static constexpr usize _ThisAlign = 0;
+            pub static constexpr usize Value = _ThisAlign < min ? _ThisAlign : min;
         };
 
     //// -------------------------------------------------------------------------------------------
@@ -144,14 +144,14 @@ namespace Atom
         template <typename TToGet, usize index, typename T, typename... Ts>
         class IndexOf<TToGet, index, T, Ts...>
         {
-            pub static cexpr usize Value = RSameAs<TToGet, T> ? index :
+            pub static constexpr usize Value = RSameAs<TToGet, T> ? index :
                 IndexOf<TToGet, index + 1, Ts...>::Value;
         };
 
         template <typename TToGet, usize index>
         class IndexOf<TToGet, index>
         {
-            pub static cexpr usize Value = -1;
+            pub static constexpr usize Value = -1;
         };
 
     //// -------------------------------------------------------------------------------------------
@@ -162,7 +162,7 @@ namespace Atom
         class Has
         {
             // TODO: try to remove the explicit 0 index.
-            pub static cexpr bool Value = IndexOf<T, 0, Ts...>::Value != -1;
+            pub static constexpr bool Value = IndexOf<T, 0, Ts...>::Value != -1;
         };
 
     //// -------------------------------------------------------------------------------------------
@@ -273,13 +273,13 @@ namespace Atom
         template <typename T>
         class AreUnique <T>
         {
-            pub static cexpr bool Value = true;
+            pub static constexpr bool Value = true;
         };
 
         template <typename T, typename... Ts>
         class AreUnique <T, Ts...>
         {
-            pub static cexpr bool Value = !Has<T, Ts...>::Value && AreUnique<Ts...>::Value;
+            pub static constexpr bool Value = !Has<T, Ts...>::Value && AreUnique<Ts...>::Value;
         };
     };
 
@@ -293,27 +293,27 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        static cexpr usize Count = TypeListOps::template Count<Ts...>::Value;
+        static constexpr usize Count = TypeListOps::template Count<Ts...>::Value;
 
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        static cexpr usize MaxSize = TypeListOps::template MaxSize<0, Ts...>::Value;
+        static constexpr usize MaxSize = TypeListOps::template MaxSize<0, Ts...>::Value;
 
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        static cexpr usize MinSize = TypeListOps::template MaxSize<0, Ts...>::Value;
+        static constexpr usize MinSize = TypeListOps::template MaxSize<0, Ts...>::Value;
 
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        static cexpr usize MaxAlign = TypeListOps::template MaxAlign<0, Ts...>::Value;
+        static constexpr usize MaxAlign = TypeListOps::template MaxAlign<0, Ts...>::Value;
 
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        static cexpr usize MinAlign = TypeListOps::template MaxAlign<0, Ts...>::Value;
+        static constexpr usize MinAlign = TypeListOps::template MaxAlign<0, Ts...>::Value;
 
         /// ----------------------------------------------------------------------------------------
         /// # To Do
@@ -327,7 +327,7 @@ namespace Atom
         /// 
         /// ----------------------------------------------------------------------------------------
         template <typename... TsToCheck>
-        static cexpr bool Has = (TypeListOps::template Has<TsToCheck, Ts...>::Value and...);
+        static constexpr bool Has = (TypeListOps::template Has<TsToCheck, Ts...>::Value and...);
 
         /// ----------------------------------------------------------------------------------------
         /// # To Do
@@ -335,11 +335,11 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <typename T>
         requires (Has<T>)
-        static cexpr usize IndexOf = TypeListOps::template IndexOf<T, 0, Ts...>::Value;
+        static constexpr usize IndexOf = TypeListOps::template IndexOf<T, 0, Ts...>::Value;
 
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        static cexpr bool AreUnique = TypeListOps::template AreUnique<Ts...>::Value;
+        static constexpr bool AreUnique = TypeListOps::template AreUnique<Ts...>::Value;
     };
 }
