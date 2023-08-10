@@ -1,3 +1,5 @@
+# BasedOnStyle: Microsoft
+
 Language: Cpp
 DisableFormat: false
 
@@ -11,7 +13,7 @@ IndentWidth: 4
 ContinuationIndentWidth: 4
 ConstructorInitializerIndentWidth: 4
 IndentAccessModifiers: false
-AccessModifierOffset: -2
+AccessModifierOffset: -4
 IndentCaseLabels: true
 IndentCaseBlocks: false
 IndentExternBlock: AfterExternBlock
@@ -58,14 +60,14 @@ SpacesInCStyleCastParentheses: false
 SpacesInLineCommentPrefix:
   Minimum: 1
   Maximum: -1
-# SpacesInParens: Never
+SpacesInParens: Never
 SpacesInSquareBrackets: false
 
 # --------------------------------------------------------------------------------------------------
 # Alignments
 # --------------------------------------------------------------------------------------------------
 
-AlignAfterOpenBracket: Align
+AlignAfterOpenBracket: DontAlign
 AlignArrayOfStructures: Left
 AlignConsecutiveAssignments:
   Enabled: false
@@ -91,12 +93,12 @@ AlignConsecutiveMacros:
   AcrossComments: false
   AlignCompound: false
   PadOperators: false
-# AlignConsecutiveShortCaseStatements:
-#   Enabled: true
-#   AcrossEmptyLines: false
-#   AcrossComments: false
-#   AlignCompound: false
-#   PadOperators: false
+AlignConsecutiveShortCaseStatements:
+  Enabled: true
+  AcrossEmptyLines: false
+  AcrossComments: false
+  AlignCompound: false
+  PadOperators: false
 AlignEscapedNewlines: Right
 AlignOperands: Align
 AlignTrailingComments:
@@ -118,34 +120,32 @@ AlwaysBreakBeforeMultilineStrings: false
 AlwaysBreakTemplateDeclarations: Yes
 BreakArrays: true
 BreakAfterAttributes: Always
-BreakAfterJavaFieldAnnotations: false
-BreakBeforeBinaryOperators: None
+BreakBeforeBinaryOperators: NonAssignment
 BreakBeforeConceptDeclarations: Always
 BreakBeforeBraces: Custom
 BraceWrapping:
-  AfterCaseLabel:  false
-  AfterClass:      true
-  AfterControlStatement: Always
-  AfterEnum:       true
+  AfterNamespace: true
+  AfterClass: true
+  AfterStruct: true
+  AfterUnion: true
+  AfterEnum: true
+  AfterFunction: true
+  BeforeWhile: true
+  BeforeElse: true
+  BeforeCatch: true
+  AfterCaseLabel: true
   AfterExternBlock: true
-  AfterFunction:   true
-  AfterNamespace:  true
-  AfterObjCDeclaration: true
-  AfterStruct:     true
-  AfterUnion:      false
-  BeforeCatch:     true
-  BeforeElse:      true
   BeforeLambdaBody: false
-  BeforeWhile:     false
-  IndentBraces:    false
-  SplitEmptyFunction: true
-  SplitEmptyRecord: true
-  SplitEmptyNamespace: true
+  AfterControlStatement: Always
+  IndentBraces: false
+  SplitEmptyFunction: false
+  SplitEmptyRecord: false
+  SplitEmptyNamespace: false
 BreakBeforeInlineASMColon: OnlyMultiline
 BreakBeforeTernaryOperators: true
 BreakStringLiterals: true
-BreakConstructorInitializers: AfterColon
-BreakInheritanceList: AfterColon
+BreakConstructorInitializers: BeforeComma
+BreakInheritanceList: BeforeComma
 RequiresClausePosition: OwnLine
 
 # --------------------------------------------------------------------------------------------------
@@ -191,7 +191,10 @@ PenaltyReturnTypeOnItsOwnLine: 1000
 # Macros
 # --------------------------------------------------------------------------------------------------
 
-AttributeMacros: []
+Macros: 
+  - fn=auto
+  - op=operator
+AttributeMacros: ['fn']
 ForEachMacros: []
 IfMacros: []
 MacroBlockBegin: ''
@@ -210,7 +213,7 @@ AllowAllParametersOfDeclarationOnNextLine: true
 AllowShortBlocksOnASingleLine: Always
 AllowShortCaseLabelsOnASingleLine: true
 AllowShortEnumsOnASingleLine: false
-AllowShortFunctionsOnASingleLine: None
+AllowShortFunctionsOnASingleLine: Empty
 AllowShortIfStatementsOnASingleLine: Never
 AllowShortLambdasOnASingleLine: All
 AllowShortLoopsOnASingleLine: false
@@ -225,7 +228,7 @@ EmptyLineBeforeAccessModifier: LogicalBlock
 ExperimentalAutoDetectBinPacking: false
 PackConstructorInitializers: BinPack
 ReflowComments: true
-# RemoveParentheses: MultipleParentheses
+RemoveParentheses: MultipleParentheses
 RemoveSemicolon: false
 SeparateDefinitionBlocks: Always
 ShortNamespaceLines: 1
@@ -238,7 +241,7 @@ IntegerLiteralSeparator:
   Hex: 0
   HexMinDigits: 0
 InsertNewlineAtEOF: true
-# KeepEmptyLinesAtEOF: true
+KeepEmptyLinesAtEOF: true
 KeepEmptyLinesAtTheStartOfBlocks: false
 LineEnding: DeriveLF
 MaxEmptyLinesToKeep: 1
