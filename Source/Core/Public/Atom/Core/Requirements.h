@@ -65,9 +65,9 @@ namespace Atom
     /// Ensures {TFrom} is {Convertible} to {TTo}.
     /// --------------------------------------------------------------------------------------------
     template <typename TFrom, typename TTo>
-    concept RConvertibleTo = requires
+    concept RConvertibleTo = requires(TFrom from)
     {
-        static_cast<TTo>(declval(TFrom));
+        static_cast<TTo>(from);
     };
 
     /// --------------------------------------------------------------------------------------------

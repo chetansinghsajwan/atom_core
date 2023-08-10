@@ -121,10 +121,10 @@ namespace Atom
 	/// Ensures {TFmter} is {StrFmtArgFmter} for type {T}.
 	/// --------------------------------------------------------------------------------------------
 	template <typename TFmter, typename T>
-	concept RStrFmtArgFmter = requires(TFmter fmter)
+	concept RStrFmtArgFmter = requires(TFmter fmter, T arg, StrFmtParseCtx parseCtx, StrFmtCtx ctx)
 	{
-		fmter.Parse(declval(StrFmtParseCtx&));
-		fmter.Fmt(declval(T), declval(StrFmtCtx&));
+		fmter.Parse(parseCtx);
+		fmter.Fmt(arg, ctx);
 	};
 
 	/// --------------------------------------------------------------------------------------------

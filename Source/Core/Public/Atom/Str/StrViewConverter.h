@@ -14,9 +14,9 @@ namespace Atom
     /// Ensures {TConverter} can convert {T} object to {StrView}.
     /// --------------------------------------------------------------------------------------------
     template <typename TConverter, typename T>
-    concept RStrViewConverter = requires(TConverter converter)
+    concept RStrViewConverter = requires(TConverter converter, T arg)
     {
-        { converter.Convert(declval(T)) } -> RSameAs<StrView>;
+        { converter.Convert(arg) } -> RSameAs<StrView>;
     };
 
     /// --------------------------------------------------------------------------------------------

@@ -4,11 +4,10 @@
 namespace Atom
 {
     template <typename TOut, typename T>
-    concept ROutput = requires(TOut out)
+    concept ROutput = requires(TOut out, const T& inCopy, T&& inMove, RangeReqMock<T> inRange)
     {
-        { out += declval(const T&) };
-        { out += declval(T&&) };
-
-        { out += RangeReqMock<T>() };
+        { out += inCopy };
+        { out += mov(inMove) };
+        { out += inRange };
     };
 }
