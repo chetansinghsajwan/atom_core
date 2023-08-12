@@ -143,8 +143,8 @@ BraceWrapping:
 BreakBeforeInlineASMColon: OnlyMultiline
 BreakBeforeTernaryOperators: true
 BreakStringLiterals: true
-BreakConstructorInitializers: BeforeComma
-BreakInheritanceList: BeforeComma
+BreakConstructorInitializers: AfterColon
+BreakInheritanceList: AfterColon
 RequiresClausePosition: OwnLine
 
 # --------------------------------------------------------------------------------------------------
@@ -224,7 +224,7 @@ EmptyLineAfterAccessModifier: Never
 EmptyLineBeforeAccessModifier: LogicalBlock
 ExperimentalAutoDetectBinPacking: false
 PackConstructorInitializers: BinPack
-ReflowComments: true
+ReflowComments: false
 RemoveParentheses: MultipleParentheses
 RemoveSemicolon: false
 SeparateDefinitionBlocks: Always

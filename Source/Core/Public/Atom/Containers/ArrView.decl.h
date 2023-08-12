@@ -55,7 +55,6 @@ namespace Atom
     template <typename T>
     class ArrView: public ArrRangeTrait<ArrView<T>>
     {
-    private:
         friend class ArrRangeTraitImpl<ArrView<T>>;
 
     private:
