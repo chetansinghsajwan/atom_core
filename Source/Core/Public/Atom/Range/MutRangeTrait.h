@@ -3,12 +3,54 @@
 
 namespace Atom
 {
+    /// --------------------------------------------------------------------------------------------
+    /// User defined implementation for [`MutRangeTrait`].
+    /// --------------------------------------------------------------------------------------------
     template <typename TRange>
     class MutRangeTraitImpl;
 
+    /// --------------------------------------------------------------------------------------------
+    /// Implementation for [`MutRangeTrait`].
+    /// --------------------------------------------------------------------------------------------
     template <typename TRange>
-    class _MutRangeTraitImpl {};
+    class _MutRangeTraitImpl:
+        private MutRangeTraitImpl<TRange>
+    {
+    private:
+        using _Impl = MutRangeTraitImpl<TRange>;
 
+    public:
+        using TElem = typename _Impl::TElem;
+        using TIter = typename _Impl::TIter;
+        using TIterEnd = typename _Impl::TIterEnd;
+        using TMutIter = typename _Impl::TMutIter;
+        using TMutIterEnd = typename _Impl::TMutIterEnd;
+
+    public:
+        constexpr auto iter() const -> TIter
+        {
+            return _Impl::iter();
+        }
+
+        constexpr auto iterEnd() const -> TIterEnd
+        {
+            return _Impl::iterEnd();
+        }
+
+        constexpr auto mutIter() const -> TIter
+        {
+            return _Impl::mutIter();
+        }
+
+        constexpr auto mutIterEnd() const -> TIterEnd
+        {
+            return _Impl::mutIterEnd();
+        }
+    };
+
+    /// --------------------------------------------------------------------------------------------
+    /// Trait for [`MutRange`].
+    /// --------------------------------------------------------------------------------------------
     template <typename TRange>
     class MutRangeTrait:
         public RangeTrait<TRange>
@@ -27,6 +69,7 @@ namespace Atom
     //// Iteration
     //// -------------------------------------------------------------------------------------------
 
+    public:
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
@@ -51,6 +94,7 @@ namespace Atom
     ////
     //// -------------------------------------------------------------------------------------------
 
+    public:
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
