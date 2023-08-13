@@ -1,35 +1,50 @@
 #pragma once
-#include "RangeTrait.h"
+#include "ArrRangeTrait.h"
+#include "MutRangeTrait.h"
 
 namespace Atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// User defined implementation for [`ArrRangeTrait`].
+    /// User defined implementation for [`MutArrRangeTrait`].
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
-    class ArrRangeTraitImpl;
+    class MutArrRangeTraitImpl;
 
     /// --------------------------------------------------------------------------------------------
-    /// Implementation of [`ArrRangeTrait`].
+    /// Requirements for [`MutArrRangeTraitImpl`].
+    /// 
+    /// # To Do: Implement this.
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
-    class _ArrRangeTraitImpl:
-        private ArrRangeTraitImpl<TRange>
+    concept RMutArrRangeTraitImpl = RDefaultConstructible<MutArrRangeTraitImpl<TRange>>;
+
+    /// --------------------------------------------------------------------------------------------
+    /// Implementation of [`MutArrRangeTrait`].
+    /// 
+    /// # To Do
+    /// 
+    /// - Add `iter()` and `iterEnd()` functions.
+    /// --------------------------------------------------------------------------------------------
+    template <typename TRange>
+    class _MutArrRangeTraitImpl:
+        private MutArrRangeTraitImpl<TRange>
     {
-        using _Impl = ArrRangeTraitImpl<TRange>;
+        using _Impl = MutArrRangeTraitImpl<TRange>;
 
     public:
         using TElem = typename _Impl::TElem;
         using TIter = ArrIter<TElem>;
         using TIterEnd = TIter;
+        using TMutIter = MutArrIter<TElem>;
+        using TMutIterEnd = TMutIter;
 
     public:
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto getCount() const -> usize
+        constexpr auto getData() -> TElem*
         {
-            return _Impl::getCount();
+            return _Impl::getData();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -39,22 +54,33 @@ namespace Atom
         {
             return _Impl::getData();
         }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto getCount() const -> usize
+        {
+            return _Impl::getCount();
+        }
     };
 
     /// --------------------------------------------------------------------------------------------
     /// Trait for [ArrRange].
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
-    class ArrRangeTrait:
-        public RangeTrait<TRange>,
-        private _ArrRangeTraitImpl<TRange>
+    class MutArrRangeTrait:
+        public ArrRangeTrait<TRange>,
+        public MutRangeTrait<TRange>,
+        private _MutArrRangeTraitImpl<TRange>
     {
-        using _Impl = _ArrRangeTraitImpl<TRange>;
+        using _Impl = _MutArrRangeTraitImpl<TRange>;
 
     public:
         using TElem = typename _Impl::TElem;
         using TIter = ArrIter<TElem>;
         using TIterEnd = TIter;
+        using TMutIter = MutArrIter<TElem>;
+        using TMutIterEnd = TIter;
 
     //// -------------------------------------------------------------------------------------------
     //// Access
@@ -64,7 +90,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Get underlying ptr to arr.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto data() const -> const TElem*
+        constexpr auto data() -> TElem*
         {
             return _data();
         }
@@ -78,12 +104,14 @@ namespace Atom
         /// # Time Complexity
         /// Constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto at(usize i) const -> const TElem&
+        constexpr auto at(usize i) -> TElem&
         {
             expects(isIndexInRange(i), "Index is out of range.");
 
             return _at(i);
         }
+
+        using ArrRangeTrait<TRange>::operator[];
 
         /// ----------------------------------------------------------------------------------------
         /// Access element by index.
@@ -94,7 +122,7 @@ namespace Atom
         /// # Time Complexity
         /// Constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator[](usize i) const -> const TElem&
+        constexpr auto operator[](usize i) -> TElem&
         {
             debug_expects(isIndexInRange(i), "Index is out of range.");
 
@@ -107,7 +135,7 @@ namespace Atom
         /// # Time Complexity
         /// Constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto front() const -> const TElem&
+        constexpr auto front() -> TElem&
         {
             debug_expects(not isEmpty(), "Range is empty.");
 
@@ -120,7 +148,7 @@ namespace Atom
         /// # Time Complexity
         /// Constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto back() const -> const TElem&
+        constexpr auto back() -> TElem&
         {
             debug_expects(not isEmpty(), "Range is empty.");
 
@@ -155,14 +183,14 @@ namespace Atom
         ///
         /// - `i`: Index of the element to get iter at.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto iter(usize i) const -> TIter
+        constexpr auto mutIter(usize i) const -> TMutIterEnd
         {
             expects(isIndexInRange(i), "Index is out of range.");
-
+    
             return _iter() + i;
         }
 
-        using RangeTrait<TRange>::iter;
+        using MutRangeTrait<TRange>::mutIter;
 
     //// -------------------------------------------------------------------------------------------
     //// View
@@ -199,7 +227,7 @@ namespace Atom
     //// -------------------------------------------------------------------------------------------
 
     private:
-        constexpr auto _data() const -> const TElem*
+        constexpr auto _data() -> TElem*
         {
             return _Impl::getData();
         }
@@ -209,17 +237,17 @@ namespace Atom
             return _Impl::getCount();
         }
 
-        constexpr auto _at(usize i) const -> const TElem&
+        constexpr auto _at(usize i) -> TElem&
         {
             return _data()[i];
         }
 
-        constexpr auto _front() const -> const TElem&
+        constexpr auto _front() -> TElem&
         {
             return _at(0);
         }
 
-        constexpr auto _back() const -> const TElem&
+        constexpr auto _back() -> TElem&
         {
             debug_expects(_count() > 0);
 
@@ -238,19 +266,51 @@ namespace Atom
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// [`RangeTraitImpl`] using [`ArrRangeTraitImpl`].
+    /// [`ArrRangeTraitImpl`] using [`MutArrRangeTraitImpl`].
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
-    requires(RDefaultConstructible<ArrRangeTraitImpl<TRange>>)
-    class RangeTraitImpl<TRange>:
-        private ArrRangeTraitImpl<TRange>
+    requires(RMutArrRangeTraitImpl<TRange>)
+        and (not RDerivedFrom<MutArrRangeTraitImpl<TRange>, _DontInheritRangeImpl>)
+    class ArrRangeTraitImpl<TRange>:
+        private MutArrRangeTraitImpl<TRange>
     {
-        using _Impl = ArrRangeTraitImpl<TRange>;
+        using _Impl = MutArrRangeTraitImpl<TRange>;
+
+    public:
+        using TElem = typename _Impl::TElem;
+
+    public:
+        constexpr auto getData() const -> const TElem*
+        {
+            return _Impl::getData();
+        }
+
+        constexpr auto getCount() const -> usize
+        {
+            return _Impl::getCount();
+        }
+    };
+
+    /// --------------------------------------------------------------------------------------------
+    /// [`MutRangeTraitImpl`] using [`MutArrRangeTraitImpl`].
+    /// --------------------------------------------------------------------------------------------
+    template <typename TRange>
+    requires(RMutArrRangeTraitImpl<TRange>)
+    class MutRangeTraitImpl<TRange>:
+        private MutArrRangeTraitImpl<TRange>,
+        public _DontInheritRangeImpl
+    {
+        using _Impl = MutArrRangeTraitImpl<TRange>;
 
     public:
         using TElem = typename _Impl::TElem;
         using TIter = ArrIter<TElem>;
         using TIterEnd = TIter;
+        using TMutIter = MutArrIter<TElem>;
+        using TMutIterEnd = TMutIter;
+
+    public:
+        struct DontInheritFromRange{};
 
     public:
         constexpr auto iter() const -> TIter
@@ -260,7 +320,17 @@ namespace Atom
 
         constexpr auto iterEnd() const -> TIterEnd
         {
-            return TIterEnd{ _Impl::getData() + _Impl::getCount() };
+            return TIter{ _Impl::getData() + _Impl::getCount() };
+        }
+
+        constexpr auto mutIter() const -> TIter
+        {
+            return TMutIter{ _Impl::getData() };
+        }
+
+        constexpr auto mutIterEnd() const -> TIterEnd
+        {
+            return TMutIter{ _Impl::getData() + _Impl::getCount() };
         }
     };
 }

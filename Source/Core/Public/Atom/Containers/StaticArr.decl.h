@@ -1,34 +1,75 @@
 #pragma once
-#include "_ArrImplHelper.decl.h"
+#include "Atom/Range/MutArrRangeTrait.h"
 
 namespace Atom
 {
-    template <typename T, usize Size>
-    class _StaticArrImplBase
+    template <typename T, usize count>
+    class _StaticArrStorage
     {
-    protected:
+    public:
         using TElem = T;
 
-    protected:
-        constexpr auto _Data() -> T*
+    public:
+        constexpr auto getData() -> T*
         {
             return _arr;
         }
 
-        constexpr auto _Data() const -> const T*
+        constexpr auto getData() const -> const T*
         {
             return _arr;
         }
 
-        constexpr auto _Count() const -> usize
+        constexpr auto getCount() const -> usize
         {
-            return Size;
+            return count;
         }
 
     public:
-        T _arr[Size];
+        T _arr[count];
     };
 
-    template <typename T, usize Size>
-    using StaticArr = _ArrImplHelper<_StaticArrImplBase<T, Size>>;
+    template <typename T, usize count>
+    class StaticArr:
+        public _StaticArrStorage<T, count>,
+        public MutArrRangeTrait<StaticArr<T, count>>
+    {};
+
+    template <typename T, usize count>
+    class MutArrRangeTraitImpl<StaticArr<T, count>>
+    {
+    private:
+        using _Arr = StaticArr<T, count>;
+        using _Storage = _StaticArrStorage<T, count>;
+
+    public:
+        using TElem = T;
+
+    public:
+        constexpr auto getData() -> T*
+        {
+            return _storage().getData();
+        }
+
+        constexpr auto getData() const -> const T*
+        {
+            return _storage().getData();
+        }
+
+        constexpr auto getCount() const -> usize
+        {
+            return _storage().getCount();
+        }
+
+    private:
+        constexpr auto _storage() -> _Storage&
+        {
+            return reinterpret_cast<_Storage&>(*this);
+        }
+
+        constexpr auto _storage() const -> const _Storage&
+        {
+            return reinterpret_cast<const _Storage&>(*this);
+        }
+    };
 }

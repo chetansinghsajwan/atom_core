@@ -4,6 +4,18 @@
 namespace Atom
 {
     /// --------------------------------------------------------------------------------------------
+    /// When marked with this flag, mut range implementations doesn't inherit from their range
+    /// implementations, this is done to prevent diamond problem.
+    /// --------------------------------------------------------------------------------------------
+    class _DontInheritRangeImpl {};
+
+    /// --------------------------------------------------------------------------------------------
+    /// Requirements for [`MutRangeImpl`].
+    /// --------------------------------------------------------------------------------------------
+    template <typename TRange>
+    concept RMutRangeImpl = false;
+
+    /// --------------------------------------------------------------------------------------------
     /// User defined implementation for [`MutRangeTrait`].
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
@@ -25,6 +37,10 @@ namespace Atom
         using TIterEnd = typename _Impl::TIterEnd;
         using TMutIter = typename _Impl::TMutIter;
         using TMutIterEnd = typename _Impl::TMutIterEnd;
+
+    public:
+        static constexpr bool InheritRange = not RDerivedFrom<
+            MutRangeTraitImpl<TRange>, _DontInheritRangeImpl>;
 
     public:
         constexpr auto iter() const -> TIter
@@ -53,7 +69,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
     class MutRangeTrait:
-        public RangeTrait<TRange>
+        public TTI::TConditional<_MutRangeTraitImpl<TRange>::InheritRange, RangeTrait<TRange>, Void>
     {
         using Base = RangeTrait<TRange>;
         using _Impl = _MutRangeTraitImpl<TRange>;
@@ -71,24 +87,40 @@ namespace Atom
 
     public:
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr auto begin() -> TMutIter
+        constexpr auto mutIter() -> TMutIter
         {
             return _Impl::mutIter();
         }
 
-        using Base::begin;
-
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr auto end() -> TMutIterEnd
+        constexpr auto mutIterEnd() -> TMutIterEnd
         {
             return _Impl::mutIterEnd();
         }
 
-        using Base::end;
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        // constexpr auto begin() -> TMutIter
+        // {
+        //     return _Impl::mutIter();
+        // }
+
+        // using Base::begin;
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        // constexpr auto end() -> TMutIterEnd
+        // {
+        //     return _Impl::mutIterEnd();
+        // }
+
+        // using Base::end;
 
     //// -------------------------------------------------------------------------------------------
     ////
@@ -164,4 +196,13 @@ namespace Atom
             requires(RDestructible<TElem>)
         {}
     };
+
+    /// --------------------------------------------------------------------------------------------
+    /// [`RangeTraitImpl`] using [`MutRangeTrait`].
+    /// --------------------------------------------------------------------------------------------
+    template <typename TRange>
+    requires (RMutRangeImpl<TRange>)
+        && (not RDerivedFrom<MutRangeTraitImpl<TRange>, _DontInheritRangeImpl>)
+    class RangeTraitImpl<TRange>:
+        public MutRangeTraitImpl<TRange> {};
 }
