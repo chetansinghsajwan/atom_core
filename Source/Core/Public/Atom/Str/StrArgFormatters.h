@@ -68,7 +68,7 @@ namespace Atom
 
         auto AdvanceTo(ArrIter<Char> it)
         {
-            _fmtCtx.advance_to(&*it);
+            _fmtCtx.advance_to(it.data());
         }
 
     public:

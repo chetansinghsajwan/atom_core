@@ -1,4 +1,5 @@
 #pragma once
+#include "StdIterWrapForAtomIter.h"
 #include "RangeComparer.h"
 #include "RangeReq.h"
 
@@ -11,7 +12,7 @@ namespace Atom
         requires RRange<TRange>
     constexpr auto begin(const TRange& range) -> auto
     {
-        return range.iter();
+        return StdIterWrapForAtomIter{ range.iter() };
     }
 
     /// --------------------------------------------------------------------------------------------
@@ -21,7 +22,7 @@ namespace Atom
         requires RMutRange<TRange>
     constexpr auto begin(TRange& range) -> auto
     {
-        return range.mutIter();
+        return StdIterWrapForAtomIter{ range.mutIter() };
     }
 
     /// --------------------------------------------------------------------------------------------
@@ -31,7 +32,7 @@ namespace Atom
         requires RRange<TRange>
     constexpr auto end(const TRange& range) -> auto
     {
-        return range.iterEnd();
+        return StdIterWrapForAtomIter{ range.iterEnd() };
     }
 
     /// --------------------------------------------------------------------------------------------
@@ -41,7 +42,7 @@ namespace Atom
         requires RMutRange<TRange>
     constexpr auto end(TRange& range) -> auto
     {
-        return range.mutIterEnd();
+        return StdIterWrapForAtomIter{ range.mutIterEnd() };
     }
 
     /// --------------------------------------------------------------------------------------------

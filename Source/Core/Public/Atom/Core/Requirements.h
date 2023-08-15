@@ -5,6 +5,8 @@
 #include <concepts>
 #include <type_traits>
 
+// clang-format off
+
 namespace Atom
 {
     /// --------------------------------------------------------------------------------------------
@@ -54,12 +56,9 @@ namespace Atom
     template <typename T1, typename T2>
     concept RSameAsUnqualified = std::same_as<TTI::TRemoveCVRef<T1>, TTI::TRemoveCVRef<T2>>;
 
-    template <bool V>
-    concept RTrue = (V == true);
-
-    template <bool V>
-    concept RFalse = (V == false);
-
+    /// --------------------------------------------------------------------------------------------
+    /// Enusres `T` is const-qualified.
+    /// --------------------------------------------------------------------------------------------
     template <typename T>
     concept RConst = std::is_const_v<T>;
 
@@ -67,7 +66,10 @@ namespace Atom
     /// Ensures {TFrom} is {Convertible} to {TTo}.
     /// --------------------------------------------------------------------------------------------
     template <typename TFrom, typename TTo>
-    concept RConvertibleTo = requires(TFrom from) { static_cast<TTo>(from); };
+    concept RConvertibleTo = requires(TFrom from)
+    {
+        static_cast<TTo>(from);
+    };
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures {TDerived} is derived from {TBase}.
@@ -104,7 +106,10 @@ namespace Atom
     /// Ensures {T} is {Constructible} using {args...}.
     /// --------------------------------------------------------------------------------------------
     template <typename T, typename... TArgs>
-    concept RConstructible = requires(TArgs&&... args) { T(fwd(args)...); };
+    concept RConstructible = requires(TArgs&&... args)
+    {
+        T(fwd(args)...);
+    };
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures {T} is {TriviallyConstructible} using {args...}.
@@ -191,7 +196,8 @@ namespace Atom
     /// Ensures {T} is {DefaultInitializable}.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    concept RDefaultInitializable = requires {
+    concept RDefaultInitializable = requires
+    {
         requires RDefaultConstructible<T>;
 
         (void)new T;
@@ -208,10 +214,9 @@ namespace Atom
     /// Ensures {T} is {Assignable} using {from}.
     /// --------------------------------------------------------------------------------------------
     template <typename T1, typename T2>
-    concept RAssignable = requires(T1 t1, T2 t2) {
-        {
-            t1 = t2
-        } -> RSameAs<T1&>;
+    concept RAssignable = requires(T1 t1, T2 t2)
+    {
+        { t1 = fwd(t2) } -> RSameAs<T1&>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -374,13 +379,10 @@ namespace Atom
     /// Ensures {T1} and {T2} are {EqualityComparable}.
     /// --------------------------------------------------------------------------------------------
     template <typename T1, typename T2>
-    concept REqualityComparableWith = requires(T1 t1, T2 t2) {
-        {
-            t1 == t2
-        } -> RConvertibleTo<bool>;
-        {
-            t1 != t2
-        } -> RConvertibleTo<bool>;
+    concept REqualityComparableWith = requires(T1 t1, T2 t2)
+    {
+        { t1 == t2 } -> RConvertibleTo<bool>;
+        { t1 != t2 } -> RConvertibleTo<bool>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -393,21 +395,14 @@ namespace Atom
     /// Ensures {T1} and {T2} are {Comparable}.
     /// --------------------------------------------------------------------------------------------
     template <typename T1, typename T2>
-    concept RComparableWith = requires(T1 t1, T2 t2) {
+    concept RComparableWith = requires(T1 t1, T2 t2)
+    {
         requires REqualityComparableWith<T1, T2>;
 
-        {
-            t1 < t2
-        } -> RConvertibleTo<bool>;
-        {
-            t1 > t2
-        } -> RConvertibleTo<bool>;
-        {
-            t1 <= t2
-        } -> RConvertibleTo<bool>;
-        {
-            t1 >= t2
-        } -> RConvertibleTo<bool>;
+        { t1 < t2 } -> RConvertibleTo<bool>;
+        { t1 > t2 } -> RConvertibleTo<bool>;
+        { t1 <= t2 } -> RConvertibleTo<bool>;
+        { t1 >= t2 } -> RConvertibleTo<bool>;
     };
 
     /// --------------------------------------------------------------------------------------------

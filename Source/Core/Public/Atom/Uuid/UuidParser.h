@@ -39,31 +39,31 @@ namespace Atom
             {
                 if (j == 8 || j == 13 || j == 18 || j == 23)
                 {
-                    if (*it != '-')
+                    if (it.value() != '-')
                     {
                         return Uuid::Null;
                     }
 
                     j++;
-                    it++;
+                    it.next();
                     continue;
                 }
 
-                byte high = Math::CharToHex(*it);
+                byte high = Math::CharToHex(it.value());
                 if (high == byte(-1))
                     return Uuid::Null;
 
                 j++;
-                it++;
+                it.next();
 
-                byte low = Math::CharToHex(*it);
+                byte low = Math::CharToHex(it.value());
                 if (low == byte(-1))
                     return Uuid::Null;
 
                 uuid.bytes[i++] = (high << 4) | low;
 
                 j++;
-                it++;
+                it.next();
             }
 
             return uuid;
@@ -78,41 +78,41 @@ namespace Atom
 
             while (i < 16)
             {
-                if (it == itEnd)
+                if (it.equals(itEnd))
                     return Uuid::Null;
 
                 if (j == 8 || j == 13 || j == 18 || j == 23)
                 {
-                    if (*it != '-')
+                    if (it.value() != '-')
                     {
                         return Uuid::Null;
                     }
 
                     j++;
-                    it++;
+                    it.next();
                     continue;
                 }
 
-                byte high = Math::CharToHex(*it);
+                byte high = Math::CharToHex(it.value());
                 if (high == byte(-1))
                     return Uuid::Null;
 
                 j++;
-                it++;
-                if (it == itEnd)
+                it.next();
+                if (it.equals(itEnd))
                     return Uuid::Null;
 
-                byte low = Math::CharToHex(*it);
+                byte low = Math::CharToHex(it.value());
                 if (low == byte(-1))
                     return Uuid::Null;
 
                 uuid.bytes[i++] = (high << 4) | low;
 
                 j++;
-                it++;
+                it.next();
             }
 
-            if (it != itEnd)
+            if (not it.equals(itEnd))
             {
                 return Uuid::Null;
             }

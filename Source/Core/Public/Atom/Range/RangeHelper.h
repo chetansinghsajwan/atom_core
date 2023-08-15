@@ -187,11 +187,11 @@ namespace Atom
         {
             if constexpr (RJumpIterPair<TIter, TIterEnd>)
             {
-                return iterEnd - iter;
+                return -iter.compare(iterEnd);
             }
 
             usize count = 0;
-            for (; iter != iterEnd; iter++)
+            for (; not iter.equals(iterEnd); iter.next())
                 count++;
 
             return count;
@@ -207,7 +207,7 @@ namespace Atom
         }
 
         template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
-        constexpr auto _FwdCopy(const TIter1 iter1, const TIterEnd1 iterEnd1, TIter2 iter2,
+        constexpr auto _FwdCopy(TIter1 iter1, TIterEnd1 iterEnd1, TIter2 iter2,
             TIterEnd2 iterEnd2) const -> void
         {
             StdIterWrapForAtomIter stdIter1{ iter1 };
@@ -218,7 +218,7 @@ namespace Atom
         }
 
         template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
-        constexpr auto _BwdCopy(const TIter1 iter1, const TIterEnd1 iterEnd1, TIter2 iter2,
+        constexpr auto _BwdCopy(TIter1 iter1, TIterEnd1 iterEnd1, TIter2 iter2,
             TIterEnd2 iterEnd2) const -> void
         {
             StdIterWrapForAtomIter stdIter1{ iter1 };
@@ -229,8 +229,8 @@ namespace Atom
         }
 
         template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
-        constexpr auto _FwdMove(
-            TIter1 iter1, const TIterEnd1 iterEnd1, TIter2 iter2, TIterEnd2 iterEnd2) const -> void
+        constexpr auto _FwdMove(TIter1 iter1, TIterEnd1 iterEnd1, TIter2 iter2,
+            TIterEnd2 iterEnd2) const -> void
         {
             StdIterWrapForAtomIter stdIter1{ iter1 };
             StdIterWrapForAtomIter stdIterEnd1{ iterEnd1 };
@@ -241,7 +241,7 @@ namespace Atom
 
         template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
         constexpr auto _BwdMove(
-            TIter1 iter1, const TIterEnd1 iterEnd1, TIter2 iter2, TIterEnd2 iterEnd2) const -> void
+            TIter1 iter1, TIterEnd1 iterEnd1, TIter2 iter2, TIterEnd2 iterEnd2) const -> void
         {
             StdIterWrapForAtomIter stdIter1{ iter1 };
             StdIterWrapForAtomIter stdIterEnd1{ iterEnd1 };
@@ -255,7 +255,7 @@ namespace Atom
         {
             if constexpr (RArrIterPair<TIter, TIterEnd>)
             {
-                std::shift_right(&*iter, &*iterEnd, steps);
+                std::shift_right(iter.data(), iterEnd.data(), steps);
                 return;
             }
 
@@ -270,7 +270,7 @@ namespace Atom
         {
             if constexpr (RArrIterPair<TIter, TIterEnd>)
             {
-                std::shift_left(&*iter, &*iterEnd, steps);
+                std::shift_left(iter.data(), iterEnd.data(), steps);
                 return;
             }
 
@@ -285,7 +285,7 @@ namespace Atom
         {
             if constexpr (RArrIterPair<TIter, TIterEnd>)
             {
-                std::rotate(&*iter, &*iter + steps, &*iterEnd);
+                std::rotate(iter.data(), iter.data() + steps, iterEnd.data());
                 return;
             }
 
@@ -300,7 +300,7 @@ namespace Atom
         {
             if constexpr (RArrIterPair<TIter, TIterEnd>)
             {
-                std::rotate(&*iter, &*iterEnd - steps, &*iterEnd);
+                std::rotate(iter.data(), iterEnd.data() - steps, iterEnd.data());
                 return;
             }
 
@@ -315,7 +315,7 @@ namespace Atom
         {
             if constexpr (RArrIterPair<TIter, TIterEnd>)
             {
-                std::destroy(&*iter, &*iterEnd);
+                std::destroy(iter.data(), iterEnd.data());
                 return;
             }
 

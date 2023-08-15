@@ -43,9 +43,10 @@ namespace Atom
             requires(RInvokable<TPred, bool(const TElem&)>)
         {
             usize count = 0;
-            for (auto it = _impl.iter(); it != _impl.iterEnd(); it++)
+            auto itEnd = _impl.iterEnd();
+            for (auto it = _impl.iter(); it != itEnd; it.next())
             {
-                if (pred(*it))
+                if (pred(it.value()))
                 {
                     it = _impl.removeAt(it);
                     count++;

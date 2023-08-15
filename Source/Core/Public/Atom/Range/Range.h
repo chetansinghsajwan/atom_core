@@ -14,34 +14,34 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename _TIter, typename _TIterEnd>
-        requires(RIterPair<_TIter, _TIterEnd>)
-    class Range<_TIter, _TIterEnd>
+    template <typename TIter_, typename TIterEnd_>
+    requires(RIterPair<TIter_, TIterEnd_>)
+    class Range<TIter_, TIterEnd_>
     {
     public:
-        using TElem = typename _TIter::TElem;
-        using TMutIter = _TIter;
-        using TMutIterEnd = _TIterEnd;
-        using TIter = _TIter;
-        using TIterEnd = _TIterEnd;
+        using TElem = typename TIter_::TElem;
+        using TMutIter = TIter_;
+        using TMutIterEnd = TIterEnd_;
+        using TIter = TIter_;
+        using TIterEnd = TIterEnd_;
 
     public:
         constexpr Range(TIter iter, TIterEnd end)
             : _iter{ iter }
-            , _end{ end }
+            , _iterEnd{ end }
         {}
 
     public:
         constexpr auto iter() const -> TIter
             requires(RIterPair<TIter, TIterEnd>)
         {
-            return TIter{ _iter };
+            return _iter;
         }
 
         constexpr auto iterEnd() const -> TIterEnd
             requires(RIterPair<TIter, TIterEnd>)
         {
-            return TIterEnd{ _end };
+            return _iterEnd;
         }
 
         constexpr auto mutIter() -> TMutIter
@@ -53,23 +53,30 @@ namespace Atom
         constexpr auto mutIterEnd() -> TMutIterEnd
             requires(RMutIterPair<TMutIter, TMutIterEnd>)
         {
-            return _end;
+            return _iterEnd;
         }
 
         constexpr auto count() const -> usize
             requires(RJumpIterPair<TIter, TIterEnd>)
         {
-            return _end - _iter;
+            return -_iter.compare(_iterEnd);
         }
 
-        constexpr auto data() const
-            -> const TElem* requires(RArrIterPair<TIter, TIterEnd>) { return &*_iter; }
+        constexpr auto data() const -> const TElem*
+            requires(RArrIterPair<TIter, TIterEnd>)
+        {
+            return _iter.data();
+        }
 
-        constexpr auto data()
-            -> TElem* requires(RMutArrIterPair<TIter, TIterEnd>) { return &*_iter; }
+        constexpr auto data() -> TElem*
+            requires(RMutArrIterPair<TIter, TIterEnd>)
+        {
+            return _iter.data();
+        }
 
-        protected: TIter _iter;
-        TIterEnd _end;
+    protected:
+        TIter _iter;
+        TIterEnd _iterEnd;
     };
 
     template <typename TIter, typename TIterEnd>

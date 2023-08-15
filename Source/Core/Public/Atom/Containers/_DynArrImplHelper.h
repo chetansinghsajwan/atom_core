@@ -22,7 +22,7 @@ namespace Atom
         ATOM_ASSERT(_ValidateIndexForInsert(index))
             << IndexOutOfRangeException("{pos} is out of range.", index, 0, _Count());
 
-        return mutIter() + _InsertAt(index, fwd(el));
+        return mutIter().next(_InsertAt(index, fwd(el)));
     }
 
     template <typename TImpl>
@@ -37,11 +37,11 @@ namespace Atom
 
         if constexpr (_CanGetRangeSize<TRange>())
         {
-            return mutIter() + _InsertAtCounted(index, range.mutIter(), _GetRangeSize(range));
+            return mutIter().next(_InsertAtCounted(index, range.mutIter(), _GetRangeSize(range)));
         }
         else
         {
-            return mutIter() + _InsertAtUncounted(index, range.mutIter(), range.iterEnd());
+            return mutIter().next(_InsertAtUncounted(index, range.mutIter(), range.iterEnd()));
         }
     }
 
@@ -49,7 +49,7 @@ namespace Atom
     template <typename T2, typename Req>
     constexpr auto _DynArrImplHelper<TImpl>::InsertFront(T2&& el) -> TMutIter
     {
-        return mutIter() + _InsertAt(0, fwd(el));
+        return mutIter().next(_InsertAt(0, fwd(el)));
     }
 
     template <typename TImpl>
@@ -58,11 +58,11 @@ namespace Atom
     {
         if constexpr (_CanGetRangeSize<TRange>())
         {
-            return mutIter() + _InsertAt(0, range.mutIter(), _GetRangeSize(range));
+            return mutIter().next(_InsertAt(0, range.mutIter(), _GetRangeSize(range)));
         }
         else
         {
-            return mutIter() + _InsertAt(0, range.mutIter(), range.iterEnd());
+            return mutIter().next(_InsertAt(0, range.mutIter(), range.iterEnd()));
         }
     }
 
@@ -70,7 +70,7 @@ namespace Atom
     template <typename T2, typename Req>
     constexpr auto _DynArrImplHelper<TImpl>::InsertBack(T2&& el) -> TMutIter
     {
-        return mutIter() + _InsertBack(fwd(el));
+        return mutIter().next(_InsertBack(fwd(el)));
     }
 
     template <typename TImpl>
@@ -79,11 +79,11 @@ namespace Atom
     {
         if constexpr (_CanGetRangeSize<TRange>())
         {
-            return mutIter() + _InsertBackCounted(range.iter(), _GetRangeSize(range));
+            return mutIter().next(_InsertBackCounted(range.iter(), _GetRangeSize(range)));
         }
         else
         {
-            return mutIter() + _InsertBackUncounted(range.iter(), range.iterEnd());
+            return mutIter().next(_InsertBackUncounted(range.iter(), range.iterEnd()));
         }
     }
 
@@ -166,9 +166,9 @@ namespace Atom
 
         _EnsureCapFor(count);
 
-        for (usize i = 0; i < count; i++)
+        for (usize i = 0; i < count; i++, it.next())
         {
-            _ConstructAt(index + i, fwd(*it++));
+            _ConstructAt(index + i, it.value());
         }
 
         _Count(_Count() + count);
@@ -201,7 +201,7 @@ namespace Atom
         ATOM_ASSERT(_ValidateIndex(index))
             << IndexOutOfRangeException("{pos} was out of range.", index, 0, _Count() - 1);
 
-        return mutIter() + _RemoveAt(index);
+        return mutIter().next(_RemoveAt(index));
     }
 
     template <typename TImpl>
@@ -225,7 +225,7 @@ namespace Atom
         ATOM_ASSERT(begin <= end) << InvalidArgumentException(
             "Invalid range passed. {range.mutIter()} is ahead of {range.iterEnd()}");
 
-        return mutIter() + _RemoveRange(begin, end - begin);
+        return mutIter().next(_RemoveRange(begin, end - begin));
     }
 
     template <typename TImpl>
@@ -291,7 +291,7 @@ namespace Atom
     template <typename TImpl>
     constexpr auto _DynArrImplHelper<TImpl>::_FetchIndex(TIter pos) const -> isize
     {
-        return &*pos - _Data();
+        return pos.data() - _Data();
     }
 
     template <typename TImpl>

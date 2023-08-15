@@ -8,11 +8,11 @@ namespace Atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename TIter>
-    using StdIterCatForAtomIter = TTI::TEnableIf<RIter<TIter>,
-        TTI::TNotConditional<RFwdIter<TIter>, std::input_iterator_tag,
-            TTI::TNotConditional<RBidiIter<TIter>, std::forward_iterator_tag,
-                TTI::TNotConditional<RJumpIter<TIter>, std::bidirectional_iterator_tag,
-                    TTI::TNotConditional<RArrIter<TIter>, std::random_access_iterator_tag,
+    using StdIterCatForAtomIter = TTI::TConditional<not RIter<TIter>, void,
+        TTI::TConditional<not RFwdIter<TIter>, std::input_iterator_tag,
+            TTI::TConditional<not RBidiIter<TIter>, std::forward_iterator_tag,
+                TTI::TConditional<not RJumpIter<TIter>, std::bidirectional_iterator_tag,
+                    TTI::TConditional<not RArrIter<TIter>, std::random_access_iterator_tag,
                         std::contiguous_iterator_tag>>>>>;
 
     /// --------------------------------------------------------------------------------------------
@@ -32,96 +32,94 @@ namespace Atom
         using reference = value_type&;
 
     public:
-        constexpr StdIterWrapForAtomIter(const TIter& iter)
-            : iter{ iter }
-        {}
-
         constexpr StdIterWrapForAtomIter(TIter& iter)
-            : iter{ iter }
-        {}
+            : iter{ iter } {}
 
         constexpr StdIterWrapForAtomIter(TIter&& iter)
-            : iter{ mov(iter) }
-        {}
+            : iter{ mov(iter) } {}
 
     public:
-        template <class = void>
         constexpr auto operator*() const -> const value_type&
             requires(RIter<TIter>)
         {
-            return *iter;
+            return iter.value();
         }
 
-        template <class = void>
         constexpr auto operator*() -> value_type&
             requires(RMutIter<TIter>)
         {
-            return *iter;
+            return iter.mutValue();
         }
 
         template <class TIterEnd>
         constexpr auto operator==(const StdIterWrapForAtomIter<TIterEnd>& that) const -> bool
-            requires(RIterEnd<TIter, TIterEnd>)
+            requires(RIterWithEnd<TIter, TIterEnd>)
         {
-            return iter == that.iter;
+            return iter.equals(that.iter);
         }
 
         template <class TIterEnd>
         constexpr auto operator!=(const StdIterWrapForAtomIter<TIterEnd>& that) const -> bool
-            requires(RIterEnd<TIter, TIterEnd>)
+            requires(RIterWithEnd<TIter, TIterEnd>)
         {
-            return iter != that.iter;
+            return not iter.equals(that.iter);
         }
 
-        template <class = void>
         constexpr auto operator++() -> Self&
             requires(RIter<TIter>)
         {
-            ++iter;
+            iter.next();
             return *this;
         }
 
-        template <class = void>
         constexpr auto operator++(i32) -> Self
             requires(RIter<TIter>)
         {
-            return Self{ iter++ };
+            Self tmp{ iter };
+            tmp.iter.next();
+            return tmp;
         }
 
-        template <class = void>
         constexpr auto operator--() -> Self&
             requires(RBidiIter<TIter>)
         {
-            --iter;
+            iter.prev();
             return *this;
         }
 
-        template <class = void>
         constexpr auto operator--(i32) const -> Self
             requires(RBidiIter<TIter>)
         {
-            return Self{ iter-- };
+            Self tmp{ iter };
+            tmp.iter.prev();
+            return tmp;
         }
 
-        template <class = void>
         constexpr auto operator+(difference_type steps) -> Self
             requires(RJumpIter<TIter>)
         {
-            return Self{ iter + steps };
+            // TODO: Review this. Should we accept steps as difference_type.
+            debug_expects(steps > 0);
+
+            Self tmp{ iter };
+            tmp.iter.next(steps);
+            return tmp;
         }
 
-        template <class = void>
         constexpr auto operator-(difference_type steps) -> Self
             requires(RJumpIter<TIter>)
         {
-            return Self{ iter - steps };
+            debug_expects(steps > 0);
+
+            Self tmp{ iter };
+            tmp.iter.prev(steps);
+            return tmp;
         }
 
-        template <class = void>
         constexpr auto operator-(const Self& that) -> difference_type
             requires(RJumpIter<TIter>)
         {
-            return iter - that.iter;
+            return iter.compare(that.iter);
         }
 
     public:

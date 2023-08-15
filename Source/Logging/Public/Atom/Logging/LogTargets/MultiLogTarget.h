@@ -131,7 +131,7 @@ namespace Atom::Logging::Private
             requires RRangeOf<TRange, LogTargetPtr>
         usize AddTargets(const TRange& targets)
         {
-            if (!targets.iter() == targets.iterEnd())
+            if (targets.iter().equals(targets.iterEnd()))
                 return 0;
 
             LockGuard guard(_lock);
@@ -177,7 +177,7 @@ namespace Atom::Logging::Private
             requires RRangeOf<TRange, LogTargetPtr>
         auto RemoveTargets(const TRange& targets) -> usize
         {
-            if (!targets.iter() == targets.iterEnd())
+            if (targets.iter().equals(targets.iterEnd()))
                 return 0;
 
             LockGuard guard(_lock);
@@ -219,7 +219,7 @@ namespace Atom::Logging::Private
             requires RRangeOf<TRange, LogTargetPtr>
         auto HasTargets(const TRange& targets) const -> usize
         {
-            if (!targets.iter() == targets.iterEnd())
+            if (targets.iter().equals(targets.iterEnd()))
                 return 0;
 
             LockGuard guard(_lock);
@@ -306,7 +306,8 @@ namespace Atom::Logging::Private
         {
             ATOM_DEBUG_EXPECTS(target != nullptr);
 
-            return _targets.InsertBack(mov(target)) != _targets.iterEnd();
+            _targets.InsertBack(mov(target));
+            return true;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -354,9 +355,9 @@ namespace Atom::Logging::Private
         {
             ATOM_DEBUG_EXPECTS(target != nullptr);
 
-            for (auto it = _targets.iter(); it != _targets.iterEnd(); it++)
+            for (auto it = _targets.iter(); not it.equals(_targets.iterEnd()); it.next())
             {
-                if (*it == target)
+                if (it.value() == target)
                 {
                     _targets.RemoveAt(it);
                     return true;
@@ -388,9 +389,9 @@ namespace Atom::Logging::Private
                 if (target == nullptr)
                     continue;
 
-                for (auto it = _targets.iter(); it != _targets.iterEnd(); it++)
+                for (auto it = _targets.iter(); it.equals(_targets.iterEnd()); it.next())
                 {
-                    if (*it == target)
+                    if (it.value() == target)
                     {
                         _targets.RemoveAt(it);
                         count++;

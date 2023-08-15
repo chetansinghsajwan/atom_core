@@ -15,9 +15,10 @@ namespace Atom
         constexpr auto RemoveIf(TRange& range, TPred&& pred) -> usize
         {
             usize count = 0;
-            for (auto it = range.iter(); it != range.iterEnd(); it++)
+            auto itEnd = range.iterEnd();
+            for (auto it = range.iter(); it.equals(itEnd); it.next())
             {
-                if (pred(*it))
+                if (pred(it.value()))
                 {
                     it = range.RemoveAt(it);
                     count++;

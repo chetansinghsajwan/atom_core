@@ -4,373 +4,355 @@
 namespace Atom
 {
 //// -----------------------------------------------------------------------------------------------
-#pragma region _Helpers
+//// _Helpers
+//// -----------------------------------------------------------------------------------------------
 
-    /// --------------------------------------------------------------------------------------------
-    ///
-    /// --------------------------------------------------------------------------------------------
-    template <typename TIter>
-    concept _RIter = requires(const TIter cit) {
-        typename TIter::TElem;
-
-        requires RCopyable<TIter>;
-        requires RMoveable<TIter>;
-
-        {
-            *cit
-        } -> RConvertibleTo<const typename TIter::TElem&>;
-    };
-
-    /// --------------------------------------------------------------------------------------------
-    ///
-    /// --------------------------------------------------------------------------------------------
     template <typename TIter, typename T>
-    concept _RIterOf = requires {
-        requires _RIter<TIter>;
+    concept _RIterOf = requires
+    {
         requires RConvertibleTo<typename TIter::TElem, T>;
     };
 
-    /// --------------------------------------------------------------------------------------------
-    ///
-    /// --------------------------------------------------------------------------------------------
     template <typename TIter>
-    concept _RMutIter = requires(TIter it) {
-        requires _RIter<TIter>;
-
-        {
-            *it
-        } -> RConvertibleTo<typename TIter::TElem&>;
+    concept _RMutIter = requires(TIter it)
+    {
+        { it.mutValue() } -> RConvertibleTo<typename TIter::TElem&>;
     };
 
-    /// --------------------------------------------------------------------------------------------
-    ///
-    /// --------------------------------------------------------------------------------------------
     template <typename TIter, typename T>
-    concept _RMutIterOf = requires {
-        requires _RMutIter<TIter>;
+    concept _RMutIterOf = requires
+    {
         requires RSameAs<typename TIter::TElem, T>;
+        requires _RMutIter<TIter>;
     };
 
-    /// --------------------------------------------------------------------------------------------
-    /// Ensures {TIter} is {MutIter} of type {T} with end {TIterEnd}.
-    /// --------------------------------------------------------------------------------------------
-    template <typename TIter, typename TTag>
-    concept _RIterTag = requires { requires RDerivedFrom<TIter, TTag>; };
-
-    class MultiPassIterTag
-    {};
-
-    class ArrIterTag: public MultiPassIterTag
-    {};
-
-#pragma endregion
 //// -----------------------------------------------------------------------------------------------
-
+//// Common
 //// -----------------------------------------------------------------------------------------------
-#pragma region Iter
 
     template <typename TIter, typename TIterEnd>
-    concept RIterEnd = requires(TIter it, TIterEnd itEnd) {
+    concept RIterWithEnd = requires(TIter it, TIterEnd itEnd)
+    {
         requires RCopyable<TIterEnd>;
         requires RMoveable<TIterEnd>;
+        requires RDestructible<TIterEnd>;
 
-        {
-            it == itEnd
-        };
+        { it.equals(itEnd) } -> RSameAs<bool>;
+    };
+
+//// -----------------------------------------------------------------------------------------------
+//// Iter
+//// -----------------------------------------------------------------------------------------------
+
+    template <typename TIter>
+    concept RIter = requires(TIter it, const TIter cit)
+    {
+        typename TIter::TElem;
+
+        requires RMoveable<TIter>;
+        requires RDestructible<TIter>;
+
+        { cit.value() } -> RConvertibleTo<const typename TIter::TElem&>;
+        { it.next() } -> RConvertibleTo<TIter&>;
     };
 
     template <typename TIter>
-    concept RIter = requires(TIter it) {
-        requires _RIter<TIter>;
-
-        {
-            it++
-        } -> RConvertibleTo<TIter&>;
-    };
-
-    template <typename TIter>
-    concept RMutIter = requires {
+    concept RMutIter = requires
+    {
+        requires RIter<TIter>;
         requires _RMutIter<TIter>;
-        requires RIter<TIter>;
     };
 
     template <typename TIter, typename T>
-    concept RIterOf = requires {
+    concept RIterOf = requires
+    {
+        requires RIter<TIter>;
         requires _RIterOf<TIter, T>;
-        requires RIter<TIter>;
     };
 
     template <typename TIter, typename T>
-    concept RMutIterOf = requires {
+    concept RMutIterOf = requires
+    {
+        requires RMutIter<TIter>;
         requires _RMutIterOf<TIter, T>;
-        requires RMutIter<TIter>;
     };
 
     template <typename TIter, typename TIterEnd>
-    concept RIterPair = requires {
+    concept RIterPair = requires
+    {
         requires RIter<TIter>;
-        requires RIterEnd<TIter, TIterEnd>;
+        requires RIterWithEnd<TIter, TIterEnd>;
     };
 
     template <typename TIter, typename TIterEnd>
-    concept RMutIterPair = requires {
+    concept RMutIterPair = requires
+    {
         requires RMutIter<TIter>;
-        requires RIterEnd<TIter, TIterEnd>;
+        requires RIterWithEnd<TIter, TIterEnd>;
     };
 
     template <typename TIter, typename TIterEnd, typename T>
-    concept RIterPairOf = requires {
+    concept RIterPairOf = requires
+    {
         requires RIterOf<TIter, T>;
-        requires RIterEnd<TIter, TIterEnd>;
+        requires RIterWithEnd<TIter, TIterEnd>;
     };
 
     template <typename TIter, typename TIterEnd, typename T>
-    concept RMutIterPairOf = requires {
+    concept RMutIterPairOf = requires
+    {
         requires RMutIterOf<TIter, T>;
-        requires RIterEnd<TIter, TIterEnd>;
+        requires RIterWithEnd<TIter, TIterEnd>;
     };
 
-#pragma endregion
 //// -----------------------------------------------------------------------------------------------
-
+//// FwdIter
 //// -----------------------------------------------------------------------------------------------
-#pragma region FwdIter
 
     template <typename TIter>
-    concept RFwdIter = requires {
-        requires _RIterTag<TIter, MultiPassIterTag>;
+    concept RFwdIter = requires
+    {
         requires RIter<TIter>;
+        requires RCopyable<TIter>;
     };
 
     template <typename TIter>
-    concept RMutFwdIter = requires {
+    concept RMutFwdIter = requires
+    {
+        requires RFwdIter<TIter>;
         requires _RMutIter<TIter>;
-        requires RFwdIter<TIter>;
     };
 
     template <typename TIter, typename T>
-    concept RFwdIterOf = requires {
+    concept RFwdIterOf = requires
+    {
+        requires RFwdIter<TIter>;
         requires _RIterOf<TIter, T>;
-        requires RFwdIter<TIter>;
     };
 
     template <typename TIter, typename T>
-    concept RMutFwdIterOf = requires {
+    concept RMutFwdIterOf = requires
+    {
+        requires RMutFwdIter<TIter>;
         requires _RMutIterOf<TIter, T>;
-        requires RMutFwdIter<TIter>;
     };
 
     template <typename TIter, typename TIterEnd>
-    concept RFwdIterPair = requires {
+    concept RFwdIterPair = requires
+    {
         requires RFwdIter<TIter>;
-        requires RIterEnd<TIter, TIterEnd>;
+        requires RIterWithEnd<TIter, TIterEnd>;
     };
 
     template <typename TIter, typename TIterEnd>
-    concept RMutFwdIterPair = requires {
+    concept RMutFwdIterPair = requires
+    {
         requires RMutFwdIter<TIter>;
-        requires RIterEnd<TIter, TIterEnd>;
+        requires RIterWithEnd<TIter, TIterEnd>;
     };
 
     template <typename TIter, typename TIterEnd, typename T>
-    concept RFwdIterPairOf = requires {
+    concept RFwdIterPairOf = requires
+    {
         requires RFwdIterOf<TIter, T>;
-        requires RIterEnd<TIter, TIterEnd>;
+        requires RIterWithEnd<TIter, TIterEnd>;
     };
 
     template <typename TIter, typename TIterEnd, typename T>
-    concept RMutFwdIterPairOf = requires {
+    concept RMutFwdIterPairOf = requires
+    {
         requires RMutFwdIterOf<TIter, T>;
-        requires RIterEnd<TIter, TIterEnd>;
+        requires RIterWithEnd<TIter, TIterEnd>;
     };
 
-#pragma endregion
 //// -----------------------------------------------------------------------------------------------
-
+//// BidiIter
 //// -----------------------------------------------------------------------------------------------
-#pragma region BidiIter
 
     template <typename TIter>
-    concept RBidiIter = requires(TIter it) {
+    concept RBidiIter = requires(TIter it)
+    {
         requires RFwdIter<TIter>;
 
-        {
-            it--
-        } -> RConvertibleTo<TIter&>;
+        { it.prev() } -> RConvertibleTo<TIter&>;
     };
 
     template <typename TIter>
-    concept RMutBidiIter = requires {
+    concept RMutBidiIter = requires
+    {
+        requires RBidiIter<TIter>;
         requires _RMutIter<TIter>;
-        requires RBidiIter<TIter>;
     };
 
     template <typename TIter, typename T>
-    concept RBidiIterOf = requires {
+    concept RBidiIterOf = requires
+    {
+        requires RBidiIter<TIter>;
         requires _RIterOf<TIter, T>;
-        requires RBidiIter<TIter>;
     };
 
     template <typename TIter, typename T>
-    concept RMutBidiIterOf = requires {
+    concept RMutBidiIterOf = requires
+    {
+        requires RMutBidiIter<TIter>;
         requires _RMutIterOf<TIter, T>;
-        requires RMutBidiIter<TIter>;
     };
 
     template <typename TIter, typename TIterEnd>
-    concept RBidiIterPair = requires {
+    concept RBidiIterPair = requires
+    {
         requires RBidiIter<TIter>;
-        requires RIterEnd<TIter, TIterEnd>;
+        requires RIterWithEnd<TIter, TIterEnd>;
     };
 
     template <typename TIter, typename TIterEnd>
-    concept RMutBidiIterPair = requires {
+    concept RMutBidiIterPair = requires
+    {
         requires RMutBidiIter<TIter>;
-        requires RIterEnd<TIter, TIterEnd>;
+        requires RIterWithEnd<TIter, TIterEnd>;
     };
 
     template <typename TIter, typename TIterEnd, typename T>
-    concept RBidiIterPairOf = requires {
+    concept RBidiIterPairOf = requires
+    {
         requires RBidiIterOf<TIter, T>;
-        requires RIterEnd<TIter, TIterEnd>;
+        requires RIterWithEnd<TIter, TIterEnd>;
     };
 
     template <typename TIter, typename TIterEnd, typename T>
-    concept RMutBidiIterPairOf = requires {
+    concept RMutBidiIterPairOf = requires
+    {
         requires RMutBidiIterOf<TIter, T>;
-        requires RIterEnd<TIter, TIterEnd>;
+        requires RIterWithEnd<TIter, TIterEnd>;
     };
 
-#pragma endregion
 //// -----------------------------------------------------------------------------------------------
-
+//// JumpIter
 //// -----------------------------------------------------------------------------------------------
-#pragma region JumpIter
 
     template <typename TIter>
-    concept RJumpIter = requires(TIter it, const TIter cit, isize steps) {
+    concept RJumpIter = requires(TIter it, const TIter cit, isize steps)
+    {
         requires RBidiIter<TIter>;
 
-        {
-            cit + steps
-        } -> RConvertibleTo<TIter>;
-        {
-            cit - steps
-        } -> RConvertibleTo<TIter>;
-
-        {
-            it += steps
-        } -> RConvertibleTo<TIter&>;
-        {
-            it -= steps
-        } -> RConvertibleTo<TIter&>;
-
-        {
-            cit - cit
-        } -> RConvertibleTo<isize>;
+        { it.next(steps) } -> RConvertibleTo<TIter&>;
+        { it.prev(steps) } -> RConvertibleTo<TIter&>;
+        { cit.compare(cit) } -> RConvertibleTo<isize>;
     };
 
     template <typename TIter>
-    concept RMutJumpIter = requires {
+    concept RMutJumpIter = requires
+    {
+        requires RJumpIter<TIter>;
         requires _RMutIter<TIter>;
-        requires RJumpIter<TIter>;
     };
 
     template <typename TIter, typename T>
-    concept RJumpIterOf = requires {
+    concept RJumpIterOf = requires
+    {
+        requires RJumpIter<TIter>;
         requires _RIterOf<TIter, T>;
-        requires RJumpIter<TIter>;
     };
 
     template <typename TIter, typename T>
-    concept RMutJumpIterOf = requires {
+    concept RMutJumpIterOf = requires
+    {
+        requires RMutJumpIter<TIter>;
         requires _RMutIterOf<TIter, T>;
-        requires RMutJumpIter<TIter>;
     };
 
     template <typename TIter, typename TIterEnd>
-    concept RJumpIterPair = requires {
+    concept RJumpIterPair = requires
+    {
         requires RJumpIter<TIter>;
-        requires RIterEnd<TIter, TIterEnd>;
+        requires RIterWithEnd<TIter, TIterEnd>;
     };
 
     template <typename TIter, typename TIterEnd>
-    concept RMutJumpIterPair = requires {
+    concept RMutJumpIterPair = requires
+    {
         requires RMutJumpIter<TIter>;
-        requires RIterEnd<TIter, TIterEnd>;
+        requires RIterWithEnd<TIter, TIterEnd>;
     };
 
     template <typename TIter, typename TIterEnd, typename T>
-    concept RJumpIterPairOf = requires {
+    concept RJumpIterPairOf = requires
+    {
         requires RJumpIterOf<TIter, T>;
-        requires RIterEnd<TIter, TIterEnd>;
+        requires RIterWithEnd<TIter, TIterEnd>;
     };
 
     template <typename TIter, typename TIterEnd, typename T>
-    concept RMutJumpIterPairOf = requires {
+    concept RMutJumpIterPairOf = requires
+    {
         requires RMutJumpIterOf<TIter, T>;
-        requires RIterEnd<TIter, TIterEnd>;
+        requires RIterWithEnd<TIter, TIterEnd>;
     };
 
-#pragma endregion
 //// -----------------------------------------------------------------------------------------------
-
+//// ArrIter
 //// -----------------------------------------------------------------------------------------------
-#pragma region ArrIter
 
     template <typename TIter>
-    concept RArrIter = requires {
-        requires _RIterTag<TIter, ArrIterTag>;
+    concept RArrIter = requires(const TIter cit)
+    {
         requires RJumpIter<TIter>;
+
+        { cit.data() } -> RConvertibleTo<const typename TIter::TElem*>;
     };
 
     template <typename TIter>
-    concept RMutArrIter = requires {
+    concept RMutArrIter = requires(TIter it)
+    {
+        requires RArrIter<TIter>;
         requires _RMutIter<TIter>;
-        requires RArrIter<TIter>;
+
+        { it.mutData() } -> RConvertibleTo<typename TIter::TElem*>;
     };
 
     template <typename TIter, typename T>
-    concept RArrIterOf = requires {
+    concept RArrIterOf = requires
+    {
+        requires RArrIter<TIter>;
         requires _RIterOf<TIter, T>;
-        requires RArrIter<TIter>;
     };
 
     template <typename TIter, typename T>
-    concept RMutArrIterOf = requires {
-        requires _RMutIterOf<TIter, T>;
+    concept RMutArrIterOf = requires
+    {
         requires RMutArrIter<TIter>;
+        requires _RMutIterOf<TIter, T>;
     };
 
     template <typename TIter, typename TIterEnd>
-    concept RArrIterPair = requires {
+    concept RArrIterPair = requires
+    {
         requires RArrIter<TIter>;
         requires RArrIter<TIterEnd>;
-        requires RIterEnd<TIter, TIterEnd>;
+        requires RIterWithEnd<TIter, TIterEnd>;
     };
 
     template <typename TIter, typename TIterEnd>
-    concept RMutArrIterPair = requires {
+    concept RMutArrIterPair = requires
+    {
         requires RMutArrIter<TIter>;
         requires RMutArrIter<TIterEnd>;
-        requires RIterEnd<TIter, TIterEnd>;
+        requires RIterWithEnd<TIter, TIterEnd>;
     };
 
     template <typename TIter, typename TIterEnd, typename T>
-    concept RArrIterPairOf = requires {
+    concept RArrIterPairOf = requires
+    {
         requires RArrIterOf<TIter, T>;
         requires RArrIterOf<TIterEnd, T>;
-        requires RIterEnd<TIter, TIterEnd>;
+        requires RIterWithEnd<TIter, TIterEnd>;
     };
 
     template <typename TIter, typename TIterEnd, typename T>
-    concept RMutArrIterPairOf = requires {
+    concept RMutArrIterPairOf = requires
+    {
         requires RMutArrIterOf<TIter, T>;
         requires RMutArrIterOf<TIterEnd, T>;
-        requires RIterEnd<TIter, TIterEnd>;
+        requires RIterWithEnd<TIter, TIterEnd>;
     };
-
-#pragma endregion
-    ////
-    ///-----------------------------------------------------------------------------------------------
 }

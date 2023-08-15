@@ -43,7 +43,7 @@ namespace Atom
             requires RFwdRange<TRange>
         constexpr auto Contains(const TRange& range, const typename TRange::TElem& el) -> bool
         {
-            return Find(range, el) != range.iterEnd();
+            return not Find(range, el).equals(range.iterEnd());
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -53,7 +53,7 @@ namespace Atom
             requires RFwdRange<TRange1> and RFwdRange<TRange2>
         constexpr auto Contains(const TRange1& range1, const TRange2& range2) -> bool
         {
-            return Find(range1, range2) != range1.iterEnd();
+            return not Find(range1, range2).equals(range1.iterEnd());
         }
     };
 }

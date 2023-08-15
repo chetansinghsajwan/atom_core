@@ -159,7 +159,7 @@ namespace Atom
         {
             expects(isIndexInRange(i), "Index is out of range.");
 
-            return _iter() + i;
+            return _iter().next(i);
         }
 
         using RangeTrait<TRange>::iter;
