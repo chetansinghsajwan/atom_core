@@ -3,15 +3,14 @@
 
 namespace Atom
 {
-    template <typename T, usize BufSize, typename TAlloc>
-    class _BufArrImplBase: public _DynArrImplBase<T, TAlloc>
+    template <typename TAlloc>
+    class _BufArrAllocWrap: public TAlloc {};
+    
+    template <typename T, usize bufSize, typename TAlloc>
+    class _DynArrStorage<T, _BufArrAllocWrap<TAlloc>>: public _DynArrStorage<T, TAlloc>
     {
     private:
-        using Base = _DynArrImplBase<T, TAlloc>;
-
-    protected:
-        using TElem = T;
-        using Base::Base;
+        using _Impl = _DynArrStorage<T, TAlloc>;
 
     protected:
         constexpr auto _StackBuf() const -> const T*
@@ -21,12 +20,12 @@ namespace Atom
 
         constexpr auto _AllocMem(usize size) -> T*
         {
-            if (BufSize <= size)
+            if (bufSize <= size)
             {
                 return _stackBuf;
             }
 
-            return Base::_AllocMem(size);
+            return _Impl::_AllocMem(size);
         }
 
         constexpr auto _DeallocMem(T* mem) -> void
@@ -36,7 +35,7 @@ namespace Atom
                 return;
             }
 
-            return Base::_DeallocMem(mem);
+            return _Impl::_DeallocMem(mem);
         }
 
         constexpr auto _CalcCapGrowth(usize required) const -> usize
@@ -45,22 +44,22 @@ namespace Atom
             return required;
         }
 
-        using Base::_Capacity;
-        using Base::_Count;
+        using _Impl::_Capacity;
+        using _Impl::_Count;
 
     protected:
-        T _stackBuf[BufSize];
+        T _stackBuf[bufSize];
     };
 
     template <typename T, usize bufSize, typename TAlloc>
-    class BufArr: public _DynArrImplHelper<_BufArrImplBase<T, bufSize, TAlloc>>
+    class BufArr: public DynArr<T, _BufArrAllocWrap<TAlloc>>
     {
     private:
-        using Base = _DynArrImplHelper<_BufArrImplBase<T, bufSize, TAlloc>>;
-        using BaseImpl = _BufArrImplBase<T, bufSize, TAlloc>;
+        using _Impl = _DynArrImpl<_BufArrStorage<T, bufSize, TAlloc>>;
+        using _Storage = _BufArrStorage<T, bufSize, TAlloc>;
 
     public:
-        using TElem = typename Base::TElem;
+        using TElem = typename _Impl::TElem;
 
         /// ----------------------------------------------------------------------------------------
         /// DefCtor.
@@ -71,7 +70,7 @@ namespace Atom
         /// NullCtor.
         /// ----------------------------------------------------------------------------------------
         constexpr BufArr(NullPtr)
-            : Base{ nullptr }
+            : _Impl{ nullptr }
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -89,7 +88,7 @@ namespace Atom
         template <typename TRange>
         constexpr BufArr(TRange&& range)
             requires(RRangeOf<TRange, T>)
-            : Base{ nullptr }
+            : _Impl{ nullptr }
         {
             InsertBack(range);
         }
@@ -110,7 +109,7 @@ namespace Atom
         ///     RCopyConstructible.
         /// ----------------------------------------------------------------------------------------
         constexpr BufArr(const BufArr& that)
-            : Base{ nullptr }
+            : _Impl{ nullptr }
         {
             // InsertBack(that);
         }
@@ -131,7 +130,7 @@ namespace Atom
         /// MoveCtor.
         /// ----------------------------------------------------------------------------------------
         constexpr BufArr(BufArr&& that)
-            : Base{ nullptr }
+            : _Impl{ nullptr }
         {
             _Move(mov(that));
         }
@@ -141,7 +140,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <usize thatBufSize>
         constexpr BufArr(BufArr<TElem, thatBufSize, TAlloc>&& that)
-            : Base{ nullptr }
+            : _Impl{ nullptr }
         {
             _Move(mov(that));
         }
@@ -150,9 +149,9 @@ namespace Atom
         /// MoveCtor for DynArr.
         /// ----------------------------------------------------------------------------------------
         constexpr BufArr(DynArr<TElem, TAlloc>&& that)
-            : Base{ nullptr }
+            : _Impl{ nullptr }
         {
-            BaseImpl::_Move(that);
+            _Storage::_Move(that);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -182,7 +181,7 @@ namespace Atom
             Clear();
             Release();
 
-            BaseImpl::_Move(that);
+            _Storage::_Move(that);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -195,9 +194,9 @@ namespace Atom
         }
 
     public:
-        using Base::Clear;
-        using Base::InsertBack;
-        using Base::Release;
+        using _Impl::Clear;
+        using _Impl::InsertBack;
+        using _Impl::Release;
 
     protected:
         /// ----------------------------------------------------------------------------------------
@@ -213,10 +212,10 @@ namespace Atom
                 return;
             }
 
-            _DynArrImplBase<TElem, TAlloc>::_Move(that);
+            _DynArrStorage<TElem, TAlloc>::_Move(that);
         }
 
-        using Base::_Data;
-        using Base::_EnsureCapFor;
+        using _Impl::_Data;
+        using _Impl::_EnsureCapFor;
     };
 }
