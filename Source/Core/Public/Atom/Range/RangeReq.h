@@ -42,9 +42,6 @@ namespace Atom
         typename TRange::TMutIter;
         typename TRange::TMutIterEnd;
 
-        // TODO: Do we need this? What problems does this solves?
-        // requires RConvertibleTo<typename TRange::TMutIter, typename TRange::TIter>;
-
         { range.mutIter() } -> RSameAs<typename TRange::TMutIter>;
         { range.mutIterEnd() } -> RSameAs<typename TRange::TMutIterEnd>;
     };

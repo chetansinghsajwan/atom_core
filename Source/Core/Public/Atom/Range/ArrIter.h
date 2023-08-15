@@ -86,8 +86,10 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <typename T>
     requires(not RConst<T>)
-    class MutArrIter
+    class MutArrIter: public ArrIter<T>
     {
+        using Base = ArrIter<T>;
+
     public:
         using TElem = T;
 
@@ -96,48 +98,21 @@ namespace Atom
         /// # Default Constructor
         /// ----------------------------------------------------------------------------------------
         constexpr MutArrIter()
-            : _it{ nullptr } {}
+            : Base{ } {}
 
         /// ----------------------------------------------------------------------------------------
         /// # Value Constructor
         /// ----------------------------------------------------------------------------------------
         constexpr MutArrIter(T* it)
-            : _it{ it } {}
+            : Base{ it } {}
 
     public:
-        /// ----------------------------------------------------------------------------------------
-        /// 
-        /// ----------------------------------------------------------------------------------------
-        template <typename T1>
-        constexpr operator ArrIter<T1>() const
-            requires(RConvertibleTo<T*, const T1*>)
-        {
-            return ArrIter<T1>{ _it };
-        }
-
-    public:
-        /// ----------------------------------------------------------------------------------------
-        /// Access value by ref.
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto value() const -> const T&
-        {
-            return *_it;
-        }
-
         /// ----------------------------------------------------------------------------------------
         /// Access value by mut ref.
         /// ----------------------------------------------------------------------------------------
         constexpr auto mutValue() -> T&
         {
-            return *_it;
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// Access value by ptr.
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto data() const -> const T*
-        {
-            return _it;
+            return const_cast<T&>(Base::value());
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -145,15 +120,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto mutData() -> T*
         {
-            return _it;
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// Check if this iter is same as `that`. Used to compare wth end.
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto equals(const MutArrIter& that) const -> bool
-        {
-            return this->_it == that._it;
+            return const_cast<T*>(Base::data());
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -161,7 +128,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto next(usize steps = 1) -> MutArrIter&
         {
-            _it += steps;
+            Base::next(steps);
             return *this;
         }
 
@@ -170,20 +137,9 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto prev(usize steps = 1) -> MutArrIter&
         {
-            _it -= steps;
+            Base::prev(steps);
             return *this;
         }
-
-        /// ----------------------------------------------------------------------------------------
-        /// Compares `this` data with `that` data.
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto compare(const MutArrIter& that) const -> isize
-        {
-            return this->_it - that._it;
-        }
-
-    protected:
-        T* _it;
     };
 
     ATOM_SATISFIES_ARR_ITER_TEMP(ArrIter);
