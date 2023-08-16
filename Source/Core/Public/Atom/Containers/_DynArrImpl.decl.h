@@ -2,19 +2,36 @@
 #include "Atom/Core.h"
 #include "Atom/Range/ArrIter.h"
 
+#include <algorithm>
+
 namespace Atom
 {
-    template <typename Storage>
+    template <typename T, typename TAlloc>
     class _DynArrImpl
     {
-        using _TStorage = Storage;
-
     public:
-        using TElem = typename _TStorage::TElem;
+        using TElem = T;
         using TIter = ArrIter<TElem>;
         using TIterEnd = TIter;
         using TMutIter = MutArrIter<TElem>;
         using TMutIterEnd = TMutIter;
+
+    public:
+        constexpr _DynArrImpl():
+            _arr{ nullptr }, _count{ 0 }, _capacity{ 0 }, _alloc{} {}
+
+        constexpr _DynArrImpl(_DynArrImpl&& that) {}
+
+    //// -------------------------------------------------------------------------------------------
+    //// 
+    //// -------------------------------------------------------------------------------------------
+
+    public:
+        constexpr auto onDestruct()
+        {
+            removeAll();
+            releaseUnusedMem();
+        }
 
     //// -------------------------------------------------------------------------------------------
     //// Insert
@@ -27,16 +44,16 @@ namespace Atom
             return _emplaceAt(i, fwd(args)...);
         }
 
-        template <typename TIter1, typename TIterEnd1>
-        constexpr auto insertRangeAt(usize i, TIter1 it, TIterEnd1 itEnd) -> usize
+        template <typename UIter, typename UIterEnd>
+        constexpr auto insertRangeAt(usize i, UIter it, UIterEnd itEnd) -> usize
         {
-            if constexpr (_canGetRangeSize<TIter1, TIterEnd1>())
+            if constexpr (_canGetRangeSize<UIter, UIterEnd>())
             {
-                return _insertAtCounted(i, it, _getRangeSize(it, itEnd));
+                return _insertRangeAtCounted(i, it, _getRangeSize(it, itEnd));
             }
             else
             {
-                return _insertAtUncounted(i, it, itEnd);
+                return _insertRangeAtUncounted(i, it, itEnd);
             }
         }
 
@@ -46,8 +63,8 @@ namespace Atom
             return _emplaceFront(fwd(args)...);
         }
 
-        template <typename TIter1, typename TIterEnd1>
-        constexpr auto insertRangeFront(TIter1 it, TIterEnd1 itEnd) -> usize
+        template <typename UIter, typename UIterEnd>
+        constexpr auto insertRangeFront(UIter it, UIterEnd itEnd) -> usize
         {
             return insertRangeAt(0, it, itEnd);
         }
@@ -58,16 +75,18 @@ namespace Atom
             return _emplaceBack(fwd(args)...);
         }
 
-        template <typename TIter1, typename TIterEnd1>
-        constexpr auto insertRangeBack(TIter1 it, TIterEnd1 itEnd) -> usize
+        template <typename UIter, typename UIterEnd>
+        constexpr auto insertRangeBack(UIter it, UIterEnd itEnd) -> usize
         {
-            if constexpr (_canGetRangeSize<TIter1, TIterEnd1>())
+            if constexpr (_canGetRangeSize<UIter, UIterEnd>())
             {
-                return _insertBackCounted(it, _getRangeSize(it, itEnd));
+                usize count = _getRangeSize(it, itEnd);
+                _insertRangeBackCounted(it, count);
+                return count;
             }
             else
             {
-                return _insertBackUncounted(it, itEnd);
+                return _insertRangeBackUncounted(it, itEnd);
             }
         }
 
@@ -106,7 +125,7 @@ namespace Atom
 
         constexpr auto reserveMore(usize count)
         {
-            _ensureCapFor(_count() + count);
+            _ensureCapFor(_getCount() + count);
         }
 
         constexpr auto releaseUnusedMem()
@@ -115,11 +134,31 @@ namespace Atom
 
         constexpr auto capacity() const -> usize
         {
-            return _capacity();
+            return _getCapacity();
         }
 
     //// -------------------------------------------------------------------------------------------
     //// 
+    //// -------------------------------------------------------------------------------------------
+
+    public:
+        constexpr auto count() const -> usize
+        {
+            return _getCount();
+        }
+
+        constexpr auto data() const -> const T*
+        {
+            return _getData();
+        }
+
+        constexpr auto mutData() -> T*
+        {
+            return _getMutData();
+        }
+
+    //// -------------------------------------------------------------------------------------------
+    //// Validation
     //// -------------------------------------------------------------------------------------------
 
     public:
@@ -133,14 +172,15 @@ namespace Atom
             return i <= _getCount();
         }
 
-        constexpr auto validateIter(TIter it) const -> bool
+        constexpr auto isIterValid(TIter it) const -> bool
         {
             return true;
         }
 
         constexpr auto indexForIter(TIter it) const -> usize
         {
-            return true;
+            isize i = it.data() - _getData();
+            return i < 0 ? usize(-1) : i;
         }
 
         constexpr auto isIterInRange(TIter it) const -> bool
@@ -158,18 +198,18 @@ namespace Atom
     //// -------------------------------------------------------------------------------------------
 
     private:
-        template <typename T1>
-        constexpr auto _insertAt(usize i, T1&& el) -> usize
+        template <typename U>
+        constexpr auto _insertAt(usize i, U&& el) -> usize
         {
-            _ensureCapFor(1);
+            _ensureCapFor(i);
             _moveRangeBack(i, 1);
             _constructAt(i, fwd(el));
 
             return i;
         }
 
-        template <typename TIter1>
-        constexpr auto _insertAtCounted(usize i, TIter1 it, usize count) -> usize
+        template <typename UIter>
+        constexpr auto _insertRangeAtCounted(usize i, UIter it, usize count) -> usize
         {
             if (count == 0)
                 return i;
@@ -180,107 +220,144 @@ namespace Atom
             // Insert new elements
             for (usize i = 0; i < count; i++)
             {
-                _constructAt(i + i, fwd(*it++));
+                _constructAt(i + i, fwd(it.value()));
+                it.next();
             }
 
             return i;
         }
 
-        template <typename TIter1, typename TIterEnd1>
-        constexpr auto _insertAtUncounted(usize i, TIter1 begin, TIterEnd1 end)
+        template <typename UIter, typename UIterEnd>
+        constexpr auto _insertRangeAtUncounted(usize i, UIter begin, UIterEnd end)
             -> usize
         {
             usize rotateSize = _getCount() - i;
-            _insertBackUncounted(begin, end);
+            _insertRangeBackUncounted(begin, end);
             _rotateRangeBack(i, rotateSize);
 
             return i;
         }
 
-        template <typename T1>
-        constexpr auto _insertBack(T1&& el) -> usize
+        template <typename U>
+        constexpr auto _insertBack(U&& el)
         {
             _ensureCapFor(1);
             _constructAt(_getCount(), fwd(el));
-            _setcount(_getCount() + 1);
-
-            return _getCount() - 1;
+            _setCount(_getCount() + 1);
         }
 
-        template <typename TIter1>
-        constexpr auto _insertBackCounted(TIter1 it, usize count) -> usize
+        template <typename UIter>
+        constexpr auto _insertRangeBackCounted(UIter it, usize count)
         {
-            usize i = _getCount();
-
             if (count == 0)
-                return i;
+                return;
 
             _ensureCapFor(count);
 
-            for (usize i = 0; i < count; i++)
+            usize i = _getCount();
+            for (usize j = 0; j < count; j++)
             {
-                _constructAt(i + i, fwd(*it++));
+                _constructAt(i + j, fwd(it.value()));
+                it.next();
             }
 
-            _setcount(_getCount() + count);
-            return i;
+            _setCount(i + count);
         }
 
-        template <typename TIter1, typename TIterEnd1>
-        constexpr auto _insertBackUncounted(TIter1 begin, TIterEnd1 end) -> usize
+        template <typename UIter, typename UIterEnd>
+        constexpr auto _insertRangeBackUncounted(UIter it, UIterEnd itEnd) -> usize
         {
             usize i = _getCount();
-            for (auto&& el : Range(begin, end))
+            usize count = 0;
+            while (not it.equals(itEnd))
             {
                 _ensureCapFor(1);
-                _constructAt(_getCount(), fwd(el));
-                _setcount(_getCount() + 1);
+                _constructAt(i + count, it.value());
+
+                it.next();
+                count++;
             }
 
-            return i;
+            _setCount(i + count);
+            return count;
         }
 
     private:
-        constexpr auto _updateIterDebugId() -> void;
-        constexpr auto _validateIndex(isize i) const -> bool;
-        constexpr auto _calcCapGrowth(usize required) const -> usize;
+        constexpr auto _updateIterDebugId() {}
+
+        constexpr auto _calcCapGrowth(usize required) const -> usize
+        {
+            return required;
+        }
 
         constexpr auto _ensureCapFor(usize count)
         {
             _updateIterDebugId();
 
             // We have enough capacity.
-            if (_capacity() - _getCount() >= count)
+            if (_getCapacity() - _getCount() >= count)
                 return;
 
             usize newCap = _calcCapGrowth(count);
-            TElem* newArr = _AllocMem(newCap);
+            TElem* newArr = _allocMem(newCap);
 
             _moveRangeTo(0, newArr);
-            _deallocMem(_Data());
-            _Data(newArr);
-            _capacity(newCap);
+            _deallocMem(_getData());
+            _setData(newArr);
+            _setCapacity(newCap);
         }
 
-    private:
-        constexpr auto _constructAt(usize i, auto&&... args) -> void;
-        constexpr auto _destructAt(usize i) -> void;
-        constexpr auto _destructRange(usize i, usize count) -> void;
-        constexpr auto _moveRangeFront(usize i, usize count) -> void;
-        constexpr auto _moveRangeBack(usize i, usize count) -> void;
-        constexpr auto _moveRangeTo(usize i, TElem* dest) -> void;
-        constexpr auto _rotateRangeBack(usize i, usize count) -> void;
+        constexpr auto _constructAt(usize i, auto&&... args) -> void
+        {
+            std::construct_at(_getData() + i, fwd(args)...);
+        }
 
-        template <typename TIter1, typename TIterEnd1>
+        constexpr auto _destructAt(usize i) -> void
+        {
+            std::destroy_at(_getData() + i);
+        }
+
+        constexpr auto _destructRange(usize i, usize count) -> void
+        {
+            std::destroy(_getData() + i, _getData() + i + count);
+        }
+
+        constexpr auto _moveRangeFront(usize i, usize count) -> void
+        {
+            T* begin = _getMutData() + i;
+            T* end = _getMutData() + _getCount();
+            T* dest = begin - count;
+            std::move(begin, end, dest);
+        }
+
+        constexpr auto _moveRangeBack(usize i, usize count) -> void
+        {
+            T* begin = _getMutData() + i;
+            T* end = _getMutData() + _getCount();
+            T* dest = begin + count;
+            std::move_backward(begin, end, dest);
+        }
+
+        constexpr auto _moveRangeTo(usize i, TElem* dest) -> void
+        {
+            std::move(_getData() + i, dest);
+        }
+
+        constexpr auto _rotateRangeBack(usize i, usize count) -> void
+        {
+            std::rotate(_getData() + i, _getData() + i + count, _getData() + _getCount() - 1);
+        }
+
+        template <typename UIter, typename UIterEnd>
         static constexpr auto _canGetRangeSize() -> bool
         {
-            return RFwdIterPair<TIter1, TIterEnd1>;
+            return RFwdIterPair<UIter, UIterEnd>;
         }
 
-        template <typename TIter1, typename TIterEnd1>
-        static constexpr auto _getRangeSize(TIter it, TIterEnd1 itEnd) -> usize
+        template <typename UIter, typename UIterEnd>
+        static constexpr auto _getRangeSize(TIter it, UIterEnd itEnd) -> usize
         {
-            if constexpr (RJumpIterPair<TIter1, TIterEnd1>)
+            if constexpr (RJumpIterPair<UIter, UIterEnd>)
             {
                 return -it.compare(itEnd);
             }
@@ -292,14 +369,55 @@ namespace Atom
             return count;
         }
 
-    private:
-        constexpr auto _getCount() -> usize
+        constexpr auto _getData() const -> const T*
         {
-            return _storage.count();
+            return _arr;
+        }
+
+        constexpr auto _getMutData() -> T*
+        {
+            return _arr;
+        }
+
+        constexpr auto _setData(T* data)
+        {
+            _arr = data;
+        }
+
+        constexpr auto _getCount() const -> usize
+        {
+            return _count;
+        }
+
+        constexpr auto _setCount(usize count)
+        {
+            _count = count;
+        }
+
+        constexpr auto _getCapacity() -> usize
+        {
+            return _capacity;
+        }
+
+        constexpr auto _setCapacity(usize capacity)
+        {
+            _capacity = capacity;
+        }
+
+        constexpr auto _allocMem(usize required) const -> T*
+        {
+            return _alloc.allocMem(required);
+        }
+
+        constexpr auto _allocMemAtLeast(usize required, usize hint) const -> T*
+        {
+            return _alloc.allocMem(required);
         }
 
     private:
-        _TStorage _storage;
-        // _TAlloc _alloc;
+        T* _arr;
+        usize _count;
+        usize _capacity;
+        TAlloc _alloc;
     };
 }

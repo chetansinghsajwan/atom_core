@@ -7,102 +7,20 @@
 namespace Atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// Storage for [`DynArr`].
-    /// --------------------------------------------------------------------------------------------
-    template <typename T, typename TAlloc>
-    class _DynArrStorage
-    {
-    public:
-        using TElem = T;
-
-    public:
-        constexpr _DynArrStorage():
-            _arr{ nullptr }, _count{ 0 }, _capacity{ 0 }, _alloc{}
-        {}
-
-    protected:
-        constexpr auto getData() const -> const T*
-        {
-            return _arr;
-        }
-
-        constexpr auto getData() -> T*
-        {
-            return _arr;
-        }
-
-        constexpr auto setData(T* arr)
-        {
-            _arr = arr;
-        }
-
-        constexpr auto getCount() const -> usize
-        {
-            return _count;
-        }
-
-        constexpr auto setCount(usize count)
-        {
-            _count = count;
-        }
-
-        constexpr auto getCapacity() const -> usize
-        {
-            return _capacity;
-        }
-
-        constexpr auto setCapacity(usize cap)
-        {
-            _capacity = cap;
-        }
-
-        constexpr auto allocMem(usize size) -> T*
-        {
-            return (T*)_alloc.Alloc(size);
-        }
-
-        constexpr auto deallocMem(T* mem)
-        {
-            return _alloc.Dealloc(mem);
-        }
-
-        constexpr auto calcCapGrowth(usize required) const -> usize
-        {
-            // return Math::Max(_Count() + required, _Capacity() * 2);
-            return required;
-        }
-
-        constexpr auto _Swap(_DynArrStorage& that)
-        {
-            _DynArrStorage tmp = that;
-            *this = that;
-            that = tmp;
-        }
-
-        constexpr auto _Move(_DynArrStorage& that)
-        {
-            *this = that;
-            that = _DynArrStorage(nullptr);
-        }
-
-    private:
-        T* _arr;
-        usize _count;
-        usize _capacity;
-        TAlloc _alloc;
-    };
-
-    /// --------------------------------------------------------------------------------------------
     /// # To Do
     /// - Write time complexities after writing implementation.
     /// - Add note for case, where element or elements to be inserted are from this array.
     /// --------------------------------------------------------------------------------------------
     template <typename T, typename TAlloc = DefaultMemAllocator>
+    requires(not RRef<T>)
+        and (not RIsVoid<T>)
     class DynArr:
         public MutArrRangeTrait<DynArr<T>>
     {
-        using _Storage = _DynArrStorage<T, TAlloc>;
-        using _Impl = _DynArrImpl<_Storage>;
+        friend class MutArrRangeTraitImpl<DynArr<T, TAlloc>>;
+
+    private:
+        using _Impl = _DynArrImpl<T, TAlloc>;
 
     public:
         using TElem = T;
@@ -140,7 +58,7 @@ namespace Atom
         /// # Move Constructor
         /// ----------------------------------------------------------------------------------------
         constexpr DynArr(DynArr&& that):
-            _impl{ mov(that) } {}
+            _impl{ mov(that._impl) } {}
 
         /// ----------------------------------------------------------------------------------------
         /// # Move Operator
@@ -223,7 +141,7 @@ namespace Atom
         constexpr auto emplaceAt(TIter it, TArgs&&... args) -> TMutIter
             requires(RConstructible<T, TArgs...>)
         {
-            debug_expects(validateIter(it), "Invalid iter.");
+            debug_expects(isIterValid(it), "Invalid iter.");
             debug_expects(isIterInRangeOrEnd(it), "Iter is out of range.");
 
             usize i = indexForIter(it);
@@ -279,7 +197,7 @@ namespace Atom
             requires(RRangeOf<TRange, T>)
                 and (RConstructible<T, typename TRange::TElem>)
         {
-            debug_expects(validateIter(it), "Invalid iter.");
+            debug_expects(isIterValid(it), "Invalid iter.");
             debug_expects(isIterInRangeOrEnd(it), "Iter is out of range.");
 
             usize i = indexForIter(it);
@@ -401,7 +319,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto removeAt(TIter it) -> TMutIter
         {
-            debug_expects(validateIter(it), "Invalid iter.");
+            debug_expects(isIterValid(it), "Invalid iter.");
             debug_expects(isIterInRange(it), "Iter is out of range.");
 
             usize i = indexForIter(it);
@@ -447,8 +365,8 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto removeRange(TIter it, TIter itEnd) -> TMutIter
         {
-            debug_expects(validateIter(it), "Invalid iter.");
-            debug_expects(validateIter(itEnd), "Invalid iter.");
+            debug_expects(isIterValid(it), "Invalid iter.");
+            debug_expects(isIterValid(itEnd), "Invalid iter.");
             debug_expects(isIterInRange(it), "Iter is out range.")
             debug_expects(isIterInRange(itEnd), "Iter is out range.")
             debug_expects(it.compare(itEnd) <= 0, "Invalid range.");
@@ -458,6 +376,26 @@ namespace Atom
             usize to = indexForIter(itEnd);
             _impl.removeRange(from, to);
             return _impl.mutIter(from);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// Removes `count_` elements from front.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto removeFront(usize count_ = 1)
+        {
+            debug_expects(count_ <= count());
+
+            _impl.removeFront(count_);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// Removes `count_` elements from back.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto removeBack(usize count_ = 1)
+        {
+            debug_expects(count_ <= count());
+
+            _impl.removeBack(count_);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -523,7 +461,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr bool isIndexInRange(usize i) const
         {
-            return i < _impl.count();
+            return _impl.isIndexInRange(i);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -531,7 +469,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr bool isIndexInRangeOrEnd(usize i) const
         {
-            return i <= _impl.count();
+            return _impl.isIndexInRangeOrEnd(i);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -539,8 +477,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto indexForIter(TIter it) const -> usize
         {
-            isize cmp = it.compare(_impl.iter());
-            return cmp < 0 ? usize(-1) : usize(cmp);
+            return _impl.indexForIter(it);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -550,9 +487,9 @@ namespace Atom
         /// # To Do
         /// - Implement iter validation.
         /// ----------------------------------------------------------------------------------------
-        constexpr bool validateIter(TIter it) const
+        constexpr bool isIterValid(TIter it) const
         {
-            return true;
+            return _impl.isIterValid(it);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -560,7 +497,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr bool isIterInRange(TIter it) const
         {
-            return isIndexInRange(indexForIter(it));
+            return _impl.isIterInRange(it);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -568,7 +505,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr bool isIterInRangeOrEnd(TIter it) const
         {
-            return isIndexInRangeOrEnd(indexForIter(it));
+            return _impl.isIterInRangeOrEnd(it);
         }
 
     private:
@@ -579,60 +516,60 @@ namespace Atom
     class MutArrRangeTraitImpl<DynArr<T, TAlloc>>
     {
         using _Arr = DynArr<T, TAlloc>;
-        using _Storage = _DynArrStorage<T, TAlloc>;
+        using _ArrImpl = _DynArrImpl<T, TAlloc>;
 
     public:
-        using TElem = T;
-        using TIter = ArrIter<T>;
-        using TIterEnd = TIter;
-        using TMutIter = MutArrIter<T>;
-        using TMutIterEnd = TMutIter;
+        using TElem = typename _ArrImpl::TElem;
+        using TIter = typename _ArrImpl::TIter;
+        using TIterEnd = typename _ArrImpl::TIterEnd;
+        using TMutIter = typename _ArrImpl::TMutIter;
+        using TMutIterEnd = typename _ArrImpl::TMutIterEnd;
 
     public:
-        constexpr auto data() -> T*
+        constexpr auto getData() const -> const T*
         {
-            return _storage().data();
+            return _impl().data();
         }
 
-        constexpr auto data() const -> const T*
+        constexpr auto getData() -> T*
         {
-            return _storage().data();
+            return _impl().mutData();
         }
 
-        constexpr auto count() const -> usize
+        constexpr auto getCount() const -> usize
         {
-            return _storage().count();
+            return _impl().count();
         }
 
         constexpr auto iter() const -> TIter
         {
-            return TIter{ _storage().data() };
+            return _impl().iter();
         }
 
         constexpr auto iterEnd() const -> TIterEnd
         {
-            return TIter{ _storage().data() + _storage().count() };
+            return _impl().iterEnd();
         }
 
         constexpr auto mutIter() -> TMutIter
         {
-            return TMutIter{ _storage().data() };
+            return _impl().mutIter();
         }
 
         constexpr auto mutIterEnd() -> TMutIterEnd
         {
-            return TMutIter{ _storage().data() + _storage().count() };
+            return _impl().mutIterEnd();
         }
 
     private:
-        constexpr auto _storage() -> _Storage&
+        constexpr auto _impl() const -> const _ArrImpl&
         {
-            return reinterpret_cast<_Arr&>(*this)._impl.storage();
+            return reinterpret_cast<const _Arr&>(*this)._impl;
         }
 
-        constexpr auto _storage() const -> const _Storage&
+        constexpr auto _impl() -> _ArrImpl&
         {
-            return reinterpret_cast<_Arr&>(*this)._impl.storage();
+            return reinterpret_cast<_Arr&>(*this)._impl;
         }
     };
 }
