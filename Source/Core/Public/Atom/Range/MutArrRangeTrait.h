@@ -90,9 +90,9 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Get underlying ptr to arr.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto data() -> TElem*
+        constexpr auto mutData() -> TElem*
         {
-            return _data();
+            return _mutData();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -104,14 +104,12 @@ namespace Atom
         /// # Time Complexity
         /// Constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto at(usize i) -> TElem&
+        constexpr auto mutAt(usize i) -> TElem&
         {
             expects(isIndexInRange(i), "Index is out of range.");
 
-            return _at(i);
+            return _mutAt(i);
         }
-
-        using ArrRangeTrait<TRange>::operator[];
 
         /// ----------------------------------------------------------------------------------------
         /// Access element by index.
@@ -126,8 +124,10 @@ namespace Atom
         {
             debug_expects(isIndexInRange(i), "Index is out of range.");
 
-            return _at(i);
+            return _mutAt(i);
         }
+
+        using ArrRangeTrait<TRange>::operator[];
 
         /// ----------------------------------------------------------------------------------------
         /// Access first element.
@@ -135,11 +135,11 @@ namespace Atom
         /// # Time Complexity
         /// Constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto front() -> TElem&
+        constexpr auto mutFront() -> TElem&
         {
             debug_expects(not isEmpty(), "Range is empty.");
 
-            return _front();
+            return _mutFront();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -148,27 +148,11 @@ namespace Atom
         /// # Time Complexity
         /// Constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto back() -> TElem&
+        constexpr auto mutBack() -> TElem&
         {
             debug_expects(not isEmpty(), "Range is empty.");
 
-            return _back();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// Get count of elements.
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto count() const -> usize
-        {
-            return _count();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// Is range empty.
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto isEmpty() const -> bool
-        {
-            return _count() == 0;
+            return _mutBack();
         }
 
     //// -------------------------------------------------------------------------------------------
@@ -183,11 +167,11 @@ namespace Atom
         ///
         /// - `i`: Index of the element to get iter at.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto mutIter(usize i) const -> TMutIterEnd
+        constexpr auto mutIter(usize i) const -> TMutIter
         {
             expects(isIndexInRange(i), "Index is out of range.");
     
-            return _iter() + i;
+            return _mutIter() + i;
         }
 
         using MutRangeTrait<TRange>::mutIter;
@@ -227,7 +211,7 @@ namespace Atom
     //// -------------------------------------------------------------------------------------------
 
     private:
-        constexpr auto _data() -> TElem*
+        constexpr auto _mutData() -> TElem*
         {
             return _Impl::getData();
         }
@@ -237,31 +221,31 @@ namespace Atom
             return _Impl::getCount();
         }
 
-        constexpr auto _at(usize i) -> TElem&
+        constexpr auto _mutAt(usize i) -> TElem&
         {
-            return _data()[i];
+            return _mutData()[i];
         }
 
-        constexpr auto _front() -> TElem&
+        constexpr auto _mutFront() -> TElem&
         {
-            return _at(0);
+            return _mutAt(0);
         }
 
-        constexpr auto _back() -> TElem&
+        constexpr auto _mutBack() -> TElem&
         {
             debug_expects(_count() > 0);
 
-            return _at(_count() - 1);
+            return _mutAt(_count() - 1);
         }
 
-        constexpr auto _iter() const -> TIter
+        constexpr auto _mutIter() const -> TIter
         {
-            return TIter{ _data() };
+            return TMutIter{ _mutData() };
         }
 
-        constexpr auto _iterEnd() const -> TIterEnd
+        constexpr auto _mutIterEnd() const -> TIterEnd
         {
-            return TIter{ _data() + _count() };
+            return TMutIter{ _mutData() + _count() };
         }
     };
 

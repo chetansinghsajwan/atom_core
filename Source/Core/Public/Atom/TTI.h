@@ -39,11 +39,11 @@ namespace Atom::TTI
     template <typename T>
     constexpr bool IsMoveAssignable = std::is_move_assignable_v<T>;
 
-    template <typename T1, typename T2>
-    constexpr bool IsSame = std::is_same_v<T1, T2>;
+    template <typename T0, typename T1>
+    constexpr bool IsSame = std::is_same_v<T0, T1>;
 
-    template <typename T1, typename T2>
-    constexpr bool IsNotSame = !IsSame<T1, T2>;
+    template <typename T0, typename T1>
+    constexpr bool IsNotSame = !IsSame<T0, T1>;
 
     template <typename T>
     using TRemoveConst = std::remove_const_t<T>;

@@ -39,22 +39,22 @@ namespace Atom
     ///-----------------------------------------------------------------------------------------------
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures {T1} is same as {T2}.
+    /// Ensures {T0} is same as {T1}.
     /// --------------------------------------------------------------------------------------------
-    template <typename T1, typename T2>
-    concept RSameAs = std::same_as<T1, T2>;
+    template <typename T0, typename T1>
+    concept RSameAs = std::same_as<T0, T1>;
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures {T1} is {void}.
+    /// Ensures {T0} is {void}.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
     concept RIsVoid = RSameAs<T, void>;
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures unqualified type of {T1} is same as unqualified type of {T2}.
+    /// Ensures unqualified type of {T0} is same as unqualified type of {T1}.
     /// --------------------------------------------------------------------------------------------
-    template <typename T1, typename T2>
-    concept RSameAsUnqualified = std::same_as<TTI::TRemoveCVRef<T1>, TTI::TRemoveCVRef<T2>>;
+    template <typename T0, typename T1>
+    concept RSameAsUnqualified = std::same_as<TTI::TRemoveCVRef<T0>, TTI::TRemoveCVRef<T1>>;
 
     /// --------------------------------------------------------------------------------------------
     /// Enusres `T` is const-qualified.
@@ -237,17 +237,17 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// Ensures {T} is {Assignable} using {from}.
     /// --------------------------------------------------------------------------------------------
-    template <typename T1, typename T2>
-    concept RAssignable = requires(T1 t1, T2 t2)
+    template <typename T0, typename T1>
+    concept RAssignable = requires(T0 t1, T1 t2)
     {
-        { t1 = fwd(t2) } -> RSameAs<T1&>;
+        { t1 = fwd(t2) } -> RSameAs<T0&>;
     };
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures {T} is {TriviallyAssignable} using {from}.
     /// --------------------------------------------------------------------------------------------
-    template <typename T1, typename T2>
-    concept RTriviallyAssignable = std::is_trivially_assignable_v<T1, T2>;
+    template <typename T0, typename T1>
+    concept RTriviallyAssignable = std::is_trivially_assignable_v<T0, T1>;
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures {T} is {CopyAssignable}.
@@ -346,16 +346,16 @@ namespace Atom
     concept RTriviallyMoveableAll = _CheckAll<_WRAP_REQ(RTriviallyMoveable<T>), Ts...>;
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures {T1} is {Swappable} with {T2}.
+    /// Ensures {T0} is {Swappable} with {T1}.
     /// --------------------------------------------------------------------------------------------
-    template <typename T1, typename T2>
-    concept RSwappableWith = RAssignable<T1, T2> && RAssignable<T2, T1>;
+    template <typename T0, typename T1>
+    concept RSwappableWith = RAssignable<T0, T1> && RAssignable<T1, T0>;
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures {T1} is {Swappable} with {TriviallyT2}.
+    /// Ensures {T0} is {Swappable} with {TriviallyT2}.
     /// --------------------------------------------------------------------------------------------
-    template <typename T1, typename T2>
-    concept RTriviallySwappableWith = RTriviallyAssignable<T1, T2> && RTriviallyAssignable<T2, T1>;
+    template <typename T0, typename T1>
+    concept RTriviallySwappableWith = RTriviallyAssignable<T0, T1> && RTriviallyAssignable<T1, T0>;
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures {T} is {Swappable} with itself.
@@ -400,10 +400,10 @@ namespace Atom
     ///-----------------------------------------------------------------------------------------------
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures {T1} and {T2} are {EqualityComparable}.
+    /// Ensures {T0} and {T1} are {EqualityComparable}.
     /// --------------------------------------------------------------------------------------------
-    template <typename T1, typename T2>
-    concept REqualityComparableWith = requires(T1 t1, T2 t2)
+    template <typename T0, typename T1>
+    concept REqualityComparableWith = requires(T0 t1, T1 t2)
     {
         { t1 == t2 } -> RConvertibleTo<bool>;
         { t1 != t2 } -> RConvertibleTo<bool>;
@@ -416,12 +416,12 @@ namespace Atom
     concept REqualityComparable = REqualityComparableWith<T, T>;
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures {T1} and {T2} are {Comparable}.
+    /// Ensures {T0} and {T1} are {Comparable}.
     /// --------------------------------------------------------------------------------------------
-    template <typename T1, typename T2>
-    concept RComparableWith = requires(T1 t1, T2 t2)
+    template <typename T0, typename T1>
+    concept RComparableWith = requires(T0 t1, T1 t2)
     {
-        requires REqualityComparableWith<T1, T2>;
+        requires REqualityComparableWith<T0, T1>;
 
         { t1 < t2 } -> RConvertibleTo<bool>;
         { t1 > t2 } -> RConvertibleTo<bool>;
