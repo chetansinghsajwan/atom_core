@@ -266,6 +266,16 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        template <typename T1>
+        constexpr auto operator+=(T1&& el)
+            requires(RConstructible<T, T1>)
+        {
+            _impl.emplaceBack(fwd(el));
+        }
+
+        /// ----------------------------------------------------------------------------------------
         /// Inserts elements at back. Forwards each value returned by `range.iter()` to 
         /// constructor of element in the arr.
         /// 
@@ -287,6 +297,18 @@ namespace Atom
         {
             usize count = _impl.insertRangeBack(fwd(range));
             return _impl.mutIter(_impl.count() - count);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// # To Do:
+        /// - What happens when the elem type accepts range as parameter?
+        /// ----------------------------------------------------------------------------------------
+        template <typename TRange>
+        constexpr auto operator+=(TRange&& range)
+            requires(RRangeOf<TRange, T>)
+                and (RConstructible<T, typename TRange::TElem>)
+        {
+            _impl.insertRangeBack(fwd(range));
         }
 
     //// -------------------------------------------------------------------------------------------
@@ -396,6 +418,27 @@ namespace Atom
             debug_expects(count_ <= count());
 
             _impl.removeBack(count_);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        template <typename TPred>
+        constexpr auto removeIf(TPred&& pred) -> usize
+            requires(RInvokable<TPred, bool(const TElem&)>)
+        {
+            usize removedCount = 0;
+            for (usize i = 0; i < _impl.count(); i++)
+            {
+                if (pred(_impl.data()[i]))
+                {
+                    _impl.removeAt(i);
+                    i--;
+                    removedCount++;
+                }
+            }
+
+            return removedCount;
         }
 
         /// ----------------------------------------------------------------------------------------

@@ -123,7 +123,7 @@ namespace Atom
         {
             EventKey key = invokable.GetInvokableType();
 
-            _listeners.InsertBack(mov(invokable));
+            _listeners.emplaceBack(mov(invokable));
             return key;
         }
 
@@ -132,8 +132,8 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         auto _RemoveListener(EventKey key) -> usize
         {
-            return RangeModifier().RemoveIf(_listeners,
-                [&](const auto& listener) { return listener.GetInvokableType() == key.GetType(); });
+            return _listeners.removeIf([&](const auto& listener)
+                { return listener.GetInvokableType() == key.GetType(); });
         }
 
         /// ----------------------------------------------------------------------------------------

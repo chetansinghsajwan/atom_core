@@ -16,6 +16,7 @@ auto main(i32 argc, char** argv) -> i32
     PrintCmdArgs(argc, argv);
 
     DynArr<int> arr;
+    auto it = arr.iter();
 
     return 0;
 }

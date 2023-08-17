@@ -72,7 +72,7 @@ namespace Atom
         template <typename... TArgs>
         constexpr auto emplaceBack(TArgs&&... args)
         {
-            return _emplaceBack(fwd(args)...);
+            return _emplaceAt(_getCount() - 1, fwd(args)...);
         }
 
         template <typename UIter, typename UIterEnd>
@@ -198,12 +198,12 @@ namespace Atom
     //// -------------------------------------------------------------------------------------------
 
     private:
-        template <typename U>
-        constexpr auto _insertAt(usize i, U&& el) -> usize
+        template <typename... TArgs>
+        constexpr auto _emplaceAt(usize i, TArgs&&... args) -> usize
         {
             _ensureCapFor(i);
             _moveRangeBack(i, 1);
-            _constructAt(i, fwd(el));
+            _constructAt(i, fwd(args)...);
 
             return i;
         }
@@ -302,30 +302,34 @@ namespace Atom
             TElem* newArr = _allocMem(newCap);
 
             _moveRangeTo(0, newArr);
-            _deallocMem(_getData());
+            _deallocMem(_getMutData());
             _setData(newArr);
             _setCapacity(newCap);
         }
 
         constexpr auto _constructAt(usize i, auto&&... args) -> void
         {
-            std::construct_at(_getData() + i, fwd(args)...);
+            T* src = _getMutData() + i;
+            std::construct_at(src, fwd(args)...);
         }
 
         constexpr auto _destructAt(usize i) -> void
         {
-            std::destroy_at(_getData() + i);
+            T* src = _getMutData() + i;
+            std::destroy_at(src);
         }
 
         constexpr auto _destructRange(usize i, usize count) -> void
         {
-            std::destroy(_getData() + i, _getData() + i + count);
+            T* begin = _getMutData() + i;
+            T* end = begin + count;
+            std::destroy(begin, end);
         }
 
         constexpr auto _moveRangeFront(usize i, usize count) -> void
         {
             T* begin = _getMutData() + i;
-            T* end = _getMutData() + _getCount();
+            T* end = _getMutData() + _getCount() - 1;
             T* dest = begin - count;
             std::move(begin, end, dest);
         }
@@ -333,19 +337,24 @@ namespace Atom
         constexpr auto _moveRangeBack(usize i, usize count) -> void
         {
             T* begin = _getMutData() + i;
-            T* end = _getMutData() + _getCount();
+            T* end = _getMutData() + _getCount() - 1;
             T* dest = begin + count;
             std::move_backward(begin, end, dest);
         }
 
         constexpr auto _moveRangeTo(usize i, TElem* dest) -> void
         {
-            std::move(_getData() + i, dest);
+            T* begin = _getMutData() + i;
+            T* end = _getMutData() + _getCount() - 1;
+            std::move_backward(begin, end, dest);
         }
 
         constexpr auto _rotateRangeBack(usize i, usize count) -> void
         {
-            std::rotate(_getData() + i, _getData() + i + count, _getData() + _getCount() - 1);
+            T* begin = _getMutData();
+            T* mid = begin + i;
+            T* end = begin + _getCount() - 1;
+            std::rotate(begin, mid, end);
         }
 
         template <typename UIter, typename UIterEnd>
@@ -404,14 +413,19 @@ namespace Atom
             _capacity = capacity;
         }
 
-        constexpr auto _allocMem(usize required) const -> T*
+        constexpr auto _allocMem(usize required) -> T*
         {
-            return _alloc.allocMem(required);
+            return static_cast<T*>(_alloc.Alloc(required));
         }
 
-        constexpr auto _allocMemAtLeast(usize required, usize hint) const -> T*
+        constexpr auto _allocMemAtLeast(usize required, usize hint) -> T*
         {
-            return _alloc.allocMem(required);
+            return _alloc.Alloc(required);
+        }
+
+        constexpr auto _deallocMem(T* mem)
+        {
+            _alloc.Dealloc(mem);
         }
 
     private:
