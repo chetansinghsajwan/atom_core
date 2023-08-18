@@ -1,6 +1,6 @@
 #pragma once
 #include "Atom/Core.h"
-#include "Atom/Memory/ObjHelper.decl.h"
+#include "Atom/Memory/ObjHelper.h"
 #include "Atom/TTI.h"
 #include "Storage.h"
 #include "TypeList.h"

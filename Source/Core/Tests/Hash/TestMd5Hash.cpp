@@ -4,6 +4,7 @@
 #include "Atom/Hash/Md5HashGenerator.h"
 #include "Atom/Hash/Md5HashParser.h"
 #include "Atom/Hash/Md5HashStringifier.h"
+#include "Atom/Str.h"
 
 using namespace Atom;
 

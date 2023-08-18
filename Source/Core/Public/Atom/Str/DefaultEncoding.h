@@ -1,3 +1,9 @@
 #pragma once
-#include "Atom/Text/Utf16Encoding.h"
-#include "DefaultEncoding.decl.h"
+#include "Atom/Text/AsciiEncoding.h"
+
+namespace Atom
+{
+    using CharEncoding = AsciiEncoding;
+    using Char = AsciiChar;
+    using Rune = AsciiRune;
+}

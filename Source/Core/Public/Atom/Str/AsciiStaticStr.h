@@ -1,5 +1,9 @@
 #pragma once
-#include "AsciiStaticStr.decl.h"
+#include "Atom/Text/AsciiEncoding.h"
 #include "BasicStaticStr.h"
 
-#include "Atom/Text/AsciiEncoding.h"
+namespace Atom
+{
+    template <usize Size>
+    using AsciiStaticStr = BasicStaticStr<AsciiEncoding, Size>;
+}

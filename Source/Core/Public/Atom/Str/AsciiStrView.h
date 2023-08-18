@@ -1,5 +1,8 @@
 #pragma once
-#include "AsciiStrView.decl.h"
+#include "Atom/Text/AsciiEncoding.h"
 #include "BasicStrView.h"
 
-#include "Atom/Text/AsciiEncoding.h"
+namespace Atom
+{
+    using AsciiStrView = BasicStrView<AsciiEncoding>;
+}

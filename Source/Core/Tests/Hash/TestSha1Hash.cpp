@@ -4,6 +4,7 @@
 #include "Atom/Hash/Sha1HashGenerator.h"
 #include "Atom/Hash/Sha1HashParser.h"
 #include "Atom/Hash/Sha1HashStringifier.h"
+#include "Atom/Str.h"
 
 using namespace Atom;
 

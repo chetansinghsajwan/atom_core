@@ -1,6 +1,7 @@
 #include "catch2/catch_all.hpp"
 
 #include "Atom/Uuid/UuidStringifier.h"
+#include "Atom/Str.h"
 
 using namespace Atom;
 

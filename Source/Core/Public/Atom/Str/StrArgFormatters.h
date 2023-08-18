@@ -27,25 +27,20 @@ namespace Atom
     using _FmtFmtEx = ::fmt::format_error;
 
     /// --------------------------------------------------------------------------------------------
-    /// Exception thrown during formatting error.
+    /// Err thrown during formatting error.
     /// --------------------------------------------------------------------------------------------
-    class StrFmtEx: public Exception
+    class StrFmtErr: public Err
     {
     public:
-        StrFmtEx(Str msg)
-            : Exception(mov(msg))
-        {}
+        StrFmtErr(ErrMsg msg): Err(mov(msg)) {}
 
         /// ----------------------------------------------------------------------------------------
         /// @TODO Fix this ugly code.
         /// ----------------------------------------------------------------------------------------
     public:
-        StrFmtEx(const _FmtFmtEx& fmtEx)
-            : Exception("Not implemented.")
-        {}
-
-        // StrFmtEx(const _FmtFmtEx& fmtEx):
-        // 	Exception(CharEncodingConverter<UTF8CharEncoding, CharEncoding>()
+        StrFmtErr(const _FmtFmtEx& fmtEx): Err("Not implemented.") {}
+        // StrFmtErr(const _FmtFmtEx& fmtEx):
+        // 	Err(CharEncodingConverter<UTF8CharEncoding, CharEncoding>()
         // 		.Convert(UTF8StrView{ (const char8*)fmtEx.what() }.iter()).data()) { }
     };
 
@@ -55,9 +50,7 @@ namespace Atom
     class StrFmtParseCtx
     {
     public:
-        constexpr StrFmtParseCtx(_FmtFmtParseCtx& fmtCtx)
-            : _fmtCtx{ fmtCtx }
-        {}
+        constexpr StrFmtParseCtx(_FmtFmtParseCtx& fmtCtx): _fmtCtx{ fmtCtx } {}
 
     public:
         auto GetRange() -> StrView
@@ -81,9 +74,7 @@ namespace Atom
     class StrFmtCtx
     {
     public:
-        constexpr StrFmtCtx(_FmtFmtCtx& fmtCtx)
-            : _fmtCtx{ fmtCtx }
-        {}
+        constexpr StrFmtCtx(_FmtFmtCtx& fmtCtx): _fmtCtx{ fmtCtx } {}
 
         auto Write(Char ch)
         {

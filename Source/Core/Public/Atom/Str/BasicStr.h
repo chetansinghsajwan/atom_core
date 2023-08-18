@@ -1,3 +1,8 @@
 #pragma once
 #include "BasicBufStr.h"
-#include "BasicStr.decl.h"
+
+namespace Atom
+{
+    template <typename TEncoding, typename TAlloc = DefaultMemAllocator>
+    using BasicStr = BasicBufStr<TEncoding, 24, TAlloc>;
+}

@@ -96,7 +96,7 @@ namespace Atom
             }
             catch (const _FmtFmtEx& err)
             {
-                throw StrFmtEx(err);
+                throw StrFmtErr(err);
             }
         }
 

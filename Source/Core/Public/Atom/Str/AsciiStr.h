@@ -1,5 +1,8 @@
 #pragma once
-#include "AsciiStr.decl.h"
+#include "Atom/Text/AsciiEncoding.h"
 #include "BasicStr.h"
 
-#include "Atom/Text/AsciiEncoding.h"
+namespace Atom
+{
+    using AsciiStr = BasicStr<AsciiEncoding>;
+}

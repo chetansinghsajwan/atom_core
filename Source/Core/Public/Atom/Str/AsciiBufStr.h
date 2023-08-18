@@ -1,5 +1,9 @@
 #pragma once
-#include "AsciiBufStr.decl.h"
+#include "Atom/Text/AsciiEncoding.h"
 #include "BasicBufStr.h"
 
-#include "Atom/Text/AsciiEncoding.h"
+namespace Atom
+{
+    template <usize BufSize>
+    using AsciiBufStr = BasicBufStr<AsciiEncoding, BufSize>;
+}

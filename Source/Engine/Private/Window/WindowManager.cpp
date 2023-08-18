@@ -22,7 +22,7 @@ namespace Atom::Engine
         if (s_windowCount == 0)
         {
             i32 success = glfwInit();
-            ATOM_ASSERT(success) << RuntimeException("GLFW initialization failed.");
+            ATOM_ASSERT(success) << RuntimeErr("GLFW initialization failed.");
 
             glfwSetErrorCallback([](i32 error_code, const char* description) {
                 // TODO: Fix this compilation error.
@@ -36,7 +36,7 @@ namespace Atom::Engine
 
     auto WindowManger::CloseWindow(Window* window) -> void
     {
-        ATOM_ASSERT(window != nullptr) << NullPointerException("Cannot close NULL window.");
+        ATOM_ASSERT(window != nullptr) << NullPtrErr("Cannot close NULL window.");
 
         delete window;
     }

@@ -33,23 +33,23 @@ namespace Atom::Logging
         ///
         /// @PARAM[IN] logger Logger to register.
         ///
-        /// @THROWS NullPointerException Asserts {logger != nullptr}.
-        /// @THROWS InvalidArgumentException Asserts {!key.isEmpty()}, {key = logger->Name()}.
-        /// @THROWS InvalidOperationException Asserts {!HasLogger(key)}, {key = logger->Name()}.
+        /// @THROWS NullPtrErr Asserts {logger != nullptr}.
+        /// @THROWS InvalidArgErr Asserts {!key.isEmpty()}, {key = logger->Name()}.
+        /// @THROWS InvalidOperationErr Asserts {!HasLogger(key)}, {key = logger->Name()}.
         ///
         /// @EXCEPTION_SAFETY VeryStrong
         /// ----------------------------------------------------------------------------------------
         auto RegisterLogger(LoggerPtr logger)
         {
-            ATOM_ASSERT(logger != nullptr) << NullPointerException("Cannot register NULL Logger.");
+            ATOM_ASSERT(logger != nullptr) << NullPtrErr("Cannot register NULL Logger.");
 
             StrView key = logger->Name();
 
             ATOM_ASSERT(!key.isEmpty())
-                << InvalidArgumentException("Cannot register logger with NULL key.");
+                << InvalidArgErr("Cannot register logger with NULL key.");
 
             ATOM_ASSERT(_HasLogger(key) == false)
-                << InvalidOperationException("Logger for key{{key}} is already registered.");
+                << InvalidOperationErr("Logger for key{{key}} is already registered.");
 
             _RegisterLogger(logger, Str(key));
         }
@@ -64,21 +64,21 @@ namespace Atom::Logging
         /// @PARAM[IN] logger Logger to register.
         /// @PARAM[IN] key Str used as key to register logger.
         ///
-        /// @THROWS NullPointerException Asserts {logger != nullptr}.
-        /// @THROWS InvalidArgumentException Asserts {!key.isEmpty()}.
-        /// @THROWS InvalidOperationException Asserts {!HasLogger(key)}.
+        /// @THROWS NullPtrErr Asserts {logger != nullptr}.
+        /// @THROWS InvalidArgErr Asserts {!key.isEmpty()}.
+        /// @THROWS InvalidOperationErr Asserts {!HasLogger(key)}.
         ///
         /// @EXCEPTION_SAFETY VeryStrong
         /// ----------------------------------------------------------------------------------------
         auto RegisterLogger(LoggerPtr logger, StrView key)
         {
-            ATOM_ASSERT(logger != nullptr) << NullPointerException("Cannot register NULL Logger.");
+            ATOM_ASSERT(logger != nullptr) << NullPtrErr("Cannot register NULL Logger.");
 
             ATOM_ASSERT(!key.isEmpty())
-                << InvalidArgumentException("Cannot register logger with NULL key.");
+                << InvalidArgErr("Cannot register logger with NULL key.");
 
             ATOM_ASSERT(_HasLogger(key) == false)
-                << InvalidOperationException("Logger for key{{key}} is already registered.");
+                << InvalidOperationErr("Logger for key{{key}} is already registered.");
 
             _RegisterLogger(logger, Str(key));
         }
@@ -90,13 +90,13 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         auto RegisterLogger(LoggerPtr logger, Str&& key)
         {
-            ATOM_ASSERT(logger != nullptr) << NullPointerException("Cannot register NULL Logger.");
+            ATOM_ASSERT(logger != nullptr) << NullPtrErr("Cannot register NULL Logger.");
 
             ATOM_ASSERT(!key.isEmpty())
-                << InvalidArgumentException("Cannot register logger with NULL key.");
+                << InvalidArgErr("Cannot register logger with NULL key.");
 
             ATOM_ASSERT(_HasLogger(key) == false)
-                << InvalidOperationException("Logger for key{{key}} is already registered.");
+                << InvalidOperationErr("Logger for key{{key}} is already registered.");
 
             _RegisterLogger(logger, mov(key));
         }
@@ -105,19 +105,19 @@ namespace Atom::Logging
         /// Force registers logger with its name. If a logger with key {key} is already
         /// registered, then unregisters it and registers this.
         ///
-        /// @THROWS NullPointerException Asserts {logger != nullptr}.
-        /// @THROWS InvalidArgumentException Asserts {!key.isEmpty()}, {key = logger->Name()}.
+        /// @THROWS NullPtrErr Asserts {logger != nullptr}.
+        /// @THROWS InvalidArgErr Asserts {!key.isEmpty()}, {key = logger->Name()}.
         ///
         /// @EXCEPTION_SAFETY VeryStrong
         /// ----------------------------------------------------------------------------------------
         auto ForceRegisterLogger(LoggerPtr logger)
         {
-            ATOM_ASSERT(logger != nullptr) << NullPointerException("Cannot register NULL Logger.");
+            ATOM_ASSERT(logger != nullptr) << NullPtrErr("Cannot register NULL Logger.");
 
             StrView key = logger->Name();
 
             ATOM_ASSERT(!key.isEmpty())
-                << InvalidArgumentException("Cannot register logger with NULL key.");
+                << InvalidArgErr("Cannot register logger with NULL key.");
 
             _ForceRegisterLogger(logger, Str(key));
         }
@@ -129,17 +129,17 @@ namespace Atom::Logging
         /// @PARAM[IN] logger Logger to register.
         /// @PARAM[IN] key Str used as key to register logger.
         ///
-        /// @THROWS NullPointerException Asserts {logger != nullptr}.
-        /// @THROWS InvalidArgumentException Asserts {!key.isEmpty()}.
+        /// @THROWS NullPtrErr Asserts {logger != nullptr}.
+        /// @THROWS InvalidArgErr Asserts {!key.isEmpty()}.
         ///
         /// @EXCEPTION_SAFETY VeryStrong
         /// ----------------------------------------------------------------------------------------
         auto ForceRegisterLogger(LoggerPtr logger, StrView key)
         {
-            ATOM_ASSERT(logger != nullptr) << NullPointerException("Cannot register NULL Logger.");
+            ATOM_ASSERT(logger != nullptr) << NullPtrErr("Cannot register NULL Logger.");
 
             ATOM_ASSERT(!key.isEmpty())
-                << InvalidArgumentException("Cannot register logger with NULL key.");
+                << InvalidArgErr("Cannot register logger with NULL key.");
 
             _ForceRegisterLogger(logger, Str(key));
         }
@@ -151,10 +151,10 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         auto ForceRegisterLogger(LoggerPtr logger, Str&& key)
         {
-            ATOM_ASSERT(logger != nullptr) << NullPointerException("Cannot register NULL Logger.");
+            ATOM_ASSERT(logger != nullptr) << NullPtrErr("Cannot register NULL Logger.");
 
             ATOM_ASSERT(!key.isEmpty())
-                << InvalidArgumentException("Cannot register logger with NULL key.");
+                << InvalidArgErr("Cannot register logger with NULL key.");
 
             _ForceRegisterLogger(logger, mov(key));
         }
@@ -225,14 +225,14 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Unregisters the logger registered with key {key}.
         ///
-        /// @THROWS InvalidArgumentException Asserts {!key.isEmpty()}.
+        /// @THROWS InvalidArgErr Asserts {!key.isEmpty()}.
         ///
         /// @EXCEPTION_SAFETY VeryStrong
         /// ----------------------------------------------------------------------------------------
         auto UnregisterLogger(StrView key) -> bool
         {
             ATOM_ASSERT(!key.isEmpty())
-                << InvalidArgumentException("Cannot access logger with NULL key.");
+                << InvalidArgErr("Cannot access logger with NULL key.");
 
             return _UnregisterLogger(key) != nullptr;
         }
@@ -251,14 +251,14 @@ namespace Atom::Logging
         /// @PARAM[IN] key Key used to register the logger.
         /// @RETURNS Logger registered with key {key}. If no logger was registered returns nullptr.
         ///
-        /// @THROWS InvalidArgumentException Asserts {!key.isEmpty()}.
+        /// @THROWS InvalidArgErr Asserts {!key.isEmpty()}.
         ///
         /// @EXCEPTION_SAFETY VeryStrong
         /// ----------------------------------------------------------------------------------------
         auto UnregisterAndGetLogger(StrView key) -> LoggerPtr
         {
             ATOM_ASSERT(!key.isEmpty())
-                << InvalidArgumentException("Cannot access logger with NULL key.");
+                << InvalidArgErr("Cannot access logger with NULL key.");
 
             return _UnregisterLogger(key);
         }
