@@ -22,6 +22,9 @@ namespace Atom
 
         constexpr _DynArrImpl(_DynArrImpl&& that) {}
 
+        template <typename UIter, typename UIterEnd>
+        constexpr _DynArrImpl(UIter it, UIterEnd itEnd) {}
+
     //// -------------------------------------------------------------------------------------------
     //// 
     //// -------------------------------------------------------------------------------------------
@@ -31,6 +34,35 @@ namespace Atom
         {
             removeAll();
             releaseUnusedMem();
+        }
+
+    //// -------------------------------------------------------------------------------------------
+    //// Iteration
+    //// -------------------------------------------------------------------------------------------
+
+    public:
+        constexpr auto iter(usize i = 0) const -> TIter
+        {
+            debug_expects(isIndexInRange(i));
+
+            return TIter{ _getData() + i };
+        }
+
+        constexpr auto iterEnd() const -> TIterEnd
+        {
+            return TIterEnd{ _getData() + _getCount() };
+        }
+
+        constexpr auto mutIter(usize i = 0) -> TMutIter
+        {
+            debug_expects(isIndexInRange(i));
+
+            return TMutIter{ _getMutData() + i };
+        }
+
+        constexpr auto mutIterEnd() -> TMutIterEnd
+        {
+            return TMutIterEnd{ _getMutData() + _getCount() };
         }
 
     //// -------------------------------------------------------------------------------------------
@@ -47,13 +79,13 @@ namespace Atom
         template <typename UIter, typename UIterEnd>
         constexpr auto insertRangeAt(usize i, UIter it, UIterEnd itEnd) -> usize
         {
-            if constexpr (_canGetRangeSize<UIter, UIterEnd>())
+            if constexpr (_CanGetRangeSize<UIter, UIterEnd>())
             {
-                return _insertRangeAtCounted(i, it, _getRangeSize(it, itEnd));
+                return _insertRangeAtCounted(i, it, _GetRangeSize(it, itEnd));
             }
             else
             {
-                return _insertRangeAtUncounted(i, it, itEnd);
+                return _insertRangeAtUncounted(i, mov(it), mov(itEnd));
             }
         }
 
@@ -78,15 +110,15 @@ namespace Atom
         template <typename UIter, typename UIterEnd>
         constexpr auto insertRangeBack(UIter it, UIterEnd itEnd) -> usize
         {
-            if constexpr (_canGetRangeSize<UIter, UIterEnd>())
+            if constexpr (_CanGetRangeSize<UIter, UIterEnd>())
             {
-                usize count = _getRangeSize(it, itEnd);
+                usize count = _GetRangeSize(it, itEnd);
                 _insertRangeBackCounted(it, count);
                 return count;
             }
             else
             {
-                return _insertRangeBackUncounted(it, itEnd);
+                return _insertRangeBackUncounted(mov(it), mov(itEnd));
             }
         }
 
@@ -228,11 +260,11 @@ namespace Atom
         }
 
         template <typename UIter, typename UIterEnd>
-        constexpr auto _insertRangeAtUncounted(usize i, UIter begin, UIterEnd end)
+        constexpr auto _insertRangeAtUncounted(usize i, UIter it, UIterEnd itEnd)
             -> usize
         {
             usize rotateSize = _getCount() - i;
-            _insertRangeBackUncounted(begin, end);
+            _insertRangeBackUncounted(mov(it), mov(itEnd));
             _rotateRangeBack(i, rotateSize);
 
             return i;
@@ -358,13 +390,13 @@ namespace Atom
         }
 
         template <typename UIter, typename UIterEnd>
-        static constexpr auto _canGetRangeSize() -> bool
+        static constexpr auto _CanGetRangeSize() -> bool
         {
             return RFwdIterPair<UIter, UIterEnd>;
         }
 
         template <typename UIter, typename UIterEnd>
-        static constexpr auto _getRangeSize(TIter it, UIterEnd itEnd) -> usize
+        static constexpr auto _GetRangeSize(UIter it, UIterEnd itEnd) -> usize
         {
             if constexpr (RJumpIterPair<UIter, UIterEnd>)
             {

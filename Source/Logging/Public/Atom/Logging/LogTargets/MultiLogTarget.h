@@ -296,9 +296,9 @@ namespace Atom::Logging::Private
         /// @PARAM[IN] target {LogTarget} object to add.
         ///     If {target} is null, this doesn't adds it.
         ///
-        /// @EXCEPTION_SAFETY @COPY_FROM ${_TContainer}::InsertBack(LogTarget& target)
+        /// @EXCEPTION_SAFETY @COPY_FROM ${_TContainer}::emplaceBack(LogTarget& target)
         ///
-        /// @TIME_COMPLEXITY @COPY_FROM ${_TContainer}::InsertBack(LogTarget& target)
+        /// @TIME_COMPLEXITY @COPY_FROM ${_TContainer}::emplaceBack(LogTarget& target)
         ///
         /// @THREAD_SAFETY NONE
         /// ----------------------------------------------------------------------------------------
@@ -306,7 +306,7 @@ namespace Atom::Logging::Private
         {
             ATOM_DEBUG_EXPECTS(target != nullptr);
 
-            _targets.InsertBack(mov(target));
+            _targets.emplaceBack(mov(target));
             return true;
         }
 
@@ -317,9 +317,9 @@ namespace Atom::Logging::Private
         ///     If {targets} contains null objects, this doesn't adds them.
         /// @RETURNS Count of LogTarget objects added.
         ///
-        /// @EXCEPTION_SAFETY @COPY_FROM ${_TContainer}::InsertBack(RRangeOf<LogTargetPtr> targets)
+        /// @EXCEPTION_SAFETY @COPY_FROM ${_TContainer}::emplaceBack(RRangeOf<LogTargetPtr> targets)
         ///
-        /// @TIME_COMPLEXITY @COPY_FROM ${_TContainer}::InsertBack(RRangeOf<LogTargetPtr> targets)
+        /// @TIME_COMPLEXITY @COPY_FROM ${_TContainer}::emplaceBack(RRangeOf<LogTargetPtr> targets)
         ///
         /// @THREAD_SAFETY NONE
         /// ----------------------------------------------------------------------------------------
@@ -332,7 +332,7 @@ namespace Atom::Logging::Private
             {
                 if (target != nullptr)
                 {
-                    _targets.InsertBack(mov(target));
+                    _targets.emplaceBack(mov(target));
                     count++;
                 }
             }
@@ -359,7 +359,7 @@ namespace Atom::Logging::Private
             {
                 if (it.value() == target)
                 {
-                    _targets.RemoveAt(it);
+                    _targets.removeAt(it);
                     return true;
                 }
             }
@@ -393,7 +393,7 @@ namespace Atom::Logging::Private
                 {
                     if (it.value() == target)
                     {
-                        _targets.RemoveAt(it);
+                        _targets.removeAt(it);
                         count++;
                         break;
                     }
@@ -447,7 +447,7 @@ namespace Atom::Logging::Private
         /// ----------------------------------------------------------------------------------------
         auto _Reserve(usize capacity)
         {
-            _targets.Reserve(capacity);
+            _targets.reserve(capacity);
         }
 
     protected:

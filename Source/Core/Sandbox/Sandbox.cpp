@@ -1,5 +1,4 @@
 #include "Atom/Core.h"
-#include "Atom/Containers/DynArr.h"
 
 using namespace Atom;
 
@@ -14,9 +13,6 @@ auto PrintCmdArgs(i32 argc, char** argv)
 auto main(i32 argc, char** argv) -> i32
 {
     PrintCmdArgs(argc, argv);
-
-    DynArr<int> arr;
-    auto it = arr.iter();
 
     return 0;
 }

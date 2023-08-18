@@ -24,62 +24,49 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// Implementation for [`MutRangeTrait`].
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange>
-    class _MutRangeTraitImpl:
-        private MutRangeTraitImpl<TRange>
+    template <typename TRangeImpl>
+    class _MutRangeTraitImpl: public TRangeImpl
     {
-    private:
-        using _Impl = MutRangeTraitImpl<TRange>;
+        using Base = TRangeImpl;
 
     public:
-        using TElem = typename _Impl::TElem;
-        using TIter = typename _Impl::TIter;
-        using TIterEnd = typename _Impl::TIterEnd;
-        using TMutIter = typename _Impl::TMutIter;
-        using TMutIterEnd = typename _Impl::TMutIterEnd;
+        using TImpl = typename Base::TImpl;
+        using TElem = typename Base::TElem;
+        using TIter = typename Base::TIter;
+        using TIterEnd = typename Base::TIterEnd;
+        using TMutIter = typename TImpl::TMutIter;
+        using TMutIterEnd = typename TImpl::TMutIterEnd;
 
     public:
-        static constexpr bool InheritRange = not RDerivedFrom<
-            MutRangeTraitImpl<TRange>, _DontInheritRangeImpl>;
+        constexpr auto mutIter() -> TMutIter
+        {
+            return _impl.mutIter();
+        }
+
+        constexpr auto mutIterEnd() -> TMutIterEnd
+        {
+            return _impl.mutIterEnd();
+        }
 
     public:
-        constexpr auto iter() const -> TIter
-        {
-            return _Impl::iter();
-        }
-
-        constexpr auto iterEnd() const -> TIterEnd
-        {
-            return _Impl::iterEnd();
-        }
-
-        constexpr auto mutIter() const -> TIter
-        {
-            return _Impl::mutIter();
-        }
-
-        constexpr auto mutIterEnd() const -> TIterEnd
-        {
-            return _Impl::mutIterEnd();
-        }
+        using Base::_impl;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Trait for [`MutRange`].
+    /// Recursive Trait for [`MutRange`].
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange>
-    class MutRangeTrait:
-        public TTI::TConditional<_MutRangeTraitImpl<TRange>::InheritRange, RangeTrait<TRange>, Void>
+    template <typename TRangeTrait>
+    class MutRangeTraitRecursive: public TRangeTrait
     {
-        using Base = RangeTrait<TRange>;
-        using _Impl = _MutRangeTraitImpl<TRange>;
+        using Base = TRangeTrait;
 
     public:
-        using TElem = typename _Impl::TElem;
-        using TIter = typename _Impl::TIter;
-        using TIterEnd = typename _Impl::TIterEnd;
-        using TMutIter = typename _Impl::TMutIter;
-        using TMutIterEnd = typename _Impl::TMutIterEnd;
+        using TImpl = typename Base::TImpl;
+        using TElem = typename Base::TElem;
+        using TIter = typename Base::TIter;
+        using TIterEnd = typename Base::TIterEnd;
+        using TMutIter = typename TImpl::TMutIter;
+        using TMutIterEnd = typename TImpl::TMutIterEnd;
 
     //// -------------------------------------------------------------------------------------------
     //// Iteration
@@ -91,7 +78,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto mutIter() -> TMutIter
         {
-            return _Impl::mutIter();
+            return _impl.mutIter();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -99,28 +86,28 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto mutIterEnd() -> TMutIterEnd
         {
-            return _Impl::mutIterEnd();
+            return _impl.mutIterEnd();
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        // constexpr auto begin() -> TMutIter
-        // {
-        //     return _Impl::mutIter();
-        // }
+        constexpr auto begin()
+        {
+            return StdIterWrapForAtomIter{ _impl.mutIter() };
+        }
 
-        // using Base::begin;
+        using Base::begin;
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        // constexpr auto end() -> TMutIterEnd
-        // {
-        //     return _Impl::mutIterEnd();
-        // }
+        constexpr auto end()
+        {
+            return StdIterWrapForAtomIter{ _impl.mutIterEnd() };
+        }
 
-        // using Base::end;
+        using Base::end;
 
     //// -------------------------------------------------------------------------------------------
     ////
@@ -195,14 +182,8 @@ namespace Atom
         constexpr auto destroyElems()
             requires(RDestructible<TElem>)
         {}
-    };
 
-    /// --------------------------------------------------------------------------------------------
-    /// [`RangeTraitImpl`] using [`MutRangeTrait`].
-    /// --------------------------------------------------------------------------------------------
-    template <typename TRange>
-    requires (RMutRangeImpl<TRange>)
-        && (not RDerivedFrom<MutRangeTraitImpl<TRange>, _DontInheritRangeImpl>)
-    class RangeTraitImpl<TRange>:
-        public MutRangeTraitImpl<TRange> {};
+    public:
+        using Base::_impl;
+    };
 }

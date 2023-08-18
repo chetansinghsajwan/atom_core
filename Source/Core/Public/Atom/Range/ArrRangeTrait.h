@@ -1,5 +1,5 @@
 #pragma once
-#include "RangeTrait.h"
+#include "JumpRangeTrait.h"
 
 namespace Atom
 {
@@ -12,49 +12,74 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// Implementation of [`ArrRangeTrait`].
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange>
-    class _ArrRangeTraitImpl:
-        private ArrRangeTraitImpl<TRange>
+    template <typename TRangeImpl>
+    class _ArrRangeTraitImpl: public _RangeTraitImpl<TRangeImpl>
     {
-        using _Impl = ArrRangeTraitImpl<TRange>;
+        using Base = _RangeTraitImpl<TRangeImpl>;
 
     public:
-        using TElem = typename _Impl::TElem;
-        using TIter = ArrIter<TElem>;
-        using TIterEnd = TIter;
+        using TImpl = typename Base::TImpl;
+        using TElem = typename Base::TElem;
+        using TIter = typename Base::TIter;
+        using TIterEnd = typename Base::TIterEnd;
 
     public:
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto getCount() const -> usize
+        constexpr auto data() const -> const TElem*
         {
-            return _Impl::getCount();
+            return _impl.data();
         }
 
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto getData() const -> const TElem*
+        constexpr auto count() const -> usize
         {
-            return _Impl::getData();
+            return _impl.count();
         }
+
+        constexpr auto at(usize i) const -> const TElem&
+        {
+            debug_expects(isIndexInRange(i));
+
+            return data()[i];
+        }
+
+        constexpr auto front() const -> const TElem&
+        {
+            return at(0);
+        }
+
+        constexpr auto back() const -> const TElem&
+        {
+            return back(count() - 1);
+        }
+
+        constexpr auto isIndexInRange(usize i) const -> bool
+        {
+            return i < count();
+        }
+
+        constexpr auto iter(usize i) const -> TIter
+        {
+            return Base::iter().next(i);
+        }
+
+        using Base::iter;
+
+    public:
+        using Base::_impl;
     };
 
     /// --------------------------------------------------------------------------------------------
     /// Trait for [ArrRange].
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange>
-    class ArrRangeTrait:
-        public RangeTrait<TRange>,
-        private _ArrRangeTraitImpl<TRange>
+    template <typename TRangeImpl>
+    class ArrRangeTraitRecursive: public JumpRangeTraitRecursive<TRangeImpl>
     {
-        using _Impl = _ArrRangeTraitImpl<TRange>;
+        using Base = JumpRangeTraitRecursive<TRangeImpl>;
 
     public:
-        using TElem = typename _Impl::TElem;
-        using TIter = ArrIter<TElem>;
-        using TIterEnd = TIter;
+        using TImpl = typename Base::TImpl;
+        using TElem = typename Base::TElem;
+        using TIter = typename Base::TIter;
+        using TIterEnd = typename Base::TIterEnd;
 
     //// -------------------------------------------------------------------------------------------
     //// Access
@@ -66,7 +91,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto data() const -> const TElem*
         {
-            return _data();
+            return _impl.data();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -82,7 +107,7 @@ namespace Atom
         {
             expects(isIndexInRange(i), "Index is out of range.");
 
-            return _at(i);
+            return _impl.at(i);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -98,7 +123,7 @@ namespace Atom
         {
             debug_expects(isIndexInRange(i), "Index is out of range.");
 
-            return _at(i);
+            return _impl.at(i);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -111,7 +136,7 @@ namespace Atom
         {
             debug_expects(not isEmpty(), "Range is empty.");
 
-            return _front();
+            return _impl.front();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -124,7 +149,7 @@ namespace Atom
         {
             debug_expects(not isEmpty(), "Range is empty.");
 
-            return _back();
+            return _impl.back();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -132,7 +157,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto count() const -> usize
         {
-            return _count();
+            return _impl.count();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -140,7 +165,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto isEmpty() const -> bool
         {
-            return _count() == 0;
+            return _impl.count() == 0;
         }
 
     //// -------------------------------------------------------------------------------------------
@@ -159,10 +184,10 @@ namespace Atom
         {
             expects(isIndexInRange(i), "Index is out of range.");
 
-            return _iter().next(i);
+            return _impl.iter(i);
         }
 
-        using RangeTrait<TRange>::iter;
+        using Base::iter;
 
     //// -------------------------------------------------------------------------------------------
     //// View
@@ -191,76 +216,22 @@ namespace Atom
     public:
         constexpr auto isIndexInRange(usize i) const -> bool
         {
-            return i < _count();
+            return _impl.isIndexInRange(i);
         }
 
     //// -------------------------------------------------------------------------------------------
-    //// Implementations
+    //// Fields
     //// -------------------------------------------------------------------------------------------
 
-    private:
-        constexpr auto _data() const -> const TElem*
-        {
-            return _Impl::getData();
-        }
-
-        constexpr auto _count() const -> usize
-        {
-            return _Impl::getCount();
-        }
-
-        constexpr auto _at(usize i) const -> const TElem&
-        {
-            return _data()[i];
-        }
-
-        constexpr auto _front() const -> const TElem&
-        {
-            return _at(0);
-        }
-
-        constexpr auto _back() const -> const TElem&
-        {
-            debug_expects(_count() > 0);
-
-            return _at(_count() - 1);
-        }
-
-        constexpr auto _iter() const -> TIter
-        {
-            return TIter{ _data() };
-        }
-
-        constexpr auto _iterEnd() const -> TIterEnd
-        {
-            return TIter{ _data() + _count() };
-        }
+    public:
+        using Base::_impl;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// [`RangeTraitImpl`] using [`ArrRangeTraitImpl`].
+    /// 
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
-    requires(RDefaultConstructible<ArrRangeTraitImpl<TRange>>)
-    class RangeTraitImpl<TRange>:
-        private ArrRangeTraitImpl<TRange>
-    {
-        using _Impl = ArrRangeTraitImpl<TRange>;
-
-    public:
-        using TElem = typename _Impl::TElem;
-        using TIter = ArrIter<TElem>;
-        using TIterEnd = TIter;
-
-    public:
-        constexpr auto iter() const -> TIter
-        {
-            return TIter{ _Impl::getData() };
-        }
-
-        constexpr auto iterEnd() const -> TIterEnd
-        {
-            return TIterEnd{ _Impl::getData() + _Impl::getCount() };
-        }
-    };
+    class ArrRangeTrait: public ArrRangeTraitRecursive<
+        _ArrRangeTraitImpl<ArrRangeTraitImpl<TRange>>>
+    {};
 }

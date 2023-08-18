@@ -19,12 +19,7 @@ namespace Atom
         {}
 
     public:
-        constexpr auto getData() const -> const T*
-        {
-            return _data;
-        }
-
-        constexpr auto getData() -> T*
+        constexpr auto data() const -> const T*
         {
             return _data;
         }
@@ -34,7 +29,7 @@ namespace Atom
             _data = data;
         }
 
-        constexpr auto getCount() const -> usize
+        constexpr auto count() const -> usize
         {
             return _count;
         }
@@ -146,24 +141,36 @@ namespace Atom
     class ArrRangeTraitImpl<ArrView<T>>
     {
         using _Arr = ArrView<T>;
-        using _Storage = _ArrViewStorage<T>;
+        using _ArrStorage = _ArrViewStorage<T>;
 
     public:
         using TElem = T;
+        using TIter = ArrIter<T>;
+        using TIterEnd = TIter;
 
     public:
-        constexpr auto getData() const -> const T*
+        constexpr auto data() const -> const T*
         {
-            return _storage().getData();
+            return _storage().data();
         }
 
-        constexpr auto getCount() const -> usize
+        constexpr auto count() const -> usize
         {
-            return _storage().getCount();
+            return _storage().count();
+        }
+
+        constexpr auto iter() const -> TIter
+        {
+            return TIter{ _storage().data() };
+        }
+
+        constexpr auto iterEnd() const -> TIterEnd
+        {
+            return TIterEnd{ _storage().data() + _storage().count() };
         }
 
     private:
-        constexpr auto _storage() const -> const _Storage&
+        constexpr auto _storage() const -> const _ArrStorage&
         {
             return reinterpret_cast<const _Arr&>(*this)._storage;
         }

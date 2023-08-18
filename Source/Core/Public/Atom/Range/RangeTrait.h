@@ -10,16 +10,14 @@ namespace Atom
     template <typename TRange>
     class RangeTraitImpl;
 
-    template <typename TRange>
-    class _RangeTraitImpl:
-        private RangeTraitImpl<TRange>
+    template <typename TUserImpl>
+    class _RangeTraitImpl
     {
-        using _Impl = RangeTraitImpl<TRange>;
-
     public:
-        using TElem = typename _Impl::TElem;
-        using TIter = typename _Impl::TIter;
-        using TIterEnd = typename _Impl::TIterEnd;
+        using TImpl = TUserImpl;
+        using TElem = typename TImpl::TElem;
+        using TIter = typename TImpl::TIter;
+        using TIterEnd = typename TImpl::TIterEnd;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -27,7 +25,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto iter() const -> TIter
         {
-            return _Impl::iter();
+            return _impl.iter();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -35,7 +33,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto iterEnd() const -> TIterEnd
         {
-            return _Impl::iterEnd();
+            return _impl.iterEnd();
         }
 
     public:
@@ -95,33 +93,33 @@ namespace Atom
 
             return count;
         }
-    };
-
-    template <typename TRange>
-    class RangeTrait:
-        private _RangeTraitImpl<TRange>
-    {
-        /// ----------------------------------------------------------------------------------------
-        /// # To Do: Should this alias be used for public API.
-        /// ----------------------------------------------------------------------------------------
-        using TraitImpl = RangeTraitImpl<TRange>;
-        using _Impl = _RangeTraitImpl<TRange>;
 
     public:
-        using TElem = typename TraitImpl::TElem;
-        using TIter = typename TraitImpl::TIter;
-        using TIterEnd = typename TraitImpl::TIterEnd;
+        TUserImpl _impl;
+    };
+
+    template <typename TRangeImpl>
+    class RangeTraitRecursive: public TRangeImpl
+    {
+        using Base = TRangeImpl;
+
+    public:
+        using TImpl = Base;
+        using TElem = typename TImpl::TElem;
+        using TIter = typename TImpl::TIter;
+        using TIterEnd = typename TImpl::TIterEnd;
 
     //// -------------------------------------------------------------------------------------------
     //// Iteration
     //// -------------------------------------------------------------------------------------------
 
+    public:
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
         constexpr auto iter() const -> TIter
         {
-            return _Impl::iter();
+            return _impl.iter();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -129,7 +127,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto iterEnd() const -> TIterEnd
         {
-            return _Impl::iterEnd();
+            return _impl.iterEnd();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -137,7 +135,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto begin() const
         {
-            return StdIterWrapForAtomIter{ _Impl::iter() };
+            return StdIterWrapForAtomIter{ _impl.iter() };
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -145,7 +143,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto end() const
         {
-            return StdIterWrapForAtomIter{ _Impl::iterEnd() };
+            return StdIterWrapForAtomIter{ _impl.iterEnd() };
         }
 
     //// -------------------------------------------------------------------------------------------
@@ -160,7 +158,7 @@ namespace Atom
         constexpr auto find(const TElem1& el) const -> TIter
             requires(REqualityComparableWith<TElem, TElem1>)
         {
-            return _Impl::findElem(el);
+            return _impl.findElem(el);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -171,7 +169,7 @@ namespace Atom
             requires(RFwdRange<TRange1>)
                     and (REqualityComparableWith<TElem, typename TRange1::TElem>)
         {
-            return _Impl::findRange(range);
+            return _impl.findRange(range);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -181,7 +179,7 @@ namespace Atom
         constexpr auto contains(const TElem1& el) const -> bool
             requires(REqualityComparableWith<TElem, TElem1>)
         {
-            return _Impl::findElem(el) != _Impl::iterEnd();
+            return _impl.findElem(el) != _impl.iterEnd();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -190,9 +188,9 @@ namespace Atom
         template <typename TRange1>
         constexpr auto contains(const TRange1& range) const -> bool
             requires(RFwdRange<TRange1>)
-                    and (REqualityComparableWith<TElem, typename TRange1::TElem>)
+                and (REqualityComparableWith<TElem, typename TRange1::TElem>)
         {
-            return _Impl::findRange(range) != _Impl::iterEnd();
+            return _impl.findRange(range) != _impl.iterEnd();
         }
 
     //// -------------------------------------------------------------------------------------------
@@ -207,7 +205,7 @@ namespace Atom
         constexpr auto compare(const TRange1& range) const -> i8
             requires(RRange<TRange1>) and (REqualityComparableWith<TElem, typename TRange1::TElem>)
         {
-            return _Impl::compare(range);
+            return _impl.compare(range);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -217,7 +215,7 @@ namespace Atom
         constexpr auto equals(const TRange1& range) const -> bool
             requires(RRange<TRange1>) and (REqualityComparableWith<TElem, typename TRange1::TElem>)
         {
-            return _Impl::compare(range) == 0;
+            return _impl.compare(range) == 0;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -227,7 +225,7 @@ namespace Atom
         constexpr auto operator==(const TRange1& range) const -> bool
             requires(RRange<TRange1>) and (REqualityComparableWith<TElem, typename TRange1::TElem>)
         {
-            return _Impl::compare(range) == 0;
+            return _impl.compare(range) == 0;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -237,7 +235,7 @@ namespace Atom
         constexpr auto operator!=(const TRange1& range) const -> bool
             requires(RRange<TRange1>) and (REqualityComparableWith<TElem, typename TRange1::TElem>)
         {
-            return _Impl::compare(range) != 0;
+            return _impl.compare(range) != 0;
         }
 
     //// -------------------------------------------------------------------------------------------
@@ -261,7 +259,13 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto getCount() const -> usize
         {
-            return _Impl::getCount();
+            return _impl.getCount();
         }
+
+    public:
+        TImpl _impl;
     };
+
+    template <typename TRange>
+    class RangeTrait: public RangeTraitRecursive<_RangeTraitImpl<TRange>> {};
 }

@@ -72,10 +72,10 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Range Constructor
         /// ----------------------------------------------------------------------------------------
-        template <typename TRange>
+        template <typename TRange, typename TRangeUnqualified = TTI::TRemoveQuailfiersRef<TRange>>
         constexpr DynArr(TRange&& range)
-            requires(RRangeOf<TRange, T>):
-            _impl{ fwd(range) }
+            requires(RRangeOf<TRangeUnqualified, T>):
+            _impl{ range.iter(), range.iterEnd() }
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -295,7 +295,7 @@ namespace Atom
             requires(RRangeOf<TRange, T>)
                 and (RConstructible<T, typename TRange::TElem>)
         {
-            usize count = _impl.insertRangeBack(fwd(range));
+            usize count = _impl.insertRangeBack(range.iter(), range.iterEnd());
             return _impl.mutIter(_impl.count() - count);
         }
 
@@ -303,12 +303,12 @@ namespace Atom
         /// # To Do:
         /// - What happens when the elem type accepts range as parameter?
         /// ----------------------------------------------------------------------------------------
-        template <typename TRange>
+        template <typename TRange, typename TRangeUnqualified = TTI::TRemoveQuailfiersRef<TRange>>
         constexpr auto operator+=(TRange&& range)
-            requires(RRangeOf<TRange, T>)
-                and (RConstructible<T, typename TRange::TElem>)
+            requires(RRangeOf<TRangeUnqualified, T>)
+                and (RConstructible<T, typename TRangeUnqualified::TElem>)
         {
-            _impl.insertRangeBack(fwd(range));
+            _impl.insertRangeBack(mov(range.iter()), mov(range.iterEnd()));
         }
 
     //// -------------------------------------------------------------------------------------------
@@ -562,46 +562,46 @@ namespace Atom
         using _ArrImpl = _DynArrImpl<T, TAlloc>;
 
     public:
-        using TElem = typename _ArrImpl::TElem;
-        using TIter = typename _ArrImpl::TIter;
-        using TIterEnd = typename _ArrImpl::TIterEnd;
-        using TMutIter = typename _ArrImpl::TMutIter;
-        using TMutIterEnd = typename _ArrImpl::TMutIterEnd;
+        using TElem = T;
+        using TIter = ArrIter<T>;
+        using TIterEnd = TIter;
+        using TMutIter = MutArrIter<T>;
+        using TMutIterEnd = TMutIter;
 
     public:
-        constexpr auto getData() const -> const T*
+        constexpr auto data() const -> const T*
         {
             return _impl().data();
         }
 
-        constexpr auto getData() -> T*
+        constexpr auto mutData() -> T*
         {
-            return _impl().mutData();
+            return _mutImpl().mutData();
         }
 
-        constexpr auto getCount() const -> usize
+        constexpr auto count() const -> usize
         {
             return _impl().count();
         }
 
         constexpr auto iter() const -> TIter
         {
-            return _impl().iter();
+            return TIter{ _impl().data() };
         }
 
         constexpr auto iterEnd() const -> TIterEnd
         {
-            return _impl().iterEnd();
+            return TIterEnd{ _impl().data() + _impl().count() };
         }
 
         constexpr auto mutIter() -> TMutIter
         {
-            return _impl().mutIter();
+            return TMutIter{ _mutImpl().mutData() };
         }
 
         constexpr auto mutIterEnd() -> TMutIterEnd
         {
-            return _impl().mutIterEnd();
+            return TMutIterEnd{ _mutImpl().mutData() + _mutImpl().count() };
         }
 
     private:
@@ -610,7 +610,7 @@ namespace Atom
             return reinterpret_cast<const _Arr&>(*this)._impl;
         }
 
-        constexpr auto _impl() -> _ArrImpl&
+        constexpr auto _mutImpl() -> _ArrImpl&
         {
             return reinterpret_cast<_Arr&>(*this)._impl;
         }

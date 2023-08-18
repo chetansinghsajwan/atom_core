@@ -7,25 +7,6 @@ namespace Atom
     class _StaticArrStorage
     {
     public:
-        using TElem = T;
-
-    public:
-        constexpr auto getData() -> T*
-        {
-            return _arr;
-        }
-
-        constexpr auto getData() const -> const T*
-        {
-            return _arr;
-        }
-
-        constexpr auto getCount() const -> usize
-        {
-            return count;
-        }
-
-    public:
         T _arr[count];
     };
 
@@ -35,41 +16,79 @@ namespace Atom
         public MutArrRangeTrait<StaticArr<T, count>>
     {};
 
-    template <typename T, usize count>
-    class MutArrRangeTraitImpl<StaticArr<T, count>>
+    template <typename T, usize count_>
+    class MutArrRangeTraitImpl<StaticArr<T, count_>>
     {
-    private:
-        using _Arr = StaticArr<T, count>;
-        using _Storage = _StaticArrStorage<T, count>;
+        using _Arr = StaticArr<T, count_>;
+        using _ArrStorage = _StaticArrStorage<T, count_>;
 
     public:
         using TElem = T;
+        using TIter = ArrIter<T>;
+        using TIterEnd = TIter;
+        using TMutIter = MutArrIter<T>;
+        using TMutIterEnd = TMutIter;
 
     public:
-        constexpr auto getData() -> T*
+        constexpr auto data() const -> const T*
         {
-            return _storage().getData();
+            return _storageData();
         }
 
-        constexpr auto getData() const -> const T*
+        constexpr auto mutData() -> T*
         {
-            return _storage().getData();
+            return _storageMutData();
         }
 
-        constexpr auto getCount() const -> usize
+        constexpr auto count() const -> usize
         {
-            return _storage().getCount();
+            return _storageCount();
+        }
+
+        constexpr auto iter() const -> TIter
+        {
+            return TIter{ _storageData() };
+        }
+
+        constexpr auto iterEnd() const -> TIterEnd
+        {
+            return TIterEnd{ _storageData() + _storageCount() };
+        }
+
+        constexpr auto mutIter() -> TMutIter
+        {
+            return TMutIter{ _storageMutData() };
+        }
+
+        constexpr auto mutIterEnd() -> TMutIterEnd
+        {
+            return TMutIterEnd{ _storageMutData() + _storageCount() };
         }
 
     private:
-        constexpr auto _storage() -> _Storage&
+        constexpr auto _storageData() const -> const T*
         {
-            return reinterpret_cast<_Storage&>(*this);
+            return _storage()._arr;
         }
 
-        constexpr auto _storage() const -> const _Storage&
+        constexpr auto _storageMutData() -> T*
         {
-            return reinterpret_cast<const _Storage&>(*this);
+            return _mutStorage()._arr;
+        }
+
+        constexpr auto _storageCount() const -> usize
+        {
+            return count_;
+        }
+
+        constexpr auto _storage() const -> const _ArrStorage&
+        {
+            return reinterpret_cast<const _ArrStorage&>(*this);
+        }
+
+        constexpr auto _mutStorage() -> _ArrStorage&
+        {
+            return reinterpret_cast<_ArrStorage&>(*this);
         }
     };
 }
