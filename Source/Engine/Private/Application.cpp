@@ -9,7 +9,7 @@ namespace Atom::Engine
         };
 
         _window = WindowManger::CreateWindow(windowProps);
-        ATOM_DEBUG_ASSERT(_window != nullptr);
+        debug_asserts(_window != nullptr);
 
         _window->OnEvent += [this](const SWindowEvent& event) { this->OnWindowEvent(event); };
     }

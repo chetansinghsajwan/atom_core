@@ -1,6 +1,6 @@
 #pragma once
 #include "Atom/Core.h"
-#include "Atom/Exceptions/Assertions.h"
+#include "Atom/Contracts.h"
 #include "Atom/Memory/ObjHelper.h"
 
 namespace Atom

@@ -1,6 +1,7 @@
 #pragma once
-#include "Atom/TTI.h"
 #include "RangeReq.h"
+#include "Atom/TTI.h"
+#include "Atom/Contracts.h"
 
 namespace Atom
 {

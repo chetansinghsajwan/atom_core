@@ -304,7 +304,7 @@ namespace Atom::Logging::Private
         /// ----------------------------------------------------------------------------------------
         auto _AddTarget(LogTargetPtr target) -> bool
         {
-            ATOM_DEBUG_EXPECTS(target != nullptr);
+            debug_expects(target != nullptr);
 
             _targets.emplaceBack(mov(target));
             return true;
@@ -353,7 +353,7 @@ namespace Atom::Logging::Private
         /// ----------------------------------------------------------------------------------------
         auto _RemoveTarget(LogTargetPtr target) -> bool
         {
-            ATOM_DEBUG_EXPECTS(target != nullptr);
+            debug_expects(target != nullptr);
 
             for (auto it = _targets.iter(); not it.equals(_targets.iterEnd()); it.next())
             {
@@ -416,7 +416,7 @@ namespace Atom::Logging::Private
         /// ----------------------------------------------------------------------------------------
         auto _HasTarget(const LogTargetPtr& target) const -> bool
         {
-            ATOM_DEBUG_EXPECTS(target != nullptr);
+            debug_expects(target != nullptr);
 
             return RangeFinder().Contains(_targets, target);
         }

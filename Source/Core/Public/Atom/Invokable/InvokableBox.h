@@ -169,8 +169,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         auto Invoke(TArgs&&... args) -> TResult
         {
-            ATOM_ASSERT(ObjectBox::_HasObject())
-                << NullPtrErr("InvokableTarget is null.");
+            expects(ObjectBox::_HasObject(), "InvokableTarget is null.");
 
             return _invoker.Invoke(ObjectBox::_GetObject(), fwd(args)...);
         }

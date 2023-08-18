@@ -9,7 +9,7 @@ namespace Atom
         template <typename TPtr>
         constexpr auto Construct(TPtr&& mem, auto&&... args) const
         {
-            ATOM_DEBUG_EXPECTS(mem != nullptr);
+            debug_expects(mem != nullptr);
 
             std::construct_at(mem, fwd(args)...);
         }
@@ -17,7 +17,7 @@ namespace Atom
         template <typename TPtr>
         constexpr auto Construct(TPtr* mem, auto&&... args) const
         {
-            ATOM_DEBUG_EXPECTS(mem != nullptr);
+            debug_expects(mem != nullptr);
 
             std::construct_at(mem, fwd(args)...);
         }
@@ -25,7 +25,7 @@ namespace Atom
         template <typename TPtr>
         constexpr auto Assign(TPtr* mem, auto&& arg) const
         {
-            ATOM_DEBUG_EXPECTS(mem != nullptr);
+            debug_expects(mem != nullptr);
 
             *mem = fwd(arg);
         }
@@ -41,7 +41,7 @@ namespace Atom
         template <typename TPtr>
         constexpr auto Destruct(TPtr&& mem) const
         {
-            ATOM_DEBUG_EXPECTS(mem != nullptr);
+            debug_expects(mem != nullptr);
 
             std::destroy_at(mem);
         }
@@ -49,7 +49,7 @@ namespace Atom
         template <typename TPtr>
         constexpr auto Destruct(TPtr* mem) const
         {
-            ATOM_DEBUG_EXPECTS(mem != nullptr);
+            debug_expects(mem != nullptr);
 
             std::destroy_at(mem);
         }

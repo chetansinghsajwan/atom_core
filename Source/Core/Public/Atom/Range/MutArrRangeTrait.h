@@ -1,6 +1,7 @@
 #pragma once
 #include "MutJumpRangeTrait.h"
 #include "ArrRangeTrait.h"
+#include "Atom/Contracts.h"
 
 namespace Atom
 {
@@ -181,7 +182,7 @@ namespace Atom
         constexpr auto mutIter(usize i) const -> TMutIter
         {
             expects(isIndexInRange(i), "Index is out of range.");
-    
+
             return _impl.mutIter(i);
         }
 
@@ -209,6 +210,8 @@ namespace Atom
 
     public:
         using Base::_impl;
+        using Base::isIndexInRange;
+        using Base::isEmpty;
     };
 
     /// --------------------------------------------------------------------------------------------

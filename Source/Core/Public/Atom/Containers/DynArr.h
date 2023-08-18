@@ -3,6 +3,7 @@
 #include "Atom/Invokable/Invokable.h"
 #include "Atom/Memory/DefaultMemAllocator.h"
 #include "Atom/Range.h"
+#include "Atom/Contracts.h"
 
 namespace Atom
 {
@@ -21,6 +22,7 @@ namespace Atom
 
     private:
         using _Impl = _DynArrImpl<T, TAlloc>;
+        using Trait = MutArrRangeTrait<DynArr<T>>;
 
     public:
         using TElem = T;
@@ -389,8 +391,8 @@ namespace Atom
         {
             debug_expects(isIterValid(it), "Invalid iter.");
             debug_expects(isIterValid(itEnd), "Invalid iter.");
-            debug_expects(isIterInRange(it), "Iter is out range.")
-            debug_expects(isIterInRange(itEnd), "Iter is out range.")
+            debug_expects(isIterInRange(it), "Iter is out range.");
+            debug_expects(isIterInRange(itEnd), "Iter is out range.");
             debug_expects(it.compare(itEnd) <= 0, "Invalid range.");
             debug_ensures(fnret.compare(iterEnd()) <= 0, "Invalid return value.")
 
@@ -550,6 +552,9 @@ namespace Atom
         {
             return _impl.isIterInRangeOrEnd(it);
         }
+
+    public:
+        using Trait::count;
 
     private:
         _Impl _impl;
