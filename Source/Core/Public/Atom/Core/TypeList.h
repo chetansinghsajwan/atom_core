@@ -334,8 +334,8 @@ namespace Atom
         template <typename... Ts>
         class AreUnique;
 
-        template <typename T>
-        class AreUnique<T>
+        template < >
+        class AreUnique<>
         {
         public:
             static constexpr bool Value = true;

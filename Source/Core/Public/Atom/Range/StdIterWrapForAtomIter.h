@@ -117,7 +117,7 @@ namespace Atom
             return tmp;
         }
 
-        constexpr auto operator-(const Self& that) -> difference_type
+        constexpr auto operator-(const Self& that) const -> difference_type
             requires(RJumpIter<TIter>)
         {
             return iter.compare(that.iter);

@@ -1,4 +1,4 @@
-#pragma onces
+#pragma once
 #include "Atom/Core.h"
 #include "Atom/Exceptions.h"
 #include "Atom/Memory/Lockable.h"

@@ -5,7 +5,6 @@
 /// - Refactor this.
 #undef operator
 #include "GLFW/glfw3.h"
-#define operator operator
 
 #include "Atom/Engine/Window/WindowManager.h"
 #include "Atom/Math.h"
@@ -24,8 +23,8 @@ namespace Atom::Engine
     public:
         static constexpr auto ToGLFW(SWindowCoords coords) -> GlfwSWindowCoords
         {
-            static constexpr i32 min = NumLimits<i32>::min();
-            static constexpr i32 max = NumLimits<i32>::max();
+            constexpr i32 min = NumLimits<i32>::min();
+            constexpr i32 max = NumLimits<i32>::max();
 
             coords.x = Math::Clamp<i32>(coords.x, min, max);
             coords.y = Math::Clamp<i32>(coords.y, min, max);
@@ -35,8 +34,8 @@ namespace Atom::Engine
 
         static constexpr auto FromGLFW(GlfwSWindowCoords coords) -> SWindowCoords
         {
-            static constexpr i32 min = NumLimits<i32>::min();
-            static constexpr i32 max = NumLimits<i32>::max();
+            constexpr i32 min = NumLimits<i32>::min();
+            constexpr i32 max = NumLimits<i32>::max();
 
             coords.x = Math::Clamp<i32>(coords.x, min, max);
             coords.y = Math::Clamp<i32>(coords.y, min, max);
