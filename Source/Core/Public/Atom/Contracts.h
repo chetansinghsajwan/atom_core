@@ -1,5 +1,6 @@
 #pragma once
 #include "Atom/Core.h"
+#include "Atom/Core/SourceLineInfo.h"
 
 #include <iostream>
 
@@ -18,6 +19,7 @@ namespace Atom
         ContractType type;
         const char* msg;
         const char* expr;
+        SourceLineInfo src;
     };
 
     class ContractViolationHandler
@@ -33,9 +35,13 @@ namespace Atom
         {
             std::cout << "Contracts " << _toStr(violation.type) << " Violation: "
                       << "'" << violation.expr << "'\n\t"
-                      << "with msg: " << violation.msg << std::endl;
+                      << "with msg: " << violation.msg << "'\n\t"
+                      << "at: " << violation.src.fileName
+                      << ":" << violation.src.line << ":" << violation.src.column
+                      << ": " << violation.src.funcName
+                      << std::endl;
 
-            // std::terminate();
+            std::terminate();
         }
 
     private:
@@ -51,16 +57,12 @@ namespace Atom
         }
     };
 
-    constexpr auto _ContractCheck(ContractType type, const char* assertExpr,
-        bool assert, const char* msg = "")
+    constexpr auto _ContractCheck(ContractType type, const char* expr,
+        bool assert, const char* msg = "", SourceLineInfo src = SourceLineInfo::current())
     {
-        if (assert)
-            return;
+        if (assert) return;
 
-        ContractViolation violation;
-        violation.type = type;
-        violation.msg = msg;
-        violation.expr = assertExpr;
+        ContractViolation violation{ type, msg, expr, src };
         DefaultContractViolationHandler().handle(violation);
     }
 

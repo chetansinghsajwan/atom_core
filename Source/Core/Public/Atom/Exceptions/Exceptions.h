@@ -1,37 +1,10 @@
 #pragma once
 #include "Atom/Core.h"
 
-#include <source_location>
 // #include <stacktrace>
 
 namespace Atom
 {
-    /// --------------------------------------------------------------------------------------------
-    /// Details about the origin of err.
-    /// --------------------------------------------------------------------------------------------
-    class ErrSource
-    {
-    public:
-        using TImpl = std::source_location;
-
-    public:
-        static constexpr ErrSource Current(TImpl src = TImpl::current())
-        {
-            return ErrSource {
-                .line = src.line(),
-                .column = src.column(),
-                .fileName = src.file_name(),
-                .funcName = src.function_name()
-            };
-        }
-
-    public:
-        u32 line;
-        u32 column;
-        const char* fileName;
-        const char* funcName;
-    };
-
     /// --------------------------------------------------------------------------------------------
     /// A record of stack frames.
     ///
