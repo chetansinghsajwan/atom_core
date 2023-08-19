@@ -12,7 +12,57 @@ namespace Atom
         PostCondition
     };
 
-    constexpr auto _ContractCheck(ContractType contractType, bool assert, const char* msg = "") {}
+    class ContractViolation
+    {
+    public:
+        ContractType type;
+        const char* msg;
+        const char* expr;
+    };
+
+    class ContractViolationHandler
+    {
+    public:
+        virtual auto handle(const ContractViolation& violation) -> void = 0;
+    };
+
+    class DefaultContractViolationHandler final: public ContractViolationHandler
+    {
+    public:
+        virtual auto handle(const ContractViolation& violation) -> void override
+        {
+            std::cout << "Contracts " << _toStr(violation.type) << " Violation: "
+                      << "'" << violation.expr << "'\n\t"
+                      << "with msg: " << violation.msg << std::endl;
+
+            // std::terminate();
+        }
+
+    private:
+        constexpr auto _toStr(ContractType type) -> std::string_view
+        {
+            switch (type)
+            {
+                case ContractType::PreCondition:  return "PreCondition";
+                case ContractType::Assertion:     return "Assertion";
+                case ContractType::PostCondition: return "PostCondition";
+                default:                          return "[INVALID_VALUE]";
+            }
+        }
+    };
+
+    constexpr auto _ContractCheck(ContractType type, const char* assertExpr,
+        bool assert, const char* msg = "")
+    {
+        if (assert)
+            return;
+
+        ContractViolation violation;
+        violation.type = type;
+        violation.msg = msg;
+        violation.expr = assertExpr;
+        DefaultContractViolationHandler().handle(violation);
+    }
 
     inline auto _Panic(const char* msg)
     {
@@ -21,13 +71,14 @@ namespace Atom
     }
 }
 
-#define _ATOM_CONTRACT_CHECK(contractType, ...) ::Atom::_ContractCheck(contractType, __VA_ARGS__)
+#define _ATOM_CONTRACT_CHECK(type, assertion, ...)                                         \
+    ::Atom::_ContractCheck(type, #assertion, assertion, __VA_ARGS__)
 
 #if ATOM_IS_CONFIG_DEBUG
-#    define _ATOM_DEBUG_CONTRACT_CHECK(contractType, ...)                                          \
-        _ATOM_CONTRACT_CHECK(contractType, __VA_ARGS__)
+#    define _ATOM_DEBUG_CONTRACT_CHECK(type, ...)                                          \
+        _ATOM_CONTRACT_CHECK(type, __VA_ARGS__)
 #else
-#    define _ATOM_DEBUG_CONTRACT_CHECK(contractType, ...)
+#    define _ATOM_DEBUG_CONTRACT_CHECK(type, ...)
 #endif
 
 /// ------------------------------------------------------------------------------------------------
