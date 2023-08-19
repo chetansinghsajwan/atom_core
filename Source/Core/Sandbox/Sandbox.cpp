@@ -1,4 +1,5 @@
 #include "Atom/Core.h"
+#include "Atom/Contracts.h"
 
 using namespace Atom;
 

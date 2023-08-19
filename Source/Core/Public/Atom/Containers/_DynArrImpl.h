@@ -1,6 +1,7 @@
 #pragma once
 #include "Atom/Core.h"
 #include "Atom/Range/ArrIter.h"
+#include "Atom/Contracts.h"
 
 #include <algorithm>
 

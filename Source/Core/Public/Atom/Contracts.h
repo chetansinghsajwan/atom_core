@@ -36,10 +36,8 @@ namespace Atom
             std::cout << "Contracts " << _toStr(violation.type) << " Violation: "
                       << "'" << violation.expr << "'\n\t"
                       << "with msg: " << violation.msg << "'\n\t"
-                      << "at: " << violation.src.fileName
-                      << ":" << violation.src.line << ":" << violation.src.column
-                      << ": " << violation.src.funcName
-                      << std::endl;
+                      << "at: " << violation.src.fileName << ":" << violation.src.line << ":"
+                      << violation.src.column << ": " << violation.src.funcName << std::endl;
 
             std::terminate();
         }
@@ -57,10 +55,11 @@ namespace Atom
         }
     };
 
-    constexpr auto _ContractCheck(ContractType type, const char* expr,
-        bool assert, const char* msg = "", SourceLineInfo src = SourceLineInfo::current())
+    constexpr auto _ContractCheck(ContractType type, const char* expr, bool assert,
+        const char* msg = "", SourceLineInfo src = SourceLineInfo::current())
     {
-        if (assert) return;
+        if (assert)
+            return;
 
         ContractViolation violation{ type, msg, expr, src };
         DefaultContractViolationHandler().handle(violation);
@@ -73,12 +72,27 @@ namespace Atom
     }
 }
 
-#define _ATOM_CONTRACT_CHECK(type, assertion, ...)                                         \
+/// ------------------------------------------------------------------------------------------------
+/// # To Do: Move this somewhere better.
+/// ------------------------------------------------------------------------------------------------
+#define ATOM_PP_GET_MACRO(a, b, c, name, ...) name
+
+/// ------------------------------------------------------------------------------------------------
+///
+/// ------------------------------------------------------------------------------------------------
+#define _ATOM_CONTRACT_CHECK_2(type, assertion) ::Atom::_ContractCheck(type, #assertion, assertion)
+
+#define _ATOM_CONTRACT_CHECK_3(type, assertion, ...)                                               \
     ::Atom::_ContractCheck(type, #assertion, assertion, __VA_ARGS__)
 
+#define _ATOM_CONTRACT_CHECK(...)                                                                  \
+    ATOM_PP_GET_MACRO(__VA_ARGS__, _ATOM_CONTRACT_CHECK_3, _ATOM_CONTRACT_CHECK_2, _, _)(__VA_ARGS__)
+
+/// ------------------------------------------------------------------------------------------------
+///
+/// ------------------------------------------------------------------------------------------------
 #if ATOM_IS_CONFIG_DEBUG
-#    define _ATOM_DEBUG_CONTRACT_CHECK(type, ...)                                          \
-        _ATOM_CONTRACT_CHECK(type, __VA_ARGS__)
+#    define _ATOM_DEBUG_CONTRACT_CHECK(type, ...) _ATOM_CONTRACT_CHECK(type, __VA_ARGS__)
 #else
 #    define _ATOM_DEBUG_CONTRACT_CHECK(type, ...)
 #endif
