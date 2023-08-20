@@ -1,6 +1,7 @@
 #pragma once
 #include "Atom/Core.h"
 #include "Atom/Core/SourceLineInfo.h"
+#include "Atom/Preprocessors.h"
 
 #include <iostream>
 
@@ -73,20 +74,15 @@ namespace Atom
 }
 
 /// ------------------------------------------------------------------------------------------------
-/// # To Do: Move this somewhere better.
-/// ------------------------------------------------------------------------------------------------
-#define ATOM_PP_GET_MACRO(a, b, c, name, ...) name
-
-/// ------------------------------------------------------------------------------------------------
 ///
 /// ------------------------------------------------------------------------------------------------
+#define _ATOM_CONTRACT_CHECK(...)                                                                  \
+    PP_OVERLOAD(_ATOM_CONTRACT_CHECK, __VA_ARGS__)
+
 #define _ATOM_CONTRACT_CHECK_2(type, assertion) ::Atom::_ContractCheck(type, #assertion, assertion)
 
-#define _ATOM_CONTRACT_CHECK_3(type, assertion, ...)                                               \
-    ::Atom::_ContractCheck(type, #assertion, assertion, __VA_ARGS__)
-
-#define _ATOM_CONTRACT_CHECK(...)                                                                  \
-    ATOM_PP_GET_MACRO(__VA_ARGS__, _ATOM_CONTRACT_CHECK_3, _ATOM_CONTRACT_CHECK_2, _, _)(__VA_ARGS__)
+#define _ATOM_CONTRACT_CHECK_3(type, assertion, msg)                                               \
+    ::Atom::_ContractCheck(type, #assertion, assertion, msg)
 
 /// ------------------------------------------------------------------------------------------------
 ///
