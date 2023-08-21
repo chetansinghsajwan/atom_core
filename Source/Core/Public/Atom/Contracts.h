@@ -1,7 +1,6 @@
 #pragma once
 #include "Atom/Core.h"
 #include "Atom/Core/SourceLineInfo.h"
-#include "Atom/Preprocessors.h"
 
 #include <iostream>
 
@@ -14,12 +13,18 @@ namespace Atom
         PostCondition
     };
 
+    consteval std::string_view _FindContractExpr(std::string_view str)
+    {
+        usize i = str.find(',');
+        return { str.data(), i };
+    }
+
     class ContractViolation
     {
     public:
         ContractType type;
-        const char* msg;
-        const char* expr;
+        std::string_view msg;
+        std::string_view expr;
         SourceLineInfo src;
     };
 
@@ -56,8 +61,8 @@ namespace Atom
         }
     };
 
-    constexpr auto _ContractCheck(ContractType type, const char* expr, bool assert,
-        const char* msg = "", SourceLineInfo src = SourceLineInfo::current())
+    constexpr auto _ContractCheck(ContractType type, std::string_view expr, bool assert,
+        std::string_view msg = "", SourceLineInfo src = SourceLineInfo::current())
     {
         if (assert)
             return;
@@ -66,7 +71,7 @@ namespace Atom
         DefaultContractViolationHandler().handle(violation);
     }
 
-    inline auto _Panic(const char* msg)
+    inline auto _Panic(std::string_view msg)
     {
         std::cerr << msg << std::endl;
         std::terminate();
@@ -76,13 +81,8 @@ namespace Atom
 /// ------------------------------------------------------------------------------------------------
 ///
 /// ------------------------------------------------------------------------------------------------
-#define _ATOM_CONTRACT_CHECK(...)                                                                  \
-    PP_OVERLOAD(_ATOM_CONTRACT_CHECK, __VA_ARGS__)
-
-#define _ATOM_CONTRACT_CHECK_2(type, assertion) ::Atom::_ContractCheck(type, #assertion, assertion)
-
-#define _ATOM_CONTRACT_CHECK_3(type, assertion, msg)                                               \
-    ::Atom::_ContractCheck(type, #assertion, assertion, msg)
+#define _ATOM_CONTRACT_CHECK(type, ...) \
+    ::Atom::_ContractCheck(type, ::Atom::_FindContractExpr(#__VA_ARGS__), __VA_ARGS__)
 
 /// ------------------------------------------------------------------------------------------------
 ///
