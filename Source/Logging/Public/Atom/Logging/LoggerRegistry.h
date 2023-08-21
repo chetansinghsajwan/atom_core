@@ -12,8 +12,9 @@ namespace Atom::Logging
     /// LoggerRegistry is used manage loggers collectively and provides interface to register
     /// loggers with a key.
     ///
-    /// @TODO Add thread safety.
-    /// @TODO Add string like template parameter support.
+    /// # To Do
+    /// - Add thread safety.
+    /// - Add string like template parameter support.
     /// --------------------------------------------------------------------------------------------
     class LoggerRegistry
     {
@@ -31,13 +32,8 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Registers Logger with its name.
         ///
-        /// @PARAM[IN] logger Logger to register.
-        ///
-        /// @THROWS NullPtrErr Asserts {logger != nullptr}.
-        /// @THROWS InvalidArgErr Asserts {!key.isEmpty()}, {key = logger->Name()}.
-        /// @THROWS InvalidOperationErr Asserts {!HasLogger(key)}, {key = logger->Name()}.
-        ///
-        /// @EXCEPTION_SAFETY VeryStrong
+        /// # Parameters
+        /// - `logger`: Logger to register.
         /// ----------------------------------------------------------------------------------------
         auto RegisterLogger(LoggerPtr logger)
         {
@@ -61,14 +57,9 @@ namespace Atom::Logging
         /// If a logger with this key is already registered throws exception.
         /// Use UnregisterLogger of ForceRegisterLogger to register logger in that case.
         ///
-        /// @PARAM[IN] logger Logger to register.
-        /// @PARAM[IN] key Str used as key to register logger.
-        ///
-        /// @THROWS NullPtrErr Asserts {logger != nullptr}.
-        /// @THROWS InvalidArgErr Asserts {!key.isEmpty()}.
-        /// @THROWS InvalidOperationErr Asserts {!HasLogger(key)}.
-        ///
-        /// @EXCEPTION_SAFETY VeryStrong
+        /// # Parameters
+        /// - `logger`: Logger to register.
+        /// - `key`: Str used as key to register logger.
         /// ----------------------------------------------------------------------------------------
         auto RegisterLogger(LoggerPtr logger, StrView key)
         {
@@ -86,7 +77,8 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Overload for void RegisterLogger(LoggerPtr logger, StrView key) for performance.
         ///
-        /// @PARAM[IN] key RValue reference to Str, to avoid allocating memory to store the key.
+        /// # Parameters
+        /// - `key`: RValue reference to Str, to avoid allocating memory to store the key.
         /// ----------------------------------------------------------------------------------------
         auto RegisterLogger(LoggerPtr logger, Str&& key)
         {
@@ -104,11 +96,6 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Force registers logger with its name. If a logger with key {key} is already
         /// registered, then unregisters it and registers this.
-        ///
-        /// @THROWS NullPtrErr Asserts {logger != nullptr}.
-        /// @THROWS InvalidArgErr Asserts {!key.isEmpty()}, {key = logger->Name()}.
-        ///
-        /// @EXCEPTION_SAFETY VeryStrong
         /// ----------------------------------------------------------------------------------------
         auto ForceRegisterLogger(LoggerPtr logger)
         {
@@ -124,13 +111,9 @@ namespace Atom::Logging
         /// Force registers logger with specified key. If a logger with key {key} is already
         /// registered, then unregisters it and registers this.
         ///
-        /// @PARAM[IN] logger Logger to register.
-        /// @PARAM[IN] key Str used as key to register logger.
-        ///
-        /// @THROWS NullPtrErr Asserts {logger != nullptr}.
-        /// @THROWS InvalidArgErr Asserts {!key.isEmpty()}.
-        ///
-        /// @EXCEPTION_SAFETY VeryStrong
+        /// # Parameters
+        /// - `logger`: Logger to register.
+        /// - `key`: Str used as key to register logger.
         /// ----------------------------------------------------------------------------------------
         auto ForceRegisterLogger(LoggerPtr logger, StrView key)
         {
@@ -143,7 +126,8 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Overload for void ForceRegisterLogger(LoggerPtr logger, StrView key) for performance.
         ///
-        /// @PARAM[IN] key RValue reference to Str, to avoid allocating memory to store the key.
+        /// # Parameters
+        /// - `key`: RValue reference to Str, to avoid allocating memory to store the key.
         /// ----------------------------------------------------------------------------------------
         auto ForceRegisterLogger(LoggerPtr logger, Str&& key)
         {
@@ -156,7 +140,8 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Tries to register logger with its name.
         ///
-        /// @PARAM[IN] logger Logger to register.
+        /// # Parameters
+        /// - `logger`: Logger to register.
         /// ----------------------------------------------------------------------------------------
         auto TryRegisterLogger(LoggerPtr logger) -> bool
         {
@@ -177,8 +162,9 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Tries to register logger with specified key.
         ///
-        /// @PARAM[IN] logger Logger to register.
-        /// @PARAM[IN] key Str used as key to register logger.
+        /// # Parameters
+        /// - `logger`: Logger to register.
+        /// - `key`: Str used as key to register logger.
         /// ----------------------------------------------------------------------------------------
         auto TryRegisterLogger(LoggerPtr logger, StrView key) -> bool
         {
@@ -199,7 +185,8 @@ namespace Atom::Logging
         /// Overload for bool TryRegisterLogger(LoggerPtr logger, StrView key) for
         /// performance.
         ///
-        /// @PARAM[IN] key RValue reference to Str, to avoid allocating memory to store the key.
+        /// # Parameters
+        /// - `key`: RValue reference to Str, to avoid allocating memory to store the key.
         /// ----------------------------------------------------------------------------------------
         auto TryRegisterLogger(LoggerPtr logger, Str&& key) -> bool
         {
@@ -218,10 +205,6 @@ namespace Atom::Logging
 
         /// ----------------------------------------------------------------------------------------
         /// Unregisters the logger registered with key {key}.
-        ///
-        /// @THROWS InvalidArgErr Asserts {!key.isEmpty()}.
-        ///
-        /// @EXCEPTION_SAFETY VeryStrong
         /// ----------------------------------------------------------------------------------------
         auto UnregisterLogger(StrView key) -> bool
         {
@@ -241,12 +224,11 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Unregisters and returns the logger registered with key {key}.
         ///
-        /// @PARAM[IN] key Key used to register the logger.
-        /// @RETURNS Logger registered with key {key}. If no logger was registered returns nullptr.
-        ///
-        /// @THROWS InvalidArgErr Asserts {!key.isEmpty()}.
-        ///
-        /// @EXCEPTION_SAFETY VeryStrong
+        /// # Parameters
+        /// - `key`: Key used to register the logger.
+        /// 
+        /// # Retuns
+        /// Logger registered with key {key}. If no logger was registered returns nullptr.
         /// ----------------------------------------------------------------------------------------
         auto UnregisterAndGetLogger(StrView key) -> LoggerPtr
         {
@@ -279,14 +261,6 @@ namespace Atom::Logging
             return _hasLogger(key);
         }
 
-        ////
-        ///-------------------------------------------------------------------------------------------
-        //// DefaultLogger
-        ////
-        //// DefaultLogger is cached for faster retrieval.
-        ////
-        ///-------------------------------------------------------------------------------------------
-
     public:
         /// ----------------------------------------------------------------------------------------
         /// Get the default logger
@@ -303,7 +277,8 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Set the default logger.
         ///
-        /// @PARAM[IN] logger Logger to set as default logger. If null sets a fake logger instead.
+        /// # Parameters
+        /// - `logger`: Logger to set as default logger. If null sets a fake logger instead.
         /// ----------------------------------------------------------------------------------------
         auto SetDefaultLogger(LoggerPtr logger) -> void
         {
@@ -315,15 +290,14 @@ namespace Atom::Logging
             _defaultLogger = logger;
         }
 
-        ////
-        ///-------------------------------------------------------------------------------------------
-        //// Iteration
-        ////
-        ///-------------------------------------------------------------------------------------------
+    //// -------------------------------------------------------------------------------------------
+    //// Iteration
+    //// -------------------------------------------------------------------------------------------
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// @RETURNS TIter to first Key-Logger pair.
+        /// # Retuns
+        /// TIter to first Key-Logger pair.
         /// ----------------------------------------------------------------------------------------
         auto iter() const -> TIter
         {
@@ -331,31 +305,19 @@ namespace Atom::Logging
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// @RETURNS TIter to last Key-Logger pair.
+        /// # Retuns
+        /// TIter to last Key-Logger pair.
         /// ----------------------------------------------------------------------------------------
         auto iterEnd() const -> TIter
         {
             return _loggers.cend();
         }
 
-        ////
-        ///-------------------------------------------------------------------------------------------
-        //// Implementation functions
-        ////
-        //// These function generally don't throw exceptions at runtime.
-        //// This promotes code usability with flexibility and no performance overhead.
-        ////
-        //// However these functions have some expectations and may throw in DEBUG mode if
-        //// expectations are not met.
-        ////
-        ///-------------------------------------------------------------------------------------------
+    //// -------------------------------------------------------------------------------------------
+    //// Implementation functions
+    //// -------------------------------------------------------------------------------------------
 
     protected:
-        /// ----------------------------------------------------------------------------------------
-        ///
-        ///
-        /// @EXCEPTION_SAFETY VeryStrong
-        /// ----------------------------------------------------------------------------------------
         auto _registerLogger(LoggerPtr logger, Str key) -> void
         {
             debug_expects(logger != nullptr);
@@ -364,10 +326,6 @@ namespace Atom::Logging
             _loggers.insert({ mov(key), mov(logger) });
         }
 
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// @EXCEPTION_SAFETY VeryStrong
-        /// ----------------------------------------------------------------------------------------
         auto _forceRegisterLogger(LoggerPtr logger, Str key) -> void
         {
             debug_expects(logger != nullptr);
@@ -376,10 +334,7 @@ namespace Atom::Logging
             _loggers.insert_or_assign(mov(key), mov(logger));
         }
 
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// @EXCEPTION_SAFETY VeryStrong
-        /// ----------------------------------------------------------------------------------------
+
         auto _UnregisterLogger(StrView key) -> LoggerPtr
         {
             auto it = _FindEntry(key);
@@ -409,9 +364,6 @@ namespace Atom::Logging
             return false;
         }
 
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
         auto _FindEntry(StrView key) const -> TIter
         {
             auto it = iter();
