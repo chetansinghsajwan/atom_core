@@ -89,7 +89,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        virtual auto Subscribe(InvokableBox<_TSignature>&& invokable) -> EventKey ofinal
+        virtual auto Subscribe(InvokableBox<_TSignature>&& invokable) -> EventKey override final
         {
             return _AddListener(fwd(invokable));
         }
@@ -97,7 +97,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        virtual auto Unsubscribe(EventKey key) -> usize ofinal
+        virtual auto Unsubscribe(EventKey key) -> usize override final
         {
             return _RemoveListener(key);
         }

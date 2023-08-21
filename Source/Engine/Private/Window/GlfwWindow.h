@@ -60,7 +60,7 @@ namespace Atom::Engine
         virtual auto GetSize() const -> SWindowCoords override;
         virtual auto UpdateSize() -> SWindowCoords;
 
-        virtual auto GetNative() const -> void* ofinal;
+        virtual auto GetNative() const -> void* override final;
 
         auto SetVSync(bool enable) -> void;
         auto GetVSync() const -> bool;

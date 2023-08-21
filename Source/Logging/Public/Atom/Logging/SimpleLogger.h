@@ -49,7 +49,7 @@ namespace Atom::Logging::Internal
         ///
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        auto Name() const -> StrView ofinal
+        auto Name() const -> StrView override final
         {
             return _name;
         }
@@ -99,7 +99,7 @@ namespace Atom::Logging::Internal
         ///
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
-        auto CheckLogLevel(ELogLevel lvl) const -> bool ofinal
+        auto CheckLogLevel(ELogLevel lvl) const -> bool override final
         {
             return lvl != ELogLevel::OFF && lvl >= _logLevel;
         }
