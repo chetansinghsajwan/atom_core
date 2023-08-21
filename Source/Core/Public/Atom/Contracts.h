@@ -10,7 +10,10 @@ namespace Atom
     {
         PreCondition,
         Assertion,
-        PostCondition
+        PostCondition,
+        DebugPreCondition,
+        DebugAssertion,
+        DebugPostCondition
     };
 
     consteval std::string_view _FindContractExpr(std::string_view str)
@@ -53,10 +56,13 @@ namespace Atom
         {
             switch (type)
             {
-                case ContractType::PreCondition:  return "PreCondition";
-                case ContractType::Assertion:     return "Assertion";
-                case ContractType::PostCondition: return "PostCondition";
-                default:                          return "[INVALID_VALUE]";
+                case ContractType::PreCondition:       return "PreCondition";
+                case ContractType::Assertion:          return "Assertion";
+                case ContractType::PostCondition:      return "PostCondition";
+                case ContractType::DebugPreCondition:  return "DebugPreCondition";
+                case ContractType::DebugAssertion:     return "DebugAssertion";
+                case ContractType::DebugPostCondition: return "DebugPostCondition";
+                default:                               return "[INVALID_VALUE]";
             }
         }
     };
@@ -81,7 +87,7 @@ namespace Atom
 /// ------------------------------------------------------------------------------------------------
 ///
 /// ------------------------------------------------------------------------------------------------
-#define _ATOM_CONTRACT_CHECK(type, ...) \
+#define _ATOM_CONTRACT_CHECK(type, ...)                                                            \
     ::Atom::_ContractCheck(type, ::Atom::_FindContractExpr(#__VA_ARGS__), __VA_ARGS__)
 
 /// ------------------------------------------------------------------------------------------------
@@ -102,7 +108,7 @@ namespace Atom
 /// Represents debug pre condition.
 /// ------------------------------------------------------------------------------------------------
 #define debug_expects(...)                                                                         \
-    _ATOM_DEBUG_CONTRACT_CHECK(::Atom::ContractType::PreCondition, __VA_ARGS__)
+    _ATOM_DEBUG_CONTRACT_CHECK(::Atom::ContractType::DebugPreCondition, __VA_ARGS__)
 
 /// ------------------------------------------------------------------------------------------------
 /// Represents assertion.
@@ -112,7 +118,8 @@ namespace Atom
 /// ------------------------------------------------------------------------------------------------
 /// Represents debug assertion.
 /// ------------------------------------------------------------------------------------------------
-#define debug_asserts(...) _ATOM_DEBUG_CONTRACT_CHECK(::Atom::ContractType::Assertion, __VA_ARGS__)
+#define debug_asserts(...)                                                                         \
+    _ATOM_DEBUG_CONTRACT_CHECK(::Atom::ContractType::DebugAssertion, __VA_ARGS__)
 
 /// ------------------------------------------------------------------------------------------------
 /// Represents post condition.
@@ -124,7 +131,7 @@ namespace Atom
 /// Represents debug post condition.
 /// ------------------------------------------------------------------------------------------------
 // #define debug_ensures(...)                                                                         \
-//     _ATOM_DEBUG_CONTRACT_CHECK(::Atom::ContractType::PostCondition, __VA_ARGS__)
+//     _ATOM_DEBUG_CONTRACT_CHECK(::Atom::ContractType::DebugPostCondition, __VA_ARGS__)
 #define debug_ensures(...)
 
 /// ------------------------------------------------------------------------------------------------
@@ -133,4 +140,3 @@ namespace Atom
 #define panic(...) ::Atom::_Panic(__VA_ARGS__);
 
 #define fnret 0
-#define static_expects(...) static_assert(__VA_ARGS__)
