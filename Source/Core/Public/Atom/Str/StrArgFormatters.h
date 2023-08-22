@@ -32,16 +32,12 @@ namespace Atom
     class StrFmtErr: public Err
     {
     public:
-        StrFmtErr(ErrMsg msg): Err(mov(msg)) {}
+        StrFmtErr(StdStrView msg):
+            Err{ msg } {}
 
-        /// ----------------------------------------------------------------------------------------
-        /// @TODO Fix this ugly code.
-        /// ----------------------------------------------------------------------------------------
     public:
-        StrFmtErr(const _FmtFmtEx& fmtEx): Err("Not implemented.") {}
-        // StrFmtErr(const _FmtFmtEx& fmtEx):
-        // 	Err(CharEncodingConverter<UTF8CharEncoding, CharEncoding>()
-        // 		.Convert(UTF8StrView{ (const char8*)fmtEx.what() }.iter()).data()) { }
+        StrFmtErr(const _FmtFmtEx& fmtEx):
+            Err{ fmtEx.what() } {}
     };
 
     /// --------------------------------------------------------------------------------------------

@@ -16,7 +16,7 @@ namespace Atom
         DebugPostCondition
     };
 
-    consteval std::string_view _FindContractExpr(std::string_view str)
+    consteval StdStrView _FindContractExpr(StdStrView str)
     {
         usize i = str.find(',');
         return { str.data(), i };
@@ -26,8 +26,8 @@ namespace Atom
     {
     public:
         ContractType type;
-        std::string_view msg;
-        std::string_view expr;
+        StdStrView msg;
+        StdStrView expr;
         SourceLineInfo src;
     };
 
@@ -52,7 +52,7 @@ namespace Atom
         }
 
     private:
-        constexpr auto _toStr(ContractType type) -> std::string_view
+        constexpr auto _toStr(ContractType type) -> StdStrView
         {
             switch (type)
             {
@@ -67,8 +67,8 @@ namespace Atom
         }
     };
 
-    constexpr auto _ContractCheck(ContractType type, std::string_view expr, bool assert,
-        std::string_view msg = "", SourceLineInfo src = SourceLineInfo::current())
+    constexpr auto _ContractCheck(ContractType type, StdStrView expr, bool assert,
+        StdStrView msg = "", SourceLineInfo src = SourceLineInfo::current())
     {
         if (assert)
             return;
@@ -77,7 +77,7 @@ namespace Atom
         DefaultContractViolationHandler().handle(violation);
     }
 
-    inline auto _Panic(std::string_view msg)
+    inline auto _Panic(StdStrView msg)
     {
         std::cerr << msg << std::endl;
         std::terminate();

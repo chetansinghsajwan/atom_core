@@ -45,4 +45,6 @@ namespace Atom
 
     using NullType = std::nullptr_t;
     using TypeInfo = std::type_info;
+
+    using StdStrView = std::string_view;
 }
