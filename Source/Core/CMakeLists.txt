@@ -15,7 +15,6 @@ target_compile_definitions(Atom.Core PRIVATE ATOM_EXPORT)
 
 target_link_libraries(Atom.Core PUBLIC WjCryptLib)
 target_link_libraries(Atom.Core PUBLIC fmt::fmt-header-only)
-target_link_libraries(Atom.Core PUBLIC utf-cpp)
 
 # --------------------------------------------------------------------------------------------------
 # Atom.Core.Tests
