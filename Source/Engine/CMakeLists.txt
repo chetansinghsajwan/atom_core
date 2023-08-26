@@ -2,6 +2,8 @@
 # Atom.Engine
 # --------------------------------------------------------------------------------------------------
 
+find_package(glfw3 CONFIG REQUIRED)
+
 file(GLOB_RECURSE SOURCES "Private/**.cpp"
     "Private/**.h" "Public/**.h")
 

@@ -2,6 +2,9 @@
 # Atom.Core
 # --------------------------------------------------------------------------------------------------
 
+find_package(fmt CONFIG REQUIRED)
+find_package(Catch2 CONFIG REQUIRED)
+
 file(GLOB_RECURSE SOURCES "Private/**.cpp"
     "Private/**.h" "Public/**.h")
 
@@ -11,7 +14,7 @@ target_include_directories(Atom.Core PUBLIC "Public/")
 target_compile_definitions(Atom.Core PRIVATE ATOM_EXPORT)
 
 target_link_libraries(Atom.Core PUBLIC WjCryptLib)
-target_link_libraries(Atom.Core PUBLIC fmt)
+target_link_libraries(Atom.Core PUBLIC fmt::fmt-header-only)
 target_link_libraries(Atom.Core PUBLIC utf-cpp)
 
 # --------------------------------------------------------------------------------------------------

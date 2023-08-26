@@ -15,6 +15,8 @@ target_link_libraries(Atom.Logging PUBLIC Atom.Core)
 # Atom.Logging Tests
 # --------------------------------------------------------------------------------------------------
 
+find_package(Catch2 CONFIG REQUIRED)
+
 file(GLOB_RECURSE TEST_SOURCES "Tests/**.cpp")
 
 add_executable(Atom.Logging.Tests ${TEST_SOURCES})
