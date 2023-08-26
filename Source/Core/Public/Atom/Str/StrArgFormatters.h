@@ -49,13 +49,13 @@ namespace Atom
         constexpr StrFmtParseCtx(_FmtFmtParseCtx& fmtCtx): _fmtCtx{ fmtCtx } {}
 
     public:
-        auto GetRange() -> StrView
+        constexpr auto GetRange() -> StrView
         {
             auto range = Range(_fmtCtx.begin(), _fmtCtx.end());
             return StrView(range);
         }
 
-        auto AdvanceTo(ArrIter<Char> it)
+        constexpr auto AdvanceTo(ArrIter<Char> it)
         {
             _fmtCtx.advance_to(it.data());
         }
@@ -143,7 +143,7 @@ namespace Atom
     class StrFmtArgFmterImpl<StrView>
     {
     public:
-        auto Parse(StrFmtParseCtx& ctx)
+        constexpr auto Parse(StrFmtParseCtx& ctx)
         {
             _FmtFmtParseCtx& fmtCtx = ctx._fmtCtx;
 
@@ -186,7 +186,7 @@ namespace Atom
     class StrFmtArgFmterImpl<T>: public StrFmtArgFmter<StrView>
     {
     public:
-        constexpr auto Fmt(const T& in, StrFmtCtx& ctx)
+        auto Fmt(const T& in, StrFmtCtx& ctx)
         {
             StrFmtArgFmter<StrView>::Fmt(convter.Convert(in), ctx);
         }
@@ -226,14 +226,14 @@ namespace fmt
     class formatter<T, Atom::Char>
     {
     public:
-        auto parse(Atom::_FmtFmtParseCtx& fmtCtx) -> Atom::_FmtFmtParseCtxIter
+        constexpr auto parse(Atom::_FmtFmtParseCtx& fmtCtx) -> Atom::_FmtFmtParseCtxIter
         {
             Atom::StrFmtParseCtx ctx(fmtCtx);
             this->fmter.Parse(ctx);
             return fmtCtx.begin();
         }
 
-        auto format(const T& in, Atom::_FmtFmtCtx& fmtCtx) -> Atom::_FmtFmtCtxOut
+        constexpr auto format(const T& in, Atom::_FmtFmtCtx& fmtCtx) -> Atom::_FmtFmtCtxOut
         {
             Atom::StrFmtCtx ctx(fmtCtx);
             this->fmter.Fmt(in, ctx);

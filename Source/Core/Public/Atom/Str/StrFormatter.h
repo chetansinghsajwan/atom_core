@@ -91,7 +91,7 @@ namespace Atom
             try
             {
                 fmt::detail::vformat_to<Char>(buf, fmt,
-                    fmt::make_format_args<fmt::buffer_context<Char>>(fwd(args)...),
+                    fmt::make_format_args<fmt::buffer_context<Char>>(args...),
                     fmt::detail::locale_ref{});
             }
             catch (const _FmtFmtEx& err)
