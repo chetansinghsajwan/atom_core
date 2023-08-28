@@ -1,6 +1,7 @@
 {
     "version": 4,
     "include": [
+        "CMake/WinPreset.json",
         "CMake/NixPreset.json"
     ]
 }
