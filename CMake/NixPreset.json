@@ -1,0 +1,16 @@
+{
+    "version": 4,
+    "configurePresets": [
+        {
+            "name": "nix",
+            "generator": "Unix Makefiles",
+            "binaryDir": "${sourceDir}/Build/Nix-Make-Debug"
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "nix",
+            "configurePreset": "nix"
+        }
+    ]
+}
