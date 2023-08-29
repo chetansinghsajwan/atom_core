@@ -73,11 +73,11 @@ namespace Atom::TTI
 /// ------------------------------------------------------------------------------------------------
 /// ATOM_ATTR_NO_UNIQUE_ADDRESS
 /// ------------------------------------------------------------------------------------------------
-#if defined(ATOM_COMPILER_CLANG)
+#if defined(ATOM_COMP_CLANG)
 #    define ATOM_ATTR_NO_UNIQUE_ADDRESS
 
-#elif defined(ATOM_COMPILER_MSVC)
-#    if (ATOM_COMPILER_MSVC_VER >= 1929)
+#elif defined(ATOM_COMP_MSVC)
+#    if (ATOM_COMP_MSVC_VER >= 1929)
 #        define ATOM_ATTR_NO_UNIQUE_ADDRESS [[msvc::no_unique_address]]
 #    else
 #        define ATOM_ATTR_NO_UNIQUE_ADDRESS [[no_unique_address]]
