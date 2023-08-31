@@ -35,8 +35,8 @@
 //// -----------------------------------------------------------------------------------------------
 
 #if defined(ATOM_COMP_MSVC)
-#    define ATOM_PRAGMA_OPTIMIZE_OFF _Pragma("optimize("", off)");
-#    define ATOM_PRAGMA_OPTIMIZE_ON _Pragma("optimize("", on)");
+#    define ATOM_PRAGMA_OPTIMIZE_OFF _Pragma("optimize(\"\", off)");
+#    define ATOM_PRAGMA_OPTIMIZE_ON _Pragma("optimize(\"\", on)");
 #elif defined(ATOM_COMP_GNUC)
 #    define ATOM_PRAGMA_OPTIMIZE_OFF _Pragma("GCC push_options") _Pragma("GCC optimize(\"O0\")")
 #    define ATOM_PRAGMA_OPTIMIZE_ON _Pragma("GCC pop_options")
