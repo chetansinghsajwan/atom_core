@@ -3,11 +3,17 @@
     "configurePresets": [
         {
             "name": "config-debug",
-            "hidden": true
+            "hidden": true,
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
         },
         {
             "name": "config-release",
-            "hidden": true
+            "hidden": true,
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
         }
     ],
     "buildPresets": [
