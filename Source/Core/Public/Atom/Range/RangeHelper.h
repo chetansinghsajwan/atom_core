@@ -42,7 +42,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-#pragma optimize("", off)
+ATOM_PRAGMA_OPTIMIZE_OFF
 
         template <class TRange, typename T>
             requires RMutRange<TRange> and RAssignable<typename TRange::TElem, T>
@@ -51,7 +51,7 @@ namespace Atom
             _Fill(range.iter(), range.iterEnd(), fwd(val));
         }
 
-#pragma optimize("", on)
+ATOM_PRAGMA_OPTIMIZE_ON
 
         /// ----------------------------------------------------------------------------------------
         ///

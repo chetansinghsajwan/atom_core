@@ -125,14 +125,14 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-#pragma optimize("", off)
+ATOM_PRAGMA_OPTIMIZE_OFF
 
         template <typename T1>
         constexpr auto writeElemsNoOptimize(T1& val) const -> void
             requires(RAssignable<TElem, T1>)
         {}
 
-#pragma optimize("", on)
+ATOM_PRAGMA_OPTIMIZE_ON
 
         /// ----------------------------------------------------------------------------------------
         ///

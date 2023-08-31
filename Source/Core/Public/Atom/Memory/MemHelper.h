@@ -52,17 +52,18 @@ namespace Atom
             _Fill(mem.mem, mem.count, val);
         }
 
-/// ----------------------------------------------------------------------------------------
-/// Same as {Fill(...)}, but the call will not be optimized away.
-/// ----------------------------------------------------------------------------------------
-#pragma optimize("", off)
+        /// ----------------------------------------------------------------------------------------
+        /// Same as {Fill(...)}, but the call will not be optimized away.
+        /// ----------------------------------------------------------------------------------------
+ATOM_PRAGMA_OPTIMIZE_OFF
 
+        // __attribute__((optimize("O0")))
         constexpr auto FillExplicit(MemBlk mem, MemUnit val) const
         {
             Fill(mem, val);
         }
 
-#pragma optimize("", on)
+ATOM_PRAGMA_OPTIMIZE_ON
 
         /// ----------------------------------------------------------------------------------------
         /// Copies each mem unit from mem block {src} to mem block {dest} using fwd iteration.
