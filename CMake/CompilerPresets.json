@@ -6,7 +6,8 @@
             "hidden": true,
             "cacheVariables": {
                 "CMAKE_C_COMPILER": "gcc",
-                "CMAKE_CXX_COMPILER": "g++"
+                "CMAKE_CXX_COMPILER": "g++",
+                "VCPKG_TARGET_TRIPLET": "x64-mingw-static"
             }
         },
         {
