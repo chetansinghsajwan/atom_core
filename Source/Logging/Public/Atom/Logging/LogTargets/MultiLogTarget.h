@@ -1,8 +1,5 @@
 #pragma once
-#include "Atom/Containers.h"
-#include "Atom/Exceptions.h"
-#include "Atom/Logging/LogTarget.h"
-#include "Atom/Memory.h"
+#include "Atom/CoreAll.h"
 
 namespace Atom::Logging::Private
 {

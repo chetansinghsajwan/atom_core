@@ -1,11 +1,8 @@
 #pragma once
-#include "Atom/Core/Result.h"
-#include "Atom/Containers.h"
-#include "Atom/Exceptions.h"
+#include "Atom/CoreAll.h"
 #include "Atom/Logging/Logger.h"
 #include "Atom/Logging/LoggerFactory.h"
 #include "Atom/Logging/NullLogger.h"
-#include "Atom/Str.h"
 
 namespace Atom::Logging
 {    

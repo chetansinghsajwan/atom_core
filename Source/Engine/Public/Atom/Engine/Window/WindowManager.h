@@ -1,7 +1,6 @@
 #pragma once
-#include "Atom/Core.h"
+#include "Atom/CoreAll.h"
 #include "Atom/Engine/Window/Window.h"
-#include "Atom/Memory.h"
 
 namespace Atom::Engine
 {

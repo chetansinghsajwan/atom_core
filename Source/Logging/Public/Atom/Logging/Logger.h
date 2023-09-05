@@ -1,5 +1,5 @@
 #pragma once
-#include "Atom/Memory.h"
+#include "Atom/CoreAll.h"
 #include "LogMsg.h"
 
 namespace Atom::Logging

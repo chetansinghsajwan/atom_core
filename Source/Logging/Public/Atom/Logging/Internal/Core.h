@@ -1,7 +1,5 @@
 #pragma once
-#include "Atom/Core.h"
-#include "Atom/Str.h"
-#include "Atom/TTI.h"
+#include "Atom/CoreAll.h"
 
 namespace Atom
 {

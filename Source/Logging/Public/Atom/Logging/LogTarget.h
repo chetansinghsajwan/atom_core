@@ -1,6 +1,6 @@
 #pragma once
+#include "Atom/CoreAll.h"
 #include "Atom/Logging/LogMsg.h"
-#include "Atom/Memory/SharedPtr.h"
 
 namespace Atom::Logging
 {

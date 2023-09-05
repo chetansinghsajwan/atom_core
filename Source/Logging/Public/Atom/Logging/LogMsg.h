@@ -3,8 +3,7 @@
 
 #include "Internal/Core.h"
 
-#include "Atom/Chrono.h"
-#include "Atom/Str.h"
+#include "Atom/CoreAll.h"
 
 namespace Atom::Logging
 {

@@ -1,9 +1,5 @@
 #pragma once
-#include "Atom/Core.h"
-#include "Atom/Invokable.h"
-#include "Atom/Math.h"
-#include "Atom/Memory.h"
-#include "Atom/Str.h"
+#include "Atom/CoreAll.h"
 
 namespace Atom::Engine
 {
