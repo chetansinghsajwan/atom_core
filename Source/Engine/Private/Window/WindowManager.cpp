@@ -24,7 +24,7 @@ namespace Atom::Engine
             i32 success = glfwInit();
             asserts(success, "GLFW initialization failed.");
 
-            glfwSetErrorCallback([](i32 error_code, const char* description) {
+            glfwSetErrorCallback([](_i32 error_code, const char* description) {
                 // TODO: Fix this compilation error.
                 // LOG_FATAL("GLFW Error: ", description);
             });

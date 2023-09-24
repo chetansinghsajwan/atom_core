@@ -17,9 +17,9 @@ namespace Atom::Engine
         glfwMakeContextCurrent(_glfwWindow);
         glfwSetWindowUserPointer(_glfwWindow, this);
 
-        glfwSetWindowPosCallback(_glfwWindow, [](GLFWwindow* glfwWindow, i32 xpos, i32 ypos) {
-            GlfwWindow& window =
-                *reinterpret_cast<GlfwWindow*>(glfwGetWindowUserPointer(glfwWindow));
+        glfwSetWindowPosCallback(_glfwWindow, [](GLFWwindow* glfwWindow, _i32 xpos, _i32 ypos) {
+            GlfwWindow& window = *reinterpret_cast<GlfwWindow*>(
+                glfwGetWindowUserPointer(glfwWindow));
 
             SWindowCoords oldPos = window._windowPos;
             SWindowCoords newPos = GlfwWindowCoordsConverter::FromGLFW({ xpos, ypos });
@@ -28,9 +28,9 @@ namespace Atom::Engine
             window._windowEventSource.Dispatch(SWindowRepositionEvent(newPos, newPos - oldPos));
         });
 
-        glfwSetWindowSizeCallback(_glfwWindow, [](GLFWwindow* glfwWindow, i32 width, i32 height) {
-            GlfwWindow& window =
-                *reinterpret_cast<GlfwWindow*>(glfwGetWindowUserPointer(glfwWindow));
+        glfwSetWindowSizeCallback(_glfwWindow, [](GLFWwindow* glfwWindow, _i32 width, _i32 height) {
+            GlfwWindow& window = *reinterpret_cast<GlfwWindow*>(
+                glfwGetWindowUserPointer(glfwWindow));
 
             SWindowCoords oldSize = window._windowSize;
             SWindowCoords newSize = GlfwWindowCoordsConverter::FromGLFW({ width, height });
@@ -77,10 +77,11 @@ namespace Atom::Engine
 
     auto GlfwWindow::UpdatePos() -> SWindowCoords
     {
-        GlfwSWindowCoords glfwPos;
-        glfwGetWindowPos(_glfwWindow, &glfwPos.x, &glfwPos.y);
+        int x;
+        int y;
+        glfwGetWindowPos(_glfwWindow, &x, &y);
 
-        return GlfwWindowCoordsConverter::FromGLFW(glfwPos);
+        return GlfwWindowCoordsConverter::FromGLFW(GlfwSWindowCoords{ x, y });
     }
 
     auto GlfwWindow::SetSize(SWindowCoords size) -> void
@@ -98,10 +99,11 @@ namespace Atom::Engine
 
     auto GlfwWindow::UpdateSize() -> SWindowCoords
     {
-        GlfwSWindowCoords glfwSize;
-        glfwGetWindowSize(_glfwWindow, &glfwSize.x, &glfwSize.y);
+        int x;
+        int y;
+        glfwGetWindowSize(_glfwWindow, &x, &y);
 
-        _windowSize = GlfwWindowCoordsConverter::FromGLFW(glfwSize);
+        _windowSize = GlfwWindowCoordsConverter::FromGLFW(GlfwSWindowCoords{ x, y });
         return _windowSize;
     }
 

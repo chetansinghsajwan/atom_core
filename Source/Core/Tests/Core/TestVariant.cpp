@@ -326,7 +326,7 @@ TEST_CASE("Atom.Core.Variant")
         REQUIRE(v.is<char>());
         REQUIRE(v.as<char>() == 'h');
 
-        v.set(99);
+        v.set(i32{ 99 });
 
         REQUIRE(v.index() == 0);
         REQUIRE(v.is<i32>());

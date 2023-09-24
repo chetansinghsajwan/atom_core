@@ -4,7 +4,14 @@
 
 namespace Atom
 {
-    using Str = BasicStr<CharEncoding>;
+    class Str: public BasicStr<CharEncoding>
+    {
+        using Base = BasicStr<CharEncoding>;
+
+    public:
+        using Base::Base;
+        using Base::operator=;
+    };
 }
 
 namespace std

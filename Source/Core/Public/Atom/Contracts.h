@@ -19,7 +19,7 @@ namespace Atom
     consteval StdStrView _FindContractExpr(StdStrView str)
     {
         usize i = str.find(',');
-        return { str.data(), i };
+        return { str.data(), i.val() };
     }
 
     class ContractViolation
@@ -45,8 +45,8 @@ namespace Atom
             std::cout << "Contracts " << _toStr(violation.type) << " Violation: "
                       << "'" << violation.expr << "'\n\t"
                       << "with msg: " << violation.msg << "'\n\t"
-                      << "at: " << violation.src.fileName << ":" << violation.src.line << ":"
-                      << violation.src.column << ": " << violation.src.funcName << std::endl;
+                      << "at: " << violation.src.fileName << ":" << violation.src.line.val() << ":"
+                      << violation.src.column.val() << ": " << violation.src.funcName << std::endl;
 
             std::terminate();
         }

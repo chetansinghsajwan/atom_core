@@ -9,6 +9,6 @@ namespace Atom
         using _Types = TypeList<Ts...>;
 
     public:
-        alignas(_Types::MaxAlign) byte storage[_Types::MaxSize];
+        alignas(_Types::MaxAlign.val()) byte storage[_Types::MaxSize];
     };
 }

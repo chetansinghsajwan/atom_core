@@ -656,7 +656,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Stack Memory.
         /// ----------------------------------------------------------------------------------------
-        ATOM_CONDITIONAL_FIELD(StackSize > 0, byte[StackSize]) _stackMem;
+        ATOM_CONDITIONAL_FIELD(StackSize > 0, byte[StackSize.val()]) _stackMem;
 
         /// ----------------------------------------------------------------------------------------
         /// Memory Allocator.

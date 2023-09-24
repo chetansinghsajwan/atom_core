@@ -72,7 +72,7 @@ namespace Atom
             return &*this->iter;
         }
 
-        constexpr auto operator++(i32) -> IterWrap&
+        constexpr auto operator++(int) -> IterWrap&
         {
             this->iter++;
             return *this;
@@ -166,7 +166,7 @@ namespace Atom
             : Base{ iter }
         {}
 
-        constexpr auto operator--(i32) -> BidiIterWrap&
+        constexpr auto operator--(int) -> BidiIterWrap&
         {
             this->iter--;
             return *this;

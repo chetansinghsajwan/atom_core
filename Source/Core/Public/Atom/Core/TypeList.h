@@ -315,7 +315,7 @@ namespace Atom
         class AreUnique<T, Ts...>
         {
         public:
-            static constexpr bool Value = !Has<T, Ts...>::Value && AreUnique<Ts...>::Value;
+            static constexpr bool Value = not Has<T, Ts...>::Value and AreUnique<Ts...>::Value;
         };
     };
 

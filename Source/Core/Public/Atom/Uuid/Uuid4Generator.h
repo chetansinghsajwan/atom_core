@@ -6,13 +6,17 @@
 
 namespace Atom
 {
-    template <typename TUniformRandomNumberGenerator>
+    /// --------------------------------------------------------------------------------------------
+    /// # Template Parameters
+    /// 
+    /// - `TGenerator`: Uniform random number generator.
+    /// --------------------------------------------------------------------------------------------
+    template <typename TGenerator>
     class BasicUuidRandomGenerator
     {
     public:
         explicit BasicUuidRandomGenerator(u32 seed = 0)
-            : _generator{ seed }
-        {}
+            : _generator{ seed } {}
 
     public:
         auto generate() -> Uuid
@@ -35,8 +39,8 @@ namespace Atom
         }
 
     private:
-        UniformIntDistribution<u32> _distribution;
-        TUniformRandomNumberGenerator _generator;
+        UniformIntDistribution<_u32> _distribution;
+        TGenerator _generator;
     };
 
     /// --------------------------------------------------------------------------------------------

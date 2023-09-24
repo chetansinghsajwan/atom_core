@@ -73,7 +73,7 @@ namespace Atom
             return *this;
         }
 
-        constexpr auto operator++(i32) -> Self
+        constexpr auto operator++(int) -> Self
             requires(RIter<TIter>)
         {
             Self tmp{ iter };
@@ -88,7 +88,7 @@ namespace Atom
             return *this;
         }
 
-        constexpr auto operator--(i32) const -> Self
+        constexpr auto operator--(int) const -> Self
             requires(RBidiIter<TIter>)
         {
             Self tmp{ iter };

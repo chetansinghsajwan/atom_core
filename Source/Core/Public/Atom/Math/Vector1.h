@@ -55,7 +55,7 @@ namespace Atom
 
     constexpr auto operator==(SVector1 lhs, SVector1 rhs) -> bool
     {
-        return Math::IsApproximatelyZero(lhs.x, rhs.x);
+        return lhs.x.sub(rhs.x).eqZeroApprox();
     }
 
     constexpr auto operator!=(SVector1 lhs, SVector1 rhs) -> bool

@@ -66,7 +66,7 @@ namespace Atom
             class _OutIterWrap
             {
             public:
-                auto operator++(i32) -> _OutIterWrap&
+                auto operator++(int) -> _OutIterWrap&
                 {
                     return *this;
                 }

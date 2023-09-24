@@ -118,7 +118,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         /// Will be removed in CPP2;
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator++(i32) -> TSelf&
+        constexpr auto operator++(int) -> TSelf&
         {
             return ++*this;
         }

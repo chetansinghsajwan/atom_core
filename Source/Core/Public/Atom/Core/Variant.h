@@ -9,16 +9,16 @@ namespace Atom
     /// - Check if requirements using TypeList functionality can be made concepts.
     /// --------------------------------------------------------------------------------------------
     template <typename... Ts>
-        requires(TypeList<Ts...>::AreUnique) and (TypeList<Ts...>::Count > 0)
-                and (not TypeList<Ts...>::template Has<void>)
+    requires(TypeList<Ts...>::AreUnique) and (TypeList<Ts...>::Count > 0)
+        and (not TypeList<Ts...>::template Has<void>)
     class Variant
     {
     private:
         using _Impl = _VariantImpl<Ts...>;
 
         template <typename... TOthers>
-            requires(TypeList<TOthers...>::AreUnique) and (TypeList<TOthers...>::Count > 0)
-                    and (not TypeList<TOthers...>::template Has<void>)
+        requires(TypeList<TOthers...>::AreUnique) and (TypeList<TOthers...>::Count > 0)
+                and (not TypeList<TOthers...>::template Has<void>)
         friend class Variant;
 
         using Self = Variant<Ts...>;
