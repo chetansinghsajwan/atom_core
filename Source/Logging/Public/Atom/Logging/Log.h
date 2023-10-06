@@ -122,8 +122,6 @@ namespace Atom::Logging
     ///
     /// This is done to afn the use of macros. But if this approach fails we may fallback to
     /// macros.
-    ///
-    /// @TODO Check the overhead of this function when it should not log anything.
     /// --------------------------------------------------------------------------------------------
     template <ELogLevel lvl, RLogArg... TArgs>
     inline auto STATIC_LOG(LogStr<TArgs...> msg, TArgs&&... args)
