@@ -2,7 +2,8 @@
 #include "RangeReq.h"
 
 //// -----------------------------------------------------------------------------------------------
-#pragma region Implementations
+//// Implementations
+//// -----------------------------------------------------------------------------------------------
 
 #define _ATOM_SATISFIES_RANGE(RRange, TRange)                                                      \
     static_assert(RRange<TRange>, "{" #TRange "} does not satisfy {" #RRange "} requirements.");
@@ -15,11 +16,9 @@
     static_assert(                                                                                 \
         RRange<TRange<i32>>, "{" #TRange "} does not satisfy {" #RRange "} requirements.");
 
-#pragma endregion
 //// -----------------------------------------------------------------------------------------------
-
+//// Checks
 //// -----------------------------------------------------------------------------------------------
-#pragma region Checks
 
 #define ATOM_SATISFIES_RANGE(TRange) _ATOM_SATISFIES_RANGE(RRange, TRange)
 #define ATOM_SATISFIES_RANGE_OF(TRange, T) _ATOM_SATISFIES_RANGE_OF(RRangeOf, TRange, T)
@@ -82,6 +81,3 @@
 #define ATOM_SATISFIES_MUT_COMMON_RANGE(TRange) _ATOM_SATISFIES_RANGE(RMutCommonRange, TRange)
 #define ATOM_SATISFIES_MUT_COMMON_RANGE_TEMP(TRange)                                               \
     _ATOM_SATISFIES_RANGE_TEMP(RMutCommonRange, TRange)
-
-#pragma endregion
-//// -----------------------------------------------------------------------------------------------
