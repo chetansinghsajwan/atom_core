@@ -14,26 +14,16 @@ namespace Atom::Logging::Internal
     {
     public:
         /// ----------------------------------------------------------------------------------------
-        /// Default constructs LogTargetBase().
+        /// # Default Constructor
         /// ----------------------------------------------------------------------------------------
-        LogTargetBase()
-            : _logLevel(ELogLevel::Debug)
-            , _flushLevel(ELogLevel::Info)
-            , _hasWritten(false)
-            , _alwaysFlush(false)
+        LogTargetBase():
+            _logLevel(ELogLevel::Debug), _flushLevel(ELogLevel::Info), _hasWritten(false),
+            _alwaysFlush(false)
         {}
-
-    //// -------------------------------------------------------------------------------------------
-    //// API Functions
-    //// -------------------------------------------------------------------------------------------
 
     public:
         /// ----------------------------------------------------------------------------------------
         /// Filters and Formats the LogMsg and passes it to write.
-        ///
-        /// @EXCEPTION_SAFETY Strong.
-        ///
-        /// @SEE _Write().
         /// ----------------------------------------------------------------------------------------
         virtual auto Write(const LogMsg& logMsg) -> void override final
         {
@@ -57,9 +47,7 @@ namespace Atom::Logging::Internal
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Flushes if {ShouldFlush() == true}.
-        ///
-        /// @EXCEPTION_SAFETY Strong.
+        /// Flushes if `[`ShouldFlush()`] == true`.
         /// ----------------------------------------------------------------------------------------
         virtual auto Flush() -> void override final
         {
@@ -116,7 +104,7 @@ namespace Atom::Logging::Internal
 
         /// ----------------------------------------------------------------------------------------
         /// Checks if should flush after logging the message of specified level.
-        /// It also asks ShouldFlush().
+        /// It also asks [`ShouldFlush()`].
         /// ----------------------------------------------------------------------------------------
         auto CheckFlushLevel(ELogLevel lvl) const -> bool
         {
@@ -133,16 +121,13 @@ namespace Atom::Logging::Internal
         /// ----------------------------------------------------------------------------------------
         /// Checks if we should flush.
         ///
-        /// @RETURNS {true} if there has been a log since last flush, else {false}.
+        /// # Returns
+        /// `true` if there has been a log since last flush, else `false`.
         /// ----------------------------------------------------------------------------------------
         auto ShouldFlush() const -> bool
         {
             return _alwaysFlush || _hasWritten;
         }
-
-    //// -------------------------------------------------------------------------------------------
-    //// Implementation Functions
-    //// -------------------------------------------------------------------------------------------
 
     protected:
         /// ----------------------------------------------------------------------------------------
@@ -157,10 +142,6 @@ namespace Atom::Logging::Internal
         /// Flush implementation.
         /// ----------------------------------------------------------------------------------------
         virtual auto _Flush() -> void abstract;
-
-    //// -------------------------------------------------------------------------------------------
-    //// Variables
-    //// -------------------------------------------------------------------------------------------
 
     protected:
         /// ----------------------------------------------------------------------------------------
