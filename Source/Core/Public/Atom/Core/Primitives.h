@@ -13,7 +13,7 @@ namespace Atom
 
     class _NumId {};
 
-    template <typename T>
+    template <typename T, typename TLimits = std::numeric_limits<T>>
     class Num: public _NumId
     {
         using _T = T;
@@ -29,7 +29,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         static consteval auto Min() -> Self
         {
-            return Self{ std::numeric_limits<T>::min() };
+            return Self{ TLimits::min() };
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -37,7 +37,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         static consteval auto Max() -> Self
         {
-            return Self{ std::numeric_limits<T>::max() };
+            return Self{ TLimits::max() };
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -267,6 +267,16 @@ namespace Atom
         constexpr auto operator*(N num) const -> Self
         {
             return mul(num);
+        /// ----------------------------------------------------------------------------------------
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        template <typename N>
+        constexpr auto checkedAddAssign(N u) -> Self&
+        {
+            _val += u;
+            return _self();
+        }
+
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -595,12 +605,6 @@ namespace Atom
 
 namespace Atom
 {
-    using byte = unsigned char;
-
-    using char8 = char8_t;
-    using char16 = char16_t;
-    using char32 = char32_t;
-
     using _i8 = int8_t;
     using _i16 = int16_t;
     using _i32 = int32_t;
@@ -610,6 +614,32 @@ namespace Atom
     using _u16 = uint16_t;
     using _u32 = uint32_t;
     using _u64 = uint64_t;
+
+    using _ileast8 = int_least8_t;
+    using _ileast16 = int_least16_t;
+    using _ileast32 = int_least32_t;
+    using _ileast64 = int_least64_t;
+
+    using _uleast8 = uint_least8_t;
+    using _uleast16 = uint_least16_t;
+    using _uleast32 = uint_least32_t;
+    using _uleast64 = uint_least64_t;
+
+    using _ifast8 = int_fast8_t;
+    using _ifast16 = int_fast16_t;
+    using _ifast32 = int_fast32_t;
+    using _ifast64 = int_fast64_t;
+
+    using _ufast8 = uint_fast8_t;
+    using _ufast16 = uint_fast16_t;
+    using _ufast32 = uint_fast32_t;
+    using _ufast64 = uint_fast64_t;
+
+    using byte = unsigned char;
+
+    using char8 = char8_t;
+    using char16 = char16_t;
+    using char32 = char32_t;
 
     using _f32 = float;
     using _f64 = double;
@@ -627,6 +657,26 @@ namespace Atom
     using u16 = Num<_u16>;
     using u32 = Num<_u32>;
     using u64 = Num<_u64>;
+
+    using ileast8 = Num<_ileast8, std::numeric_limits<_i8>>;
+    using ileast16 = Num<_ileast16, std::numeric_limits<_i16>>;
+    using ileast32 = Num<_ileast32, std::numeric_limits<_i32>>;
+    using ileast64 = Num<_ileast64, std::numeric_limits<_i64>>;
+
+    using uleast8 = Num<_uleast8, std::numeric_limits<_u8>>;
+    using uleast16 = Num<_uleast16, std::numeric_limits<_u16>>;
+    using uleast32 = Num<_uleast32, std::numeric_limits<_u32>>;
+    using uleast64 = Num<_uleast64, std::numeric_limits<_u64>>;
+
+    using ifast8 = Num<_ifast8, std::numeric_limits<_i8>>;
+    using ifast16 = Num<_ifast16, std::numeric_limits<_i16>>;
+    using ifast32 = Num<_ifast32, std::numeric_limits<_i32>>;
+    using ifast64 = Num<_ifast64, std::numeric_limits<_i64>>;
+
+    using ufast8 = Num<_ufast8, std::numeric_limits<_u8>>;
+    using ufast16 = Num<_ufast16, std::numeric_limits<_u16>>;
+    using ufast32 = Num<_ufast32, std::numeric_limits<_u32>>;
+    using ufast64 = Num<_ufast64, std::numeric_limits<_u64>>;
 
     using f32 = Num<_f32>;
     using f64 = Num<_f64>;
