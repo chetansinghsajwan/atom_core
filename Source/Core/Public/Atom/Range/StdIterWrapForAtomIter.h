@@ -26,8 +26,8 @@ namespace Atom
 
     public:
         using value_type = typename TIter::TElem;
-        using size_type = usize;
-        using difference_type = isize;
+        using size_type = _usize;
+        using difference_type = _isize;
         using iterator_category = StdIterCatForAtomIter<TIter>;
         using pointer = value_type*;
         using reference = value_type&;

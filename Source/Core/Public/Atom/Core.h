@@ -5,10 +5,9 @@
 #include "Core/Primitives.h"
 #include "Core/Requirements.h"
 
-//// -----------------------------------------------------------------------------------------------
-//// ATOM API
-//// -----------------------------------------------------------------------------------------------
-
+/// ------------------------------------------------------------------------------------------------
+/// ATOM API
+/// ------------------------------------------------------------------------------------------------
 #if ATOM_PLATFORM == ATOM_PLATFORM_WINDOWS
 #    ifdef ATOM_EXPORT
 #        define ATOM_API __declspec(dllexport)
@@ -25,15 +24,14 @@
 #    error "AtomEngine only supports Windows and Linux platform for now."
 #endif
 
-//// -----------------------------------------------------------------------------------------------
-//// Optimization handling macros.
-//// 
-//// # Macros
-//// - `ATOM_PRAGMA_OPTIMIZE_OFF`: Disables all optimization until [`ATOM_PRAGMA_OPTIMIZE_ON`] is
-////   encountered.
-//// - `ATOM_PRAGMA_OPTIMIZE_ON`: Enables optimizations disabled by [`ATOM_PRAGMA_OPTIMIZE_OFF`].
-//// -----------------------------------------------------------------------------------------------
-
+/// ------------------------------------------------------------------------------------------------
+/// Optimization handling macros.
+///
+/// # Macros
+/// - `ATOM_PRAGMA_OPTIMIZE_OFF`: Disables all optimization until [`ATOM_PRAGMA_OPTIMIZE_ON`] is
+///   encountered.
+/// - `ATOM_PRAGMA_OPTIMIZE_ON`: Enables optimizations disabled by [`ATOM_PRAGMA_OPTIMIZE_OFF`].
+/// ------------------------------------------------------------------------------------------------
 #if defined(ATOM_COMP_MSVC)
 #    define ATOM_PRAGMA_OPTIMIZE_OFF _Pragma("optimize(\"\", off)");
 #    define ATOM_PRAGMA_OPTIMIZE_ON _Pragma("optimize(\"\", on)");

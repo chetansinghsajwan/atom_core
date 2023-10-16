@@ -5,8 +5,6 @@
 #include <concepts>
 #include <type_traits>
 
-// clang-format off
-
 namespace Atom
 {
     /// --------------------------------------------------------------------------------------------
@@ -32,9 +30,11 @@ namespace Atom
 
 #define _WRAP_REQ(...) decltype([]<typename T> { return __VA_ARGS__; })
 
-//// -----------------------------------------------------------------------------------------------
-//// Basic Concepts
-//// -----------------------------------------------------------------------------------------------
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////
+    //// Basic Concepts
+    ////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures {T0} is same as {T1}.
@@ -88,10 +88,7 @@ namespace Atom
     /// Ensures {TFrom} is {Convertible} to {TTo}.
     /// --------------------------------------------------------------------------------------------
     template <typename TFrom, typename TTo>
-    concept RConvertibleTo = requires(TFrom from)
-    {
-        static_cast<TTo>(from);
-    };
+    concept RConvertibleTo = requires(TFrom from) { static_cast<TTo>(from); };
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures {TDerived} is derived from {TBase}.
@@ -118,18 +115,17 @@ namespace Atom
     template <typename TDerived, typename TBase>
     concept RNotSameOrDerivedFrom = !RSameOrDerivedFrom<TDerived, TBase>;
 
-//// -----------------------------------------------------------------------------------------------
-//// Object concepts
-//// -----------------------------------------------------------------------------------------------
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////
+    //// Object concepts
+    ////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures {T} is {Constructible} using {args...}.
     /// --------------------------------------------------------------------------------------------
     template <typename T, typename... TArgs>
-    concept RConstructible = requires(TArgs&&... args)
-    {
-        T(fwd(args)...);
-    };
+    concept RConstructible = requires(TArgs&&... args) { T(fwd(args)...); };
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures {T} is {TriviallyConstructible} using {args...}.
@@ -216,8 +212,7 @@ namespace Atom
     /// Ensures {T} is {DefaultInitializable}.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    concept RDefaultInitializable = requires
-    {
+    concept RDefaultInitializable = requires {
         requires RDefaultConstructible<T>;
 
         (void)new T;
@@ -234,9 +229,10 @@ namespace Atom
     /// Ensures {T} is {Assignable} using {from}.
     /// --------------------------------------------------------------------------------------------
     template <typename T0, typename T1>
-    concept RAssignable = requires(T0 t1, T1 t2)
-    {
-        { t1 = fwd(t2) } -> RSameAs<T0&>;
+    concept RAssignable = requires(T0 t1, T1 t2) {
+        {
+            t1 = fwd(t2)
+        } -> RSameAs<T0&>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -389,18 +385,23 @@ namespace Atom
     template <typename... Ts>
     concept RTriviallyDestructibleAll = _CheckAll<_WRAP_REQ(RTriviallyDestructible<T>), Ts...>;
 
-//// -----------------------------------------------------------------------------------------------
-//// Comparision Concepts.
-//// -----------------------------------------------------------------------------------------------
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////
+    //// Comparision Concepts.
+    ////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures {T0} and {T1} are {EqualityComparable}.
     /// --------------------------------------------------------------------------------------------
     template <typename T0, typename T1>
-    concept REqualityComparableWith = requires(T0 t1, T1 t2)
-    {
-        { t1 == t2 } -> RConvertibleTo<bool>;
-        { t1 != t2 } -> RConvertibleTo<bool>;
+    concept REqualityComparableWith = requires(T0 t1, T1 t2) {
+        {
+            t1 == t2
+        } -> RConvertibleTo<bool>;
+        {
+            t1 != t2
+        } -> RConvertibleTo<bool>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -413,14 +414,21 @@ namespace Atom
     /// Ensures {T0} and {T1} are {Comparable}.
     /// --------------------------------------------------------------------------------------------
     template <typename T0, typename T1>
-    concept RComparableWith = requires(T0 t1, T1 t2)
-    {
+    concept RComparableWith = requires(T0 t1, T1 t2) {
         requires REqualityComparableWith<T0, T1>;
 
-        { t1 < t2 } -> RConvertibleTo<bool>;
-        { t1 > t2 } -> RConvertibleTo<bool>;
-        { t1 <= t2 } -> RConvertibleTo<bool>;
-        { t1 >= t2 } -> RConvertibleTo<bool>;
+        {
+            t1 < t2
+        } -> RConvertibleTo<bool>;
+        {
+            t1 > t2
+        } -> RConvertibleTo<bool>;
+        {
+            t1 <= t2
+        } -> RConvertibleTo<bool>;
+        {
+            t1 >= t2
+        } -> RConvertibleTo<bool>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -429,9 +437,11 @@ namespace Atom
     template <typename T>
     concept RComparable = RComparableWith<T, T>;
 
-//// -----------------------------------------------------------------------------------------------
-//// Type Concepts
-//// -----------------------------------------------------------------------------------------------
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////
+    //// Type Concepts
+    ////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures {T} is {SemiRegular}.

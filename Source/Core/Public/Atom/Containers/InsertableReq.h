@@ -4,23 +4,23 @@
 namespace Atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// {Insertable} represents a type that allows inserting objs of type {Element} into it.
+    /// `Insertable` represents a type that allows inserting objects of some type into it.
     ///
-    /// {FrontInsertable} represents a type that allows inserting objs of type {Element}
+    /// `FrontInsertable` represents a type that allows inserting objects of some type
     /// into front of container.
     ///
-    /// {FrontInsertable} represents a type that allows inserting objs of type {Element}
+    /// `FrontInsertable` represents a type that allows inserting objects of some type
     /// into back of container.
     ///
-    /// {KeyInsertable} represents a type that allows inserting objs of type {Element}
+    /// `KeyInsertable` represents a type that allows inserting objects of some type
     /// at specified index of container.
     ///
-    /// {IndexInsertable} represents a type that allows inserting objs of type {Element}
+    /// `IndexInsertable` represents a type that allows inserting objects of some type
     /// at specified index of container.
     /// --------------------------------------------------------------------------------------------
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures {TInsertable} is {Insertable} for type {T}.
+    /// Ensures `TInsertable` is `Insertable` for type `T`.
     /// --------------------------------------------------------------------------------------------
     template <typename TInsertable, typename T>
     concept RInsertable = requires(TInsertable insertable, T el, RangeReqMock<T> range) {
@@ -29,7 +29,7 @@ namespace Atom
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures {TInsertable} is {FrontInsertable} for type {T}.
+    /// Ensures `TInsertable` is `FrontInsertable` for type `T`.
     /// --------------------------------------------------------------------------------------------
     template <typename TFrontInsertable, typename T>
     concept RFrontInsertable = requires(TFrontInsertable insertable, T el, RangeReqMock<T> range) {
@@ -38,7 +38,7 @@ namespace Atom
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures {TInsertable} is {BackInsertable} for type {T}.
+    /// Ensures `TInsertable` is `BackInsertable` for type `T`.
     /// --------------------------------------------------------------------------------------------
     template <typename TInsertable, typename T>
     concept RBackInsertable = requires(TInsertable insertable, T el, RangeReqMock<T> range) {
@@ -47,7 +47,7 @@ namespace Atom
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures {TInsertable} is {KeyInsertable} for type {T}.
+    /// Ensures `TInsertable` is `KeyInsertable` for type `T`.
     /// --------------------------------------------------------------------------------------------
     template <typename TInsertable, typename TKey, typename T>
     concept RKeyInsertable =
@@ -57,7 +57,7 @@ namespace Atom
         };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures {TInsertable} is {IndexInsertable} for type {T}.
+    /// Ensures `TInsertable` is `IndexInsertable` for type `T`.
     /// --------------------------------------------------------------------------------------------
     template <typename TInsertable, typename T>
     concept RIndexInsertable = RKeyInsertable<TInsertable, usize, T>;

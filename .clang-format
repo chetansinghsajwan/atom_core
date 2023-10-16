@@ -107,7 +107,7 @@ DerivePointerAlignment: false
 PointerAlignment: Left
 ReferenceAlignment: Pointer
 QualifierAlignment: Custom
-QualifierOrder: ['static', 'constexpr', 'inline', 'const', 'volatile', 'type' ]
+QualifierOrder: [ 'static', 'constexpr', 'inline', 'const', 'volatile', 'type' ]
 
 # --------------------------------------------------------------------------------------------------
 # Break
@@ -145,6 +145,7 @@ BreakBeforeTernaryOperators: true
 BreakStringLiterals: true
 BreakConstructorInitializers: AfterColon
 BreakInheritanceList: AfterColon
+AllowBreakBeforeNoexceptSpecifier: Never
 RequiresClausePosition: OwnLine
 
 # --------------------------------------------------------------------------------------------------
@@ -223,7 +224,7 @@ Cpp11BracedListStyle: false
 EmptyLineAfterAccessModifier: Never
 EmptyLineBeforeAccessModifier: LogicalBlock
 ExperimentalAutoDetectBinPacking: false
-PackConstructorInitializers: BinPack
+PackConstructorInitializers: NextLineOnly
 ReflowComments: false
 RemoveParentheses: MultipleParentheses
 RemoveSemicolon: false

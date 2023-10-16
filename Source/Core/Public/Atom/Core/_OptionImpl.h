@@ -1,6 +1,6 @@
 #pragma once
-#include "Atom/Core.h"
 #include "Atom/Contracts.h"
+#include "Atom/Core.h"
 #include "Atom/Memory/ObjHelper.h"
 
 namespace Atom
@@ -15,12 +15,12 @@ namespace Atom
     public:
         _OptionStorage() {}
 
-        _OptionStorage(NoInit)
-            : _dummy{}
+        _OptionStorage(NoInit):
+            _dummy{}
         {}
 
-        _OptionStorage(auto&&... args)
-            : _value{ fwd(args)... }
+        _OptionStorage(auto&&... args):
+            _value{ fwd(args)... }
         {}
 
         _OptionStorage(const _OptionStorage&) = default;
@@ -67,8 +67,8 @@ namespace Atom
 
         _OptionStorage(NoInit) {}
 
-        _OptionStorage(T* ptr)
-            : _ptr{ ptr }
+        _OptionStorage(T* ptr):
+            _ptr{ ptr }
         {}
 
     public:
@@ -105,14 +105,12 @@ namespace Atom
     public:
         constexpr _OptionImpl() = default;
 
-        constexpr _OptionImpl(CtorNoVal)
-            : _storage{ _StorageCtorNoInit{} }
-            , _isValue{ false }
+        constexpr _OptionImpl(CtorNoVal):
+            _storage{ _StorageCtorNoInit{} }, _isValue{ false }
         {}
 
-        constexpr _OptionImpl(auto&&... args)
-            : _storage{ fwd(args)... }
-            , _isValue{ true }
+        constexpr _OptionImpl(auto&&... args):
+            _storage{ fwd(args)... }, _isValue{ true }
         {}
 
     public:

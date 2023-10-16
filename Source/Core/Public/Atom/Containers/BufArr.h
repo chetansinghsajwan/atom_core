@@ -4,7 +4,8 @@
 namespace Atom
 {
     template <typename TAlloc>
-    class _BufArrAllocWrap: public TAlloc {};
+    class _BufArrAllocWrap: public TAlloc
+    {};
 
     template <typename T, usize bufSize, typename TAlloc>
     class BufArr: public DynArr<T, _BufArrAllocWrap<TAlloc>>

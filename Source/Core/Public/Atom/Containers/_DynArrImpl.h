@@ -1,7 +1,7 @@
 #pragma once
+#include "Atom/Contracts.h"
 #include "Atom/Core.h"
 #include "Atom/Range/ArrIter.h"
-#include "Atom/Contracts.h"
 
 #include <algorithm>
 
@@ -19,16 +19,14 @@ namespace Atom
 
     public:
         constexpr _DynArrImpl():
-            _arr{ nullptr }, _count{ 0 }, _capacity{ 0 }, _alloc{} {}
+            _arr{ nullptr }, _count{ 0 }, _capacity{ 0 }, _alloc{}
+        {}
 
         constexpr _DynArrImpl(_DynArrImpl&& that) {}
 
         template <typename UIter, typename UIterEnd>
-        constexpr _DynArrImpl(UIter it, UIterEnd itEnd) {}
-
-    //// -------------------------------------------------------------------------------------------
-    //// 
-    //// -------------------------------------------------------------------------------------------
+        constexpr _DynArrImpl(UIter it, UIterEnd itEnd)
+        {}
 
     public:
         constexpr auto onDestruct()
@@ -37,11 +35,6 @@ namespace Atom
             releaseUnusedMem();
         }
 
-    //// -------------------------------------------------------------------------------------------
-    //// Iteration
-    //// -------------------------------------------------------------------------------------------
-
-    public:
         constexpr auto iter(usize i = 0) const -> TIter
         {
             debug_expects(isIndexInRange(i));
@@ -66,11 +59,6 @@ namespace Atom
             return TMutIterEnd{ _getMutData() + _getCount() };
         }
 
-    //// -------------------------------------------------------------------------------------------
-    //// Insert
-    //// -------------------------------------------------------------------------------------------
-
-    public:
         template <typename... TArgs>
         constexpr auto emplaceAt(usize i, TArgs&&... args)
         {
@@ -123,11 +111,6 @@ namespace Atom
             }
         }
 
-    //// -------------------------------------------------------------------------------------------
-    //// Remove
-    //// -------------------------------------------------------------------------------------------
-
-    public:
         constexpr auto removeAt(usize i)
         {
             _destructAt(i);
@@ -146,11 +129,6 @@ namespace Atom
             _moveRangeFront(0, _getCount() - 1);
         }
 
-    //// -------------------------------------------------------------------------------------------
-    //// Memory
-    //// -------------------------------------------------------------------------------------------
-
-    public:
         constexpr auto reserve(usize count)
         {
             return reserveMore(count);
@@ -161,20 +139,13 @@ namespace Atom
             _ensureCapFor(_getCount() + count);
         }
 
-        constexpr auto releaseUnusedMem()
-        {
-        }
+        constexpr auto releaseUnusedMem() {}
 
         constexpr auto capacity() const -> usize
         {
             return _getCapacity();
         }
 
-    //// -------------------------------------------------------------------------------------------
-    //// 
-    //// -------------------------------------------------------------------------------------------
-
-    public:
         constexpr auto count() const -> usize
         {
             return _getCount();
@@ -190,11 +161,6 @@ namespace Atom
             return _getMutData();
         }
 
-    //// -------------------------------------------------------------------------------------------
-    //// Validation
-    //// -------------------------------------------------------------------------------------------
-
-    public:
         constexpr auto isIndexInRange(usize i) const -> bool
         {
             return i < _getCount();
@@ -226,9 +192,11 @@ namespace Atom
             return indexForIter(it) <= _getCount();
         }
 
-    //// -------------------------------------------------------------------------------------------
-    //// Implementations
-    //// -------------------------------------------------------------------------------------------
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////
+        //// Implementations
+        ////
+        ////////////////////////////////////////////////////////////////////////////////////////////
 
     private:
         template <typename... TArgs>
@@ -261,8 +229,7 @@ namespace Atom
         }
 
         template <typename UIter, typename UIterEnd>
-        constexpr auto _insertRangeAtUncounted(usize i, UIter it, UIterEnd itEnd)
-            -> usize
+        constexpr auto _insertRangeAtUncounted(usize i, UIter it, UIterEnd itEnd) -> usize
         {
             usize rotateSize = _getCount() - i;
             _insertRangeBackUncounted(mov(it), mov(itEnd));
@@ -315,7 +282,6 @@ namespace Atom
             return count;
         }
 
-    private:
         constexpr auto _updateIterDebugId() {}
 
         constexpr auto _calcCapGrowth(usize required) const -> usize

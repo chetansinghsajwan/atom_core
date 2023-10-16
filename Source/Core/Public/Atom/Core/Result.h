@@ -13,7 +13,8 @@ namespace Atom
         using Base::operator=;
     };
 
-    class _ResultVoid {};
+    class _ResultVoid
+    {};
 
     template <typename... TErrs>
     class Result<void, TErrs...>: public Variant<_ResultVoid, TErrs...>

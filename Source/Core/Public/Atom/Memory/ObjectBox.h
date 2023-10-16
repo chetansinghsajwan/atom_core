@@ -11,8 +11,8 @@ namespace Atom
     namespace Internal
     {
         /// ----------------------------------------------------------------------------------------
-        /// {ObjectBoxIdentifier} is used to check if the type is same as or derived from
-        /// {ObjectBox} template.
+        /// `ObjectBoxIdentifier` is used to check if the type is same as or derived from
+        /// `ObjectBox` template.
         /// ----------------------------------------------------------------------------------------
         class ObjectBoxIdentifier
         {};
@@ -21,16 +21,16 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// Stores object inside using type erasure.
     ///
-    /// @TPARAM Copyable Should the {ObjectBox} be {CopyConstructible} and {CopyAssignable}.
-    /// @TPARAM Movable Should the {ObjectBox} be {MoveConstructible} and {MoveAssignable}.
-    /// @TPARAM AllowNonMovableObject Should the {Object} be {MoveConstructible} when {Movable} is
-    /// true.
-    ///     {Object} can be allocated on heap if it's not movable.
-    /// @TPARAM StackSize Size of stack to store object, to avoid heap allocation.
-    /// @TPARAM TMemAllocator {MemAllocator} to allocate memory to store object.
+    /// # Template Parameters
+    /// - `Copyable`: Should the `ObjectBox` be `CopyConstructible` and `CopyAssignable`.
+    /// - `Movable`: Should the `ObjectBox` be `MoveConstructible` and `MoveAssignable`.
+    /// - `AllowNonMovableObject`: Should the `Object` be `MoveConstructible` when `Movable` is
+    ///     true. `Object` can be allocated on heap if it's not movable.
+    /// - `StackSize`: Size of stack to store object, to avoid heap allocation.
+    /// - `TAlloc`: `MemAllocator` to allocate memory to store object.
     /// --------------------------------------------------------------------------------------------
     template <bool Copyable, bool Movable, bool AllowNonMovableObject, usize StackSize,
-        typename TMemAllocator = DefaultMemAllocator>
+        typename TAlloc = DefaultMemAllocator>
     class ObjectBox: public Internal::ObjectBoxIdentifier
     {
         template <bool OtherCopyable, bool OtherMovable, bool OtherAllowNonMovableObject,
@@ -38,7 +38,7 @@ namespace Atom
         friend class ObjectBox;
 
         /// --------------------------------------------------------------------------------------------
-        /// Stores data for object. Like, {CopyConstructor}, {MoveConstructor} and {ObjectSize}.
+        /// Stores data for object. Like, `CopyConstructor`, `MoveConstructor` and `ObjectSize`.
         /// --------------------------------------------------------------------------------------------
         class ObjectData
         {
@@ -55,63 +55,56 @@ namespace Atom
         };
 
         /// ----------------------------------------------------------------------------------------
-        /// Requirements for {Object} accepted by this {ObjectBox}.
+        /// Requirements for `Object` accepted by this `ObjectBox`.
         /// ----------------------------------------------------------------------------------------
         template <typename T>
         static constexpr bool RObject = requires {
-            // {ObjectBox} variants are not stored inside {ObjectBox} variants.
+            // `ObjectBox` variants are not stored inside `ObjectBox` variants.
             requires RNotDerivedFrom<T, Internal::ObjectBoxIdentifier>;
 
-            // If Box is {Copyable} then the object should also be {CopyConstructible}.
+            // If Box is `Copyable` then the object should also be {CopyConstructibl``.
             requires !Copyable || RCopyConstructible<T>;
 
-            // If Box is {Movable} then the object should also be {MoveConstructible} unless
-            // {NonMovableObject} is allowed.
+            // If Box is `Movable` then the object should also be `MoveConstructible` unless
+            // `NonMovableObject` is allowed.
             requires !Movable || (RMoveConstructible<T> || AllowNonMovableObject);
         };
 
         /// ----------------------------------------------------------------------------------------
-        /// Requirements for other {ObjectBox} accepted by this {ObjectBox}.
-        /// For example, {CopyConstructor} and {MoveConstructor}.
+        /// Requirements for other `ObjectBox` accepted by this `ObjectBox`.
+        /// For example, `CopyConstructor` and `MoveConstructor`.
         /// ----------------------------------------------------------------------------------------
         template <bool OtherCopyable, bool OtherMovable, bool OtherAllowNonMovableObject>
         static constexpr bool ROtherBox = requires {
-            // If this {Box} is {Copyable} the {OtherBox} should also be {Copyable}.
+            // If this {Box} is `Copyable` the {OtherBox} should also be `Copyable`.
             requires !Copyable || OtherCopyable;
 
-            // If this {Box} is {Movable} the {OtherBox} should also be {Movable} unless
-            // {NonMovableObject} is allowed.
+            // If this {Box} is `Movable` the {OtherBox} should also be `Movable` unless
+            // `NonMovableObject` is allowed.
             requires !Movable || (OtherMovable || AllowNonMovableObject);
 
-            // If this {Box} does not allow {NonMovableObject} then {OtherBox} should also not
-            // allow {NonMovableObject}.
+            // If this {Box} does not allow `NonMovableObject` then {OtherBox} should also not
+            // allow {NonMovableObjec``.
             requires !Movable || (AllowNonMovableObject || !OtherAllowNonMovableObject);
         };
 
-    //// -------------------------------------------------------------------------------------------
-    //// Constructors and Operators.
-    //// -------------------------------------------------------------------------------------------
-
     public:
         /// ----------------------------------------------------------------------------------------
-        /// DefaultConstructor.
+        /// # Default Constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr ObjectBox()
-            : _object()
-            , _heapMem(nullptr)
-            , _heapMemSize(0)
-            , _memAllocator()
+        constexpr ObjectBox():
+            _object(), _heapMem(nullptr), _heapMemSize(0), _allocator()
         {}
 
         /// ----------------------------------------------------------------------------------------
-        /// NullConstructor.
+        /// # Null Constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr ObjectBox(NullType null)
-            : ObjectBox()
+        constexpr ObjectBox(NullType null):
+            ObjectBox()
         {}
 
         /// ----------------------------------------------------------------------------------------
-        /// NullAssignmentOperator.
+        /// # Null Assignment
         /// ----------------------------------------------------------------------------------------
         auto operator=(NullType null) -> ObjectBox&
         {
@@ -120,26 +113,22 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// NullEqualityOperator.
-        /// ----------------------------------------------------------------------------------------
-        auto operator==(NullType null) const -> bool
-        {
-            return _HasObject();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// Constructor. Initializes with object.
+        /// # Constructor
+        /// 
+        /// Initializes with object.
         /// ----------------------------------------------------------------------------------------
         template <typename T>
             requires RObject<T>
-        ObjectBox(T&& obj)
-            : ObjectBox()
+        ObjectBox(T&& obj):
+            ObjectBox()
         {
             _InitObject(fwd(obj));
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// AssignmentOperator. Assigns new object.
+        /// # Assignment
+        /// 
+        /// Assigns new object.
         /// ----------------------------------------------------------------------------------------
         template <typename T>
             requires RObject<T>
@@ -150,30 +139,31 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// CopyConstructor.
+        /// # Copy Constructor
         /// ----------------------------------------------------------------------------------------
         ObjectBox(const ObjectBox& other)
             requires Copyable
-            : ObjectBox()
+            :
+            ObjectBox()
         {
             _CopyBox(other);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// CopyConstructorTemplate.
+        /// # Copy Constructor
         /// ----------------------------------------------------------------------------------------
         template <bool OtherMovable, bool OtherAllowNonMovableObject, usize OtherStackSize,
             typename TOtherMemAllocator>
             requires Copyable && ROtherBox<Copyable, OtherMovable, OtherAllowNonMovableObject>
         ObjectBox(const ObjectBox<Copyable, OtherMovable, OtherAllowNonMovableObject,
-            OtherStackSize, TOtherMemAllocator>& other)
-            : ObjectBox()
+            OtherStackSize, TOtherMemAllocator>& other):
+            ObjectBox()
         {
             _CopyBox(other);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// CopyAssignmentOperator.
+        /// # Copy Assignment
         /// ----------------------------------------------------------------------------------------
         auto operator=(const ObjectBox& other) -> ObjectBox&
             requires Copyable
@@ -183,7 +173,7 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// CopyAssignmentOperatorTemplate.
+        /// # Copy Assignment
         /// ----------------------------------------------------------------------------------------
         template <bool OtherMovable, bool OtherAllowNonMovableObject, usize OtherStackSize,
             typename TOtherMemAllocator>
@@ -196,30 +186,31 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// MoveConstructor.
+        /// # Move Constructor
         /// ----------------------------------------------------------------------------------------
         ObjectBox(ObjectBox&& other)
             requires Movable
-            : ObjectBox()
+            :
+            ObjectBox()
         {
             _MoveBox(mov(other));
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// MoveConstructorTemplate.
+        /// # Move Constructor
         /// ----------------------------------------------------------------------------------------
         template <bool OtherCopyable, bool OtherMovable, bool OtherAllowNonMovableObject,
             usize OtherStackSize, typename TOtherMemAllocator>
             requires Movable && ROtherBox<OtherCopyable, OtherMovable, OtherAllowNonMovableObject>
         ObjectBox(ObjectBox<OtherCopyable, OtherMovable, OtherAllowNonMovableObject, OtherStackSize,
-            TOtherMemAllocator>&& other)
-            : ObjectBox()
+            TOtherMemAllocator>&& other):
+            ObjectBox()
         {
             _MoveBox(mov(other));
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// MoveAssignmentOperator.
+        /// # Move Assignment
         /// ----------------------------------------------------------------------------------------
         auto operator=(ObjectBox&& other) -> ObjectBox&
             requires Movable
@@ -229,7 +220,7 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// MoveAssignmentOperatorTemplate.
+        /// # Move Assignment
         /// ----------------------------------------------------------------------------------------
         template <bool OtherCopyable, bool OtherMovable, bool OtherAllowNonMovableObject,
             usize OtherStackSize, typename TOtherMemAllocator>
@@ -242,16 +233,12 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Destructor.
+        /// # Destructor
         /// ----------------------------------------------------------------------------------------
         ~ObjectBox()
         {
             _DisposeBox();
         }
-
-    //// -------------------------------------------------------------------------------------------
-    //// Functions
-    //// -------------------------------------------------------------------------------------------
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -282,13 +269,22 @@ namespace Atom
             return *_GetObject<T>();
         }
 
-    //// -------------------------------------------------------------------------------------------
-    //// Box Manipulation Functions
-    //// -------------------------------------------------------------------------------------------
-
-    protected:
         /// ----------------------------------------------------------------------------------------
-        /// Copies {other} {ObjectBox} into {this} {ObjectBox}.
+        /// # Null Equality Operator
+        /// ----------------------------------------------------------------------------------------
+        auto operator==(NullType null) const -> bool
+        {
+            return _HasObject();
+        }
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////
+        //// Box Manipulation Functions
+        ////
+        ////////////////////////////////////////////////////////////////////////////////////////////
+
+        /// ----------------------------------------------------------------------------------------
+        /// Copies `other` `ObjectBox` into `this` `ObjectBox`.
         /// ----------------------------------------------------------------------------------------
         template <bool OtherMovable, bool OtherAllowNonMovableObject, usize OtherStackSize,
             typename TOtherMemAllocator>
@@ -300,7 +296,7 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Moves {other} {ObjectBox} into {this} {ObjectBox}.
+        /// Moves `other` `ObjectBox` into `this` `ObjectBox`.
         /// ----------------------------------------------------------------------------------------
         template <bool OtherCopyable, bool OtherMovable, bool OtherAllowNonMovableObject,
             usize OtherStackSize, typename TOtherMemAllocator>
@@ -310,7 +306,7 @@ namespace Atom
         {
             // When allocator type is different, we cannot handle heap memory.
             // So we only move the object.
-            if constexpr (!RSameAs<TMemAllocator, TOtherMemAllocator>)
+            if constexpr (!RSameAs<TAlloc, TOtherMemAllocator>)
             {
                 _MoveObject(other);
                 other._DisposeBox();
@@ -333,7 +329,7 @@ namespace Atom
 
                 _heapMem = mov(other._heapMem);
                 _heapMemSize = mov(other._heapMemSize);
-                _memAllocator = mov(other._memAllocator);
+                _allocator = mov(other._allocator);
             }
 
             if (otherIsUsingStackMem)
@@ -355,11 +351,12 @@ namespace Atom
             _ReleaseMem();
         }
 
-    //// -------------------------------------------------------------------------------------------
-    //// Object Manipulation Functions
-    //// -------------------------------------------------------------------------------------------
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////
+        //// Object Manipulation Functions
+        ////
+        ////////////////////////////////////////////////////////////////////////////////////////////
 
-    protected:
         /// ----------------------------------------------------------------------------------------
         /// Stores the object.
         ///
@@ -455,9 +452,9 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Copies the object from {other} {ObjectBox} into {this} {ObjectBox}.
+        /// Copies the object from `other` `ObjectBox` into `this` `ObjectBox`.
         ///
-        /// @PARAM[IN] other {ObjectBox} of which to copy object.
+        /// @PARAM[IN] other `ObjectBox` of which to copy object.
         /// @PARAM[IN] forceHeap (default = false) Force allocate object on heap.
         /// ----------------------------------------------------------------------------------------
         template <bool OtherMovable, bool OtherAllowNonMovableObject, usize OtherStackSize,
@@ -485,12 +482,12 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Moves the object from {other} {ObjectBox} into {this} {ObjectBox}.
+        /// Moves the object from `other` `ObjectBox` into `this` `ObjectBox`.
         ///
-        /// @PARAM[IN] other {ObjectBox} of which to move object.
+        /// @PARAM[IN] other `ObjectBox` of which to move object.
         /// @PARAM[IN] forceHeap (default = false) Force allocate object on heap.
         ///
-        /// @NOTE This doesn't moves the memory from {other} {ObjectBox}.
+        /// @NOTE This doesn't moves the memory from `other` `ObjectBox`.
         /// ----------------------------------------------------------------------------------------
         template <bool OtherCopyable, bool OtherMovable, bool OtherAllowNoneMovableObject,
             usize OtherStackSize, typename TOtherMemAllocator>
@@ -528,7 +525,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Copies {ObjectData} from {otherBox}.
         ///
-        /// @PARAM[IN] otherBox {ObjectBox} of which to copy {ObjectData}.
+        /// @PARAM[IN] otherBox `ObjectBox` of which to copy {ObjectData}.
         /// ----------------------------------------------------------------------------------------
         template <bool OtherCopyable, bool OtherMovable, bool OtherAllowNonMovableObject,
             usize OtherStackSize, typename TOtherMemAllocator>
@@ -567,16 +564,18 @@ namespace Atom
             }
         }
 
-    //// -------------------------------------------------------------------------------------------
-    //// Memory Manipulation Functions
-    //// -------------------------------------------------------------------------------------------
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////
+        //// Memory Manipulation Functions
+        ////
+        ////////////////////////////////////////////////////////////////////////////////////////////
 
     protected:
         /// ----------------------------------------------------------------------------------------
-        /// Allocates enough memory of size {size}. Uses stack memory if it is big enough.
+        /// Allocates enough memory of size `size`. Uses stack memory if it is big enough.
         ///
         /// @PARAM[IN] size Size of memory to allocate.
-        /// @PARAM[IN] forceHeap If {true}, allocates memory from {TMemAllocator}.
+        /// @PARAM[IN] forceHeap If `true`, allocates memory from `TAlloc`.
         ///
         /// @RETURNS Pointer to the allocated memory.
         /// ----------------------------------------------------------------------------------------
@@ -596,14 +595,14 @@ namespace Atom
             {
                 if (_heapMemSize < size)
                 {
-                    _heapMem = _memAllocator.Realloc(_heapMem, size);
+                    _heapMem = _allocator.Realloc(_heapMem, size);
                     _heapMemSize = size;
                 }
             }
             // We need to allocate heap memory.
             else
             {
-                _heapMem = _memAllocator.Alloc(size);
+                _heapMem = _allocator.Alloc(size);
                 _heapMemSize = size;
             }
 
@@ -617,7 +616,7 @@ namespace Atom
         {
             if (_heapMem != nullptr)
             {
-                _memAllocator.Dealloc(_heapMem);
+                _allocator.Dealloc(_heapMem);
                 _heapMem = nullptr;
                 _heapMemSize = 0;
             }
@@ -636,20 +635,19 @@ namespace Atom
             return false;
         }
 
-    //// -------------------------------------------------------------------------------------------
-    //// Fields
-    //// -------------------------------------------------------------------------------------------
-
     protected:
         /// ----------------------------------------------------------------------------------------
         /// Stack Memory.
+        /// 
+        /// # To Do
+        /// - Replace with a type to handle storage.
         /// ----------------------------------------------------------------------------------------
         ATOM_CONDITIONAL_FIELD(StackSize > 0, byte[StackSize.val()]) _stackMem;
 
         /// ----------------------------------------------------------------------------------------
         /// Memory Allocator.
         /// ----------------------------------------------------------------------------------------
-        TMemAllocator _memAllocator;
+        TAlloc _allocator;
 
         /// ----------------------------------------------------------------------------------------
         /// Heap memory allocated.

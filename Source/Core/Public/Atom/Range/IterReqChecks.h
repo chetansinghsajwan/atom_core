@@ -1,9 +1,11 @@
 #pragma once
 #include "IterReq.h"
 
-//// -----------------------------------------------------------------------------------------------
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////
 //// Iter Assertion Implementation
-//// -----------------------------------------------------------------------------------------------
+////
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #define _ATOM_SATISFIES_ITER(RIter, TIter)                                                         \
     static_assert(RIter<TIter>, "{" #TIter "} does not satisfy {" #RIter "} requirement.")
@@ -42,9 +44,11 @@
 #define _ATOM_SATISFIES_MUT_ITER_TEMP(RIter, TIterTemp)                                            \
     _ATOM_SATISFIES_MUT_ITER(RIter, TIterTemp<i32>)
 
-//// -----------------------------------------------------------------------------------------------
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////
 //// Iter Assertions
-//// -----------------------------------------------------------------------------------------------
+////
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #define ATOM_SATISFIES_ITER(TIter) _ATOM_SATISFIES_ITER(RIter, TIter)
 #define ATOM_SATISFIES_ITER_OF(TIter, T) _ATOM_SATISFIES_ITER_OF(RIterOf, TIter, T)
@@ -63,9 +67,11 @@
 #define ATOM_SATISFIES_ITER_TEMP(TIterTemp) _ATOM_SATISFIES_ITER_TEMP(RIter, TIterTemp)
 #define ATOM_SATISFIES_MUT_ITER_TEMP(TIterTemp) _ATOM_SATISFIES_MUT_ITER_TEMP(RIter, TIterTemp)
 
-//// -----------------------------------------------------------------------------------------------
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////
 //// Fwd Iter Assertions
-//// -----------------------------------------------------------------------------------------------
+////
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #define ATOM_SATISFIES_FWD_ITER(TIter) _ATOM_SATISFIES_ITER(RFwdIter, TIter)
 #define ATOM_SATISFIES_FWD_ITER_OF(TIter, T) _ATOM_SATISFIES_ITER_OF(RFwdIterOf, TIter, T)
@@ -86,9 +92,11 @@
 #define ATOM_SATISFIES_MUT_FWD_ITER_TEMP(TIterTemp)                                                \
     _ATOM_SATISFIES_MUT_ITER_TEMP(RFwdIter, TIterTemp)
 
-//// -----------------------------------------------------------------------------------------------
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////
 //// Bidi Iter Assertions
-//// -----------------------------------------------------------------------------------------------
+////
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #define ATOM_SATISFIES_BIDI_ITER(TIter) _ATOM_SATISFIES_ITER(RBidiIter, TIter)
 #define ATOM_SATISFIES_BIDI_ITER_OF(TIter, T) _ATOM_SATISFIES_ITER_OF(RBidiIterOf, TIter, T)
@@ -109,9 +117,11 @@
 #define ATOM_SATISFIES_MUT_BIDI_ITER_TEMP(TIterTemp)                                               \
     _ATOM_SATISFIES_MUT_ITER_TEMP(RBidiIter, TIterTemp)
 
-//// -----------------------------------------------------------------------------------------------
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////
 //// Jump Iter Assertions
-//// -----------------------------------------------------------------------------------------------
+////
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #define ATOM_SATISFIES_JUMP_ITER(TIter) _ATOM_SATISFIES_ITER(RJumpIter, TIter)
 #define ATOM_SATISFIES_JUMP_ITER_OF(TIter, T) _ATOM_SATISFIES_ITER_OF(RJumpIterOf, TIter, T)
@@ -132,9 +142,11 @@
 #define ATOM_SATISFIES_MUT_JUMP_ITER_TEMP(TIterTemp)                                               \
     _ATOM_SATISFIES_MUT_ITER_TEMP(RJumpIter, TIterTemp)
 
-//// -----------------------------------------------------------------------------------------------
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////
 //// Arr Iter Assertions
-//// -----------------------------------------------------------------------------------------------
+////
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #define ATOM_SATISFIES_ARR_ITER(TIter) _ATOM_SATISFIES_ITER(RArrIter, TIter)
 #define ATOM_SATISFIES_ARR_ITER_OF(TIter, T) _ATOM_SATISFIES_ITER_OF(RArrIterOf, TIter, T)

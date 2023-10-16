@@ -14,7 +14,8 @@ namespace Atom::Logging::Private
     ///
     /// @THREAD_SAFETY SAFE
     /// --------------------------------------------------------------------------------------------
-    template <RLockable TLockable>
+    template <typename TLockable>
+        requires RLockable<TLockable>
     class MultiLogTargetTemplate: public LogTarget
     {
         using _TContainer = DynArr<LogTargetPtr>;
@@ -36,26 +37,24 @@ namespace Atom::Logging::Private
         /// @PARAM[IN] target RRange of LogTarget objects to add.
         ///     If {targets} contains null objects, this doesn't adds them.
         ///
-        /// @EXCEPTION_SAFETY @COPY_FROM _AddTargets(range).
-        ///
         /// @TIME_COMPLEXITY @COPY_FROM _AddTargets(range).
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
-            requires RRangeOf<TRange, LogTargetPtr>
         MultiLogTargetTemplate(const TRange& targets)
+            requires(RRangeOf<TRange, LogTargetPtr>)
         {
             _AddTargets(mov(targets));
         }
 
-    //// -------------------------------------------------------------------------------------------
-    //// LogTarget Interface
-    //// -------------------------------------------------------------------------------------------
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////
+        //// LogTarget Interface
+        ////
+        ////////////////////////////////////////////////////////////////////////////////////////////
 
     public:
         /// ----------------------------------------------------------------------------------------
         /// Writes to all stored LogTarget objects.
-        ///
-        /// @EXCEPTION_SAFETY STRONG
         /// ----------------------------------------------------------------------------------------
         virtual auto Write(const LogMsg& logMsg) -> void override final
         {
@@ -68,8 +67,6 @@ namespace Atom::Logging::Private
 
         /// ----------------------------------------------------------------------------------------
         /// Flushes all stored LogTarget objects.
-        ///
-        /// @EXCEPTION_SAFETY STRONG
         /// ----------------------------------------------------------------------------------------
         virtual auto Flush() -> void override final
         {
@@ -80,9 +77,11 @@ namespace Atom::Logging::Private
             }
         }
 
-    //// -------------------------------------------------------------------------------------------
-    //// LogTarget manipulation functions
-    //// -------------------------------------------------------------------------------------------
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////
+        //// LogTarget manipulation functions
+        ////
+        ////////////////////////////////////////////////////////////////////////////////////////////
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -91,8 +90,6 @@ namespace Atom::Logging::Private
         /// @PARAM[IN] target {LogTarget} object to add.
         ///     If {target} is null, this doesn't adds it.
         /// @RETURNS {true} if added, else {false}.
-        ///
-        /// @EXCEPTION_SAFETY @COPY_FROM _AddTarget(LogTargetPtr target).
         ///
         /// @TIME_COMPLEXITY @COPY_FROM _AddTarget(LogTargetPtr target).
         ///
@@ -113,8 +110,6 @@ namespace Atom::Logging::Private
         /// @PARAM[IN] targets LogTarget objects to add.
         ///     If {targets} contains null objects, this doesn't adds them.
         /// @RETURNS Count of LogTarget objects added.
-        ///
-        /// @EXCEPTION_SAFETY @COPY_FROM _AddTargets(range).
         ///
         /// @TIME_COMPLEXITY @COPY_FROM _AddTargets(range).
         ///
@@ -138,8 +133,6 @@ namespace Atom::Logging::Private
         ///     If {target} is null, this doesn't searches it.
         /// @RETURNS {true} if found and removed, else {false}.
         ///
-        /// @EXCEPTION_SAFETY @COPY_FROM _RemoveTarget(LogTargetPtr target)
-        ///
         /// @TIME_COMPLEXITY @COPY_FROM _RemoveTarget(LogTargetPtr target)
         ///
         /// @THREAD_SAFETY SAFE
@@ -159,8 +152,6 @@ namespace Atom::Logging::Private
         /// @PARAM[IN] targets LogTarget objects to remove.
         ///     If {targets} contains null objects, this doesn't searches them.
         /// @RETURNS Count of LogTarget objects removed.
-        ///
-        /// @EXCEPTION_SAFETY @COPY_FROM _RemoveTargets(const TRange& range)
         ///
         /// @TIME_COMPLEXITY @COPY_FROM _RemoveTargets(const TRange& range)
         ///
@@ -222,8 +213,6 @@ namespace Atom::Logging::Private
         /// ----------------------------------------------------------------------------------------
         /// Reserves memory for {capacity} LogTarget objects.
         ///
-        /// @EXCEPTION_SAFETY @COPY_FROM _Reserve(usize capacity)
-        ///
         /// @THREAD_SAFETY SAFE
         /// ----------------------------------------------------------------------------------------
         auto Reserve(usize capacity)
@@ -243,9 +232,11 @@ namespace Atom::Logging::Private
             return _targets.count();
         }
 
-    //// -------------------------------------------------------------------------------------------
-    //// Iteration
-    //// -------------------------------------------------------------------------------------------
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////
+        //// Iteration
+        ////
+        ////////////////////////////////////////////////////////////////////////////////////////////
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -272,12 +263,13 @@ namespace Atom::Logging::Private
             return _targets.iterEnd();
         }
 
-    //// -------------------------------------------------------------------------------------------
-    //// Implementation Functions
-    //// 
-    //// These functions doesn't perform any checks at runtime and assumes that all thread safety 
-    //// steps have been taken.
-    //// -------------------------------------------------------------------------------------------
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////
+        //// Implementation Functions
+        ////
+        //// These functions doesn't perform any checks at runtime and assumes that all thread safety
+        //// steps have been taken.
+        //// -------------------------------------------------------------------------------------------
 
     protected:
         /// ----------------------------------------------------------------------------------------
@@ -285,8 +277,6 @@ namespace Atom::Logging::Private
         ///
         /// @PARAM[IN] target {LogTarget} object to add.
         ///     If {target} is null, this doesn't adds it.
-        ///
-        /// @EXCEPTION_SAFETY @COPY_FROM ${_TContainer}::emplaceBack(LogTarget& target)
         ///
         /// @TIME_COMPLEXITY @COPY_FROM ${_TContainer}::emplaceBack(LogTarget& target)
         ///
@@ -306,8 +296,6 @@ namespace Atom::Logging::Private
         /// @PARAM[IN] target {LogTarget} object to add.
         ///     If {targets} contains null objects, this doesn't adds them.
         /// @RETURNS Count of LogTarget objects added.
-        ///
-        /// @EXCEPTION_SAFETY @COPY_FROM ${_TContainer}::emplaceBack(RRangeOf<LogTargetPtr> targets)
         ///
         /// @TIME_COMPLEXITY @COPY_FROM ${_TContainer}::emplaceBack(RRangeOf<LogTargetPtr> targets)
         ///
@@ -337,8 +325,6 @@ namespace Atom::Logging::Private
         ///     If {target} is null, this doesn't searches it.
         /// @RETURNS {true} if found and removed, else {false}.
         ///
-        /// @EXCEPTION_SAFETY @COPY_FROM ${_TContainer}::Remove(LogTarget& target)
-        ///
         /// @TIME_COMPLEXITY @COPY_FROM ${_TContainer}::Remove(LogTarget& target)
         /// ----------------------------------------------------------------------------------------
         auto _RemoveTarget(LogTargetPtr target) -> bool
@@ -364,8 +350,6 @@ namespace Atom::Logging::Private
         /// @PARAM[IN] end RRange to end of the range to remove.
         ///     If range {[it, end]} contains null objects, this doesn't searches them.
         /// @RETURNS Count of LogTarget objects removed.
-        ///
-        /// @EXCEPTION_SAFETY @COPY_FROM ${_TContainer}::Remove(LogTarget& target)
         ///
         /// @TIME_COMPLEXITY @COPY_FROM ${_TContainer}::Remove(LogTarget& target)
         /// ----------------------------------------------------------------------------------------
@@ -400,8 +384,6 @@ namespace Atom::Logging::Private
         ///     If {target} is null, doesn't searches it.
         /// @RETURNS {true} if found, else {false}.
         ///
-        /// @EXCEPTION_SAFETY
-        ///
         /// @TIME_COMPLEXITY Linear
         /// ----------------------------------------------------------------------------------------
         auto _HasTarget(const LogTargetPtr& target) const -> bool
@@ -419,8 +401,6 @@ namespace Atom::Logging::Private
         ///     If range {[it, end]} contains null objects, this doesn't searches them.
         /// @RETURNS Count of LogTarget objects found.
         ///
-        /// @EXCEPTION_SAFETY
-        ///
         /// @TIME_COMPLEXITY Exponential
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
@@ -432,8 +412,6 @@ namespace Atom::Logging::Private
 
         /// ----------------------------------------------------------------------------------------
         /// Reserves memory for {capacity} LogTarget objects.
-        ///
-        /// @EXCEPTION_SAFETY @COPY_FROM ${_TContainer}::Reserve(usize capacity).
         /// ----------------------------------------------------------------------------------------
         auto _Reserve(usize capacity)
         {

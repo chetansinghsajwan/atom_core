@@ -4,7 +4,7 @@
 namespace Atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// {RInsertable} mock object.
+    /// `RInsertable` mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
     class InsertableReqMock
@@ -20,7 +20,7 @@ namespace Atom
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// {RFrontInsertable} mock object.
+    /// `RFrontInsertable` mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
     class FrontInsertableReqMock
@@ -36,7 +36,7 @@ namespace Atom
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// {RBackInsertable} mock object.
+    /// `RBackInsertable` mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
     class BackInsertableReqMock
@@ -52,7 +52,7 @@ namespace Atom
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// {RKeyInsertable} mock object.
+    /// `RKeyInsertable` mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename TKey, typename T>
     class KeyInsertableReqMock
@@ -68,7 +68,7 @@ namespace Atom
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// {RIndexInsertable} mock object.
+    /// `RIndexInsertable` mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
     using IndexInsertableReqMock = KeyInsertableReqMock<usize, T>;

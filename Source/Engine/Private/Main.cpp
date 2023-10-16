@@ -2,7 +2,7 @@
 
 using namespace Atom;
 
-auto main(i32 argc, char** args) -> int
+auto main(int argc, char** args) -> int
 {
     Engine::Application* app = Engine::CreateApplication();
     app->Run();
