@@ -2,7 +2,7 @@
 #include <numeric>
 
 #include "Atom/Core.h"
-#include "Atom/Str/StaticStr.h"
+#include "Atom/Str/StackStr.h"
 
 namespace Atom
 {
@@ -60,7 +60,7 @@ namespace Atom::Math
         return -1;
     }
 
-    constexpr auto HexToChar(byte hex) -> StaticStr<2>
+    constexpr auto HexToChar(byte hex) -> StackStr<2>
     {
         constexpr const Char chars[] = "0123456789abcdef";
 

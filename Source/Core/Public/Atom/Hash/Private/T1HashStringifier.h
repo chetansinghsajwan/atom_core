@@ -20,7 +20,7 @@ namespace Atom::Private
         {
             for (byte b : hash.bytes)
             {
-                StaticStr<2> chars = Math::HexToChar(b);
+                StackStr<2> chars = Math::HexToChar(b);
                 out += chars[0];
                 out += chars[1];
             }
