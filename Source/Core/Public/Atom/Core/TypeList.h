@@ -205,7 +205,6 @@ namespace Atom
         template <typename T, typename... Ts>
         class Has
         {
-            // TODO: try to remove the explicit 0 index.
         public:
             static constexpr bool Value = IndexOf<T, 0, Ts...>::Value != -1;
         };
