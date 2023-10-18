@@ -8,7 +8,9 @@ namespace Atom::Private
     /// --------------------------------------------------------------------------------------------
     /// T1Hash Generator.
     ///
-    /// @TODO: Make this type constexpr.
+    /// # To Do
+    ///
+    /// - Make this type constexpr.
     /// --------------------------------------------------------------------------------------------
     template <typename T1Hash, typename TImpl>
     class T1HashGenerator
@@ -17,20 +19,20 @@ namespace Atom::Private
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// DefaultConstructor.
+        /// # DefaultConstructor.
         ///
         /// Same as calling Reset.
         /// ----------------------------------------------------------------------------------------
-        T1HashGenerator()
+        constexpr T1HashGenerator()
         {
             Reset();
         }
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// Resets the {T1HashGenerator} to its initial state.
+        /// Resets the `T1HashGenerator` to its initial state.
         /// ----------------------------------------------------------------------------------------
-        auto Reset()
+        constexpr auto Reset()
         {
             _impl.Initialize();
         }
@@ -39,7 +41,7 @@ namespace Atom::Private
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename TRange, usize BufSize = 50>
-        auto ProcessBytes(TRange bytes) -> Self&
+        constexpr auto ProcessBytes(TRange bytes) -> Self&
             requires RRangeOf<TRange, byte>
         {
             if constexpr (RArrRangeOf<TRange, byte>)
@@ -70,16 +72,12 @@ namespace Atom::Private
         /// ----------------------------------------------------------------------------------------
         /// Processes data. This can be called infinite times.
         ///
-        /// @PARAM[IN] data Ptr to the input data.
-        /// @PARAM[IN] dataSize Size of the data.
+        /// # Parameters
         ///
-        /// @EXPECTS {data != nullptr}.
-        /// @EXPECTS {dataSize > 0}.
-        ///
-        /// @THROWS AssertionException Expects {data != nullptr}.
-        /// @THROWS AssertionException Expects {dataSize > 0}.
+        /// - `data`: Ptr to the input data.
+        /// - `dataSize`: Size of the data.
         /// ----------------------------------------------------------------------------------------
-        auto ProcessBytes(const void* data, usize dataSize) -> Self&
+        constexpr auto ProcessBytes(const void* data, usize dataSize) -> Self&
         {
             debug_expects(data != nullptr);
             debug_expects(dataSize > 0);
@@ -102,9 +100,11 @@ namespace Atom::Private
         /// ----------------------------------------------------------------------------------------
         /// Processes single byte. This can be called infinite times.
         ///
-        /// @PARAM[IN] data Data to process.
+        /// # Parameters
+        ///
+        /// - `data`: Data to process.
         /// ----------------------------------------------------------------------------------------
-        auto ProcessByte(byte data) -> Self&
+        constexpr auto ProcessByte(byte data) -> Self&
         {
             _impl.Update(&data, 1);
             return *this;
@@ -113,9 +113,11 @@ namespace Atom::Private
         /// ----------------------------------------------------------------------------------------
         /// Generates T1Hash.
         ///
-        /// @RETURNS {T1Hash} object.
+        /// # Returns
+        /// 
+        /// `T1Hash` object.
         /// ----------------------------------------------------------------------------------------
-        auto Generate() -> T1Hash
+        constexpr auto Generate() -> T1Hash
         {
             T1Hash hash;
             _impl.Calculate(hash);
@@ -123,9 +125,6 @@ namespace Atom::Private
         }
 
     private:
-        /// ----------------------------------------------------------------------------------------
-        /// Underlying T1HashGenerator implementation.
-        /// ----------------------------------------------------------------------------------------
         TImpl _impl;
     };
 }
