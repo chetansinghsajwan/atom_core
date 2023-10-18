@@ -7,29 +7,6 @@
 
 namespace Atom
 {
-    /// --------------------------------------------------------------------------------------------
-    /// @TODO: Needs refactoring.
-    /// --------------------------------------------------------------------------------------------
-    template <typename TCheck, typename T, typename... Ts>
-    class _CheckAllImpl
-    {
-    public:
-        static constexpr bool Value =
-            TCheck().template operator()<T>() && _CheckAllImpl<TCheck, Ts...>::Value;
-    };
-
-    template <typename TCheck, typename T>
-    class _CheckAllImpl<TCheck, T>
-    {
-    public:
-        static constexpr bool Value = TCheck().template operator()<T>();
-    };
-
-    template <typename TCheck, typename T, typename... Ts>
-    constexpr bool _CheckAll = _CheckAllImpl<TCheck, T, Ts...>::Value;
-
-#define _WRAP_REQ(...) decltype([]<typename T> { return __VA_ARGS__; })
-
     ////////////////////////////////////////////////////////////////////////////////////////////////
     ////
     //// Basic Concepts
@@ -149,14 +126,13 @@ namespace Atom
     /// Ensures each {T} in {Ts...} is {DefaultConstructible}.
     /// --------------------------------------------------------------------------------------------
     template <typename... Ts>
-    concept RDefaultConstructibleAll = _CheckAll<_WRAP_REQ(RDefaultConstructible<T>), Ts...>;
+    concept RDefaultConstructibleAll = (RDefaultConstructible<Ts> and ...);
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures each {T} in {Ts...} is {TriviallyDefaultConstructible}.
     /// --------------------------------------------------------------------------------------------
     template <typename... Ts>
-    concept RTriviallyDefaultConstructibleAll =
-        _CheckAll<_WRAP_REQ(RTriviallyDefaultConstructible<T>), Ts...>;
+    concept RTriviallyDefaultConstructibleAll = (RTriviallyDefaultConstructible<Ts> and ...);
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures {T} is {CopyConstructible}.
@@ -174,14 +150,13 @@ namespace Atom
     /// Ensures each {T} in {Ts...} is {CopyConstructible}.
     /// --------------------------------------------------------------------------------------------
     template <typename... Ts>
-    concept RCopyConstructibleAll = _CheckAll<_WRAP_REQ(RCopyConstructible<T>), Ts...>;
+    concept RCopyConstructibleAll = (RCopyConstructible<Ts> and ...);
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures each {T} in {Ts...} is {TriviallyCopyConstructible}.
     /// --------------------------------------------------------------------------------------------
     template <typename... Ts>
-    concept RTriviallyCopyConstructibleAll =
-        _CheckAll<_WRAP_REQ(RTriviallyCopyConstructible<T>), Ts...>;
+    concept RTriviallyCopyConstructibleAll = (RTriviallyCopyConstructible<Ts> and ...);
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures {T} is {MoveConstructible}.
@@ -199,14 +174,13 @@ namespace Atom
     /// Ensures each {T} in {Ts...} is {MoveConstructible}.
     /// --------------------------------------------------------------------------------------------
     template <typename... Ts>
-    concept RMoveConstructibleAll = _CheckAll<_WRAP_REQ(RMoveConstructible<T>), Ts...>;
+    concept RMoveConstructibleAll = (RMoveConstructible<Ts> and ...);
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures each {T} in {Ts...} is {TriviallyMoveConstructible}.
     /// --------------------------------------------------------------------------------------------
     template <typename... Ts>
-    concept RTriviallyMoveConstructibleAll =
-        _CheckAll<_WRAP_REQ(RTriviallyMoveConstructible<T>), Ts...>;
+    concept RTriviallyMoveConstructibleAll = (RTriviallyMoveConstructible<Ts> and ...);
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures {T} is {DefaultInitializable}.
@@ -223,7 +197,7 @@ namespace Atom
     /// Ensures each {T} in {Ts...} is {DefaultInitializable}.
     /// --------------------------------------------------------------------------------------------
     template <typename... Ts>
-    concept RDefaultInitializableAll = _CheckAll<_WRAP_REQ(RDefaultInitializable<T>), Ts...>;
+    concept RDefaultInitializableAll = (RDefaultInitializable<Ts> and ...);
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures {T} is {Assignable} using {from}.
@@ -257,13 +231,13 @@ namespace Atom
     /// Ensures each {T} in {Ts...} is {CopyAssignable}.
     /// --------------------------------------------------------------------------------------------
     template <typename... Ts>
-    concept RCopyAssignableAll = _CheckAll<_WRAP_REQ(RCopyAssignable<T>), Ts...>;
+    concept RCopyAssignableAll = (RCopyAssignable<Ts> and ...);
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures each {T} in {Ts...} is {TriviallyCopyAssignable}.
     /// --------------------------------------------------------------------------------------------
     template <typename... Ts>
-    concept RTriviallyCopyAssignableAll = _CheckAll<_WRAP_REQ(RTriviallyCopyAssignable<T>), Ts...>;
+    concept RTriviallyCopyAssignableAll = (RTriviallyCopyAssignable<Ts> and ...);
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures {T} is {MoveAssignable}.
@@ -281,13 +255,13 @@ namespace Atom
     /// Ensures each {T} in {Ts...} is {MoveAssignable}.
     /// --------------------------------------------------------------------------------------------
     template <typename... Ts>
-    concept RMoveAssignableAll = _CheckAll<_WRAP_REQ(RMoveAssignable<T>), Ts...>;
+    concept RMoveAssignableAll = (RMoveAssignable<Ts> and ...);
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures each {T} in {Ts...} is {TriviallyMoveAssignable}.
     /// --------------------------------------------------------------------------------------------
     template <typename... Ts>
-    concept RTriviallyMoveAssignableAll = _CheckAll<_WRAP_REQ(RTriviallyMoveAssignable<T>), Ts...>;
+    concept RTriviallyMoveAssignableAll = (RTriviallyMoveAssignable<Ts> and ...);
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures {T} is {CopyConstructible} and {CopyAssignable}.
@@ -305,13 +279,13 @@ namespace Atom
     /// Ensures each {T} in {Ts...} is {Copyable}.
     /// --------------------------------------------------------------------------------------------
     template <typename... Ts>
-    concept RCopyableAll = _CheckAll<_WRAP_REQ(RCopyable<T>), Ts...>;
+    concept RCopyableAll = (RCopyable<Ts> and ...);
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures each {T} in {Ts...} is {TriviallyCopyable}.
     /// --------------------------------------------------------------------------------------------
     template <typename... Ts>
-    concept RTriviallyCopyableAll = _CheckAll<_WRAP_REQ(RTriviallyCopyable<T>), Ts...>;
+    concept RTriviallyCopyableAll = (RTriviallyCopyable<Ts> and ...);
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures {T} is {MoveConstructible} and {MoveAssignable}.
@@ -329,13 +303,13 @@ namespace Atom
     /// Ensures each {T} in {Ts...} is {Moveable}.
     /// --------------------------------------------------------------------------------------------
     template <typename... Ts>
-    concept RMoveableAll = _CheckAll<_WRAP_REQ(RMoveable<T>), Ts...>;
+    concept RMoveableAll = (RMoveable<Ts> and ...);
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures each {T} in {Ts...} is {TriviallyMoveable}.
     /// --------------------------------------------------------------------------------------------
     template <typename... Ts>
-    concept RTriviallyMoveableAll = _CheckAll<_WRAP_REQ(RTriviallyMoveable<T>), Ts...>;
+    concept RTriviallyMoveableAll = (RTriviallyMoveable<Ts> and ...);
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures {T0} is {Swappable} with {T1}.
@@ -377,13 +351,13 @@ namespace Atom
     /// Ensures each {T} in {Ts...} is {Destructible}.
     /// --------------------------------------------------------------------------------------------
     template <typename... Ts>
-    concept RDestructibleAll = _CheckAll<_WRAP_REQ(RDestructible<T>), Ts...>;
+    concept RDestructibleAll = (RDestructible<Ts> and ...);
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures each {T} in {Ts...} is {TrivallyDestructible}.
     /// --------------------------------------------------------------------------------------------
     template <typename... Ts>
-    concept RTriviallyDestructibleAll = _CheckAll<_WRAP_REQ(RTriviallyDestructible<T>), Ts...>;
+    concept RTriviallyDestructibleAll = (RTriviallyDestructible<Ts> and ...);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     ////
