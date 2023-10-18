@@ -64,7 +64,7 @@ namespace Atom
         /// Tries to lock the lock. If the lock is already locked by some thread then returns but
         /// doesn't blocks the thread.
         ///
-        /// @RETURNS {true} if lock acquired, else {false}.
+        /// @RETURNS `true` if lock acquired, else `false`.
         /// ----------------------------------------------------------------------------------------
         auto TryLock() -> bool
         {

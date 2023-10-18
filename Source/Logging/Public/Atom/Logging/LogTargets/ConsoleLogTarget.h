@@ -42,7 +42,7 @@ namespace Atom::Logging
         /// ----------------------------------------------------------------------------------------
         /// Checks if ELogLevel should be written to stderr.
         ///
-        /// @RETURNS {true} if {lvl >= GetErrLogLevel()}, else {false}.
+        /// @RETURNS `true` if {lvl >= GetErrLogLevel()}, else `false`.
         /// ----------------------------------------------------------------------------------------
         auto ShouldLogAsError(ELogLevel lvl) const -> bool
         {

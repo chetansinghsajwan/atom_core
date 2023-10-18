@@ -5,13 +5,13 @@
 namespace Atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// Converts {T} object to {StrView}.
+    /// Converts `T` object to {StrView}.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
     class StrViewConverter;
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures {TConverter} can convert {T} object to {StrView}.
+    /// Ensures {TConverter} can convert `T` object to {StrView}.
     /// --------------------------------------------------------------------------------------------
     template <typename TConverter, typename T>
     concept RStrViewConverter = requires(TConverter converter, T arg) {
@@ -21,7 +21,7 @@ namespace Atom
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures {T} is convertible to {StrView}.
+    /// Ensures `T` is convertible to {StrView}.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
     concept RStrViewConvertible = RStrViewConverter<StrViewConverter<T>, T>;
@@ -39,7 +39,7 @@ namespace Atom
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// {StirngViewConverter} specialization for {T} containing {const}, {volatile} or {lvalue}
+    /// {StirngViewConverter} specialization for `T` containing {const}, {volatile} or {lvalue}
     /// and {rvalue} reference.
     ///
     /// @TODO Needs refactoring.

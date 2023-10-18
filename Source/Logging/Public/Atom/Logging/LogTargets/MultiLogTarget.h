@@ -89,7 +89,7 @@ namespace Atom::Logging::Private
         ///
         /// @PARAM[IN] target {LogTarget} object to add.
         ///     If {target} is null, this doesn't adds it.
-        /// @RETURNS {true} if added, else {false}.
+        /// @RETURNS `true` if added, else `false`.
         ///
         /// @TIME_COMPLEXITY @COPY_FROM _AddTarget(LogTargetPtr target).
         ///
@@ -131,7 +131,7 @@ namespace Atom::Logging::Private
         ///
         /// @PARAM[IN] target LogTarget object to remove.
         ///     If {target} is null, this doesn't searches it.
-        /// @RETURNS {true} if found and removed, else {false}.
+        /// @RETURNS `true` if found and removed, else `false`.
         ///
         /// @TIME_COMPLEXITY @COPY_FROM _RemoveTarget(LogTargetPtr target)
         ///
@@ -173,7 +173,7 @@ namespace Atom::Logging::Private
         ///
         /// @PARAM[IN] target LogTarget object to search for.
         ///     If {target} is null, this doesn't searches it.
-        /// @RETURNS {true} if found, else {false}.
+        /// @RETURNS `true` if found, else `false`.
         ///
         /// @TIME_COMPLEXITY @COPY_FROM _HasTarget(LogTargetPtr target)
         ///
@@ -323,7 +323,7 @@ namespace Atom::Logging::Private
         ///
         /// @PARAM[IN] target LogTarget object to remove.
         ///     If {target} is null, this doesn't searches it.
-        /// @RETURNS {true} if found and removed, else {false}.
+        /// @RETURNS `true` if found and removed, else `false`.
         ///
         /// @TIME_COMPLEXITY @COPY_FROM ${_TContainer}::Remove(LogTarget& target)
         /// ----------------------------------------------------------------------------------------
@@ -382,7 +382,7 @@ namespace Atom::Logging::Private
         ///
         /// @PARAM[IN] target LogTarget object to search for.
         ///     If {target} is null, doesn't searches it.
-        /// @RETURNS {true} if found, else {false}.
+        /// @RETURNS `true` if found, else `false`.
         ///
         /// @TIME_COMPLEXITY Linear
         /// ----------------------------------------------------------------------------------------

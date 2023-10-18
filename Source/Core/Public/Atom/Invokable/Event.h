@@ -25,7 +25,7 @@ namespace Atom
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// {Event} is just a frontend to {EventSource} to prevent users from dispatching events.
+    /// [`Event`] is just a frontend to [`EventSource`] to prevent users from dispatching events.
     /// --------------------------------------------------------------------------------------------
     template <typename... TArgs>
     class IEvent

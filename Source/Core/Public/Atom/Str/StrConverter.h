@@ -7,13 +7,13 @@
 namespace Atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// Converts {T} object to {Str}.
+    /// Converts `T` object to {Str}.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
     class StrConverter;
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures {TStrConverter} can convert {T} object to {Str}.
+    /// Ensures {TStrConverter} can convert `T` object to {Str}.
     ///
     /// @TPARAM[IN] TConverter Converter type to convert to stirng.
     /// @TPARAM[IN] T Object type to convert to stirng.
@@ -30,13 +30,13 @@ namespace Atom
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures {StrConverter<T>} for {T} is {RStrConverter}.
+    /// Ensures {StrConverter<T>} for `T` is {RStrConverter}.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
     concept RStrConvertible = RStrConverter<StrConverter<T>, T>;
 
     /// --------------------------------------------------------------------------------------------
-    /// {StirngConverter} specialization for {T} containing {const}, {volatile} or {lvalue}
+    /// {StirngConverter} specialization for `T` containing {const}, {volatile} or {lvalue}
     /// and {rvalue} reference.
     ///
     /// @TODO Needs refactoring.

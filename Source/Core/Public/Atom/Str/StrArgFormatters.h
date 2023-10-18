@@ -110,7 +110,7 @@ namespace Atom
     using StrFmtArgFmter = StrFmtArgFmterImpl<TTI::TRemoveCVRef<T>>;
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures {TFmter} is {StrFmtArgFmter} for type {T}.
+    /// Ensures {TFmter} is {StrFmtArgFmter} for type `T`.
     /// --------------------------------------------------------------------------------------------
     template <typename TFmter, typename T>
     concept RStrFmtArgFmter =
@@ -125,7 +125,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures {T} is {StrArgFmtable}.
+    /// Ensures `T` is {StrArgFmtable}.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
     concept RStrFmtArgFmtable = RStrFmtArgFmter<StrFmtArgFmter<T>, T>;
