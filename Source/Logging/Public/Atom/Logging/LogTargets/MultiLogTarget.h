@@ -390,7 +390,7 @@ namespace Atom::Logging::Private
         {
             debug_expects(target != nullptr);
 
-            return RangeFinder().Contains(_targets, target);
+            return _targets.contains(target);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -407,7 +407,7 @@ namespace Atom::Logging::Private
             requires RRangeOf<TRange, LogTargetPtr>
         auto _HasTargets(const TRange& targets) -> usize
         {
-            return RangeFinder().Contains(_targets, targets);
+            return _targets.countAny(targets);
         }
 
         /// ----------------------------------------------------------------------------------------

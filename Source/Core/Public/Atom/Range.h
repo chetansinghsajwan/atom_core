@@ -4,7 +4,6 @@
 #include "Range/IterReqMocks.h"
 #include "Range/Range.h"
 #include "Range/RangeExtensions.h"
-#include "Range/RangeFinder.h"
 #include "Range/RangeHelper.h"
 #include "Range/RangeModifier.h"
 #include "Range/RangeReq.h"

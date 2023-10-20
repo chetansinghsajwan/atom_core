@@ -36,7 +36,6 @@ namespace Atom
             return _impl.iterEnd();
         }
 
-    public:
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
@@ -61,7 +60,6 @@ namespace Atom
             return std::find(stdIter1, stdIterEnd1, stdIter2, stdIterEnd2);
         }
 
-    public:
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
@@ -76,7 +74,6 @@ namespace Atom
             return std::equal(stdIter1, stdIterEnd1, stdIter2, stdIterEnd2);
         }
 
-    public:
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
@@ -176,6 +173,20 @@ namespace Atom
             return _impl.findRange(range);
         }
 
+        template <typename TRange1>
+        auto countAny(const TRange1& range) const -> usize
+        {
+            usize count = 0;
+            for (auto it = iter(); it.compare(iterEnd()) != 0; it++)
+            for (const auto& el : range)
+            {
+                if (*it == el)
+                    count++;
+            }
+
+            return count;
+        }
+
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
@@ -183,7 +194,7 @@ namespace Atom
         constexpr auto contains(const TElem1& el) const -> bool
             requires(REqualityComparableWith<TElem, TElem1>)
         {
-            return _impl.findElem(el) != _impl.iterEnd();
+            return _impl.findElem(el).compare(_impl.iterEnd()) != 0;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -194,7 +205,7 @@ namespace Atom
             requires(RFwdRange<TRange1>)
                 and (REqualityComparableWith<TElem, typename TRange1::TElem>)
         {
-            return _impl.findRange(range) != _impl.iterEnd();
+            return _impl.findRange(range).compare(_impl.iterEnd()) != 0;
         }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
