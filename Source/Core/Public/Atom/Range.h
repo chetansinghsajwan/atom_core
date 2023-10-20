@@ -3,7 +3,6 @@
 #include "Range/IterReqChecks.h"
 #include "Range/IterReqMocks.h"
 #include "Range/Range.h"
-#include "Range/RangeComparer.h"
 #include "Range/RangeExtensions.h"
 #include "Range/RangeFinder.h"
 #include "Range/RangeHelper.h"
