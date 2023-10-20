@@ -13,11 +13,11 @@
 #define _RANGE_REF_WRAP(Wrap, ...)                                                                 \
     class Wrap: __VA_ARGS__                                                                        \
     {                                                                                              \
-    public:
-constexpr Wrap(TRange& range)
-    : __VA_ARGS__{ range }
-{}
-}
+    public:                                                                                        \
+        constexpr Wrap(TRange& range):                                                             \
+            __VA_ARGS__{ range }                                                                   \
+        {}                                                                                         \
+    }
 
 // Preferred implementation.
 //
@@ -38,8 +38,8 @@ namespace Atom
         using TIterEnd = TIterWrap<typename TRange::TIterEnd>;
 
     public:
-        constexpr _RangeWrapBase(TRange& range)
-            : _range{ range }
+        constexpr _RangeWrapBase(TRange& range):
+            _range{ range }
         {}
 
     public:
@@ -68,8 +68,8 @@ namespace Atom
         using TMutIterEnd = TMutIterWrap<typename TRange::TMutIterEnd>;
 
     public:
-        constexpr _MutRangeWrapBase(TRange& range)
-            : Base{ range }
+        constexpr _MutRangeWrapBase(TRange& range):
+            Base{ range }
         {}
 
     public:
