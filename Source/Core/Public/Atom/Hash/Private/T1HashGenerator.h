@@ -49,7 +49,7 @@ namespace Atom::Private
                 return ProcessBytes(bytes.data(), bytes.Size());
             }
 
-            static_assert(BufSize <= NumLimits<uint32_t>::max() && BufSize > 10,
+            static_assert(BufSize <= u32::Max() && BufSize > 10,
                 "Keep {BufSize} smaller than or equal to max of {uint32_t}");
 
             usize count = 0;
@@ -87,11 +87,11 @@ namespace Atom::Private
             // in parts.
 
             // Max size of input WjCrypt accepts at once.
-            static constexpr usize maxInput = NumLimits<uint32_t>::max();
+            constexpr u32 maxInput = u32::Max();
             for (usize processed = 0; processed < dataSize; processed += maxInput)
             {
                 _impl.Update(
-                    (byte*)data + processed, (uint32_t)Math::Min(maxInput, dataSize - processed));
+                    (byte*)data + processed, maxInput.min(dataSize - processed).to<u32>().val());
             }
 
             return *this;
@@ -114,7 +114,7 @@ namespace Atom::Private
         /// Generates T1Hash.
         ///
         /// # Returns
-        /// 
+        ///
         /// `T1Hash` object.
         /// ----------------------------------------------------------------------------------------
         constexpr auto Generate() -> T1Hash

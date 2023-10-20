@@ -1,6 +1,8 @@
 #pragma once
 #include "Atom/Core.h"
 
+#include <memory>
+
 namespace Atom
 {
     class LegacyMemAllocator

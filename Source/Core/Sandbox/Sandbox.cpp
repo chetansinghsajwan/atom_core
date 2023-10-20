@@ -1,4 +1,5 @@
 #include "Atom/Core.h"
+#include <iostream>
 
 using namespace Atom;
 
