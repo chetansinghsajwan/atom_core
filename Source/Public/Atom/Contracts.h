@@ -1,6 +1,7 @@
 #pragma once
 #include "Atom/Core.h"
 #include "Atom/Core/SourceLineInfo.h"
+#include "Contracts.decl.h"
 
 #include <iostream>
 
@@ -16,18 +17,12 @@ namespace Atom
         DebugPostCondition
     };
 
-    consteval StdStrView _FindContractExpr(StdStrView str)
-    {
-        usize i = str.find(',');
-        return { str.data(), i.val() };
-    }
-
     class ContractViolation
     {
     public:
         ContractType type;
-        StdStrView msg;
-        StdStrView expr;
+        std::string_view msg;
+        std::string_view expr;
         SourceLineInfo src;
     };
 
@@ -52,7 +47,7 @@ namespace Atom
         }
 
     private:
-        constexpr auto _toStr(ContractType type) -> StdStrView
+        constexpr auto _toStr(ContractType type) -> std::string_view
         {
             switch (type)
             {
@@ -67,76 +62,27 @@ namespace Atom
         }
     };
 
-    constexpr auto _ContractCheck(ContractType type, StdStrView expr, bool assert,
-        StdStrView msg = "", SourceLineInfo src = SourceLineInfo::current())
+    constexpr auto _ContractCheck(_ContractType type, std::string_view expr, bool assert,
+        std::string_view msg, std::source_location src) -> void
     {
         if (assert)
             return;
 
-        ContractViolation violation{ type, msg, expr, src };
+        SourceLineInfo srcInfo
+        {
+            .line = src.line(),
+            .column = src.column(),
+            .funcName = src.function_name(),
+            .fileName = src.file_name()
+        };
+
+        ContractViolation violation{ ContractType(type), msg, expr, srcInfo };
         DefaultContractViolationHandler().handle(violation);
     }
 
-    inline auto _Panic(StdStrView msg)
+    inline auto _Panic(std::string_view msg)
     {
         std::cerr << msg << std::endl;
         std::terminate();
     }
 }
-
-/// ------------------------------------------------------------------------------------------------
-///
-/// ------------------------------------------------------------------------------------------------
-#define _ATOM_CONTRACT_CHECK(type, ...)                                                            \
-    ::Atom::_ContractCheck(type, ::Atom::_FindContractExpr(#__VA_ARGS__), __VA_ARGS__)
-
-/// ------------------------------------------------------------------------------------------------
-///
-/// ------------------------------------------------------------------------------------------------
-#if ATOM_IS_CONFIG_DEBUG
-#    define _ATOM_DEBUG_CONTRACT_CHECK(type, ...) _ATOM_CONTRACT_CHECK(type, __VA_ARGS__)
-#else
-#    define _ATOM_DEBUG_CONTRACT_CHECK(type, ...)
-#endif
-
-/// ------------------------------------------------------------------------------------------------
-/// Represents pre condition.
-/// ------------------------------------------------------------------------------------------------
-#define expects(...) _ATOM_CONTRACT_CHECK(::Atom::ContractType::PreCondition, __VA_ARGS__)
-
-/// ------------------------------------------------------------------------------------------------
-/// Represents debug pre condition.
-/// ------------------------------------------------------------------------------------------------
-#define debug_expects(...)                                                                         \
-    _ATOM_DEBUG_CONTRACT_CHECK(::Atom::ContractType::DebugPreCondition, __VA_ARGS__)
-
-/// ------------------------------------------------------------------------------------------------
-/// Represents assertion.
-/// ------------------------------------------------------------------------------------------------
-#define asserts(...) _ATOM_CONTRACT_CHECK(::Atom::ContractType::Assertion, __VA_ARGS__)
-
-/// ------------------------------------------------------------------------------------------------
-/// Represents debug assertion.
-/// ------------------------------------------------------------------------------------------------
-#define debug_asserts(...)                                                                         \
-    _ATOM_DEBUG_CONTRACT_CHECK(::Atom::ContractType::DebugAssertion, __VA_ARGS__)
-
-/// ------------------------------------------------------------------------------------------------
-/// Represents post condition.
-/// ------------------------------------------------------------------------------------------------
-// #define ensures(...) _ATOM_CONTRACT_CHECK(::Atom::ContractType::PostCondition, __VA_ARGS__)
-#define ensures(...)
-
-/// ------------------------------------------------------------------------------------------------
-/// Represents debug post condition.
-/// ------------------------------------------------------------------------------------------------
-// #define debug_ensures(...)                                                                         \
-//     _ATOM_DEBUG_CONTRACT_CHECK(::Atom::ContractType::DebugPostCondition, __VA_ARGS__)
-#define debug_ensures(...)
-
-/// ------------------------------------------------------------------------------------------------
-///
-/// ------------------------------------------------------------------------------------------------
-#define panic(...) ::Atom::_Panic(__VA_ARGS__);
-
-#define fnret 0

@@ -1,6 +1,7 @@
 #include "catch2/catch_all.hpp"
 
 #include "Atom/Str/StrConverter.h"
+#include "Atom/Contracts.h"
 
 using namespace Atom;
 

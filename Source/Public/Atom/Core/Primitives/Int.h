@@ -58,8 +58,11 @@ namespace Atom
         }
     };
 
+    class _IntId
+    {};
+
     template <typename TImpl>
-    class Int: public Num<TImpl>
+    class Int: public Num<TImpl>, public _IntId
     {
         using Base = Num<TImpl>;
 
@@ -115,7 +118,7 @@ namespace Atom
 
     class i16: public Int<_IntImpl<i16, _i16>>
     {
-        using Base =  Int<_IntImpl<i16, _i16>>;
+        using Base = Int<_IntImpl<i16, _i16>>;
 
     public:
         using Base::Base;
@@ -124,7 +127,7 @@ namespace Atom
 
     class i32: public Int<_IntImpl<i32, _i32>>
     {
-        using Base =  Int<_IntImpl<i32, _i32>>;
+        using Base = Int<_IntImpl<i32, _i32>>;
 
     public:
         using Base::Base;
@@ -133,7 +136,7 @@ namespace Atom
 
     class i64: public Int<_IntImpl<i64, _i64>>
     {
-        using Base =  Int<_IntImpl<i64, _i64>>;
+        using Base = Int<_IntImpl<i64, _i64>>;
 
     public:
         using Base::Base;
@@ -151,7 +154,7 @@ namespace Atom
 
     class u16: public Int<_IntImpl<u16, _u16>>
     {
-        using Base =  Int<_IntImpl<u16, _u16>>;
+        using Base = Int<_IntImpl<u16, _u16>>;
 
     public:
         using Base::Base;
@@ -160,7 +163,7 @@ namespace Atom
 
     class u32: public Int<_IntImpl<u32, _u32>>
     {
-        using Base =  Int<_IntImpl<u32, _u32>>;
+        using Base = Int<_IntImpl<u32, _u32>>;
 
     public:
         using Base::Base;
@@ -169,7 +172,7 @@ namespace Atom
 
     class u64: public Int<_IntImpl<u64, _u64>>
     {
-        using Base =  Int<_IntImpl<u64, _u64>>;
+        using Base = Int<_IntImpl<u64, _u64>>;
 
     public:
         using Base::Base;

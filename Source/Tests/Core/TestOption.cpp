@@ -167,10 +167,8 @@ TEST_CASE("Atom.Core.Option")
         class Type
         {
         public:
-            Type(i32 a, char b, f32 c)
-                : a{ a }
-                , b{ b }
-                , c{ c }
+            Type(i32 a, char b, f32 c):
+                a{ a }, b{ b }, c{ c }
             {}
 
         public:

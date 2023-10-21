@@ -1,7 +1,4 @@
 #pragma once
-#include "Atom/TTI.h"
-#include "Primitives.h"
-
 #include <concepts>
 #include <type_traits>
 
@@ -29,7 +26,7 @@ namespace Atom
     /// Ensures unqualified type of `T0` is same as unqualified type of `T1`.
     /// --------------------------------------------------------------------------------------------
     template <typename T0, typename T1>
-    concept RSameAsUnqualified = std::same_as<TTI::TRemoveCVRef<T0>, TTI::TRemoveCVRef<T1>>;
+    concept RSameAsUnqualified = std::same_as<std::remove_cvref_t<T0>, std::remove_cvref_t<T1>>;
 
     /// --------------------------------------------------------------------------------------------
     /// Enusres `T` is const-qualified.

@@ -1,8 +1,10 @@
 #pragma once
+#include "Atom/Contracts.decl.h"
+#include "Atom/Core/Requirements.h"
 #include "Byte.h"
 
-#include <numeric>
 #include <cmath>
+#include <numeric>
 
 /// ------------------------------------------------------------------------------------------------
 /// # To Do
@@ -11,7 +13,20 @@
 /// ------------------------------------------------------------------------------------------------
 namespace Atom
 {
-    class _NumId{};
+    class _NumId
+    {};
+
+    /// --------------------------------------------------------------------------------------------
+    ///
+    /// --------------------------------------------------------------------------------------------
+    template <typename TNum>
+    concept _RNum = std::is_integral_v<TNum>;
+
+    /// --------------------------------------------------------------------------------------------
+    ///
+    /// --------------------------------------------------------------------------------------------
+    template <typename TNum>
+    concept RNum = requires(TNum num) { requires RDerivedFrom<TNum, _NumId>; };
 
     template <typename TSelf_, typename TVal_, typename TLimit>
     class _NumImpl
@@ -129,35 +144,88 @@ namespace Atom
             _val{ num }
         {}
 
+    public:
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////
+        //// Assignment
+        ////
+        ////////////////////////////////////////////////////////////////////////////////////////////
+
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename N>
-        constexpr auto operator=(N num) -> TSelf&
+        template <typename TNum>
+        constexpr auto assign(TNum num) -> TSelf&
+            requires(RNum<TNum>)
+        {
+            debug_expects(not CheckOverflowOnAssignment(num));
+
+            _val = num.val();
+            return _self();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename TNum>
+        constexpr auto checkedAssign(TNum num) -> TSelf&
+            requires(RNum<TNum>)
+        {
+            expects(not CheckOverflowOnAssignment(num));
+
+            _val = num.val();
+            return _self();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename TNum>
+        constexpr auto operator=(TNum num) -> TSelf&
+            requires(RNum<TNum>)
         {
             return assign(num);
         }
 
-    public:
-        template <typename N>
-        constexpr auto assign(N num) -> TSelf&
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename TNum>
+        constexpr auto assign(TNum num) -> TSelf&
+            requires(_RNum<TNum>)
         {
-            _val = num;
+            debug_expects(not CheckOverflowOnAssignment(num));
 
+            _val = num;
             return _self();
         }
 
-        template <typename N>
-        constexpr auto checkedAssign(N num) -> TSelf&
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename TNum>
+        constexpr auto checkedAssign(TNum num) -> TSelf&
+            requires(_RNum<TNum>)
         {
-            _val = num;
+            expects(not CheckOverflowOnAssignment(num));
 
+            _val = num;
             return _self();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename TNum>
+        constexpr auto operator=(TNum num) -> TSelf&
+            requires(_RNum<TNum>)
+        {
+            return assign(num);
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////
-        //// Arithmetic Operations
+        //// Arithmetic
         ////
         ////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -597,7 +665,8 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto min(auto v) const -> TSelf
         {
-            if (*this > v) return _Make(v);
+            if (*this > v)
+                return _Make(v);
             return _clone();
         }
 
@@ -606,7 +675,8 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto max(auto v) const -> TSelf
         {
-            if (*this < v) return _Make(v);
+            if (*this < v)
+                return _Make(v);
             return _clone();
         }
 
@@ -615,8 +685,10 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto clamp(auto l, auto r) const -> TSelf
         {
-            if (*this < l) return _Make(l);
-            if (*this > r) return _Make(r);
+            if (*this < l)
+                return _Make(l);
+            if (*this > r)
+                return _Make(r);
             return _clone();
         }
 
@@ -690,8 +762,44 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
+        template <typename TNum>
+        static constexpr auto CheckOverflowOnAssignment(TNum num) -> bool
+            requires(RNum<TNum>)
+        {
+            if constexpr (TNum::Min() < Min())
+                if (num < Min())
+                    return true;
+
+            if constexpr (TNum::Max() > Max())
+                if (num > Max())
+                    return true;
+
+            return false;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename TNum>
+        static constexpr auto CheckOverflowOnAssignment(TNum num) -> bool
+            requires(_RNum<TNum>)
+        {
+            if constexpr (std::numeric_limits<TNum>::min() < Min().val())
+                if (num < Min())
+                    return true;
+
+            if constexpr (std::numeric_limits<TNum>::max() > Max().val())
+                if (num > Max())
+                    return true;
+
+            return false;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
         template <typename N>
-        static consteval auto checkOverflowOnConversion() -> bool
+        static constexpr auto CheckOverflowOnConversion() -> bool
         {
             return false;
         }

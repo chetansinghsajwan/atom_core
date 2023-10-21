@@ -38,7 +38,7 @@ namespace Atom
     constexpr auto _IntImpl<TSelf, TVal, TLimit>::ToStr(TVal val) -> TStr
     {
         TStr str;
-        Char* begin = _ToStr(str.mutData() + str.count() - 1, val);
+        Char* begin = _ToStr(val, str.mutData() + str.count() - 1);
         begin--;
         while (begin >= str.data())
         {
@@ -53,7 +53,7 @@ namespace Atom
     constexpr auto _FloatImpl<TSelf, TVal>::ToStr(TVal val) -> TStr
     {
         TStr str;
-        Char* begin = _ToStr(str.mutData() + str.count() - 1, val);
+        Char* begin = _ToStr(val, str.mutData() + str.count() - 1);
         begin--;
         while (begin >= str.data())
         {
