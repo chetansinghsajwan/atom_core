@@ -5,8 +5,7 @@
         "CMake/ArchitecturePresets.json",
         "CMake/CompilerPresets.json",
         "CMake/GeneratorPresets.json",
-        "CMake/ConfigPresets.json",
-        "CMake/StandalonePresets.json"
+        "CMake/ConfigPresets.json"
     ],
     "configurePresets": [
         {

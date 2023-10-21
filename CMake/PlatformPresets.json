@@ -1,18 +1,13 @@
 {
     "version": 4,
-    "include": [
-        "StandalonePresets.json"
-    ],
     "configurePresets": [
         {
             "name": "platform-win",
-            "hidden": true,
-            "inherits": "standalone-vcpkg"
+            "hidden": true
         },
         {
             "name": "platform-unix",
-            "hidden": true,
-            "inherits": "standalone-vcpkg"
+            "hidden": true
         },
         {
             "name": "platform-nix",
