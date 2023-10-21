@@ -7,6 +7,9 @@
 
 namespace Atom
 {
+    /// --------------------------------------------------------------------------------------------
+    /// 
+    /// --------------------------------------------------------------------------------------------
     enum class ContractType
     {
         PreCondition,
@@ -17,6 +20,9 @@ namespace Atom
         DebugPostCondition
     };
 
+    /// --------------------------------------------------------------------------------------------
+    /// 
+    /// --------------------------------------------------------------------------------------------
     class ContractViolation
     {
     public:
@@ -26,12 +32,18 @@ namespace Atom
         SourceLineInfo src;
     };
 
+    /// --------------------------------------------------------------------------------------------
+    /// 
+    /// --------------------------------------------------------------------------------------------
     class ContractViolationHandler
     {
     public:
         virtual auto handle(const ContractViolation& violation) -> void = 0;
     };
 
+    /// --------------------------------------------------------------------------------------------
+    /// 
+    /// --------------------------------------------------------------------------------------------
     class DefaultContractViolationHandler final: public ContractViolationHandler
     {
     public:
@@ -62,22 +74,55 @@ namespace Atom
         }
     };
 
-    constexpr auto _ContractCheck(_ContractType type, std::string_view expr, bool assert,
+    /// --------------------------------------------------------------------------------------------
+    /// 
+    /// --------------------------------------------------------------------------------------------
+    class ContractViolationHandlerManager
+    {
+    public:
+        static auto GetHandler() -> ContractViolationHandler&
+        {
+            return *_Handler;
+        }
+
+        static auto SetHandler(ContractViolationHandler* handler)
+        {
+            _Handler = handler;
+            if (_Handler == nullptr)
+            {
+                _Handler = &_DefaultHandler;
+            }
+        }
+
+        static auto SetHandlerToDefault()
+        {
+            _Handler = &_DefaultHandler;
+        }
+
+    private:
+        static DefaultContractViolationHandler _DefaultHandler;
+        static ContractViolationHandler* _Handler;
+    };
+
+    inline DefaultContractViolationHandler ContractViolationHandlerManager::_DefaultHandler = DefaultContractViolationHandler();
+    inline ContractViolationHandler* ContractViolationHandlerManager::_Handler = &_DefaultHandler;
+
+    /// --------------------------------------------------------------------------------------------
+    /// 
+    /// --------------------------------------------------------------------------------------------
+    inline auto _ContractCheck(_ContractType type, std::string_view expr, bool assert,
         std::string_view msg, std::source_location src) -> void
     {
         if (assert)
             return;
 
-        SourceLineInfo srcInfo
-        {
-            .line = src.line(),
+        SourceLineInfo srcInfo{ .line = src.line(),
             .column = src.column(),
             .funcName = src.function_name(),
-            .fileName = src.file_name()
-        };
+            .fileName = src.file_name() };
 
         ContractViolation violation{ ContractType(type), msg, expr, srcInfo };
-        DefaultContractViolationHandler().handle(violation);
+        ContractViolationHandlerManager::GetHandler().handle(violation);
     }
 
     inline auto _Panic(std::string_view msg)
