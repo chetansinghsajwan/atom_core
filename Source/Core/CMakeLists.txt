@@ -2,8 +2,9 @@
 # Atom.Core
 # --------------------------------------------------------------------------------------------------
 
-find_package(fmt CONFIG REQUIRED)
-find_package(Catch2 CONFIG REQUIRED)
+CPMAddPackage("gh:fmtlib/fmt#10.1.0")
+CPMAddPackage("gh:catchorg/Catch2@3.4.0")
+CPMAddPackage("gh:WaterJuice/WjCryptLib#Version_2.3.0")
 
 file(GLOB_RECURSE SOURCES "Private/**.cpp"
     "Private/**.h" "Public/**.h")

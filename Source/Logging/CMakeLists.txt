@@ -15,7 +15,7 @@ target_link_libraries(Atom.Logging PUBLIC Atom.Core)
 # Atom.Logging Tests
 # --------------------------------------------------------------------------------------------------
 
-find_package(Catch2 CONFIG REQUIRED)
+CPMAddPackage("gh:catchorg/Catch2@3.4.0")
 
 file(GLOB_RECURSE TEST_SOURCES "Tests/**.cpp")
 

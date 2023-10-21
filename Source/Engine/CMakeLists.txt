@@ -2,7 +2,7 @@
 # Atom.Engine
 # --------------------------------------------------------------------------------------------------
 
-find_package(glfw3 CONFIG REQUIRED)
+CPMAddPackage("gh:glfw/glfw#3.3.8")
 
 file(GLOB_RECURSE SOURCES "Private/**.cpp"
     "Private/**.h" "Public/**.h")
