@@ -8,7 +8,7 @@
 namespace Atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
     enum class ContractType
     {
@@ -21,7 +21,7 @@ namespace Atom
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
     class ContractViolation
     {
@@ -33,7 +33,16 @@ namespace Atom
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
+    /// --------------------------------------------------------------------------------------------
+    class ContractViolationException
+    {
+    public:
+        ContractViolation violation;
+    };
+
+    /// --------------------------------------------------------------------------------------------
+    ///
     /// --------------------------------------------------------------------------------------------
     class ContractViolationHandler
     {
@@ -42,7 +51,7 @@ namespace Atom
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
     class DefaultContractViolationHandler final: public ContractViolationHandler
     {
@@ -55,7 +64,14 @@ namespace Atom
                       << "at: " << violation.src.fileName << ":" << violation.src.line.val() << ":"
                       << violation.src.column.val() << ": " << violation.src.funcName << std::endl;
 
-            std::terminate();
+            if constexpr (ATOM_IS_CONFIG_DEBUG)
+            {
+                throw ContractViolationException{ violation };
+            }
+            else
+            {
+                std::terminate();
+            }
         }
 
     private:
@@ -75,7 +91,7 @@ namespace Atom
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
     class ContractViolationHandlerManager
     {
@@ -104,11 +120,12 @@ namespace Atom
         static ContractViolationHandler* _Handler;
     };
 
-    inline DefaultContractViolationHandler ContractViolationHandlerManager::_DefaultHandler = DefaultContractViolationHandler();
+    inline DefaultContractViolationHandler ContractViolationHandlerManager::_DefaultHandler =
+        DefaultContractViolationHandler();
     inline ContractViolationHandler* ContractViolationHandlerManager::_Handler = &_DefaultHandler;
 
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
     inline auto _ContractCheck(_ContractType type, std::string_view expr, bool assert,
         std::string_view msg, std::source_location src) -> void
