@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(AtomEngine VERSION 0.1.0 LANGUAGES CXX C)
+project(Atom.Core VERSION 0.1.0 LANGUAGES CXX C)
 
 include(CMake/CPM.cmake)
 set(CPM_SOURCE_CACHE "${CMAKE_SOURCE_DIR}/Build/CPMCache")

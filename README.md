@@ -1,2 +1,2 @@
-# AtomEngine
-A GameEngine written in C++.
+# Atom.Core
+Library with core functionality written in C++.

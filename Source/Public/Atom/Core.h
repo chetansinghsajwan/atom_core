@@ -21,7 +21,7 @@
 #        define ATOM_API
 #    endif
 #else
-#    error "AtomEngine only supports Windows and Linux platform for now."
+#    error "Atom.Core only supports Windows and Linux platform for now."
 #endif
 
 /// ------------------------------------------------------------------------------------------------
