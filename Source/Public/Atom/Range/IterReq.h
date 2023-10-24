@@ -243,7 +243,7 @@ namespace Atom
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     template <typename TIter>
-    concept RJumpIter = requires(TIter it, const TIter cit, isize steps)
+    concept RJumpIter = requires(TIter it, const TIter cit, usize steps)
     {
         requires RBidiIter<TIter>;
 

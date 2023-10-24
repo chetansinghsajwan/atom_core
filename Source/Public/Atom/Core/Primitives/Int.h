@@ -71,6 +71,40 @@ namespace Atom
         using Base::operator=;
     };
 
+    template <typename TInt>
+    concept RInt = requires
+    {
+        requires RDerivedFrom<TInt, _IntId>;
+    };
+
+    template <typename TInt, typename T>
+    constexpr auto operator+(TInt num, T* ptr) -> T*
+        requires(RInt<TInt>)
+    {
+        return ptr + num._val;
+    }
+
+    template <typename TInt, typename T>
+    constexpr auto operator-(TInt num, T* ptr) -> T*
+        requires(RInt<TInt>)
+    {
+        return ptr - num._val;
+    }
+
+    template <typename TInt, typename T>
+    constexpr auto operator+(T* ptr, TInt num) -> T*
+        requires(RInt<TInt>)
+    {
+        return ptr + num._val;
+    }
+
+    template <typename TInt, typename T>
+    constexpr auto operator-(T* ptr, TInt num) -> T*
+        requires(RInt<TInt>)
+    {
+        return ptr - num._val;
+    }
+
     using _i8 = std::int8_t;
     using _i16 = std::int16_t;
     using _i32 = std::int32_t;

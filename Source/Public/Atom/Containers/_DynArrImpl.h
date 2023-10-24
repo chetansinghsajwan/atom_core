@@ -179,7 +179,7 @@ namespace Atom
         constexpr auto indexForIter(TIter it) const -> usize
         {
             isize i = it.data() - _getData();
-            return i < 0 ? usize(-1) : i;
+            return i < 0 ? usize::Max() : usize(i);
         }
 
         constexpr auto isIterInRange(TIter it) const -> bool
@@ -367,7 +367,7 @@ namespace Atom
         {
             if constexpr (RJumpIterPair<UIter, UIterEnd>)
             {
-                return -it.compare(itEnd);
+                return it.compare(itEnd).abs().template to<usize>();
             }
 
             usize count = 0;

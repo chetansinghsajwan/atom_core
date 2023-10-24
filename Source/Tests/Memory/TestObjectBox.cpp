@@ -1,4 +1,5 @@
 #include "Atom/Memory/ObjectBox.h"
+#include "Atom/Contracts.h"
 #include "catch2/catch_all.hpp"
 
 using namespace Atom;

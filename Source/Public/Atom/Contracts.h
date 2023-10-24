@@ -58,18 +58,18 @@ namespace Atom
     public:
         virtual auto handle(const ContractViolation& violation) -> void override
         {
-            std::cout << "Contracts " << _toStr(violation.type) << " Violation: "
-                      << "'" << violation.expr << "'\n\t"
-                      << "with msg: " << violation.msg << "'\n\t"
-                      << "at: " << violation.src.fileName << ":" << violation.src.line.val() << ":"
-                      << violation.src.column.val() << ": " << violation.src.funcName << std::endl;
-
             if constexpr (ATOM_IS_CONFIG_DEBUG)
             {
                 throw ContractViolationException{ violation };
             }
             else
             {
+                std::cout << "Contracts " << _toStr(violation.type) << " Violation: "
+                        << "'" << violation.expr << "'\n\t"
+                        << "with msg: " << violation.msg << "'\n\t"
+                        << "at: " << violation.src.fileName << ":" << violation.src.line.val() << ":"
+                        << violation.src.column.val() << ": " << violation.src.funcName << std::endl;
+
                 std::terminate();
             }
         }
@@ -127,11 +127,14 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    inline auto _ContractCheck(_ContractType type, std::string_view expr, bool assert,
+    constexpr auto _ContractCheck(_ContractType type, std::string_view expr, bool assert,
         std::string_view msg, std::source_location src) -> void
     {
         if (assert)
             return;
+
+        if (std::is_constant_evaluated())
+            throw 0;
 
         SourceLineInfo srcInfo{ .line = src.line(),
             .column = src.column(),

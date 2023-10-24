@@ -59,7 +59,7 @@ namespace Atom
         constexpr auto count() const -> usize
             requires(RJumpIterPair<TIter, TIterEnd>)
         {
-            return -_iter.compare(_iterEnd);
+            return _iter.compare(_iterEnd).abs().template to<usize>();
         }
 
         constexpr auto data() const -> const TElem*

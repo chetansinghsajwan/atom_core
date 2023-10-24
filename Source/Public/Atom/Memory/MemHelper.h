@@ -214,11 +214,11 @@ ATOM_PRAGMA_OPTIMIZE_ON
 
             if (steps > 0)
             {
-                _ShiftFwd(mem.mem, mem.count, steps);
+                _ShiftFwd(mem.mem, mem.count, steps.to<usize>());
             }
             else
             {
-                _ShiftBwd(mem.mem, mem.count, -steps);
+                _ShiftBwd(mem.mem, mem.count, steps.abs().to<usize>());
             }
         }
 
@@ -263,11 +263,11 @@ ATOM_PRAGMA_OPTIMIZE_ON
 
             if (steps > 0)
             {
-                _ShiftFwd(mem.mem, mem.count, steps);
+                _ShiftFwd(mem.mem, mem.count, steps.to<usize>());
             }
             else
             {
-                _ShiftBwd(mem.mem, mem.count, -steps);
+                _ShiftBwd(mem.mem, mem.count, steps.abs().to<usize>());
             }
         }
 
@@ -289,12 +289,12 @@ ATOM_PRAGMA_OPTIMIZE_ON
 
         constexpr auto _ShiftFwd(const MemPtr mem, usize memCount, usize steps) const -> void
         {
-            std::shift_right(mem, mem + memCount, steps);
+            std::shift_right(mem, mem + memCount, steps.val());
         }
 
         constexpr auto _ShiftBwd(const MemPtr mem, usize memCount, usize steps) const -> void
         {
-            std::shift_left(mem, mem + memCount, steps);
+            std::shift_left(mem, mem + memCount, steps.val());
         }
 
         constexpr auto _RotateFwd(const MemPtr mem, usize memCount, usize offset) const -> void

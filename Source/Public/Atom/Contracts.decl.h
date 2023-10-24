@@ -1,6 +1,6 @@
 #pragma once
-#include <string_view>
 #include <source_location>
+#include <string_view>
 
 namespace Atom
 {
@@ -20,8 +20,9 @@ namespace Atom
         return { str.data(), i };
     }
 
-    auto _ContractCheck(_ContractType type, std::string_view expr, bool assert,
-        std::string_view msg = "", std::source_location src = std::source_location::current()) -> void;
+    constexpr auto _ContractCheck(_ContractType type, std::string_view expr, bool assert,
+        std::string_view msg = "", std::source_location src = std::source_location::current())
+        -> void;
 
     inline auto _Panic(std::string_view msg);
 }

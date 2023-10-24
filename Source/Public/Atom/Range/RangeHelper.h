@@ -187,7 +187,7 @@ ATOM_PRAGMA_OPTIMIZE_ON
         {
             if constexpr (RJumpIterPair<TIter, TIterEnd>)
             {
-                return -iter.compare(iterEnd);
+                return iter.compare(iterEnd).abs().template to<usize>();
             }
 
             usize count = 0;
