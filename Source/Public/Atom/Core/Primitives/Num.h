@@ -20,7 +20,7 @@ namespace Atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename TNum>
-    concept _RNum = std::is_integral_v<TNum>;
+    concept _RNum = std::is_integral_v<TNum> or std::is_floating_point_v<TNum>;
 
     /// --------------------------------------------------------------------------------------------
     ///
@@ -126,25 +126,97 @@ namespace Atom
             return TImpl::IsSigned();
         }
 
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename TNum>
+        static consteval auto IsConversionSafe() -> bool
+            requires(RNum<TNum>) or (_RNum<TNum>)
+        {
+            // It's better to ask the target type if it can accept our range values.
+            if constexpr (RNum<TNum>)
+            {
+                return TNum::template IsAssignmentSafe<TSelf>();
+            }
+            else
+            {
+                if (TImpl::Min() < std::numeric_limits<TNum>::min())
+                    return false;
+
+                if (TImpl::Max() > std::numeric_limits<TNum>::max())
+                    return false;
+
+                return true;
+            }
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename TNum>
+        static consteval auto IsAssignmentSafe() -> bool
+            requires(RNum<TNum>) or (_RNum<TNum>)
+        {
+            if constexpr (RNum<TNum>)
+            {
+                if constexpr (IsSigned() != TNum::IsSigned())
+                    return false;
+
+                if constexpr (TNum::TImpl::Min() < TImpl::Min())
+                    return false;
+
+                if constexpr (TNum::TImpl::Max() > TImpl::Max())
+                    return false;
+            }
+            else
+            {
+                if constexpr (IsSigned() != std::is_signed_v<TNum>)
+                    return false;
+
+                if constexpr (std::numeric_limits<TNum>::min() < TImpl::Min())
+                    return false;
+
+                if constexpr (std::numeric_limits<TNum>::max() > TImpl::Max())
+                    return false;
+            }
+
+            return true;
+        }
+
     public:
         /// ----------------------------------------------------------------------------------------
-        /// # To Do: No default constructor should be provided. Value should be initialized explicitly.
+        /// # To Do
+        ///
+        /// - No default constructor should be provided. Value should be initialized explicitly.
         /// ----------------------------------------------------------------------------------------
         constexpr Num() = default;
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr Num(TVal num):
-            _val{ num }
-        {}
+        template <typename TNum>
+        constexpr Num(TNum num)
+            requires(RNum<TNum>) and (IsAssignmentSafe<TNum>())
+        {
+            _val = _Unwrap(num);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename TNum>
+        explicit constexpr Num(TNum num)
+            requires(RNum<TNum>) and (not IsAssignmentSafe<TNum>())
+        {
+            _val = _Unwrap(num);
+        }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename TNum>
         constexpr Num(TNum num)
-            requires(RNum<TNum>) or (_RNum<TNum>)
+            requires(_RNum<TNum>)
         {
             debug_expects(not CheckOverflowOnAssignment(num));
 
@@ -156,7 +228,18 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <typename TNum>
         constexpr auto operator=(TNum num) -> TSelf&
-            requires(RNum<TNum>) or (_RNum<TNum>)
+            requires(RNum<TNum>) and (IsAssignmentSafe<TNum>())
+        {
+            _val = _Unwrap(num);
+            return _self();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename TNum>
+        constexpr auto operator=(TNum num) -> TSelf&
+            requires(_RNum<TNum>)
         {
             debug_expects(not CheckOverflowOnAssignment(num));
 
@@ -165,16 +248,14 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # To Do
         ///
-        /// - Review implicit conversions.
         /// ----------------------------------------------------------------------------------------
-        // template <typename TNum>
-        // constexpr operator TNum() const
-        //     requires(_RNum<TNum>) and (Self::IsConversionSafe<TNum>())
-        // {
-        //     return to<TNum>();
-        // }
+        template <typename TNum>
+        constexpr operator TNum() const
+            requires(_RNum<TNum>) and (Self::IsConversionSafe<TNum>())
+        {
+            return to<TNum>();
+        }
 
         /// ----------------------------------------------------------------------------------------
         ///
@@ -805,68 +886,11 @@ namespace Atom
             return TNum(_val);
         }
 
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename TNum>
-        static consteval auto IsConversionSafe() -> bool
-            requires(RNum<TNum>) or (_RNum<TNum>)
-        {
-            // It's better to ask the target type if it can accept our range values.
-            if constexpr (RNum<TNum>)
-            {
-                return TNum::template IsAssignmentSafe<TSelf>();
-            }
-            else
-            {
-                if (TImpl::Min() < std::numeric_limits<TNum>::min())
-                    return false;
-
-                if (TImpl::Max() > std::numeric_limits<TNum>::max())
-                    return false;
-
-                return true;
-            }
-        }
-
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////
         //// Checks
         ////
         ////////////////////////////////////////////////////////////////////////////////////////////
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename TNum>
-        static consteval auto IsAssignmentSafe() -> bool
-            requires(RNum<TNum>) or (_RNum<TNum>)
-        {
-            if constexpr (RNum<TNum>)
-            {
-                if constexpr (IsSigned() != TNum::IsSigned())
-                    return false;
-
-                if constexpr (TNum::TImpl::Min() < TImpl::Min())
-                    return false;
-
-                if constexpr (TNum::TImpl::Max() > TImpl::Max())
-                    return false;
-            }
-            else
-            {
-                if constexpr (IsSigned() != std::is_signed_v<TNum>)
-                    return false;
-
-                if constexpr (std::numeric_limits<TNum>::min() < TImpl::Min())
-                    return false;
-
-                if constexpr (std::numeric_limits<TNum>::max() > TImpl::Max())
-                    return false;
-            }
-
-            return true;
-        }
 
         /// ----------------------------------------------------------------------------------------
         ///
