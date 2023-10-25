@@ -140,10 +140,13 @@ namespace Atom
             }
             else
             {
-                if (TImpl::Min() < std::numeric_limits<TNum>::min())
+                if constexpr (IsSigned() != std::is_signed_v<TNum>)
                     return false;
 
-                if (TImpl::Max() > std::numeric_limits<TNum>::max())
+                if constexpr (TImpl::Min() < std::numeric_limits<TNum>::min())
+                    return false;
+
+                if constexpr (TImpl::Max() > std::numeric_limits<TNum>::max())
                     return false;
 
                 return true;
@@ -260,9 +263,11 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr operator TVal() const
+        template <typename TNum>
+        explicit constexpr operator TNum() const
+            requires(_RNum<TNum>) and (not Self::IsConversionSafe<TNum>())
         {
-            return _val;
+            return to<TNum>();
         }
 
     public:

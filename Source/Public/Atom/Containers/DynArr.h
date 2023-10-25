@@ -422,7 +422,7 @@ namespace Atom
             usize removedCount = 0;
             for (usize i = 0; i < _impl.count(); i++)
             {
-                if (pred(_impl.data()[i]))
+                if (pred(_impl.data()[i.val()]))
                 {
                     _impl.removeAt(i);
                     i--;

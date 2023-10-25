@@ -56,7 +56,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto next(usize steps = 1) -> ArrIter&
         {
-            _it += steps;
+            _it += steps.val();
             return *this;
         }
 
@@ -65,7 +65,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto prev(usize steps = 1) -> ArrIter&
         {
-            _it -= steps;
+            _it -= steps.val();
             return *this;
         }
 

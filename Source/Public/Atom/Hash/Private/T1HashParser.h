@@ -27,7 +27,7 @@ namespace Atom::Private
             T1Hash hash;
             for (usize i = 0; i < _Size * 2; i += 2)
             {
-                byte hex1 = Math::CharToHex(str[i + 0]);
+                byte hex1 = Math::CharToHex(str[i.val()]);
                 if (hex1 == (byte)-1)
                 {
                     return T1Hash::Null;
@@ -36,7 +36,7 @@ namespace Atom::Private
                 // Left shift 4 bits to make space for next 4 bits.
                 hex1 = hex1 << 4;
 
-                byte hex2 = Math::CharToHex(str[i + 1]);
+                byte hex2 = Math::CharToHex(str[(i + 1).val()]);
                 if (hex2 == (byte)-1)
                 {
                     return T1Hash::Null;
