@@ -1,4 +1,5 @@
-#include "Atom/CoreAll.h"
+// #include "Atom/CoreAll.h"
+#include "Atom/Core/Primitives.h"
 #include <iostream>
 
 using namespace Atom;
