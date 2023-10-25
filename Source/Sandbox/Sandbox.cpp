@@ -7,7 +7,7 @@ auto PrintCmdArgs(i32 argc, char** argv)
 {
     for (i32 i = 1; i < argc; i++)
     {
-        std::cout << argv[i] << std::endl;
+        std::cout << argv[i.val()] << std::endl;
     }
 }
 
