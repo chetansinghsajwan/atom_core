@@ -1,38 +1,38 @@
 #pragma once
-#include "StrConverter.h"
-#include "StrView.h"
+#include "StringConverter.h"
+#include "StringView.h"
 
 namespace Atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// Converts `T` object to {StrView}.
+    /// Converts `T` object to {StringView}.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    class StrViewConverter;
+    class StringViewConverter;
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures {TConverter} can convert `T` object to {StrView}.
+    /// Ensures {TConverter} can convert `T` object to {StringView}.
     /// --------------------------------------------------------------------------------------------
     template <typename TConverter, typename T>
-    concept RStrViewConverter = requires(TConverter converter, T arg) {
+    concept RStringViewConverter = requires(TConverter converter, T arg) {
         {
             converter.Convert(arg)
-        } -> RSameAs<StrView>;
+        } -> RSameAs<StringView>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures `T` is convertible to {StrView}.
+    /// Ensures `T` is convertible to {StringView}.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    concept RStrViewConvertible = RStrViewConverter<StrViewConverter<T>, T>;
+    concept RStringViewConvertible = RStringViewConverter<StringViewConverter<T>, T>;
 
     /// --------------------------------------------------------------------------------------------
-    /// {StrViewConverter} specialization for {StrView}.
+    /// {StringViewConverter} specialization for {StringView}.
     /// --------------------------------------------------------------------------------------------
     template <>
-    class StrViewConverter<StrView>
+    class StringViewConverter<StringView>
     {
-        constexpr StrView Convert(StrView in)
+        constexpr StringView Convert(StringView in)
         {
             return in;
         }
@@ -45,29 +45,29 @@ namespace Atom
     /// @TODO Needs refactoring.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-        requires(!RSameAs<T, TTI::TRemoveCVRef<T>>) && RStrViewConvertible<TTI::TRemoveCVRef<T>>
-    class StrViewConverter<T>: StrViewConverter<TTI::TRemoveCVRef<T>>
+        requires(!RSameAs<T, TTI::TRemoveCVRef<T>>) && RStringViewConvertible<TTI::TRemoveCVRef<T>>
+    class StringViewConverter<T>: StringViewConverter<TTI::TRemoveCVRef<T>>
     {};
 
     /// --------------------------------------------------------------------------------------------
-    /// {StrConverter} specialization for types which are {StrViewConvertible}.
+    /// {StringConverter} specialization for types which are {StringViewConvertible}.
     /// --------------------------------------------------------------------------------------------
-    template <RStrViewConvertible T>
-    class StrConverter<T>
+    template <RStringViewConvertible T>
+    class StringConverter<T>
     {
     public:
-        constexpr auto Convert(const T& in) -> Str
+        constexpr auto Convert(const T& in) -> String
         {
             return converter.Convert();
         }
 
         constexpr auto Convert(const T& in, ROutput<Char> auto out) -> void
         {
-            StrView strView = converter.Convert(in);
+            StringView strView = converter.Convert(in);
             out.InsertBack(in);
         }
 
     public:
-        StrViewConverter<T> converter;
+        StringViewConverter<T> converter;
     };
 }

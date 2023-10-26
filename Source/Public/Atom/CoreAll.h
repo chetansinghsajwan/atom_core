@@ -12,6 +12,6 @@
 #include "Preprocessors.h"
 #include "Random.h"
 #include "Range.h"
-#include "Str.h"
+#include "String.h"
 #include "TTI.h"
 #include "Uuid.h"

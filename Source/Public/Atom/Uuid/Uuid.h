@@ -38,7 +38,7 @@ namespace Atom
         constexpr auto operator!=(const Uuid& other) const -> bool = default;
 
     public:
-        StaticArr<byte, 16> bytes;
+        StaticArray<byte, 16> bytes;
     };
 
     constexpr inline const Uuid Uuid::Null = Uuid{ 0 };

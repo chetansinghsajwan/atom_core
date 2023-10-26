@@ -1,19 +1,19 @@
 // #include "catch2/catch_all.hpp"
 // #include "Atom/Range/IterWrappers.h"
-// #include "Atom/Range/ArrIter.h"
+// #include "Atom/Range/ArrayIter.h"
 //
 // using namespace Atom;
 //
 // TEST_CASE("Atom.Range.IterWrappers", "[.compilation]")
 // {
-//     using IterWrapMock = IterWrap<MutArrIter<i32>>;
-//     using MutIterWrapMock = MutIterWrap<MutArrIter<i32>>;
-//     using FwdIterWrapMock = FwdIterWrap<MutArrIter<i32>>;
-//     using MutFwdIterWrapMock = MutFwdIterWrap<MutArrIter<i32>>;
-//     using BidiIterWrapMock = BidiIterWrap<MutArrIter<i32>>;
-//     using MutBidiIterWrapMock = MutBidiIterWrap<MutArrIter<i32>>;
-//     using JumpIterWrapMock = JumpIterWrap<MutArrIter<i32>>;
-//     using MutJumpIterWrapMock = MutJumpIterWrap<MutArrIter<i32>>;
+//     using IterWrapMock = IterWrap<MutArrayIter<i32>>;
+//     using MutIterWrapMock = MutIterWrap<MutArrayIter<i32>>;
+//     using FwdIterWrapMock = FwdIterWrap<MutArrayIter<i32>>;
+//     using MutFwdIterWrapMock = MutFwdIterWrap<MutArrayIter<i32>>;
+//     using BidiIterWrapMock = BidiIterWrap<MutArrayIter<i32>>;
+//     using MutBidiIterWrapMock = MutBidiIterWrap<MutArrayIter<i32>>;
+//     using JumpIterWrapMock = JumpIterWrap<MutArrayIter<i32>>;
+//     using MutJumpIterWrapMock = MutJumpIterWrap<MutArrayIter<i32>>;
 //
 //     STATIC_CHECK(RIter<IterWrapMock>);
 //     STATIC_CHECK_FALSE(RMutIter<IterWrapMock>);
@@ -38,18 +38,18 @@
 //
 //     STATIC_CHECK(RJumpIter<JumpIterWrapMock>);
 //     STATIC_CHECK_FALSE(RMutJumpIter<JumpIterWrapMock>);
-//     STATIC_CHECK_FALSE(RMutArrIter<IterWrapMock>);
+//     STATIC_CHECK_FALSE(RMutArrayIter<IterWrapMock>);
 //
 //     STATIC_CHECK(RMutJumpIter<MutJumpIterWrapMock>);
-//     STATIC_CHECK_FALSE(RMutArrIter<IterWrapMock>);
+//     STATIC_CHECK_FALSE(RMutArrayIter<IterWrapMock>);
 // }
 //
 // TEST_CASE("Atom.Range.IterWrappers", "[.interface]")
 // {
-//     class CustomIter: MutArrIter<i32>
+//     class CustomIter: MutArrayIter<i32>
 //     {
 //     public:
-//         using Base = MutArrIter<i32>;
+//         using Base = MutArrayIter<i32>;
 //
 //     public:
 //         constexpr CustomIter() { }
@@ -62,7 +62,7 @@
 //
 //     SECTION("")
 //     {
-//         MutArrIter<i32> iter;
+//         MutArrayIter<i32> iter;
 //
 //         IterWrap iterWrap{ iter };
 //         MutIterWrap mutIterWrap{ iter };

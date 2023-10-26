@@ -44,7 +44,7 @@ namespace Atom::Private
         constexpr auto ProcessBytes(TRange bytes) -> Self&
             requires RRangeOf<TRange, byte>
         {
-            if constexpr (RArrRangeOf<TRange, byte>)
+            if constexpr (RArrayRangeOf<TRange, byte>)
             {
                 return ProcessBytes(bytes.data(), bytes.Size());
             }
@@ -53,7 +53,7 @@ namespace Atom::Private
                 "Keep {BufSize} smaller than or equal to max of {uint32_t}");
 
             usize count = 0;
-            StaticArr<byte, BufSize> buf;
+            StaticArray<byte, BufSize> buf;
 
             auto end = bytes.End();
             for (auto it = bytes.Begin(); it != end; it++)

@@ -1,7 +1,7 @@
 #pragma once
 #include "Atom/Hash/Private/T1Hash.h"
-#include "Atom/Str/Str.h"
-#include "Atom/Str/StrConverter.h"
+#include "Atom/String/String.h"
+#include "Atom/String/StringConverter.h"
 
 namespace Atom::Private
 {
@@ -9,18 +9,18 @@ namespace Atom::Private
     class T1HashStringifier
     {
     public:
-        constexpr auto ToStr(const T1Hash& hash) -> Str
+        constexpr auto ToString(const T1Hash& hash) -> String
         {
-            Str str;
-            WriteStr(hash, str);
+            String str;
+            WriteString(hash, str);
             return str;
         };
 
-        constexpr auto WriteStr(const T1Hash& hash, ROutput<Char> auto&& out)
+        constexpr auto WriteString(const T1Hash& hash, ROutput<Char> auto&& out)
         {
             for (byte b : hash.bytes)
             {
-                StackStr<2> chars = Math::HexToChar(b);
+                StackString<2> chars = Math::HexToChar(b);
                 out += chars[0];
                 out += chars[1];
             }
@@ -32,17 +32,17 @@ namespace Atom
 {
     template <typename T1Hash>
         requires(RDefaultConstructible<Private::T1HashStringifier<T1Hash>>)
-    class StrConverter<T1Hash>
+    class StringConverter<T1Hash>
     {
     public:
-        constexpr auto Convert(const T1Hash& hash) -> Str
+        constexpr auto Convert(const T1Hash& hash) -> String
         {
-            return Private::T1HashStringifier<T1Hash>().ToStr(hash);
+            return Private::T1HashStringifier<T1Hash>().ToString(hash);
         }
 
         constexpr auto Convert(const T1Hash& hash, ROutput<Char> auto&& out)
         {
-            return Private::T1HashStringifier<T1Hash>().WriteStr(hash, out);
+            return Private::T1HashStringifier<T1Hash>().WriteString(hash, out);
         }
     };
 }

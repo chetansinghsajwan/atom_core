@@ -1,7 +1,7 @@
 #pragma once
 #include "Atom/Math.h"
 #include "Atom/Range.h"
-#include "Atom/Str.h"
+#include "Atom/String.h"
 #include "Uuid.h"
 
 namespace Atom

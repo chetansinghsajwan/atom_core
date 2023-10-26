@@ -1,7 +1,7 @@
 #pragma once
 #include "Atom/Exceptions.h"
 #include "Atom/Memory/ObjectBox.h"
-#include "Atom/Str.h"
+#include "Atom/String.h"
 #include "Atom/TTI.h"
 
 #include "Atom/Invokable/Invokable.h"

@@ -1,9 +1,9 @@
 #pragma once
-#include "_DynArrImpl.h"
+#include "Atom/Contracts.h"
 #include "Atom/Invokable/Invokable.h"
 #include "Atom/Memory/DefaultMemAllocator.h"
 #include "Atom/Range.h"
-#include "Atom/Contracts.h"
+#include "_DynamicArrayImpl.h"
 
 namespace Atom
 {
@@ -13,35 +13,34 @@ namespace Atom
     /// - Add note for case, where element or elements to be inserted are from this array.
     /// --------------------------------------------------------------------------------------------
     template <typename T, typename TAlloc = DefaultMemAllocator>
-    requires(not RRef<T>)
-        and (not RIsVoid<T>)
-    class DynArr:
-        public MutArrRangeTrait<DynArr<T>>
+        requires(not RRef<T>) and (not RIsVoid<T>)
+    class DynamicArray: public MutArrayRangeTrait<DynamicArray<T>>
     {
-        friend class MutArrRangeTraitImpl<DynArr<T, TAlloc>>;
+        friend class MutArrayRangeTraitImpl<DynamicArray<T, TAlloc>>;
 
     private:
-        using _Impl = _DynArrImpl<T, TAlloc>;
-        using Trait = MutArrRangeTrait<DynArr<T>>;
+        using _Impl = _DynamicArrayImpl<T, TAlloc>;
+        using Trait = MutArrayRangeTrait<DynamicArray<T>>;
 
     public:
         using TElem = T;
-        using TIter = ArrIter<T>;
+        using TIter = ArrayIter<T>;
         using TIterEnd = TIter;
-        using TMutIter = ArrIter<T>;
+        using TMutIter = ArrayIter<T>;
         using TMutIterEnd = TMutIter;
 
     public:
         /// ----------------------------------------------------------------------------------------
         /// # Default Constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr DynArr():
-            _impl{} { }
+        constexpr DynamicArray():
+            _impl{}
+        {}
 
         /// ----------------------------------------------------------------------------------------
         /// # Copy Constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr DynArr(const DynArr& that):
+        constexpr DynamicArray(const DynamicArray& that):
             _impl{ that.iter(), that.iterEnd() }
         {
             _impl.insertRangeBack(that.iter(), that.iterEnd());
@@ -50,7 +49,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Copy Operator
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator=(const DynArr& that) -> DynArr&
+        constexpr auto operator=(const DynamicArray& that) -> DynamicArray&
         {
             _impl.assignRange(that.iter(), that.iterEnd());
             return *this;
@@ -59,13 +58,14 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Move Constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr DynArr(DynArr&& that):
-            _impl{ mov(that._impl) } {}
+        constexpr DynamicArray(DynamicArray&& that):
+            _impl{ mov(that._impl) }
+        {}
 
         /// ----------------------------------------------------------------------------------------
         /// # Move Operator
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator=(DynArr&& that) -> DynArr&
+        constexpr auto operator=(DynamicArray&& that) -> DynamicArray&
         {
             _impl.storage().move(mov(that));
             return *this;
@@ -75,8 +75,9 @@ namespace Atom
         /// # Range Constructor
         /// ----------------------------------------------------------------------------------------
         template <typename TRange, typename TRangeUnqualified = TTI::TRemoveQuailfiersRef<TRange>>
-        constexpr DynArr(TRange&& range)
-            requires(RRangeOf<TRangeUnqualified, T>):
+        constexpr DynamicArray(TRange&& range)
+            requires(RRangeOf<TRangeUnqualified, T>)
+            :
             _impl{ range.iter(), range.iterEnd() }
         {}
 
@@ -84,7 +85,7 @@ namespace Atom
         /// # Range Operator
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
-        constexpr DynArr& operator=(TRange&& range)
+        constexpr DynamicArray& operator=(TRange&& range)
             requires(RRangeOf<TRange, T>)
         {
             _impl.assignRange(range.iter(), range.iterEnd());
@@ -93,20 +94,20 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Destructor
         /// ----------------------------------------------------------------------------------------
-        constexpr ~DynArr()
+        constexpr ~DynamicArray()
         {
             _impl.onDestruct();
         }
 
         /// ----------------------------------------------------------------------------------------
         /// Constructs element at index `i` with `args`.
-        /// 
+        ///
         /// # Parameters
         /// - `i`: Index to insert element at.
         /// - `args...`: Args to construct element with.
-        /// 
+        ///
         /// # Time Complexity
-        /// 
+        ///
         /// # Iter Invalidation
         /// All iters are invalidated.
         /// ----------------------------------------------------------------------------------------
@@ -121,16 +122,16 @@ namespace Atom
 
         /// ----------------------------------------------------------------------------------------
         /// Constructs element at pos `it` with `args`.
-        /// 
+        ///
         /// # Parameters
         /// - `it`: Pos to insert element at.
         /// - `args...`: Args to construct element with.
-        /// 
+        ///
         /// # Returns
         /// [`TMutIter`] to element inserted.
-        /// 
+        ///
         /// # Time Complexity
-        /// 
+        ///
         /// # Iter Invalidation
         /// All iters are invalidated.
         /// ----------------------------------------------------------------------------------------
@@ -147,25 +148,24 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Inserts elements at index `i`. Forwards each value returned by `range.iter()` to 
+        /// Inserts elements at index `i`. Forwards each value returned by `range.iter()` to
         /// constructor of element in the arr.
-        /// 
+        ///
         /// # Parameters
         /// - `i`: Index to insert elements at.
         /// - `range`: Range of elements to insert.
-        /// 
+        ///
         /// # Returns
         /// Count of elements inserted.
-        /// 
+        ///
         /// # Time Complexity
-        /// 
+        ///
         /// # Iter Invalidation
         /// All iters are invalidated.
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
         constexpr auto insertRangeAt(usize i, TRange&& range) -> usize
-            requires(RRangeOf<TRange, T>)
-                and (RConstructible<T, typename TRange::TElem>)
+            requires(RRangeOf<TRange, T>) and (RConstructible<T, typename TRange::TElem>)
         {
             debug_expects(isIndexInRangeOrEnd(i), "Index is out of range.");
 
@@ -174,25 +174,24 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Inserts elements at pos `it`. Forwards each value returned by `range.iter()` to 
+        /// Inserts elements at pos `it`. Forwards each value returned by `range.iter()` to
         /// constructor of element in the arr.
-        /// 
+        ///
         /// # Parameters
         /// - `it`: Pos to insert elements at.
         /// - `range`: Range of elements to insert.
-        /// 
+        ///
         /// # Returns
         /// `MutRange` of elements inserted.
-        /// 
+        ///
         /// # Time Complexity
-        /// 
+        ///
         /// # Iter Invalidation
         /// All iters are invalidated.
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
         constexpr auto insertRangeAt(TIter it, TRange&& range) -> Range<TMutIter, TMutIterEnd>
-            requires(RRangeOf<TRange, T>)
-                and (RConstructible<T, typename TRange::TElem>)
+            requires(RRangeOf<TRange, T>) and (RConstructible<T, typename TRange::TElem>)
         {
             debug_expects(isIterValid(it), "Invalid iter.");
             debug_expects(isIterInRangeOrEnd(it), "Iter is out of range.");
@@ -204,12 +203,12 @@ namespace Atom
 
         /// ----------------------------------------------------------------------------------------
         /// Constructs element at front with `args`.
-        /// 
+        ///
         /// # Parameters
         /// - `args...`: Args to construct element with.
-        /// 
+        ///
         /// # Time Complexity
-        /// 
+        ///
         /// # Iter Invalidation
         /// All iters are invalidated.
         /// ----------------------------------------------------------------------------------------
@@ -221,24 +220,23 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Inserts elements at front. Forwards each value returned by `range.iter()` to 
+        /// Inserts elements at front. Forwards each value returned by `range.iter()` to
         /// constructor of element in the arr.
-        /// 
+        ///
         /// # Parameters
         /// - `range`: Range of elements to insert.
-        /// 
+        ///
         /// # Returns
         /// [`TMutIter`] to past the last inserted element.
-        /// 
+        ///
         /// # Time Complexity
-        /// 
+        ///
         /// # Iter Invalidation
         /// All iters are invalidated.
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
         constexpr auto insertRangeFront(TRange&& range) -> TMutIter
-            requires(RRangeOf<TRange, T>)
-                and (RConstructible<T, typename TRange::TElem>)
+            requires(RRangeOf<TRange, T>) and (RConstructible<T, typename TRange::TElem>)
         {
             usize count = _impl.insertRangeFront(fwd(range));
             return _impl.mutIter(count);
@@ -246,12 +244,12 @@ namespace Atom
 
         /// ----------------------------------------------------------------------------------------
         /// Constructs element at back with `args`.
-        /// 
+        ///
         /// # Parameters
         /// - `args...`: Args to construct element with.
-        /// 
+        ///
         /// # Time Complexity
-        /// 
+        ///
         /// # Iter Invalidation
         /// All iters are invalidated.
         /// ----------------------------------------------------------------------------------------
@@ -263,7 +261,7 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         template <typename T1>
         constexpr auto operator+=(T1&& el)
@@ -273,24 +271,23 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Inserts elements at back. Forwards each value returned by `range.iter()` to 
+        /// Inserts elements at back. Forwards each value returned by `range.iter()` to
         /// constructor of element in the arr.
-        /// 
+        ///
         /// # Parameters
         /// - `range`: Range of elements to insert.
-        /// 
+        ///
         /// # Returns
         /// [`TMutIter`] to the first inserted element.
-        /// 
+        ///
         /// # Time Complexity
-        /// 
+        ///
         /// # Iter Invalidation
         /// All iters are invalidated.
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
         constexpr auto insertRangeBack(TRange&& range) -> TMutIter
-            requires(RRangeOf<TRange, T>)
-                and (RConstructible<T, typename TRange::TElem>)
+            requires(RRangeOf<TRange, T>) and (RConstructible<T, typename TRange::TElem>)
         {
             usize count = _impl.insertRangeBack(range.iter(), range.iterEnd());
             return _impl.mutIter(_impl.count() - count);
@@ -303,14 +300,14 @@ namespace Atom
         template <typename TRange, typename TRangeUnqualified = TTI::TRemoveQuailfiersRef<TRange>>
         constexpr auto operator+=(TRange&& range)
             requires(RRangeOf<TRangeUnqualified, T>)
-                and (RConstructible<T, typename TRangeUnqualified::TElem>)
+                    and (RConstructible<T, typename TRangeUnqualified::TElem>)
         {
             _impl.insertRangeBack(mov(range.iter()), mov(range.iterEnd()));
         }
 
         /// ----------------------------------------------------------------------------------------
         /// Removes element at index `i`.
-        /// 
+        ///
         /// # Parameters
         /// - `i`: Index to remove element at.
         /// ----------------------------------------------------------------------------------------
@@ -323,12 +320,12 @@ namespace Atom
 
         /// ----------------------------------------------------------------------------------------
         /// Removes element at pos `it`.
-        /// 
+        ///
         /// # Parameters
         /// - `it`: Pos to remove element at.
-        /// 
+        ///
         /// # Returns
-        /// [TMutIter] to next element. If `it` was pointing to the last element, 
+        /// [TMutIter] to next element. If `it` was pointing to the last element,
         /// returns [`iterEnd()`].
         /// ----------------------------------------------------------------------------------------
         constexpr auto removeAt(TIter it) -> TMutIter
@@ -343,14 +340,14 @@ namespace Atom
 
         /// ----------------------------------------------------------------------------------------
         /// Removes elements in range [[`from`, `to`]].
-        /// 
+        ///
         /// # Parameters
         /// - `from`: Start of range to remove elements at.
         /// - `to`: End of range to remove elements at.
-        /// 
+        ///
         /// # Returns
         /// `from`.
-        /// 
+        ///
         /// ## Explanation
         /// After removing `to - from` elements, next elements will be shifted back to index `from`.
         /// So the next element will be available at index `from`. If the last element of the arr
@@ -368,13 +365,13 @@ namespace Atom
 
         /// ----------------------------------------------------------------------------------------
         /// Removes elements in range represented by `range`.
-        /// 
+        ///
         /// # Parameters
         /// - `it`: Start of range to remove elements at.
         /// - `itEnd`: End of range to remove elements at.
-        /// 
+        ///
         /// # Returns
-        /// [`TMutIter`] to next element of the last removed element. If the last removed element 
+        /// [`TMutIter`] to next element of the last removed element. If the last removed element
         /// was also the last element of the arr, returns [`iterEnd()`].
         /// ----------------------------------------------------------------------------------------
         constexpr auto removeRange(TIter it, TIter itEnd) -> TMutIter
@@ -386,7 +383,7 @@ namespace Atom
             debug_expects(it.compare(itEnd) <= 0, "Invalid range.");
             debug_ensures(fnret.compare(iterEnd()) <= 0, "Invalid return value.")
 
-            usize from = indexForIter(it);
+                usize from = indexForIter(it);
             usize to = indexForIter(itEnd);
             _impl.removeRange(from, to);
             return _impl.mutIter(from);
@@ -413,7 +410,7 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         template <typename TPred>
         constexpr auto removeIf(TPred&& pred) -> usize
@@ -435,7 +432,7 @@ namespace Atom
 
         /// ----------------------------------------------------------------------------------------
         /// Removes all elements.
-        /// 
+        ///
         /// # Note
         /// - Doesn't free storage.
         /// ----------------------------------------------------------------------------------------
@@ -510,9 +507,9 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Checks for iter has been invalidated. This is done through a value which is changed 
+        /// Checks for iter has been invalidated. This is done through a value which is changed
         /// for the container every time iters are invalidated.
-        /// 
+        ///
         /// # To Do
         /// - Implement iter validation.
         /// ----------------------------------------------------------------------------------------
@@ -544,16 +541,16 @@ namespace Atom
     };
 
     template <typename T, typename TAlloc>
-    class MutArrRangeTraitImpl<DynArr<T, TAlloc>>
+    class MutArrayRangeTraitImpl<DynamicArray<T, TAlloc>>
     {
-        using _Arr = DynArr<T, TAlloc>;
-        using _ArrImpl = _DynArrImpl<T, TAlloc>;
+        using _Array = DynamicArray<T, TAlloc>;
+        using _ArrayImpl = _DynamicArrayImpl<T, TAlloc>;
 
     public:
         using TElem = T;
-        using TIter = ArrIter<T>;
+        using TIter = ArrayIter<T>;
         using TIterEnd = TIter;
-        using TMutIter = MutArrIter<T>;
+        using TMutIter = MutArrayIter<T>;
         using TMutIterEnd = TMutIter;
 
     public:
@@ -593,14 +590,14 @@ namespace Atom
         }
 
     private:
-        constexpr auto _impl() const -> const _ArrImpl&
+        constexpr auto _impl() const -> const _ArrayImpl&
         {
-            return reinterpret_cast<const _Arr&>(*this)._impl;
+            return reinterpret_cast<const _Array&>(*this)._impl;
         }
 
-        constexpr auto _mutImpl() -> _ArrImpl&
+        constexpr auto _mutImpl() -> _ArrayImpl&
         {
-            return reinterpret_cast<_Arr&>(*this)._impl;
+            return reinterpret_cast<_Array&>(*this)._impl;
         }
     };
 }

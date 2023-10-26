@@ -1,5 +1,5 @@
 #pragma once
-#include "ArrIter.h"
+#include "ArrayIter.h"
 #include "InitList.h"
 #include "RangeReq.h"
 
@@ -63,13 +63,13 @@ namespace Atom
         }
 
         constexpr auto data() const -> const TElem*
-            requires(RArrIterPair<TIter, TIterEnd>)
+            requires(RArrayIterPair<TIter, TIterEnd>)
         {
             return _iter.data();
         }
 
         constexpr auto data() -> TElem*
-            requires(RMutArrIterPair<TIter, TIterEnd>)
+            requires(RMutArrayIterPair<TIter, TIterEnd>)
         {
             return _iter.data();
         }
@@ -87,10 +87,10 @@ namespace Atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    class Range<const T*, const T*>: public Range<ArrIter<T>, ArrIter<T>>
+    class Range<const T*, const T*>: public Range<ArrayIter<T>, ArrayIter<T>>
     {
     public:
-        using Base = Range<ArrIter<T>, ArrIter<T>>;
+        using Base = Range<ArrayIter<T>, ArrayIter<T>>;
 
     public:
         constexpr Range(const T* arr, const T* end)
@@ -111,10 +111,10 @@ namespace Atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    class Range<T*, T*>: public Range<MutArrIter<T>, MutArrIter<T>>
+    class Range<T*, T*>: public Range<MutArrayIter<T>, MutArrayIter<T>>
     {
     public:
-        using Base = Range<MutArrIter<T>, MutArrIter<T>>;
+        using Base = Range<MutArrayIter<T>, MutArrayIter<T>>;
 
     public:
         constexpr Range(T* arr, T* end)

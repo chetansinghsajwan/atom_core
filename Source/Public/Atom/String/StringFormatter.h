@@ -1,67 +1,67 @@
 #pragma once
-#include "StrArgFormatters.h"
+#include "StringArgFormatters.h"
 
 namespace Atom
 {
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    class _FmtStrViewCnvter
+    class _FmtStringViewCnvter
     {
     public:
-        constexpr auto FromFmt(_FmtStrView strv) -> StrView
+        constexpr auto FromFmt(_FmtStringView strv) -> StringView
         {
-            return StrView{ Range(strv.data(), strv.size()) };
+            return StringView{ Range(strv.data(), strv.size()) };
         }
 
-        constexpr auto ToFmt(StrView strv) -> _FmtStrView
+        constexpr auto ToFmt(StringView strv) -> _FmtStringView
         {
-            return _FmtStrView{ strv.data(), strv.count() };
+            return _FmtStringView{ strv.data(), strv.count() };
         }
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Wrapper over {StrView} to represent format string. This is done to avoid compile
+    /// Wrapper over {StringView} to represent format string. This is done to avoid compile
     /// time checks.
     /// --------------------------------------------------------------------------------------------
-    class RunFmtStr
+    class RunFmtString
     {
     public:
-        StrView str;
+        StringView str;
     };
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <RStrFmtArgFmtable... TArgs>
-    using FmtStr = _FmtFmtStr<TArgs...>;
+    template <RStringFmtArgFmtable... TArgs>
+    using FmtString = _FmtFmtString<TArgs...>;
 
-    //     class FmtStr
+    //     class FmtString
     //     {
     //     public:
     //         template <typename T>
-    //         consteval FmtStr(const T& strv) { }
-    //             _fmt{ _FmtStrViewCnvter().ToFmt(strv) } { }
+    //         consteval FmtString(const T& strv) { }
+    //             _fmt{ _FmtStringViewCnvter().ToFmt(strv) } { }
     //
-    //         FmtStr(RunFmtStr str) { }
-    //             _fmt{ _FmtRunFmtStr{ _FmtStrViewCnvter().ToFmt(str.str) } } { }
+    //         FmtString(RunFmtString str) { }
+    //             _fmt{ _FmtRunFmtString{ _FmtStringViewCnvter().ToFmt(str.str) } } { }
     //
     //     public:
-    //         _FmtFmtStr<TArgs...> _fmt;
+    //         _FmtFmtString<TArgs...> _fmt;
     //     };
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    class StrFmter
+    class StringFmter
     {
     public:
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename TOut, RStrFmtArgFmtable... TArgs>
+        template <typename TOut, RStringFmtArgFmtable... TArgs>
             requires ROutput<TOut, Char>
-        auto FmtTo(TOut out, FmtStr<TArgs...> fmt, TArgs&&... args)
+        auto FmtTo(TOut out, FmtString<TArgs...> fmt, TArgs&&... args)
         {
             class _OutIterWrap
             {
@@ -96,17 +96,17 @@ namespace Atom
             }
             catch (const _FmtFmtEx& err)
             {
-                throw StrFmtErr(err);
+                throw StringFmtErr(err);
             }
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <RStrFmtArgFmtable... TArgs>
-        auto Fmt(FmtStr<TArgs...> fmt, TArgs&&... args) -> Str
+        template <RStringFmtArgFmtable... TArgs>
+        auto Fmt(FmtString<TArgs...> fmt, TArgs&&... args) -> String
         {
-            Str out;
+            String out;
             FmtTo(out, fmt, fwd(args)...);
 
             return out;
@@ -114,4 +114,4 @@ namespace Atom
     };
 }
 
-#define ATOM_STR_FMT(fmt, ...) ::Atom::StrFmter(fmt, __VA_ARGS__)
+#define ATOM_STR_FMT(fmt, ...) ::Atom::StringFmter(fmt, __VA_ARGS__)

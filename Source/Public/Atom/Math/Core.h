@@ -1,6 +1,6 @@
 #pragma once
 #include "Atom/Core.h"
-#include "Atom/Str/StackStr.h"
+#include "Atom/String/StackString.h"
 
 namespace Atom::Math
 {
@@ -16,7 +16,7 @@ namespace Atom::Math
         return -1;
     }
 
-    constexpr auto HexToChar(byte hex) -> StackStr<2>
+    constexpr auto HexToChar(byte hex) -> StackString<2>
     {
         constexpr const Char chars[] = "0123456789abcdef";
 

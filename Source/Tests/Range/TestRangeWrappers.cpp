@@ -5,18 +5,18 @@
 // using namespace Atom;
 //
 // template <typename T>
-// using MutArrRange = Range<T*, T*>;
+// using MutArrayRange = Range<T*, T*>;
 //
 // TEST_CASE("Atom.Range.RangeWrappers", "[.compilation]")
 // {
-//     using RangeWrapMock = RangeRefWrap<MutArrRange<i32>>;
-//     using MutRangeWrapMock = MutRangeRefWrap<MutArrRange<i32>>;
-//     using FwdRangeWrapMock = FwdRangeRefWrap<MutArrRange<i32>>;
-//     using MutFwdRangeWrapMock = MutFwdRangeRefWrap<MutArrRange<i32>>;
-//     using BidiRangeWrapMock = BidiRangeRefWrap<MutArrRange<i32>>;
-//     using MutBidiRangeWrapMock = MutBidiRangeRefWrap<MutArrRange<i32>>;
-//     using JumpRangeWrapMock = JumpRangeRefWrap<MutArrRange<i32>>;
-//     using MutJumpRangeWrapMock = MutJumpRangeRefWrap<MutArrRange<i32>>;
+//     using RangeWrapMock = RangeRefWrap<MutArrayRange<i32>>;
+//     using MutRangeWrapMock = MutRangeRefWrap<MutArrayRange<i32>>;
+//     using FwdRangeWrapMock = FwdRangeRefWrap<MutArrayRange<i32>>;
+//     using MutFwdRangeWrapMock = MutFwdRangeRefWrap<MutArrayRange<i32>>;
+//     using BidiRangeWrapMock = BidiRangeRefWrap<MutArrayRange<i32>>;
+//     using MutBidiRangeWrapMock = MutBidiRangeRefWrap<MutArrayRange<i32>>;
+//     using JumpRangeWrapMock = JumpRangeRefWrap<MutArrayRange<i32>>;
+//     using MutJumpRangeWrapMock = MutJumpRangeRefWrap<MutArrayRange<i32>>;
 //
 //     STATIC_CHECK(RRange<RangeWrapMock>);
 //     STATIC_CHECK_FALSE(RMutRange<RangeWrapMock>);
@@ -41,10 +41,10 @@
 //
 //     STATIC_CHECK(RJumpRange<JumpRangeWrapMock>);
 //     STATIC_CHECK_FALSE(RMutJumpRange<JumpRangeWrapMock>);
-//     STATIC_CHECK_FALSE(RMutArrRange<RangeWrapMock>);
+//     STATIC_CHECK_FALSE(RMutArrayRange<RangeWrapMock>);
 //
 //     STATIC_CHECK(RMutJumpRange<MutJumpRangeWrapMock>);
-//     STATIC_CHECK_FALSE(RMutArrRange<RangeWrapMock>);
+//     STATIC_CHECK_FALSE(RMutArrayRange<RangeWrapMock>);
 // }
 //
 // TEST_CASE("Atom.Range.RangeWrappers", "[.compilation]")

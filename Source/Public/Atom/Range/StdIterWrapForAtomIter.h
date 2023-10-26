@@ -13,7 +13,7 @@ namespace Atom
         TTI::TConditional<not RFwdIter<TIter>, std::input_iterator_tag,
             TTI::TConditional<not RBidiIter<TIter>, std::forward_iterator_tag,
                 TTI::TConditional<not RJumpIter<TIter>, std::bidirectional_iterator_tag,
-                    TTI::TConditional<not RArrIter<TIter>, std::random_access_iterator_tag,
+                    TTI::TConditional<not RArrayIter<TIter>, std::random_access_iterator_tag,
                         std::contiguous_iterator_tag>>>>>;
 
     /// --------------------------------------------------------------------------------------------

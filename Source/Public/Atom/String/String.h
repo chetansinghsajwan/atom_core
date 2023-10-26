@@ -1,12 +1,12 @@
 #pragma once
-#include "BasicStr.h"
+#include "BasicString.h"
 #include "DefaultEncoding.h"
 
 namespace Atom
 {
-    class Str: public BasicStr<CharEncoding>
+    class String: public BasicString<CharEncoding>
     {
-        using Base = BasicStr<CharEncoding>;
+        using Base = BasicString<CharEncoding>;
 
     public:
         using Base::Base;
@@ -17,10 +17,10 @@ namespace Atom
 namespace std
 {
     template <>
-    class hash<Atom::Str>
+    class hash<Atom::String>
     {
     public:
-        auto operator()(const Atom::Str& str) const -> size_t
+        auto operator()(const Atom::String& str) const -> size_t
         {
             using TChar = Atom::BasicChar<Atom::CharEncoding>;
             using StdStirngView = basic_string_view<TChar>;

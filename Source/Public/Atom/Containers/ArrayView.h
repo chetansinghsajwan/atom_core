@@ -7,13 +7,13 @@ namespace Atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    class _ArrViewStorage
+    class _ArrayViewStorage
     {
     public:
         using TElem = T;
 
     public:
-        constexpr _ArrViewStorage(const T* arr, usize count):
+        constexpr _ArrayViewStorage(const T* arr, usize count):
             _data{ arr }, _count{ count }
         {}
 
@@ -47,13 +47,13 @@ namespace Atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    class ArrView: public ArrRangeTrait<ArrView<T>>
+    class ArrayView: public ArrayRangeTrait<ArrayView<T>>
     {
-        friend class ArrRangeTraitImpl<ArrView<T>>;
+        friend class ArrayRangeTraitImpl<ArrayView<T>>;
 
     private:
-        using This = ArrView;
-        using _Storage = _ArrViewStorage<T>;
+        using This = ArrayView;
+        using _Storage = _ArrayViewStorage<T>;
 
     public:
         using TElem = T;
@@ -62,43 +62,43 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Default Constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr ArrView():
+        constexpr ArrayView():
             _storage(nullptr, 0)
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # Trivial Copy Constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr ArrView(const This& that) = default;
+        constexpr ArrayView(const This& that) = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # Trivial Copy Operator
         /// ----------------------------------------------------------------------------------------
-        constexpr ArrView& operator=(const This& that) = default;
+        constexpr ArrayView& operator=(const This& that) = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # Trivial Move Constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr ArrView(This&& that) = default;
+        constexpr ArrayView(This&& that) = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # Trivial Move Operator
         /// ----------------------------------------------------------------------------------------
-        constexpr ArrView& operator=(This&& that) = default;
+        constexpr ArrayView& operator=(This&& that) = default;
 
         /// ----------------------------------------------------------------------------------------
-        /// # Arr Constructor
+        /// # Array Constructor
         /// ----------------------------------------------------------------------------------------
         template <usize count>
-        constexpr ArrView(const T (&arr)[count]):
+        constexpr ArrayView(const T (&arr)[count]):
             _storage(arr, count)
         {}
 
         /// ----------------------------------------------------------------------------------------
-        /// # Arr Operator
+        /// # Array Operator
         /// ----------------------------------------------------------------------------------------
         template <usize count>
-        constexpr ArrView& operator=(const T (&arr)[count])
+        constexpr ArrayView& operator=(const T (&arr)[count])
         {
             _storage.setData(arr);
             _storage.setCount(count);
@@ -108,8 +108,8 @@ namespace Atom
         /// # Range Constructor
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
-        constexpr ArrView(const TRange& range)
-            requires(RArrRangeOf<TRange, T>)
+        constexpr ArrayView(const TRange& range)
+            requires(RArrayRangeOf<TRange, T>)
             :
             _storage{ range.data(), range.count() }
         {}
@@ -118,8 +118,8 @@ namespace Atom
         /// # Range Operator
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
-        constexpr ArrView& operator=(const TRange& range)
-            requires(RArrRangeOf<TRange, T>)
+        constexpr ArrayView& operator=(const TRange& range)
+            requires(RArrayRangeOf<TRange, T>)
         {
             _storage.setData(range.data());
             _storage.setCount(range.count());
@@ -128,7 +128,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Trivial Destructor
         /// ----------------------------------------------------------------------------------------
-        constexpr ~ArrView() = default;
+        constexpr ~ArrayView() = default;
 
     private:
         _Storage _storage;
@@ -138,14 +138,14 @@ namespace Atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    class ArrRangeTraitImpl<ArrView<T>>
+    class ArrayRangeTraitImpl<ArrayView<T>>
     {
-        using _Arr = ArrView<T>;
-        using _ArrStorage = _ArrViewStorage<T>;
+        using _Array = ArrayView<T>;
+        using _ArrayStorage = _ArrayViewStorage<T>;
 
     public:
         using TElem = T;
-        using TIter = ArrIter<T>;
+        using TIter = ArrayIter<T>;
         using TIterEnd = TIter;
 
     public:
@@ -170,9 +170,9 @@ namespace Atom
         }
 
     private:
-        constexpr auto _storage() const -> const _ArrStorage&
+        constexpr auto _storage() const -> const _ArrayStorage&
         {
-            return reinterpret_cast<const _Arr&>(*this)._storage;
+            return reinterpret_cast<const _Array&>(*this)._storage;
         }
     };
 }

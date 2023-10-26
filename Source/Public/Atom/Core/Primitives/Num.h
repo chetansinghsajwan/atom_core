@@ -91,7 +91,7 @@ namespace Atom
         using TImpl = TImpl_;
         using TSelf = typename TImpl::TSelf;
         using TVal = typename TImpl::TVal;
-        using TStr = typename TImpl::TStr;
+        using TString = typename TImpl::TString;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -1022,7 +1022,7 @@ namespace Atom
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////
-        //// Str Conversion
+        //// String Conversion
         ////
         ////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1030,18 +1030,18 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto toStr() const -> TStr
+        constexpr auto toString() const -> TString
         {
-            return TImpl::ToStr(_val);
+            return TImpl::ToString(_val);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename TOut>
-        constexpr auto toStrOut(TOut&& out) const -> TOut&
+        constexpr auto toStringOut(TOut&& out) const -> TOut&
         {
-            return TImpl::ToStrOut(_val, fwd(out));
+            return TImpl::ToStringOut(_val, fwd(out));
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////

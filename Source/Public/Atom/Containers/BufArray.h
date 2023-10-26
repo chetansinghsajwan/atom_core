@@ -1,16 +1,16 @@
 #pragma once
-#include "DynArr.h"
+#include "DynamicArray.h"
 
 namespace Atom
 {
     template <typename TAlloc>
-    class _BufArrAllocWrap: public TAlloc
+    class _BufArrayAllocWrap: public TAlloc
     {};
 
     template <typename T, usize bufSize, typename TAlloc>
-    class BufArr: public DynArr<T, _BufArrAllocWrap<TAlloc>>
+    class BufArray: public DynamicArray<T, _BufArrayAllocWrap<TAlloc>>
     {
-        using Base = DynArr<T, _BufArrAllocWrap<TAlloc>>;
+        using Base = DynamicArray<T, _BufArrayAllocWrap<TAlloc>>;
 
     public:
         using Base::Base;

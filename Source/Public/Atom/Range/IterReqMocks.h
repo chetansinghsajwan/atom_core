@@ -158,10 +158,10 @@ namespace Atom
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// `RArrIter` mock object.
+    /// `RArrayIter` mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    class ArrIterReqMock
+    class ArrayIterReqMock
     {
     public:
         using TElem = T;
@@ -169,17 +169,17 @@ namespace Atom
     public:
         auto value() const -> const T&;
         auto data() const -> const T*;
-        auto next(usize steps = 1) -> ArrIterReqMock&;
-        auto prev(usize steps = 1) -> ArrIterReqMock&;
-        auto equals(ArrIterReqMock end) const -> bool;
-        auto compare(const ArrIterReqMock& that) const -> isize;
+        auto next(usize steps = 1) -> ArrayIterReqMock&;
+        auto prev(usize steps = 1) -> ArrayIterReqMock&;
+        auto equals(ArrayIterReqMock end) const -> bool;
+        auto compare(const ArrayIterReqMock& that) const -> isize;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// `RMutArrIter` mock object.
+    /// `RMutArrayIter` mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    class MutArrIterReqMock
+    class MutArrayIterReqMock
     {
     public:
         using TElem = T;
@@ -189,10 +189,10 @@ namespace Atom
         auto mutValue() -> T&;
         auto data() const -> const T*;
         auto mutData() -> T*;
-        auto next(usize steps = 1) -> MutArrIterReqMock&;
-        auto prev(usize steps = 1) -> MutArrIterReqMock&;
-        auto equals(MutArrIterReqMock end) const -> bool;
-        auto compare(const MutArrIterReqMock& that) const -> isize;
+        auto next(usize steps = 1) -> MutArrayIterReqMock&;
+        auto prev(usize steps = 1) -> MutArrayIterReqMock&;
+        auto equals(MutArrayIterReqMock end) const -> bool;
+        auto compare(const MutArrayIterReqMock& that) const -> isize;
     };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -209,6 +209,6 @@ namespace Atom
     ATOM_SATISFIES_MUT_BIDI_ITER_PAIR(MutBidiIterReqMock<i32>, IterEndReqMock);
     ATOM_SATISFIES_JUMP_ITER_PAIR(JumpIterReqMock<i32>, IterEndReqMock);
     ATOM_SATISFIES_MUT_JUMP_ITER_PAIR(MutJumpIterReqMock<i32>, IterEndReqMock);
-    ATOM_SATISFIES_ARR_ITER_PAIR(ArrIterReqMock<i32>, ArrIterReqMock<i32>);
-    ATOM_SATISFIES_MUT_ARR_ITER_PAIR(MutArrIterReqMock<i32>, MutArrIterReqMock<i32>);
+    ATOM_SATISFIES_ARR_ITER_PAIR(ArrayIterReqMock<i32>, ArrayIterReqMock<i32>);
+    ATOM_SATISFIES_MUT_ARR_ITER_PAIR(MutArrayIterReqMock<i32>, MutArrayIterReqMock<i32>);
 }

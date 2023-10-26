@@ -1,31 +1,31 @@
 #pragma once
 #include "Atom/Contracts.h"
 #include "Atom/Core.h"
-#include "Atom/Range/ArrIter.h"
+#include "Atom/Range/ArrayIter.h"
 
 #include <algorithm>
 
 namespace Atom
 {
     template <typename T, typename TAlloc>
-    class _DynArrImpl
+    class _DynamicArrayImpl
     {
     public:
         using TElem = T;
-        using TIter = ArrIter<TElem>;
+        using TIter = ArrayIter<TElem>;
         using TIterEnd = TIter;
-        using TMutIter = MutArrIter<TElem>;
+        using TMutIter = MutArrayIter<TElem>;
         using TMutIterEnd = TMutIter;
 
     public:
-        constexpr _DynArrImpl():
+        constexpr _DynamicArrayImpl():
             _arr{ nullptr }, _count{ 0 }, _capacity{ 0 }, _alloc{}
         {}
 
-        constexpr _DynArrImpl(_DynArrImpl&& that) {}
+        constexpr _DynamicArrayImpl(_DynamicArrayImpl&& that) {}
 
         template <typename UIter, typename UIterEnd>
-        constexpr _DynArrImpl(UIter it, UIterEnd itEnd)
+        constexpr _DynamicArrayImpl(UIter it, UIterEnd itEnd)
         {}
 
     public:
@@ -298,11 +298,11 @@ namespace Atom
                 return;
 
             usize newCap = _calcCapGrowth(count);
-            TElem* newArr = _allocMem(newCap);
+            TElem* newArray = _allocMem(newCap);
 
-            _moveRangeTo(0, newArr);
+            _moveRangeTo(0, newArray);
             _deallocMem(_getMutData());
-            _setData(newArr);
+            _setData(newArray);
             _setCapacity(newCap);
         }
 

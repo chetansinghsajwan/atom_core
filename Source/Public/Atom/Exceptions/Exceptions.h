@@ -9,6 +9,6 @@ namespace Atom
     class Err
     {
     public:
-        StdStrView msg;
+        StdStringView msg;
     };
 }

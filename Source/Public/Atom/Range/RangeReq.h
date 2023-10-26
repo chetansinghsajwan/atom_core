@@ -225,45 +225,45 @@ namespace Atom
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures `TRange` is `ArrRange`.
+    /// Ensures `TRange` is `ArrayRange`.
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
-    concept RArrRange = requires
+    concept RArrayRange = requires
     {
         requires _RRange<TRange>;
-        requires RArrIterPair<typename TRange::TIter, typename TRange::TIterEnd>;
+        requires RArrayIterPair<typename TRange::TIter, typename TRange::TIterEnd>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures `TRange` is `ArrRange` of type `T`.
+    /// Ensures `TRange` is `ArrayRange` of type `T`.
     /// --------------------------------------------------------------------------------------------
     template <typename TRange, typename T>
-    concept RArrRangeOf = requires
+    concept RArrayRangeOf = requires
     {
         requires _RRangeOf<TRange, T>;
-        requires RArrIterPairOf<typename TRange::TIter, typename TRange::TIterEnd, T>;
+        requires RArrayIterPairOf<typename TRange::TIter, typename TRange::TIterEnd, T>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures `TRange` is `MutArrRange`.
+    /// Ensures `TRange` is `MutArrayRange`.
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
-    concept RMutArrRange = requires
+    concept RMutArrayRange = requires
     {
         requires _RMutRange<TRange>;
-        requires RArrIterPair<typename TRange::TIter, typename TRange::TIterEnd>;
-        requires RMutArrIterPair<typename TRange::TMutIter, typename TRange::TMutIterEnd>;
+        requires RArrayIterPair<typename TRange::TIter, typename TRange::TIterEnd>;
+        requires RMutArrayIterPair<typename TRange::TMutIter, typename TRange::TMutIterEnd>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures `TRange` is `MutArrRange` of type `T`.
+    /// Ensures `TRange` is `MutArrayRange` of type `T`.
     /// --------------------------------------------------------------------------------------------
     template <typename TRange, typename T>
-    concept RMutArrRangeOf = requires
+    concept RMutArrayRangeOf = requires
     {
         requires _RMutRangeOf<TRange, T>;
-        requires RArrIterPairOf<typename TRange::TIter, typename TRange::TIterEnd, T>;
-        requires RMutArrIterPairOf<typename TRange::TMutIter, typename TRange::TMutIterEnd, T>;
+        requires RArrayIterPairOf<typename TRange::TIter, typename TRange::TIterEnd, T>;
+        requires RMutArrayIterPairOf<typename TRange::TMutIter, typename TRange::TMutIterEnd, T>;
     };
 
     /// --------------------------------------------------------------------------------------------

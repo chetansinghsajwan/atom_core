@@ -1,11 +1,11 @@
 #pragma once
-#include "BasicStackStr.h"
+#include "BasicStackString.h"
 #include "DefaultEncoding.h"
 
 namespace Atom
 {
     template <usize size>
-    using StackStr = BasicStackStr<CharEncoding, size>;
+    using StackString = BasicStackString<CharEncoding, size>;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     ////
@@ -15,9 +15,9 @@ namespace Atom
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     template <size_t size>
-    class IntStr: public StackStr<size>
+    class IntString: public StackString<size>
     {
-        using Base = StackStr<size>;
+        using Base = StackString<size>;
 
     public:
         using Base::Base;
@@ -25,9 +25,9 @@ namespace Atom
     };
 
     template <size_t size>
-    class FloatStr: public StackStr<size>
+    class FloatString: public StackString<size>
     {
-        using Base = StackStr<size>;
+        using Base = StackString<size>;
 
     public:
         using Base::Base;
@@ -35,10 +35,10 @@ namespace Atom
     };
 
     template <typename TSelf, typename TVal, typename TLimit>
-    constexpr auto _IntImpl<TSelf, TVal, TLimit>::ToStr(TVal val) -> TStr
+    constexpr auto _IntImpl<TSelf, TVal, TLimit>::ToString(TVal val) -> TString
     {
-        TStr str;
-        Char* begin = _ToStr(val, str.mutData() + str.count() - 1);
+        TString str;
+        Char* begin = _ToString(val, str.mutData() + str.count() - 1);
         begin--;
         while (begin >= str.data())
         {
@@ -50,10 +50,10 @@ namespace Atom
     }
 
     template <typename TSelf, typename TVal>
-    constexpr auto _FloatImpl<TSelf, TVal>::ToStr(TVal val) -> TStr
+    constexpr auto _FloatImpl<TSelf, TVal>::ToString(TVal val) -> TString
     {
-        TStr str;
-        Char* begin = _ToStr(val, str.mutData() + str.count() - 1);
+        TString str;
+        Char* begin = _ToString(val, str.mutData() + str.count() - 1);
         begin--;
         while (begin >= str.data())
         {

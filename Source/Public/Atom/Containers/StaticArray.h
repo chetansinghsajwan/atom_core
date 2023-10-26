@@ -1,32 +1,32 @@
 #pragma once
-#include "Atom/Range/MutArrRangeTrait.h"
+#include "Atom/Range/MutArrayRangeTrait.h"
 
 namespace Atom
 {
     template <typename T, usize count>
-    class _StaticArrStorage
+    class _StaticArrayStorage
     {
     public:
         T _arr[count];
     };
 
     template <typename T, usize count>
-    class StaticArr:
-        public _StaticArrStorage<T, count>,
-        public MutArrRangeTrait<StaticArr<T, count>>
+    class StaticArray:
+        public _StaticArrayStorage<T, count>,
+        public MutArrayRangeTrait<StaticArray<T, count>>
     {};
 
     template <typename T, usize count_>
-    class MutArrRangeTraitImpl<StaticArr<T, count_>>
+    class MutArrayRangeTraitImpl<StaticArray<T, count_>>
     {
-        using _Arr = StaticArr<T, count_>;
-        using _ArrStorage = _StaticArrStorage<T, count_>;
+        using _Array = StaticArray<T, count_>;
+        using _ArrayStorage = _StaticArrayStorage<T, count_>;
 
     public:
         using TElem = T;
-        using TIter = ArrIter<T>;
+        using TIter = ArrayIter<T>;
         using TIterEnd = TIter;
-        using TMutIter = MutArrIter<T>;
+        using TMutIter = MutArrayIter<T>;
         using TMutIterEnd = TMutIter;
 
     public:
@@ -81,14 +81,14 @@ namespace Atom
             return count_;
         }
 
-        constexpr auto _storage() const -> const _ArrStorage&
+        constexpr auto _storage() const -> const _ArrayStorage&
         {
-            return reinterpret_cast<const _ArrStorage&>(*this);
+            return reinterpret_cast<const _ArrayStorage&>(*this);
         }
 
-        constexpr auto _mutStorage() -> _ArrStorage&
+        constexpr auto _mutStorage() -> _ArrayStorage&
         {
-            return reinterpret_cast<_ArrStorage&>(*this);
+            return reinterpret_cast<_ArrayStorage&>(*this);
         }
     };
 }

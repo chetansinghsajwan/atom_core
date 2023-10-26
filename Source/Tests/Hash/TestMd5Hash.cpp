@@ -4,7 +4,7 @@
 #include "Atom/Hash/Md5HashGenerator.h"
 #include "Atom/Hash/Md5HashParser.h"
 #include "Atom/Hash/Md5HashStringifier.h"
-#include "Atom/Str.h"
+#include "Atom/String.h"
 
 using namespace Atom;
 
@@ -38,7 +38,7 @@ TEST_CASE("Atom::Hash::Md5Hash")
 
 TEST_CASE("Atom::Hash::Md5HashParser")
 {
-    SECTION("Str to Hash")
+    SECTION("String to Hash")
     {
         Md5Hash hash = Md5HashParser().Parse("da39a3ee5e6b4b0d3255bfef95601890");
 
@@ -63,9 +63,9 @@ TEST_CASE("Atom::Hash::Md5HashStringifier")
     Md5Hash hash = { 0xda, 0x39, 0xa3, 0xee, 0x5e, 0x6b, 0x4b, 0x0d, 0x32, 0x55, 0xbf, 0xef, 0x95,
         0x60, 0x18, 0x90 };
 
-    Str str = Md5HashStringifier().ToStr(hash);
+    String str = Md5HashStringifier().ToString(hash);
 
-    StrView expected = "da39a3ee5e6b4b0d3255bfef95601890";
+    StringView expected = "da39a3ee5e6b4b0d3255bfef95601890";
 
     CHECK(str == expected);
 }

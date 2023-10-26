@@ -6,7 +6,7 @@
 namespace Atom
 {
     template <typename TEncoding_, typename TContainer>
-    class _StrImpl: public TContainer
+    class _StringImpl: public TContainer
     {
     public:
         using TEncoding = TEncoding_;
@@ -31,7 +31,7 @@ namespace Atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <usize count>
-        constexpr _StrImpl(const TChar (&arr)[count])
+        constexpr _StringImpl(const TChar (&arr)[count])
             : TContainer()
         {}
     };

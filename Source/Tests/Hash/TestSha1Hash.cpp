@@ -4,7 +4,7 @@
 #include "Atom/Hash/Sha1HashGenerator.h"
 #include "Atom/Hash/Sha1HashParser.h"
 #include "Atom/Hash/Sha1HashStringifier.h"
-#include "Atom/Str.h"
+#include "Atom/String.h"
 
 using namespace Atom;
 
@@ -38,7 +38,7 @@ TEST_CASE("Atom::Hash::Sha1Hash")
 
 TEST_CASE("Atom::Hash::Sha1HashParser")
 {
-    SECTION("Str to Hash")
+    SECTION("String to Hash")
     {
         Sha1Hash hash = Sha1HashParser().Parse("da39a3ee5e6b4b0d3255bfef95601890afd80709");
 
@@ -63,9 +63,9 @@ TEST_CASE("Atom::Hash::Sha1HashStringifier")
     Sha1Hash hash = { 0xda, 0x39, 0xa3, 0xee, 0x5e, 0x6b, 0x4b, 0x0d, 0x32, 0x55, 0xbf, 0xef, 0x95,
         0x60, 0x18, 0x90, 0xaf, 0xd8, 0x07, 0x09 };
 
-    Str str = Sha1HashStringifier().ToStr(hash);
+    String str = Sha1HashStringifier().ToString(hash);
 
-    StrView expected = "da39a3ee5e6b4b0d3255bfef95601890afd80709";
+    StringView expected = "da39a3ee5e6b4b0d3255bfef95601890afd80709";
 
     CHECK(str == expected);
 }

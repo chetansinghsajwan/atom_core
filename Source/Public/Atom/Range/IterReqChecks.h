@@ -144,25 +144,25 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////
-//// Arr Iter Assertions
+//// Array Iter Assertions
 ////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#define ATOM_SATISFIES_ARR_ITER(TIter) _ATOM_SATISFIES_ITER(RArrIter, TIter)
-#define ATOM_SATISFIES_ARR_ITER_OF(TIter, T) _ATOM_SATISFIES_ITER_OF(RArrIterOf, TIter, T)
-#define ATOM_SATISFIES_MUT_ARR_ITER(TIter) _ATOM_SATISFIES_MUT_ITER(RMutArrIter, TIter)
+#define ATOM_SATISFIES_ARR_ITER(TIter) _ATOM_SATISFIES_ITER(RArrayIter, TIter)
+#define ATOM_SATISFIES_ARR_ITER_OF(TIter, T) _ATOM_SATISFIES_ITER_OF(RArrayIterOf, TIter, T)
+#define ATOM_SATISFIES_MUT_ARR_ITER(TIter) _ATOM_SATISFIES_MUT_ITER(RMutArrayIter, TIter)
 #define ATOM_SATISFIES_MUT_ARR_ITER_OF(TIter, T)                                                   \
-    _ATOM_SATISFIES_MUT_ITER_OF(RMutArrIterOf, TIter, T)
+    _ATOM_SATISFIES_MUT_ITER_OF(RMutArrayIterOf, TIter, T)
 
 #define ATOM_SATISFIES_ARR_ITER_PAIR(TIter, TIterEnd)                                              \
-    _ATOM_SATISFIES_ITER_PAIR(RArrIterPair, TIter, TIterEnd)
+    _ATOM_SATISFIES_ITER_PAIR(RArrayIterPair, TIter, TIterEnd)
 #define ATOM_SATISFIES_ARR_ITER_PAIR_OF(TIter, TIterEnd, T)                                        \
-    _ATOM_SATISFIES_ITER_PAIR_OF(RArrIterPairOf, TIter, TIterEnd, T)
+    _ATOM_SATISFIES_ITER_PAIR_OF(RArrayIterPairOf, TIter, TIterEnd, T)
 #define ATOM_SATISFIES_MUT_ARR_ITER_PAIR(TIter, TIterEnd)                                          \
-    _ATOM_SATISFIES_MUT_ITER_PAIR(RMutArrIterPair, TIter, TIterEnd)
+    _ATOM_SATISFIES_MUT_ITER_PAIR(RMutArrayIterPair, TIter, TIterEnd)
 #define ATOM_SATISFIES_MUT_ARR_ITER_PAIR_OF(TIter, TIterEnd, T)                                    \
-    _ATOM_SATISFIES_MUT_ITER_PAIR_OF(RMutArrIterPairOf, TIter, TIterEnd, T)
+    _ATOM_SATISFIES_MUT_ITER_PAIR_OF(RMutArrayIterPairOf, TIter, TIterEnd, T)
 
-#define ATOM_SATISFIES_ARR_ITER_TEMP(TIterTemp) _ATOM_SATISFIES_ITER_TEMP(RArrIter, TIterTemp)
+#define ATOM_SATISFIES_ARR_ITER_TEMP(TIterTemp) _ATOM_SATISFIES_ITER_TEMP(RArrayIter, TIterTemp)
 #define ATOM_SATISFIES_MUT_ARR_ITER_TEMP(TIterTemp)                                                \
-    _ATOM_SATISFIES_MUT_ITER_TEMP(RArrIter, TIterTemp)
+    _ATOM_SATISFIES_MUT_ITER_TEMP(RArrayIter, TIterTemp)

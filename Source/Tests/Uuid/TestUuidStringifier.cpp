@@ -1,7 +1,7 @@
 #include "catch2/catch_all.hpp"
 
 #include "Atom/Uuid/UuidStringifier.h"
-#include "Atom/Str.h"
+#include "Atom/String.h"
 
 using namespace Atom;
 
@@ -9,9 +9,9 @@ TEST_CASE("Atom::Uuid::UuidStringifier")
 {
     Uuid uuid = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
 
-    Str str = UuidStringifier().toStr(uuid);
+    String str = UuidStringifier().toString(uuid);
 
-    constexpr StrView expected = "00010203-0405-0607-0809-101112131415";
+    constexpr StringView expected = "00010203-0405-0607-0809-101112131415";
 
     CHECK(str == expected);
 }

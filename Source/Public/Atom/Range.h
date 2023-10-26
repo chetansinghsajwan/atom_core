@@ -11,6 +11,6 @@
 #include "Range/RangeReqMocks.h"
 #include "Range/RangeTrait.h"
 #include "Range/MutRangeTrait.h"
-#include "Range/ArrRangeTrait.h"
-#include "Range/MutArrRangeTrait.h"
+#include "Range/ArrayRangeTrait.h"
+#include "Range/MutArrayRangeTrait.h"
 #include "Range/DynamicRangeTrait.h"

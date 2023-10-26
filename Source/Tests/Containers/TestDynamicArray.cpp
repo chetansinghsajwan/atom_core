@@ -1,12 +1,12 @@
 #include "catch2/catch_all.hpp"
 
-#include "Atom/Containers/DynArr.h"
+#include "Atom/Containers/DynamicArray.h"
 
 using namespace Atom;
 
-TEST_CASE("Atom::Containers::DynArr")
+TEST_CASE("Atom.Containers.DynamicArray")
 {
-    DynArr<i32> arr;
+    DynamicArray<i32> arr;
 
     REQUIRE(arr.count() == 0);
     REQUIRE(arr.data() == nullptr);

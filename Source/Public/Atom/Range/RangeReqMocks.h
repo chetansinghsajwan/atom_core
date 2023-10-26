@@ -113,22 +113,22 @@ namespace Atom
     ATOM_SATISFIES_MUT_JUMP_RANGE_TEMP(MutJumpRangeReqMock);
 
     /// --------------------------------------------------------------------------------------------
-    /// `RArrRange` mock object.
+    /// `RArrayRange` mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    class ArrRangeReqMock: public _RangeReqMock<ArrIterReqMock<T>, ArrIterReqMock<T>, T>
+    class ArrayRangeReqMock: public _RangeReqMock<ArrayIterReqMock<T>, ArrayIterReqMock<T>, T>
     {};
 
-    ATOM_SATISFIES_ARR_RANGE_TEMP(ArrRangeReqMock);
+    ATOM_SATISFIES_ARR_RANGE_TEMP(ArrayRangeReqMock);
 
     /// --------------------------------------------------------------------------------------------
-    /// `RMutArrRange` mock object.
+    /// `RMutArrayRange` mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    class MutArrRangeReqMock: public _MutRangeReqMock<MutArrIterReqMock<T>, MutArrIterReqMock<T>, T>
+    class MutArrayRangeReqMock: public _MutRangeReqMock<MutArrayIterReqMock<T>, MutArrayIterReqMock<T>, T>
     {};
 
-    ATOM_SATISFIES_MUT_ARR_RANGE_TEMP(MutArrRangeReqMock);
+    ATOM_SATISFIES_MUT_ARR_RANGE_TEMP(MutArrayRangeReqMock);
 
     /// --------------------------------------------------------------------------------------------
     /// `RCommonRange` mock object.

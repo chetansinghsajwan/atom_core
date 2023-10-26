@@ -1,6 +1,6 @@
 #pragma once
 #include "Atom/Math.h"
-#include "Atom/Str/Str.h"
+#include "Atom/String/String.h"
 #include "Atom/Uuid/Uuid.h"
 
 namespace Atom
@@ -9,7 +9,7 @@ namespace Atom
     {
     public:
         template <typename TOutput>
-        constexpr auto writeStr(const Uuid& uuid, TOutput&& out) const
+        constexpr auto writeString(const Uuid& uuid, TOutput&& out) const
             requires(ROutput<TOutput, Char>)
         {
             out += Math::HexToChar(uuid.bytes[0]);
@@ -34,10 +34,10 @@ namespace Atom
             out += Math::HexToChar(uuid.bytes[15]);
         }
 
-        constexpr auto toStr(const Uuid& uuid) const -> Str
+        constexpr auto toString(const Uuid& uuid) const -> String
         {
-            Str out;
-            writeStr(uuid, out);
+            String out;
+            writeString(uuid, out);
             return out;
         }
     };

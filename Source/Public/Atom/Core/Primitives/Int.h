@@ -6,7 +6,7 @@
 namespace Atom
 {
     template <size_t>
-    class IntStr;
+    class IntString;
 
     template <typename TSelf, typename TVal, typename TLimit = TVal>
     class _IntImpl: public _NumImpl<TSelf, TVal, TLimit>
@@ -15,21 +15,21 @@ namespace Atom
         using Self = _IntImpl<TSelf, TVal, TLimit>;
 
     public:
-        using TStr = IntStr<Base::MaxDigitsCount() + 1>;
+        using TString = IntString<Base::MaxDigitsCount() + 1>;
 
     public:
-        static constexpr auto ToStr(TVal val) -> TStr;
+        static constexpr auto ToString(TVal val) -> TString;
 
         template <typename TOut>
-        static constexpr auto ToStrOut(TVal val, TOut&& out) -> TOut
+        static constexpr auto ToStringOut(TVal val, TOut&& out) -> TOut
         {
-            TStr str = ToStr(val);
+            TString str = ToString(val);
             out += str;
             return out;
         }
 
     private:
-        static constexpr auto _ToStr(TVal val, char* str) -> char*
+        static constexpr auto _ToString(TVal val, char* str) -> char*
         {
             bool neg = false;
             if constexpr (std::is_signed_v<TVal>)

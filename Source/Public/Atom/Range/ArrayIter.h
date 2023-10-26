@@ -4,11 +4,11 @@
 namespace Atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// ArrIter iterates over raw arr.
+    /// ArrayIter iterates over raw arr.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
     requires(not RConst<T>)
-    class ArrIter
+    class ArrayIter
     {
     public:
         using TElem = T;
@@ -17,13 +17,13 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Default Constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr ArrIter()
+        constexpr ArrayIter()
             : _it{ nullptr } {}
 
         /// ----------------------------------------------------------------------------------------
         /// # Value Constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr ArrIter(const T* it)
+        constexpr ArrayIter(const T* it)
             : _it{ it } {}
 
     public:
@@ -46,7 +46,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Check if this iter is same as `that`. Used to compare wth end.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto equals(const ArrIter& that) const -> bool
+        constexpr auto equals(const ArrayIter& that) const -> bool
         {
             return this->_it == that._it;
         }
@@ -54,7 +54,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Move fwd by `steps`.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto next(usize steps = 1) -> ArrIter&
+        constexpr auto next(usize steps = 1) -> ArrayIter&
         {
             _it += steps.val();
             return *this;
@@ -63,7 +63,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Move bwd by `steps`.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto prev(usize steps = 1) -> ArrIter&
+        constexpr auto prev(usize steps = 1) -> ArrayIter&
         {
             _it -= steps.val();
             return *this;
@@ -72,7 +72,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Compares `this` data with `that` data.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto compare(const ArrIter& that) const -> isize
+        constexpr auto compare(const ArrayIter& that) const -> isize
         {
             return this->_it - that._it;
         }
@@ -82,13 +82,13 @@ namespace Atom
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// MutArrIter iterates over mut raw arr.
+    /// MutArrayIter iterates over mut raw arr.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
     requires(not RConst<T>)
-    class MutArrIter: public ArrIter<T>
+    class MutArrayIter: public ArrayIter<T>
     {
-        using Base = ArrIter<T>;
+        using Base = ArrayIter<T>;
 
     public:
         using TElem = T;
@@ -97,13 +97,13 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Default Constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr MutArrIter()
+        constexpr MutArrayIter()
             : Base{ } {}
 
         /// ----------------------------------------------------------------------------------------
         /// # Value Constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr MutArrIter(T* it)
+        constexpr MutArrayIter(T* it)
             : Base{ it } {}
 
     public:
@@ -126,7 +126,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Move fwd by `steps`.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto next(usize steps = 1) -> MutArrIter&
+        constexpr auto next(usize steps = 1) -> MutArrayIter&
         {
             Base::next(steps);
             return *this;
@@ -135,13 +135,13 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Move bwd by `steps`.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto prev(usize steps = 1) -> MutArrIter&
+        constexpr auto prev(usize steps = 1) -> MutArrayIter&
         {
             Base::prev(steps);
             return *this;
         }
     };
 
-    ATOM_SATISFIES_ARR_ITER_TEMP(ArrIter);
-    ATOM_SATISFIES_MUT_ARR_ITER_TEMP(ArrIter);
+    ATOM_SATISFIES_ARR_ITER_TEMP(ArrayIter);
+    ATOM_SATISFIES_MUT_ARR_ITER_TEMP(ArrayIter);
 }

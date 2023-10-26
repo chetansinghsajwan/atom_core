@@ -64,7 +64,7 @@ namespace Atom
             }
             else
             {
-                std::cout << "Contracts " << _toStr(violation.type) << " Violation: "
+                std::cout << "Contracts " << _toString(violation.type) << " Violation: "
                         << "'" << violation.expr << "'\n\t"
                         << "with msg: " << violation.msg << "'\n\t"
                         << "at: " << violation.src.fileName << ":" << violation.src.line.val() << ":"
@@ -75,7 +75,7 @@ namespace Atom
         }
 
     private:
-        constexpr auto _toStr(ContractType type) -> std::string_view
+        constexpr auto _toString(ContractType type) -> std::string_view
         {
             switch (type)
             {

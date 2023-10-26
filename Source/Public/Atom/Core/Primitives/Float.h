@@ -4,7 +4,7 @@
 namespace Atom
 {
     template <size_t size>
-    class FloatStr;
+    class FloatString;
 
     template <typename TSelf, typename TVal>
     class _FloatImpl: public _NumImpl<TSelf, TVal, TVal>
@@ -15,9 +15,9 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # To Do
         /// 
-        /// - Review this. [`FloatStr`] has different sting requirements.
+        /// - Review this. [`FloatString`] has different sting requirements.
         /// ----------------------------------------------------------------------------------------
-        using TStr = FloatStr<Base::MaxDigitsCount() + 1>;
+        using TString = FloatString<Base::MaxDigitsCount() + 1>;
 
     public:
         static consteval auto Nan() -> TVal
@@ -40,18 +40,18 @@ namespace Atom
             return std::round(val);
         }
 
-        static constexpr auto ToStr(TVal val) -> TStr;
+        static constexpr auto ToString(TVal val) -> TString;
 
         template <typename TOut>
-        static constexpr auto ToStrOut(TVal val, TOut&& out) -> TOut
+        static constexpr auto ToStringOut(TVal val, TOut&& out) -> TOut
         {
-            TStr str = ToStr();
+            TString str = ToString();
             out += str;
             return out;
         }
 
     private:
-        static constexpr auto _ToStr(TVal val, char* str) -> char*
+        static constexpr auto _ToString(TVal val, char* str) -> char*
         {
             return str;
         }
@@ -66,7 +66,7 @@ namespace Atom
     public:
         using TSelf = typename Base::TSelf;
         using TVal = typename Base::TVal;
-        using TStr = typename Base::TStr;
+        using TString = typename Base::TString;
 
     public:
         using Base::Base;

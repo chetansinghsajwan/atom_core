@@ -303,12 +303,12 @@ namespace Atom
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     ////
-    //// ArrIter
+    //// ArrayIter
     ////
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     template <typename TIter>
-    concept RArrIter = requires(const TIter cit)
+    concept RArrayIter = requires(const TIter cit)
     {
         requires RJumpIter<TIter>;
 
@@ -316,57 +316,57 @@ namespace Atom
     };
 
     template <typename TIter>
-    concept RMutArrIter = requires(TIter it)
+    concept RMutArrayIter = requires(TIter it)
     {
-        requires RArrIter<TIter>;
+        requires RArrayIter<TIter>;
         requires _RMutIter<TIter>;
 
         { it.mutData() } -> RConvertibleTo<typename TIter::TElem*>;
     };
 
     template <typename TIter, typename T>
-    concept RArrIterOf = requires
+    concept RArrayIterOf = requires
     {
-        requires RArrIter<TIter>;
+        requires RArrayIter<TIter>;
         requires _RIterOf<TIter, T>;
     };
 
     template <typename TIter, typename T>
-    concept RMutArrIterOf = requires
+    concept RMutArrayIterOf = requires
     {
-        requires RMutArrIter<TIter>;
+        requires RMutArrayIter<TIter>;
         requires _RMutIterOf<TIter, T>;
     };
 
     template <typename TIter, typename TIterEnd>
-    concept RArrIterPair = requires
+    concept RArrayIterPair = requires
     {
-        requires RArrIter<TIter>;
-        requires RArrIter<TIterEnd>;
+        requires RArrayIter<TIter>;
+        requires RArrayIter<TIterEnd>;
         requires RIterWithEnd<TIter, TIterEnd>;
     };
 
     template <typename TIter, typename TIterEnd>
-    concept RMutArrIterPair = requires
+    concept RMutArrayIterPair = requires
     {
-        requires RMutArrIter<TIter>;
-        requires RMutArrIter<TIterEnd>;
+        requires RMutArrayIter<TIter>;
+        requires RMutArrayIter<TIterEnd>;
         requires RIterWithEnd<TIter, TIterEnd>;
     };
 
     template <typename TIter, typename TIterEnd, typename T>
-    concept RArrIterPairOf = requires
+    concept RArrayIterPairOf = requires
     {
-        requires RArrIterOf<TIter, T>;
-        requires RArrIterOf<TIterEnd, T>;
+        requires RArrayIterOf<TIter, T>;
+        requires RArrayIterOf<TIterEnd, T>;
         requires RIterWithEnd<TIter, TIterEnd>;
     };
 
     template <typename TIter, typename TIterEnd, typename T>
-    concept RMutArrIterPairOf = requires
+    concept RMutArrayIterPairOf = requires
     {
-        requires RMutArrIterOf<TIter, T>;
-        requires RMutArrIterOf<TIterEnd, T>;
+        requires RMutArrayIterOf<TIter, T>;
+        requires RMutArrayIterOf<TIterEnd, T>;
         requires RIterWithEnd<TIter, TIterEnd>;
     };
 }

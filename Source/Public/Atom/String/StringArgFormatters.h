@@ -1,9 +1,9 @@
 #pragma once
 #include "fmt/format.h"
 
-#include "Str.h"
-#include "StrConverter.h"
-#include "StrViewConverter.h"
+#include "String.h"
+#include "StringConverter.h"
+#include "StringViewConverter.h"
 
 #include "Atom/Exceptions.h"
 #include "Atom/TTI.h"
@@ -17,9 +17,9 @@ namespace Atom
     using _FmtFmtCtx = ::fmt::basic_format_context<_FmtFmtCtxOut, Char>;
 
     template <typename... TArgs>
-    using _FmtFmtStr = ::fmt::basic_format_string<Char, fmt::type_identity_t<TArgs>...>;
-    using _FmtRunFmtStr = ::fmt::runtime_format_string<Char>;
-    using _FmtStrView = ::fmt::basic_string_view<Char>;
+    using _FmtFmtString = ::fmt::basic_format_string<Char, fmt::type_identity_t<TArgs>...>;
+    using _FmtRunFmtString = ::fmt::runtime_format_string<Char>;
+    using _FmtStringView = ::fmt::basic_string_view<Char>;
 
     template <typename T>
     using _FmtFmter = ::fmt::formatter<T, Char>;
@@ -29,33 +29,33 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// Err thrown during formatting error.
     /// --------------------------------------------------------------------------------------------
-    class StrFmtErr: public Err
+    class StringFmtErr: public Err
     {
     public:
-        StrFmtErr(StdStrView msg):
+        StringFmtErr(StdStringView msg):
             Err{ msg } {}
 
     public:
-        StrFmtErr(const _FmtFmtEx& fmtEx):
+        StringFmtErr(const _FmtFmtEx& fmtEx):
             Err{ fmtEx.what() } {}
     };
 
     /// --------------------------------------------------------------------------------------------
     /// Context to parse format string.
     /// --------------------------------------------------------------------------------------------
-    class StrFmtParseCtx
+    class StringFmtParseCtx
     {
     public:
-        constexpr StrFmtParseCtx(_FmtFmtParseCtx& fmtCtx): _fmtCtx{ fmtCtx } {}
+        constexpr StringFmtParseCtx(_FmtFmtParseCtx& fmtCtx): _fmtCtx{ fmtCtx } {}
 
     public:
-        constexpr auto GetRange() -> StrView
+        constexpr auto GetRange() -> StringView
         {
             auto range = Range(_fmtCtx.begin(), _fmtCtx.end());
-            return StrView(range);
+            return StringView(range);
         }
 
-        constexpr auto AdvanceTo(ArrIter<Char> it)
+        constexpr auto AdvanceTo(ArrayIter<Char> it)
         {
             _fmtCtx.advance_to(it.data());
         }
@@ -67,10 +67,10 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// Context to write formatted string.
     /// --------------------------------------------------------------------------------------------
-    class StrFmtCtx
+    class StringFmtCtx
     {
     public:
-        constexpr StrFmtCtx(_FmtFmtCtx& fmtCtx): _fmtCtx{ fmtCtx } {}
+        constexpr StringFmtCtx(_FmtFmtCtx& fmtCtx): _fmtCtx{ fmtCtx } {}
 
         auto Write(Char ch)
         {
@@ -101,98 +101,98 @@ namespace Atom
     /// specifiers.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    class StrFmtArgFmterImpl;
+    class StringFmtArgFmterImpl;
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    using StrFmtArgFmter = StrFmtArgFmterImpl<TTI::TRemoveCVRef<T>>;
+    using StringFmtArgFmter = StringFmtArgFmterImpl<TTI::TRemoveCVRef<T>>;
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures {TFmter} is {StrFmtArgFmter} for type `T`.
+    /// Ensures {TFmter} is {StringFmtArgFmter} for type `T`.
     /// --------------------------------------------------------------------------------------------
     template <typename TFmter, typename T>
-    concept RStrFmtArgFmter =
-        requires(TFmter fmter, T arg, StrFmtParseCtx parseCtx, StrFmtCtx ctx) {
+    concept RStringFmtArgFmter =
+        requires(TFmter fmter, T arg, StringFmtParseCtx parseCtx, StringFmtCtx ctx) {
             fmter.Parse(parseCtx);
             fmter.Fmt(arg, ctx);
         };
 
     /// --------------------------------------------------------------------------------------------
-    /// StrArgFmtable refers to a type for which exists a valid {StrFmtArgFmter<T>} specialization
-    /// which satisfies {RStrFmtArgFmter<StrFmtArgFmter<T>, T>} requirement.
+    /// StringArgFmtable refers to a type for which exists a valid {StringFmtArgFmter<T>} specialization
+    /// which satisfies {RStringFmtArgFmter<StringFmtArgFmter<T>, T>} requirement.
     /// --------------------------------------------------------------------------------------------
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures `T` is {StrArgFmtable}.
+    /// Ensures `T` is {StringArgFmtable}.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    concept RStrFmtArgFmtable = RStrFmtArgFmter<StrFmtArgFmter<T>, T>;
+    concept RStringFmtArgFmtable = RStringFmtArgFmter<StringFmtArgFmter<T>, T>;
 }
 
 namespace Atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// {StrFmtArgFmter} specialization for {StrView}.
+    /// {StringFmtArgFmter} specialization for {StringView}.
     ///
     /// @INTERNAL
     /// Uses {fmt::fmter<fmt::string_view>} specialization.
     /// --------------------------------------------------------------------------------------------
     template <>
-    class StrFmtArgFmterImpl<StrView>
+    class StringFmtArgFmterImpl<StringView>
     {
     public:
-        constexpr auto Parse(StrFmtParseCtx& ctx)
+        constexpr auto Parse(StringFmtParseCtx& ctx)
         {
             _FmtFmtParseCtx& fmtCtx = ctx._fmtCtx;
 
             fmtCtx.advance_to(_fmtFmter.parse(fmtCtx));
         }
 
-        auto Fmt(StrView str, StrFmtCtx& ctx)
+        auto Fmt(StringView str, StringFmtCtx& ctx)
         {
             _FmtFmtCtx& fmtCtx = ctx._fmtCtx;
 
-            _FmtStrView fmt_str{ str.data(), str.count() };
+            _FmtStringView fmt_str{ str.data(), str.count() };
             fmtCtx.advance_to(_fmtFmter.format(fmt_str, fmtCtx));
         }
 
     public:
-        _FmtFmter<_FmtStrView> _fmtFmter;
+        _FmtFmter<_FmtStringView> _fmtFmter;
     };
 
-    static_assert(RStrFmtArgFmtable<StrView>, "StrView is not formattable.");
+    static_assert(RStringFmtArgFmtable<StringView>, "StringView is not formattable.");
 
     /// --------------------------------------------------------------------------------------------
-    /// {StrFmtArgFmter} specialization for {Char} arr.
+    /// {StringFmtArgFmter} specialization for {Char} arr.
     /// --------------------------------------------------------------------------------------------
     template <usize N>
-    class StrFmtArgFmterImpl<Char[N]>: public StrFmtArgFmter<StrView>
+    class StringFmtArgFmterImpl<Char[N]>: public StringFmtArgFmter<StringView>
     {
     public:
-        auto Fmt(const Char (&chars)[N], StrFmtCtx& ctx)
+        auto Fmt(const Char (&chars)[N], StringFmtCtx& ctx)
         {
-            StrView str{ chars, N };
-            StrFmtArgFmter<StrView>::Fmt(str, ctx);
+            StringView str{ chars, N };
+            StringFmtArgFmter<StringView>::Fmt(str, ctx);
         }
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// {StrFmtArgFmter} specialization for types which satisfy {RStrViewConvertible} requirement.
+    /// {StringFmtArgFmter} specialization for types which satisfy {RStringViewConvertible} requirement.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-        requires(RStrViewConvertible<T>)
-    class StrFmtArgFmterImpl<T>: public StrFmtArgFmter<StrView>
+        requires(RStringViewConvertible<T>)
+    class StringFmtArgFmterImpl<T>: public StringFmtArgFmter<StringView>
     {
     public:
-        auto Fmt(const T& in, StrFmtCtx& ctx)
+        auto Fmt(const T& in, StringFmtCtx& ctx)
         {
-            StrFmtArgFmter<StrView>::Fmt(convter.Convert(in), ctx);
+            StringFmtArgFmter<StringView>::Fmt(convter.Convert(in), ctx);
         }
 
     public:
-        StrViewConverter<T> convter;
+        StringViewConverter<T> convter;
     };
 
     template <typename T>
@@ -215,27 +215,27 @@ namespace fmt
     /// --------------------------------------------------------------------------------------------
     /// @INTERNAL
     ///
-    /// {fmt::fmter} specialization for all types that implement {Atom::StrFmtArgFmter}.
-    /// {fmt} uses this type and users specialize {Atom::StrFmtArgFmter}.
+    /// {fmt::fmter} specialization for all types that implement {Atom::StringFmtArgFmter}.
+    /// {fmt} uses this type and users specialize {Atom::StringFmtArgFmter}.
     ///
     /// This is specialized for {Char} character type only as {Atom} uses that type for
     /// character representation.
     /// --------------------------------------------------------------------------------------------
-    template <Atom::RStrFmtArgFmtable T>
+    template <Atom::RStringFmtArgFmtable T>
         requires(Atom::_FmtFmtfierFilter<T>::Enable)
     class formatter<T, Atom::Char>
     {
     public:
         constexpr auto parse(Atom::_FmtFmtParseCtx& fmtCtx) -> Atom::_FmtFmtParseCtxIter
         {
-            Atom::StrFmtParseCtx ctx(fmtCtx);
+            Atom::StringFmtParseCtx ctx(fmtCtx);
             this->fmter.Parse(ctx);
             return fmtCtx.begin();
         }
 
         constexpr auto format(const T& in, Atom::_FmtFmtCtx& fmtCtx) -> Atom::_FmtFmtCtxOut
         {
-            Atom::StrFmtCtx ctx(fmtCtx);
+            Atom::StringFmtCtx ctx(fmtCtx);
             this->fmter.Fmt(in, ctx);
             return fmtCtx.out();
         }
@@ -244,6 +244,6 @@ namespace fmt
         /// ----------------------------------------------------------------------------------------
         /// This contains actual implementation.
         /// ----------------------------------------------------------------------------------------
-        Atom::StrFmtArgFmter<T> fmter;
+        Atom::StringFmtArgFmter<T> fmter;
     };
 }

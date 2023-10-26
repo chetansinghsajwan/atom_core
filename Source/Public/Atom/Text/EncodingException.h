@@ -9,7 +9,7 @@ namespace Atom::Text
     class EncodingException: public Exception
     {
     public:
-        EncodingException(Str msg):
+        EncodingException(String msg):
             Exception(mov(msg)) {}
     };
 }

@@ -253,7 +253,7 @@ ATOM_PRAGMA_OPTIMIZE_ON
         template <class TIter, class TIterEnd>
         constexpr auto _FwdShift(TIter iter, TIterEnd iterEnd, usize steps) const -> void
         {
-            if constexpr (RArrIterPair<TIter, TIterEnd>)
+            if constexpr (RArrayIterPair<TIter, TIterEnd>)
             {
                 std::shift_right(iter.data(), iterEnd.data(), steps);
                 return;
@@ -268,7 +268,7 @@ ATOM_PRAGMA_OPTIMIZE_ON
         template <class TIter, class TIterEnd>
         constexpr auto _BwdShift(TIter iter, TIterEnd iterEnd, usize steps) const -> void
         {
-            if constexpr (RArrIterPair<TIter, TIterEnd>)
+            if constexpr (RArrayIterPair<TIter, TIterEnd>)
             {
                 std::shift_left(iter.data(), iterEnd.data(), steps);
                 return;
@@ -283,7 +283,7 @@ ATOM_PRAGMA_OPTIMIZE_ON
         template <class TIter, class TIterEnd>
         constexpr auto _BwdRotate(TIter iter, TIterEnd iterEnd, usize steps) const -> void
         {
-            if constexpr (RArrIterPair<TIter, TIterEnd>)
+            if constexpr (RArrayIterPair<TIter, TIterEnd>)
             {
                 std::rotate(iter.data(), iter.data() + steps, iterEnd.data());
                 return;
@@ -298,7 +298,7 @@ ATOM_PRAGMA_OPTIMIZE_ON
         template <class TIter, class TIterEnd>
         constexpr auto _FwdRotate(TIter iter, TIterEnd iterEnd, isize steps) const -> void
         {
-            if constexpr (RArrIterPair<TIter, TIterEnd>)
+            if constexpr (RArrayIterPair<TIter, TIterEnd>)
             {
                 std::rotate(iter.data(), iterEnd.data() - steps, iterEnd.data());
                 return;
@@ -313,7 +313,7 @@ ATOM_PRAGMA_OPTIMIZE_ON
         template <class TIter, class TIterEnd>
         constexpr auto _Destruct(TIter iter, TIterEnd iterEnd) const -> void
         {
-            if constexpr (RArrIterPair<TIter, TIterEnd>)
+            if constexpr (RArrayIterPair<TIter, TIterEnd>)
             {
                 std::destroy(iter.data(), iterEnd.data());
                 return;

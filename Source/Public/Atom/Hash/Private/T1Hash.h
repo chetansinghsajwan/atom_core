@@ -1,5 +1,5 @@
 #pragma once
-#include "Atom/Containers/StaticArr.h"
+#include "Atom/Containers/StaticArray.h"
 
 namespace Atom::Private
 {
@@ -18,7 +18,7 @@ namespace Atom::Private
         constexpr auto operator!=(const T1Hash& other) const -> bool = default;
 
     public:
-        StaticArr<byte, Size> bytes;
+        StaticArray<byte, Size> bytes;
     };
 
     // FIX: Compilation error in MSVC, checkout /Zc:externConstexpr
