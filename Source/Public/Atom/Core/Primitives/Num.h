@@ -579,6 +579,8 @@ namespace Atom
         constexpr auto divAssign(TNum num) -> TSelf&
             requires(RNum<TNum>) or (_RNum<TNum>)
         {
+            debug_expects(isDivSafe(num));
+
             _val /= _Unwrap(num);
             return _self();
         }
@@ -590,6 +592,8 @@ namespace Atom
         constexpr auto checkedDivAssign(TNum num) -> TSelf&
             requires(RNum<TNum>) or (_RNum<TNum>)
         {
+            expects(isDivSafe(num));
+
             _val /= _Unwrap(num);
             return _self();
         }
@@ -999,6 +1003,21 @@ namespace Atom
                 return true;
 
             return false;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// # To Do
+        /// 
+        /// - Complete implementation.
+        /// ----------------------------------------------------------------------------------------
+        template <typename TNum>
+        constexpr auto isDivSafe(TNum num) const -> bool
+            requires(RNum<TNum>) or (_RNum<TNum>)
+        {
+            if (_Unwrap(num) == -1 and _val == TImpl::Min())
+                return false;
+
+            return true;
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////
