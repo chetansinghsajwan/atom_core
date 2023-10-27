@@ -3,6 +3,7 @@
 #include "Atom/Core/SourceLineInfo.h"
 #include "Contracts.decl.h"
 
+#include "fmt/format.h"
 #include <iostream>
 
 namespace Atom
@@ -32,13 +33,49 @@ namespace Atom
         SourceLineInfo src;
     };
 
+    constexpr auto _ContractTypeToString(ContractType type) -> std::string_view
+    {
+        switch (type)
+        {
+            case ContractType::PreCondition:       return "PreCondition";
+            case ContractType::Assertion:          return "Assertion";
+            case ContractType::PostCondition:      return "PostCondition";
+            case ContractType::DebugPreCondition:  return "DebugPreCondition";
+            case ContractType::DebugAssertion:     return "DebugAssertion";
+            case ContractType::DebugPostCondition: return "DebugPostCondition";
+            default:                               return "[INVALID_VALUE]";
+        }
+    }
+
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    class ContractViolationException
+    class ContractViolationException: public std::exception
     {
     public:
+        ContractViolationException(ContractViolation violation):
+            violation{ violation }
+        {
+            _what = fmt::format("Contracts {} Violation: '{}'"
+                                "\n\twith msg: {}"
+                                "\n\tat: {}: {}: {}"
+                                "\n\tfunc: {}",
+                _ContractTypeToString(violation.type), violation.expr, violation.msg,
+                violation.src.fileName, violation.src.line.val(), violation.src.column.val(),
+                violation.src.funcName);
+        }
+
+    public:
+        virtual auto what() const noexcept -> const char* override
+        {
+            return _what.data();
+        }
+
+    public:
         ContractViolation violation;
+
+    private:
+        std::string _what;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -64,28 +101,14 @@ namespace Atom
             }
             else
             {
-                std::cout << "Contracts " << _toString(violation.type) << " Violation: "
-                        << "'" << violation.expr << "'\n\t"
-                        << "with msg: " << violation.msg << "'\n\t"
-                        << "at: " << violation.src.fileName << ":" << violation.src.line.val() << ":"
-                        << violation.src.column.val() << ": " << violation.src.funcName << std::endl;
+                std::cout << "Contracts " << _ContractTypeToString(violation.type) << " Violation: "
+                          << "'" << violation.expr << "'\n\t"
+                          << "with msg: " << violation.msg << "'\n\t"
+                          << "at: " << violation.src.fileName << ":" << violation.src.line.val()
+                          << ":" << violation.src.column.val() << ": " << violation.src.funcName
+                          << std::endl;
 
                 std::terminate();
-            }
-        }
-
-    private:
-        constexpr auto _toString(ContractType type) -> std::string_view
-        {
-            switch (type)
-            {
-                case ContractType::PreCondition:       return "PreCondition";
-                case ContractType::Assertion:          return "Assertion";
-                case ContractType::PostCondition:      return "PostCondition";
-                case ContractType::DebugPreCondition:  return "DebugPreCondition";
-                case ContractType::DebugAssertion:     return "DebugAssertion";
-                case ContractType::DebugPostCondition: return "DebugPostCondition";
-                default:                               return "[INVALID_VALUE]";
             }
         }
     };
@@ -141,7 +164,9 @@ namespace Atom
             .funcName = src.function_name(),
             .fileName = src.file_name() };
 
-        ContractViolation violation{ ContractType(type), msg, expr, srcInfo };
+        ContractViolation violation{
+            .type = ContractType(type), .msg = msg, .expr = expr, .src = srcInfo
+        };
         ContractViolationHandlerManager::GetHandler().handle(violation);
     }
 

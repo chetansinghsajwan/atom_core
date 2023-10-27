@@ -17,6 +17,9 @@ namespace Atom
     consteval auto _FindContractExpr(std::string_view str) -> std::string_view
     {
         size_t i = str.find(',');
+        if (i == -1)
+            i = str.size();
+
         return { str.data(), i };
     }
 
