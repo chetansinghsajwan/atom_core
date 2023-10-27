@@ -15,7 +15,7 @@ namespace Atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename TIter_, typename TIterEnd_>
-    requires(RIterPair<TIter_, TIterEnd_>)
+        requires(RIterPair<TIter_, TIterEnd_>)
     class Range<TIter_, TIterEnd_>
     {
     public:
@@ -26,9 +26,8 @@ namespace Atom
         using TIterEnd = TIterEnd_;
 
     public:
-        constexpr Range(TIter iter, TIterEnd end)
-            : _iter{ iter }
-            , _iterEnd{ end }
+        constexpr Range(TIter iter, TIterEnd end):
+            _iter{ iter }, _iterEnd{ end }
         {}
 
     public:
@@ -62,20 +61,13 @@ namespace Atom
             return _iter.compare(_iterEnd).abs().template to<usize>();
         }
 
-        constexpr auto data() const -> const TElem*
-            requires(RArrayIterPair<TIter, TIterEnd>)
-        {
-            return _iter.data();
-        }
+        constexpr auto data() const
+            -> const TElem* requires(RArrayIterPair<TIter, TIterEnd>) { return _iter.data(); }
 
-        constexpr auto data() -> TElem*
-            requires(RMutArrayIterPair<TIter, TIterEnd>)
-        {
-            return _iter.data();
-        }
+        constexpr auto data()
+            -> TElem* requires(RMutArrayIterPair<TIter, TIterEnd>) { return _iter.data(); }
 
-    protected:
-        TIter _iter;
+        protected: TIter _iter;
         TIterEnd _iterEnd;
     };
 
@@ -93,17 +85,17 @@ namespace Atom
         using Base = Range<ArrayIter<T>, ArrayIter<T>>;
 
     public:
-        constexpr Range(const T* arr, const T* end)
-            : Base{ arr, end }
+        constexpr Range(const T* arr, const T* end):
+            Base{ arr, end }
         {}
 
-        constexpr Range(const T* arr, usize count)
-            : Base{ arr, arr + count }
+        constexpr Range(const T* arr, usize count):
+            Base{ arr, arr + count }
         {}
 
         template <usize count>
-        constexpr Range(const T (&arr)[count])
-            : Base{ arr, arr + count }
+        constexpr Range(const T (&arr)[count]):
+            Base{ arr, arr + count }
         {}
     };
 
@@ -117,17 +109,17 @@ namespace Atom
         using Base = Range<MutArrayIter<T>, MutArrayIter<T>>;
 
     public:
-        constexpr Range(T* arr, T* end)
-            : Base{ arr, end }
+        constexpr Range(T* arr, T* end):
+            Base{ arr, end }
         {}
 
-        constexpr Range(T* arr, usize count)
-            : Base{ arr, arr + count }
+        constexpr Range(T* arr, usize count):
+            Base{ arr, arr + count }
         {}
 
         template <usize count>
-        constexpr Range(T (&arr)[count])
-            : Base{ arr, arr + count }
+        constexpr Range(T (&arr)[count]):
+            Base{ arr, arr + count }
         {}
     };
 
@@ -150,8 +142,8 @@ namespace Atom
         using Base = Range<const T*, const T*>;
 
     public:
-        constexpr Range(const InitList<T>& init)
-            : Base{ init.begin(), init.end() }
+        constexpr Range(const InitList<T>& init):
+            Base{ init.begin(), init.end() }
         {}
     };
 
