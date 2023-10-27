@@ -96,7 +96,7 @@ namespace Atom
     };
 
     template <typename TRangeImpl>
-    class RangeTraitRecursive: public TRangeImpl
+    class RangeTraitRecursive
     {
         using Base = TRangeImpl;
 

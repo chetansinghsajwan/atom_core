@@ -26,8 +26,11 @@ namespace Atom
         constexpr _DynamicArrayImpl(_DynamicArrayImpl&& that) {}
 
         template <typename UIter, typename UIterEnd>
-        constexpr _DynamicArrayImpl(UIter it, UIterEnd itEnd)
-        {}
+        constexpr _DynamicArrayImpl(UIter it, UIterEnd itEnd):
+            _DynamicArrayImpl{}
+        {
+            insertRangeBack(it, itEnd);
+        }
 
     public:
         constexpr auto onDestruct()
@@ -143,8 +146,11 @@ namespace Atom
 
         constexpr auto removeAll()
         {
-            _destructRange(0, _getCount() - 1);
-            _moveRangeFront(0, _getCount() - 1);
+            if (_getCount() > 0)
+            {
+                _destructRange(0, _getCount().sub(1));
+                _moveRangeFront(0, _getCount().sub(1));
+            }
         }
 
         constexpr auto reserve(usize count)

@@ -43,9 +43,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr DynamicArray(const DynamicArray& that):
             _impl{ that.iter(), that.iterEnd() }
-        {
-            _impl.insertRangeBack(that.iter(), that.iterEnd());
-        }
+        {}
 
         /// ----------------------------------------------------------------------------------------
         /// # Copy Operator
