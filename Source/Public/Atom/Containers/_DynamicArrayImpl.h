@@ -7,11 +7,12 @@
 
 namespace Atom
 {
-    template <typename T, typename TAlloc>
+    template <typename TElem_, typename TAlloc_>
     class _DynamicArrayImpl
     {
     public:
-        using TElem = T;
+        using TElem = TElem_;
+        using TAlloc = TAlloc_;
         using TIter = ArrayIter<TElem>;
         using TIterEnd = TIter;
         using TMutIter = MutArrayIter<TElem>;
@@ -33,6 +34,16 @@ namespace Atom
         {
             removeAll();
             releaseUnusedMem();
+        }
+
+        constexpr auto at(usize i) const -> const TElem&
+        {
+            return _getData()[i.val()];
+        }
+
+        constexpr auto mutAt(usize i) const -> const TElem&
+        {
+            return _getMutData()[i.val()];
         }
 
         constexpr auto iter(usize i = 0) const -> TIter
@@ -57,6 +68,13 @@ namespace Atom
         constexpr auto mutIterEnd() -> TMutIterEnd
         {
             return TMutIterEnd{ _getMutData() + _getCount() };
+        }
+
+        template <typename UIter, typename UIterEnd>
+        constexpr auto assignRange(UIter it, UIterEnd itEnd)
+        {
+            removeAll();
+            insertRangeBack(it, itEnd);
         }
 
         template <typename... TArgs>
@@ -151,14 +169,19 @@ namespace Atom
             return _getCount();
         }
 
-        constexpr auto data() const -> const T*
+        constexpr auto data() const -> const TElem*
         {
             return _getData();
         }
 
-        constexpr auto mutData() -> T*
+        constexpr auto mutData() -> TElem*
         {
             return _getMutData();
+        }
+
+        constexpr auto alloc() const -> const TAlloc&
+        {
+            return _alloc;
         }
 
         constexpr auto isIndexInRange(usize i) const -> bool
@@ -308,51 +331,51 @@ namespace Atom
 
         constexpr auto _constructAt(usize i, auto&&... args) -> void
         {
-            T* src = _getMutData() + i;
+            TElem* src = _getMutData() + i;
             std::construct_at(src, fwd(args)...);
         }
 
         constexpr auto _destructAt(usize i) -> void
         {
-            T* src = _getMutData() + i;
+            TElem* src = _getMutData() + i;
             std::destroy_at(src);
         }
 
         constexpr auto _destructRange(usize i, usize count) -> void
         {
-            T* begin = _getMutData() + i;
-            T* end = begin + count;
+            TElem* begin = _getMutData() + i;
+            TElem* end = begin + count;
             std::destroy(begin, end);
         }
 
         constexpr auto _moveRangeFront(usize i, usize count) -> void
         {
-            T* begin = _getMutData() + i;
-            T* end = _getMutData() + _getCount() - 1;
-            T* dest = begin - count;
+            TElem* begin = _getMutData() + i;
+            TElem* end = _getMutData() + _getCount() - 1;
+            TElem* dest = begin - count;
             std::move(begin, end, dest);
         }
 
         constexpr auto _moveRangeBack(usize i, usize count) -> void
         {
-            T* begin = _getMutData() + i;
-            T* end = _getMutData() + _getCount() - 1;
-            T* dest = begin + count;
+            TElem* begin = _getMutData() + i;
+            TElem* end = _getMutData() + _getCount() - 1;
+            TElem* dest = begin + count;
             std::move_backward(begin, end, dest);
         }
 
         constexpr auto _moveRangeTo(usize i, TElem* dest) -> void
         {
-            T* begin = _getMutData() + i;
-            T* end = _getMutData() + _getCount() - 1;
+            TElem* begin = _getMutData() + i;
+            TElem* end = _getMutData() + _getCount() - 1;
             std::move_backward(begin, end, dest);
         }
 
         constexpr auto _rotateRangeBack(usize i, usize count) -> void
         {
-            T* begin = _getMutData();
-            T* mid = begin + i;
-            T* end = begin + _getCount() - 1;
+            TElem* begin = _getMutData();
+            TElem* mid = begin + i;
+            TElem* end = begin + _getCount() - 1;
             std::rotate(begin, mid, end);
         }
 
@@ -377,17 +400,17 @@ namespace Atom
             return count;
         }
 
-        constexpr auto _getData() const -> const T*
+        constexpr auto _getData() const -> const TElem*
         {
             return _arr;
         }
 
-        constexpr auto _getMutData() -> T*
+        constexpr auto _getMutData() -> TElem*
         {
             return _arr;
         }
 
-        constexpr auto _setData(T* data)
+        constexpr auto _setData(TElem* data)
         {
             _arr = data;
         }
@@ -402,7 +425,7 @@ namespace Atom
             _count = count;
         }
 
-        constexpr auto _getCapacity() -> usize
+        constexpr auto _getCapacity() const -> usize
         {
             return _capacity;
         }
@@ -412,23 +435,23 @@ namespace Atom
             _capacity = capacity;
         }
 
-        constexpr auto _allocMem(usize required) -> T*
+        constexpr auto _allocMem(usize required) -> TElem*
         {
-            return static_cast<T*>(_alloc.Alloc(required));
+            return static_cast<TElem*>(_alloc.Alloc(required));
         }
 
-        constexpr auto _allocMemAtLeast(usize required, usize hint) -> T*
+        constexpr auto _allocMemAtLeast(usize required, usize hint) -> TElem*
         {
             return _alloc.Alloc(required);
         }
 
-        constexpr auto _deallocMem(T* mem)
+        constexpr auto _deallocMem(TElem* mem)
         {
             _alloc.Dealloc(mem);
         }
 
     private:
-        T* _arr;
+        TElem* _arr;
         usize _count;
         usize _capacity;
         TAlloc _alloc;

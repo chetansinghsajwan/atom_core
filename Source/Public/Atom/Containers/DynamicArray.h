@@ -12,21 +12,22 @@ namespace Atom
     /// - Write time complexities after writing implementation.
     /// - Add note for case, where element or elements to be inserted are from this array.
     /// --------------------------------------------------------------------------------------------
-    template <typename T, typename TAlloc = DefaultMemAllocator>
-        requires(not RRef<T>) and (not RIsVoid<T>)
-    class DynamicArray: public MutArrayRangeTrait<DynamicArray<T>>
+    template <typename TElem_, typename TAlloc_ = DefaultMemAllocator>
+        requires(not RRef<TElem_>) and (not RIsVoid<TElem_>)
+    class DynamicArray: public MutArrayRangeTrait<DynamicArray<TElem_>>
     {
-        friend class MutArrayRangeTraitImpl<DynamicArray<T, TAlloc>>;
+        friend class MutArrayRangeTraitImpl<DynamicArray<TElem_, TAlloc_>>;
 
     private:
-        using _Impl = _DynamicArrayImpl<T, TAlloc>;
-        using Trait = MutArrayRangeTrait<DynamicArray<T>>;
+        using _Impl = _DynamicArrayImpl<TElem_, TAlloc_>;
+        using Trait = MutArrayRangeTrait<DynamicArray<TElem_>>;
 
     public:
-        using TElem = T;
-        using TIter = ArrayIter<T>;
+        using TElem = TElem_;
+        using TAlloc = TAlloc_;
+        using TIter = ArrayIter<TElem>;
         using TIterEnd = TIter;
-        using TMutIter = ArrayIter<T>;
+        using TMutIter = ArrayIter<TElem>;
         using TMutIterEnd = TMutIter;
 
     public:
@@ -76,7 +77,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <typename TRange, typename TRangeUnqualified = TTI::TRemoveQuailfiersRef<TRange>>
         constexpr DynamicArray(TRange&& range)
-            requires(RRangeOf<TRangeUnqualified, T>)
+            requires(RRangeOf<TRangeUnqualified, TElem>)
             :
             _impl{ range.iter(), range.iterEnd() }
         {}
@@ -86,7 +87,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
         constexpr DynamicArray& operator=(TRange&& range)
-            requires(RRangeOf<TRange, T>)
+            requires(RRangeOf<TRange, TElem>)
         {
             _impl.assignRange(range.iter(), range.iterEnd());
         }
@@ -99,6 +100,7 @@ namespace Atom
             _impl.onDestruct();
         }
 
+    public:
         /// ----------------------------------------------------------------------------------------
         /// Constructs element at index `i` with `args`.
         ///
@@ -113,7 +115,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <typename... TArgs>
         constexpr auto emplaceAt(usize i, TArgs&&... args)
-            requires(RConstructible<T, TArgs...>)
+            requires(RConstructible<TElem, TArgs...>)
         {
             debug_expects(isIndexInRangeOrEnd(i), "Index is out of range.");
 
@@ -137,7 +139,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <typename... TArgs>
         constexpr auto emplaceAt(TIter it, TArgs&&... args) -> TMutIter
-            requires(RConstructible<T, TArgs...>)
+            requires(RConstructible<TElem, TArgs...>)
         {
             debug_expects(isIterValid(it), "Invalid iter.");
             debug_expects(isIterInRangeOrEnd(it), "Iter is out of range.");
@@ -165,12 +167,11 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
         constexpr auto insertRangeAt(usize i, TRange&& range) -> usize
-            requires(RRangeOf<TRange, T>) and (RConstructible<T, typename TRange::TElem>)
+            requires(RRangeOf<TRange, TElem>) and (RConstructible<TElem, typename TRange::TElem>)
         {
             debug_expects(isIndexInRangeOrEnd(i), "Index is out of range.");
 
-            usize count = _impl.insertRangeAt(i, range.iter(), range.iterEnd());
-            return count;
+            return _impl.insertRangeAt(i, range.iter(), range.iterEnd());
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -191,7 +192,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
         constexpr auto insertRangeAt(TIter it, TRange&& range) -> Range<TMutIter, TMutIterEnd>
-            requires(RRangeOf<TRange, T>) and (RConstructible<T, typename TRange::TElem>)
+            requires(RRangeOf<TRange, TElem>) and (RConstructible<TElem, typename TRange::TElem>)
         {
             debug_expects(isIterValid(it), "Invalid iter.");
             debug_expects(isIterInRangeOrEnd(it), "Iter is out of range.");
@@ -214,7 +215,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <typename... TArgs>
         constexpr auto emplaceFront(TArgs&&... args)
-            requires(RConstructible<T, TArgs...>)
+            requires(RConstructible<TElem, TArgs...>)
         {
             _impl.emplaceFront(fwd(args)...);
         }
@@ -236,7 +237,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
         constexpr auto insertRangeFront(TRange&& range) -> TMutIter
-            requires(RRangeOf<TRange, T>) and (RConstructible<T, typename TRange::TElem>)
+            requires(RRangeOf<TRange, TElem>) and (RConstructible<TElem, typename TRange::TElem>)
         {
             usize count = _impl.insertRangeFront(fwd(range));
             return _impl.mutIter(count);
@@ -255,7 +256,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <typename... TArgs>
         constexpr auto emplaceBack(TArgs&&... args)
-            requires(RConstructible<T, TArgs...>)
+            requires(RConstructible<TElem, TArgs...>)
         {
             _impl.emplaceBack(fwd(args)...);
         }
@@ -263,9 +264,9 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename T1>
-        constexpr auto operator+=(T1&& el)
-            requires(RConstructible<T, T1>)
+        template <typename TArg>
+        constexpr auto operator+=(TArg&& el)
+            requires(RConstructible<TElem, TArg>)
         {
             _impl.emplaceBack(fwd(el));
         }
@@ -287,7 +288,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
         constexpr auto insertRangeBack(TRange&& range) -> TMutIter
-            requires(RRangeOf<TRange, T>) and (RConstructible<T, typename TRange::TElem>)
+            requires(RRangeOf<TRange, TElem>) and (RConstructible<TElem, typename TRange::TElem>)
         {
             usize count = _impl.insertRangeBack(range.iter(), range.iterEnd());
             return _impl.mutIter(_impl.count() - count);
@@ -299,8 +300,8 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <typename TRange, typename TRangeUnqualified = TTI::TRemoveQuailfiersRef<TRange>>
         constexpr auto operator+=(TRange&& range)
-            requires(RRangeOf<TRangeUnqualified, T>)
-                    and (RConstructible<T, typename TRangeUnqualified::TElem>)
+            requires(RRangeOf<TRangeUnqualified, TElem>)
+                    and (RConstructible<TElem, typename TRangeUnqualified::TElem>)
         {
             _impl.insertRangeBack(mov(range.iter()), mov(range.iterEnd()));
         }
@@ -463,7 +464,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto releaseMem()
         {
-            return _impl.releaseMem();
+            return _impl.releaseUnusedMem();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -480,6 +481,14 @@ namespace Atom
         constexpr auto reservedCount() const -> usize
         {
             return _impl.capacity() - _impl.count();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto alloc() const -> const TAlloc&
+        {
+            return _impl.alloc();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -540,26 +549,26 @@ namespace Atom
         _Impl _impl;
     };
 
-    template <typename T, typename TAlloc>
-    class MutArrayRangeTraitImpl<DynamicArray<T, TAlloc>>
+    template <typename TElem_, typename TAlloc_>
+    class MutArrayRangeTraitImpl<DynamicArray<TElem_, TAlloc_>>
     {
-        using _Array = DynamicArray<T, TAlloc>;
-        using _ArrayImpl = _DynamicArrayImpl<T, TAlloc>;
+        using _Array = DynamicArray<TElem_, TAlloc_>;
+        using _ArrayImpl = _DynamicArrayImpl<TElem_, TAlloc_>;
 
     public:
-        using TElem = T;
-        using TIter = ArrayIter<T>;
+        using TElem = TElem_;
+        using TIter = ArrayIter<TElem>;
         using TIterEnd = TIter;
-        using TMutIter = MutArrayIter<T>;
+        using TMutIter = MutArrayIter<TElem>;
         using TMutIterEnd = TMutIter;
 
     public:
-        constexpr auto data() const -> const T*
+        constexpr auto data() const -> const TElem*
         {
             return _impl().data();
         }
 
-        constexpr auto mutData() -> T*
+        constexpr auto mutData() -> TElem*
         {
             return _mutImpl().mutData();
         }
