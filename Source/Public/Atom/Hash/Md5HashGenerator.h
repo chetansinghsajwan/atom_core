@@ -24,7 +24,7 @@ namespace Atom::Private
 
         auto Calculate(Md5Hash& hash)
         {
-            Md5Finalise(&_context, (MD5_HASH*)hash.bytes.data());
+            Md5Finalise(&_context, (MD5_HASH*)hash.bytes.mem());
         }
 
     public:

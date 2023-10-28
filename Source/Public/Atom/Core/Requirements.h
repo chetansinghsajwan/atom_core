@@ -1,4 +1,6 @@
 #pragma once
+#include "Atom/Core/LangExtensions.h"
+
 #include <concepts>
 #include <type_traits>
 

@@ -1,16 +1,16 @@
 #pragma once
-#include "Atom/Containers/StaticArray.h"
+#include "Atom/Core/Storage.h"
 
 namespace Atom::Private
 {
     /// --------------------------------------------------------------------------------------------
     /// T1Hash output.
     /// --------------------------------------------------------------------------------------------
-    template <usize Size>
+    template <usize size>
     class T1Hash
     {
     public:
-        static constexpr usize _Size = Size;
+        static constexpr usize Size = size;
         static const T1Hash Null;
 
     public:
@@ -18,15 +18,15 @@ namespace Atom::Private
         constexpr auto operator!=(const T1Hash& other) const -> bool = default;
 
     public:
-        StaticArray<byte, Size> bytes;
+        StaticStorage<size> bytes;
     };
 
     // FIX: Compilation error in MSVC, checkout /Zc:externConstexpr
-    template <usize Size>
+    template <usize size>
 #ifdef ATOM_COMP_MSVC
     inline
 #else
     constexpr
 #endif
-        const T1Hash<Size> T1Hash<Size>::Null = T1Hash<Size>{ 0 };
+        const T1Hash<size> T1Hash<size>::Null = T1Hash<size>{ 0 };
 }

@@ -24,7 +24,7 @@ namespace Atom::Private
 
         auto Calculate(Sha1Hash& hash)
         {
-            Sha1Finalise(&_context, (SHA1_HASH*)hash.bytes.data());
+            Sha1Finalise(&_context, (SHA1_HASH*)hash.bytes.mem());
         }
 
     public:

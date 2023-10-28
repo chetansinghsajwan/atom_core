@@ -1,5 +1,5 @@
 #pragma once
-#include "Atom/Containers.h"
+#include "Atom/Core/Storage.h"
 
 namespace Atom
 {
@@ -38,7 +38,7 @@ namespace Atom
         constexpr auto operator!=(const Uuid& other) const -> bool = default;
 
     public:
-        StaticArray<byte, 16> bytes;
+        StaticStorage<16> bytes;
     };
 
     constexpr inline const Uuid Uuid::Null = Uuid{ 0 };

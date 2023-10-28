@@ -11,21 +11,21 @@ namespace Atom::Private
     template <typename T1Hash>
     class T1HashParser
     {
-        static constexpr usize _Size = T1Hash::_Size;
+        static constexpr usize Size = T1Hash::Size;
 
     public:
         /// ----------------------------------------------------------------------------------------
         /// # Requires
         ///
-        /// - `count == (_Size * 2) + 1`:  _Size * 2 (1 byte represents 2 hex values and 1 char
+        /// - `count == (Size * 2) + 1`:  Size * 2 (1 byte represents 2 hex values and 1 char
         /// represents one hex value) + 1 (null terminator).
         /// ----------------------------------------------------------------------------------------
         template <usize count>
         constexpr auto Parse(const Char (&str)[count]) const -> T1Hash
-            requires(count == (_Size * 2) + 1)
+            requires(count == (Size * 2) + 1)
         {
             T1Hash hash;
-            for (usize i = 0; i < _Size * 2; i += 2)
+            for (usize i = 0; i < Size * 2; i += 2)
             {
                 byte hex1 = Math::CharToHex(str[i.val()]);
                 if (hex1 == (byte)-1)
@@ -101,7 +101,7 @@ namespace Atom::Private
         constexpr auto Parse(const TRange& range) const -> T1Hash
             requires(RJumpRangeOf<TRange, Char>)
         {
-            if (range.Size() != _Size * 2)
+            if (range.Size() != Size * 2)
             {
                 return T1Hash::Null;
             }
