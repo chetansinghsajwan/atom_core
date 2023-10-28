@@ -1,94 +1,79 @@
 #pragma once
-#include "Atom/Range/MutArrayRangeTrait.h"
+#include "Atom/Range/MutArrayRangeExtensions.h"
 
 namespace Atom
 {
-    template <typename T, usize count>
-    class _StaticArrayStorage
+    template <typename TElem_, usize count_>
+    class BasicStaticArray
     {
     public:
-        T _arr[count];
-    };
-
-    template <typename T, usize count>
-    class StaticArray:
-        public _StaticArrayStorage<T, count>,
-        public MutArrayRangeTrait<StaticArray<T, count>>
-    {};
-
-    template <typename T, usize count_>
-    class MutArrayRangeTraitImpl<StaticArray<T, count_>>
-    {
-        using _Array = StaticArray<T, count_>;
-        using _ArrayStorage = _StaticArrayStorage<T, count_>;
-
-    public:
-        using TElem = T;
-        using TIter = ArrayIter<T>;
+        using TElem = TElem_;
+        using TIter = ArrayIter<TElem>;
         using TIterEnd = TIter;
-        using TMutIter = MutArrayIter<T>;
+        using TMutIter = MutArrayIter<TElem>;
         using TMutIterEnd = TMutIter;
 
     public:
-        constexpr auto data() const -> const T*
+        constexpr BasicStaticArray() = default;
+
+        template <usize n>
+        constexpr BasicStaticArray(const TElem (&arr)[n])
+            requires(n <= count_):
+            _arr{ arr }
+        {}
+
+        template <typename... TArgs>
+        constexpr BasicStaticArray(TArgs&&... args)
+            requires(RConvertibleTo<TArgs, TElem> and ...) and (sizeof...(TArgs) <= count_.val()):
+            _arr{ 0 } { }
+
+    public:
+        constexpr auto data() const -> const TElem*
         {
-            return _storageData();
+            return _arr;
         }
 
-        constexpr auto mutData() -> T*
+        constexpr auto mutData() -> TElem*
         {
-            return _storageMutData();
+            return _arr;
         }
 
         constexpr auto count() const -> usize
         {
-            return _storageCount();
+            return count_;
         }
 
         constexpr auto iter() const -> TIter
         {
-            return TIter{ _storageData() };
+            return TIter{ _arr };
         }
 
         constexpr auto iterEnd() const -> TIterEnd
         {
-            return TIterEnd{ _storageData() + _storageCount() };
+            return TIterEnd{ _arr + count_ };
         }
 
         constexpr auto mutIter() -> TMutIter
         {
-            return TMutIter{ _storageMutData() };
+            return TMutIter{ _arr };
         }
 
         constexpr auto mutIterEnd() -> TMutIterEnd
         {
-            return TMutIterEnd{ _storageMutData() + _storageCount() };
+            return TMutIterEnd{ _arr + count_ };
         }
 
     private:
-        constexpr auto _storageData() const -> const T*
-        {
-            return _storage()._arr;
-        }
+        TElem _arr[count_.val()];
+    };
 
-        constexpr auto _storageMutData() -> T*
-        {
-            return _mutStorage()._arr;
-        }
+    template <typename TElem, usize count>
+    class StaticArray: public MutArrayRangeExtensions<BasicStaticArray<TElem, count>>
+    {
+        using Base = MutArrayRangeExtensions<BasicStaticArray<TElem, count>>;
 
-        constexpr auto _storageCount() const -> usize
-        {
-            return count_;
-        }
-
-        constexpr auto _storage() const -> const _ArrayStorage&
-        {
-            return reinterpret_cast<const _ArrayStorage&>(*this);
-        }
-
-        constexpr auto _mutStorage() -> _ArrayStorage&
-        {
-            return reinterpret_cast<_ArrayStorage&>(*this);
-        }
+    public:
+        using Base::Base;
+        using Base::operator=;
     };
 }

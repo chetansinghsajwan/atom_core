@@ -22,7 +22,14 @@ namespace Atom::Math
 
         byte high = hex >> 4;
         byte low = hex & 0b00001111;
-        return { chars[high], chars[low] };
+
+        StackString<2> str;
+        str[0] = chars[high];
+        str[1] = chars[low];
+        return str;
+
+        // TODO: fix this.
+        // return { chars[high], chars[low] };
     }
 
     constexpr auto IsHexChar(Char ch) -> bool

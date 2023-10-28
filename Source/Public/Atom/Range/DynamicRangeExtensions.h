@@ -1,5 +1,5 @@
 #pragma once
-#include "MutRangeTrait.h"
+#include "MutRangeExtensions.h"
 #include "Atom/Invokable/Invokable.h"
 
 namespace Atom
@@ -11,22 +11,22 @@ namespace Atom
     concept RDynamicRange = RMutRange<TRange>;
 
     template <typename T>
-    class DynamicRangeTraitImpl
+    class DynamicRangeExtensionsImpl
     {};
 
     template <typename T>
-    class _DynamicRangeTraitImpl
+    class _DynamicRangeExtensionsImpl
     {};
 
     template <typename T>
-    class DynamicRangeTrait
+    class DynamicRangeExtensions
     {
-        using _Impl = DynamicRangeTraitImpl<T>;
+        using _TImpl = DynamicRangeExtensionsImpl<T>;
 
     public:
-        using TElem = typename _Impl::TElem;
-        using TMutIter = typename _Impl::TMutIter;
-        using TMutIterEnd = typename _Impl::TMutIterEnd;
+        using TElem = typename _TImpl::TElem;
+        using TMutIter = typename _TImpl::TMutIter;
+        using TMutIterEnd = typename _TImpl::TMutIterEnd;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////
@@ -57,6 +57,6 @@ namespace Atom
         }
 
     private:
-        _Impl _impl;
+        _TImpl _impl;
     };
 }

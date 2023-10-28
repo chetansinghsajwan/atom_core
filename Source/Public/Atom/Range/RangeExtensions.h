@@ -1,46 +1,330 @@
 #pragma once
-#include "StdIterWrapForAtomIter.h"
+#include "ArrayIter.h"
 #include "RangeReq.h"
+#include "StdIterWrapForAtomIter.h"
+
+#include <algorithm>
 
 namespace Atom
 {
-    /// --------------------------------------------------------------------------------------------
-    ///
-    /// --------------------------------------------------------------------------------------------
     template <typename TRange>
-        requires RRange<TRange>
-    constexpr auto begin(const TRange& range) -> auto
+    class _RangeExtensionsImpl
     {
-        return StdIterWrapForAtomIter{ range.iter() };
-    }
+    protected:
+        using _TImpl = TRange;
 
-    /// --------------------------------------------------------------------------------------------
-    ///
-    /// --------------------------------------------------------------------------------------------
-    template <typename TRange>
-        requires RMutRange<TRange>
-    constexpr auto begin(TRange& range) -> auto
-    {
-        return StdIterWrapForAtomIter{ range.mutIter() };
-    }
+    public:
+        using TElem = typename _TImpl::TElem;
+        using TIter = typename _TImpl::TIter;
+        using TIterEnd = typename _TImpl::TIterEnd;
 
-    /// --------------------------------------------------------------------------------------------
-    ///
-    /// --------------------------------------------------------------------------------------------
-    template <typename TRange>
-        requires RRange<TRange>
-    constexpr auto end(const TRange& range) -> auto
-    {
-        return StdIterWrapForAtomIter{ range.iterEnd() };
-    }
+    public:
+        constexpr _RangeExtensionsImpl(TRange& range):
+            _range(range) {}
 
-    /// --------------------------------------------------------------------------------------------
-    ///
-    /// --------------------------------------------------------------------------------------------
-    template <typename TRange>
-        requires RMutRange<TRange>
-    constexpr auto end(TRange& range) -> auto
+        /// ----------------------------------------------------------------------------------------
+        /// # To Do
+        ///
+        /// - Can we remove const_cast here?
+        /// ----------------------------------------------------------------------------------------
+        constexpr _RangeExtensionsImpl(const TRange& range):
+            _range(const_cast<TRange&>(range)) {}
+
+    public:
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto iter() const -> TIter
+        {
+            return _impl().iter();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto iterEnd() const -> TIterEnd
+        {
+            return _impl().iterEnd();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename TElem1>
+        constexpr auto findElem(const TElem1& el) const -> TIter
+        {
+            StdIterWrapForAtomIter stdIter{ iter() };
+            StdIterWrapForAtomIter stdIterEnd{ iterEnd() };
+            return std::find(stdIter, stdIterEnd, el).iter;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename TRange1>
+        constexpr auto findRange(const TRange1& range) const -> TIter
+        {
+            StdIterWrapForAtomIter stdIter{ iter() };
+            StdIterWrapForAtomIter stdIterEnd{ iterEnd() };
+            StdIterWrapForAtomIter stdIter1{ range.iter() };
+            StdIterWrapForAtomIter stdIterEnd1{ range.iterEnd() };
+            return std::find(stdIter, stdIterEnd, stdIter1, stdIterEnd1);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename TRange1>
+        auto compare(const TRange1& range) const -> i8
+        {
+            StdIterWrapForAtomIter stdIter{ iter() };
+            StdIterWrapForAtomIter stdIterEnd{ iterEnd() };
+            StdIterWrapForAtomIter stdIter1{ range.iter() };
+            StdIterWrapForAtomIter stdIterEnd1{ range.iterEnd() };
+
+            return std::equal(stdIter, stdIterEnd, stdIter1, stdIterEnd1);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto getCount() const -> usize
+        {
+            if constexpr (RJumpIterPair<TIter, TIterEnd>)
+            {
+                return iterEnd() - iter();
+            }
+
+            usize count = 0;
+            for (auto it = iter(); it != iterEnd(); it++)
+                count++;
+
+            return count;
+        }
+
+    protected:
+        constexpr auto _impl() const -> const TRange&
+        {
+            return _range;
+        }
+
+        constexpr auto _impl() -> TRange&
+        {
+            return _range;
+        }
+
+    private:
+        TRange& _range;
+    };
+
+    template <typename TRange, typename _TImpl_ = void>
+    class RangeExtensions: public TRange
     {
-        return StdIterWrapForAtomIter{ range.mutIterEnd() };
-    }
+        using Base = TRange;
+
+    protected:
+        using _TImpl = _TImpl_;
+
+    public:
+        using TElem = typename _TImpl::TElem;
+        using TIter = typename _TImpl::TIter;
+        using TIterEnd = typename _TImpl::TIterEnd;
+
+    public:
+        using Base::Base;
+        using Base::operator=;
+
+    public:
+        ////////////////////////////////////////////////////////////////////////////////////////////////
+        ////
+        //// Iteration
+        ////
+        ////////////////////////////////////////////////////////////////////////////////////////////////
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto iter() const -> TIter
+        {
+            return _impl().iter();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto iterEnd() const -> TIterEnd
+        {
+            return _impl().iterEnd();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto begin() const
+        {
+            return StdIterWrapForAtomIter{ _impl().iter() };
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto end() const
+        {
+            return StdIterWrapForAtomIter{ _impl().iterEnd() };
+        }
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////
+        ////
+        //// Search
+        ////
+        ////////////////////////////////////////////////////////////////////////////////////////////////
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename TElem1>
+        constexpr auto find(const TElem1& el) const -> TIter
+            requires(REqualityComparableWith<TElem, TElem1>)
+        {
+            return _impl().findElem(el);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename TRange1>
+        constexpr auto findRange(const TRange1& range) const -> TIter
+            requires(RFwdRange<TRange1>)
+                    and (REqualityComparableWith<TElem, typename TRange1::TElem>)
+        {
+            return _impl().findRange(range);
+        }
+
+        template <typename TRange1>
+        auto countAny(const TRange1& range) const -> usize
+        {
+            usize count = 0;
+            for (auto it = iter(); it.compare(iterEnd()) != 0; it++)
+                for (const auto& el : range)
+                {
+                    if (*it == el)
+                        count++;
+                }
+
+            return count;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename TElem1>
+        constexpr auto contains(const TElem1& el) const -> bool
+            requires(REqualityComparableWith<TElem, TElem1>)
+        {
+            return _impl().findElem(el).compare(_impl().iterEnd()) != 0;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename TRange1>
+        constexpr auto contains(const TRange1& range) const -> bool
+            requires(RFwdRange<TRange1>)
+                    and (REqualityComparableWith<TElem, typename TRange1::TElem>)
+        {
+            return _impl().findRange(range).compare(_impl().iterEnd()) != 0;
+        }
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////
+        ////
+        //// Comparision
+        ////
+        ////////////////////////////////////////////////////////////////////////////////////////////////
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename TRange1>
+        constexpr auto compare(const TRange1& range) const -> i8
+            requires(RRange<TRange1>) and (REqualityComparableWith<TElem, typename TRange1::TElem>)
+        {
+            return _impl().compare(range);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename TRange1>
+        constexpr auto equals(const TRange1& range) const -> bool
+            requires(RRange<TRange1>) and (REqualityComparableWith<TElem, typename TRange1::TElem>)
+        {
+            return _impl().compare(range) == 0;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename TRange1>
+        constexpr auto operator==(const TRange1& range) const -> bool
+            requires(RRange<TRange1>) and (REqualityComparableWith<TElem, typename TRange1::TElem>)
+        {
+            return _impl().compare(range) == 0;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename TRange1>
+        constexpr auto operator!=(const TRange1& range) const -> bool
+            requires(RRange<TRange1>) and (REqualityComparableWith<TElem, typename TRange1::TElem>)
+        {
+            return _impl().compare(range) != 0;
+        }
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////
+        ////
+        //// Helpers
+        ////
+        //// # To Do
+        //// - Add range helper functions.
+        //// -------------------------------------------------------------------------------------------
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto canGetCount() const -> bool
+        {
+            return RFwdIterPair<TIter, TIterEnd>;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto getCount() const -> usize
+        {
+            return _impl().getCount();
+        }
+
+    protected:
+        constexpr auto _impl() const -> const _TImpl
+        {
+            return _TImpl(*this);
+        }
+
+        constexpr auto _impl() -> _TImpl
+        {
+            return _TImpl(*this);
+        }
+    };
+
+    template <typename TRange>
+    class RangeExtensions<TRange, void>:
+        public RangeExtensions<TRange, _RangeExtensionsImpl<TRange>>
+    {
+        using Base = RangeExtensions<TRange, _RangeExtensionsImpl<TRange>>;
+
+    public:
+        using Base::Base;
+        using Base::operator=;
+    };
 }

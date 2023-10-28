@@ -1,86 +1,87 @@
 #pragma once
-#include "RangeTrait.h"
+#include "RangeExtensions.h"
 
 namespace Atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// When marked with this flag, mut range implementations doesn't inherit from their range
-    /// implementations, this is done to prevent diamond problem.
+    /// Implementation for [`MutRangeExtensions`].
     /// --------------------------------------------------------------------------------------------
-    class _DontInheritRangeImpl {};
-
-    /// --------------------------------------------------------------------------------------------
-    /// Requirements for [`MutRangeImpl`].
-    /// --------------------------------------------------------------------------------------------
-    template <typename TRange>
-    concept RMutRangeImpl = false;
-
-    /// --------------------------------------------------------------------------------------------
-    /// User defined implementation for [`MutRangeTrait`].
-    /// --------------------------------------------------------------------------------------------
-    template <typename TRange>
-    class MutRangeTraitImpl;
-
-    /// --------------------------------------------------------------------------------------------
-    /// Implementation for [`MutRangeTrait`].
-    /// --------------------------------------------------------------------------------------------
-    template <typename TRangeImpl>
-    class _MutRangeTraitImpl: public TRangeImpl
+    template <typename TRange, typename _TExtensionsImpl = void>
+    class _MutRangeExtensionsImpl: public _TExtensionsImpl
     {
-        using Base = TRangeImpl;
+        using Base = _TExtensionsImpl;
+
+    protected:
+        using _TImpl = typename Base::_TImpl;
 
     public:
-        using TImpl = typename Base::TImpl;
         using TElem = typename Base::TElem;
         using TIter = typename Base::TIter;
         using TIterEnd = typename Base::TIterEnd;
-        using TMutIter = typename TImpl::TMutIter;
-        using TMutIterEnd = typename TImpl::TMutIterEnd;
+        using TMutIter = typename _TImpl::TMutIter;
+        using TMutIterEnd = typename _TImpl::TMutIterEnd;
+
+    public:
+        using Base::Base;
+        using Base::operator=;
 
     public:
         constexpr auto mutIter() -> TMutIter
         {
-            return _impl.mutIter();
+            return _impl().mutIter();
         }
 
         constexpr auto mutIterEnd() -> TMutIterEnd
         {
-            return _impl.mutIterEnd();
+            return _impl().mutIterEnd();
         }
 
-    public:
+    protected:
         using Base::_impl;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Recursive Trait for [`MutRange`].
+    /// 
     /// --------------------------------------------------------------------------------------------
-    template <typename TRangeTrait>
-    class MutRangeTraitRecursive: public TRangeTrait
+    template <typename TRange>
+    class _MutRangeExtensionsImpl<TRange, void>:
+        public _MutRangeExtensionsImpl<TRange, _RangeExtensionsImpl<TRange>> {};
+
+    /// --------------------------------------------------------------------------------------------
+    /// 
+    /// --------------------------------------------------------------------------------------------
+    template <typename TRange, typename _TRangeExtensions = void>
+    class MutRangeExtensions: public _TRangeExtensions
     {
-        using Base = TRangeTrait;
+        using Base = _TRangeExtensions;
+
+    protected:
+        using _TImpl = typename Base::_TImpl;
 
     public:
-        using TImpl = typename Base::TImpl;
         using TElem = typename Base::TElem;
         using TIter = typename Base::TIter;
         using TIterEnd = typename Base::TIterEnd;
-        using TMutIter = typename TImpl::TMutIter;
-        using TMutIterEnd = typename TImpl::TMutIterEnd;
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    ////
-    //// Iteration
-    ////
-    ////////////////////////////////////////////////////////////////////////////////////////////////
+        using TMutIter = typename _TImpl::TMutIter;
+        using TMutIterEnd = typename _TImpl::TMutIterEnd;
 
     public:
+        using Base::Base;
+        using Base::operator=;
+
+    public:
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////
+        //// Iteration
+        ////
+        ////////////////////////////////////////////////////////////////////////////////////////////
+
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
         constexpr auto mutIter() -> TMutIter
         {
-            return _impl.mutIter();
+            return _impl().mutIter();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -88,7 +89,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto mutIterEnd() -> TMutIterEnd
         {
-            return _impl.mutIterEnd();
+            return _impl().mutIterEnd();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -96,7 +97,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto begin()
         {
-            return StdIterWrapForAtomIter{ _impl.mutIter() };
+            return StdIterWrapForAtomIter{ _impl().mutIter() };
         }
 
         using Base::begin;
@@ -106,18 +107,17 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto end()
         {
-            return StdIterWrapForAtomIter{ _impl.mutIterEnd() };
+            return StdIterWrapForAtomIter{ _impl().mutIterEnd() };
         }
 
         using Base::end;
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    ////
-    //// Write
-    ////
-    ////////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////
+        //// Write
+        ////
+        ////////////////////////////////////////////////////////////////////////////////////////////
 
-    public:
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
@@ -187,7 +187,22 @@ ATOM_PRAGMA_OPTIMIZE_ON
             requires(RDestructible<TElem>)
         {}
 
-    public:
+    protected:
         using Base::_impl;
+    };
+
+    /// --------------------------------------------------------------------------------------------
+    /// 
+    /// --------------------------------------------------------------------------------------------
+    template <typename TRange>
+    class MutRangeExtensions<TRange, void>:
+        public MutRangeExtensions<TRange, RangeExtensions<TRange, _MutRangeExtensionsImpl<TRange>>>
+    {
+        using Base = MutRangeExtensions<TRange, 
+            RangeExtensions<TRange, _MutRangeExtensionsImpl<TRange>>>;
+
+    public:
+        using Base::Base;
+        using Base::operator=;
     };
 }

@@ -1,112 +1,105 @@
 #pragma once
-#include "MutJumpRangeTrait.h"
-#include "ArrayRangeTrait.h"
-#include "Atom/Contracts.h"
+#include "JumpRangeExtensions.h"
 
 namespace Atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// User defined implementation for [`MutArrayRangeTrait`].
+    /// Implementation of [`ArrayRangeExtensions`].
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
-    class MutArrayRangeTraitImpl;
-
-    /// --------------------------------------------------------------------------------------------
-    /// Requirements for [`MutArrayRangeTraitImpl`].
-    /// 
-    /// # To Do: Implement this.
-    /// --------------------------------------------------------------------------------------------
-    template <typename TRange>
-    concept RMutArrayRangeTraitImpl = RDefaultConstructible<MutArrayRangeTraitImpl<TRange>>;
-
-    /// --------------------------------------------------------------------------------------------
-    /// Implementation of [`MutArrayRangeTrait`].
-    /// 
-    /// # To Do
-    /// 
-    /// - Add `iter()` and `iterEnd()` functions.
-    /// --------------------------------------------------------------------------------------------
-    template <typename TRangeImpl>
-    class _MutArrayRangeTraitImpl: public _MutRangeTraitImpl<TRangeImpl>
+    class _ArrayRangeExtensionsImpl: public _JumpRangeExtensionsImpl<TRange>
     {
-        using Base = _MutRangeTraitImpl<TRangeImpl>;
+        using Base = _JumpRangeExtensionsImpl<TRange>;
+
+    protected:
+        using _TImpl = typename Base::_TImpl;
 
     public:
-        using TImpl = typename Base::TImpl;
         using TElem = typename Base::TElem;
         using TIter = typename Base::TIter;
         using TIterEnd = typename Base::TIterEnd;
-        using TMutIter = typename Base::TMutIter;
-        using TMutIterEnd = typename Base::TMutIterEnd;
 
     public:
-        constexpr auto mutData() -> TElem*
+        using Base::Base;
+        using Base::operator=;
+
+    public:
+        constexpr auto data() const -> const TElem*
         {
-            return _impl.mutData();
+            return _impl().data();
         }
 
         constexpr auto count() const -> usize
         {
-            return _impl.count();
+            return _impl().count();
         }
 
-        constexpr auto mutAt(usize i) -> TElem&
+        constexpr auto at(usize i) const -> const TElem&
         {
-            return mutData()[i.val()];
+            debug_expects(isIndexInRange(i));
+
+            return data()[i.val()];
         }
 
-        constexpr auto mutFront() -> TElem&
+        constexpr auto front() const -> const TElem&
         {
-            return mutAt(0);
+            return at(0);
         }
 
-        constexpr auto mutBack() -> TElem&
+        constexpr auto back() const -> const TElem&
         {
-            debug_expects(count() > 0);
-
-            return mutAt(count() - 1);
+            return back(count() - 1);
         }
 
-        constexpr auto mutIter(usize i) -> TMutIter
+        constexpr auto isIndexInRange(usize i) const -> bool
         {
-            return Base::mutIter().next(i);
+            return i < count();
         }
 
-        using Base::mutIter;
+        constexpr auto iter(usize i) const -> TIter
+        {
+            return Base::iter().next(i);
+        }
 
-    public:
+        using Base::iter;
+
+    protected:
         using Base::_impl;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Recrusive Trait Impl for [MutArrayRange].
+    /// [ArrayRangeExtensions].
     /// --------------------------------------------------------------------------------------------
-    template <typename TRangeTrait>
-    class MutArrayRangeTraitRecursive: public MutJumpRangeTraitRecursive<TRangeTrait>
+    template <typename TRange, typename _TImpl_ = void>
+    class ArrayRangeExtensions: public JumpRangeExtensions<TRange, _TImpl_>
     {
-        using Base = MutJumpRangeTraitRecursive<TRangeTrait>;
+        using Base = JumpRangeExtensions<TRange, _TImpl_>;
+
+    protected:
+        using _TImpl = typename Base::_TImpl;
 
     public:
-        using TImpl = typename Base::TImpl;
         using TElem = typename Base::TElem;
         using TIter = typename Base::TIter;
         using TIterEnd = typename Base::TIterEnd;
-        using TMutIter = typename Base::TMutIter;
-        using TMutIterEnd = typename Base::TMutIterEnd;
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    ////
-    //// Access
-    ////
-    ////////////////////////////////////////////////////////////////////////////////////////////////
 
     public:
+        using Base::Base;
+        using Base::operator=;
+
+    public:
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////
+        //// Access
+        ////
+        ////////////////////////////////////////////////////////////////////////////////////////////
+
         /// ----------------------------------------------------------------------------------------
         /// Get underlying ptr to arr.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto mutData() -> TElem*
+        constexpr auto data() const -> const TElem*
         {
-            return _impl.mutData();
+            return _impl().data();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -118,11 +111,11 @@ namespace Atom
         /// # Time Complexity
         /// Constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto mutAt(usize i) -> TElem&
+        constexpr auto at(usize i) const -> const TElem&
         {
             expects(isIndexInRange(i), "Index is out of range.");
 
-            return _impl.mutAt(i);
+            return _impl().at(i);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -134,14 +127,12 @@ namespace Atom
         /// # Time Complexity
         /// Constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator[](usize i) -> TElem&
+        constexpr auto operator[](usize i) const -> const TElem&
         {
             debug_expects(isIndexInRange(i), "Index is out of range.");
 
-            return _impl.mutAt(i);
+            return _impl().at(i);
         }
-
-        using Base::operator[];
 
         /// ----------------------------------------------------------------------------------------
         /// Access first element.
@@ -149,11 +140,11 @@ namespace Atom
         /// # Time Complexity
         /// Constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto mutFront() -> TElem&
+        constexpr auto front() const -> const TElem&
         {
             debug_expects(not isEmpty(), "Range is empty.");
 
-            return _impl.mutFront();
+            return _impl().front();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -162,20 +153,35 @@ namespace Atom
         /// # Time Complexity
         /// Constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto mutBack() -> TElem&
+        constexpr auto back() const -> const TElem&
         {
             debug_expects(not isEmpty(), "Range is empty.");
 
-            return _impl.mutBack();
+            return _impl().back();
         }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    ////
-    //// Iteration
-    ////
-    ////////////////////////////////////////////////////////////////////////////////////////////////
+        /// ----------------------------------------------------------------------------------------
+        /// Get count of elements.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto count() const -> usize
+        {
+            return _impl().count();
+        }
 
-    public:
+        /// ----------------------------------------------------------------------------------------
+        /// Is range empty.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto isEmpty() const -> bool
+        {
+            return _impl().count() == 0;
+        }
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////
+        //// Iteration
+        ////
+        ////////////////////////////////////////////////////////////////////////////////////////////
+
         /// ----------------------------------------------------------------------------------------
         /// Get iter to element at index `i`.
         ///
@@ -183,22 +189,21 @@ namespace Atom
         ///
         /// - `i`: Index of the element to get iter at.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto mutIter(usize i) const -> TMutIter
+        constexpr auto iter(usize i) const -> TIter
         {
             expects(isIndexInRange(i), "Index is out of range.");
 
-            return _impl.mutIter(i);
+            return _impl().iter(i);
         }
 
-        using Base::mutIter;
+        using Base::iter;
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    ////
-    //// View
-    ////
-    ////////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////
+        //// View
+        ////
+        ////////////////////////////////////////////////////////////////////////////////////////////
 
-    public:
         /// ----------------------------------------------------------------------------------------
         /// # To Do: Review this.
         /// ----------------------------------------------------------------------------------------
@@ -214,18 +219,32 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto rangeTo(usize to) const {}
 
-    public:
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////
+        //// Validation
+        ////
+        ////////////////////////////////////////////////////////////////////////////////////////////
+
+        constexpr auto isIndexInRange(usize i) const -> bool
+        {
+            return _impl().isIndexInRange(i);
+        }
+
+    protected:
         using Base::_impl;
-        using Base::isIndexInRange;
-        using Base::isEmpty;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Trait for [MutArrayRange].
+    ///
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
-    requires(RMutArrayRangeTraitImpl<TRange>)
-    class MutArrayRangeTrait: public MutArrayRangeTraitRecursive<ArrayRangeTraitRecursive<
-        _MutArrayRangeTraitImpl<_ArrayRangeTraitImpl<MutArrayRangeTraitImpl<TRange>>>>>
-    {};
+    class ArrayRangeExtensions<TRange, void>:
+        public ArrayRangeExtensions<TRange, _ArrayRangeExtensionsImpl<TRange>>
+    {
+        using Base = ArrayRangeExtensions<TRange, _ArrayRangeExtensionsImpl<TRange>>;
+
+    public:
+        using Base::Base;
+        using Base::operator=;
+    };
 }

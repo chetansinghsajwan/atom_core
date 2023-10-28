@@ -12,15 +12,11 @@ namespace Atom
     /// - Write time complexities after writing implementation.
     /// - Add note for case, where element or elements to be inserted are from this array.
     /// --------------------------------------------------------------------------------------------
-    template <typename TElem_, typename TAlloc_ = DefaultMemAllocator>
+    template <typename TElem_, typename TAlloc_>
         requires(not RRef<TElem_>) and (not RIsVoid<TElem_>)
-    class DynamicArray: public MutArrayRangeTrait<DynamicArray<TElem_>>
+    class BasicDynamicArray
     {
-        friend class MutArrayRangeTraitImpl<DynamicArray<TElem_, TAlloc_>>;
-
-    private:
         using _Impl = _DynamicArrayImpl<TElem_, TAlloc_>;
-        using Trait = MutArrayRangeTrait<DynamicArray<TElem_>>;
 
     public:
         using TElem = TElem_;
@@ -34,21 +30,21 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Default Constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr DynamicArray():
+        constexpr BasicDynamicArray():
             _impl{}
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # Copy Constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr DynamicArray(const DynamicArray& that):
+        constexpr BasicDynamicArray(const BasicDynamicArray& that):
             _impl{ that.iter(), that.iterEnd() }
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # Copy Operator
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator=(const DynamicArray& that) -> DynamicArray&
+        constexpr auto operator=(const BasicDynamicArray& that) -> BasicDynamicArray&
         {
             _impl.assignRange(that.iter(), that.iterEnd());
             return *this;
@@ -57,14 +53,14 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Move Constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr DynamicArray(DynamicArray&& that):
+        constexpr BasicDynamicArray(BasicDynamicArray&& that):
             _impl{ mov(that._impl) }
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # Move Operator
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator=(DynamicArray&& that) -> DynamicArray&
+        constexpr auto operator=(BasicDynamicArray&& that) -> BasicDynamicArray&
         {
             _impl.storage().move(mov(that));
             return *this;
@@ -74,7 +70,7 @@ namespace Atom
         /// # Range Constructor
         /// ----------------------------------------------------------------------------------------
         template <typename TRange, typename TRangeUnqualified = TTI::TRemoveQuailfiersRef<TRange>>
-        constexpr DynamicArray(TRange&& range)
+        constexpr BasicDynamicArray(TRange&& range)
             requires(RRangeOf<TRangeUnqualified, TElem>)
             :
             _impl{ range.iter(), range.iterEnd() }
@@ -84,7 +80,7 @@ namespace Atom
         /// # Range Operator
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
-        constexpr DynamicArray& operator=(TRange&& range)
+        constexpr BasicDynamicArray& operator=(TRange&& range)
             requires(RRangeOf<TRange, TElem>)
         {
             _impl.assignRange(range.iter(), range.iterEnd());
@@ -93,12 +89,68 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Destructor
         /// ----------------------------------------------------------------------------------------
-        constexpr ~DynamicArray()
+        constexpr ~BasicDynamicArray()
         {
             _impl.onDestruct();
         }
 
     public:
+        /// ----------------------------------------------------------------------------------------
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto data() const -> const TElem*
+        {
+            return _impl.data();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto mutData() -> TElem*
+        {
+            return _impl.mutData();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto count() const -> usize
+        {
+            return _impl.count();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto iter(usize i = 0) const -> TIter
+        {
+            return _impl.iter(i);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto iterEnd() const -> TIterEnd
+        {
+            return _impl.iterEnd();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto mutIter(usize i = 0) -> TMutIter
+        {
+            return _impl.mutIter(0);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto mutIterEnd() -> TMutIterEnd
+        {
+            return _impl.mutIterEnd();
+        }
+
         /// ----------------------------------------------------------------------------------------
         /// Constructs element at index `i` with `args`.
         ///
@@ -541,70 +593,20 @@ namespace Atom
             return _impl.isIterInRangeOrEnd(it);
         }
 
-        using Trait::count;
-
     private:
         _Impl _impl;
     };
 
-    template <typename TElem_, typename TAlloc_>
-    class MutArrayRangeTraitImpl<DynamicArray<TElem_, TAlloc_>>
+    /// --------------------------------------------------------------------------------------------
+    ///
+    /// --------------------------------------------------------------------------------------------
+    template <typename TElem, typename TAlloc = DefaultMemAllocator>
+    class DynamicArray: public MutArrayRangeExtensions<BasicDynamicArray<TElem, TAlloc>>
     {
-        using _Array = DynamicArray<TElem_, TAlloc_>;
-        using _ArrayImpl = _DynamicArrayImpl<TElem_, TAlloc_>;
+        using Base = MutArrayRangeExtensions<BasicDynamicArray<TElem, TAlloc>>;
 
     public:
-        using TElem = TElem_;
-        using TIter = ArrayIter<TElem>;
-        using TIterEnd = TIter;
-        using TMutIter = MutArrayIter<TElem>;
-        using TMutIterEnd = TMutIter;
-
-    public:
-        constexpr auto data() const -> const TElem*
-        {
-            return _impl().data();
-        }
-
-        constexpr auto mutData() -> TElem*
-        {
-            return _mutImpl().mutData();
-        }
-
-        constexpr auto count() const -> usize
-        {
-            return _impl().count();
-        }
-
-        constexpr auto iter() const -> TIter
-        {
-            return TIter{ _impl().data() };
-        }
-
-        constexpr auto iterEnd() const -> TIterEnd
-        {
-            return TIterEnd{ _impl().data() + _impl().count() };
-        }
-
-        constexpr auto mutIter() -> TMutIter
-        {
-            return TMutIter{ _mutImpl().mutData() };
-        }
-
-        constexpr auto mutIterEnd() -> TMutIterEnd
-        {
-            return TMutIterEnd{ _mutImpl().mutData() + _mutImpl().count() };
-        }
-
-    private:
-        constexpr auto _impl() const -> const _ArrayImpl&
-        {
-            return reinterpret_cast<const _Array&>(*this)._impl;
-        }
-
-        constexpr auto _mutImpl() -> _ArrayImpl&
-        {
-            return reinterpret_cast<_Array&>(*this)._impl;
-        }
+        using Base::Base;
+        using Base::operator=;
     };
 }
