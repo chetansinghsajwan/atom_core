@@ -16,7 +16,9 @@ namespace Atom::Private
             return str;
         };
 
-        constexpr auto WriteString(const T1Hash& hash, ROutput<Char> auto&& out)
+        template <typename TOut>
+        constexpr auto WriteString(const T1Hash& hash, TOut&& out)
+            requires(ROutput<TOut, Char>)
         {
             for (byte b : hash.bytes)
             {
