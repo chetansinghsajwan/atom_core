@@ -150,15 +150,9 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    constexpr auto _ContractCheck(_ContractType type, std::string_view expr, bool assert,
-        std::string_view msg, std::source_location src) -> void
+    auto _ContractCheckImpl(_ContractType type, std::string_view expr, std::string_view msg,
+        std::source_location src) -> void
     {
-        if (assert)
-            return;
-
-        if (std::is_constant_evaluated())
-            throw 0;
-
         SourceLineInfo srcInfo{ .line = src.line(),
             .column = src.column(),
             .funcName = src.function_name(),
@@ -167,6 +161,7 @@ namespace Atom
         ContractViolation violation{
             .type = ContractType(type), .msg = msg, .expr = expr, .src = srcInfo
         };
+
         ContractViolationHandlerManager::GetHandler().handle(violation);
     }
 
