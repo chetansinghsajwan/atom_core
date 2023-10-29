@@ -20,15 +20,8 @@ namespace Atom
 
     public:
         constexpr _RangeExtensionsImpl(TRange& range):
-            _range(range) {}
-
-        /// ----------------------------------------------------------------------------------------
-        /// # To Do
-        ///
-        /// - Can we remove const_cast here?
-        /// ----------------------------------------------------------------------------------------
-        constexpr _RangeExtensionsImpl(const TRange& range):
-            _range(const_cast<TRange&>(range)) {}
+            _range_(range)
+        {}
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -36,7 +29,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto iter() const -> TIter
         {
-            return _impl().iter();
+            return _range().iter();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -44,7 +37,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto iterEnd() const -> TIterEnd
         {
-            return _impl().iterEnd();
+            return _range().iterEnd();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -103,27 +96,27 @@ namespace Atom
         }
 
     protected:
-        constexpr auto _impl() const -> const TRange&
+        constexpr auto _range() const -> const TRange&
         {
-            return _range;
+            return _range_;
         }
 
-        constexpr auto _impl() -> TRange&
+        constexpr auto _range() -> TRange&
         {
-            return _range;
+            return _range_;
         }
 
     private:
-        TRange& _range;
+        TRange& _range_;
     };
 
-    template <typename TRange, typename _TImpl_ = void>
+    template <typename TRange, typename _TRangeExtensionsImpl = void>
     class RangeExtensions: public TRange
     {
         using Base = TRange;
 
     protected:
-        using _TImpl = _TImpl_;
+        using _TImpl = _TRangeExtensionsImpl;
 
     public:
         using TElem = typename _TImpl::TElem;
@@ -306,15 +299,18 @@ namespace Atom
         }
 
     protected:
-        constexpr auto _impl() const -> const _TImpl
+        constexpr auto _impl() const -> const _TImpl&
         {
-            return _TImpl(*this);
+            return _impl_;
         }
 
-        constexpr auto _impl() -> _TImpl
+        constexpr auto _impl() -> _TImpl&
         {
-            return _TImpl(*this);
+            return _impl_;
         }
+
+    private:
+        _TImpl _impl_ = *this;
     };
 
     template <typename TRange>

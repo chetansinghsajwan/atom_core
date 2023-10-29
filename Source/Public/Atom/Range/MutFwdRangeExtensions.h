@@ -5,13 +5,13 @@
 namespace Atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange, typename _TRangeExtensionsImpl = void>
+    template <typename TRange, typename _TConstRangeExtensionsImpl = void>
     class _MutFwdRangeExtensionsImpl:
-        public _MutRangeExtensionsImpl<TRange, _TRangeExtensionsImpl>
+        public _MutRangeExtensionsImpl<TRange, _TConstRangeExtensionsImpl>
     {
-        using Base = _MutRangeExtensionsImpl<TRange, _TRangeExtensionsImpl>;
+        using Base = _MutRangeExtensionsImpl<TRange, _TConstRangeExtensionsImpl>;
 
     public:
         using Base::Base;
@@ -19,7 +19,7 @@ namespace Atom
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
     class _MutFwdRangeExtensionsImpl<TRange, void>:
@@ -35,10 +35,10 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange, typename _TRangeExtensions = void>
-    class MutFwdRangeExtensions: public MutRangeExtensions<TRange, _TRangeExtensions>
+    template <typename TRange, typename _TConstRangeExtensions = void>
+    class MutFwdRangeExtensions: public MutRangeExtensions<TRange, _TConstRangeExtensions>
     {
-        using Base = MutRangeExtensions<TRange, _TRangeExtensions>;
+        using Base = MutRangeExtensions<TRange, _TConstRangeExtensions>;
 
     protected:
         using _TImpl = typename Base::_TImpl;

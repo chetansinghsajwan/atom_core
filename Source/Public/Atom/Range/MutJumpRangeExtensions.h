@@ -5,27 +5,13 @@
 namespace Atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
-    template <typename TRangeImpl, class _TRangeExtensionsImpl = void>
-    class _MutJumpRangeExtensionsImpl: 
-        public _MutBidiRangeExtensionsImpl<TRangeImpl, _TRangeExtensionsImpl>
+    template <typename TRange, class _TConstRangeExtensionsImpl = void>
+    class _MutJumpRangeExtensionsImpl:
+        public _MutBidiRangeExtensionsImpl<TRange, _TConstRangeExtensionsImpl>
     {
-        using Base = _MutBidiRangeExtensionsImpl<TRangeImpl, _TRangeExtensionsImpl>;
-
-    public:
-        using Base::Base;
-        using Base::operator=;
-    };
-
-    /// --------------------------------------------------------------------------------------------
-    /// 
-    /// --------------------------------------------------------------------------------------------
-    template <typename TRangeImpl>
-    class _MutJumpRangeExtensionsImpl<TRangeImpl, void>: 
-        public _MutBidiRangeExtensionsImpl<TRangeImpl, _BidiRangeExtensionsImpl<TRangeImpl>>
-    {
-        using Base = _MutBidiRangeExtensionsImpl<TRangeImpl, _BidiRangeExtensionsImpl<TRangeImpl>>;
+        using Base = _MutBidiRangeExtensionsImpl<TRange, _TConstRangeExtensionsImpl>;
 
     public:
         using Base::Base;
@@ -35,10 +21,24 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange, typename _TRangeExtensions = void>
-    class MutJumpRangeExtensions: public MutBidiRangeExtensions<TRange, _TRangeExtensions>
+    template <typename TRange>
+    class _MutJumpRangeExtensionsImpl<TRange, void>:
+        public _MutBidiRangeExtensionsImpl<TRange, _BidiRangeExtensionsImpl<TRange>>
     {
-        using Base = MutBidiRangeExtensions<TRange, _TRangeExtensions>;
+        using Base = _MutBidiRangeExtensionsImpl<TRange, _BidiRangeExtensionsImpl<TRange>>;
+
+    public:
+        using Base::Base;
+        using Base::operator=;
+    };
+
+    /// --------------------------------------------------------------------------------------------
+    ///
+    /// --------------------------------------------------------------------------------------------
+    template <typename TRange, typename _TConstRangeExtensions = void>
+    class MutJumpRangeExtensions: public MutBidiRangeExtensions<TRange, _TConstRangeExtensions>
+    {
+        using Base = MutBidiRangeExtensions<TRange, _TConstRangeExtensions>;
 
     protected:
         using _TImpl = typename Base::_TImpl;

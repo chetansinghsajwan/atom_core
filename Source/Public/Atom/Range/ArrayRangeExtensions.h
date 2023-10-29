@@ -26,12 +26,12 @@ namespace Atom
     public:
         constexpr auto data() const -> const TElem*
         {
-            return _impl().data();
+            return _range().data();
         }
 
         constexpr auto count() const -> usize
         {
-            return _impl().count();
+            return _range().count();
         }
 
         constexpr auto at(usize i) const -> const TElem&
@@ -64,16 +64,16 @@ namespace Atom
         using Base::iter;
 
     protected:
-        using Base::_impl;
+        using Base::_range;
     };
 
     /// --------------------------------------------------------------------------------------------
     /// [ArrayRangeExtensions].
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange, typename _TImpl_ = void>
-    class ArrayRangeExtensions: public JumpRangeExtensions<TRange, _TImpl_>
+    template <typename TRange, typename _TRangeExtensionsImpl_ = void>
+    class ArrayRangeExtensions: public JumpRangeExtensions<TRange, _TRangeExtensionsImpl_>
     {
-        using Base = JumpRangeExtensions<TRange, _TImpl_>;
+        using Base = JumpRangeExtensions<TRange, _TRangeExtensionsImpl_>;
 
     protected:
         using _TImpl = typename Base::_TImpl;

@@ -5,13 +5,13 @@
 namespace Atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange, typename _TRangeExtensionsImpl = void>
+    template <typename TRange, typename _TConstRangeExtensionsImpl = void>
     class _MutArrayRangeExtensionsImpl:
-        public _MutJumpRangeExtensionsImpl<TRange, _TRangeExtensionsImpl>
+        public _MutJumpRangeExtensionsImpl<TRange, _TConstRangeExtensionsImpl>
     {
-        using Base = _MutJumpRangeExtensionsImpl<TRange, _TRangeExtensionsImpl>;
+        using Base = _MutJumpRangeExtensionsImpl<TRange, _TConstRangeExtensionsImpl>;
 
     protected:
         using _TImpl = typename Base::_TImpl;
@@ -30,12 +30,12 @@ namespace Atom
     public:
         constexpr auto mutData() -> TElem*
         {
-            return _impl().mutData();
+            return _range().mutData();
         }
 
         constexpr auto count() const -> usize
         {
-            return _impl().count();
+            return _range().count();
         }
 
         constexpr auto mutAt(usize i) -> TElem&
@@ -63,11 +63,11 @@ namespace Atom
         using Base::mutIter;
 
     protected:
-        using Base::_impl;
+        using Base::_range;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
     class _MutArrayRangeExtensionsImpl<TRange, void>:
@@ -83,10 +83,10 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange, typename _TRangeExtensions = void>
-    class MutArrayRangeExtensions: public MutJumpRangeExtensions<TRange, _TRangeExtensions>
+    template <typename TRange, typename _TConstRangeExtensions = void>
+    class MutArrayRangeExtensions: public MutJumpRangeExtensions<TRange, _TConstRangeExtensions>
     {
-        using Base = MutJumpRangeExtensions<TRange, _TRangeExtensions>;
+        using Base = MutJumpRangeExtensions<TRange, _TConstRangeExtensions>;
 
     protected:
         using _TImpl = typename Base::_TImpl;
@@ -228,14 +228,14 @@ namespace Atom
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
     class MutArrayRangeExtensions<TRange, void>:
-        public MutArrayRangeExtensions<TRange, 
+        public MutArrayRangeExtensions<TRange,
             ArrayRangeExtensions<TRange, _MutArrayRangeExtensionsImpl<TRange>>>
     {
-        using Base = MutArrayRangeExtensions<TRange, 
+        using Base = MutArrayRangeExtensions<TRange,
             ArrayRangeExtensions<TRange, _MutArrayRangeExtensionsImpl<TRange>>>;
 
     public:

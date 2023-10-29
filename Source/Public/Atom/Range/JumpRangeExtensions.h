@@ -4,7 +4,7 @@
 namespace Atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
     class _JumpRangeExtensionsImpl: public _BidiRangeExtensionsImpl<TRange>
@@ -19,10 +19,10 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange, typename _TImpl_ = void>
-    class JumpRangeExtensions: public BidiRangeExtensions<TRange, _TImpl_>
+    template <typename TRange, typename _TRangeExtensionsImpl = void>
+    class JumpRangeExtensions: public BidiRangeExtensions<TRange, _TRangeExtensionsImpl>
     {
-        using Base = BidiRangeExtensions<TRange, _TImpl_>;
+        using Base = BidiRangeExtensions<TRange, _TRangeExtensionsImpl>;
 
     protected:
         using _TImpl = typename Base::_TImpl;

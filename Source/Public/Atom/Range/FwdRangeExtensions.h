@@ -4,7 +4,7 @@
 namespace Atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
     class _FwdRangeExtensionsImpl: public _RangeExtensionsImpl<TRange>
@@ -19,10 +19,10 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange, typename _TImpl_ = void>
-    class FwdRangeExtensions: public RangeExtensions<TRange, _TImpl_>
+    template <typename TRange, typename _TRangeExtensionsImpl = void>
+    class FwdRangeExtensions: public RangeExtensions<TRange, _TRangeExtensionsImpl>
     {
-        using Base = RangeExtensions<TRange, _TImpl_>;
+        using Base = RangeExtensions<TRange, _TRangeExtensionsImpl>;
 
     protected:
         using _TImpl = typename Base::_TImpl;

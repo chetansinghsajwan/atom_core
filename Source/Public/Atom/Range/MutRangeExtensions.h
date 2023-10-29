@@ -6,10 +6,10 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// Implementation for [`MutRangeExtensions`].
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange, typename _TExtensionsImpl = void>
-    class _MutRangeExtensionsImpl: public _TExtensionsImpl
+    template <typename TRange, typename _TConstExtensionsImpl = void>
+    class _MutRangeExtensionsImpl: public _TConstExtensionsImpl
     {
-        using Base = _TExtensionsImpl;
+        using Base = _TConstExtensionsImpl;
 
     protected:
         using _TImpl = typename Base::_TImpl;
@@ -28,16 +28,16 @@ namespace Atom
     public:
         constexpr auto mutIter() -> TMutIter
         {
-            return _impl().mutIter();
+            return _range().mutIter();
         }
 
         constexpr auto mutIterEnd() -> TMutIterEnd
         {
-            return _impl().mutIterEnd();
+            return _range().mutIterEnd();
         }
 
     protected:
-        using Base::_impl;
+        using Base::_range;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -50,10 +50,10 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange, typename _TRangeExtensions = void>
-    class MutRangeExtensions: public _TRangeExtensions
+    template <typename TRange, typename _TConstRangeExtensions = void>
+    class MutRangeExtensions: public _TConstRangeExtensions
     {
-        using Base = _TRangeExtensions;
+        using Base = _TConstRangeExtensions;
 
     protected:
         using _TImpl = typename Base::_TImpl;
