@@ -1,6 +1,6 @@
 #include "Atom/Core/Option.h"
-#include "Atom/Test/CustomType.h"
-#include "Atom/Test/TrackedType.h"
+#include "Helpers/CustomType.h"
+#include "Helpers/TrackedType.h"
 #include "catch2/catch_all.hpp"
 
 using namespace Atom;
