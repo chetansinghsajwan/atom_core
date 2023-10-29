@@ -4,7 +4,7 @@
 #include <catch2/matchers/catch_matchers_floating_point.hpp>
 
 using namespace Atom;
-using namespace Atom::Test;
+using namespace Atom::Tests;
 using namespace Catch;
 
 using TrackedType0 = TrackedTypeOf<i32>;

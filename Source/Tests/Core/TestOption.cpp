@@ -4,7 +4,7 @@
 #include "catch2/catch_all.hpp"
 
 using namespace Atom;
-using namespace Atom::Test;
+using namespace Atom::Tests;
 
 TEST_CASE("Atom.Core.Option")
 {

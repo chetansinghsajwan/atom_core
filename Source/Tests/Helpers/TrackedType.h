@@ -1,7 +1,8 @@
 #pragma once
 #include "Atom/Core.h"
+#include "catch2/catch_tostring.hpp"
 
-namespace Atom::Test
+namespace Atom::Tests
 {
     /// --------------------------------------------------------------------------------------------
     /// Type used to track object state.
@@ -33,6 +34,30 @@ namespace Atom::Test
             LessThanOrEqualOperator,
             GreaterThanOrEqualOperator
         };
+
+        static constexpr auto ToStringView(EOperation op) -> std::string_view
+        {
+            switch (op)
+            {
+                case EOperation::None:                       return "None";
+                case EOperation::DefaultConstructor:         return "DefaultConstructor";
+                case EOperation::CopyConstructor:            return "CopyConstructor";
+                case EOperation::CopyConstructorAsThat:      return "CopyConstructorAsThat";
+                case EOperation::CopyOperator:               return "CopyOperator";
+                case EOperation::CopyOperatorAsThat:         return "CopyOperatorAsThat";
+                case EOperation::MoveConstructor:            return "MoveConstructor";
+                case EOperation::MoveConstructorAsThat:      return "MoveConstructorAsThat";
+                case EOperation::MoveOperator:               return "MoveOperator";
+                case EOperation::MoveOperatorAsThat:         return "MoveOperatorAsThat";
+                case EOperation::Destructor:                 return "Destructor";
+                case EOperation::EqualOperator:              return "EqualOperator";
+                case EOperation::LessThanOperator:           return "LessThanOperator";
+                case EOperation::GreaterThanOperator:        return "GreaterThanOperator";
+                case EOperation::LessThanOrEqualOperator:    return "LessThanOrEqualOperator";
+                case EOperation::GreaterThanOrEqualOperator: return "GreaterThanOrEqualOperator";
+                default:                                     return "UNKNOWN";
+            }
+        }
 
     public:
         constexpr TrackedType()
@@ -130,5 +155,18 @@ namespace Atom::Test
 
     public:
         T value;
+    };
+}
+
+namespace Catch
+{
+    template <>
+    class StringMaker<Atom::Tests::TrackedType::EOperation>
+    {
+    public:
+        static constexpr auto convert(Atom::Tests::TrackedType::EOperation op) -> std::string
+        {
+            return std::string(Atom::Tests::TrackedType::ToStringView(op));
+        }
     };
 }
