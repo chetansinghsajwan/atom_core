@@ -113,6 +113,7 @@ namespace Atom
     template <typename TRange, typename _TRangeExtensionsImpl = void>
     class RangeExtensions: public TRange
     {
+        using This = RangeExtensions;
         using Base = TRange;
 
     protected:
@@ -299,18 +300,15 @@ namespace Atom
         }
 
     protected:
-        constexpr auto _impl() const -> const _TImpl&
+        constexpr auto _impl() const -> const _TImpl
         {
-            return _impl_;
+            return _TImpl(const_cast<This&>(*this));
         }
 
-        constexpr auto _impl() -> _TImpl&
+        constexpr auto _impl() -> _TImpl
         {
-            return _impl_;
+            return _TImpl(*this);
         }
-
-    private:
-        _TImpl _impl_ = *this;
     };
 
     template <typename TRange>
