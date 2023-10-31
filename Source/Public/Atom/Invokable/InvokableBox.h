@@ -8,13 +8,16 @@
 
 namespace Atom
 {
-    namespace Private
-    {
-        class InvokableBoxIdentifier
-        {};
+    class _InvokableBoxId
+    {};
 
-        template <typename TResult, typename... TArgs>
-        class Invoker
+    template <typename TResult, typename... TArgs>
+    class _Invoker
+    {
+    public:
+        template <typename TInvokable>
+        auto Set()
+            requires(RInvokable<TInvokable, TResult(TArgs...)>)
         {
         public:
             template <typename TInvokable>
@@ -62,18 +65,44 @@ namespace Atom
         };
     }
 
+    template <typename... TArgs>
+    class _Invoker<void, TArgs...>
+    {
+    public:
+        template <RInvokable<void(TArgs...)> TInvokable>
+        auto Set()
+        {
+            _impl = [](void* obj, TArgs&&... args) {
+                TInvokable& invokable = *reinterpret_cast<TInvokable*>(obj);
+                invokable(fwd(args)...);
+            };
+        }
+
+        auto Invoke(void* invokable, TArgs&&... args)
+        {
+            _impl(invokable, fwd(args)...);
+        }
+
+    protected:
+        void (*_impl)(void* invokable, TArgs&&... args);
+    };
+
+    /// --------------------------------------------------------------------------------------------
     /// InvokableBox declaration.
     /// --------------------------------------------------------------------------------------------
     template <typename>
     class InvokableBox;
 
+    /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename TResult, typename... TArgs>
-    class InvokableBox<TResult(TArgs...)>
-        : public ObjectBox<true, true, true, 50, DefaultMemAllocator>
-        , public Private::InvokableBoxIdentifier
+    class InvokableBox<TResult(TArgs...)>: public _InvokableBoxId
     {
+    private:
+        using _TBox = CopyMoveBox<void, true, 50>;
+        using _TInvoker = _Invoker<TResult, TArgs...>;
+
     public:
         /// ----------------------------------------------------------------------------------------
         /// DefaultConstructor.
@@ -83,8 +112,8 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// NullConstructor.
         /// ----------------------------------------------------------------------------------------
-        InvokableBox(NullType null)
-            : ObjectBox(null)
+        InvokableBox(NullType null):
+            _box(null)
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -110,7 +139,7 @@ namespace Atom
         template <typename TInvokable>
         requires RInvokable<TInvokable, TResult(TArgs...)>
         InvokableBox(TInvokable&& invokable)
-            requires(RNotDerivedFrom<TInvokable, Private::InvokableBoxIdentifier>)
+            requires(RNotDerivedFrom<TInvokable, _InvokableBoxId>)
             : ObjectBox(forward<TInvokable>(invokable))
         {
             _SetInvoker<TInvokable>();
@@ -120,9 +149,10 @@ namespace Atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename TInvokable>
-        requires RInvokable<TInvokable, TResult(TArgs...)>
-        auto operator=(TInvokable&& invokable) -> InvokableBox& requires(
-            RNotDerivedFrom<TInvokable, Private::InvokableBoxIdentifier>) {
+        InvokableBox& operator=(TInvokable&& invokable)
+            requires RInvokable<TInvokable, TResult(TArgs...)>
+                and (not RDerivedFrom<TInvokable, _InvokableBoxId>)
+        {
             ObjectBox::operator=(forward<TInvokable>(invokable));
             _SetInvoker<TInvokable>();
             return *this;
@@ -131,8 +161,8 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        InvokableBox(const InvokableBox& other)
-            : ObjectBox(other)
+        InvokableBox(const InvokableBox& other):
+            _box(other)
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -140,15 +170,15 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         auto operator=(const InvokableBox& other) -> InvokableBox&
         {
-            ObjectBox::operator=(other);
+            _box = other._box;
             return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        InvokableBox(InvokableBox&& other)
-            : ObjectBox(mov(other))
+        InvokableBox(InvokableBox&& other):
+            _box(mov(other._box))
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -156,7 +186,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         auto operator=(InvokableBox&& other) -> InvokableBox&
         {
-            ObjectBox::operator=(mov(other));
+            _box = mov(other._box);
             return *this;
         }
 
@@ -171,9 +201,9 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         auto Invoke(TArgs&&... args) -> TResult
         {
-            Contracts::Expects(ObjectBox::_HasObject(), "InvokableTarget is null.");
+            Contracts::Expects(_box.has(), "InvokableTarget is null.");
 
-            return _invoker.Invoke(ObjectBox::_GetObject(), forward<TArgs>(args)...);
+            return _invoker.Invoke(_box.mutMem(), forward<TArgs>(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -190,12 +220,12 @@ namespace Atom
             if (typeid(T) != GetInvokableType())
                 return nullptr;
 
-            return ObjectBox::_GetObject<T>();
+            return _box.mutMemAs<T>();
         }
 
         auto GetInvokableType() const -> const TypeInfo&
         {
-            return ObjectBox::_GetObjectType();
+            return _box.type();
         }
 
     protected:
@@ -217,8 +247,8 @@ namespace Atom
             return _invoker.Invoke(forward<TArgs>(args)...);
         }
 
-        using TInvoker = Private::Invoker<TResult, TArgs...>;
-
-        TInvoker _invoker;
+    private:
+        _TInvoker _invoker;
+        _TBox _box;
     };
 }
