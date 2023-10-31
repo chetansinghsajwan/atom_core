@@ -6,51 +6,7 @@
 
 namespace Atom
 {
-    /// ----------------------------------------------------------------------------------------
-    /// [`_BoxId`] is used as an identifier for [`Box`] where a template cannot be used.
-    /// ----------------------------------------------------------------------------------------
-    class _BoxId
-    {};
-
-    /// ----------------------------------------------------------------------------------------
-    ///
-    /// ----------------------------------------------------------------------------------------
-    template <bool copy, bool move>
-    class _BoxObjData;
-
-    template <>
-    class _BoxObjData<false, false>
-    {
-    public:
-        InvokablePtr<void(void* obj)> dtor;
-        const TypeInfo* type;
-        void* obj;
-        usize size;
-    };
-
-    template <>
-    class _BoxObjData<true, false>: public _BoxObjData<false, false>
-    {
-    public:
-        InvokablePtr<void(void*, const void*)> copy;
-    };
-
-    template <>
-    class _BoxObjData<false, true>: public _BoxObjData<false, false>
-    {
-    public:
-        InvokablePtr<void(void*, void*)> move;
-    };
-
-    template <>
-    class _BoxObjData<true, true>: public _BoxObjData<false, false>
-    {
-    public:
-        InvokablePtr<void(void*, const void*)> copy;
-        InvokablePtr<void(void*, void*)> move;
-    };
-
-    template <bool copy, bool move, bool allowNonMove, usize bufSize, typename TAlloc_>
+    template <bool copy_, bool move_, bool allowNonMove, usize bufSize, typename TAlloc_>
     class _BoxImpl
     {
     public:
@@ -84,12 +40,12 @@ namespace Atom
     public:
         static constexpr auto IsCopyable() -> bool
         {
-            return copy;
+            return copy_;
         }
 
         static constexpr auto IsMovable() -> bool
         {
-            return move;
+            return move_;
         }
 
         static constexpr auto AllowNonMovable() -> bool
@@ -104,16 +60,16 @@ namespace Atom
         ////////////////////////////////////////////////////////////////////////////////////////////
 
         /// ----------------------------------------------------------------------------------------
-        /// Copies `that` `Box` into `this` `Box`.
+        /// Copies `that` [`Box`] into `this` [`Box`].
         /// ----------------------------------------------------------------------------------------
         template <typename TBox>
         constexpr auto copyBox(TBox& that)
         {
-            copyObj(that);
+            _copyObj(that);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Moves `that` `Box` into `this` `Box`.
+        /// Moves `that` [`Box`] into `this` [`Box`].
         /// ----------------------------------------------------------------------------------------
         template <typename TBox>
         constexpr auto moveBox(TBox&& that)
@@ -122,7 +78,7 @@ namespace Atom
             // So we only move the object.
             if constexpr (not RSameAs<TAlloc, typename TTI::TRemoveCVRef<TBox>::TAlloc>)
             {
-                moveObj(that);
+                _moveObj(that);
                 that.destroyBox();
                 return;
             }
@@ -148,21 +104,12 @@ namespace Atom
 
             if (thatIsUsingStackMem)
             {
-                moveObj(mov(that));
+                _moveObj(mov(that));
             }
             else
             {
                 _copyObjData(that);
             }
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// Destroy stored object and releases any allocated memory.
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto destroyBox()
-        {
-            destroyObj();
-            _releaseMem();
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////
@@ -174,45 +121,11 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr auto initObj(T&& obj, bool forceHeap = false)
+        template <typename T, typename... TArgs>
+        constexpr auto emplaceObj(TArgs&&... args, bool forceHeap = false)
         {
-            _obj.size = sizeof(T);
-            _obj.type = &typeid(T);
-
-            // TODO: Check if we can do static_cast instead to preserve constexpr.
-            _obj.dtor = [](void* obj) { reinterpret_cast<T*>(obj)->T::~T(); };
-
-            if constexpr (copy)
-            {
-                _obj.copy = [](void* obj, const void* that) {
-                    new (obj) T(*reinterpret_cast<const T*>(that));
-                };
-            }
-
-            if constexpr (move)
-            {
-                if constexpr (RMoveConstructible<T>)
-                {
-                    _obj.move = [](void* obj, void* that) {
-                        new (obj) T(mov(*reinterpret_cast<T*>(that)));
-                    };
-                }
-                else
-                {
-                    _obj.move = nullptr;
-                }
-            }
-
-            // If the object is not movable but allowNonMove is allowed,
-            // we allocate it on heap to avoid object's move constructor.
-            if constexpr (move && allowNonMove && !RMoveConstructible<T>)
-            {
-                forceHeap = true;
-            }
-
-            _obj.obj = _allocMem(_obj.size, forceHeap);
-            new (_obj.obj) T(fwd(obj));
+            destroyObj();
+            _emplaceObj<T>(fwd(args)..., forceHeap);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -226,30 +139,53 @@ namespace Atom
         template <typename T>
         constexpr auto setObj(T&& obj, bool forceHeap = false)
         {
-            destroyObj();
-            initObj(fwd(obj), forceHeap);
+            emplaceObj<T>(fwd(obj));
         }
 
         /// ----------------------------------------------------------------------------------------
         /// Get pointer to stored object.
         ///
-        /// @TPARAM T Type as which to get the object.
+        /// # Template Parameters
+        ///
+        /// - `T`: Type as which to get the object.
         /// ----------------------------------------------------------------------------------------
         template <typename T>
         constexpr auto getObj() -> const T&
         {
-            return *reinterpret_cast<const T*>(_obj.obj);
+            debug_expects(getMemAs<T>() != nullptr);
+
+            return *getMemAs<T>();
         }
 
         /// ----------------------------------------------------------------------------------------
         /// Get pointer to stored object.
         ///
-        /// @TPARAM T Type as which to get the object.
+        /// # Template Parameters
+        ///
+        /// - `T`: Type as which to get the object.
         /// ----------------------------------------------------------------------------------------
         template <typename T>
         constexpr auto getMutObj() -> T&
         {
-            return *reinterpret_cast<T*>(_obj.obj);
+            debug_expects(getMutMemAs<T>() != nullptr);
+
+            return *getMutMemAs<T>();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// Get pointer to stored object.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto getMem() const -> const void*
+        {
+            return _obj.obj;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// Get pointer to stored object.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto getMutMem() -> void*
+        {
+            return _obj.obj;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -260,7 +196,7 @@ namespace Atom
         template <typename T>
         constexpr auto getMemAs() const -> const T*
         {
-            return reinterpret_cast<T*>(_obj.obj);
+            return static_cast<T*>(_obj.obj);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -271,7 +207,7 @@ namespace Atom
         template <typename T>
         constexpr auto getMutMemAs() -> T*
         {
-            return reinterpret_cast<T*>(_obj.obj);
+            return static_cast<T*>(_obj.obj);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -288,53 +224,6 @@ namespace Atom
         constexpr auto hasObj() const -> bool
         {
             return _obj.obj != nullptr;
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// Copies the object from `that` `Box` into `this` `Box`.
-        ///
-        /// @PARAM[IN] that `Box` of which to copy object.
-        /// @PARAM[IN] forceHeap (default = false) Force allocate object on heap.
-        /// ----------------------------------------------------------------------------------------
-        template <typename TBoxObjData>
-        constexpr auto copyObj(const TBoxObjData& that, bool forceHeap = false)
-        {
-            destroyObj();
-
-            _copyObjData(that);
-
-            if constexpr (move)
-            {
-                forceHeap = forceHeap || _obj.move == nullptr;
-            }
-            else
-            {
-                forceHeap = true;
-            }
-
-            _obj.obj = _allocMem(_obj.size, forceHeap);
-            _obj.copy(_obj.obj, that.obj);
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// Moves the object from `that` `Box` into `this` `Box`.
-        ///
-        /// @PARAM[IN] that `Box` of which to move object.
-        /// @PARAM[IN] forceHeap (default = false) Force allocate object on heap.
-        ///
-        /// @NOTE This doesn't moves the memory from `that` `Box`.
-        /// ----------------------------------------------------------------------------------------
-        template <typename TBox>
-        constexpr auto moveObj(TBox&& that, bool forceHeap = false)
-            requires(move)
-        {
-            destroyObj();
-
-            _copyObjData(that);
-            forceHeap = forceHeap || _obj.move == nullptr;
-
-            _obj.obj = _allocMem(_obj.size, forceHeap);
-            _obj.move(_obj.obj, that._obj.obj);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -363,9 +252,100 @@ namespace Atom
 
     private:
         /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename T>
+        constexpr auto _emplaceObj(T&& obj, bool forceHeap = false)
+        {
+            _obj.size = sizeof(T);
+            _obj.type = &typeid(T);
+
+            // TODO: Check if we can do static_cast instead to preserve constexpr.
+            _obj.dtor = [](void* obj) { reinterpret_cast<T*>(obj)->T::~T(); };
+
+            if constexpr (IsCopyable())
+            {
+                _obj.copy = [](void* obj, const void* that) {
+                    new (obj) T(*reinterpret_cast<const T*>(that));
+                };
+            }
+
+            if constexpr (IsMovable())
+            {
+                if constexpr (RMoveConstructible<T>)
+                {
+                    _obj.move = [](void* obj, void* that) {
+                        new (obj) T(mov(*reinterpret_cast<T*>(that)));
+                    };
+                }
+                else
+                {
+                    _obj.move = nullptr;
+                }
+            }
+
+            // If the object is not movable but allowNonMove is allowed,
+            // we allocate it on heap to avoid object's move constructor.
+            if constexpr (IsCopyable() && AllowNonMovable() && !RMoveConstructible<T>)
+            {
+                forceHeap = true;
+            }
+
+            _obj.obj = _allocMem(_obj.size, forceHeap);
+            new (_obj.obj) T(fwd(obj));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// Copies the object from `that` [`Box`] into `this` [`Box`].
+        ///
+        /// @PARAM[IN] that [`Box`] of which to copy object.
+        /// @PARAM[IN] forceHeap (default = false) Force allocate object on heap.
+        /// ----------------------------------------------------------------------------------------
+        template <typename TBoxObjData>
+        constexpr auto _copyObj(const TBoxObjData& that, bool forceHeap = false)
+        {
+            destroyObj();
+
+            _copyObjData(that);
+
+            if constexpr (IsMovable())
+            {
+                forceHeap = forceHeap || _obj.move == nullptr;
+            }
+            else
+            {
+                forceHeap = true;
+            }
+
+            _obj.obj = _allocMem(_obj.size, forceHeap);
+            _obj.copy(_obj.obj, that.obj);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// Moves the object from `that` [`Box`] into `this` [`Box`].
+        ///
+        /// @PARAM[IN] that [`Box`] of which to move object.
+        /// @PARAM[IN] forceHeap (default = false) Force allocate object on heap.
+        ///
+        /// @NOTE This doesn't moves the memory from `that` [`Box`].
+        /// ----------------------------------------------------------------------------------------
+        template <typename TBox>
+        constexpr auto _moveObj(TBox&& that, bool forceHeap = false)
+            requires(IsMovable())
+        {
+            destroyObj();
+
+            _copyObjData(that);
+            forceHeap = forceHeap || _obj.move == nullptr;
+
+            _obj.obj = _allocMem(_obj.size, forceHeap);
+            _obj.move(_obj.obj, that._obj.obj);
+        }
+
+        /// ----------------------------------------------------------------------------------------
         /// Copies {_ObjData} from {thatBox}.
         ///
-        /// @PARAM[IN] thatBox `Box` of which to copy {_ObjData}.
+        /// @PARAM[IN] thatBox [`Box`] of which to copy {_ObjData}.
         /// ----------------------------------------------------------------------------------------
         template <typename TBox>
         constexpr auto _copyObjData(const TBox& thatBox)
@@ -377,9 +357,9 @@ namespace Atom
             _obj.type = that.type;
             _obj.dtor = that.dtor;
 
-            if constexpr (copy)
+            if constexpr (IsCopyable())
             {
-                if constexpr (move)
+                if constexpr (IsMovable())
                 {
                     _obj.copy = that.copy;
                 }
@@ -389,7 +369,7 @@ namespace Atom
                 }
             }
 
-            if constexpr (move)
+            if constexpr (IsMovable())
             {
                 if constexpr (TBox::IsMovable())
                 {
@@ -453,11 +433,24 @@ namespace Atom
             }
         }
 
-    protected:
+    private:
+        class _ObjData
+        {
+        public:
+            InvokablePtr<void(void* obj)> dtor;
+            const TypeInfo* type;
+            void* obj;
+            usize size;
+
+            ATOM_CONDITIONAL_FIELD(IsCopyable(), InvokablePtr<void(void*, const void*)>) copy;
+            ATOM_CONDITIONAL_FIELD(IsMovable(), InvokablePtr<void(void*, void*)>) move;
+        };
+
+    private:
         TAlloc _alloc;
         void* _mem;
         usize _memSize;
-        _BoxObjData<copy, move> _obj;
+        _ObjData _obj;
         StaticStorage<bufSize> _buf;
     };
 }

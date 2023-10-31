@@ -12,8 +12,8 @@ namespace Atom::TTI
     template <bool Condition, typename TTrue, typename TFalse>
     using TConditional = std::conditional_t<Condition, TTrue, TFalse>;
 
-    template <bool Condition, typename T>
-    using TConditionalField = TConditional<Condition, T, _Empty>;
+    template <bool Condition, typename TTrue, typename TFalse = _Empty>
+    using TConditionalField = TConditional<Condition, TTrue, TFalse>;
 
     template <typename TBase, typename TDerived>
     constexpr bool IsBaseOf = std::is_base_of_v<TBase, std::decay_t<TDerived>>;
