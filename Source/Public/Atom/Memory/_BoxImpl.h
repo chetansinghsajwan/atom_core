@@ -20,7 +20,7 @@ namespace Atom
 
     public:
         constexpr _BoxImpl():
-            _obj(), _mem(nullptr), _memSize(0), _alloc()
+            _obj(), _heapMem(nullptr), _heapMemSize(0), _alloc()
         {}
 
         template <typename TBox>
@@ -38,26 +38,25 @@ namespace Atom
         constexpr ~_BoxImpl() {}
 
     public:
-        static constexpr auto IsCopyable() -> bool
+        static consteval auto IsCopyable() -> bool
         {
             return copy_;
         }
 
-        static constexpr auto IsMovable() -> bool
+        static consteval auto IsMovable() -> bool
         {
             return move_;
         }
 
-        static constexpr auto AllowNonMovable() -> bool
+        static consteval auto AllowNonMovable() -> bool
         {
             return allowNonMove;
         }
 
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        ////
-        //// Box Manipulation Functions
-        ////
-        ////////////////////////////////////////////////////////////////////////////////////////////
+        static consteval auto BufSize() -> usize
+        {
+            return bufSize;
+        }
 
         /// ----------------------------------------------------------------------------------------
         /// Copies `that` [`Box`] into `this` [`Box`].
@@ -74,49 +73,88 @@ namespace Atom
         template <typename TBox>
         constexpr auto moveBox(TBox&& that)
         {
-            // When allocator type is different, we cannot handle heap memory.
-            // So we only move the object.
+            // When allocator type is different, we cannot handle heap memory. So we only move the
+            // object and not the memory.
             if constexpr (not RSameAs<TAlloc, typename TTI::TRemoveCVRef<TBox>::TAlloc>)
             {
-                _moveObj(that);
-                that.destroyBox();
+                if (that._hasObj())
+                {
+                    if (_hasObj())
+                    {
+                        _destroyObj();
+                    }
+
+                    _moveObj(that);
+                }
+                else
+                {
+                    if (_hasObj())
+                    {
+                        _destroyObj();
+                        _resetObjData();
+                    }
+                }
+
                 return;
             }
 
-            destroyObj();
-
-            const usize thatObjSize = that._obj.size;
-            const bool thatIsUsingStackMem = that.isUsingStackMem();
-            if (thatIsUsingStackMem && thatObjSize > bufSize && _memSize >= thatObjSize
-                && that._memSize < thatObjSize)
+            if (that._hasObj())
             {
-                // We cannot deallocate our memory in the above scenario.
-                that._releaseMem();
+                if (_hasObj())
+                {
+                    _destroyObj();
+                }
+
+                if (that._isObjOnBuf())
+                {
+                    // If that has enough memory, we prefer that's memory as 
+                    // we are moving and user expects the memory to be moved too.
+                    if (that._heapMemSize >= that._obj.size)
+                    {
+                        _checkAndReleaseMem();
+
+                        _alloc = mov(that._alloc);
+                        _heapMem = that._heapMem;
+                        _heapMemSize = that._heapMemSize;
+
+                        that._heapMem = 0;
+                        that._heapMemSize = 0;
+                    }
+
+                    if (_heapMemSize >= that._obj.size)
+                    {
+                        _moveObjData(that);
+                        _obj.move(_heapMem, _obj.obj);
+                        _obj.obj = _heapMem;
+                    }
+                    else
+                    {
+                        _moveObj(that);
+                    }
+                }
+                else
+                {
+                    _checkAndReleaseMem();
+
+                    _alloc = mov(that._alloc);
+                    _heapMem = that._heapMem;
+                    _heapMemSize = that._heapMemSize;
+
+                    that._heapMem = 0;
+                    that._heapMemSize = 0;
+
+                    _moveObjData(that);
+                }
             }
             else
             {
-                _releaseMem();
-
-                _mem = mov(that._mem);
-                _memSize = mov(that._memSize);
-                _alloc = mov(that._alloc);
-            }
-
-            if (thatIsUsingStackMem)
-            {
-                _moveObj(mov(that));
-            }
-            else
-            {
-                _copyObjData(that);
+                if (_hasObj())
+                {
+                    _destroyObj();
+                    _resetObjData();
+                }
             }
         }
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        ////
-        //// Object Manipulation Functions
-        ////
-        ////////////////////////////////////////////////////////////////////////////////////////////
 
         /// ----------------------------------------------------------------------------------------
         ///
@@ -139,7 +177,7 @@ namespace Atom
         template <typename T>
         constexpr auto setObj(T&& obj, bool forceHeap = false)
         {
-            emplaceObj<T>(fwd(obj));
+            emplaceObj<TTI::TRemoveCVRef<T>>(fwd(obj));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -211,7 +249,7 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Get {TypeInfo} or stored object.
+        /// Get `TypeInfo` of stored object.
         /// ----------------------------------------------------------------------------------------
         constexpr auto getObjType() const -> const TypeInfo&
         {
@@ -219,43 +257,57 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Checks if object is not {null}.
+        /// Size of the object stored.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto getObjSize() const -> usize
+        {
+            return _obj.size;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// Checks if object is not `null`.
         /// ----------------------------------------------------------------------------------------
         constexpr auto hasObj() const -> bool
         {
-            return _obj.obj != nullptr;
+            return _hasObj();
         }
 
         /// ----------------------------------------------------------------------------------------
         /// Disposes current object by calling its destructor.
-        ///
-        /// @NOTE This does'n deallocates memory.
-        ///
-        /// @SEE _releaseMem().
         /// ----------------------------------------------------------------------------------------
         constexpr auto destroyObj()
         {
-            if (_obj.obj != nullptr)
+            if (_hasObj())
             {
-                _obj.dtor(_obj.obj);
-                _obj = {};
+                _destroyObj();
             }
         }
 
         /// ----------------------------------------------------------------------------------------
         /// Is object is stored in stack memory.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto isUsingStackMem() const -> bool
+        constexpr auto isObjOnBuf() const -> bool
         {
-            return _obj.obj == _buf.mem();
+            return _isObjOnBuf();
         }
 
     private:
         /// ----------------------------------------------------------------------------------------
+        /// Creates new object of type `T`. Doesn't handles current object.
         ///
+        /// # Template Parameters
+        ///
+        /// - `T`: Type of the object to create.
+        /// - `TArgs`: Type of args for object's constructor.
+        ///
+        /// # Parameters
+        ///
+        /// - `args...`: Args for object's constructor.
+        /// - `forceHeap`: If true, allocates object on heap even if buffer was sufficient, else
+        ///    chooses the best fit.
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr auto _emplaceObj(T&& obj, bool forceHeap = false)
+        template <typename T, typename... TArgs>
+        constexpr auto _emplaceObj(TArgs&&... args, bool forceHeap = false)
         {
             _obj.size = sizeof(T);
             _obj.type = &typeid(T);
@@ -284,15 +336,15 @@ namespace Atom
                 }
             }
 
-            // If the object is not movable but allowNonMove is allowed,
-            // we allocate it on heap to avoid object's move constructor.
-            if constexpr (IsCopyable() && AllowNonMovable() && !RMoveConstructible<T>)
+            // If the object is not movable but allowNonMove is allowed, we allocate it on heap to
+            // avoid object's move constructor.
+            if constexpr (IsMovable() and AllowNonMovable() and not RMoveConstructible<T>)
             {
                 forceHeap = true;
             }
 
             _obj.obj = _allocMem(_obj.size, forceHeap);
-            new (_obj.obj) T(fwd(obj));
+            new (_obj.obj) T(fwd(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -301,20 +353,14 @@ namespace Atom
         /// @PARAM[IN] that [`Box`] of which to copy object.
         /// @PARAM[IN] forceHeap (default = false) Force allocate object on heap.
         /// ----------------------------------------------------------------------------------------
-        template <typename TBoxObjData>
-        constexpr auto _copyObj(const TBoxObjData& that, bool forceHeap = false)
+        template <typename TBox>
+        constexpr auto _copyObj(const TBox& that, bool forceHeap = false)
         {
-            destroyObj();
-
             _copyObjData(that);
 
-            if constexpr (IsMovable())
+            if constexpr (IsMovable() and AllowNonMovable())
             {
                 forceHeap = forceHeap || _obj.move == nullptr;
-            }
-            else
-            {
-                forceHeap = true;
             }
 
             _obj.obj = _allocMem(_obj.size, forceHeap);
@@ -331,15 +377,33 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <typename TBox>
         constexpr auto _moveObj(TBox&& that, bool forceHeap = false)
-            requires(IsMovable())
         {
-            destroyObj();
+            _moveObjData(that);
 
-            _copyObjData(that);
-            forceHeap = forceHeap || _obj.move == nullptr;
+            if constexpr (AllowNonMovable())
+            {
+                forceHeap = forceHeap || _obj.move == nullptr;
+            }
 
             _obj.obj = _allocMem(_obj.size, forceHeap);
             _obj.move(_obj.obj, that._obj.obj);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto _hasObj() const -> bool
+        {
+            return _obj.obj != nullptr;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto _destroyObj()
+        {
+            _obj.dtor(_obj.obj);
+            _resetObjData();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -383,6 +447,70 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        template <typename TBox>
+        constexpr auto _moveObjData(TBox& thatBox)
+        {
+            auto& that = thatBox._obj;
+
+            _obj.obj = that.obj;
+            _obj.type = that.type;
+            _obj.dtor = that.dtor;
+            _obj.size = that.size;
+
+            that.obj = nullptr;
+            that.type = nullptr;
+            that.dtor = nullptr;
+            that.size = 0;
+
+            if constexpr (IsCopyable())
+            {
+                if constexpr (TBox::IsCopyable())
+                {
+                    _obj.copy = that.copy;
+                    that.copy = nullptr;
+                }
+                else
+                {
+                    _obj.copy = nullptr;
+                }
+            }
+
+            if constexpr (IsMovable())
+            {
+                if constexpr (TBox::IsMovable())
+                {
+                    _obj.move = that.move;
+                    that.move = nullptr;
+                }
+                else
+                {
+                    _obj.move = nullptr;
+                }
+            }
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto _resetObjData()
+        {
+            _obj = _ObjData();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// Is object is stored in stack memory.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto _isObjOnBuf() const -> bool
+        {
+            if constexpr (BufSize() == 0)
+                return false;
+
+            return _obj.obj == _buf.mem();
+        }
+
+        /// ----------------------------------------------------------------------------------------
         /// Allocates enough memory of size `size`. Uses stack memory if it is big enough.
         ///
         /// @PARAM[IN] size Size of memory to allocate.
@@ -395,42 +523,54 @@ namespace Atom
             if constexpr (bufSize > 0)
             {
                 // Check if stack memory is big enough.
-                if (!forceHeap && size <= bufSize)
+                if (not forceHeap and size <= bufSize)
                 {
-                    return reinterpret_cast<void*>(_buf.mutMem());
+                    return _buf.mutMem();
                 }
             }
 
             // If we have previously allocated memory.
-            if (_mem != nullptr)
+            if (_heapMem != nullptr)
             {
-                if (_memSize < size)
+                if (_heapMemSize < size)
                 {
-                    _mem = _alloc.Realloc(_mem, size);
-                    _memSize = size;
+                    _heapMem = _alloc.Realloc(_heapMem, size);
+                    _heapMemSize = size;
                 }
             }
             // We need to allocate heap memory.
             else
             {
-                _mem = _alloc.Alloc(size);
-                _memSize = size;
+                _heapMem = _alloc.Alloc(size);
+                _heapMemSize = size;
             }
 
-            return _mem;
+            return _heapMem;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Deallocates any allocated memory.
+        /// If heap memory is allocated, deallocates it.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto _checkAndReleaseMem()
+        {
+            if (_heapMem != nullptr)
+            {
+                _releaseMem();
+            }
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// Deallocates allocated heap memory.
+        /// 
+        /// # Note
+        /// 
+        /// Doesn't check if memory is even allocated.
         /// ----------------------------------------------------------------------------------------
         constexpr auto _releaseMem()
         {
-            if (_mem != nullptr)
-            {
-                _alloc.Dealloc(_mem);
-                _mem = nullptr;
-                _memSize = 0;
-            }
+            _alloc.Dealloc(_heapMem);
+            _heapMem = nullptr;
+            _heapMemSize = 0;
         }
 
     private:
@@ -448,9 +588,16 @@ namespace Atom
 
     private:
         TAlloc _alloc;
-        void* _mem;
-        usize _memSize;
-        _ObjData _obj;
+        void* _heapMem;
+        usize _heapMemSize;
         StaticStorage<bufSize> _buf;
+        _ObjData _obj;
+
+        // void* obj;
+        // usize objSize;
+        // const TypeInfo* objType;
+        // InvokablePtr<void(void* obj)> objDtor;
+        // ATOM_CONDITIONAL_FIELD(IsCopyable(), InvokablePtr<void(void*, const void*)>) objCopy;
+        // ATOM_CONDITIONAL_FIELD(IsMovable(), InvokablePtr<void(void*, void*)>) objMove;
     };
 }
