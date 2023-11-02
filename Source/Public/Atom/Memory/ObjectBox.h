@@ -6,14 +6,6 @@
 
 namespace Atom
 {
-    template <typename T>
-    using Ptr = T*;
-
-    using memptr = void*;
-}
-
-namespace Atom
-{
     template <typename _TImpl_>
     class BoxFunctions
     {
@@ -36,8 +28,8 @@ namespace Atom
         constexpr auto emplace(TArgs&&... args) -> T&
             requires RSameOrDerivedFrom<TPure<T>, TVal>
         {
-            _impl.template emplaceObj<T>(fwd(args)...);
-            return _impl.template getMutObjAs<T>();
+            _impl.template emplaceVal<T>(fwd(args)...);
+            return _impl.template getMutValAs<T>();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -47,8 +39,8 @@ namespace Atom
         constexpr auto set(T&& obj) -> T&
             requires RSameOrDerivedFrom<TPure<T>, TVal>
         {
-            _impl._setObj(fwd(obj));
-            return _impl.template getMutObjAs<T>();
+            _impl._setVal(fwd(obj));
+            return _impl.template getMutValAs<T>();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -66,7 +58,7 @@ namespace Atom
         {
             debug_expects(hasVal(), "Value is null.");
 
-            return _impl.getObj();
+            return _impl.getVal();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -76,7 +68,7 @@ namespace Atom
         {
             debug_expects(hasVal(), "Value is null.");
 
-            return _impl.getObjMut();
+            return _impl.getValMut();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -86,7 +78,7 @@ namespace Atom
         {
             expects(hasVal(), "Value is null.");
 
-            return _impl.getObj();
+            return _impl.getVal();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -96,7 +88,7 @@ namespace Atom
         {
             expects(hasVal(), "Value is null.");
 
-            return _impl.getObjMut();
+            return _impl.getValMut();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -108,7 +100,7 @@ namespace Atom
         {
             debug_expects(hasVal(), "Value is null.");
 
-            return _impl.template getObjAs<T>();
+            return _impl.template getValAs<T>();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -120,7 +112,7 @@ namespace Atom
         {
             debug_expects(hasVal(), "Value is null.");
 
-            return _impl.template getMutObjAs<T>();
+            return _impl.template getMutValAs<T>();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -132,7 +124,7 @@ namespace Atom
         {
             expects(hasVal(), "Value is null.");
 
-            return _impl.template getObjAs<T>();
+            return _impl.template getValAs<T>();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -144,7 +136,7 @@ namespace Atom
         {
             expects(hasVal(), "Value is null.");
 
-            return _impl.template getMutObjAs<T>();
+            return _impl.template getMutValAs<T>();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -248,7 +240,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto hasVal() const -> bool
         {
-            return _impl.hasObj();
+            return _impl.hasVal();
         }
 
     protected:
@@ -278,8 +270,8 @@ namespace Atom
         constexpr auto emplace(TArgs&&... args) -> T&
             requires(not RIsVoid<T>)
         {
-            _impl.template emplaceObj<T>(fwd(args)...);
-            return _impl.template getMutObjAs<T>();
+            _impl.template emplaceVal<T>(fwd(args)...);
+            return _impl.template getMutValAs<T>();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -288,8 +280,8 @@ namespace Atom
         template <typename T>
         constexpr auto set(T&& obj) -> T&
         {
-            _impl._setObj(fwd(obj));
-            return _impl.template getMutObjAs<T>();
+            _impl._setVal(fwd(obj));
+            return _impl.template getMutValAs<T>();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -308,7 +300,7 @@ namespace Atom
         {
             debug_expects(hasVal(), "Value is null.");
 
-            return _impl.template getObjAs<T>();
+            return _impl.template getValAs<T>();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -319,7 +311,7 @@ namespace Atom
         {
             debug_expects(hasVal(), "Value is null.");
 
-            return _impl.template getMutObjAs<T>();
+            return _impl.template getMutValAs<T>();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -330,7 +322,7 @@ namespace Atom
         {
             expects(hasVal(), "Value is null.");
 
-            return _impl.template getObjAs<T>();
+            return _impl.template getValAs<T>();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -341,7 +333,7 @@ namespace Atom
         {
             expects(hasVal(), "Value is null.");
 
-            return _impl.template getMutObjAs<T>();
+            return _impl.template getMutValAs<T>();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -429,7 +421,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto valType() const -> const TypeInfo&
         {
-            return _impl.getObjType();
+            return _impl.getValType();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -445,7 +437,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto hasVal() const -> bool
         {
-            return _impl.hasObj();
+            return _impl.hasVal();
         }
 
     protected:
@@ -587,7 +579,7 @@ namespace Atom
         template <typename T>
         constexpr This& operator=(T&& obj)
         {
-            _impl.setObj(fwd(obj));
+            _impl.setVal(fwd(obj));
             return *this;
         }
 
@@ -675,7 +667,7 @@ namespace Atom
         constexpr This& operator=(T&& obj)
             requires(RCopyable<T>)
         {
-            _impl.setObj(fwd(obj));
+            _impl.setVal(fwd(obj));
             return *this;
         }
 
@@ -803,7 +795,7 @@ namespace Atom
         template <typename T>
         constexpr MoveBox& operator=(T&& obj)
         {
-            _impl.setObj(fwd(obj));
+            _impl.setVal(fwd(obj));
             return *this;
         }
 
@@ -965,7 +957,7 @@ namespace Atom
         template <typename T>
         constexpr CopyMoveBox& operator=(T&& obj)
         {
-            _impl.setObj(fwd(obj));
+            _impl.setVal(fwd(obj));
             return *this;
         }
 

@@ -28,4 +28,9 @@ namespace Atom
     using TypeInfo = std::type_info;
 
     using StdStringView = std::string_view;
+
+    template <typename T>
+    using Ptr = T*;
+
+    using memptr = void*;
 }

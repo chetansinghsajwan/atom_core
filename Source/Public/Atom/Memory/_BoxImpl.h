@@ -21,7 +21,7 @@ namespace Atom
 
     public:
         constexpr _BoxImpl():
-            _obj(), _heapMem(nullptr), _heapMemSize(0), _alloc()
+            _val(), _heapMem(nullptr), _heapMemSize(0), _alloc()
         {}
 
         template <typename TBox>
@@ -32,8 +32,8 @@ namespace Atom
         constexpr _BoxImpl(MoveTag, TBox& box)
         {}
 
-        template <typename TObj>
-        constexpr _BoxImpl(TObj&& obj)
+        template <typename TVal>
+        constexpr _BoxImpl(TVal&& val)
         {}
 
         constexpr ~_BoxImpl() {}
@@ -65,7 +65,7 @@ namespace Atom
         template <typename TBox>
         constexpr auto copyBox(TBox& that)
         {
-            _copyObj(that);
+            _copyVal(that);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -78,39 +78,39 @@ namespace Atom
             // object and not the memory.
             if constexpr (not RSameAs<TAlloc, typename TTI::TRemoveCVRef<TBox>::TAlloc>)
             {
-                if (that._hasObj())
+                if (that._hasVal())
                 {
-                    if (_hasObj())
+                    if (_hasVal())
                     {
-                        _destroyObj();
+                        _destroyVal();
                     }
 
-                    _moveObj(that);
+                    _moveVal(that);
                 }
                 else
                 {
-                    if (_hasObj())
+                    if (_hasVal())
                     {
-                        _destroyObj();
-                        _resetObjData();
+                        _destroyVal();
+                        _resetValData();
                     }
                 }
 
                 return;
             }
 
-            if (that._hasObj())
+            if (that._hasVal())
             {
-                if (_hasObj())
+                if (_hasVal())
                 {
-                    _destroyObj();
+                    _destroyVal();
                 }
 
-                if (that._isObjOnBuf())
+                if (that._isValOnBuf())
                 {
                     // If that has enough memory, we prefer that's memory as 
                     // we are moving and user expects the memory to be moved too.
-                    if (that._heapMemSize >= that._obj.size)
+                    if (that._heapMemSize >= that._val.size)
                     {
                         _checkAndReleaseMem();
 
@@ -122,15 +122,15 @@ namespace Atom
                         that._heapMemSize = 0;
                     }
 
-                    if (_heapMemSize >= that._obj.size)
+                    if (_heapMemSize >= that._val.size)
                     {
-                        _moveObjData(that);
-                        _obj.move(_heapMem, _obj.obj);
-                        _obj.obj = _heapMem;
+                        _moveValData(that);
+                        _val.move(_heapMem, _val.val);
+                        _val.val = _heapMem;
                     }
                     else
                     {
-                        _moveObj(that);
+                        _moveVal(that);
                     }
                 }
                 else
@@ -144,15 +144,15 @@ namespace Atom
                     that._heapMem = 0;
                     that._heapMemSize = 0;
 
-                    _moveObjData(that);
+                    _moveValData(that);
                 }
             }
             else
             {
-                if (_hasObj())
+                if (_hasVal())
                 {
-                    _destroyObj();
-                    _resetObjData();
+                    _destroyVal();
+                    _resetValData();
                 }
             }
         }
@@ -161,10 +161,10 @@ namespace Atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename T, typename... TArgs>
-        constexpr auto emplaceObj(TArgs&&... args, bool forceHeap = false)
+        constexpr auto emplaceVal(TArgs&&... args, bool forceHeap = false)
         {
-            destroyObj();
-            _emplaceObj<T>(fwd(args)..., forceHeap);
+            destroyVal();
+            _emplaceVal<T>(fwd(args)..., forceHeap);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -172,13 +172,13 @@ namespace Atom
         ///
         /// @TPARAM T Type of object to store.
         ///
-        /// @PARAM[IN] obj Object to store.
+        /// @PARAM[IN] val Valect to store.
         /// @PARAM[IN] forceHeap (default = false) Force store on heap.
         /// ----------------------------------------------------------------------------------------
         template <typename T>
-        constexpr auto setObj(T&& obj, bool forceHeap = false)
+        constexpr auto setVal(T&& val, bool forceHeap = false)
         {
-            emplaceObj<TTI::TRemoveCVRef<T>>(fwd(obj));
+            emplaceVal<TTI::TRemoveCVRef<T>>(fwd(val));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -189,7 +189,7 @@ namespace Atom
         /// - `T`: Type as which to get the object.
         /// ----------------------------------------------------------------------------------------
         template <typename T>
-        constexpr auto getObj() -> const T&
+        constexpr auto getVal() -> const T&
         {
             debug_expects(getMemAs<T>() != nullptr);
 
@@ -204,7 +204,7 @@ namespace Atom
         /// - `T`: Type as which to get the object.
         /// ----------------------------------------------------------------------------------------
         template <typename T>
-        constexpr auto getMutObj() -> T&
+        constexpr auto getMutVal() -> T&
         {
             debug_expects(getMutMemAs<T>() != nullptr);
 
@@ -216,7 +216,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto getMem() const -> const void*
         {
-            return _obj.obj;
+            return _val.val;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -224,7 +224,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto getMutMem() -> void*
         {
-            return _obj.obj;
+            return _val.val;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -235,7 +235,7 @@ namespace Atom
         template <typename T>
         constexpr auto getMemAs() const -> const T*
         {
-            return static_cast<T*>(_obj.obj);
+            return static_cast<T*>(_val.val);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -246,50 +246,50 @@ namespace Atom
         template <typename T>
         constexpr auto getMutMemAs() -> T*
         {
-            return static_cast<T*>(_obj.obj);
+            return static_cast<T*>(_val.val);
         }
 
         /// ----------------------------------------------------------------------------------------
         /// Get `TypeInfo` of stored object.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto getObjType() const -> const TypeInfo&
+        constexpr auto getValType() const -> const TypeInfo&
         {
-            return *_obj.type;
+            return *_val.type;
         }
 
         /// ----------------------------------------------------------------------------------------
         /// Size of the object stored.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto getObjSize() const -> usize
+        constexpr auto getValSize() const -> usize
         {
-            return _obj.size;
+            return _val.size;
         }
 
         /// ----------------------------------------------------------------------------------------
         /// Checks if object is not `null`.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto hasObj() const -> bool
+        constexpr auto hasVal() const -> bool
         {
-            return _hasObj();
+            return _hasVal();
         }
 
         /// ----------------------------------------------------------------------------------------
         /// Disposes current object by calling its destructor.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto destroyObj()
+        constexpr auto destroyVal()
         {
-            if (_hasObj())
+            if (_hasVal())
             {
-                _destroyObj();
+                _destroyVal();
             }
         }
 
         /// ----------------------------------------------------------------------------------------
         /// Is object is stored in stack memory.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto isObjOnBuf() const -> bool
+        constexpr auto isValOnBuf() const -> bool
         {
-            return _isObjOnBuf();
+            return _isValOnBuf();
         }
 
     private:
@@ -308,18 +308,18 @@ namespace Atom
         ///    chooses the best fit.
         /// ----------------------------------------------------------------------------------------
         template <typename T, typename... TArgs>
-        constexpr auto _emplaceObj(TArgs&&... args, bool forceHeap = false)
+        constexpr auto _emplaceVal(TArgs&&... args, bool forceHeap = false)
         {
-            _obj.size = sizeof(T);
-            _obj.type = &typeid(T);
+            _val.size = sizeof(T);
+            _val.type = &typeid(T);
 
             // TODO: Check if we can do static_cast instead to preserve constexpr.
-            _obj.dtor = [](void* obj) { reinterpret_cast<T*>(obj)->T::~T(); };
+            _val.dtor = [](void* val) { reinterpret_cast<T*>(val)->T::~T(); };
 
             if constexpr (IsCopyable())
             {
-                _obj.copy = [](void* obj, const void* that) {
-                    new (obj) T(*reinterpret_cast<const T*>(that));
+                _val.copy = [](void* val, const void* that) {
+                    new (val) T(*reinterpret_cast<const T*>(that));
                 };
             }
 
@@ -327,13 +327,13 @@ namespace Atom
             {
                 if constexpr (RMoveConstructible<T>)
                 {
-                    _obj.move = [](void* obj, void* that) {
-                        new (obj) T(mov(*reinterpret_cast<T*>(that)));
+                    _val.move = [](void* val, void* that) {
+                        new (val) T(mov(*reinterpret_cast<T*>(that)));
                     };
                 }
                 else
                 {
-                    _obj.move = nullptr;
+                    _val.move = nullptr;
                 }
             }
 
@@ -344,8 +344,8 @@ namespace Atom
                 forceHeap = true;
             }
 
-            _obj.obj = _allocMem(_obj.size, forceHeap);
-            new (_obj.obj) T(fwd(args)...);
+            _val.val = _allocMem(_val.size, forceHeap);
+            new (_val.val) T(fwd(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -355,17 +355,17 @@ namespace Atom
         /// @PARAM[IN] forceHeap (default = false) Force allocate object on heap.
         /// ----------------------------------------------------------------------------------------
         template <typename TBox>
-        constexpr auto _copyObj(const TBox& that, bool forceHeap = false)
+        constexpr auto _copyVal(const TBox& that, bool forceHeap = false)
         {
-            _copyObjData(that);
+            _copyValData(that);
 
             if constexpr (IsMovable() and AllowNonMovable())
             {
-                forceHeap = forceHeap || _obj.move == nullptr;
+                forceHeap = forceHeap || _val.move == nullptr;
             }
 
-            _obj.obj = _allocMem(_obj.size, forceHeap);
-            _obj.copy(_obj.obj, that.obj);
+            _val.val = _allocMem(_val.size, forceHeap);
+            _val.copy(_val.val, that.val);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -377,60 +377,60 @@ namespace Atom
         /// @NOTE This doesn't moves the memory from `that` [`Box`].
         /// ----------------------------------------------------------------------------------------
         template <typename TBox>
-        constexpr auto _moveObj(TBox&& that, bool forceHeap = false)
+        constexpr auto _moveVal(TBox&& that, bool forceHeap = false)
         {
-            _moveObjData(that);
+            _moveValData(that);
 
             if constexpr (AllowNonMovable())
             {
-                forceHeap = forceHeap || _obj.move == nullptr;
+                forceHeap = forceHeap || _val.move == nullptr;
             }
 
-            _obj.obj = _allocMem(_obj.size, forceHeap);
-            _obj.move(_obj.obj, that._obj.obj);
+            _val.val = _allocMem(_val.size, forceHeap);
+            _val.move(_val.val, that._val.val);
         }
 
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr auto _hasObj() const -> bool
+        constexpr auto _hasVal() const -> bool
         {
-            return _obj.obj != nullptr;
+            return _val.val != nullptr;
         }
 
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr auto _destroyObj()
+        constexpr auto _destroyVal()
         {
-            _obj.dtor(_obj.obj);
-            _resetObjData();
+            _val.dtor(_val.val);
+            _resetValData();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Copies {_ObjData} from {thatBox}.
+        /// Copies {_ValData} from {thatBox}.
         ///
-        /// @PARAM[IN] thatBox [`Box`] of which to copy {_ObjData}.
+        /// @PARAM[IN] thatBox [`Box`] of which to copy {_ValData}.
         /// ----------------------------------------------------------------------------------------
         template <typename TBox>
-        constexpr auto _copyObjData(const TBox& thatBox)
+        constexpr auto _copyValData(const TBox& thatBox)
         {
-            const auto& that = thatBox._obj;
+            const auto& that = thatBox._val;
 
-            _obj.obj = that.obj;
-            _obj.size = that.size;
-            _obj.type = that.type;
-            _obj.dtor = that.dtor;
+            _val.val = that.val;
+            _val.size = that.size;
+            _val.type = that.type;
+            _val.dtor = that.dtor;
 
             if constexpr (IsCopyable())
             {
                 if constexpr (IsMovable())
                 {
-                    _obj.copy = that.copy;
+                    _val.copy = that.copy;
                 }
                 else
                 {
-                    _obj.copy = nullptr;
+                    _val.copy = nullptr;
                 }
             }
 
@@ -438,11 +438,11 @@ namespace Atom
             {
                 if constexpr (TBox::IsMovable())
                 {
-                    _obj.move = that.move;
+                    _val.move = that.move;
                 }
                 else
                 {
-                    _obj.move = nullptr;
+                    _val.move = nullptr;
                 }
             }
         }
@@ -451,16 +451,16 @@ namespace Atom
         /// 
         /// ----------------------------------------------------------------------------------------
         template <typename TBox>
-        constexpr auto _moveObjData(TBox& thatBox)
+        constexpr auto _moveValData(TBox& thatBox)
         {
-            auto& that = thatBox._obj;
+            auto& that = thatBox._val;
 
-            _obj.obj = that.obj;
-            _obj.type = that.type;
-            _obj.dtor = that.dtor;
-            _obj.size = that.size;
+            _val.val = that.val;
+            _val.type = that.type;
+            _val.dtor = that.dtor;
+            _val.size = that.size;
 
-            that.obj = nullptr;
+            that.val = nullptr;
             that.type = nullptr;
             that.dtor = nullptr;
             that.size = 0;
@@ -469,12 +469,12 @@ namespace Atom
             {
                 if constexpr (TBox::IsCopyable())
                 {
-                    _obj.copy = that.copy;
+                    _val.copy = that.copy;
                     that.copy = nullptr;
                 }
                 else
                 {
-                    _obj.copy = nullptr;
+                    _val.copy = nullptr;
                 }
             }
 
@@ -482,12 +482,12 @@ namespace Atom
             {
                 if constexpr (TBox::IsMovable())
                 {
-                    _obj.move = that.move;
+                    _val.move = that.move;
                     that.move = nullptr;
                 }
                 else
                 {
-                    _obj.move = nullptr;
+                    _val.move = nullptr;
                 }
             }
         }
@@ -495,20 +495,20 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr auto _resetObjData()
+        constexpr auto _resetValData()
         {
-            _obj = _ObjData();
+            _val = _ValData();
         }
 
         /// ----------------------------------------------------------------------------------------
         /// Is object is stored in stack memory.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto _isObjOnBuf() const -> bool
+        constexpr auto _isValOnBuf() const -> bool
         {
             if constexpr (BufSize() == 0)
                 return false;
 
-            return _obj.obj == _buf.mem();
+            return _val.val == _buf.mem();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -575,13 +575,13 @@ namespace Atom
         }
 
     private:
-        class _ObjData
+        class _ValData
         {
         public:
-            InvokablePtr<void(void* obj)> dtor;
-            const TypeInfo* type;
-            void* obj;
+            TVal* val;
             usize size;
+            const TypeInfo* type;
+            InvokablePtr<void(void*)> dtor;
 
             ATOM_CONDITIONAL_FIELD(IsCopyable(), InvokablePtr<void(void*, const void*)>) copy;
             ATOM_CONDITIONAL_FIELD(IsMovable(), InvokablePtr<void(void*, void*)>) move;
@@ -592,6 +592,6 @@ namespace Atom
         void* _heapMem;
         usize _heapMemSize;
         StaticStorage<bufSize> _buf;
-        _ObjData _obj;
+        _ValData _val;
     };
 }
