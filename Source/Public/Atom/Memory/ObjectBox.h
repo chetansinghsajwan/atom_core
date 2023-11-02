@@ -444,17 +444,17 @@ namespace Atom
         _TImpl _impl;
     };
 
-    template <typename T, usize bufSize = 50, typename TAlloc = DefaultMemAllocator>
+    template <typename TVal, usize bufSize = 50, typename TAlloc = DefaultMemAllocator>
     class Box;
 
-    template <typename T, usize bufSize = 50, typename TAlloc = DefaultMemAllocator>
+    template <typename TVal, usize bufSize = 50, typename TAlloc = DefaultMemAllocator>
     class CopyBox;
 
-    template <typename T, bool allowNonMove = true, usize bufSize = 50,
+    template <typename TVal, bool allowNonMove = true, usize bufSize = 50,
         typename TAlloc = DefaultMemAllocator>
     class MoveBox;
 
-    template <typename T, bool allowNonMove = true, usize bufSize = 50,
+    template <typename TVal, bool allowNonMove = true, usize bufSize = 50,
         typename TAlloc = DefaultMemAllocator>
     class CopyMoveBox;
 
@@ -496,16 +496,19 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Template Copy Constructor
         /// ----------------------------------------------------------------------------------------
-        template <typename TThat, usize thatBufSize, typename TThatAlloc>
-        constexpr Box(const CopyBox<TThat, thatBufSize, TThatAlloc>& that):
+        template <typename T, usize thatBufSize, typename TThatAlloc>
+        constexpr Box(const CopyBox<T, thatBufSize, TThatAlloc>& that)
+            requires IsVoid<TVal> or RSameOrDerivedFrom<T, TVal>
+            :
             Base{ typename _TImpl::CopyTag(), that._impl }
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # Template Copy Operator
         /// ----------------------------------------------------------------------------------------
-        template <typename TThat, usize thatBufSize, typename TThatAlloc>
-        constexpr This& operator=(const CopyBox<TThat, thatBufSize, TThatAlloc>& that)
+        template <typename T, usize thatBufSize, typename TThatAlloc>
+        constexpr This& operator=(const CopyBox<T, thatBufSize, TThatAlloc>& that)
+            requires IsVoid<TVal> or RSameOrDerivedFrom<T, TVal>
         {
             _impl.copyBox(that._impl);
             return *this;
@@ -514,16 +517,19 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Template Copy Constructor
         /// ----------------------------------------------------------------------------------------
-        template <typename TThat, usize thatBufSize, typename TThatAlloc>
-        constexpr Box(const CopyMoveBox<TThat, true, thatBufSize, TThatAlloc>& that):
+        template <typename T, usize thatBufSize, typename TThatAlloc>
+        constexpr Box(const CopyMoveBox<T, true, thatBufSize, TThatAlloc>& that)
+            requires IsVoid<TVal> or RSameOrDerivedFrom<T, TVal>
+            :
             Base{ typename _TImpl::CopyTag(), that._impl }
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # Template Copy Operator
         /// ----------------------------------------------------------------------------------------
-        template <typename TThat, usize thatBufSize, typename TThatAlloc>
-        constexpr This& operator=(const CopyMoveBox<TThat, true, thatBufSize, TThatAlloc>& that)
+        template <typename T, usize thatBufSize, typename TThatAlloc>
+        constexpr This& operator=(const CopyMoveBox<T, true, thatBufSize, TThatAlloc>& that)
+            requires IsVoid<TVal> or RSameOrDerivedFrom<T, TVal>
         {
             _impl.copyBox(that._impl);
             return *this;
@@ -532,16 +538,19 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Template Move Constructor
         /// ----------------------------------------------------------------------------------------
-        template <typename TThat, usize thatBufSize, typename TThatAlloc>
-        constexpr Box(MoveBox<TThat, true, thatBufSize, TThatAlloc>&& that):
+        template <typename T, usize thatBufSize, typename TThatAlloc>
+        constexpr Box(MoveBox<T, true, thatBufSize, TThatAlloc>&& that)
+            requires IsVoid<TVal> or RSameOrDerivedFrom<T, TVal>
+            :
             Base{ typename _TImpl::MoveTag(), that._impl }
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # Template Move Operator
         /// ----------------------------------------------------------------------------------------
-        template <typename TThat, usize thatBufSize, typename TThatAlloc>
-        constexpr This& operator=(MoveBox<TThat, true, thatBufSize, TThatAlloc>&& that)
+        template <typename T, usize thatBufSize, typename TThatAlloc>
+        constexpr This& operator=(MoveBox<T, true, thatBufSize, TThatAlloc>&& that)
+            requires (IsVoid<TVal>) or RSameOrDerivedFrom<T, TVal>
         {
             _impl.moveBox(that._impl);
             return *this;
@@ -550,16 +559,19 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Template Move Constructor
         /// ----------------------------------------------------------------------------------------
-        template <typename TThat, usize thatBufSize, typename TThatAlloc>
-        constexpr Box(CopyMoveBox<TThat, true, thatBufSize, TThatAlloc>&& that):
+        template <typename T, usize thatBufSize, typename TThatAlloc>
+        constexpr Box(CopyMoveBox<T, true, thatBufSize, TThatAlloc>&& that)
+            requires IsVoid<TVal> or RSameOrDerivedFrom<T, TVal>
+            :
             Base{ typename _TImpl::MoveTag(), that._impl }
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # Template Move Operator
         /// ----------------------------------------------------------------------------------------
-        template <typename TThat, usize thatBufSize, typename TThatAlloc>
-        constexpr This& operator=(CopyMoveBox<TThat, true, thatBufSize, TThatAlloc>&& that)
+        template <typename T, usize thatBufSize, typename TThatAlloc>
+        constexpr This& operator=(CopyMoveBox<T, true, thatBufSize, TThatAlloc>&& that)
+            requires IsVoid<TVal> or RSameOrDerivedFrom<T, TVal>
         {
             _impl.moveBox(that._impl);
             return *this;
@@ -568,8 +580,20 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Constructor
         /// ----------------------------------------------------------------------------------------
+        template <typename T, typename... TArgs>
+        constexpr Box(CtorParam<T> targ, TArgs&&... args)
+            requires(IsVoid<TVal> or RSameOrDerivedFrom<T, TVal>) and RConstructible<T, TArgs...>
+            :
+            Base{ targ, fwd(args)... }
+        {}
+
+        /// ----------------------------------------------------------------------------------------
+        /// # Constructor
+        /// ----------------------------------------------------------------------------------------
         template <typename T>
-        constexpr Box(T&& obj):
+        constexpr Box(T&& obj)
+            requires IsVoid<TVal> or RSameOrDerivedFrom<TPure<T>, TVal>
+            :
             Base{ fwd(obj) }
         {}
 
@@ -578,6 +602,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <typename T>
         constexpr This& operator=(T&& obj)
+            requires IsVoid<TVal> or RSameOrDerivedFrom<TPure<T>, TVal>
         {
             _impl.setVal(fwd(obj));
             return *this;
@@ -636,17 +661,16 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Template Copy Constructor
         /// ----------------------------------------------------------------------------------------
-        template <typename TThat, bool allowNonMove, usize thatBufSize, typename TThatAlloc>
-        constexpr CopyBox(const CopyMoveBox<TThat, allowNonMove, thatBufSize, TThatAlloc>& that):
+        template <typename T, bool allowNonMove, usize thatBufSize, typename TThatAlloc>
+        constexpr CopyBox(const CopyMoveBox<T, allowNonMove, thatBufSize, TThatAlloc>& that):
             Base{ typename _TImpl::CopyTag(), that._impl }
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # Template Copy Operator
         /// ----------------------------------------------------------------------------------------
-        template <typename TThat, bool allowNonMove, usize thatBufSize, typename TThatAlloc>
-        constexpr This& operator=(
-            const CopyMoveBox<TThat, allowNonMove, thatBufSize, TThatAlloc>& that)
+        template <typename T, bool allowNonMove, usize thatBufSize, typename TThatAlloc>
+        constexpr This& operator=(const CopyMoveBox<T, allowNonMove, thatBufSize, TThatAlloc>& that)
         {
             _impl.copyBox(that._impl);
             return *this;
@@ -708,18 +732,18 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Template Copy Constructor
         /// ----------------------------------------------------------------------------------------
-        template <typename TThat, usize thatBufSize, typename TThatAlloc>
+        template <typename T, usize thatBufSize, typename TThatAlloc>
             requires allowNonMove
-        constexpr MoveBox(const CopyBox<TThat, thatBufSize, TThatAlloc>& that):
+        constexpr MoveBox(const CopyBox<T, thatBufSize, TThatAlloc>& that):
             Base{ typename _TImpl::CopyTag(), that._impl }
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # Template Copy Operator
         /// ----------------------------------------------------------------------------------------
-        template <typename TThat, usize thatBufSize, typename TThatAlloc>
+        template <typename T, usize thatBufSize, typename TThatAlloc>
             requires allowNonMove
-        constexpr MoveBox& operator=(const CopyBox<TThat, thatBufSize, TThatAlloc>& that)
+        constexpr MoveBox& operator=(const CopyBox<T, thatBufSize, TThatAlloc>& that)
         {
             _impl.moveBox(that._impl);
             return *this;
@@ -728,19 +752,19 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Template Copy Constructor
         /// ----------------------------------------------------------------------------------------
-        template <typename TThat, usize thatBufSize, typename TThatAlloc>
+        template <typename T, usize thatBufSize, typename TThatAlloc>
             requires allowNonMove
-        constexpr MoveBox(const CopyMoveBox<TThat, allowNonMove, thatBufSize, TThatAlloc>& that):
+        constexpr MoveBox(const CopyMoveBox<T, allowNonMove, thatBufSize, TThatAlloc>& that):
             Base{ typename _TImpl::CopyTag(), that._impl }
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # Template Copy Operator
         /// ----------------------------------------------------------------------------------------
-        template <typename TThat, usize thatBufSize, typename TThatAlloc>
+        template <typename T, usize thatBufSize, typename TThatAlloc>
             requires allowNonMove
         constexpr MoveBox& operator=(
-            const CopyMoveBox<TThat, allowNonMove, thatBufSize, TThatAlloc>& that)
+            const CopyMoveBox<T, allowNonMove, thatBufSize, TThatAlloc>& that)
         {
             _impl.moveBox(that._impl);
             return *this;
@@ -765,17 +789,16 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Template Move Constructor
         /// ----------------------------------------------------------------------------------------
-        template <typename TThat, usize thatBufSize, typename TThatAlloc>
-        constexpr MoveBox(CopyMoveBox<TThat, allowNonMove, thatBufSize, TThatAlloc>&& that):
+        template <typename T, usize thatBufSize, typename TThatAlloc>
+        constexpr MoveBox(CopyMoveBox<T, allowNonMove, thatBufSize, TThatAlloc>&& that):
             Base{ typename _TImpl::MoveTag(), that._impl }
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # Template Move Operator
         /// ----------------------------------------------------------------------------------------
-        template <typename TThat, usize thatBufSize, typename TThatAlloc>
-        constexpr MoveBox& operator=(
-            CopyMoveBox<TThat, allowNonMove, thatBufSize, TThatAlloc>&& that)
+        template <typename T, usize thatBufSize, typename TThatAlloc>
+        constexpr MoveBox& operator=(CopyMoveBox<T, allowNonMove, thatBufSize, TThatAlloc>&& that)
         {
             _impl.moveBox(that._impl);
             return *this;
@@ -846,18 +869,18 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Template Copy Constructor
         /// ----------------------------------------------------------------------------------------
-        template <typename TThat, usize thatBufSize, typename TThatAlloc>
+        template <typename T, usize thatBufSize, typename TThatAlloc>
             requires allowNonMove
-        constexpr CopyMoveBox(const CopyBox<TThat, thatBufSize, TThatAlloc>& that):
+        constexpr CopyMoveBox(const CopyBox<T, thatBufSize, TThatAlloc>& that):
             Base{ typename _TImpl::CopyTag(), that._impl }
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # Template Copy Operator
         /// ----------------------------------------------------------------------------------------
-        template <typename TThat, usize thatBufSize, typename TThatAlloc>
+        template <typename T, usize thatBufSize, typename TThatAlloc>
             requires allowNonMove
-        constexpr CopyMoveBox& operator=(const CopyBox<TThat, thatBufSize, TThatAlloc>& that)
+        constexpr CopyMoveBox& operator=(const CopyBox<T, thatBufSize, TThatAlloc>& that)
         {
             _impl.copyBox(that._impl);
             return *this;
@@ -866,20 +889,19 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Template Copy Constructor
         /// ----------------------------------------------------------------------------------------
-        template <typename TThat, usize thatBufSize, typename TThatAlloc>
+        template <typename T, usize thatBufSize, typename TThatAlloc>
             requires allowNonMove
-        constexpr CopyMoveBox(
-            const CopyMoveBox<TThat, allowNonMove, thatBufSize, TThatAlloc>& that):
+        constexpr CopyMoveBox(const CopyMoveBox<T, allowNonMove, thatBufSize, TThatAlloc>& that):
             Base{ typename _TImpl::CopyTag(), that._impl }
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # Template Copy Operator
         /// ----------------------------------------------------------------------------------------
-        template <typename TThat, usize thatBufSize, typename TThatAlloc>
+        template <typename T, usize thatBufSize, typename TThatAlloc>
             requires allowNonMove
         constexpr CopyMoveBox& operator=(
-            const CopyMoveBox<TThat, allowNonMove, thatBufSize, TThatAlloc>& that)
+            const CopyMoveBox<T, allowNonMove, thatBufSize, TThatAlloc>& that)
         {
             _impl.copyBox(that._impl);
             return *this;
@@ -904,19 +926,19 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Template Move Constructor
         /// ----------------------------------------------------------------------------------------
-        template <typename TThat, bool thatAllowNonMove, usize thatBufSize, typename TThatAlloc>
+        template <typename T, bool thatAllowNonMove, usize thatBufSize, typename TThatAlloc>
             requires allowNonMove
-        constexpr CopyMoveBox(MoveBox<TThat, thatAllowNonMove, thatBufSize, TThatAlloc>&& that):
+        constexpr CopyMoveBox(MoveBox<T, thatAllowNonMove, thatBufSize, TThatAlloc>&& that):
             Base{ typename _TImpl::MoveTag(), that._impl }
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # Template Move Operator
         /// ----------------------------------------------------------------------------------------
-        template <typename TThat, bool thatAllowNonMove, usize thatBufSize, typename TThatAlloc>
+        template <typename T, bool thatAllowNonMove, usize thatBufSize, typename TThatAlloc>
             requires allowNonMove
         constexpr CopyMoveBox& operator=(
-            MoveBox<TThat, thatAllowNonMove, thatBufSize, TThatAlloc>&& that)
+            MoveBox<T, thatAllowNonMove, thatBufSize, TThatAlloc>&& that)
         {
             _impl.moveBox(that._impl);
             return *this;
@@ -925,19 +947,19 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Template Move Constructor
         /// ----------------------------------------------------------------------------------------
-        template <typename TThat, bool thatAllowNonMove, usize thatBufSize, typename TThatAlloc>
+        template <typename T, bool thatAllowNonMove, usize thatBufSize, typename TThatAlloc>
             requires allowNonMove
-        constexpr CopyMoveBox(CopyMoveBox<TThat, thatAllowNonMove, thatBufSize, TThatAlloc>&& that):
+        constexpr CopyMoveBox(CopyMoveBox<T, thatAllowNonMove, thatBufSize, TThatAlloc>&& that):
             Base{ typename _TImpl::MoveTag(), that._impl }
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # Template Move Operator
         /// ----------------------------------------------------------------------------------------
-        template <typename TThat, bool thatAllowNonMove, usize thatBufSize, typename TThatAlloc>
+        template <typename T, bool thatAllowNonMove, usize thatBufSize, typename TThatAlloc>
             requires allowNonMove
         constexpr CopyMoveBox& operator=(
-            CopyMoveBox<TThat, thatAllowNonMove, thatBufSize, TThatAlloc>&& that)
+            CopyMoveBox<T, thatAllowNonMove, thatBufSize, TThatAlloc>&& that)
         {
             _impl.moveBox(that._impl);
             return *this;

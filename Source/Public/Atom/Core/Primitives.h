@@ -1,16 +1,15 @@
 #pragma once
 #include "Primitives/Byte.h"
 #include "Primitives/Char.h"
-#include "Primitives/Int.h"
 #include "Primitives/Float.h"
 #include "Atom/Memory/MemPtr.h"
 
-#include <typeinfo>
 #include <string_view>
+#include <typeinfo>
 
 /// ------------------------------------------------------------------------------------------------
 /// # To Do
-/// 
+///
 /// - Review these types, maybe we should remove them.
 /// ------------------------------------------------------------------------------------------------
 namespace Atom
@@ -33,4 +32,8 @@ namespace Atom
     using Ptr = T*;
 
     using memptr = void*;
+
+    template <typename T>
+    class CtorParam
+    {};
 }

@@ -47,7 +47,7 @@ SpaceBeforeParensOptions:
   AfterFunctionDeclarationName: false
   AfterIfMacros: true
   AfterOverloadedOperator: false
-  AfterRequiresInClause: false
+  AfterRequiresInClause: true
   AfterRequiresInExpression: false
   BeforeNonEmptyParentheses: false
 SpaceBeforeRangeBasedForLoopColon: true
