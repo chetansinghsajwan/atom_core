@@ -113,7 +113,7 @@ namespace Atom
         /// NullConstructor.
         /// ----------------------------------------------------------------------------------------
         InvokableBox(NullType null):
-            _box(null)
+            _box()
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -225,7 +225,7 @@ namespace Atom
 
         auto GetInvokableType() const -> const TypeInfo&
         {
-            return _box.type();
+            return _box.valType();
         }
 
     protected:

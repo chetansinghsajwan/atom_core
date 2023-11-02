@@ -6,10 +6,11 @@
 
 namespace Atom
 {
-    template <bool copy_, bool move_, bool allowNonMove, usize bufSize, typename TAlloc_>
+    template <typename TVal_, bool copy_, bool move_, bool allowNonMove, usize bufSize, typename TAlloc_>
     class _BoxImpl
     {
     public:
+        using TVal = TVal_;
         using TAlloc = TAlloc_;
 
         class CopyTag
@@ -592,12 +593,5 @@ namespace Atom
         usize _heapMemSize;
         StaticStorage<bufSize> _buf;
         _ObjData _obj;
-
-        // void* obj;
-        // usize objSize;
-        // const TypeInfo* objType;
-        // InvokablePtr<void(void* obj)> objDtor;
-        // ATOM_CONDITIONAL_FIELD(IsCopyable(), InvokablePtr<void(void*, const void*)>) objCopy;
-        // ATOM_CONDITIONAL_FIELD(IsMovable(), InvokablePtr<void(void*, void*)>) objMove;
     };
 }

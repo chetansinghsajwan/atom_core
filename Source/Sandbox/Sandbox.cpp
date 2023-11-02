@@ -15,5 +15,10 @@ auto main(int argc, char** args) -> int
 {
     PrintCmdArgs(argc, args);
 
+    Box<i32> box1 = i32(0);
+    CopyBox<i32> box2 = i32(0);
+    MoveBox<i32> box3 = i32(0);
+    CopyMoveBox<i32> box4 = i32(0);
+
     return 0;
 }

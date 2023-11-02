@@ -1,128 +1,456 @@
 #pragma once
+#include "Atom/Core/Requirements.h"
 #include "Atom/Memory/DefaultMemAllocator.h"
 #include "Atom/TTI.h"
 #include "_BoxImpl.h"
 
 namespace Atom
 {
-    // template <typename _TImpl>
-    // class BoxFunctions
-    // {
-    //     using T = typename _TImpl::T;
+    template <typename T>
+    using Ptr = T*;
 
-    // public:
-    //     /// ----------------------------------------------------------------------------------------
-    //     ///
-    //     /// ----------------------------------------------------------------------------------------
-    //     template <typename T>
-    //     constexpr auto set(T&& obj) -> T&
-    //         requires(IsObjAssignable<T>())
-    //     {
-    //         _impl._set(fwd(obj));
-    //         return _impl._get();
-    //     }
+    using memptr = void*;
+}
 
-    //     /// ----------------------------------------------------------------------------------------
-    //     ///
-    //     /// ----------------------------------------------------------------------------------------
-    //     template <typename T, typename... TArgs>
-    //     constexpr auto emplace(TArgs&&... args) -> T&
-    //         requires(IsObjAssignable<T>())
-    //     {
-    //         return *this;
-    //     }
+namespace Atom
+{
+    template <typename _TImpl_>
+    class BoxFunctions
+    {
+    protected:
+        using _TImpl = _TImpl_;
 
-    //     /// ----------------------------------------------------------------------------------------
-    //     ///
-    //     /// ----------------------------------------------------------------------------------------
-    //     constexpr auto destroy()
-    //     {
-    //         _impl.destroy();
-    //     }
+    public:
+        using TVal = typename _TImpl::TVal;
 
-    //     /// ----------------------------------------------------------------------------------------
-    //     ///
-    //     /// ----------------------------------------------------------------------------------------
-    //     template <typename T>
-    //     constexpr auto getAs() const -> const T&
-    //     {
-    //         debug_expects(not isNull(), "Obj is null.");
+    public:
+        constexpr BoxFunctions(auto&&... args):
+            _impl{ fwd(args)... }
+        {}
 
-    //         return _impl.getAs<T>();
-    //     }
+    public:
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename T, typename... TArgs>
+        constexpr auto emplace(TArgs&&... args) -> T&
+            requires RSameOrDerivedFrom<TPure<T>, TVal>
+        {
+            _impl.template emplaceObj<T>(fwd(args)...);
+            return _impl.template getMutObjAs<T>();
+        }
 
-    //     /// ----------------------------------------------------------------------------------------
-    //     ///
-    //     /// ----------------------------------------------------------------------------------------
-    //     template <typename T>
-    //     constexpr auto getAsMut() -> T&
-    //     {
-    //         debug_expects(not isNull(), "Obj is null.");
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename T>
+        constexpr auto set(T&& obj) -> T&
+            requires RSameOrDerivedFrom<TPure<T>, TVal>
+        {
+            _impl._setObj(fwd(obj));
+            return _impl.template getMutObjAs<T>();
+        }
 
-    //         return _impl.getAsMut<T>();
-    //     }
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto destroy()
+        {
+            _impl.destroy();
+        }
 
-    //     /// ----------------------------------------------------------------------------------------
-    //     ///
-    //     /// ----------------------------------------------------------------------------------------
-    //     constexpr auto mem() const -> const memptr
-    //     {
-    //         debug_expects(not isNull(), "Obj is null.");
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto get() const -> const TVal&
+        {
+            debug_expects(hasVal(), "Value is null.");
 
-    //         return _impl.mem();
-    //     }
+            return _impl.getObj();
+        }
 
-    //     /// ----------------------------------------------------------------------------------------
-    //     ///
-    //     /// ----------------------------------------------------------------------------------------
-    //     constexpr auto mutMem() -> memptr
-    //     {
-    //         debug_expects(not isNull(), "Obj is null.");
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto getMut() -> TVal&
+        {
+            debug_expects(hasVal(), "Value is null.");
 
-    //         return _impl.mutMem();
-    //     }
+            return _impl.getObjMut();
+        }
 
-    //     /// ----------------------------------------------------------------------------------------
-    //     ///
-    //     /// ----------------------------------------------------------------------------------------
-    //     template <typename T>
-    //     constexpr auto memAs() const -> const Ptr<T>
-    //     {
-    //         debug_expects(not isNull(), "Obj is null.");
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto checkGet() const -> const TVal&
+        {
+            expects(hasVal(), "Value is null.");
 
-    //         return _impl.memAs<T>();
-    //     }
+            return _impl.getObj();
+        }
 
-    //     /// ----------------------------------------------------------------------------------------
-    //     ///
-    //     /// ----------------------------------------------------------------------------------------
-    //     template <typename T>
-    //     constexpr auto mutMemAs() -> Ptr<T>
-    //     {
-    //         debug_expects(not isNull(), "Obj is null.");
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto checkGetMut() -> TVal&
+        {
+            expects(hasVal(), "Value is null.");
 
-    //         return _impl.mutMemAs<T>();
-    //     }
+            return _impl.getObjMut();
+        }
 
-    //     /// ----------------------------------------------------------------------------------------
-    //     ///
-    //     /// ----------------------------------------------------------------------------------------
-    //     constexpr auto size() -> usize
-    //     {
-    //         return _impl.size();
-    //     }
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename T>
+        constexpr auto getAs() const -> const T&
+            requires RSameOrDerivedFrom<TPure<T>, TVal>
+        {
+            debug_expects(hasVal(), "Value is null.");
 
-    //     /// ----------------------------------------------------------------------------------------
-    //     ///
-    //     /// ----------------------------------------------------------------------------------------
-    //     constexpr auto isNull() const -> bool
-    //     {
-    //         return _impl.has();
-    //     }
+            return _impl.template getObjAs<T>();
+        }
 
-    // private:
-    //     _TImpl _impl;
-    // };
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename T>
+        constexpr auto getMutAs() -> T&
+            requires RSameOrDerivedFrom<TPure<T>, TVal>
+        {
+            debug_expects(hasVal(), "Value is null.");
+
+            return _impl.template getMutObjAs<T>();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename T>
+        constexpr auto checkGetAs() const -> const T&
+            requires RSameOrDerivedFrom<TPure<T>, TVal>
+        {
+            expects(hasVal(), "Value is null.");
+
+            return _impl.template getObjAs<T>();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename T>
+        constexpr auto checkGetMutAs() -> T&
+            requires RSameOrDerivedFrom<TPure<T>, TVal>
+        {
+            expects(hasVal(), "Value is null.");
+
+            return _impl.template getMutObjAs<T>();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto mem() const -> const Ptr<TVal>
+        {
+            return _impl.mem();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto mutMem() -> Ptr<TVal>
+        {
+            return _impl.mutMem();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto checkMem() const -> const Ptr<TVal>
+        {
+            expects(hasVal(), "Value is null.");
+
+            return _impl.mem();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto checkMutMem() -> Ptr<TVal>
+        {
+            expects(hasVal(), "Value is null.");
+
+            return _impl.mutMem();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename T>
+        constexpr auto memAs() const -> const Ptr<T>
+            requires RSameOrDerivedFrom<TPure<T>, TVal>
+        {
+            return _impl.template memAs<T>();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename T>
+        constexpr auto mutMemAs() -> Ptr<T>
+            requires RSameOrDerivedFrom<TPure<T>, TVal>
+        {
+            return _impl.template mutMemAs<T>();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename T>
+        constexpr auto checkMemAs() const -> const Ptr<T>
+            requires RSameOrDerivedFrom<TPure<T>, TVal>
+        {
+            expects(hasVal(), "Value is null.");
+
+            return _impl.template memAs<T>();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename T>
+        constexpr auto checkMutMemAs() -> Ptr<T>
+            requires RSameOrDerivedFrom<TPure<T>, TVal>
+        {
+            expects(hasVal(), "Value is null.");
+
+            return _impl.template mutMemAs<T>();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto valType() const -> const TypeInfo&
+        {
+            return _impl.objType();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto valSize() const -> usize
+        {
+            return _impl.objSize();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto hasVal() const -> bool
+        {
+            return _impl.hasObj();
+        }
+
+    protected:
+        _TImpl _impl;
+    };
+
+    template <typename _TImpl_>
+        requires(RIsVoid<typename _TImpl_::TVal>)
+    class BoxFunctions<_TImpl_>
+    {
+    protected:
+        using _TImpl = _TImpl_;
+
+    public:
+        using TVal = void;
+
+    public:
+        constexpr BoxFunctions(auto&&... args):
+            _impl{ fwd(args)... }
+        {}
+
+    public:
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename T, typename... TArgs>
+        constexpr auto emplace(TArgs&&... args) -> T&
+            requires(not RIsVoid<T>)
+        {
+            _impl.template emplaceObj<T>(fwd(args)...);
+            return _impl.template getMutObjAs<T>();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename T>
+        constexpr auto set(T&& obj) -> T&
+        {
+            _impl._setObj(fwd(obj));
+            return _impl.template getMutObjAs<T>();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto destroy()
+        {
+            _impl.destroy();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename T>
+        constexpr auto getAs() const -> const T&
+        {
+            debug_expects(hasVal(), "Value is null.");
+
+            return _impl.template getObjAs<T>();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename T>
+        constexpr auto getMutAs() -> T&
+        {
+            debug_expects(hasVal(), "Value is null.");
+
+            return _impl.template getMutObjAs<T>();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename T>
+        constexpr auto checkGetAs() const -> const T&
+        {
+            expects(hasVal(), "Value is null.");
+
+            return _impl.template getObjAs<T>();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename T>
+        constexpr auto checkGetMutAs() -> T&
+        {
+            expects(hasVal(), "Value is null.");
+
+            return _impl.template getMutObjAs<T>();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto mem() const -> const memptr
+        {
+            return _impl.getMem();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto mutMem() -> memptr
+        {
+            return _impl.getMutMem();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto checkMem() const -> const memptr
+        {
+            expects(hasVal(), "Value is null.");
+
+            return _impl.getMem();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto checkMutMem() -> memptr
+        {
+            expects(hasVal(), "Value is null.");
+
+            return _impl.getMutMem();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename T>
+        constexpr auto memAs() const -> const Ptr<T>
+            requires(not RIsVoid<T>)
+        {
+            return _impl.template memAs<T>();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename T>
+        constexpr auto mutMemAs() -> Ptr<T>
+            requires(not RIsVoid<T>)
+        {
+            return _impl.template mutMemAs<T>();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename T>
+        constexpr auto checkMemAs() const -> const memptr
+            requires(not RIsVoid<T>)
+        {
+            expects(hasVal(), "Value is null.");
+
+            return _impl.template getMemAs<T>();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename T>
+        constexpr auto checkMutMemAs() -> memptr
+            requires(not RIsVoid<T>)
+        {
+            expects(hasVal(), "Value is null.");
+
+            return _impl.template getMutMemAs<T>();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto valType() const -> const TypeInfo&
+        {
+            return _impl.getObjType();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto valSize() const -> usize
+        {
+            return _impl.objSize();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto hasVal() const -> bool
+        {
+            return _impl.hasObj();
+        }
+
+    protected:
+        _TImpl _impl;
+    };
 
     template <typename T, usize bufSize = 50, typename TAlloc = DefaultMemAllocator>
     class Box;
@@ -138,18 +466,19 @@ namespace Atom
         typename TAlloc = DefaultMemAllocator>
     class CopyMoveBox;
 
-    template <typename T, usize bufSize, typename TAlloc>
-    class Box
+    template <typename TVal, usize bufSize, typename TAlloc>
+    class Box: public BoxFunctions<_BoxImpl<TVal, false, false, false, bufSize, TAlloc>>
     {
-        using This = Box<T, bufSize, TAlloc>;
-        using _TImpl = _BoxImpl<false, false, false, bufSize, TAlloc>;
+        using This = Box<TVal, bufSize, TAlloc>;
+        using Base = BoxFunctions<_BoxImpl<TVal, false, false, false, bufSize, TAlloc>>;
+        using _TImpl = typename Base::_TImpl;
 
     public:
         /// ----------------------------------------------------------------------------------------
         /// # Default Constructor
         /// ----------------------------------------------------------------------------------------
         constexpr Box():
-            _impl()
+            Base{}
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -177,7 +506,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <typename TThat, usize thatBufSize, typename TThatAlloc>
         constexpr Box(const CopyBox<TThat, thatBufSize, TThatAlloc>& that):
-            _impl{ typename _TImpl::CopyTag(), that._impl }
+            Base{ typename _TImpl::CopyTag(), that._impl }
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -195,7 +524,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <typename TThat, usize thatBufSize, typename TThatAlloc>
         constexpr Box(const CopyMoveBox<TThat, true, thatBufSize, TThatAlloc>& that):
-            _impl{ typename _TImpl::CopyTag(), that._impl }
+            Base{ typename _TImpl::CopyTag(), that._impl }
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -209,15 +538,15 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Template Move Constructor
+        /// # Template Move Constructor
         /// ----------------------------------------------------------------------------------------
         template <typename TThat, usize thatBufSize, typename TThatAlloc>
         constexpr Box(MoveBox<TThat, true, thatBufSize, TThatAlloc>&& that):
-            _impl{ typename _TImpl::MoveTag(), that._impl }
+            Base{ typename _TImpl::MoveTag(), that._impl }
         {}
 
         /// ----------------------------------------------------------------------------------------
-        /// Template Move Operator
+        /// # Template Move Operator
         /// ----------------------------------------------------------------------------------------
         template <typename TThat, usize thatBufSize, typename TThatAlloc>
         constexpr This& operator=(MoveBox<TThat, true, thatBufSize, TThatAlloc>&& that)
@@ -227,15 +556,15 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Template Move Constructor
+        /// # Template Move Constructor
         /// ----------------------------------------------------------------------------------------
         template <typename TThat, usize thatBufSize, typename TThatAlloc>
         constexpr Box(CopyMoveBox<TThat, true, thatBufSize, TThatAlloc>&& that):
-            _impl{ typename _TImpl::MoveTag(), that._impl }
+            Base{ typename _TImpl::MoveTag(), that._impl }
         {}
 
         /// ----------------------------------------------------------------------------------------
-        /// Template Move Operator
+        /// # Template Move Operator
         /// ----------------------------------------------------------------------------------------
         template <typename TThat, usize thatBufSize, typename TThatAlloc>
         constexpr This& operator=(CopyMoveBox<TThat, true, thatBufSize, TThatAlloc>&& that)
@@ -247,16 +576,16 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Constructor
         /// ----------------------------------------------------------------------------------------
-        template <typename T1>
-        constexpr Box(T1&& obj):
-            _impl{ fwd(obj) }
+        template <typename T>
+        constexpr Box(T&& obj):
+            Base{ fwd(obj) }
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # Operator
         /// ----------------------------------------------------------------------------------------
-        template <typename T1>
-        constexpr This& operator=(T1&& obj)
+        template <typename T>
+        constexpr This& operator=(T&& obj)
         {
             _impl.setObj(fwd(obj));
             return *this;
@@ -268,28 +597,29 @@ namespace Atom
         constexpr ~Box() {}
 
     private:
-        _TImpl _impl;
+        using Base::_impl;
     };
 
-    template <typename T, usize bufSize, typename TAlloc>
-    class CopyBox
+    template <typename TVal, usize bufSize, typename TAlloc>
+    class CopyBox: public BoxFunctions<_BoxImpl<TVal, true, false, false, bufSize, TAlloc>>
     {
-        using This = CopyBox<T, bufSize, TAlloc>;
-        using _TImpl = _BoxImpl<true, false, false, bufSize, TAlloc>;
+        using This = CopyBox<TVal, bufSize, TAlloc>;
+        using Base = BoxFunctions<_BoxImpl<TVal, true, false, false, bufSize, TAlloc>>;
+        using _TImpl = typename Base::_TImpl;
 
     public:
         /// ----------------------------------------------------------------------------------------
         /// # Default Constructor
         /// ----------------------------------------------------------------------------------------
         constexpr CopyBox():
-            _impl()
+            Base{}
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # Copy Constructor
         /// ----------------------------------------------------------------------------------------
         constexpr CopyBox(const This& that):
-            _impl(typename _TImpl::CopyTag(), that._impl)
+            Base{ typename _TImpl::CopyTag(), that._impl }
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -316,7 +646,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <typename TThat, bool allowNonMove, usize thatBufSize, typename TThatAlloc>
         constexpr CopyBox(const CopyMoveBox<TThat, allowNonMove, thatBufSize, TThatAlloc>& that):
-            _impl(typename _TImpl::CopyTag(), that._impl)
+            Base{ typename _TImpl::CopyTag(), that._impl }
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -333,17 +663,17 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Constructor
         /// ----------------------------------------------------------------------------------------
-        template <typename T1>
-        constexpr CopyBox(T1&& obj):
-            _impl(fwd(obj))
+        template <typename T>
+        constexpr CopyBox(T&& obj):
+            Base{ fwd(obj) }
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # Operator
         /// ----------------------------------------------------------------------------------------
-        template <typename T1>
-        constexpr This& operator=(T1&& obj)
-            requires(RCopyable<T1>)
+        template <typename T>
+        constexpr This& operator=(T&& obj)
+            requires(RCopyable<T>)
         {
             _impl.setObj(fwd(obj));
             return *this;
@@ -354,22 +684,23 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr ~CopyBox() {}
 
-    protected:
-        _TImpl _impl;
+    private:
+        using Base::_impl;
     };
 
-    template <typename T, bool allowNonMove, usize bufSize, typename TAlloc>
-    class MoveBox
+    template <typename TVal, bool allowNonMove, usize bufSize, typename TAlloc>
+    class MoveBox: public BoxFunctions<_BoxImpl<TVal, false, true, allowNonMove, bufSize, TAlloc>>
     {
-        using This = MoveBox<T, allowNonMove, bufSize, TAlloc>;
-        using _TImpl = _BoxImpl<false, true, allowNonMove, bufSize, TAlloc>;
+        using This = MoveBox<TVal, allowNonMove, bufSize, TAlloc>;
+        using Base = BoxFunctions<_BoxImpl<TVal, false, true, allowNonMove, bufSize, TAlloc>>;
+        using _TImpl = typename Base::_TImpl;
 
     public:
         /// ----------------------------------------------------------------------------------------
         /// # Default Constructor
         /// ----------------------------------------------------------------------------------------
         constexpr MoveBox():
-            _impl()
+            Base{}
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -388,7 +719,7 @@ namespace Atom
         template <typename TThat, usize thatBufSize, typename TThatAlloc>
             requires allowNonMove
         constexpr MoveBox(const CopyBox<TThat, thatBufSize, TThatAlloc>& that):
-            _impl(typename _TImpl::CopyTag(), that._impl)
+            Base{ typename _TImpl::CopyTag(), that._impl }
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -408,7 +739,7 @@ namespace Atom
         template <typename TThat, usize thatBufSize, typename TThatAlloc>
             requires allowNonMove
         constexpr MoveBox(const CopyMoveBox<TThat, allowNonMove, thatBufSize, TThatAlloc>& that):
-            _impl(typename _TImpl::CopyTag(), that._impl)
+            Base{ typename _TImpl::CopyTag(), that._impl }
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -427,7 +758,7 @@ namespace Atom
         /// # Move Constructor
         /// ----------------------------------------------------------------------------------------
         constexpr MoveBox(This&& that):
-            _impl(typename _TImpl::MoveTag(), that._impl)
+            Base{ typename _TImpl::MoveTag(), that._impl }
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -444,7 +775,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <typename TThat, usize thatBufSize, typename TThatAlloc>
         constexpr MoveBox(CopyMoveBox<TThat, allowNonMove, thatBufSize, TThatAlloc>&& that):
-            _impl(typename _TImpl::MoveTag(), that._impl)
+            Base{ typename _TImpl::MoveTag(), that._impl }
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -461,16 +792,16 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Constructor
         /// ----------------------------------------------------------------------------------------
-        template <typename T1>
-        constexpr MoveBox(T1&& obj):
-            _impl(fwd(obj))
+        template <typename T>
+        constexpr MoveBox(T&& obj):
+            Base{ fwd(obj) }
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # Operator
         /// ----------------------------------------------------------------------------------------
-        template <typename T1>
-        constexpr MoveBox& operator=(T1&& obj)
+        template <typename T>
+        constexpr MoveBox& operator=(T&& obj)
         {
             _impl.setObj(fwd(obj));
             return *this;
@@ -481,29 +812,34 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr ~MoveBox() {}
 
-    protected:
-        _TImpl _impl;
+    private:
+        using Base::_impl;
     };
 
-    template <typename T, bool allowNonMove, usize bufSize, typename TAlloc>
-    class CopyMoveBox
+    template <typename TVal, bool allowNonMove, usize bufSize, typename TAlloc>
+    class CopyMoveBox:
+        public BoxFunctions<_BoxImpl<TVal, true, true, allowNonMove, bufSize, TAlloc>>
     {
-        using This = CopyMoveBox<T, allowNonMove, bufSize, TAlloc>;
-        using _TImpl = _BoxImpl<true, true, allowNonMove, bufSize, TAlloc>;
+        using This = CopyMoveBox<TVal, allowNonMove, bufSize, TAlloc>;
+        using Base = BoxFunctions<_BoxImpl<TVal, true, true, allowNonMove, bufSize, TAlloc>>;
+        using _TImpl = typename Base::_TImpl;
+
+    private:
+        using Base::_impl;
 
     public:
         /// ----------------------------------------------------------------------------------------
         /// # Default Constructor
         /// ----------------------------------------------------------------------------------------
         constexpr CopyMoveBox():
-            _impl()
+            Base{}
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # Copy Constructor
         /// ----------------------------------------------------------------------------------------
         constexpr CopyMoveBox(const This& that):
-            _impl(typename _TImpl::CopyTag(), that._impl)
+            Base{ typename _TImpl::CopyTag(), that._impl }
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -521,7 +857,7 @@ namespace Atom
         template <typename TThat, usize thatBufSize, typename TThatAlloc>
             requires allowNonMove
         constexpr CopyMoveBox(const CopyBox<TThat, thatBufSize, TThatAlloc>& that):
-            _impl(typename _TImpl::CopyTag(), that._impl)
+            Base{ typename _TImpl::CopyTag(), that._impl }
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -542,7 +878,7 @@ namespace Atom
             requires allowNonMove
         constexpr CopyMoveBox(
             const CopyMoveBox<TThat, allowNonMove, thatBufSize, TThatAlloc>& that):
-            _impl(typename _TImpl::CopyTag(), that._impl)
+            Base{ typename _TImpl::CopyTag(), that._impl }
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -561,7 +897,7 @@ namespace Atom
         /// # Move Constructor
         /// ----------------------------------------------------------------------------------------
         constexpr CopyMoveBox(This&& that):
-            _impl(typename _TImpl::MoveTag(), that._impl)
+            Base{ typename _TImpl::MoveTag(), that._impl }
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -579,7 +915,7 @@ namespace Atom
         template <typename TThat, bool thatAllowNonMove, usize thatBufSize, typename TThatAlloc>
             requires allowNonMove
         constexpr CopyMoveBox(MoveBox<TThat, thatAllowNonMove, thatBufSize, TThatAlloc>&& that):
-            _impl(typename _TImpl::MoveTag(), that._impl)
+            Base{ typename _TImpl::MoveTag(), that._impl }
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -600,7 +936,7 @@ namespace Atom
         template <typename TThat, bool thatAllowNonMove, usize thatBufSize, typename TThatAlloc>
             requires allowNonMove
         constexpr CopyMoveBox(CopyMoveBox<TThat, thatAllowNonMove, thatBufSize, TThatAlloc>&& that):
-            _impl(typename _TImpl::MoveTag(), that._impl)
+            Base{ typename _TImpl::MoveTag(), that._impl }
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -618,16 +954,16 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Constructor
         /// ----------------------------------------------------------------------------------------
-        template <typename T1>
-        constexpr CopyMoveBox(T1&& obj):
-            _impl(fwd(obj))
+        template <typename T>
+        constexpr CopyMoveBox(T&& obj):
+            Base{ fwd(obj) }
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # Operator
         /// ----------------------------------------------------------------------------------------
-        template <typename T1>
-        constexpr CopyMoveBox& operator=(T1&& obj)
+        template <typename T>
+        constexpr CopyMoveBox& operator=(T&& obj)
         {
             _impl.setObj(fwd(obj));
             return *this;
@@ -637,42 +973,5 @@ namespace Atom
         /// # Destructor
         /// ----------------------------------------------------------------------------------------
         constexpr ~CopyMoveBox() {}
-
-    public:
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto has() const -> bool
-        {
-            return _impl.hasObj();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto mutMem() -> T*
-        {
-            return _impl.template getMutMemAs<T>();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename T1>
-        constexpr auto mutMemAs() -> T1*
-        {
-            return _impl.template getMutMemAs<T1>();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto type() const -> const TypeInfo&
-        {
-            return _impl.getObjType();
-        }
-
-    protected:
-        _TImpl _impl;
     };
 }
