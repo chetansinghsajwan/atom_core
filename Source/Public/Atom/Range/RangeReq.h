@@ -2,7 +2,6 @@
 #include "IterReq.h"
 
 // clang-format off
-
 namespace Atom
 {
     /// --------------------------------------------------------------------------------------------
@@ -271,28 +270,36 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <typename TRange, typename>
     concept RRevRange = requires
-    { requires RBidiRange<TRange>; };
+    {
+        requires RBidiRange<TRange>;
+    };
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures `TRange` is `RevRange` of type `T`.
     /// --------------------------------------------------------------------------------------------
     template <typename TRange, typename T>
     concept RRevRangeOf = requires
-    { requires RBidiRangeOf<TRange, T>; };
+    {
+        requires RBidiRangeOf<TRange, T>;
+    };
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures `TRange` is `MutRevRange`.
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
     concept RMutRevRange = requires
-    { requires RMutBidiRange<TRange>; };
+    {
+        requires RMutBidiRange<TRange>;
+    };
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures `TRange` is `MutRevRange` of type `T`.
     /// --------------------------------------------------------------------------------------------
     template <typename TRange, typename T>
     concept RMutRevRangeOf = requires
-    { requires RMutBidiRangeOf<TRange, T>; };
+    {
+        requires RMutBidiRangeOf<TRange, T>;
+    };
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures `TRange` is `CommonRange`.
