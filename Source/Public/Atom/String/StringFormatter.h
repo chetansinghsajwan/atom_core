@@ -11,7 +11,7 @@ namespace Atom
     public:
         constexpr auto FromFmt(_FmtStringView strv) -> StringView
         {
-            return StringView{ Range(strv.data(), strv.size()) };
+            return StringView{ MakeRange(strv.data(), strv.size()) };
         }
 
         constexpr auto ToFmt(StringView strv) -> _FmtStringView

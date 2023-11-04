@@ -1,7 +1,8 @@
 #pragma once
-#include "ArrayIter.h"
-#include "InitList.h"
-#include "RangeReq.h"
+#include "Atom/Range/ArrayIter.h"
+#include "Atom/Range/MutArrayRangeExtensions.h"
+#include "Atom/Range/RangeReq.h"
+#include "Atom/TTI.h"
 
 #include <cstring>
 
@@ -29,6 +30,18 @@ namespace Atom
         constexpr auto iterEnd() const -> TIter
         {
             return _itEnd;
+        }
+
+        constexpr auto data() const -> const TElem*
+            requires RArrayIterPair<TIter, TIterEnd>
+        {
+            return &_it.value();
+        }
+
+        constexpr auto count() const -> usize
+            requires RJumpIterPair<TIter, TIterEnd>
+        {
+            return _itEnd.compare(_it).template to<usize>();
         }
 
     private:
@@ -63,9 +76,79 @@ namespace Atom
     };
 
     template <typename TIter, typename TIterEnd>
-    class _RangeFromIterPair: public _BasicRangeFromIterPair<TIter, TIterEnd>
+    class _RangeFromIterExtended
     {
-        using Base = _BasicRangeFromIterPair<TIter, TIterEnd>;
+    private:
+        template <typename T_>
+        class _TypeContainer
+        {
+        public:
+            using T = TTI::TRemoveCVRef<T_>;
+        };
+
+        static consteval auto _Get()
+        {
+            using TRange = _BasicRangeFromIterPair<TIter, TIterEnd>;
+
+            if constexpr (RArrayIterPair<TIter, TIterEnd>)
+                return _TypeContainer<ArrayRangeExtensions<TRange>>();
+
+            else if constexpr (RJumpIterPair<TIter, TIterEnd>)
+                return _TypeContainer<JumpRangeExtensions<TRange>>();
+
+            else if constexpr (RBidiIterPair<TIter, TIterEnd>)
+                return _TypeContainer<BidiRangeExtensions<TRange>>();
+
+            else if constexpr (RFwdIterPair<TIter, TIterEnd>)
+                return _TypeContainer<FwdRangeExtensions<TRange>>();
+
+            else if constexpr (RIterPair<TIter, TIterEnd>)
+                return _TypeContainer<RangeExtensions<TRange>>();
+        }
+
+    public:
+        using T = typename decltype(_Get())::T;
+    };
+
+    template <typename TIter, typename TIterEnd>
+    class _MutRangeFromIterExtended
+    {
+    private:
+        template <typename T_>
+        class _TypeContainer
+        {
+        public:
+            using T = TTI::TRemoveCVRef<T_>;
+        };
+
+        static consteval auto _Get()
+        {
+            using TRange = _BasicMutRangeFromIterPair<TIter, TIterEnd>;
+
+            if constexpr (RArrayIterPair<TIter, TIterEnd>)
+                return _TypeContainer<MutArrayRangeExtensions<TRange>>();
+
+            else if constexpr (RJumpIterPair<TIter, TIterEnd>)
+                return _TypeContainer<MutJumpRangeExtensions<TRange>>();
+
+            else if constexpr (RBidiIterPair<TIter, TIterEnd>)
+                return _TypeContainer<MutBidiRangeExtensions<TRange>>();
+
+            else if constexpr (RFwdIterPair<TIter, TIterEnd>)
+                return _TypeContainer<MutFwdRangeExtensions<TRange>>();
+
+            else if constexpr (RIterPair<TIter, TIterEnd>)
+                return _TypeContainer<MutRangeExtensions<TRange>>();
+        }
+
+    public:
+        using T = typename decltype(_Get())::T;
+    };
+
+    template <typename TIter, typename TIterEnd>
+    class _RangeFromIterPair: public _RangeFromIterExtended<TIter, TIterEnd>::T
+    {
+        using Base = _RangeFromIterExtended<TIter, TIterEnd>::T;
 
     public:
         constexpr _RangeFromIterPair(TIter it, TIterEnd itEnd):
@@ -73,10 +156,10 @@ namespace Atom
         {}
     };
 
-    template <typename TIter, typename TIterEnd>
-    class _MutRangeFromIterPair: public _BasicMutRangeFromIterPair<TIter, TIterEnd>
+    template <typename TMutIter, typename TMutIterEnd>
+    class _MutRangeFromIterPair: public _MutRangeFromIterExtended<TMutIter, TMutIterEnd>::T
     {
-        using Base = _BasicMutRangeFromIterPair<TIter, TIterEnd>;
+        using Base = _MutRangeFromIterExtended<TMutIter, TMutIterEnd>::T;
 
     public:
         constexpr _MutRangeFromIterPair(TMutIter it, TMutIterEnd itEnd):
@@ -105,7 +188,10 @@ namespace Atom
 
         return usize(std::strlen(str));
     }
+}
 
+namespace Atom
+{
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------

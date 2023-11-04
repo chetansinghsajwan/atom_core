@@ -40,7 +40,7 @@ TEST_CASE("Atom::Hash::Md5HashParser")
 {
     SECTION("String to Hash")
     {
-        Md5Hash hash = Md5HashParser().Parse("da39a3ee5e6b4b0d3255bfef95601890");
+        Md5Hash hash = Md5HashParser().parse(MakeRange("da39a3ee5e6b4b0d3255bfef95601890"));
 
         Md5Hash expected = { 0xda, 0x39, 0xa3, 0xee, 0x5e, 0x6b, 0x4b, 0x0d, 0x32, 0x55, 0xbf, 0xef,
             0x95, 0x60, 0x18, 0x90 };
@@ -52,7 +52,7 @@ TEST_CASE("Atom::Hash::Md5HashParser")
     {
         //! Won't Compile
         // Md5Hash hash = Md5HashParser()
-        //     .Parse("da3");
+        //     .parse("da3");
         //
         // CHECK(hash == Md5Hash);
     }
@@ -65,9 +65,9 @@ TEST_CASE("Atom::Hash::Md5HashStringifier")
 
     String str = Md5HashStringifier().ToString(hash);
 
-    StringView expected = "da39a3ee5e6b4b0d3255bfef95601890";
+    StringView expected = MakeRange("da39a3ee5e6b4b0d3255bfef95601890");
 
-    CHECK(str == expected);
+    CHECK(str.equals(expected));
 }
 
 TEST_CASE("Atom::Hash::Md5HashGenerator")
@@ -79,7 +79,7 @@ TEST_CASE("Atom::Hash::Md5HashGenerator")
 
         Md5Hash hash = Md5HashGenerator().Generate();
 
-        Md5Hash expected = Md5HashParser().Parse("d41d8cd98f00b204e9800998ecf8427e");
+        Md5Hash expected = Md5HashParser().parse(MakeRange("d41d8cd98f00b204e9800998ecf8427e"));
 
         CHECK(hash == expected);
     }
@@ -91,7 +91,7 @@ TEST_CASE("Atom::Hash::Md5HashGenerator")
 
         Md5Hash hash = Md5HashGenerator().ProcessBytes(input, sizeof(input) - 1).Generate();
 
-        Md5Hash expected = Md5HashParser().Parse("9e107d9d372bb6826bd81d3542a419d6");
+        Md5Hash expected = Md5HashParser().parse(MakeRange("9e107d9d372bb6826bd81d3542a419d6"));
 
         CHECK(hash == expected);
     }
@@ -100,17 +100,16 @@ TEST_CASE("Atom::Hash::Md5HashGenerator")
     SECTION("TestMultiBlockInput")
     {
         constexpr char input[] =
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
-            "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
-            "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris "
-            "nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in "
-            "reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. "
-            "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia "
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor "
+            "incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud "
+            "exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure "
+            "dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla "
+            "pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia "
             "deserunt mollit anim id est laborum.";
 
         Md5Hash hash = Md5HashGenerator().ProcessBytes(input, sizeof(input) - 1).Generate();
 
-        Md5Hash expected = Md5HashParser().Parse("db89bb5ceab87f9c0fcc2ab36c189c2c");
+        Md5Hash expected = Md5HashParser().parse(MakeRange("db89bb5ceab87f9c0fcc2ab36c189c2c"));
 
         CHECK(hash == expected);
     }

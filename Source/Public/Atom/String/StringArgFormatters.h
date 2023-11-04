@@ -51,7 +51,7 @@ namespace Atom
     public:
         constexpr auto GetRange() -> StringView
         {
-            return StringView(Range(_fmtCtx.begin(), _fmtCtx.end()));
+            return StringView(MakeRange(_fmtCtx.begin(), _fmtCtx.end()));
         }
 
         constexpr auto AdvanceTo(ArrayIter<Char> it)

@@ -26,6 +26,8 @@ auto main(int argc, char** argv) -> int
     auto range3 = MakeRange(arr);
     auto range4 = MakeRange(str);
 
+    // range0.data()
+
     auto it = range0.iter();
 
     return 0;

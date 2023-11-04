@@ -96,7 +96,7 @@ namespace Atom
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         constexpr auto data() const -> const TElem*
         {
@@ -104,7 +104,7 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         constexpr auto mutData() -> TElem*
         {
@@ -112,7 +112,7 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         constexpr auto count() const -> usize
         {
@@ -120,7 +120,7 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         constexpr auto iter(usize i = 0) const -> TIter
         {
@@ -128,7 +128,7 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         constexpr auto iterEnd() const -> TIterEnd
         {
@@ -136,7 +136,7 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         constexpr auto mutIter(usize i = 0) -> TMutIter
         {
@@ -144,7 +144,7 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         constexpr auto mutIterEnd() -> TMutIterEnd
         {
@@ -233,7 +233,7 @@ namespace Atom
         /// - `range`: Range of elements to insert.
         ///
         /// # Returns
-        /// `MutRange` of elements inserted.
+        /// [`MutArrayRange`] of elements inserted.
         ///
         /// # Time Complexity
         ///
@@ -241,7 +241,7 @@ namespace Atom
         /// All iters are invalidated.
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
-        constexpr auto insertRangeAt(TIter it, TRange&& range) -> Range<TMutIter, TMutIterEnd>
+        constexpr auto insertRangeAt(TIter it, TRange&& range)
             requires(RRangeOf<TRange, TElem>) and (RConstructible<TElem, typename TRange::TElem>)
         {
             debug_expects(isIterValid(it), "Invalid iter.");
@@ -249,7 +249,7 @@ namespace Atom
 
             usize i = indexForIter(it);
             usize count = _impl.insertRangeAt(i, range.iter(), range.iterEnd());
-            return Range(_impl.mutIter(i), _impl.mutIter(i + count));
+            return MakeRange(_impl.mutIter(i), _impl.mutIter(i + count));
         }
 
         /// ----------------------------------------------------------------------------------------
