@@ -21,38 +21,30 @@ namespace Atom::Private
         /// represents one hex value) + 1 (null terminator).
         /// ----------------------------------------------------------------------------------------
         template <usize count>
-        constexpr auto Parse(const Char (&str)[count]) const -> T1Hash
+        constexpr auto parse(const Char (&str)[count]) const -> T1Hash
             requires(count == (Size * 2) + 1)
         {
-            T1Hash hash;
-            for (usize i = 0; i < Size * 2; i += 2)
-            {
-                byte hex1 = Math::CharToHex(str[i.val()]);
-                if (hex1 == (byte)-1)
-                {
-                    return T1Hash::Null;
-                }
-
-                // Left shift 4 bits to make space for next 4 bits.
-                hex1 = hex1 << 4;
-
-                byte hex2 = Math::CharToHex(str[(i + 1).val()]);
-                if (hex2 == (byte)-1)
-                {
-                    return T1Hash::Null;
-                }
-
-                hash.bytes[i / 2] = hex1 + hex2;
-            }
-
-            return hash;
+            return _parseArr(str);
         }
 
+        /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
-        constexpr auto Parse(const TRange& range) const -> T1Hash
+        constexpr auto parse(const TRange& range) const -> T1Hash
             requires(RRangeOf<TRange, Char>)
+        {
+            if constexpr (RJumpRangeOf<TRange, Char>)
+            {
+                return _parseJumpRange(range);
+            }
+
+            return _parseRange(range);
+        }
+
+    private:
+        template <typename TRange>
+        constexpr auto _parseRange(const TRange& range) const -> T1Hash
         {
             T1Hash hash;
             usize i = 0;
@@ -95,11 +87,8 @@ namespace Atom::Private
             return hash;
         }
 
-        ///
-        /// ----------------------------------------------------------------------------------------
         template <typename TRange>
-        constexpr auto Parse(const TRange& range) const -> T1Hash
-            requires(RJumpRangeOf<TRange, Char>)
+        constexpr auto _parseJumpRange(TRange&& range) const -> T1Hash
         {
             if (range.Size() != Size * 2)
             {
@@ -127,6 +116,32 @@ namespace Atom::Private
                 range.Next();
 
                 hash.bytes[i] = hex1 + hex2;
+            }
+
+            return hash;
+        }
+
+        constexpr auto _parseArr(const Char* str) const -> T1Hash
+        {
+            T1Hash hash;
+            for (usize i = 0; i < Size * 2; i += 2)
+            {
+                byte hex1 = Math::CharToHex(str[i.val()]);
+                if (hex1 == (byte)-1)
+                {
+                    return T1Hash::Null;
+                }
+
+                // Left shift 4 bits to make space for next 4 bits.
+                hex1 = hex1 << 4;
+
+                byte hex2 = Math::CharToHex(str[(i + 1).val()]);
+                if (hex2 == (byte)-1)
+                {
+                    return T1Hash::Null;
+                }
+
+                hash.bytes[i / 2] = hex1 + hex2;
             }
 
             return hash;
