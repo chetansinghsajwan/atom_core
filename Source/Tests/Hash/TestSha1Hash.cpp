@@ -40,7 +40,7 @@ TEST_CASE("Atom::Hash::Sha1HashParser")
 {
     SECTION("String to Hash")
     {
-        Sha1Hash hash = Sha1HashParser().Parse("da39a3ee5e6b4b0d3255bfef95601890afd80709");
+        Sha1Hash hash = Sha1HashParser().parse(MakeRange("da39a3ee5e6b4b0d3255bfef95601890afd80709"));
 
         Sha1Hash expected = { 0xda, 0x39, 0xa3, 0xee, 0x5e, 0x6b, 0x4b, 0x0d, 0x32, 0x55, 0xbf,
             0xef, 0x95, 0x60, 0x18, 0x90, 0xaf, 0xd8, 0x07, 0x09 };
@@ -52,7 +52,7 @@ TEST_CASE("Atom::Hash::Sha1HashParser")
     {
         //! Won't Compile
         // Sha1Hash hash = Sha1HashParser()
-        //     .Parse("da3");
+        //     .parse(MakeRange("da3"));
         //
         // CHECK(hash == Sha1Hash);
     }
@@ -65,9 +65,9 @@ TEST_CASE("Atom::Hash::Sha1HashStringifier")
 
     String str = Sha1HashStringifier().ToString(hash);
 
-    StringView expected = "da39a3ee5e6b4b0d3255bfef95601890afd80709";
+    StringView expected = MakeRange("da39a3ee5e6b4b0d3255bfef95601890afd80709");
 
-    CHECK(str == expected);
+    CHECK(str.equals(expected));
 }
 
 TEST_CASE("Atom::Hash::Sha1HashGenerator")
@@ -79,7 +79,7 @@ TEST_CASE("Atom::Hash::Sha1HashGenerator")
 
         Sha1Hash hash = Sha1HashGenerator().Generate();
 
-        Sha1Hash expected = Sha1HashParser().Parse("da39a3ee5e6b4b0d3255bfef95601890afd80709");
+        Sha1Hash expected = Sha1HashParser().parse(MakeRange("da39a3ee5e6b4b0d3255bfef95601890afd80709"));
 
         CHECK(hash == expected);
     }
@@ -91,7 +91,7 @@ TEST_CASE("Atom::Hash::Sha1HashGenerator")
 
         Sha1Hash hash = Sha1HashGenerator().ProcessBytes(input, sizeof(input) - 1).Generate();
 
-        Sha1Hash expected = Sha1HashParser().Parse("2fd4e1c67a2d28fced849ee1bb76e7391b93eb12");
+        Sha1Hash expected = Sha1HashParser().parse(MakeRange("2fd4e1c67a2d28fced849ee1bb76e7391b93eb12"));
 
         CHECK(hash == expected);
     }
@@ -110,7 +110,7 @@ TEST_CASE("Atom::Hash::Sha1HashGenerator")
 
         Sha1Hash hash = Sha1HashGenerator().ProcessBytes(input, sizeof(input) - 1).Generate();
 
-        Sha1Hash expected = Sha1HashParser().Parse("cd36b370758a259b34845084a6cc38473cb95e27");
+        Sha1Hash expected = Sha1HashParser().parse(MakeRange("cd36b370758a259b34845084a6cc38473cb95e27"));
 
         CHECK(hash == expected);
     }

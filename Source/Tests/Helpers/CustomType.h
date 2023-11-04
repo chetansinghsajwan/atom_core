@@ -1,7 +1,7 @@
 #pragma once
 #include "Atom/Core.h"
 
-namespace Atom::Test
+namespace Atom::Tests
 {
     enum class ECustomTypeFlags : uint64_t
     {

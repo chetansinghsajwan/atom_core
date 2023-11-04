@@ -36,27 +36,27 @@ namespace Atom::Private
         {
             if constexpr (RJumpRangeOf<TRange, Char>)
             {
-                return _parseJumpRange(range);
+                return _parseJumpRange(range.iter(), range.iterEnd());
             }
 
-            return _parseRange(range);
+            return _parseRange(range.iter(), range.iterEnd());
         }
 
     private:
-        template <typename TRange>
-        constexpr auto _parseRange(const TRange& range) const -> T1Hash
+        template <typename TIter, typename TIterEnd>
+        constexpr auto _parseRange(TIter it, TIterEnd itEnd) const -> T1Hash
         {
             T1Hash hash;
             usize i = 0;
-            while (range.HasNext())
+            while (not it.equals(itEnd))
             {
                 if (i > 20)
                 {
                     return T1Hash::Null;
                 }
 
-                byte hex1 = Math::CharToHex(range.Get());
-                if (hex1 == (byte)-1)
+                byte hex1 = Math::CharToHex(it.value());
+                if (hex1 == byte(-1))
                 {
                     return T1Hash::Null;
                 }
@@ -64,17 +64,17 @@ namespace Atom::Private
                 // Left shift 4 bits to make space for next 4 bits.
                 hex1 = hex1 << 4;
 
-                if (!range.Next())
+                if (it.next().equals(itEnd))
                 {
                     return T1Hash::Null;
                 }
 
-                byte hex2 = Math::CharToHex(range.Get());
-                if (hex2 == (byte)-1)
+                byte hex2 = Math::CharToHex(it.value());
+                if (hex2 == byte(-1))
                 {
                     return T1Hash::Null;
                 }
-                range.Next();
+                it.next();
 
                 hash.bytes[i++] = hex1 + hex2;
             }
@@ -87,10 +87,10 @@ namespace Atom::Private
             return hash;
         }
 
-        template <typename TRange>
-        constexpr auto _parseJumpRange(TRange&& range) const -> T1Hash
+        template <typename TIter, typename TIterEnd>
+        constexpr auto _parseJumpRange(TIter it, TIterEnd itEnd) const -> T1Hash
         {
-            if (range.Size() != Size * 2)
+            if (itEnd.compare(it).ne(Size * 2))
             {
                 return T1Hash::Null;
             }
@@ -98,22 +98,22 @@ namespace Atom::Private
             T1Hash hash;
             for (usize i = 0; i < 20; i++)
             {
-                byte hex1 = Math::CharToHex(range.Get());
-                if (hex1 == (byte)-1)
+                byte hex1 = Math::CharToHex(it.value());
+                if (hex1 == byte(-1))
                 {
                     return T1Hash::Null;
                 }
 
                 // Left shift 4 bits to make space for next 4 bits.
                 hex1 = hex1 << 4;
-                range.Next();
+                it.next();
 
-                byte hex2 = Math::CharToHex(range.Get());
-                if (hex2 == (byte)-1)
+                byte hex2 = Math::CharToHex(it.value());
+                if (hex2 == byte(-1))
                 {
                     return T1Hash::Null;
                 }
-                range.Next();
+                it.next();
 
                 hash.bytes[i] = hex1 + hex2;
             }
@@ -127,7 +127,7 @@ namespace Atom::Private
             for (usize i = 0; i < Size * 2; i += 2)
             {
                 byte hex1 = Math::CharToHex(str[i.val()]);
-                if (hex1 == (byte)-1)
+                if (hex1 == byte(-1))
                 {
                     return T1Hash::Null;
                 }
@@ -136,7 +136,7 @@ namespace Atom::Private
                 hex1 = hex1 << 4;
 
                 byte hex2 = Math::CharToHex(str[(i + 1).val()]);
-                if (hex2 == (byte)-1)
+                if (hex2 == byte(-1))
                 {
                     return T1Hash::Null;
                 }
