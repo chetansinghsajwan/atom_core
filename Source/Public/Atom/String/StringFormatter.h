@@ -113,5 +113,3 @@ namespace Atom
         }
     };
 }
-
-#define ATOM_STR_FMT(fmt, ...) ::Atom::StringFmter(fmt, __VA_ARGS__)
