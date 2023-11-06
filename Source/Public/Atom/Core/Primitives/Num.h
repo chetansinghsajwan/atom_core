@@ -1041,7 +1041,7 @@ namespace Atom
         template <typename TOut>
         constexpr auto toStringOut(TOut&& out) const -> TOut&
         {
-            return TImpl::ToStringOut(_val, fwd(out));
+            return TImpl::ToStringOut(_val, forward<TOut>(out));
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////

@@ -81,7 +81,7 @@ namespace Atom::Text
             requires(RRangeOf<TInput, const TChar>) and (ROutput<TOut, TChar>)
         constexpr auto Convert(TInput&& in, TOut& out)
         {
-            out += fwd(in);
+            out += forward<TInput>(in);
         }
     };
 }

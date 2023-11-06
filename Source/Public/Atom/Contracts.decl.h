@@ -23,7 +23,7 @@ namespace Atom
         return { str.data(), i };
     }
 
-    auto _ContractCheckImpl(_ContractType type, std::string_view expr, std::string_view msg,
+    inline auto _ContractCheckImpl(_ContractType type, std::string_view expr, std::string_view msg,
         std::source_location src) -> void;
 
     constexpr auto _ContractCheck(_ContractType type, std::string_view expr, bool assert,

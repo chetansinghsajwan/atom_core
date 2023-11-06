@@ -236,7 +236,7 @@ namespace Atom
         constexpr auto emplace(TArgs&&... args)
             requires(RConstructible<T, TArgs...>)
         {
-            _impl.emplaceValue(fwd(args)...);
+            _impl.emplaceValue(forward<TArgs>(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------

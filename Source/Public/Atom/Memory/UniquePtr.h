@@ -8,9 +8,9 @@ namespace Atom
     template <typename T>
     using UniquePtr = std::unique_ptr<T>;
 
-    template <typename T>
-    auto MakeUnique(auto&&... args) -> UniquePtr<T>
+    template <typename T, typename... TArgs>
+    auto MakeUnique(TArgs&&... args) -> UniquePtr<T>
     {
-        return std::make_unique<T>(fwd(args)...);
+        return std::make_unique<T>(forward<TArgs>(args)...);
     }
 }

@@ -58,7 +58,7 @@ namespace Atom
         template <typename... TArgs>
             requires RConstructible<TIter, TArgs...>
         constexpr IterWrap(TArgs&&... args)
-            : iter{ fwd(args)... }
+            : iter{ forward<TArgs>(args)... }
         {}
 
     public:

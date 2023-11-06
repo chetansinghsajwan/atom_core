@@ -278,7 +278,7 @@ namespace Atom
         constexpr auto emplace(TArgs&&... args)
             requires(Has<T>()) and (RConstructible<T, TArgs...>)
         {
-            _impl.template emplaceValueByType<T>(fwd(args)...);
+            _impl.template emplaceValueByType<T>(forward<TArgs>(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -291,7 +291,7 @@ namespace Atom
         constexpr auto emplace(TArgs&&... args)
             requires(Has<i>()) and (RConstructible<TAt<i>, TArgs...>)
         {
-            _impl.template emplaceValueByIndex<i>(fwd(args)...);
+            _impl.template emplaceValueByIndex<i>(forward<TArgs>(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -304,7 +304,7 @@ namespace Atom
         constexpr auto set(TFwd&& value)
             requires(Has<T>()) and (RConstructible<T, TFwd>)
         {
-            _impl.setValue(fwd(value));
+            _impl.setValue(forward<TFwd>(value));
         }
 
         /// ----------------------------------------------------------------------------------------

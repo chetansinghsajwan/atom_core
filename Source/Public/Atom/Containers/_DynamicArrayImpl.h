@@ -83,7 +83,7 @@ namespace Atom
         template <typename... TArgs>
         constexpr auto emplaceAt(usize i, TArgs&&... args)
         {
-            return _emplaceAt(i, fwd(args)...);
+            return _emplaceAt(i, forward<TArgs>(args)...);
         }
 
         template <typename UIter, typename UIterEnd>
@@ -102,7 +102,7 @@ namespace Atom
         template <typename... TArgs>
         constexpr auto emplaceFront(TArgs&&... args)
         {
-            return _emplaceFront(fwd(args)...);
+            return _emplaceFront(forward<TArgs>(args)...);
         }
 
         template <typename UIter, typename UIterEnd>
@@ -114,7 +114,7 @@ namespace Atom
         template <typename... TArgs>
         constexpr auto emplaceBack(TArgs&&... args)
         {
-            return _emplaceAt(_getCount() - 1, fwd(args)...);
+            return _emplaceAt(_getCount() - 1, forward<TArgs>(args)...);
         }
 
         template <typename UIter, typename UIterEnd>
@@ -233,7 +233,7 @@ namespace Atom
         {
             _ensureCapFor(i);
             _moveRangeBack(i, 1);
-            _constructAt(i, fwd(args)...);
+            _constructAt(i, forward<TArgs>(args)...);
 
             return i;
         }
@@ -250,7 +250,7 @@ namespace Atom
             // Insert new elements
             for (usize i = 0; i < count; i++)
             {
-                _constructAt(i + i, fwd(it.value()));
+                _constructAt(i + i, forward<decltype(it.value())>(it.value()));
                 it.next();
             }
 
@@ -271,7 +271,7 @@ namespace Atom
         constexpr auto _insertBack(U&& el)
         {
             _ensureCapFor(1);
-            _constructAt(_getCount(), fwd(el));
+            _constructAt(_getCount(), forward<U>(el));
             _setCount(_getCount() + 1);
         }
 
@@ -286,7 +286,7 @@ namespace Atom
             usize i = _getCount();
             for (usize j = 0; j < count; j++)
             {
-                _constructAt(i + j, fwd(it.value()));
+                _constructAt(i + j, forward<decltype(it.value())>(it.value()));
                 it.next();
             }
 
@@ -335,10 +335,11 @@ namespace Atom
             _setCapacity(newCap);
         }
 
-        constexpr auto _constructAt(usize i, auto&&... args) -> void
+        template <typename... TArgs>
+        constexpr auto _constructAt(usize i, TArgs&&... args) -> void
         {
             TElem* src = _getMutData() + i;
-            std::construct_at(src, fwd(args)...);
+            std::construct_at(src, forward<TArgs>(args)...);
         }
 
         constexpr auto _destructAt(usize i) -> void

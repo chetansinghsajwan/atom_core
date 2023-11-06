@@ -4,6 +4,7 @@
 #include <concepts>
 #include <type_traits>
 
+// clang-format off
 namespace Atom
 {
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -101,7 +102,7 @@ namespace Atom
     /// Ensures `T` is `Constructible` using `args...`.
     /// --------------------------------------------------------------------------------------------
     template <typename T, typename... TArgs>
-    concept RConstructible = requires(TArgs&&... args) { T(fwd(args)...); };
+    concept RConstructible = requires(TArgs&&... args) { T(forward<TArgs>(args)...); };
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures `T` is `TriviallyConstructible` using `args...`.
@@ -202,10 +203,9 @@ namespace Atom
     /// Ensures `T0` is `Assignable` using `T1`.
     /// --------------------------------------------------------------------------------------------
     template <typename T0, typename T1>
-    concept RAssignable = requires(T0 t0, T1 t1) {
-        {
-            t0 = fwd(t1)
-        } -> RSameAs<T0&>;
+    concept RAssignable = requires(T0 t0, T1 t1)
+    {
+        { t0 = forward<T1>(t1) } -> RSameAs<T0&>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -368,13 +368,10 @@ namespace Atom
     /// Ensures `T0` and `T1` are `EqualityComparable`.
     /// --------------------------------------------------------------------------------------------
     template <typename T0, typename T1>
-    concept REqualityComparableWith = requires(T0 t0, T1 t1) {
-        {
-            t0 == t1
-        } -> RConvertibleTo<bool>;
-        {
-            t0 != t1
-        } -> RConvertibleTo<bool>;
+    concept REqualityComparableWith = requires(T0 t0, T1 t1)
+    {
+        { t0 == t1 } -> RConvertibleTo<bool>;
+        { t0 != t1 } -> RConvertibleTo<bool>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -387,21 +384,14 @@ namespace Atom
     /// Ensures `T0` and `T1` are `Comparable`.
     /// --------------------------------------------------------------------------------------------
     template <typename T0, typename T1>
-    concept RComparableWith = requires(T0 t0, T1 t1) {
+    concept RComparableWith = requires(T0 t0, T1 t1)
+    {
         requires REqualityComparableWith<T0, T1>;
 
-        {
-            t0 < t1
-        } -> RConvertibleTo<bool>;
-        {
-            t0 > t1
-        } -> RConvertibleTo<bool>;
-        {
-            t0 <= t1
-        } -> RConvertibleTo<bool>;
-        {
-            t0 >= t1
-        } -> RConvertibleTo<bool>;
+        { t0 < t1 } -> RConvertibleTo<bool>;
+        { t0 > t1 } -> RConvertibleTo<bool>;
+        { t0 <= t1 } -> RConvertibleTo<bool>;
+        { t0 >= t1 } -> RConvertibleTo<bool>;
     };
 
     /// --------------------------------------------------------------------------------------------

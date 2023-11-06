@@ -19,8 +19,9 @@ namespace Atom
             _dummy{}
         {}
 
-        _OptionStorage(auto&&... args):
-            _value{ fwd(args)... }
+        template <typename... TArgs>
+        _OptionStorage(TArgs&&... args):
+            _value{ forward<TArgs>(args)... }
         {}
 
         _OptionStorage(const _OptionStorage&) = default;
@@ -109,8 +110,9 @@ namespace Atom
             _storage{ _StorageCtorNoInit{} }, _isValue{ false }
         {}
 
-        constexpr _OptionImpl(auto&&... args):
-            _storage{ fwd(args)... }, _isValue{ true }
+        template <typename... TArgs>
+        constexpr _OptionImpl(TArgs&&... args):
+            _storage{ forward<TArgs>(args)... }, _isValue{ true }
         {}
 
     public:
@@ -139,31 +141,34 @@ namespace Atom
             _swapValueFromOption(opt);
         }
 
-        constexpr auto constructValue(auto&&... args)
+        template <typename... TArgs>
+        constexpr auto constructValue(TArgs&&... args)
         {
             debug_expects(not _isValue);
 
-            _constructValue(fwd(args)...);
+            _constructValue(forward<TArgs>(args)...);
             _isValue = true;
         }
 
-        constexpr auto emplaceValue(auto&&... args)
+        template <typename... TArgs>
+        constexpr auto emplaceValue(TArgs&&... args)
         {
             if (_isValue)
             {
                 _destroyValue();
-                _constructValue(fwd(args)...);
+                _constructValue(forward<TArgs>(args)...);
             }
             else
             {
-                _constructValue(fwd(args)...);
+                _constructValue(forward<TArgs>(args)...);
                 _isValue = true;
             }
         }
 
-        constexpr auto assignValue(auto&& val)
+        template <typename T1>
+        constexpr auto assignValue(T1&& val)
         {
-            _assignValue(fwd(val));
+            _assignValue(forward<T1>(val));
             _isValue = true;
         }
 
@@ -284,14 +289,16 @@ namespace Atom
             }
         }
 
-        constexpr auto _constructValue(auto&&... args)
+        template <typename... TArgs>
+        constexpr auto _constructValue(TArgs&&... args)
         {
-            ObjHelper().Construct<T>(_storage.getData(), fwd(args)...);
+            ObjHelper().Construct<T>(_storage.getData(), forward<TArgs>(args)...);
         }
 
-        constexpr auto _assignValue(auto&& val)
+        template <typename TArg>
+        constexpr auto _assignValue(TArg&& val)
         {
-            ObjHelper().Assign<T>(_storage.getData(), fwd(val));
+            ObjHelper().Assign<T>(_storage.getData(), forward<TArg>(val));
         }
 
         constexpr auto _swapValue(T& that)

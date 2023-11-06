@@ -115,7 +115,7 @@ namespace Atom
         template <typename T, typename... TArgs>
         constexpr auto constructValueByType(TArgs&&... args)
         {
-            _constructValueAs<T>(fwd(args)...);
+            _constructValueAs<T>(forward<TArgs>(args)...);
             _index = GetIndexForType<T>();
         }
 
@@ -128,7 +128,7 @@ namespace Atom
         template <usize i, typename... TArgs>
         constexpr auto constructValueByIndex(TArgs&&... args)
         {
-            constructValueByType<TypeAtIndex<i>>(fwd(args)...);
+            constructValueByType<TypeAtIndex<i>>(forward<TArgs>(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -142,7 +142,7 @@ namespace Atom
         {
             destroyValue();
 
-            _constructValueAs<T>(fwd(args)...);
+            _constructValueAs<T>(forward<TArgs>(args)...);
             _index = GetIndexForType<T>();
         }
 
@@ -155,7 +155,7 @@ namespace Atom
         template <usize i, typename... TArgs>
         constexpr auto emplaceValueByIndex(TArgs&&... args)
         {
-            emplaceValueByType<TypeAtIndex<i>>(fwd(args)...);
+            emplaceValueByType<TypeAtIndex<i>>(forward<TArgs>(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -170,12 +170,12 @@ namespace Atom
             // The new type to set is same as current.
             if (indexToSet == _index)
             {
-                _assignValueAs<T>(fwd(value));
+                _assignValueAs<T>(forward<TFwd>(value));
             }
             else
             {
                 destroyValue();
-                constructValueByType<T>(fwd(value));
+                constructValueByType<T>(forward<TFwd>(value));
             }
         }
 
@@ -334,16 +334,16 @@ namespace Atom
             _destructValueAs<T>();
         }
 
-        template <typename T>
-        constexpr auto _constructValueAs(auto&&... args)
+        template <typename T, typename... TArgs>
+        constexpr auto _constructValueAs(TArgs&&... args)
         {
-            ObjHelper().Construct(_getDataAs<T>(), fwd(args)...);
+            ObjHelper().Construct(_getDataAs<T>(), forward<TArgs>(args)...);
         }
 
-        template <typename T>
-        constexpr auto _assignValueAs(auto&& val)
+        template <typename T, typename T1>
+        constexpr auto _assignValueAs(T1&& val)
         {
-            ObjHelper().Assign(_getDataAs<T>(), fwd(val));
+            ObjHelper().Assign(_getDataAs<T>(), forward<T1>(val));
         }
 
         template <typename T>

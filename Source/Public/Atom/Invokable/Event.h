@@ -35,13 +35,13 @@ namespace Atom
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// Calls Subscribe(fwd(listener));
+        /// Calls Subscribe(forward<TInvokable>(listener));
         /// ----------------------------------------------------------------------------------------
         template <typename TInvokable>
         auto operator+=(TInvokable&& listener) -> EventKey
             requires(RInvokable<TInvokable, _TSignature>)
         {
-            return Subscribe(fwd(listener));
+            return Subscribe(forward<TInvokable>(listener));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -53,13 +53,13 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Calls Subscribe(fwd(listener)) on {Source}.
+        /// Calls Subscribe(forward<TInvokable>(listener)) on {Source}.
         /// ----------------------------------------------------------------------------------------
         template <typename TInvokable>
         auto Subscribe(TInvokable&& listener) -> EventKey
             requires(RInvokable<TInvokable, _TSignature>)
         {
-            return Subscribe(InvokableBox<_TSignature>(fwd(listener)));
+            return Subscribe(InvokableBox<_TSignature>(forward<TInvokable>(listener)));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -91,7 +91,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         virtual auto Subscribe(InvokableBox<_TSignature>&& invokable) -> EventKey override final
         {
-            return _AddListener(fwd(invokable));
+            return _AddListener(mov(invokable));
         }
 
         /// ----------------------------------------------------------------------------------------

@@ -6,28 +6,28 @@ namespace Atom
     class ObjHelper
     {
     public:
-        template <typename TPtr>
-        constexpr auto Construct(TPtr&& mem, auto&&... args) const
+        template <typename TPtr, typename... TArgs>
+        constexpr auto Construct(TPtr&& mem, TArgs&&... args) const
         {
             debug_expects(mem != nullptr);
 
-            std::construct_at(mem, fwd(args)...);
+            std::construct_at(mem, forward<TArgs>(args)...);
         }
 
-        template <typename TPtr>
-        constexpr auto Construct(TPtr* mem, auto&&... args) const
+        template <typename TPtr, typename... TArgs>
+        constexpr auto Construct(TPtr* mem, TArgs&&... args) const
         {
             debug_expects(mem != nullptr);
 
-            std::construct_at(mem, fwd(args)...);
+            std::construct_at(mem, forward<TArgs>(args)...);
         }
 
-        template <typename TPtr>
-        constexpr auto Assign(TPtr* mem, auto&& arg) const
+        template <typename TPtr, typename TArg>
+        constexpr auto Assign(TPtr* mem, TArg&& arg) const
         {
             debug_expects(mem != nullptr);
 
-            *mem = fwd(arg);
+            *mem = forward<TArg>(arg);
         }
 
         template <typename T>

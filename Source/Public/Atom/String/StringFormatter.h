@@ -107,7 +107,7 @@ namespace Atom
         auto Fmt(FmtString<TArgs...> fmt, TArgs&&... args) -> String
         {
             String out;
-            FmtTo(out, fmt, fwd(args)...);
+            FmtTo(out, fmt, forward<TArgs>(args)...);
 
             return out;
         }

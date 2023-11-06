@@ -169,7 +169,7 @@ namespace Atom
         {
             debug_expects(isIndexInRangeOrEnd(i), "Index is out of range.");
 
-            _impl.emplaceAt(i, fwd(args)...);
+            _impl.emplaceAt(i, forward<TArgs>(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -195,7 +195,7 @@ namespace Atom
             debug_expects(isIterInRangeOrEnd(it), "Iter is out of range.");
 
             usize i = indexForIter(it);
-            _impl.emplaceAt(i, fwd(args)...);
+            _impl.emplaceAt(i, forward<TArgs>(args)...);
             return _impl.mutIter(i);
         }
 
@@ -267,7 +267,7 @@ namespace Atom
         constexpr auto emplaceFront(TArgs&&... args)
             requires(RConstructible<TElem, TArgs...>)
         {
-            _impl.emplaceFront(fwd(args)...);
+            _impl.emplaceFront(forward<TArgs>(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -289,7 +289,7 @@ namespace Atom
         constexpr auto insertRangeFront(TRange&& range) -> TMutIter
             requires(RRangeOf<TRange, TElem>) and (RConstructible<TElem, typename TRange::TElem>)
         {
-            usize count = _impl.insertRangeFront(fwd(range));
+            usize count = _impl.insertRangeFront(forward<TRange&&>(range));
             return _impl.mutIter(count);
         }
 
@@ -308,7 +308,7 @@ namespace Atom
         constexpr auto emplaceBack(TArgs&&... args)
             requires(RConstructible<TElem, TArgs...>)
         {
-            _impl.emplaceBack(fwd(args)...);
+            _impl.emplaceBack(forward<TArgs>(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -318,7 +318,7 @@ namespace Atom
         constexpr auto operator+=(TArg&& el)
             requires(RConstructible<TElem, TArg>)
         {
-            _impl.emplaceBack(fwd(el));
+            _impl.emplaceBack(forward<TArg>(el));
         }
 
         /// ----------------------------------------------------------------------------------------

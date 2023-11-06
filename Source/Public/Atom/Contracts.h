@@ -150,7 +150,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    auto _ContractCheckImpl(_ContractType type, std::string_view expr, std::string_view msg,
+    inline auto _ContractCheckImpl(_ContractType type, std::string_view expr, std::string_view msg,
         std::source_location src) -> void
     {
         SourceLineInfo srcInfo{ .line = src.line(),

@@ -23,14 +23,14 @@ namespace Atom
             {
                 _impl = [](void* obj, TResult& result, TArgs&&... args) {
                     TInvokable& invokable = *reinterpret_cast<TInvokable*>(obj);
-                    new (&result) TResult(invokable(fwd(args)...));
+                    new (&result) TResult(invokable(forward<TArgs>(args)...));
                 };
             }
 
             auto Invoke(void* invokable, TArgs&&... args) -> TResult
             {
                 TResult result;
-                _impl(invokable, result, fwd(args)...);
+                _impl(invokable, result, forward<TArgs>(args)...);
 
                 return result;
             }
@@ -48,13 +48,13 @@ namespace Atom
             {
                 _impl = [](void* obj, TArgs&&... args) {
                     TInvokable& invokable = *reinterpret_cast<TInvokable*>(obj);
-                    invokable(fwd(args)...);
+                    invokable(forward<TArgs>(args)...);
                 };
             }
 
             auto Invoke(void* invokable, TArgs&&... args)
             {
-                _impl(invokable, fwd(args)...);
+                _impl(invokable, forward<TArgs>(args)...);
             }
 
         protected:
@@ -107,10 +107,11 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <RInvokable<TResult(TArgs...)> TInvokable>
+        template <typename TInvokable>
+        requires RInvokable<TInvokable, TResult(TArgs...)>
         InvokableBox(TInvokable&& invokable)
             requires(RNotDerivedFrom<TInvokable, Private::InvokableBoxIdentifier>)
-            : ObjectBox(fwd(invokable))
+            : ObjectBox(forward<TInvokable>(invokable))
         {
             _SetInvoker<TInvokable>();
         }
@@ -118,10 +119,11 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <RInvokable<TResult(TArgs...)> TInvokable>
+        template <typename TInvokable>
+        requires RInvokable<TInvokable, TResult(TArgs...)>
         auto operator=(TInvokable&& invokable) -> InvokableBox& requires(
             RNotDerivedFrom<TInvokable, Private::InvokableBoxIdentifier>) {
-            ObjectBox::operator=(fwd(invokable));
+            ObjectBox::operator=(forward<TInvokable>(invokable));
             _SetInvoker<TInvokable>();
             return *this;
         }
@@ -171,7 +173,7 @@ namespace Atom
         {
             expects(ObjectBox::_HasObject(), "InvokableTarget is null.");
 
-            return _invoker.Invoke(ObjectBox::_GetObject(), fwd(args)...);
+            return _invoker.Invoke(ObjectBox::_GetObject(), forward<TArgs>(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -179,7 +181,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         auto operator()(TArgs&&... args) -> TResult
         {
-            return Invoke(fwd(args)...);
+            return Invoke(forward<TArgs>(args)...);
         }
 
         template <typename T>
@@ -212,7 +214,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         auto _InvokeInvokable(TArgs&&... args) -> TResult
         {
-            return _invoker.Invoke(fwd(args)...);
+            return _invoker.Invoke(forward<TArgs>(args)...);
         }
 
         using TInvoker = Private::Invoker<TResult, TArgs...>;

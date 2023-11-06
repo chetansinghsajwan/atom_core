@@ -122,7 +122,7 @@ namespace Atom
         ObjectBox(T&& obj):
             ObjectBox()
         {
-            _InitObject(fwd(obj));
+            _InitObject(forward<T>(obj));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -134,7 +134,7 @@ namespace Atom
             requires RObject<T>
         auto operator=(T&& object) -> ObjectBox&
         {
-            _SetObject(fwd(object));
+            _SetObject(forward<T>(object));
             return *this;
         }
 
@@ -248,7 +248,7 @@ namespace Atom
             requires RObject<T>
         auto SetObject(T&& obj)
         {
-            _SetObject(fwd(obj));
+            _SetObject(forward<T>(obj));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -405,7 +405,7 @@ namespace Atom
             }
 
             _object.obj = _AllocMem(_object.size, forceHeap);
-            new (_object.obj) T(fwd(obj));
+            new (_object.obj) T(forward<T>(obj));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -421,7 +421,7 @@ namespace Atom
         auto _SetObject(T&& obj, bool forceHeap = false)
         {
             _DisposeObject();
-            _InitObject(fwd(obj));
+            _InitObject(forward<T>(obj));
         }
 
         /// ----------------------------------------------------------------------------------------

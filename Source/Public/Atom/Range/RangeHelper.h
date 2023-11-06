@@ -36,7 +36,7 @@ namespace Atom
             requires RMutRange<TRange> and RAssignable<typename TRange::TElem, T>
         constexpr auto Fill(TRange&& range, T&& val) const -> void
         {
-            _Fill(range.iter(), range.iterEnd(), fwd(val));
+            _Fill(range.iter(), range.iterEnd(), forward<T>(val));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -48,7 +48,7 @@ ATOM_PRAGMA_OPTIMIZE_OFF
             requires RMutRange<TRange> and RAssignable<typename TRange::TElem, T>
         constexpr auto FillExplicit(TRange&& range, T&& val) const -> void
         {
-            _Fill(range.iter(), range.iterEnd(), fwd(val));
+            _Fill(range.iter(), range.iterEnd(), forward<T>(val));
         }
 
 ATOM_PRAGMA_OPTIMIZE_ON
@@ -203,7 +203,7 @@ ATOM_PRAGMA_OPTIMIZE_ON
             StdIterWrapForAtomIter stdIter{ iter };
             StdIterWrapForAtomIter stdIterEnd{ iterEnd };
 
-            std::fill(stdIter, stdIterEnd, fwd(val));
+            std::fill(stdIter, stdIterEnd, forward<T>(val));
         }
 
         template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>

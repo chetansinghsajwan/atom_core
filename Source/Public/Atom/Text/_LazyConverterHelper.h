@@ -85,8 +85,8 @@ namespace Atom::Text
         ///
         /// ----------------------------------------------------------------------------------------
         constexpr _CharEncodingLazyConverterHelperIter(TImpl&& impl, TInput&& in)
-            : _impl{ fwd(impl) }
-            , _input{ fwd(input) }
+            : _impl{ forward<TImpl>(impl) }
+            , _input{ forward<TInput>(input) }
             , _out{ 0 }
             , _outIndex{ -1 }
         {
