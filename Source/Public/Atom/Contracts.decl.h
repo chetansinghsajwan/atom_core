@@ -22,7 +22,7 @@ namespace Atom
     template <_ContractType type, typename... TArgs>
     constexpr auto _ContractCheck(std::source_location src, bool assert, TArgs&&... args) -> void
     {
-        if constexpr (ATOM_IS_CONFIG_DEBUG and type == _ContractType::DebugPreCondition
+        if constexpr (BuildConfig::IsDebug() and type == _ContractType::DebugPreCondition
                       or type == _ContractType::DebugAssertion
                       or type == _ContractType::DebugPostCondition)
             return;
@@ -45,8 +45,8 @@ namespace Atom
     /// ------------------------------------------------------------------------------------------------
     /// Represents pre condition.
     /// ------------------------------------------------------------------------------------------------
-    constexpr auto expects(
-        bool assert, std::string_view msg = "", std::source_location _src = std::source_location::current())
+    constexpr auto expects(bool assert, std::string_view msg = "",
+        std::source_location _src = std::source_location::current())
     {
         _ContractCheck<_ContractType::PreCondition>(_src, assert, msg);
     }
@@ -54,8 +54,8 @@ namespace Atom
     /// ------------------------------------------------------------------------------------------------
     /// Represents debug pre condition.
     /// ------------------------------------------------------------------------------------------------
-    constexpr auto debug_expects(
-        bool assert, std::string_view msg = "", std::source_location _src = std::source_location::current())
+    constexpr auto debug_expects(bool assert, std::string_view msg = "",
+        std::source_location _src = std::source_location::current())
     {
         _ContractCheck<_ContractType::DebugPreCondition>(_src, assert, msg);
     }
@@ -63,8 +63,8 @@ namespace Atom
     /// ------------------------------------------------------------------------------------------------
     /// Represents assertion.
     /// ------------------------------------------------------------------------------------------------
-    constexpr auto asserts(
-        bool assert, std::string_view msg = "", std::source_location _src = std::source_location::current())
+    constexpr auto asserts(bool assert, std::string_view msg = "",
+        std::source_location _src = std::source_location::current())
     {
         _ContractCheck<_ContractType::Assertion>(_src, assert, msg);
     }
@@ -72,8 +72,8 @@ namespace Atom
     /// ------------------------------------------------------------------------------------------------
     /// Represents debug assertion.
     /// ------------------------------------------------------------------------------------------------
-    constexpr auto debug_asserts(
-        bool assert, std::string_view msg = "", std::source_location _src = std::source_location::current())
+    constexpr auto debug_asserts(bool assert, std::string_view msg = "",
+        std::source_location _src = std::source_location::current())
     {
         _ContractCheck<_ContractType::DebugAssertion>(_src, assert, msg);
     }
@@ -81,8 +81,8 @@ namespace Atom
     /// ------------------------------------------------------------------------------------------------
     /// Represents post condition.
     /// ------------------------------------------------------------------------------------------------
-    constexpr auto ensures(
-        bool assert, std::string_view msg = "", std::source_location _src = std::source_location::current())
+    constexpr auto ensures(bool assert, std::string_view msg = "",
+        std::source_location _src = std::source_location::current())
     {
         _ContractCheck<_ContractType::PostCondition>(_src, assert, msg);
     }
@@ -90,8 +90,8 @@ namespace Atom
     /// ------------------------------------------------------------------------------------------------
     /// Represents debug post condition.
     /// ------------------------------------------------------------------------------------------------
-    constexpr auto debug_ensures(
-        bool assert, std::string_view msg = "", std::source_location _src = std::source_location::current())
+    constexpr auto debug_ensures(bool assert, std::string_view msg = "",
+        std::source_location _src = std::source_location::current())
     {
         _ContractCheck<_ContractType::DebugPostCondition>(_src, assert, msg);
     }

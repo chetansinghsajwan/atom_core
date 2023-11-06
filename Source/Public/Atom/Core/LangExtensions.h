@@ -3,36 +3,37 @@
 
 namespace Atom
 {
-    template <typename T>
-    class _remove_ref
+    class BuildConfig
     {
+    private:
+        enum class _Config
+        {
+            Debug,
+            Release
+        };
+
+    private:
+        static consteval auto _GetConfig() -> _Config
+        {
+#ifdef NDEBUG
+            return _Config::Release;
+#else
+            return _Config::Debug;
+#endif
+        }
+
     public:
-        using value = T;
+        static consteval auto IsDebug() -> bool
+        {
+            return _GetConfig() == _Config::Debug;
+        }
+
+        static consteval auto IsRelease() -> bool
+        {
+            return _GetConfig() == _Config::Debug;
+        }
     };
 
-    template <typename T>
-    class _remove_ref<T&>
-    {
-    public:
-        using value = T;
-    };
-
-    template <typename T>
-    class _remove_ref<T&&>
-    {
-    public:
-        using value = T;
-    };
-
-    template <typename T>
-    using _remove_ref_t = _remove_ref<T>::value;
-}
-
-#define ATOM_IS_CONFIG_DEBUG true
-#define ATOM_IF_DEBUG if constexpr (ATOM_IS_CONFIG_DEBUG)
-
-namespace Atom
-{
     template <typename T>
     constexpr auto mov(T&& t) -> typename std::remove_reference<T>::type&&
     {

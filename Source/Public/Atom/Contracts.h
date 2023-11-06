@@ -94,7 +94,7 @@ namespace Atom
     public:
         virtual auto handle(const ContractViolation& violation) -> void override
         {
-            if constexpr (ATOM_IS_CONFIG_DEBUG)
+            if constexpr (BuildConfig::IsDebug())
             {
                 throw ContractViolationException{ violation };
             }
