@@ -65,12 +65,12 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        virtual auto Subscribe(InvokableBox<_TSignature>&& invokable) -> EventKey abstract;
+        virtual auto Subscribe(InvokableBox<_TSignature>&& invokable) -> EventKey = 0;
 
         /// ----------------------------------------------------------------------------------------
         /// Calls Unsubscribe(key) on {Source}.
         /// ----------------------------------------------------------------------------------------
-        virtual auto Unsubscribe(EventKey key) -> usize abstract;
+        virtual auto Unsubscribe(EventKey key) -> usize = 0;
     };
 
     /// --------------------------------------------------------------------------------------------

@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 
 namespace Atom
 {
@@ -29,9 +30,6 @@ namespace Atom
 
 #define ATOM_IS_CONFIG_DEBUG true
 #define ATOM_IF_DEBUG if constexpr (ATOM_IS_CONFIG_DEBUG)
-#define abstract = 0
-
-#include <iostream>
 
 namespace Atom
 {
