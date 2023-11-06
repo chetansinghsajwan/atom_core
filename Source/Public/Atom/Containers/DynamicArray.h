@@ -408,7 +408,8 @@ namespace Atom
         {
             debug_expects(from <= to, "Invalid range.");
             debug_expects(isIndexInRange(to), "Index was out of range.");
-            debug_ensures(fnret <= count(), "Invalid return value.");
+            // TODO: what should we do about fnret?
+            // debug_ensures(fnret <= count(), "Invalid return value.");
 
             _impl.removeRange(from, to);
             return from;
@@ -432,7 +433,8 @@ namespace Atom
             debug_expects(isIterInRange(it), "Iter is out range.");
             debug_expects(isIterInRange(itEnd), "Iter is out range.");
             debug_expects(it.compare(itEnd) <= 0, "Invalid range.");
-            debug_ensures(fnret.compare(iterEnd()) <= 0, "Invalid return value.")
+            // TODO: what should we do about fnret?
+            // debug_ensures(fnret.compare(iterEnd()) <= 0, "Invalid return value.")
 
                 usize from = indexForIter(it);
             usize to = indexForIter(itEnd);

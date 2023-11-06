@@ -29,7 +29,6 @@ namespace Atom
     public:
         ContractType type;
         std::string_view msg;
-        std::string_view expr;
         SourceLineInfo src;
     };
 
@@ -56,11 +55,11 @@ namespace Atom
         ContractViolationException(ContractViolation violation):
             violation{ violation }
         {
-            _what = fmt::format("Contracts {} Violation: '{}'"
+            _what = fmt::format("Contracts {} Violation:"
                                 "\n\twith msg: {}"
                                 "\n\tat: {}: {}: {}"
                                 "\n\tfunc: {}",
-                _ContractTypeToString(violation.type), violation.expr, violation.msg,
+                _ContractTypeToString(violation.type), violation.msg,
                 violation.src.fileName, violation.src.line.val(), violation.src.column.val(),
                 violation.src.funcName);
         }
@@ -101,10 +100,9 @@ namespace Atom
             }
             else
             {
-                std::cout << "Contracts " << _ContractTypeToString(violation.type) << " Violation: "
-                          << "'" << violation.expr << "'\n\t"
-                          << "with msg: " << violation.msg << "'\n\t"
-                          << "at: " << violation.src.fileName << ":" << violation.src.line.val()
+                std::cout << "Contracts " << _ContractTypeToString(violation.type) << " Violation:"
+                          << "\n\twith msg: " << violation.msg << "'"
+                          << "\n\tat: " << violation.src.fileName << ":" << violation.src.line.val()
                           << ":" << violation.src.column.val() << ": " << violation.src.funcName
                           << std::endl;
 
@@ -150,22 +148,20 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    inline auto _ContractCheckImpl(_ContractType type, std::string_view expr, std::string_view msg,
-        std::source_location src) -> void
+    inline auto _ContractCheckImpl(
+        _ContractType type, std::source_location src, std::string_view msg) -> void
     {
         SourceLineInfo srcInfo{ .line = src.line(),
             .column = src.column(),
             .funcName = src.function_name(),
             .fileName = src.file_name() };
 
-        ContractViolation violation{
-            .type = ContractType(type), .msg = msg, .expr = expr, .src = srcInfo
-        };
+        ContractViolation violation{ .type = ContractType(type), .msg = msg, .src = srcInfo };
 
         ContractViolationHandlerManager::GetHandler().handle(violation);
     }
 
-    inline auto _Panic(std::string_view msg)
+    inline auto _Panic(std::source_location src, std::string_view msg) -> void
     {
         std::cerr << msg << std::endl;
         std::terminate();
