@@ -1,8 +1,0 @@
-#pragma once
-#include "Atom/Range.h"
-
-#define ATOM_STATIC_ASSERT_REQ_INSERTABLE(TInsertable)
-#define ATOM_STATIC_ASSERT_REQ_FRONT_INSERTABLE(TInsertable)
-#define ATOM_STATIC_ASSERT_REQ_BACK_INSERTABLE(TInsertable)
-#define ATOM_STATIC_ASSERT_REQ_KEY_INSERTABLE(TInsertable)
-#define ATOM_STATIC_ASSERT_REQ_INDEX_INSERTABLE(TInsertable)

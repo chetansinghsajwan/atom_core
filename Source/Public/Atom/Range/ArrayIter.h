@@ -1,5 +1,5 @@
 #pragma once
-#include "IterReqChecks.h"
+#include "Atom/Core.h"
 
 namespace Atom
 {
@@ -141,7 +141,4 @@ namespace Atom
             return *this;
         }
     };
-
-    ATOM_SATISFIES_ARR_ITER_TEMP(ArrayIter);
-    ATOM_SATISFIES_MUT_ARR_ITER_TEMP(ArrayIter);
 }
