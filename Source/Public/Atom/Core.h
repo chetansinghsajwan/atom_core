@@ -5,25 +5,6 @@
 #include "Core/Requirements.h"
 
 /// ------------------------------------------------------------------------------------------------
-/// ATOM API
-/// ------------------------------------------------------------------------------------------------
-#if ATOM_PLATFORM == ATOM_PLATFORM_WINDOWS
-#    ifdef ATOM_EXPORT
-#        define ATOM_API __declspec(dllexport)
-#    else
-#        define ATOM_API __declspec(dllimport)
-#    endif
-#elif ATOM_PLATFORM == ATOM_PLATFORM_LINUX
-#    ifdef ATOM_EXPORT
-#        define ATOM_API __attribute__((visibility("default")))
-#    else
-#        define ATOM_API
-#    endif
-#else
-#    error "Atom.Core only supports Windows and Linux platform for now."
-#endif
-
-/// ------------------------------------------------------------------------------------------------
 /// Optimization handling macros.
 ///
 /// # Macros
