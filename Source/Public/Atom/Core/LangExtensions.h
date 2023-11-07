@@ -3,37 +3,6 @@
 
 namespace Atom
 {
-    class BuildConfig
-    {
-    private:
-        enum class _Config
-        {
-            Debug,
-            Release
-        };
-
-    private:
-        static consteval auto _GetConfig() -> _Config
-        {
-#ifdef NDEBUG
-            return _Config::Release;
-#else
-            return _Config::Debug;
-#endif
-        }
-
-    public:
-        static consteval auto IsDebug() -> bool
-        {
-            return _GetConfig() == _Config::Debug;
-        }
-
-        static consteval auto IsRelease() -> bool
-        {
-            return _GetConfig() == _Config::Debug;
-        }
-    };
-
     template <typename T>
     constexpr auto mov(T&& t) -> typename std::remove_reference<T>::type&&
     {

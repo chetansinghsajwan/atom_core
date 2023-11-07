@@ -57,7 +57,6 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
 ATOM_PRAGMA_OPTIMIZE_OFF
 
-        // __attribute__((optimize("O0")))
         constexpr auto FillExplicit(MemBlk mem, MemUnit val) const
         {
             Fill(mem, val);

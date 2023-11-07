@@ -2,6 +2,7 @@
 #include <source_location>
 #include <string_view>
 
+#include "Atom/Core/BuildConfig.h"
 #include "Atom/Core/LangExtensions.h"
 
 namespace Atom
@@ -22,7 +23,7 @@ namespace Atom
     template <_ContractType type, typename... TArgs>
     constexpr auto _ContractCheck(std::source_location src, bool assert, TArgs&&... args) -> void
     {
-        if constexpr (BuildConfig::IsDebug() and type == _ContractType::DebugPreCondition
+        if constexpr (BuildConfig::IsModeDebug() and type == _ContractType::DebugPreCondition
                       or type == _ContractType::DebugAssertion
                       or type == _ContractType::DebugPostCondition)
             return;
