@@ -78,28 +78,28 @@ namespace Atom
     };
 
     template <typename TInt, typename T>
-    constexpr auto operator+(TInt num, T* ptr) -> T*
+    constexpr auto operator+(TInt num, MemPtr<T> ptr) -> MemPtr<T>
         requires(RInt<TInt>)
     {
         return ptr + num._val;
     }
 
     template <typename TInt, typename T>
-    constexpr auto operator-(TInt num, T* ptr) -> T*
+    constexpr auto operator-(TInt num, MemPtr<T> ptr) -> MemPtr<T>
         requires(RInt<TInt>)
     {
         return ptr - num._val;
     }
 
     template <typename TInt, typename T>
-    constexpr auto operator+(T* ptr, TInt num) -> T*
+    constexpr auto operator+(MemPtr<T> ptr, TInt num) -> MemPtr<T>
         requires(RInt<TInt>)
     {
         return ptr + num._val;
     }
 
     template <typename TInt, typename T>
-    constexpr auto operator-(T* ptr, TInt num) -> T*
+    constexpr auto operator-(MemPtr<T> ptr, TInt num) -> MemPtr<T>
         requires(RInt<TInt>)
     {
         return ptr - num._val;

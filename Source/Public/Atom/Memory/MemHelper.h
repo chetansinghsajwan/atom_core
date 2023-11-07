@@ -5,18 +5,15 @@
 
 namespace Atom
 {
-    using MemUnit = byte;
-    using MemPtr = byte*;
-
     class MemBlk
     {
     public:
-        constexpr MemBlk(MemPtr mem, usize count)
+        constexpr MemBlk(memptr mem, usize count)
             : mem{ mem }
             , count{ count }
         {}
 
-        constexpr MemBlk(MemPtr begin, MemPtr end)
+        constexpr MemBlk(memptr begin, memptr end)
             : mem{ begin }
             , count{ (usize)(end - begin) }
         {
@@ -24,7 +21,7 @@ namespace Atom
         }
 
     public:
-        MemPtr mem;
+        memptr mem;
         usize count;
     };
 
@@ -45,7 +42,7 @@ namespace Atom
         /// @PARAM mem: Mem block to write to.
         /// @PARAM val: Value to write.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto Fill(MemBlk mem, MemUnit val) const
+        constexpr auto Fill(MemBlk mem, memunit val) const
         {
             debug_expects(mem != nullptr);
 
@@ -271,37 +268,37 @@ ATOM_PRAGMA_OPTIMIZE_ON
         }
 
     private:
-        constexpr auto _Fill(MemPtr mem, usize count, MemUnit val) const -> void
+        constexpr auto _Fill(memptr mem, usize count, memunit val) const -> void
         {
             std::fill(mem, mem + count, val);
         }
 
-        constexpr auto _FwdCopy(const MemPtr src, usize count, MemPtr dest) const -> void
+        constexpr auto _FwdCopy(const memptr src, usize count, memptr dest) const -> void
         {
             std::copy(src, src + count, dest);
         }
 
-        constexpr auto _BwdCopy(const MemPtr src, usize count, MemPtr dest) const -> void
+        constexpr auto _BwdCopy(const memptr src, usize count, memptr dest) const -> void
         {
             std::copy_backward(src, src + count, dest);
         }
 
-        constexpr auto _ShiftFwd(const MemPtr mem, usize memCount, usize steps) const -> void
+        constexpr auto _ShiftFwd(const memptr mem, usize memCount, usize steps) const -> void
         {
             std::shift_right(mem, mem + memCount, steps.val());
         }
 
-        constexpr auto _ShiftBwd(const MemPtr mem, usize memCount, usize steps) const -> void
+        constexpr auto _ShiftBwd(const memptr mem, usize memCount, usize steps) const -> void
         {
             std::shift_left(mem, mem + memCount, steps.val());
         }
 
-        constexpr auto _RotateFwd(const MemPtr mem, usize memCount, usize offset) const -> void
+        constexpr auto _RotateFwd(const memptr mem, usize memCount, usize offset) const -> void
         {
             std::rotate(mem, mem + offset, mem + memCount);
         }
 
-        constexpr auto _RotateBwd(const MemPtr mem, usize memCount, usize offset) const -> void
+        constexpr auto _RotateBwd(const memptr mem, usize memCount, usize offset) const -> void
         {
             std::rotate(mem, mem + offset, mem + memCount);
         }

@@ -302,7 +302,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Access the value by ptr.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator->() -> T*
+        constexpr auto operator->() -> MemPtr<T>
         {
             debug_expects(isValue(), "Doesn't contain value.");
 
@@ -312,7 +312,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Access the value by ptr.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator->() const -> const T*
+        constexpr auto operator->() const -> MemPtr<const T>
         {
             debug_expects(isValue(), "Doesn't contain value.");
 
@@ -415,7 +415,7 @@ namespace Atom
     template <typename T>
     class Option<T&>
     {
-        using _Impl = _OptionImpl<T*>;
+        using _Impl = _OptionImpl<MemPtr<T>>;
         using _ImplCtorNoVal = _Impl::CtorNoVal;
 
     public:
@@ -577,7 +577,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Access the ptr.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator->() -> T*
+        constexpr auto operator->() -> MemPtr<T>
         {
             debug_expects(isValue(), "Doesn't contain value.");
 
@@ -587,7 +587,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Access the ptr.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator->() const -> const T*
+        constexpr auto operator->() const -> MemPtr<const T>
         {
             debug_expects(isValue(), "Doesn't contain value.");
 

@@ -32,7 +32,7 @@ namespace Atom
             return _itEnd;
         }
 
-        constexpr auto data() const -> const TElem*
+        constexpr auto data() const -> MemPtr<const TElem>
             requires RArrayIterPair<TIter, TIterEnd>
         {
             return &_it.value();
@@ -205,7 +205,7 @@ namespace Atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    constexpr auto MakeRange(const T* begin, const T* end)
+    constexpr auto MakeRange(MemPtr<const T> begin, MemPtr<const T> end)
     {
         return _RangeFromIterPair(ArrayIter(begin), ArrayIter(end));
     }
@@ -214,7 +214,7 @@ namespace Atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    constexpr auto MakeRange(T* begin, T* end)
+    constexpr auto MakeRange(MemPtr<T> begin, MemPtr<T> end)
     {
         return _MutRangeFromIterPair(MutArrayIter(begin), MutArrayIter(end));
     }
@@ -223,7 +223,7 @@ namespace Atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    constexpr auto MakeRange(const T* begin, usize count)
+    constexpr auto MakeRange(MemPtr<const T> begin, usize count)
     {
         return _RangeFromIterPair(ArrayIter(begin), ArrayIter(begin + count));
     }
@@ -232,7 +232,7 @@ namespace Atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    constexpr auto MakeRange(T* begin, usize count)
+    constexpr auto MakeRange(MemPtr<T> begin, usize count)
     {
         return _MutRangeFromIterPair(MutArrayIter(begin), MutArrayIter(begin + count));
     }

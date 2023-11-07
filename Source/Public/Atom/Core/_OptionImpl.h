@@ -41,12 +41,12 @@ namespace Atom
         {}
 
     public:
-        constexpr auto getData() -> T*
+        constexpr auto getData() -> MemPtr<T>
         {
             return &_value;
         }
 
-        constexpr auto getData() const -> const T*
+        constexpr auto getData() const -> MemPtr<const T>
         {
             return &_value;
         }
@@ -57,7 +57,7 @@ namespace Atom
     };
 
     template <typename T>
-    union _OptionStorage<T*>
+    union _OptionStorage<MemPtr<T>>
     {
     public:
         class NoInit
@@ -68,23 +68,23 @@ namespace Atom
 
         _OptionStorage(NoInit) {}
 
-        _OptionStorage(T* ptr):
+        _OptionStorage(MemPtr<T> ptr):
             _ptr{ ptr }
         {}
 
     public:
-        constexpr auto getData() -> T**
+        constexpr auto getData() -> MemPtr<T>*
         {
             return &_ptr;
         }
 
-        constexpr auto getData() const -> const T**
+        constexpr auto getData() const -> MemPtr<const T>*
         {
             return &_ptr;
         }
 
     private:
-        T* _ptr;
+        MemPtr<T> _ptr;
     };
 
     template <typename T>

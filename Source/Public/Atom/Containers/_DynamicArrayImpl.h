@@ -175,12 +175,12 @@ namespace Atom
             return _getCount();
         }
 
-        constexpr auto data() const -> const TElem*
+        constexpr auto data() const -> MemPtr<const TElem>
         {
             return _getData();
         }
 
-        constexpr auto mutData() -> TElem*
+        constexpr auto mutData() -> MemPtr<TElem>
         {
             return _getMutData();
         }
@@ -327,7 +327,7 @@ namespace Atom
                 return;
 
             usize newCap = _calcCapGrowth(count);
-            TElem* newArray = _allocMem(newCap);
+            MemPtr<TElem> newArray = _allocMem(newCap);
 
             _moveRangeTo(0, newArray);
             _deallocMem(_getMutData());
@@ -338,51 +338,51 @@ namespace Atom
         template <typename... TArgs>
         constexpr auto _constructAt(usize i, TArgs&&... args) -> void
         {
-            TElem* src = _getMutData() + i;
+            MemPtr<TElem> src = _getMutData() + i;
             std::construct_at(src, forward<TArgs>(args)...);
         }
 
         constexpr auto _destructAt(usize i) -> void
         {
-            TElem* src = _getMutData() + i;
+            MemPtr<TElem> src = _getMutData() + i;
             std::destroy_at(src);
         }
 
         constexpr auto _destructRange(usize i, usize count) -> void
         {
-            TElem* begin = _getMutData() + i;
-            TElem* end = begin + count;
+            MemPtr<TElem> begin = _getMutData() + i;
+            MemPtr<TElem> end = begin + count;
             std::destroy(begin, end);
         }
 
         constexpr auto _moveRangeFront(usize i, usize count) -> void
         {
-            TElem* begin = _getMutData() + i;
-            TElem* end = _getMutData() + _getCount() - 1;
-            TElem* dest = begin - count;
+            MemPtr<TElem> begin = _getMutData() + i;
+            MemPtr<TElem> end = _getMutData() + _getCount() - 1;
+            MemPtr<TElem> dest = begin - count;
             std::move(begin, end, dest);
         }
 
         constexpr auto _moveRangeBack(usize i, usize count) -> void
         {
-            TElem* begin = _getMutData() + i;
-            TElem* end = _getMutData() + _getCount() - 1;
-            TElem* dest = begin + count;
+            MemPtr<TElem> begin = _getMutData() + i;
+            MemPtr<TElem> end = _getMutData() + _getCount() - 1;
+            MemPtr<TElem> dest = begin + count;
             std::move_backward(begin, end, dest);
         }
 
-        constexpr auto _moveRangeTo(usize i, TElem* dest) -> void
+        constexpr auto _moveRangeTo(usize i, MemPtr<TElem> dest) -> void
         {
-            TElem* begin = _getMutData() + i;
-            TElem* end = _getMutData() + _getCount() - 1;
+            MemPtr<TElem> begin = _getMutData() + i;
+            MemPtr<TElem> end = _getMutData() + _getCount() - 1;
             std::move_backward(begin, end, dest);
         }
 
         constexpr auto _rotateRangeBack(usize i, usize count) -> void
         {
-            TElem* begin = _getMutData();
-            TElem* mid = begin + i;
-            TElem* end = begin + _getCount() - 1;
+            MemPtr<TElem> begin = _getMutData();
+            MemPtr<TElem> mid = begin + i;
+            MemPtr<TElem> end = begin + _getCount() - 1;
             std::rotate(begin, mid, end);
         }
 
@@ -407,12 +407,12 @@ namespace Atom
             return count;
         }
 
-        constexpr auto _getData() const -> const TElem*
+        constexpr auto _getData() const -> MemPtr<const TElem>
         {
             return _arr;
         }
 
-        constexpr auto _getMutData() -> TElem*
+        constexpr auto _getMutData() -> MemPtr<TElem>
         {
             return _arr;
         }
@@ -442,12 +442,12 @@ namespace Atom
             _capacity = capacity;
         }
 
-        constexpr auto _allocMem(usize required) -> TElem*
+        constexpr auto _allocMem(usize required) -> MemPtr<TElem>
         {
             return static_cast<TElem*>(_alloc.Alloc(required));
         }
 
-        constexpr auto _allocMemAtLeast(usize required, usize hint) -> TElem*
+        constexpr auto _allocMemAtLeast(usize required, usize hint) -> MemPtr<TElem>
         {
             return _alloc.Alloc(required);
         }
@@ -458,7 +458,7 @@ namespace Atom
         }
 
     private:
-        TElem* _arr;
+        MemPtr<TElem> _arr;
         usize _count;
         usize _capacity;
         TAlloc _alloc;

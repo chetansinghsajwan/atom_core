@@ -28,12 +28,12 @@ namespace Atom
             _arr{ 0 } { }
 
     public:
-        constexpr auto data() const -> const TElem*
+        constexpr auto data() const -> MemPtr<const TElem>
         {
             return _arr;
         }
 
-        constexpr auto mutData() -> TElem*
+        constexpr auto mutData() -> MemPtr<TElem>
         {
             return _arr;
         }

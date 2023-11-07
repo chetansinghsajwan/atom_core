@@ -365,15 +365,15 @@ namespace Atom
         }
 
         template <typename T>
-        constexpr auto _getDataAs() -> T*
+        constexpr auto _getDataAs() -> MemPtr<T>
         {
-            return reinterpret_cast<T*>(_storage.getData());
+            return reinterpret_cast<MemPtr<T>>(_storage.getData());
         }
 
         template <typename T>
-        constexpr auto _getDataAs() const -> const T*
+        constexpr auto _getDataAs() const -> MemPtr<const T>
         {
-            return reinterpret_cast<const T*>(_storage.getData());
+            return reinterpret_cast<MemPtr<const T>>(_storage.getData());
         }
 
     private:

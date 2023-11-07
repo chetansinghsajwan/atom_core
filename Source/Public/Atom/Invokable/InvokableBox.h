@@ -185,7 +185,7 @@ namespace Atom
         }
 
         template <typename T>
-        auto GetInvokable() -> T*
+        auto GetInvokable() -> MemPtr<T>
         {
             if (typeid(T) != GetInvokableType())
                 return nullptr;

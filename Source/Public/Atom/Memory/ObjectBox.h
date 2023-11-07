@@ -374,12 +374,12 @@ namespace Atom
             _object.size = sizeof(T);
             _object.type = &typeid(T);
 
-            _object.dtor = [](void* obj) { reinterpret_cast<T*>(obj)->T::~T(); };
+            _object.dtor = [](void* obj) { reinterpret_cast<MemPtr<T>>(obj)->T::~T(); };
 
             if constexpr (Copyable)
             {
                 _object.copy = [](void* obj, const void* other) {
-                    new (obj) T(*reinterpret_cast<const T*>(other));
+                    new (obj) T(*reinterpret_cast<MemPtr<const T>>(other));
                 };
             }
 
@@ -388,7 +388,7 @@ namespace Atom
                 if constexpr (RMoveConstructible<T>)
                 {
                     _object.move = [](void* obj, void* other) {
-                        new (obj) T(mov(*reinterpret_cast<T*>(other)));
+                        new (obj) T(mov(*reinterpret_cast<MemPtr<T>>(other)));
                     };
                 }
                 else
@@ -430,9 +430,9 @@ namespace Atom
         /// @TPARAM T Type as which to get the object.
         /// ----------------------------------------------------------------------------------------
         template <typename T = void>
-        auto _GetObject() -> T*
+        auto _GetObject() -> MemPtr<T>
         {
-            return reinterpret_cast<T*>(_object.obj);
+            return reinterpret_cast<MemPtr<T>>(_object.obj);
         }
 
         /// ----------------------------------------------------------------------------------------
