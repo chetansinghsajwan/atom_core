@@ -312,7 +312,7 @@ namespace Atom
     {
         requires RJumpIter<TIter>;
 
-        { cit.data() } -> RConvertibleTo<const typename TIter::TElem*>;
+        { cit.data() } -> RConvertibleTo<ConstMemPtr<typename TIter::TElem>>;
     };
 
     template <typename TIter>
@@ -321,7 +321,7 @@ namespace Atom
         requires RArrayIter<TIter>;
         requires _RMutIter<TIter>;
 
-        { it.mutData() } -> RConvertibleTo<typename TIter::TElem*>;
+        { it.mutData() } -> RConvertibleTo<MemPtr<typename TIter::TElem>>;
     };
 
     template <typename TIter, typename T>

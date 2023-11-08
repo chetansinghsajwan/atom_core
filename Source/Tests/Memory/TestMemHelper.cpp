@@ -8,12 +8,12 @@ TEST_CASE("Atom::Memory::MemHelper")
 {
     MemHelper helper;
 
-    memptr src = memptr(std::malloc(100));
-    memptr dest = memptr(std::malloc(100));
+    MemPtr<void> src = MemPtr<void>(std::malloc(100));
+    MemPtr<void> dest = MemPtr<void>(std::malloc(100));
 
     // TODO: Write tests.
     helper.FwdCopyTo({ src, 5 }, { dest, 10 });
 
-    std::free(src);
-    std::free(dest);
+    std::free(src.raw());
+    std::free(dest.raw());
 }

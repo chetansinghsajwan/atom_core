@@ -168,7 +168,7 @@ namespace Atom
 
     public:
         auto value() const -> const T&;
-        auto data() const -> MemPtr<const T>;
+        auto data() const -> ConstMemPtr<T>;
         auto next(usize steps = 1) -> ArrayIterReqMock&;
         auto prev(usize steps = 1) -> ArrayIterReqMock&;
         auto equals(ArrayIterReqMock end) const -> bool;
@@ -187,7 +187,7 @@ namespace Atom
     public:
         auto value() const -> const T&;
         auto mutValue() -> T&;
-        auto data() const -> MemPtr<const T>;
+        auto data() const -> ConstMemPtr<T>;
         auto mutData() -> MemPtr<T>;
         auto next(usize steps = 1) -> MutArrayIterReqMock&;
         auto prev(usize steps = 1) -> MutArrayIterReqMock&;

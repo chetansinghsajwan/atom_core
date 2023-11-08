@@ -94,7 +94,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr auto data() const -> MemPtr<const TElem>
+        constexpr auto data() const -> ConstMemPtr<TElem>
         {
             return _data;
         }
@@ -148,7 +148,7 @@ namespace Atom
         }
 
     private:
-        MemPtr<const TElem> _data;
+        ConstMemPtr<TElem> _data;
         usize _count;
     };
 

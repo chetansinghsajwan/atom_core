@@ -6,24 +6,36 @@ namespace Atom
     class ObjHelper
     {
     public:
+        template <typename T, typename TPtr, typename... TArgs>
+        constexpr auto ConstructAs(TPtr&& mem, TArgs&&... args) const
+            requires(RPtrOf<TPtr, T>)
+        {
+            debug_expects(mem != nullptr);
+
+            std::construct_at(mem.raw(), forward<TArgs>(args)...);
+        }
+
         template <typename TPtr, typename... TArgs>
         constexpr auto Construct(TPtr&& mem, TArgs&&... args) const
+            requires(RPtr<TPtr>)
         {
             debug_expects(mem != nullptr);
 
-            std::construct_at(mem, forward<TArgs>(args)...);
+            std::construct_at(mem.raw(), forward<TArgs>(args)...);
         }
 
-        template <typename TPtr, typename... TArgs>
-        constexpr auto Construct(TPtr* mem, TArgs&&... args) const
+        template <typename T, typename TPtr, typename TArg>
+        constexpr auto AssignAs(TPtr&& mem, TArg&& arg) const
+            requires(RPtrOf<TPtr, T>)
         {
             debug_expects(mem != nullptr);
 
-            std::construct_at(mem, forward<TArgs>(args)...);
+            *mem = forward<TArg>(arg);
         }
 
-        template <typename TPtr, typename TArg>
-        constexpr auto Assign(TPtr* mem, TArg&& arg) const
+        template <typename TPtr>
+        constexpr auto Assign(TPtr&& mem, auto&& arg) const
+            requires(RPtr<TPtr>)
         {
             debug_expects(mem != nullptr);
 
@@ -38,20 +50,23 @@ namespace Atom
             t2 = mov(tmp);
         }
 
-        template <typename TPtr>
-        constexpr auto Destruct(TPtr&& mem) const
+        template <typename T, typename TPtr>
+        constexpr auto DestructAs(TPtr&& mem) const
+            requires(RPtrOf<TPtr, T>)
         {
             debug_expects(mem != nullptr);
 
-            std::destroy_at(mem);
+            std::destroy_at(mem.raw());
         }
 
+
         template <typename TPtr>
-        constexpr auto Destruct(TPtr* mem) const
+        constexpr auto Destruct(TPtr&& mem) const
+            requires(RPtr<TPtr>)
         {
             debug_expects(mem != nullptr);
 
-            std::destroy_at(mem);
+            std::destroy_at(mem.raw());
         }
     };
 }

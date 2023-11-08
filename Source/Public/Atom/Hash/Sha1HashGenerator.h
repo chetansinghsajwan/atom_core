@@ -17,14 +17,14 @@ namespace Atom::Private
             Sha1Initialise(&_context);
         }
 
-        auto Update(const void* data, uint32_t dataSize)
+        auto Update(ConstMemPtr<void> data, uint32_t dataSize)
         {
-            Sha1Update(&_context, data, dataSize);
+            Sha1Update(&_context, data.raw(), dataSize);
         }
 
         auto Calculate(Sha1Hash& hash)
         {
-            Sha1Finalise(&_context, (SHA1_HASH*)hash.bytes.mem());
+            Sha1Finalise(&_context, reinterpret_cast<SHA1_HASH*>(hash.bytes.mutMem().raw()));
         }
 
     public:

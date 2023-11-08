@@ -16,7 +16,7 @@ namespace Atom
 
         constexpr auto ToFmt(StringView strv) -> _FmtStringView
         {
-            return _FmtStringView{ strv.data(), strv.count() };
+            return _FmtStringView{ strv.data().raw(), strv.count().val() };
         }
     };
 

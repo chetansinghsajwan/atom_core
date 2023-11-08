@@ -46,7 +46,7 @@ namespace Atom
             return &_value;
         }
 
-        constexpr auto getData() const -> MemPtr<const T>
+        constexpr auto getData() const -> ConstMemPtr<T>
         {
             return &_value;
         }
@@ -78,7 +78,7 @@ namespace Atom
             return &_ptr;
         }
 
-        constexpr auto getData() const -> MemPtr<const T>*
+        constexpr auto getData() const -> ConstMemPtr<T>*
         {
             return &_ptr;
         }
@@ -292,13 +292,13 @@ namespace Atom
         template <typename... TArgs>
         constexpr auto _constructValue(TArgs&&... args)
         {
-            ObjHelper().Construct<T>(_storage.getData(), forward<TArgs>(args)...);
+            ObjHelper().ConstructAs<T>(_storage.getData(), forward<TArgs>(args)...);
         }
 
         template <typename TArg>
         constexpr auto _assignValue(TArg&& val)
         {
-            ObjHelper().Assign<T>(_storage.getData(), forward<TArg>(val));
+            ObjHelper().AssignAs<T>(_storage.getData(), forward<TArg>(val));
         }
 
         constexpr auto _swapValue(T& that)
@@ -308,7 +308,7 @@ namespace Atom
 
         constexpr auto _destroyValue()
         {
-            ObjHelper().Destruct<T>(_storage.getData());
+            ObjHelper().DestructAs<T>(_storage.getData());
         }
 
         constexpr auto _getValue() -> T&

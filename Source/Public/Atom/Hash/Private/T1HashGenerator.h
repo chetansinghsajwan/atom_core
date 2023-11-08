@@ -77,7 +77,7 @@ namespace Atom::Private
         /// - `data`: Ptr to the input data.
         /// - `dataSize`: Size of the data.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto ProcessBytes(const void* data, usize dataSize) -> Self&
+        constexpr auto ProcessBytes(ConstMemPtr<void> data, usize dataSize) -> Self&
         {
             debug_expects(data != nullptr);
             debug_expects(dataSize > 0);
@@ -90,8 +90,7 @@ namespace Atom::Private
             constexpr u32 maxInput = u32::Max();
             for (usize processed = 0; processed < dataSize; processed += maxInput)
             {
-                _impl.Update(
-                    (byte*)data + processed, maxInput.min(dataSize - processed).to<u32>().val());
+                _impl.Update(data + processed, maxInput.min(dataSize - processed).to<u32>().val());
             }
 
             return *this;

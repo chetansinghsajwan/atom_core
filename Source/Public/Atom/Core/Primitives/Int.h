@@ -3,8 +3,36 @@
 
 #include <cstdint>
 
+/// ------------------------------------------------------------------------------------------------
+/// # To Do
+///
+/// - Refactor this.
+/// ------------------------------------------------------------------------------------------------
 namespace Atom
 {
+    class _IntId
+    {};
+
+    template <typename TInt>
+    concept _RInt = std::is_integral_v<TInt>;
+
+    template <typename TInt>
+    concept RInt = std::derived_from<TInt, _IntId>;
+
+    template <typename TInt>
+    constexpr auto _UnwrapInt(TInt n)
+        requires RInt<TInt> or _RInt<TInt>
+    {
+        if constexpr (RInt<TInt>)
+        {
+            return n.val();
+        }
+        else
+        {
+            return n;
+        }
+    }
+
     template <size_t>
     class IntString;
 
@@ -58,9 +86,6 @@ namespace Atom
         }
     };
 
-    class _IntId
-    {};
-
     template <typename TImpl>
     class Int: public Num<TImpl>, public _IntId
     {
@@ -70,40 +95,6 @@ namespace Atom
         using Base::Base;
         using Base::operator=;
     };
-
-    template <typename TInt>
-    concept RInt = requires
-    {
-        requires RDerivedFrom<TInt, _IntId>;
-    };
-
-    template <typename TInt, typename T>
-    constexpr auto operator+(TInt num, MemPtr<T> ptr) -> MemPtr<T>
-        requires(RInt<TInt>)
-    {
-        return ptr + num._val;
-    }
-
-    template <typename TInt, typename T>
-    constexpr auto operator-(TInt num, MemPtr<T> ptr) -> MemPtr<T>
-        requires(RInt<TInt>)
-    {
-        return ptr - num._val;
-    }
-
-    template <typename TInt, typename T>
-    constexpr auto operator+(MemPtr<T> ptr, TInt num) -> MemPtr<T>
-        requires(RInt<TInt>)
-    {
-        return ptr + num._val;
-    }
-
-    template <typename TInt, typename T>
-    constexpr auto operator-(MemPtr<T> ptr, TInt num) -> MemPtr<T>
-        requires(RInt<TInt>)
-    {
-        return ptr - num._val;
-    }
 
     using _i8 = std::int8_t;
     using _i16 = std::int16_t;

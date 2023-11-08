@@ -175,7 +175,7 @@ namespace Atom
             return _getCount();
         }
 
-        constexpr auto data() const -> MemPtr<const TElem>
+        constexpr auto data() const -> ConstMemPtr<TElem>
         {
             return _getData();
         }
@@ -339,20 +339,20 @@ namespace Atom
         constexpr auto _constructAt(usize i, TArgs&&... args) -> void
         {
             MemPtr<TElem> src = _getMutData() + i;
-            std::construct_at(src, forward<TArgs>(args)...);
+            std::construct_at(src.raw(), forward<TArgs>(args)...);
         }
 
         constexpr auto _destructAt(usize i) -> void
         {
             MemPtr<TElem> src = _getMutData() + i;
-            std::destroy_at(src);
+            std::destroy_at(src.raw());
         }
 
         constexpr auto _destructRange(usize i, usize count) -> void
         {
             MemPtr<TElem> begin = _getMutData() + i;
             MemPtr<TElem> end = begin + count;
-            std::destroy(begin, end);
+            std::destroy(begin.raw(), end.raw());
         }
 
         constexpr auto _moveRangeFront(usize i, usize count) -> void
@@ -360,7 +360,7 @@ namespace Atom
             MemPtr<TElem> begin = _getMutData() + i;
             MemPtr<TElem> end = _getMutData() + _getCount() - 1;
             MemPtr<TElem> dest = begin - count;
-            std::move(begin, end, dest);
+            std::move(begin.raw(), end.raw(), dest.raw());
         }
 
         constexpr auto _moveRangeBack(usize i, usize count) -> void
@@ -368,14 +368,14 @@ namespace Atom
             MemPtr<TElem> begin = _getMutData() + i;
             MemPtr<TElem> end = _getMutData() + _getCount() - 1;
             MemPtr<TElem> dest = begin + count;
-            std::move_backward(begin, end, dest);
+            std::move_backward(begin.raw(), end.raw(), dest.raw());
         }
 
         constexpr auto _moveRangeTo(usize i, MemPtr<TElem> dest) -> void
         {
             MemPtr<TElem> begin = _getMutData() + i;
             MemPtr<TElem> end = _getMutData() + _getCount() - 1;
-            std::move_backward(begin, end, dest);
+            std::move_backward(begin.raw(), end.raw(), dest.raw());
         }
 
         constexpr auto _rotateRangeBack(usize i, usize count) -> void
@@ -383,7 +383,7 @@ namespace Atom
             MemPtr<TElem> begin = _getMutData();
             MemPtr<TElem> mid = begin + i;
             MemPtr<TElem> end = begin + _getCount() - 1;
-            std::rotate(begin, mid, end);
+            std::rotate(begin.raw(), mid.raw(), end.raw());
         }
 
         template <typename UIter, typename UIterEnd>
@@ -407,7 +407,7 @@ namespace Atom
             return count;
         }
 
-        constexpr auto _getData() const -> MemPtr<const TElem>
+        constexpr auto _getData() const -> ConstMemPtr<TElem>
         {
             return _arr;
         }
@@ -417,7 +417,7 @@ namespace Atom
             return _arr;
         }
 
-        constexpr auto _setData(TElem* data)
+        constexpr auto _setData(MemPtr<TElem> data)
         {
             _arr = data;
         }
@@ -444,7 +444,7 @@ namespace Atom
 
         constexpr auto _allocMem(usize required) -> MemPtr<TElem>
         {
-            return static_cast<TElem*>(_alloc.Alloc(required));
+            return _alloc.Alloc(required);
         }
 
         constexpr auto _allocMemAtLeast(usize required, usize hint) -> MemPtr<TElem>
@@ -452,7 +452,7 @@ namespace Atom
             return _alloc.Alloc(required);
         }
 
-        constexpr auto _deallocMem(TElem* mem)
+        constexpr auto _deallocMem(MemPtr<TElem> mem)
         {
             _alloc.Dealloc(mem);
         }

@@ -40,7 +40,7 @@ namespace Atom
 
         constexpr auto mutAt(usize i) -> TElem&
         {
-            return mutData()[i.val()];
+            return mutData()[i];
         }
 
         constexpr auto mutFront() -> TElem&

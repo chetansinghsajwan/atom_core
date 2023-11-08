@@ -24,18 +24,18 @@ namespace Atom
         }
 
     public:
-        constexpr auto mem(usize i = 0) const -> const byte*
+        constexpr auto mem(usize i = 0) const -> ConstMemPtr<void>
         {
             debug_expects(i < Size());
 
-            return _storage + i.val();
+            return ConstMemPtr(_storage + i.val());
         }
 
-        constexpr auto mutMem(usize i = 0) -> byte*
+        constexpr auto mutMem(usize i = 0) -> MemPtr<void>
         {
             debug_expects(i < Size());
 
-            return _storage + i.val();
+            return MemPtr(_storage + i.val());
         }
 
         constexpr auto ref(usize i) const -> const byte&

@@ -312,7 +312,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Access the value by ptr.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator->() const -> MemPtr<const T>
+        constexpr auto operator->() const -> ConstMemPtr<T>
         {
             debug_expects(isValue(), "Doesn't contain value.");
 
@@ -587,7 +587,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Access the ptr.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator->() const -> MemPtr<const T>
+        constexpr auto operator->() const -> ConstMemPtr<T>
         {
             debug_expects(isValue(), "Doesn't contain value.");
 

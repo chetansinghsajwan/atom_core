@@ -98,7 +98,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto data() const -> MemPtr<const TElem>
+        constexpr auto data() const -> ConstMemPtr<TElem>
         {
             return _impl.data();
         }
@@ -472,7 +472,7 @@ namespace Atom
             usize removedCount = 0;
             for (usize i = 0; i < _impl.count(); i++)
             {
-                if (pred(_impl.data()[i.val()]))
+                if (pred(_impl.data()[i]))
                 {
                     _impl.removeAt(i);
                     i--;

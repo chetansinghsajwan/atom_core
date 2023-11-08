@@ -23,7 +23,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Value Constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr ArrayIter(MemPtr<const T> it)
+        constexpr ArrayIter(ConstMemPtr<T> it)
             : _it{ it } {}
 
     public:
@@ -38,7 +38,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Access value by ptr.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto data() const -> MemPtr<const T>
+        constexpr auto data() const -> ConstMemPtr<T>
         {
             return this->_it;
         }
@@ -78,7 +78,7 @@ namespace Atom
         }
 
     protected:
-        MemPtr<const T> _it;
+        ConstMemPtr<T> _it;
     };
 
     /// --------------------------------------------------------------------------------------------

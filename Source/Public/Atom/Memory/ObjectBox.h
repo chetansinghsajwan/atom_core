@@ -43,14 +43,14 @@ namespace Atom
         class ObjectData
         {
         public:
-            ATOM_CONDITIONAL_FIELD(Copyable, InvokablePtr<void(void*, const void*)>) copy;
+            ATOM_CONDITIONAL_FIELD(Copyable, InvokablePtr<void(MemPtr<void>, ConstMemPtr<void>)>) copy;
 
-            ATOM_CONDITIONAL_FIELD(Movable, InvokablePtr<void(void*, void*)>) move;
+            ATOM_CONDITIONAL_FIELD(Movable, InvokablePtr<void(MemPtr<void>, MemPtr<void>)>) move;
 
-            InvokablePtr<void(void* obj)> dtor;
+            InvokablePtr<void(MemPtr<void> obj)> dtor;
 
             usize size;
-            void* obj;
+            MemPtr<void> obj;
             const TypeInfo* type;
         };
 
@@ -374,12 +374,12 @@ namespace Atom
             _object.size = sizeof(T);
             _object.type = &typeid(T);
 
-            _object.dtor = [](void* obj) { reinterpret_cast<MemPtr<T>>(obj)->T::~T(); };
+            _object.dtor = [](MemPtr<void> obj) { MemPtr<T>(obj)->T::~T(); };
 
             if constexpr (Copyable)
             {
-                _object.copy = [](void* obj, const void* other) {
-                    new (obj) T(*reinterpret_cast<MemPtr<const T>>(other));
+                _object.copy = [](MemPtr<void> obj, ConstMemPtr<void> other) {
+                    new (obj.raw()) T(ConstMemPtr<T>(other).cval());
                 };
             }
 
@@ -387,8 +387,8 @@ namespace Atom
             {
                 if constexpr (RMoveConstructible<T>)
                 {
-                    _object.move = [](void* obj, void* other) {
-                        new (obj) T(mov(*reinterpret_cast<MemPtr<T>>(other)));
+                    _object.move = [](MemPtr<void> obj, MemPtr<void> other) {
+                        new (obj.raw()) T(mov(MemPtr<T>(other).val()));
                     };
                 }
                 else
@@ -405,7 +405,7 @@ namespace Atom
             }
 
             _object.obj = _AllocMem(_object.size, forceHeap);
-            new (_object.obj) T(forward<T>(obj));
+            new (_object.obj.raw()) T(forward<TArgs>(obj));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -432,7 +432,7 @@ namespace Atom
         template <typename T = void>
         auto _GetObject() -> MemPtr<T>
         {
-            return reinterpret_cast<MemPtr<T>>(_object.obj);
+            return _object.obj;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -579,7 +579,7 @@ namespace Atom
         ///
         /// @RETURNS Pointer to the allocated memory.
         /// ----------------------------------------------------------------------------------------
-        auto _AllocMem(usize size, bool forceHeap = false) -> void*
+        auto _AllocMem(usize size, bool forceHeap = false) -> MemPtr<void>
         {
             if constexpr (StackSize > 0)
             {
@@ -629,7 +629,7 @@ namespace Atom
         {
             if constexpr (StackSize > 0)
             {
-                return _object.obj == _stackMem;
+                return _object.obj.raw() == _stackMem;
             }
 
             return false;
@@ -652,7 +652,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Heap memory allocated.
         /// ----------------------------------------------------------------------------------------
-        void* _heapMem;
+        MemPtr<void> _heapMem;
 
         /// ----------------------------------------------------------------------------------------
         /// Size of heap memory allocated.

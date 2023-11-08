@@ -8,20 +8,18 @@ namespace Atom
     class MemBlk
     {
     public:
-        constexpr MemBlk(memptr mem, usize count)
-            : mem{ mem }
-            , count{ count }
+        constexpr MemBlk(MemPtr<void> mem, usize count):
+            mem{ mem }, count{ count }
         {}
 
-        constexpr MemBlk(memptr begin, memptr end)
-            : mem{ begin }
-            , count{ (usize)(end - begin) }
+        constexpr MemBlk(MemPtr<void> begin, MemPtr<void> end):
+            mem{ begin }, count{ (usize)(end - begin) }
         {
             debug_expects(end >= begin);
         }
 
     public:
-        memptr mem;
+        MemPtr<void> mem;
         usize count;
     };
 
@@ -52,14 +50,14 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Same as {Fill(...)}, but the call will not be optimized away.
         /// ----------------------------------------------------------------------------------------
-ATOM_PRAGMA_OPTIMIZE_OFF
+        ATOM_PRAGMA_OPTIMIZE_OFF
 
         constexpr auto FillExplicit(MemBlk mem, MemUnit val) const
         {
             Fill(mem, val);
         }
 
-ATOM_PRAGMA_OPTIMIZE_ON
+        ATOM_PRAGMA_OPTIMIZE_ON
 
         /// ----------------------------------------------------------------------------------------
         /// Copies each mem unit from mem block {src} to mem block {dest} using fwd iteration.
@@ -72,8 +70,7 @@ ATOM_PRAGMA_OPTIMIZE_ON
             debug_expects(src != nullptr);
             debug_expects(dest != nullptr);
 
-            debug_expects(dest.mem < src.mem,
-                "Src mem block overlaps with dest mem block.");
+            debug_expects(dest.mem < src.mem, "Src mem block overlaps with dest mem block.");
 
             _FwdCopy(src.mem, src.count, dest.mem);
         }
@@ -89,8 +86,8 @@ ATOM_PRAGMA_OPTIMIZE_ON
             debug_expects(src != nullptr);
             debug_expects(dest != nullptr);
 
-            debug_expects(dest.mem > (src.mem + src.count),
-                "Src mem block overlaps with dest mem block.");
+            debug_expects(
+                dest.mem > (src.mem + src.count), "Src mem block overlaps with dest mem block.");
 
             _BwdCopy(src.mem, src.count, dest.mem);
         }
@@ -268,39 +265,39 @@ ATOM_PRAGMA_OPTIMIZE_ON
         }
 
     private:
-        constexpr auto _Fill(memptr mem, usize count, memunit val) const -> void
+        constexpr auto _Fill(MemPtr<void> mem, usize count, memunit val) const -> void
         {
-            std::fill(mem, mem + count, val);
+            std::fill(mem.byteRaw(), (mem + count).byteRaw(), val);
         }
 
-        constexpr auto _FwdCopy(const memptr src, usize count, memptr dest) const -> void
+        constexpr auto _FwdCopy(ConstMemPtr<void> src, usize count, MemPtr<void> dest) const -> void
         {
-            std::copy(src, src + count, dest);
+            std::copy(src.byteRaw(), (src + count).byteRaw(), dest.byteRaw());
         }
 
-        constexpr auto _BwdCopy(const memptr src, usize count, memptr dest) const -> void
+        constexpr auto _BwdCopy(ConstMemPtr<void> src, usize count, MemPtr<void> dest) const -> void
         {
-            std::copy_backward(src, src + count, dest);
+            std::copy_backward(src.byteRaw(), (src + count).byteRaw(), dest.byteRaw());
         }
 
-        constexpr auto _ShiftFwd(const memptr mem, usize memCount, usize steps) const -> void
+        constexpr auto _ShiftFwd(MemPtr<void> mem, usize memCount, usize steps) const -> void
         {
-            std::shift_right(mem, mem + memCount, steps.val());
+            std::shift_right(mem.byteRaw(), (mem + memCount).byteRaw(), steps.val());
         }
 
-        constexpr auto _ShiftBwd(const memptr mem, usize memCount, usize steps) const -> void
+        constexpr auto _ShiftBwd(MemPtr<void> mem, usize memCount, usize steps) const -> void
         {
-            std::shift_left(mem, mem + memCount, steps.val());
+            std::shift_left(mem.byteRaw(), (mem + memCount).byteRaw(), steps.val());
         }
 
-        constexpr auto _RotateFwd(const memptr mem, usize memCount, usize offset) const -> void
+        constexpr auto _RotateFwd(MemPtr<void> mem, usize memCount, usize offset) const -> void
         {
-            std::rotate(mem, mem + offset, mem + memCount);
+            std::rotate(mem.byteRaw(), (mem + offset).byteRaw(), (mem + memCount).byteRaw());
         }
 
-        constexpr auto _RotateBwd(const memptr mem, usize memCount, usize offset) const -> void
+        constexpr auto _RotateBwd(MemPtr<void> mem, usize memCount, usize offset) const -> void
         {
-            std::rotate(mem, mem + offset, mem + memCount);
+            std::rotate(mem.byteRaw(), (mem + offset).byteRaw(), (mem + memCount).byteRaw());
         }
     };
 }

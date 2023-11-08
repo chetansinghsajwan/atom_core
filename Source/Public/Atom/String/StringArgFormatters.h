@@ -56,7 +56,7 @@ namespace Atom
 
         constexpr auto AdvanceTo(ArrayIter<Char> it)
         {
-            _fmtCtx.advance_to(it.data());
+            _fmtCtx.advance_to(it.data().raw());
         }
 
     public:
@@ -153,7 +153,7 @@ namespace Atom
         {
             _FmtFmtCtx& fmtCtx = ctx._fmtCtx;
 
-            _FmtStringView fmt_str{ str.data(), str.count() };
+            _FmtStringView fmt_str{ str.data().raw(), str.count() };
             fmtCtx.advance_to(_fmtFmter.format(fmt_str, fmtCtx));
         }
 

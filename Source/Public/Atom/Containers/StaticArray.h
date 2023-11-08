@@ -28,7 +28,7 @@ namespace Atom
             _arr{ 0 } { }
 
     public:
-        constexpr auto data() const -> MemPtr<const TElem>
+        constexpr auto data() const -> ConstMemPtr<TElem>
         {
             return _arr;
         }
@@ -50,7 +50,7 @@ namespace Atom
 
         constexpr auto iterEnd() const -> TIterEnd
         {
-            return TIterEnd{ _arr + count_ };
+            return TIterEnd{ _arr + count_.val() };
         }
 
         constexpr auto mutIter() -> TMutIter

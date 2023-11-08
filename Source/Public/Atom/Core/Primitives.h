@@ -3,6 +3,7 @@
 #include "Primitives/Char.h"
 #include "Primitives/Int.h"
 #include "Primitives/Float.h"
+#include "Atom/Memory/MemPtr.h"
 
 #include <typeinfo>
 #include <string_view>

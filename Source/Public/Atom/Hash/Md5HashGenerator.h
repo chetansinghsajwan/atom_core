@@ -17,14 +17,14 @@ namespace Atom::Private
             Md5Initialise(&_context);
         }
 
-        auto Update(const void* data, uint32_t dataSize)
+        auto Update(ConstMemPtr<void> data, uint32_t dataSize)
         {
-            Md5Update(&_context, data, dataSize);
+            Md5Update(&_context, data.raw(), dataSize);
         }
 
         auto Calculate(Md5Hash& hash)
         {
-            Md5Finalise(&_context, (MD5_HASH*)hash.bytes.mem());
+            Md5Finalise(&_context, reinterpret_cast<MD5_HASH*>(hash.bytes.mutMem().raw()));
         }
 
     public:

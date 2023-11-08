@@ -13,12 +13,6 @@
 /// ------------------------------------------------------------------------------------------------
 namespace Atom
 {
-    template <typename T>
-    using MemPtr = T*;
-
-    using memunit = byte;
-    using memptr = MemPtr<memunit>;
-
     class _NumId
     {};
 

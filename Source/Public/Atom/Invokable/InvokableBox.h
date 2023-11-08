@@ -21,13 +21,13 @@ namespace Atom
             auto Set()
                 requires(RInvokable<TInvokable, TResult(TArgs...)>)
             {
-                _impl = [](void* obj, TResult& result, TArgs&&... args) {
-                    TInvokable& invokable = *reinterpret_cast<TInvokable*>(obj);
+                _impl = [](MemPtr<void> obj, TResult& result, TArgs&&... args) {
+                    TInvokable& invokable = *reinterpret_cast<TInvokable*>(obj.raw());
                     new (&result) TResult(invokable(forward<TArgs>(args)...));
                 };
             }
 
-            auto Invoke(void* invokable, TArgs&&... args) -> TResult
+            auto Invoke(MemPtr<void> invokable, TArgs&&... args) -> TResult
             {
                 TResult result;
                 _impl(invokable, result, forward<TArgs>(args)...);
@@ -36,7 +36,7 @@ namespace Atom
             }
 
         protected:
-            void (*_impl)(void* invokable, TResult& result, TArgs&&... args);
+            void (*_impl)(MemPtr<void> invokable, TResult& result, TArgs&&... args);
         };
 
         template <typename... TArgs>
@@ -46,19 +46,19 @@ namespace Atom
             template <RInvokable<void(TArgs...)> TInvokable>
             auto Set()
             {
-                _impl = [](void* obj, TArgs&&... args) {
-                    TInvokable& invokable = *reinterpret_cast<TInvokable*>(obj);
+                _impl = [](MemPtr<void> obj, TArgs&&... args) {
+                    TInvokable& invokable = *reinterpret_cast<TInvokable*>(obj.raw());
                     invokable(forward<TArgs>(args)...);
                 };
             }
 
-            auto Invoke(void* invokable, TArgs&&... args)
+            auto Invoke(MemPtr<void> invokable, TArgs&&... args)
             {
                 _impl(invokable, forward<TArgs>(args)...);
             }
 
         protected:
-            void (*_impl)(void* invokable, TArgs&&... args);
+            void (*_impl)(MemPtr<void> invokable, TArgs&&... args);
         };
     }
 
