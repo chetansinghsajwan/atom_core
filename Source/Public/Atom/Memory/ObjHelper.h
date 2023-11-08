@@ -33,8 +33,8 @@ namespace Atom
             *mem = forward<TArg>(arg);
         }
 
-        template <typename TPtr>
-        constexpr auto Assign(TPtr&& mem, auto&& arg) const
+        template <typename TPtr, typename TArg>
+        constexpr auto Assign(TPtr&& mem, TArg&& arg) const
             requires(RPtr<TPtr>)
         {
             debug_expects(mem != nullptr);

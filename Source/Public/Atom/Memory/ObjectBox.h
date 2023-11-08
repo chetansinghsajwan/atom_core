@@ -405,7 +405,7 @@ namespace Atom
             }
 
             _object.obj = _AllocMem(_object.size, forceHeap);
-            new (_object.obj.raw()) T(forward<TArgs>(obj));
+            new (_object.obj.raw()) T(forward<T>(obj));
         }
 
         /// ----------------------------------------------------------------------------------------
