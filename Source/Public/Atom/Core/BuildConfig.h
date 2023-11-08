@@ -22,9 +22,9 @@ namespace Atom
         enum class Compiler
         {
             Clang,
-            ClangGcc,
+            ClangGnuc,
             ClangMsvc,
-            Gcc,
+            Gnuc,
             Msvc,
             Unknown
         };
@@ -81,12 +81,12 @@ namespace Atom
         static consteval auto IsCompilerClang() -> bool
         {
             return GetCompiler() == Compiler::Clang or GetCompiler() == Compiler::ClangMsvc
-                   or GetCompiler() == Compiler::ClangGcc;
+                   or GetCompiler() == Compiler::ClangGnuc;
         }
 
-        static consteval auto IsCompilerClangGcc() -> bool
+        static consteval auto IsCompilerClangGnuc() -> bool
         {
-            return GetCompiler() == Compiler::ClangGcc;
+            return GetCompiler() == Compiler::ClangGnuc;
         }
 
         static consteval auto IsCompilerClangMsvc() -> bool
@@ -94,27 +94,27 @@ namespace Atom
             return GetCompiler() == Compiler::ClangMsvc;
         }
 
-        static consteval auto IsCompilerGcc() -> bool
+        static consteval auto IsCompilerGnuc() -> bool
         {
-            return GetCompiler() == Compiler::Gcc;
+            return GetCompiler() == Compiler::Gnuc;
         }
 
-        static consteval auto IsCompilerGccEmulated() -> bool
+        static consteval auto IsCompilerGnucEmulated() -> bool
         {
-            return GetCompiler() == Compiler::ClangGcc;
+            return GetCompiler() == Compiler::ClangGnuc;
         }
 
-        static consteval auto IsCompilerGccOrEmulated() -> bool
+        static consteval auto IsCompilerGnucOrEmulated() -> bool
         {
-            return GetCompiler() == Compiler::Gcc or GetCompiler() == Compiler::ClangGcc;
+            return GetCompiler() == Compiler::Gnuc or GetCompiler() == Compiler::ClangGnuc;
         }
 
-        static consteval auto GetCompilerGccEmulatedVersion() -> Version
+        static consteval auto GetCompilerGnucEmulatedVersion() -> Version
         {
             // TODO: add this assertion.
-            // assert(IsCompilerGccEmulated(), "This compiler doesn't support gcc features.");
+            // assert(IsCompilerGnucEmulated(), "This compiler doesn't support gcc features.");
 
-            return _GetCompilerGccVersion();
+            return _GetCompilerGnucVersion();
         }
 
         static consteval auto IsCompilerMsvc() -> bool
@@ -143,58 +143,58 @@ namespace Atom
     private:
         static consteval auto _GetMode() -> Mode
         {
-#if defined(NDEBUG)
-            return Mode::Release;
-#else
+#if defined(ATOM_MODE_DEBUG)
             return Mode::Debug;
+#elif defined(ATOM_MODE_RELEASE)
+            return Mode::Release;
 #endif
         }
 
         static consteval auto _GetPlatform() -> Platform
         {
-#if defined(_WIN32)
+#if defined(ATOM_PLATFORM_WIN)
             return Platform::Windows;
-#elif defined(__unix__)
+#elif defined(ATOM_PLATFORM_POSIX)
             return Platform::Posix;
-#else
+#elif defined(ATOM_PLATFORM_UNKNOWN)
             return Platform::Unknown;
 #endif
         }
 
         static consteval auto _GetCompiler() -> Compiler
         {
-#if defined(__clang__)
-#    if defined(_MSC_VER)
+#if defined(ATOM_COMPILER_CLANG)
+#    if defined(ATOM_COMPILER_MSVC_EMULATED)
             return Compiler::ClangMsvc;
-#    elif defined(__GNUC__)
-            return Compiler::ClangGcc;
+#    elif defined(ATOM_COMPILER_GNUC_EMULATED)
+            return Compiler::ClangGnuc;
 #    else
             return Compiler::Clang;
 #    endif
-#elif defined(__GNUC__)
-            return Compiler::Gcc;
-#elif defined(_MSC_VER)
+#elif defined(ATOM_COMPILER_GNUC)
+            return Compiler::Gnuc;
+#elif defined(ATOM_COMPILER_MSVC)
             return Compiler::Msvc;
 #endif
         }
 
         static consteval auto _GetCompilerClangVersion() -> Version
         {
-#if defined(__clang__)
-            return Version{
-                .major = __clang_major__, .minor = __clang_minor__, .patch = __clang_patchlevel__
-            };
+#if defined(ATOM_COMPILER_CLANG)
+            return Version{ .major = ATOM_COMPILER_CLANG_VER_MAJOR,
+                .minor = ATOM_COMPILER_CLANG_VER_MINOR,
+                .patch = ATOM_COMPILER_CLANG_VER_PATCH };
 #else
             return _GetCompilerUnknownVersion();
 #endif
         }
 
-        static consteval auto _GetCompilerGccVersion() -> Version
+        static consteval auto _GetCompilerGnucVersion() -> Version
         {
-#if defined(__GNUC__)
-            return Version{
-                .major = __GNUC__, .minor = __GNUC_MINOR__, .patch = __GNUC_PATCHLEVEL__
-            };
+#if defined(ATOM_COMPILER_GNUC) or defined(ATOM_COMPILER_GNUC_EMULATED)
+            return Version{ .major = ATOM_COMPILER_GNUC_VER_MAJOR,
+                .minor = ATOM_COMPILER_GNUC_VER_MINOR,
+                .patch = ATOM_COMPILER_GNUC_VER_PATCH };
 #else
             return _GetCompilerUnknownVersion();
 #endif
@@ -202,8 +202,10 @@ namespace Atom
 
         static consteval auto _GetCompilerMsvcVersion() -> Version
         {
-#if defined(_MSC_VER)
-            return Version{ .major = _MSC_VER / 100, .minor = _MSC_VER % 100, .patch = 0 };
+#if defined(ATOM_COMPILER_MSVC) or defined(ATOM_COMPILER_MSVC_EMULATED)
+            return Version{ .major = ATOM_COMPILER_MSVC_VER_MAJOR,
+                .minor = ATOM_COMPILER_MSVC_VER_MINOR,
+                .patch = ATOM_COMPILER_MSVC_VER_PATCH };
 #else
             return _GetCompilerUnknownVersion();
 #endif
@@ -216,12 +218,14 @@ namespace Atom
 
         static consteval auto _GetCompilerVersion() -> Version
         {
-#if defined(__clang__)
+#if defined(ATOM_COMPILER_CLANG)
             return _GetCompilerClangVersion();
-#elif defined(__GNUC__)
-            return _GetCompilerGccVersion();
-#elif defined(_MSC_VER)
+#elif defined(ATOM_COMPILER_GNUC)
+            return _GetCompilerGnucVersion();
+#elif defined(ATOM_COMPILER_MSVC)
             return _GetCompilerMsvcVersion();
+#elif defined(ATOM_COMPILER_UNKNOWN)
+            return _GetCompilerUnknownVersion();
 #endif
         }
     };

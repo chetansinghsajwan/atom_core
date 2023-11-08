@@ -1,4 +1,5 @@
 #pragma once
+#include <type_traits>
 
 /// ------------------------------------------------------------------------------------------------
 /// General utility macro
@@ -42,14 +43,60 @@
 #define ATOM_OVERLOAD(NAME, ...) _ATOM_OVERLOAD_SELECT(NAME, ATOM_ARG_N(__VA_ARGS__))(__VA_ARGS__)
 
 /// ------------------------------------------------------------------------------------------------
-///
+/// Mode
+/// ------------------------------------------------------------------------------------------------
+#if defined(NDEBUG)
+#    define ATOM_MODE_DEBUG
+#else
+#    define ATOM_MODE_RELEASE
+#endif
+
+/// ------------------------------------------------------------------------------------------------
+/// Platform
+/// ------------------------------------------------------------------------------------------------
+#if defined(_WIN32)
+#    define ATOM_PLATFORM_WIN
+#elif defined(__unix__)
+#    define ATOM_PLATFORM_POSIX
+#else
+#    define ATOM_PLATFORM_UNKNOWN
+#endif
+
+/// ------------------------------------------------------------------------------------------------
+/// Compiler
 /// ------------------------------------------------------------------------------------------------
 #if defined(__clang__)
 #    define ATOM_COMPILER_CLANG
+#    define ATOM_COMPILER_CLANG_VER_MAJOR __clang_major__
+#    define ATOM_COMPILER_CLANG_VER_MINOR __clang_minor__
+#    define ATOM_COMPILER_CLANG_VER_PATCH __clang_patchlevel__
+#    define ATOM_COMPILER_CLANG_VER __clang_version__
+
 #elif defined(__GNUC__)
-#    define ATOM_COMPILER_GCC
+#    if defined(ATOM_COMPILER_CLANG)
+#        define ATOM_COMPILER_GNUC_EMUL
+#    else
+#        define ATOM_COMPILER_GNUC
+#    endif
+#    define ATOM_COMPILER_GNUC_VER_MAJOR __GNUC__
+#    define ATOM_COMPILER_GNUC_VER_MINOR __GNUC_MINOR__
+#    define ATOM_COMPILER_GNUC_VER_PATCH __GNUC_PATCHLEVEL__
+#    define ATOM_COMPILER_GNUC_VER (__GNUC__ * 100) + __GNUC_MINOR__
+
 #elif defined(_MSC_VER)
-#    define ATOM_COMPILER_MSVC
+#    if defined(ATOM_COMPILER_CLANG)
+#        define ATOM_COMPILER_MSVC_EMUL
+#    else
+#        define ATOM_COMPILER_MSVC
+#    endif
+#    define ATOM_COMPILER_MSVC_VER_MAJOR (_MSC_VER / 100)
+#    define ATOM_COMPILER_MSVC_VER_MINOR (_MSC_VER % 100)
+#    define ATOM_COMPILER_MSVC_VER_PATCH (_MSC_VER)
+#    define ATOM_COMPILER_MSVC_VER _MSC_VER
+
+#else
+#    define ATOM_COMPILER_UNKNOWN
+
 #endif
 
 /// ------------------------------------------------------------------------------------------------
@@ -74,10 +121,10 @@
 /// ------------------------------------------------------------------------------------------------
 /// ATOM_ATTR_NO_UNIQUE_ADDRESS
 /// ------------------------------------------------------------------------------------------------
-#if defined(ATOM_COMP_CLANG)
+#if defined(ATOM_COMPILER_CLANG)
 #    define ATOM_ATTR_NO_UNIQUE_ADDRESS
-#elif defined(ATOM_COMP_MSVC)
-#    if (ATOM_COMP_MSVC_VER >= 1929)
+#elif defined(ATOM_COMPILER_MSVC)
+#    if (ATOM_COMPILER_MSVC_VER >= 1929)
 #        define ATOM_ATTR_NO_UNIQUE_ADDRESS [[msvc::no_unique_address]]
 #    else
 #        define ATOM_ATTR_NO_UNIQUE_ADDRESS [[no_unique_address]]
@@ -91,4 +138,13 @@
 /// ------------------------------------------------------------------------------------------------
 #define ATOM_CONDITIONAL_FIELD(Condition, T)                                                       \
     ATOM_ATTR_NO_UNIQUE_ADDRESS                                                                    \
-    ::Atom::TTI::TConditionalField<(Condition), T>
+    _Atom::ConditionalField<(Condition), T>
+
+namespace _Atom
+{
+    class _Empty
+    {};
+
+    template <bool cond, typename T>
+    using ConditionalField = std::conditional_t<cond, T, _Empty>;
+}
