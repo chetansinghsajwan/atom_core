@@ -1,4 +1,5 @@
 #pragma once
+#include "Atom/Preprocessors.h"
 
 namespace Atom
 {
@@ -225,11 +226,3 @@ namespace Atom
         }
     };
 }
-
-#if defined(__clang__)
-#    define ATOM_COMPILER_CLANG
-#elif defined(__GNUC__)
-#    define ATOM_COMPILER_GCC
-#elif defined(_MSC_VER)
-#    define ATOM_COMPILER_MSVC
-#endif

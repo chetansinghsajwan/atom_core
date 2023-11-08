@@ -66,28 +66,3 @@ namespace Atom::TTI
     template <typename T>
     constexpr bool IsQualified = IsConst<T> || IsVolatile<T>;
 }
-
-/// ------------------------------------------------------------------------------------------------
-/// ATOM_ATTR_NO_UNIQUE_ADDRESS
-/// ------------------------------------------------------------------------------------------------
-#if defined(ATOM_COMP_CLANG)
-#    define ATOM_ATTR_NO_UNIQUE_ADDRESS
-
-#elif defined(ATOM_COMP_MSVC)
-#    if (ATOM_COMP_MSVC_VER >= 1929)
-#        define ATOM_ATTR_NO_UNIQUE_ADDRESS [[msvc::no_unique_address]]
-#    else
-#        define ATOM_ATTR_NO_UNIQUE_ADDRESS [[no_unique_address]]
-#    endif
-
-#else
-#    define ATOM_ATTR_NO_UNIQUE_ADDRESS [[no_unique_address]]
-
-#endif
-
-/// ------------------------------------------------------------------------------------------------
-/// ATOM_CONDITIONAL_FIELD
-/// ------------------------------------------------------------------------------------------------
-#define ATOM_CONDITIONAL_FIELD(Condition, T)                                                       \
-    ATOM_ATTR_NO_UNIQUE_ADDRESS                                                                    \
-    ::Atom::TTI::TConditionalField<(Condition), T>

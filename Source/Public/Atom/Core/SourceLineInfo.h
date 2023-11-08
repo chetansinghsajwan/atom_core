@@ -1,5 +1,6 @@
 #pragma once
 #include "Atom/Core/Primitives.h"
+#include "Atom/Preprocessors.h"
 #include <source_location>
 
 namespace Atom
@@ -17,7 +18,7 @@ namespace Atom
         /// - This default argument is used to capture the source line info of the calling site.
         ///   Don't pass any argument for this.
         /// --------------------------------------------------------------------------------------------
-#if defined(ATOM_COMP_CLANG) && !defined(__cpp_lib_source_location)
+#if defined(ATOM_COMPILER_CLANG) && !defined(__cpp_lib_source_location)
         static consteval auto current(const char* fileName = __builtin_FILE(),
             const char* funcName = __builtin_FUNCTION(), u32 line = __builtin_LINE(),
             u32 column = __builtin_COLUMN()) -> SourceLineInfo
