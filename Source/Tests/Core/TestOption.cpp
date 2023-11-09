@@ -14,7 +14,7 @@ TEST_CASE("Atom.Core.Option")
 
         Option<TrackedType> opt;
 
-        REQUIRE(not opt.isValue());
+        REQUIRE(opt.isNull());
     }
 
     SECTION("Value Constructor")
@@ -69,7 +69,7 @@ TEST_CASE("Atom.Core.Option")
         Option<TrackedType> opt2;
         opt1 = opt2;
 
-        REQUIRE(not opt1.isValue());
+        REQUIRE(opt1.isNull());
     }
 
     SECTION("Move Constructor")
@@ -107,7 +107,7 @@ TEST_CASE("Atom.Core.Option")
         Option<TrackedType> opt2;
         opt1 = mov(opt2);
 
-        REQUIRE(not opt1.isValue());
+        REQUIRE(opt1.isNull());
     }
 
     SECTION("Destructor")
@@ -187,7 +187,7 @@ TEST_CASE("Atom.Core.Option")
 
         opt.reset();
 
-        REQUIRE(not opt.isValue());
+        REQUIRE(opt.isNull());
     }
 
     SECTION("Comparision with `Option`")
@@ -200,62 +200,62 @@ TEST_CASE("Atom.Core.Option")
         Option<TrackedType> opt1;
 
         // Both have null state, so they are compared equal.
-        REQUIRE(opt0 == opt1);
-        REQUIRE_FALSE(opt0 != opt1);
+        REQUIRE(opt0.eq(opt1));
+        REQUIRE_FALSE(opt0.ne(opt1));
 
         // Both have null state, they will not be compared.
-        REQUIRE_FALSE(opt0 < opt1);
-        REQUIRE_FALSE(opt0 > opt1);
-        REQUIRE_FALSE(opt0 <= opt1);
-        REQUIRE_FALSE(opt0 >= opt1);
+        REQUIRE_FALSE(opt0.lt(opt1));
+        REQUIRE_FALSE(opt0.gt(opt1));
+        REQUIRE_FALSE(opt0.le(opt1));
+        REQUIRE_FALSE(opt0.ge(opt1));
 
         // If either have them null state, still they will not be compared.
         opt0 = TrackedType();
         opt0->lastOp = TrackedType::EOperation::None;
 
-        REQUIRE_FALSE(opt0 == opt1);
+        REQUIRE_FALSE(opt0.eq(opt1));
         REQUIRE(opt0.value().lastOp == TrackedType::EOperation::None);
 
-        REQUIRE(opt0 != opt1);
+        REQUIRE(opt0.ne(opt1));
         REQUIRE(opt0.value().lastOp == TrackedType::EOperation::None);
 
-        REQUIRE_FALSE(opt0 < opt1);
+        REQUIRE_FALSE(opt0.lt(opt1));
         REQUIRE(opt0.value().lastOp == TrackedType::EOperation::None);
 
-        REQUIRE_FALSE(opt0 > opt1);
+        REQUIRE_FALSE(opt0.gt(opt1));
         REQUIRE(opt0.value().lastOp == TrackedType::EOperation::None);
 
-        REQUIRE_FALSE(opt0 <= opt1);
+        REQUIRE_FALSE(opt0.le(opt1));
         REQUIRE(opt0.value().lastOp == TrackedType::EOperation::None);
 
-        REQUIRE_FALSE(opt0 >= opt1);
+        REQUIRE_FALSE(opt0.ge(opt1));
         REQUIRE(opt0.value().lastOp == TrackedType::EOperation::None);
 
         // They will be compared if they both have value state.
         opt1 = TrackedType();
         opt1->lastOp = TrackedType::EOperation::None;
 
-        REQUIRE(opt0 == opt1);
+        REQUIRE(opt0.eq(opt1));
         REQUIRE(opt0.value().lastOp == TrackedType::EOperation::EqualOperator);
         REQUIRE(opt1.value().lastOp == TrackedType::EOperation::EqualOperator);
 
-        REQUIRE_FALSE(opt0 != opt1);
+        REQUIRE_FALSE(opt0.ne(opt1));
         REQUIRE(opt0.value().lastOp == TrackedType::EOperation::EqualOperator);
         REQUIRE(opt1.value().lastOp == TrackedType::EOperation::EqualOperator);
 
-        REQUIRE(opt0 < opt1);
+        REQUIRE(opt0.lt(opt1));
         REQUIRE(opt0.value().lastOp == TrackedType::EOperation::LessThanOperator);
         REQUIRE(opt1.value().lastOp == TrackedType::EOperation::LessThanOperator);
 
-        REQUIRE(opt0 > opt1);
+        REQUIRE(opt0.gt(opt1));
         REQUIRE(opt0.value().lastOp == TrackedType::EOperation::GreaterThanOperator);
         REQUIRE(opt1.value().lastOp == TrackedType::EOperation::GreaterThanOperator);
 
-        REQUIRE(opt0 <= opt1);
+        REQUIRE(opt0.le(opt1));
         REQUIRE(opt0.value().lastOp == TrackedType::EOperation::LessThanOrEqualOperator);
         REQUIRE(opt1.value().lastOp == TrackedType::EOperation::LessThanOrEqualOperator);
 
-        REQUIRE(opt0 >= opt1);
+        REQUIRE(opt0.ge(opt1));
         REQUIRE(opt0.value().lastOp == TrackedType::EOperation::GreaterThanOrEqualOperator);
         REQUIRE(opt1.value().lastOp == TrackedType::EOperation::GreaterThanOrEqualOperator);
     }
@@ -265,35 +265,15 @@ TEST_CASE("Atom.Core.Option")
         Option<TrackedType> opt;
 
         // `opt` has null state.
-        REQUIRE(opt == nullopt);
+        REQUIRE(opt.isNull());
 
         opt = TrackedType();
         opt->lastOp = TrackedType::EOperation::None;
 
         // `opt` doesn't have null state anymore.
-        REQUIRE(opt != nullopt);
+        REQUIRE(opt.isValue());
 
         // The value isn't compared in this comparision.
         REQUIRE(opt->lastOp == TrackedType::EOperation::None);
-    }
-
-    SECTION("Reference Types")
-    {
-        TrackedType val;
-        Option<TrackedType&> opt = val;
-
-        REQUIRE(&val == &opt.value());
-
-        opt.value().lastOp = TrackedType::EOperation::Destructor;
-        REQUIRE(val.lastOp == TrackedType::EOperation::Destructor);
-
-        using Opt = Option<i32&>;
-
-        STATIC_REQUIRE(RDefaultConstructible<Opt>);
-        STATIC_REQUIRE(RCopyConstructible<Opt>);
-        STATIC_REQUIRE(RMoveConstructible<Opt>);
-        STATIC_REQUIRE(RCopyAssignable<Opt>);
-        STATIC_REQUIRE(RMoveAssignable<Opt>);
-        STATIC_REQUIRE(RDestructible<Opt>);
     }
 }

@@ -55,6 +55,12 @@ namespace Atom::TTI
     using TUnqualified = std::remove_cv_t<T>;
 
     template <typename T>
+    constexpr bool IsVoid = std::is_void_v<T>;
+
+    template <typename T>
+    constexpr bool IsRef = std::is_reference_v<T>;
+
+    template <typename T>
     constexpr bool IsRValueRef = std::is_rvalue_reference_v<T>;
 
     template <typename T>

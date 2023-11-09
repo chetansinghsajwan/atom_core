@@ -5,7 +5,7 @@
 
 namespace Atom
 {
-    template <typename T>
+    template <typename TVal>
     union _OptionStorage
     {
     public:
@@ -33,31 +33,31 @@ namespace Atom
         _OptionStorage& operator=(_OptionStorage&&) = default;
 
         ~_OptionStorage()
-            requires(RTriviallyDestructible<T>)
+            requires(RTriviallyDestructible<TVal>)
         = default;
 
         ~_OptionStorage()
-            requires(not RTriviallyDestructible<T>)
+            requires(not RTriviallyDestructible<TVal>)
         {}
 
     public:
-        constexpr auto getData() -> MemPtr<T>
+        constexpr auto getData() -> MemPtr<TVal>
         {
             return &_value;
         }
 
-        constexpr auto getData() const -> ConstMemPtr<T>
+        constexpr auto getData() const -> ConstMemPtr<TVal>
         {
             return &_value;
         }
 
     private:
-        T _value;
+        TVal _value;
         NoInit _dummy;
     };
 
-    template <typename T>
-    union _OptionStorage<MemPtr<T>>
+    template <typename TVal>
+    union _OptionStorage<MemPtr<TVal>>
     {
     public:
         class NoInit
@@ -68,23 +68,23 @@ namespace Atom
 
         _OptionStorage(NoInit) {}
 
-        _OptionStorage(MemPtr<T> ptr):
+        _OptionStorage(MemPtr<TVal> ptr):
             _ptr{ ptr }
         {}
 
     public:
-        constexpr auto getData() -> MemPtr<T>*
+        constexpr auto getData() -> MemPtr<TVal>*
         {
             return &_ptr;
         }
 
-        constexpr auto getData() const -> ConstMemPtr<T>*
+        constexpr auto getData() const -> ConstMemPtr<TVal>*
         {
             return &_ptr;
         }
 
     private:
-        MemPtr<T> _ptr;
+        MemPtr<TVal> _ptr;
     };
 
     template <typename T>
@@ -92,28 +92,65 @@ namespace Atom
     {
         using _Storage = _OptionStorage<T>;
         using _StorageCtorNoInit = _Storage::NoInit;
+        using This = _OptionImpl<T>;
 
     public:
-        class CtorNoVal
-        {};
+        using TVal = T;
 
     public:
-        static consteval auto GetDefault() -> const T&
+        static consteval auto GetDefault() -> const TVal&
         {
-            return T();
+            return TVal();
         }
 
     public:
-        constexpr _OptionImpl() = default;
-
-        constexpr _OptionImpl(CtorNoVal):
+        constexpr _OptionImpl():
             _storage{ _StorageCtorNoInit{} }, _isValue{ false }
         {}
+
+        constexpr _OptionImpl(const This& that)
+            requires(RTriviallyCopyConstructible<TVal>)
+        = default;
+
+        constexpr _OptionImpl(const This& that)
+            requires(not RTriviallyCopyConstructible<TVal>)
+            : This()
+        {
+            constructValueFromOption(that);
+        }
+
+        constexpr _OptionImpl& operator=(const This& that) = default;
+
+        constexpr _OptionImpl(This&& that)
+            requires(RTriviallyMoveConstructible<TVal>)
+        = default;
+
+        constexpr _OptionImpl(This&& that)
+            requires(not RTriviallyMoveConstructible<TVal>)
+            : This()
+        {
+            constructValueFromOption(mov(that));
+        }
+
+        constexpr _OptionImpl& operator=(This&& that) = default;
 
         template <typename... TArgs>
         constexpr _OptionImpl(TArgs&&... args):
             _storage{ forward<TArgs>(args)... }, _isValue{ true }
         {}
+
+        constexpr ~_OptionImpl()
+            requires(RTriviallyDestructible<TVal>)
+        = default;
+
+        constexpr ~_OptionImpl()
+            requires(not RTriviallyDestructible<TVal>)
+        {
+            if (_isValue)
+            {
+                _destroyValue();
+            }
+        }
 
     public:
         constexpr auto constructValueFromOption(const _OptionImpl& opt)
@@ -189,22 +226,14 @@ namespace Atom
             }
         }
 
-        constexpr auto destroyValueOnDestructor()
-        {
-            if (_isValue)
-            {
-                _destroyValue();
-            }
-        }
-
-        constexpr auto getValue() -> T&
+        constexpr auto getValue() -> TVal&
         {
             debug_expects(_isValue);
 
             return _getValue();
         }
 
-        constexpr auto getValue() const -> const T&
+        constexpr auto getValue() const -> const TVal&
         {
             debug_expects(_isValue);
 
@@ -292,31 +321,31 @@ namespace Atom
         template <typename... TArgs>
         constexpr auto _constructValue(TArgs&&... args)
         {
-            ObjHelper().ConstructAs<T>(_storage.getData(), forward<TArgs>(args)...);
+            ObjHelper().ConstructAs<TVal>(_storage.getData(), forward<TArgs>(args)...);
         }
 
         template <typename TArg>
         constexpr auto _assignValue(TArg&& val)
         {
-            ObjHelper().AssignAs<T>(_storage.getData(), forward<TArg>(val));
+            ObjHelper().AssignAs<TVal>(_storage.getData(), forward<TArg>(val));
         }
 
-        constexpr auto _swapValue(T& that)
+        constexpr auto _swapValue(TVal& that)
         {
             ObjHelper().Swap(_getValue(), that);
         }
 
         constexpr auto _destroyValue()
         {
-            ObjHelper().DestructAs<T>(_storage.getData());
+            ObjHelper().DestructAs<TVal>(_storage.getData());
         }
 
-        constexpr auto _getValue() -> T&
+        constexpr auto _getValue() -> TVal&
         {
             return *_storage.getData();
         }
 
-        constexpr auto _getValue() const -> const T&
+        constexpr auto _getValue() const -> const TVal&
         {
             return *_storage.getData();
         }

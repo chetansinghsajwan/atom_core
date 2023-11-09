@@ -97,40 +97,40 @@ namespace Atom::Tests
         }
 
     public:
-        constexpr auto operator==(const TrackedType& that) const -> bool
+        constexpr auto eq(const TrackedType& that) const -> bool
         {
             lastOp = EOperation::EqualOperator;
             that.lastOp = EOperation::EqualOperator;
             return true;
         }
 
-        constexpr auto operator!=(const TrackedType& that) const -> bool
+        constexpr auto ne(const TrackedType& that) const -> bool
         {
             return not(*this == that);
         }
 
-        constexpr auto operator<(const TrackedType& that) const -> bool
+        constexpr auto lt(const TrackedType& that) const -> bool
         {
             lastOp = EOperation::LessThanOperator;
             that.lastOp = EOperation::LessThanOperator;
             return true;
         }
 
-        constexpr auto operator>(const TrackedType& that) const -> bool
+        constexpr auto gt(const TrackedType& that) const -> bool
         {
             lastOp = EOperation::GreaterThanOperator;
             that.lastOp = EOperation::GreaterThanOperator;
             return true;
         }
 
-        constexpr auto operator<=(const TrackedType& that) const -> bool
+        constexpr auto le(const TrackedType& that) const -> bool
         {
             lastOp = EOperation::LessThanOrEqualOperator;
             that.lastOp = EOperation::LessThanOrEqualOperator;
             return true;
         }
 
-        constexpr auto operator>=(const TrackedType& that) const -> bool
+        constexpr auto ge(const TrackedType& that) const -> bool
         {
             lastOp = EOperation::GreaterThanOrEqualOperator;
             that.lastOp = EOperation::GreaterThanOrEqualOperator;

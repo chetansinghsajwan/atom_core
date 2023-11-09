@@ -164,7 +164,7 @@ namespace Atom::Tests
         /// ----------------------------------------------------------------------------------------
         /// # Equal To Opeartor
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator==(const CustomType& that) -> bool
+        constexpr auto eq(const CustomType& that) const -> bool
             requires(EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::EqualToOperator))
         {
             return true;
@@ -173,7 +173,7 @@ namespace Atom::Tests
         /// ----------------------------------------------------------------------------------------
         /// # Not Equal To Opeartor
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator!=(const CustomType& that) -> bool
+        constexpr auto ne(const CustomType& that) const -> bool
             requires(EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::EqualToOperator))
         {
             return not(*this == that);
@@ -182,7 +182,7 @@ namespace Atom::Tests
         /// ----------------------------------------------------------------------------------------
         /// # Less Than Opeartor
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator<(const CustomType& that) -> bool
+        constexpr auto lt(const CustomType& that) const -> bool
             requires(EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::LessThanToOperator))
         {
             return true;
@@ -191,7 +191,7 @@ namespace Atom::Tests
         /// ----------------------------------------------------------------------------------------
         /// # Greater Than Opeartor
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator>(const CustomType& that) -> bool
+        constexpr auto gt(const CustomType& that) const -> bool
             requires(EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::GreaterThanToOperator))
         {
             return true;
@@ -200,7 +200,7 @@ namespace Atom::Tests
         /// ----------------------------------------------------------------------------------------
         /// # Less Than Or Equal To Opeartor
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator<=(const CustomType& that) -> bool
+        constexpr auto le(const CustomType& that) const -> bool
             requires(EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::LessThanOrEqualToOperator))
         {
             return true;
@@ -209,7 +209,7 @@ namespace Atom::Tests
         /// ----------------------------------------------------------------------------------------
         /// # Greater Than Or Equal To Opeartor
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator>=(const CustomType& that) -> bool
+        constexpr auto ge(const CustomType& that) const -> bool
             requires(EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::GreaterThanOrEqualToOperator))
         {
             return true;
