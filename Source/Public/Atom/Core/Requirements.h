@@ -203,9 +203,9 @@ namespace Atom
     /// Ensures `T0` is `Assignable` using `T1`.
     /// --------------------------------------------------------------------------------------------
     template <typename T0, typename T1>
-    concept RAssignable = requires(T0 t0, T1 t1)
+    concept RAssignable = requires(T0 v0, T1 v1)
     {
-        { t0 = forward<T1>(t1) } -> RSameAs<T0&>;
+        { v0 = forward<T1>(v1) } -> RSameAs<T0&>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -368,10 +368,20 @@ namespace Atom
     /// Ensures `T0` and `T1` are `EqualityComparable`.
     /// --------------------------------------------------------------------------------------------
     template <typename T0, typename T1>
-    concept REqualityComparableWith = requires(T0 t0, T1 t1)
+    concept _REqualityComparableWith = requires(const T0 v0, const T1 v1)
     {
-        { t0 == t1 } -> RConvertibleTo<bool>;
-        { t0 != t1 } -> RConvertibleTo<bool>;
+        { v0 == v1 } -> RSameAs<bool>;
+        { v0 != v1 } -> RSameAs<bool>;
+    };
+
+    /// --------------------------------------------------------------------------------------------
+    /// Ensures `T0` and `T1` are `EqualityComparable`.
+    /// --------------------------------------------------------------------------------------------
+    template <typename T0, typename T1>
+    concept REqualityComparableWith = requires(const T0 v0, const T1 v1)
+    {
+        { v0.eq(v1) } -> RSameAs<bool>;
+        { v0.ne(v1) } -> RSameAs<bool>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -384,14 +394,28 @@ namespace Atom
     /// Ensures `T0` and `T1` are `Comparable`.
     /// --------------------------------------------------------------------------------------------
     template <typename T0, typename T1>
-    concept RComparableWith = requires(T0 t0, T1 t1)
+    concept _RComparableWith = requires(const T0 v0, const T1 v1)
+    {
+        requires _REqualityComparableWith<T0, T1>;
+
+        { v0 < v1 } -> RSameAs<bool>;
+        { v0 > v1 } -> RSameAs<bool>;
+        { v0 <= v1 } -> RSameAs<bool>;
+        { v0 >= v1 } -> RSameAs<bool>;
+    };
+
+    /// --------------------------------------------------------------------------------------------
+    /// Ensures `T0` and `T1` are `Comparable`.
+    /// --------------------------------------------------------------------------------------------
+    template <typename T0, typename T1>
+    concept RComparableWith = requires(const T0 v0, const T1 v1)
     {
         requires REqualityComparableWith<T0, T1>;
 
-        { t0 < t1 } -> RConvertibleTo<bool>;
-        { t0 > t1 } -> RConvertibleTo<bool>;
-        { t0 <= t1 } -> RConvertibleTo<bool>;
-        { t0 >= t1 } -> RConvertibleTo<bool>;
+        { v0.lt(v1) } -> RSameAs<bool>;
+        { v0.gt(v1) } -> RSameAs<bool>;
+        { v0.le(v1) } -> RSameAs<bool>;
+        { v0.ge(v1) } -> RSameAs<bool>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -417,4 +441,50 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <class T>
     concept Regular = RSemiRegular<T> && REqualityComparable<T>;
+}
+
+namespace Atom
+{
+    template <typename T0, typename T1>
+    constexpr auto operator==(const T0& v0, const T1& v1) -> bool
+        requires REqualityComparableWith<T0, T1>
+    {
+        return v0.eq(v1);
+    }
+
+    template <typename T0, typename T1>
+    constexpr auto operator!=(const T0& v0, const T1& v1) -> bool
+        requires REqualityComparableWith<T0, T1>
+    {
+        return v0.ne(v1);
+    }
+
+    template <typename T0, typename T1>
+    constexpr auto operator<(const T0& v0, const T1& v1) -> bool
+        requires RComparableWith<T0, T1>
+    {
+        return v0.lt(v1);
+    }
+
+    template <typename T0, typename T1>
+    constexpr auto operator>(const T0& v0, const T1& v1) -> bool
+        requires RComparableWith<T0, T1>
+    {
+        return v0.gt(v1);
+    }
+
+    template <typename T0, typename T1>
+    constexpr auto operator<=(const T0& v0, const T1& v1) -> bool
+        requires RComparableWith<T0, T1>
+    {
+        return v0.le(v1);
+    }
+
+    template <typename T0, typename T1>
+    constexpr auto operator>=(const T0& v0, const T1& v1) -> bool
+    
+        requires RComparableWith<T0, T1>
+    {
+        return v0.ge(v1);
+    }
 }
