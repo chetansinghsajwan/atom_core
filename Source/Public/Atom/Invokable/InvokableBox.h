@@ -99,9 +99,9 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// NullEqualityOperator.
         /// ----------------------------------------------------------------------------------------
-        auto operator==(NullType null) const -> bool
+        auto eq(NullType null) const -> bool
         {
-            return ObjectBox::operator==(null);
+            return ObjectBox::eq(null);
         }
 
         /// ----------------------------------------------------------------------------------------

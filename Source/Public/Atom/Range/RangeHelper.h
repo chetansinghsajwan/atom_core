@@ -191,7 +191,7 @@ ATOM_PRAGMA_OPTIMIZE_ON
             }
 
             usize count = 0;
-            for (; not iter.equals(iterEnd); iter.next())
+            for (; not iter.eq(iterEnd); iter.next())
                 count++;
 
             return count;

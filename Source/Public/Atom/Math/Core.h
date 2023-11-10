@@ -18,7 +18,7 @@ namespace Atom::Math
 
     constexpr auto HexToChar(byte hex) -> StackString<2>
     {
-        constexpr const Char chars[] = "0123456789abcdef";
+        constexpr char chars[] = "0123456789abcdef";
 
         byte high = hex >> 4;
         byte low = hex & 0b00001111;

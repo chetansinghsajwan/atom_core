@@ -249,7 +249,7 @@ namespace Atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename TRange1>
-        constexpr auto equals(const TRange1& range) const -> bool
+        constexpr auto eq(const TRange1& range) const -> bool
             requires(RRange<TRange1>) and (REqualityComparableWith<TElem, typename TRange1::TElem>)
         {
             return _impl().compare(range) == 0;
@@ -259,20 +259,10 @@ namespace Atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename TRange1>
-        constexpr auto operator==(const TRange1& range) const -> bool
+        constexpr auto ne(const TRange1& range) const -> bool
             requires(RRange<TRange1>) and (REqualityComparableWith<TElem, typename TRange1::TElem>)
         {
-            return _impl().compare(range) == 0;
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename TRange1>
-        constexpr auto operator!=(const TRange1& range) const -> bool
-            requires(RRange<TRange1>) and (REqualityComparableWith<TElem, typename TRange1::TElem>)
-        {
-            return _impl().compare(range) != 0;
+            return not eq(range);
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////

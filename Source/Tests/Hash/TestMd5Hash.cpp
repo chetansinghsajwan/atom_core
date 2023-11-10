@@ -18,8 +18,8 @@ TEST_CASE("Atom::Hash::Md5Hash")
         Md5Hash hash2 = { 0xaa, 0x39, 0xa3, 0xee, 0x5e, 0x6b, 0x4b, 0x0d, 0x32, 0x55, 0xbf, 0xef,
             0x95, 0x60, 0x18, 0x90 };
 
-        CHECK(hash1 == hash1);
-        CHECK(hash1 != hash2);
+        CHECK(hash1.eq(hash1));
+        CHECK(hash1.ne(hash2));
     }
 
     SECTION("Null Hash")
@@ -27,12 +27,12 @@ TEST_CASE("Atom::Hash::Md5Hash")
         Md5Hash hash;
         Md5Hash nullHash = Md5Hash::Null;
 
-        CHECK(nullHash == Md5Hash::Null);
+        CHECK(nullHash.eq(Md5Hash::Null));
 
         hash = Md5Hash::Null;
 
-        CHECK(hash == Md5Hash::Null);
-        CHECK(hash == nullHash);
+        CHECK(hash.eq(Md5Hash::Null));
+        CHECK(hash.eq(nullHash));
     }
 }
 
@@ -45,7 +45,7 @@ TEST_CASE("Atom::Hash::Md5HashParser")
         Md5Hash expected = { 0xda, 0x39, 0xa3, 0xee, 0x5e, 0x6b, 0x4b, 0x0d, 0x32, 0x55, 0xbf, 0xef,
             0x95, 0x60, 0x18, 0x90 };
 
-        CHECK(hash == expected);
+        CHECK(hash.eq(expected));
     }
 
     SECTION("Invalid Hash")
@@ -54,7 +54,7 @@ TEST_CASE("Atom::Hash::Md5HashParser")
         // Md5Hash hash = Md5HashParser()
         //     .parse("da3");
         //
-        // CHECK(hash == Md5Hash);
+        // CHECK(hash.eq(Md5Hash));
     }
 }
 
@@ -67,7 +67,7 @@ TEST_CASE("Atom::Hash::Md5HashStringifier")
 
     StringView expected = MakeRange("da39a3ee5e6b4b0d3255bfef95601890");
 
-    CHECK(str.equals(expected));
+    CHECK(str.eq(expected));
 }
 
 TEST_CASE("Atom::Hash::Md5HashGenerator")
@@ -81,7 +81,7 @@ TEST_CASE("Atom::Hash::Md5HashGenerator")
 
         Md5Hash expected = Md5HashParser().parse(MakeRange("d41d8cd98f00b204e9800998ecf8427e"));
 
-        CHECK(hash == expected);
+        CHECK(hash.eq(expected));
     }
 
     // Tests if the SHA-1 hash of a single block input string is correct.
@@ -93,7 +93,7 @@ TEST_CASE("Atom::Hash::Md5HashGenerator")
 
         Md5Hash expected = Md5HashParser().parse(MakeRange("9e107d9d372bb6826bd81d3542a419d6"));
 
-        CHECK(hash == expected);
+        CHECK(hash.eq(expected));
     }
 
     // Tests if the SHA-1 hash of a multi-block input string is correct.
@@ -111,6 +111,6 @@ TEST_CASE("Atom::Hash::Md5HashGenerator")
 
         Md5Hash expected = Md5HashParser().parse(MakeRange("db89bb5ceab87f9c0fcc2ab36c189c2c"));
 
-        CHECK(hash == expected);
+        CHECK(hash.eq(expected));
     }
 }

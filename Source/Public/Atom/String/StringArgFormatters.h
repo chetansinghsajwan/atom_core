@@ -10,19 +10,19 @@
 
 namespace Atom
 {
-    using _FmtFmtParseCtx = ::fmt::basic_format_parse_context<Char>;
+    using _FmtFmtParseCtx = ::fmt::basic_format_parse_context<char>;
     using _FmtFmtParseCtxIter = typename _FmtFmtParseCtx::iterator;
 
-    using _FmtFmtCtxOut = ::fmt::detail::buffer_appender<Char>;
-    using _FmtFmtCtx = ::fmt::basic_format_context<_FmtFmtCtxOut, Char>;
+    using _FmtFmtCtxOut = ::fmt::detail::buffer_appender<char>;
+    using _FmtFmtCtx = ::fmt::basic_format_context<_FmtFmtCtxOut, char>;
 
     template <typename... TArgs>
-    using _FmtFmtString = ::fmt::basic_format_string<Char, fmt::type_identity_t<TArgs>...>;
-    using _FmtRunFmtString = ::fmt::runtime_format_string<Char>;
-    using _FmtStringView = ::fmt::basic_string_view<Char>;
+    using _FmtFmtString = ::fmt::basic_format_string<char, fmt::type_identity_t<TArgs>...>;
+    using _FmtRunFmtString = ::fmt::runtime_format_string<char>;
+    using _FmtStringView = ::fmt::basic_string_view<char>;
 
     template <typename T>
-    using _FmtFmter = ::fmt::formatter<T, Char>;
+    using _FmtFmter = ::fmt::formatter<T, char>;
 
     using _FmtFmtEx = ::fmt::format_error;
 
@@ -56,7 +56,7 @@ namespace Atom
 
         constexpr auto AdvanceTo(ArrayIter<Char> it)
         {
-            _fmtCtx.advance_to(it.data().raw());
+            _fmtCtx.advance_to(_ToStdCharPtr(it.data().raw()));
         }
 
     public:
@@ -153,7 +153,7 @@ namespace Atom
         {
             _FmtFmtCtx& fmtCtx = ctx._fmtCtx;
 
-            _FmtStringView fmt_str{ str.data().raw(), str.count() };
+            _FmtStringView fmt_str{ _ToStdCharPtr(str.data().raw()), str.count() };
             fmtCtx.advance_to(_fmtFmter.format(fmt_str, fmtCtx));
         }
 

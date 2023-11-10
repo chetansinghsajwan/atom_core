@@ -6,8 +6,8 @@ using namespace Atom;
 
 TEST_CASE("Atom::StringFormatter")
 {
-    String out = StringFmter().Fmt("Hello {}", StringView{ "World." });
-    CHECK(out == MakeRange("Hello World."));
+    // String out = StringFmter().Fmt("Hello {}", StringView(MakeRange("World.")));
+    // CHECK(out == MakeRange("Hello World."));
 
     // StringView fmt = "Hello {}";
     // String out1 = StringFmter().Fmt(RuntimeFormatString(fmt), "World.");

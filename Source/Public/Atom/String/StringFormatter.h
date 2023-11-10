@@ -9,14 +9,18 @@ namespace Atom
     class _FmtStringViewCnvter
     {
     public:
-        constexpr auto FromFmt(_FmtStringView strv) -> StringView
+        constexpr auto FromFmt(_FmtStringView str) -> StringView
         {
-            return StringView{ MakeRange(strv.data(), strv.size()) };
+            const Char* begin = _FromStdCharPtr(str.data());
+            usize count = str.size();
+            return StringView{ MakeRange(begin, count) };
         }
 
-        constexpr auto ToFmt(StringView strv) -> _FmtStringView
+        constexpr auto ToFmt(StringView str) -> _FmtStringView
         {
-            return _FmtStringView{ strv.data().raw(), strv.count().val() };
+            const char* begin = _ToStdCharPtr(str.data().raw());
+            const _usize count = str.count().val();
+            return _FmtStringView{ begin, count };
         }
     };
 

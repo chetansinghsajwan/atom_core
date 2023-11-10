@@ -21,7 +21,7 @@ TEST_CASE("Atom::Uuid::Uuid")
     SECTION("Stringification")
     {
         Uuid uuid = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
-        StringView expected = "00010203-0405-0607-0809-101112131415";
+        StringView expected = MakeRange("00010203-0405-0607-0809-101112131415");
 
         CHECK(uuid.toString() == expected);
     }

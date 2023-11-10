@@ -41,7 +41,7 @@ namespace Atom
         requires RMoveable<TIterEnd>;
         requires RDestructible<TIterEnd>;
 
-        { it.equals(itEnd) } -> RSameAs<bool>;
+        { it.eq(itEnd) } -> RSameAs<bool>;
     };
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

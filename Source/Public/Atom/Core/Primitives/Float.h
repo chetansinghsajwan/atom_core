@@ -51,7 +51,7 @@ namespace Atom
         }
 
     private:
-        static constexpr auto _ToString(TVal val, char* str) -> char*
+        static constexpr auto _ToString(TVal val, Char* str) -> Char*
         {
             return str;
         }

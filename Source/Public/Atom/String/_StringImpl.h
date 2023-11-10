@@ -34,5 +34,16 @@ namespace Atom
         constexpr _StringImpl(const TChar (&arr)[count])
             : TContainer()
         {}
+
+    public:
+        constexpr auto toStdCharPtr() const -> const char*
+        {
+            return _ToStdCharPtr(this->data().raw());
+        }
+
+        constexpr auto toStdCharPtr() -> char*
+        {
+            return _ToStdCharPtr(this->mutData().raw());
+        }
     };
 }

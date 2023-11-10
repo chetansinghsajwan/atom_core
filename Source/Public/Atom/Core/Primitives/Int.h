@@ -57,7 +57,7 @@ namespace Atom
         }
 
     private:
-        static constexpr auto _ToString(TVal val, char* str) -> char*
+        static constexpr auto _ToString(TVal val, Char* str) -> Char*
         {
             bool neg = false;
             if constexpr (std::is_signed_v<TVal>)

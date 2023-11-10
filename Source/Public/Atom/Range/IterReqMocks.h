@@ -28,7 +28,7 @@ namespace Atom
 
     public:
         auto value() const -> const T&;
-        auto equals(IterEndReqMock end) const -> bool;
+        auto eq(IterEndReqMock end) const -> bool;
         auto next() -> IterReqMock&;
     };
 
@@ -53,7 +53,7 @@ namespace Atom
     public:
         auto value() const -> const T&;
         auto mutValue() -> T&;
-        auto equals(IterEndReqMock end) const -> bool;
+        auto eq(IterEndReqMock end) const -> bool;
         auto next() -> MutIterReqMock&;
     };
 
@@ -70,7 +70,7 @@ namespace Atom
         auto value() const -> const T&;
         auto mutValue() -> T&;
         auto next() -> FwdIterReqMock&;
-        auto equals(IterEndReqMock end) const -> bool;
+        auto eq(IterEndReqMock end) const -> bool;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -86,7 +86,7 @@ namespace Atom
         auto value() const -> const T&;
         auto mutValue() -> T&;
         auto next() -> MutFwdIterReqMock&;
-        auto equals(IterEndReqMock end) const -> bool;
+        auto eq(IterEndReqMock end) const -> bool;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -102,7 +102,7 @@ namespace Atom
         auto value() const -> const T&;
         auto next() -> BidiIterReqMock&;
         auto prev() -> BidiIterReqMock&;
-        auto equals(IterEndReqMock end) const -> bool;
+        auto eq(IterEndReqMock end) const -> bool;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -119,7 +119,7 @@ namespace Atom
         auto mutValue() -> T&;
         auto next() -> MutBidiIterReqMock&;
         auto prev() -> MutBidiIterReqMock&;
-        auto equals(IterEndReqMock end) const -> bool;
+        auto eq(IterEndReqMock end) const -> bool;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -135,7 +135,7 @@ namespace Atom
         auto value() const -> const T&;
         auto next(usize steps = 1) -> JumpIterReqMock&;
         auto prev(usize steps = 1) -> JumpIterReqMock&;
-        auto equals(IterEndReqMock end) const -> bool;
+        auto eq(IterEndReqMock end) const -> bool;
         auto compare(const JumpIterReqMock& that) const -> isize;
     };
 
@@ -153,7 +153,7 @@ namespace Atom
         auto mutValue() -> T&;
         auto next(usize steps = 1) -> MutJumpIterReqMock&;
         auto prev(usize steps = 1) -> MutJumpIterReqMock&;
-        auto equals(IterEndReqMock end) const -> bool;
+        auto eq(IterEndReqMock end) const -> bool;
         auto compare(const MutJumpIterReqMock& that) const -> isize;
     };
 
@@ -171,7 +171,7 @@ namespace Atom
         auto data() const -> ConstMemPtr<T>;
         auto next(usize steps = 1) -> ArrayIterReqMock&;
         auto prev(usize steps = 1) -> ArrayIterReqMock&;
-        auto equals(ArrayIterReqMock end) const -> bool;
+        auto eq(ArrayIterReqMock end) const -> bool;
         auto compare(const ArrayIterReqMock& that) const -> isize;
     };
 
@@ -191,7 +191,7 @@ namespace Atom
         auto mutData() -> MemPtr<T>;
         auto next(usize steps = 1) -> MutArrayIterReqMock&;
         auto prev(usize steps = 1) -> MutArrayIterReqMock&;
-        auto equals(MutArrayIterReqMock end) const -> bool;
+        auto eq(MutArrayIterReqMock end) const -> bool;
         auto compare(const MutArrayIterReqMock& that) const -> isize;
     };
 }

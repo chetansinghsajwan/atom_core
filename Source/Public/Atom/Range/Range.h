@@ -172,7 +172,7 @@ namespace Atom
     ///
     /// - Review this implementation after implementing character encoding.
     /// --------------------------------------------------------------------------------------------
-    constexpr auto _RangeFindStrLen(ConstMemPtr<char> str) -> usize
+    constexpr auto _RangeFindStrLen(ConstMemPtr<Char> str) -> usize
     {
         if (std::is_constant_evaluated())
         {
@@ -186,7 +186,7 @@ namespace Atom
             return len;
         }
 
-        return usize(std::strlen(str.raw()));
+        return usize(std::strlen(_ToStdCharPtr(str.raw())));
     }
 }
 
@@ -258,7 +258,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    constexpr auto MakeRange(ConstMemPtr<char> str)
+    constexpr auto MakeRange(ConstMemPtr<Char> str)
     {
         return _RangeFromIterPair(ArrayIter(str), ArrayIter(str + _RangeFindStrLen(str)));
     }
@@ -266,7 +266,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    constexpr auto MakeRange(MemPtr<char> str)
+    constexpr auto MakeRange(MemPtr<Char> str)
     {
         return _MutRangeFromIterPair(MutArrayIter(str), MutArrayIter(str + _RangeFindStrLen(str)));
     }
@@ -313,5 +313,34 @@ namespace Atom
     constexpr auto MakeRange(const T* begin, usize count)
     {
         return MakeRange(ConstMemPtr(begin), ConstMemPtr(begin + count.val()));
+    }
+
+    /// --------------------------------------------------------------------------------------------
+    ///
+    /// --------------------------------------------------------------------------------------------
+    constexpr auto MakeRange(const char* begin, const char* end)
+    {
+        const Char* begin_ = static_cast<const Char*>(static_cast<const void*>(begin));
+        const Char* end_ = static_cast<const Char*>(static_cast<const void*>(end));
+        return MakeRange(begin_, end_);
+    }
+
+    /// --------------------------------------------------------------------------------------------
+    ///
+    /// --------------------------------------------------------------------------------------------
+    constexpr auto MakeRange(const char* begin, _usize count)
+    {
+        const Char* begin_ = static_cast<const Char*>(static_cast<const void*>(begin));
+        return MakeRange(begin_, begin_ + count);
+    }
+
+    /// --------------------------------------------------------------------------------------------
+    ///
+    /// --------------------------------------------------------------------------------------------
+    template <usize count>
+    constexpr auto MakeRange(const char (&arr)[count])
+    {
+        const Char* begin_ = static_cast<const Char*>(static_cast<const void*>(arr));
+        return MakeRange(begin_, begin_ + count.val());
     }
 }

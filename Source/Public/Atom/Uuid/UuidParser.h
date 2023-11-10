@@ -78,7 +78,7 @@ namespace Atom
 
             while (i < 16)
             {
-                if (it.equals(itEnd))
+                if (it.eq(itEnd))
                     return Uuid::Null;
 
                 if (j == 8 || j == 13 || j == 18 || j == 23)
@@ -99,7 +99,7 @@ namespace Atom
 
                 j++;
                 it.next();
-                if (it.equals(itEnd))
+                if (it.eq(itEnd))
                     return Uuid::Null;
 
                 byte low = Math::CharToHex(it.value());
@@ -112,7 +112,7 @@ namespace Atom
                 it.next();
             }
 
-            if (not it.equals(itEnd))
+            if (not it.eq(itEnd))
             {
                 return Uuid::Null;
             }

@@ -48,7 +48,7 @@ namespace Atom::Private
         {
             T1Hash hash;
             usize i = 0;
-            while (not it.equals(itEnd))
+            while (not it.eq(itEnd))
             {
                 if (i > 20)
                 {
@@ -64,7 +64,7 @@ namespace Atom::Private
                 // Left shift 4 bits to make space for next 4 bits.
                 hex1 = hex1 << 4;
 
-                if (it.next().equals(itEnd))
+                if (it.next().eq(itEnd))
                 {
                     return T1Hash::Null;
                 }

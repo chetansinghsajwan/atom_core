@@ -8,8 +8,8 @@ namespace Atom
     class AsciiEncoding
     {
     public:
-        using TChar = char;
-        using TRune = char;
+        using TChar = Char;
+        using TRune = Char;
 
     public:
         static constexpr TChar Null = '\0';

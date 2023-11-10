@@ -4,6 +4,6 @@
 namespace Atom
 {
     using CharEncoding = AsciiEncoding;
-    using Char = AsciiChar;
+    // using Char = AsciiChar;
     using Rune = AsciiRune;
 }

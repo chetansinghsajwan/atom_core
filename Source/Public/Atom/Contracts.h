@@ -59,9 +59,8 @@ namespace Atom
                                 "\n\twith msg: {}"
                                 "\n\tat: {}: {}: {}"
                                 "\n\tfunc: {}",
-                _ContractTypeToString(violation.type), violation.msg,
-                violation.src.fileName, violation.src.line.val(), violation.src.column.val(),
-                violation.src.funcName);
+                _ContractTypeToString(violation.type), violation.msg, violation.src.fileName,
+                violation.src.line.val(), violation.src.column.val(), violation.src.funcName);
         }
 
     public:

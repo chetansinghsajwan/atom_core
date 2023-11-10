@@ -5,5 +5,5 @@
 namespace Atom
 {
     template <typename TEncoding>
-    using BasicStringView = ArrayView<BasicChar<TEncoding>>;
+    using BasicStringView = _StringImpl<TEncoding, ArrayView<BasicChar<TEncoding>>>;
 }

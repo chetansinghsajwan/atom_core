@@ -18,8 +18,8 @@ TEST_CASE("Atom::Hash::Sha1Hash")
         Sha1Hash hash2 = { 0xaa, 0x39, 0xa3, 0xee, 0x5e, 0x6b, 0x4b, 0x0d, 0x32, 0x55, 0xbf, 0xef,
             0x95, 0x60, 0x18, 0x90, 0xaf, 0xd8, 0x07, 0x09 };
 
-        CHECK(hash1 == hash1);
-        CHECK(hash1 != hash2);
+        CHECK(hash1.eq(hash1));
+        CHECK(hash1.ne(hash2));
     }
 
     SECTION("Null Hash")
@@ -27,12 +27,12 @@ TEST_CASE("Atom::Hash::Sha1Hash")
         Sha1Hash hash;
         Sha1Hash nullHash = Sha1Hash::Null;
 
-        CHECK(nullHash == Sha1Hash::Null);
+        CHECK(nullHash.eq(Sha1Hash::Null));
 
         hash = Sha1Hash::Null;
 
-        CHECK(hash == Sha1Hash::Null);
-        CHECK(hash == nullHash);
+        CHECK(hash.eq(Sha1Hash::Null));
+        CHECK(hash.eq(nullHash));
     }
 }
 
@@ -45,7 +45,7 @@ TEST_CASE("Atom::Hash::Sha1HashParser")
         Sha1Hash expected = { 0xda, 0x39, 0xa3, 0xee, 0x5e, 0x6b, 0x4b, 0x0d, 0x32, 0x55, 0xbf,
             0xef, 0x95, 0x60, 0x18, 0x90, 0xaf, 0xd8, 0x07, 0x09 };
 
-        CHECK(hash == expected);
+        CHECK(hash.eq(expected));
     }
 
     SECTION("Invalid Hash")
@@ -54,7 +54,7 @@ TEST_CASE("Atom::Hash::Sha1HashParser")
         // Sha1Hash hash = Sha1HashParser()
         //     .parse(MakeRange("da3"));
         //
-        // CHECK(hash == Sha1Hash);
+        // CHECK(hash.eq(Sha1Hash));
     }
 }
 
@@ -67,7 +67,7 @@ TEST_CASE("Atom::Hash::Sha1HashStringifier")
 
     StringView expected = MakeRange("da39a3ee5e6b4b0d3255bfef95601890afd80709");
 
-    CHECK(str.equals(expected));
+    CHECK(str.eq(expected));
 }
 
 TEST_CASE("Atom::Hash::Sha1HashGenerator")
@@ -81,7 +81,7 @@ TEST_CASE("Atom::Hash::Sha1HashGenerator")
 
         Sha1Hash expected = Sha1HashParser().parse(MakeRange("da39a3ee5e6b4b0d3255bfef95601890afd80709"));
 
-        CHECK(hash == expected);
+        CHECK(hash.eq(expected));
     }
 
     // Tests if the SHA-1 hash of a single block input string is correct.
@@ -93,7 +93,7 @@ TEST_CASE("Atom::Hash::Sha1HashGenerator")
 
         Sha1Hash expected = Sha1HashParser().parse(MakeRange("2fd4e1c67a2d28fced849ee1bb76e7391b93eb12"));
 
-        CHECK(hash == expected);
+        CHECK(hash.eq(expected));
     }
 
     // Tests if the SHA-1 hash of a multi-block input string is correct.
@@ -112,6 +112,6 @@ TEST_CASE("Atom::Hash::Sha1HashGenerator")
 
         Sha1Hash expected = Sha1HashParser().parse(MakeRange("cd36b370758a259b34845084a6cc38473cb95e27"));
 
-        CHECK(hash == expected);
+        CHECK(hash.eq(expected));
     }
 }

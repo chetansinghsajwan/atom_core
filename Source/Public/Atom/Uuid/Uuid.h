@@ -87,7 +87,7 @@ namespace Atom
 
         template <typename TOut>
         constexpr auto writeString(TOut&& out) const
-            requires(ROutput<TOut, char>)
+            requires(ROutput<TOut, Char>)
         {
             out += Math::HexToChar(bytes[0]);
             out += Math::HexToChar(bytes[1]);

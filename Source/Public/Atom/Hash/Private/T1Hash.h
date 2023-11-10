@@ -14,8 +14,15 @@ namespace Atom::Private
         static const T1Hash Null;
 
     public:
-        constexpr auto operator==(const T1Hash& other) const -> bool = default;
-        constexpr auto operator!=(const T1Hash& other) const -> bool = default;
+        constexpr auto eq(const T1Hash& that) const -> bool
+        {
+            return bytes.eq(that.bytes);
+        }
+
+        constexpr auto ne(const T1Hash& that) const -> bool
+        {
+            return bytes.ne(that.bytes);
+        }
 
     public:
         StaticStorage<size> bytes;

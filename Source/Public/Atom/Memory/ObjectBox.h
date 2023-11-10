@@ -272,7 +272,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Null Equality Operator
         /// ----------------------------------------------------------------------------------------
-        auto operator==(NullType null) const -> bool
+        auto eq(NullType null) const -> bool
         {
             return _HasObject();
         }

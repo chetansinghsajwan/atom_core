@@ -62,7 +62,7 @@ namespace Atom
             return mutRef(i);
         }
 
-        constexpr auto operator==(const StaticStorage& that) const -> bool
+        constexpr auto eq(const StaticStorage& that) const -> bool
         {
             for (usize i = usize(0); i < Size(); i++)
             {
@@ -73,7 +73,7 @@ namespace Atom
             return true;
         }
 
-        constexpr auto operator!=(const StaticStorage& that) const -> bool
+        constexpr auto ne(const StaticStorage& that) const -> bool
         {
             return not(*this == that);
         }

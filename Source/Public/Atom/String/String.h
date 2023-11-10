@@ -22,10 +22,11 @@ namespace std
     public:
         auto operator()(const Atom::String& str) const -> size_t
         {
-            using TChar = Atom::BasicChar<Atom::CharEncoding>;
-            using StdStirngView = basic_string_view<TChar>;
+            using StdStirngView = basic_string_view<char>;
 
-            return hash<StdStirngView>()(StdStirngView(str.data().raw(), str.count().val()));
+            const char* begin = str.toStdCharPtr();
+            Atom::_usize count = str.count().val();
+            return hash<StdStirngView>()(StdStirngView(begin, count));
         }
     };
 }

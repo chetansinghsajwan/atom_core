@@ -46,7 +46,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Check if this iter is same as `that`. Used to compare wth end.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto equals(const ArrayIter& that) const -> bool
+        constexpr auto eq(const ArrayIter& that) const -> bool
         {
             return this->_it == that._it;
         }

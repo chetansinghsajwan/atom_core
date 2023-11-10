@@ -56,14 +56,14 @@ namespace Atom
         constexpr auto operator==(const StdIterWrapForAtomIter<TIterEnd>& that) const -> bool
             requires(RIterWithEnd<TIter, TIterEnd>)
         {
-            return iter.equals(that.iter);
+            return iter.eq(that.iter);
         }
 
         template <class TIterEnd>
         constexpr auto operator!=(const StdIterWrapForAtomIter<TIterEnd>& that) const -> bool
             requires(RIterWithEnd<TIter, TIterEnd>)
         {
-            return not iter.equals(that.iter);
+            return not iter.eq(that.iter);
         }
 
         constexpr auto operator++() -> Self&

@@ -19,8 +19,8 @@ namespace Atom
         ///   Don't pass any argument for this.
         /// --------------------------------------------------------------------------------------------
 #if defined(ATOM_COMPILER_CLANG) && !defined(__cpp_lib_source_location)
-        static consteval auto current(const char* fileName = __builtin_FILE(),
-            const char* funcName = __builtin_FUNCTION(), u32 line = __builtin_LINE(),
+        static consteval auto current(const Char* fileName = __builtin_FILE(),
+            const Char* funcName = __builtin_FUNCTION(), u32 line = __builtin_LINE(),
             u32 column = __builtin_COLUMN()) -> SourceLineInfo
         {
             return SourceLineInfo{
@@ -41,7 +41,7 @@ namespace Atom
     public:
         u32 line;
         u32 column;
-        const char* funcName;
-        const char* fileName;
+        std::string_view funcName;
+        std::string_view fileName;
     };
 }
