@@ -10,6 +10,8 @@ TEST_CASE("Atom.Core.Option")
 {
     SECTION("Default Constructor")
     {
+        // Default constructor doesn't constructs the object, so it's not affected by the object's
+        // default constructor.
         STATIC_REQUIRE(RDefaultConstructible<Option<NonDefaultConstructibleMock>>);
 
         Option<TrackedType> opt;
@@ -17,18 +19,49 @@ TEST_CASE("Atom.Core.Option")
         REQUIRE(opt.isNull());
     }
 
-    SECTION("Value Constructor")
+    SECTION("Value Copy Constructor")
     {
-        Option<TrackedType> opt = TrackedType();
+        TrackedType obj = TrackedType();
+        Option<TrackedType> opt = obj;
+
+        REQUIRE(opt.isValue());
+        REQUIRE(opt.value().lastOp == TrackedType::EOperation::CopyConstructor);
+    }
+
+    SECTION("Value Move Constructor")
+    {
+        TrackedType obj = TrackedType();
+        Option<TrackedType> opt = mov(obj);
 
         REQUIRE(opt.isValue());
         REQUIRE(opt.value().lastOp == TrackedType::EOperation::MoveConstructor);
     }
 
-    SECTION("Value Assignment")
+    SECTION("Value Copy Operator")
     {
+        TrackedType obj = TrackedType();
         Option<TrackedType> opt;
-        opt = TrackedType();
+        opt = obj;
+
+        REQUIRE(opt.isValue());
+        REQUIRE(opt.value().lastOp == TrackedType::EOperation::CopyConstructor);
+
+        opt = obj;
+
+        REQUIRE(opt.isValue());
+        REQUIRE(opt.value().lastOp == TrackedType::EOperation::CopyOperator);
+    }
+
+    SECTION("Value Move Operator")
+    {
+        TrackedType obj = TrackedType();
+        Option<TrackedType> opt;
+        opt = obj;
+
+        REQUIRE(opt.isValue());
+        REQUIRE(opt.value().lastOp == TrackedType::EOperation::MoveConstructor);
+
+        opt = obj;
 
         REQUIRE(opt.isValue());
         REQUIRE(opt.value().lastOp == TrackedType::EOperation::MoveOperator);
@@ -37,10 +70,9 @@ TEST_CASE("Atom.Core.Option")
     SECTION("Copy Constructor")
     {
         STATIC_REQUIRE(RTriviallyCopyConstructible<Option<TriviallyCopyConstructibleMock>>);
-
         STATIC_REQUIRE(RCopyConstructible<Option<CopyConstructibleMock>>);
 
-        Option<TrackedType> opt0 = TrackedType();
+        const Option<TrackedType> opt0 = TrackedType();
         Option<TrackedType> opt1 = opt0;
 
         REQUIRE(opt0.isValue());
@@ -50,13 +82,12 @@ TEST_CASE("Atom.Core.Option")
         REQUIRE(opt1.value().lastOp == TrackedType::EOperation::CopyConstructor);
     }
 
-    SECTION("Copy Assignment")
+    SECTION("Copy Operator")
     {
         STATIC_REQUIRE(RTriviallyCopyAssignable<Option<TriviallyCopyableMock>>);
-
         STATIC_REQUIRE(RCopyAssignable<Option<CopyableMock>>);
 
-        Option<TrackedType> opt0 = TrackedType();
+        const Option<TrackedType> opt0 = TrackedType();
         Option<TrackedType> opt1 = TrackedType();
         opt1 = opt0;
 
@@ -66,7 +97,7 @@ TEST_CASE("Atom.Core.Option")
         REQUIRE(opt1.isValue());
         REQUIRE(opt1.value().lastOp == TrackedType::EOperation::CopyOperator);
 
-        Option<TrackedType> opt2;
+        const Option<TrackedType> opt2;
         opt1 = opt2;
 
         REQUIRE(opt1.isNull());
@@ -75,7 +106,6 @@ TEST_CASE("Atom.Core.Option")
     SECTION("Move Constructor")
     {
         STATIC_REQUIRE(RTriviallyMoveConstructible<Option<TriviallyMoveConstructibleMock>>);
-
         STATIC_REQUIRE(RMoveConstructible<Option<MoveConstructibleMock>>);
 
         Option<TrackedType> opt0 = TrackedType();
@@ -88,10 +118,9 @@ TEST_CASE("Atom.Core.Option")
         REQUIRE(opt1.value().lastOp == TrackedType::EOperation::MoveConstructor);
     }
 
-    SECTION("Move Assignment")
+    SECTION("Move Operator")
     {
         STATIC_REQUIRE(RTriviallyMoveAssignable<Option<TriviallyMoveableMock>>);
-
         STATIC_REQUIRE(RMoveAssignable<Option<MoveableMock>>);
 
         Option<TrackedType> opt0 = TrackedType();
@@ -113,7 +142,6 @@ TEST_CASE("Atom.Core.Option")
     SECTION("Destructor")
     {
         STATIC_REQUIRE(RTriviallyDestructible<Option<TriviallyDestructibleMock>>);
-
         STATIC_REQUIRE(RDestructible<Option<DestructibleMock>>);
 
         TrackedType::EOperation* lastOp;
@@ -126,54 +154,18 @@ TEST_CASE("Atom.Core.Option")
         REQUIRE(*lastOp == TrackedType::EOperation::Destructor);
     }
 
-    SECTION("Access Value using value(), operator*(), operator->()")
-    {
-        class Overloads
-        {
-        public:
-            static constexpr usize Test(TrackedType&)
-            {
-                return 0;
-            }
-
-            static constexpr usize Test(const TrackedType&)
-            {
-                return 1;
-            }
-
-            static constexpr usize Test(TrackedType&&)
-            {
-                return 2;
-            }
-        };
-
-        Option<TrackedType> opt0 = TrackedType();
-        const Option<TrackedType> opt1 = TrackedType();
-
-        REQUIRE(Overloads::Test(opt0.value()) == 0);
-        REQUIRE(Overloads::Test(opt1.value()) == 1);
-        REQUIRE(Overloads::Test(mov(opt0).value()) == 2);
-
-        REQUIRE(Overloads::Test(*opt0) == 0);
-        REQUIRE(Overloads::Test(*opt1) == 1);
-        REQUIRE(Overloads::Test(mov(*opt0)) == 2);
-
-        REQUIRE(opt0->lastOp == TrackedType::EOperation::MoveConstructor);
-        REQUIRE(opt1->lastOp == TrackedType::EOperation::MoveConstructor);
-    }
-
     SECTION("Emplace")
     {
         class Type
         {
         public:
-            Type(i32 a, char b, f32 c):
+            Type(i32 a, Char b, f32 c):
                 a{ a }, b{ b }, c{ c }
             {}
 
         public:
             i32 a;
-            char b;
+            Char b;
             f32 c;
         };
 
@@ -184,16 +176,50 @@ TEST_CASE("Atom.Core.Option")
         REQUIRE(opt.value().a == 9);
         REQUIRE(opt.value().b == 'a');
         REQUIRE(opt.value().c == 0.99f);
-
-        opt.reset();
-
-        REQUIRE(opt.isNull());
     }
 
-    SECTION("Comparision with `Option`")
+    SECTION("Value access")
+    {
+        SECTION("value()")
+        {
+            Option<i32> opt = i32(10);
+
+            REQUIRE(opt.value() == 10);
+        }
+
+        SECTION("value()")
+        {
+            Option<i32> opt;
+            REQUIRE(opt.valueOr(99) == 99);
+
+            opt = i32(10);
+            REQUIRE(opt.valueOr(99) == 10);
+        }
+
+        SECTION("valueOrInvoke()")
+        {
+            auto invoke = [&]() -> i32 { return 99; };
+
+            Option<i32> opt;
+            REQUIRE(opt.valueOrInvoke(invoke) == 99);
+
+            opt = i32(10);
+            REQUIRE(opt.valueOrInvoke(invoke) == 10);
+        }
+
+        SECTION("valueOrDefault()")
+        {
+            Option<i32> opt;
+            REQUIRE(opt.valueOrDefault() == 0);
+
+            opt = i32(99);
+            REQUIRE(opt.valueOrDefault() == 99);
+        }
+    }
+
+    SECTION("Comparision")
     {
         STATIC_REQUIRE(REqualityComparable<Option<EqualityComparableMock>>);
-
         STATIC_REQUIRE(RComparable<Option<ComparableMock>>);
 
         Option<TrackedType> opt0;
@@ -201,34 +227,33 @@ TEST_CASE("Atom.Core.Option")
 
         // Both have null state, so they are compared equal.
         REQUIRE(opt0.eq(opt1));
-        REQUIRE_FALSE(opt0.ne(opt1));
 
         // Both have null state, they will not be compared.
-        REQUIRE_FALSE(opt0.lt(opt1));
-        REQUIRE_FALSE(opt0.gt(opt1));
-        REQUIRE_FALSE(opt0.le(opt1));
-        REQUIRE_FALSE(opt0.ge(opt1));
+        REQUIRE(not opt0.lt(opt1));
+        REQUIRE(not opt0.gt(opt1));
+        REQUIRE(not opt0.le(opt1));
+        REQUIRE(not opt0.ge(opt1));
 
         // If either have them null state, still they will not be compared.
         opt0 = TrackedType();
         opt0->lastOp = TrackedType::EOperation::None;
 
-        REQUIRE_FALSE(opt0.eq(opt1));
+        REQUIRE(not opt0.eq(opt1));
         REQUIRE(opt0.value().lastOp == TrackedType::EOperation::None);
 
         REQUIRE(opt0.ne(opt1));
         REQUIRE(opt0.value().lastOp == TrackedType::EOperation::None);
 
-        REQUIRE_FALSE(opt0.lt(opt1));
+        REQUIRE(not opt0.lt(opt1));
         REQUIRE(opt0.value().lastOp == TrackedType::EOperation::None);
 
-        REQUIRE_FALSE(opt0.gt(opt1));
+        REQUIRE(not opt0.gt(opt1));
         REQUIRE(opt0.value().lastOp == TrackedType::EOperation::None);
 
-        REQUIRE_FALSE(opt0.le(opt1));
+        REQUIRE(not opt0.le(opt1));
         REQUIRE(opt0.value().lastOp == TrackedType::EOperation::None);
 
-        REQUIRE_FALSE(opt0.ge(opt1));
+        REQUIRE(not opt0.ge(opt1));
         REQUIRE(opt0.value().lastOp == TrackedType::EOperation::None);
 
         // They will be compared if they both have value state.
@@ -239,7 +264,7 @@ TEST_CASE("Atom.Core.Option")
         REQUIRE(opt0.value().lastOp == TrackedType::EOperation::EqualOperator);
         REQUIRE(opt1.value().lastOp == TrackedType::EOperation::EqualOperator);
 
-        REQUIRE_FALSE(opt0.ne(opt1));
+        REQUIRE(not opt0.ne(opt1));
         REQUIRE(opt0.value().lastOp == TrackedType::EOperation::EqualOperator);
         REQUIRE(opt1.value().lastOp == TrackedType::EOperation::EqualOperator);
 
@@ -260,20 +285,15 @@ TEST_CASE("Atom.Core.Option")
         REQUIRE(opt1.value().lastOp == TrackedType::EOperation::GreaterThanOrEqualOperator);
     }
 
-    SECTION("Comparision with `nullopt`")
+    SECTION("Reset")
     {
-        Option<TrackedType> opt;
+        TrackedType::EOperation* lastOp;
+        Option<TrackedType> opt = TrackedType();
+        lastOp = &opt.value().lastOp;
 
-        // `opt` has null state.
+        opt.reset();
+
         REQUIRE(opt.isNull());
-
-        opt = TrackedType();
-        opt->lastOp = TrackedType::EOperation::None;
-
-        // `opt` doesn't have null state anymore.
-        REQUIRE(opt.isValue());
-
-        // The value isn't compared in this comparision.
-        REQUIRE(opt->lastOp == TrackedType::EOperation::None);
+        REQUIRE(*lastOp == TrackedType::EOperation::Destructor);
     }
 }

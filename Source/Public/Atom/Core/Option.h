@@ -26,6 +26,7 @@ namespace Atom
         static_assert(not TTI::IsQualified<T>, "Option doesn't support qualified types.");
 
     private:
+        using This = Option<T>;
         using _TImpl = _OptionImpl<T>;
 
     public:
@@ -243,39 +244,9 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Access the value by ref.
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto operator*() & -> TVal&
-        {
-            debug_expects(isValue(), "Doesn't contain value.");
-
-            return _impl.getValue();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// Access the value by ref.
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto operator*() const& -> const TVal&
-        {
-            debug_expects(isValue(), "Doesn't contain value.");
-
-            return _impl.getValue();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// Access the value by ref.
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto operator*() && -> TVal&&
-        {
-            debug_expects(isValue(), "Doesn't contain value.");
-
-            return _impl.getValue();
-        }
-
-        /// ----------------------------------------------------------------------------------------
         /// Access the value by ptr.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator->() -> MemPtr<TVal>
+        constexpr auto operator->() -> TVal*
         {
             debug_expects(isValue(), "Doesn't contain value.");
 
@@ -285,11 +256,59 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Access the value by ptr.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator->() const -> ConstMemPtr<TVal>
+        constexpr auto operator->() const -> const TVal*
         {
             debug_expects(isValue(), "Doesn't contain value.");
 
             return &_impl.getValue();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// Get `this` value or.
+        ///
+        /// - If `this` contains value, get `this` value.
+        /// - Else, get value `other`.
+        ///
+        /// # Parameters
+        /// - `other`: Other value to return.
+        ///
+        /// # Returns
+        /// Const reference to `this` value or `other`.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto valueOr(const TVal& orVal) const -> const TVal&
+        {
+            if (_impl.isNull())
+            {
+                return orVal;
+            }
+
+            return _impl.getValue();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto valueOr(TVal& orVal) -> TVal&
+        {
+            if (_impl.isNull())
+            {
+                return orVal;
+            }
+
+            return _impl.getValue();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto valueOr(TVal&& orVal) && -> TVal&&
+        {
+            if (_impl.isNull())
+            {
+                return mov(orVal);
+            }
+
+            return mov(_impl.getValue());
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -305,32 +324,45 @@ namespace Atom
         /// Const reference to `this` value or other value returned by invokable `other`.
         /// ----------------------------------------------------------------------------------------
         template <typename TInvokable>
-        constexpr auto valueOrInvoke(TInvokable&& other) const -> const TVal&
-            requires RInvokable<TInvokable, const TVal&()>
+        constexpr auto valueOrInvoke(TInvokable&& orInvoke) const -> const TVal&
+            requires RInvokable<TPure<TInvokable>, const TVal&()>
         {
-            if (not _impl.isValue())
+            if (_impl.isNull())
             {
-                return other();
+                return orInvoke();
             }
 
             return _impl.getValue();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Get `this` value or.
-        ///
-        /// - If `this` contains value, get `this` value.
-        /// - Else, get value `other`.
-        ///
-        /// # Parameters
-        /// - `other`: Other value to return.
-        ///
-        /// # Returns
-        /// Const reference to `this` value or `other`.
+        /// 
         /// ----------------------------------------------------------------------------------------
-        constexpr auto valueOr(const TVal& other) const -> const TVal&
+        template <typename TInvokable>
+        constexpr auto valueOrInvoke(TInvokable&& orInvoke) -> TVal&
+            requires RInvokable<TPure<TInvokable>, TVal&()>
         {
-            return valueOrInvoke([&other]() { return other; });
+            if (_impl.isNull())
+            {
+                return orInvoke();
+            }
+
+            return _impl.getValue();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        template <typename TInvokable>
+        constexpr auto valueOrInvoke(TInvokable&& orInvoke) && -> TVal&&
+            requires RInvokable<TPure<TInvokable>, TVal&&()>
+        {
+            if (_impl.isNull())
+            {
+                return orInvoke();
+            }
+
+            return mov(_impl.getValue());
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -339,10 +371,29 @@ namespace Atom
         /// - If `this` contains value, get `this` value.
         /// - Else, get default constructed value.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto valueOrDefault() const -> const TVal&
+        constexpr auto valueOrDefault() const& -> const TVal&
             requires(RDefaultConstructible<TVal>)
         {
-            return valueOrInvoke([&]() { return _impl.GetDefault(); });
+            if (_impl.isNull())
+            {
+                return _TImpl::GetDefault();
+            }
+
+            return _impl.getValue();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto valueOrDefault() && -> TVal&&
+            requires(RDefaultConstructible<TVal>)
+        {
+            if (_impl.isNull())
+            {
+                return mov(_TImpl::GetDefault());
+            }
+
+            return mov(_impl.getValue());
         }
 
         /// ----------------------------------------------------------------------------------------

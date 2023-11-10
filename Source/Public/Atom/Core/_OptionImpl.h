@@ -98,7 +98,7 @@ namespace Atom
         using TVal = T;
 
     public:
-        static consteval auto GetDefault() -> const TVal&
+        static consteval auto GetDefault() -> TVal
         {
             return TVal();
         }
@@ -205,8 +205,15 @@ namespace Atom
         template <typename T1>
         constexpr auto assignValue(T1&& val)
         {
-            _assignValue(forward<T1>(val));
-            _isValue = true;
+            if (not _isValue)
+            {
+                _constructValue(forward<T1>(val));
+                _isValue = true;
+            }
+            else
+            {
+                _assignValue(forward<T1>(val));
+            }
         }
 
         constexpr auto destroyValue()
@@ -243,6 +250,11 @@ namespace Atom
         constexpr auto isValue() const -> bool
         {
             return _isValue;
+        }
+
+        constexpr auto isNull() const -> bool
+        {
+            return not _isValue;
         }
 
     private:

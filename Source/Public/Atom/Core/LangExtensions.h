@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <type_traits>
 
 namespace Atom
 {
@@ -23,4 +24,7 @@ namespace Atom
 
         return static_cast<T&&>(t);
     }
+
+    template <typename T>
+    using TPure = std::remove_cvref_t<T>;
 }
