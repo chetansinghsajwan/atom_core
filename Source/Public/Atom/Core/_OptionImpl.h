@@ -8,35 +8,30 @@ namespace Atom
     template <typename TVal>
     union _OptionStorage
     {
-    public:
-        class NoInit
+        class _Dummy
         {};
 
     public:
-        _OptionStorage() {}
-
-        _OptionStorage(NoInit):
+        constexpr _OptionStorage():
             _dummy{}
         {}
 
+        constexpr _OptionStorage(const _OptionStorage&) = default;
+        constexpr _OptionStorage& operator=(const _OptionStorage&) = default;
+
+        constexpr _OptionStorage(_OptionStorage&&) = default;
+        constexpr _OptionStorage& operator=(_OptionStorage&&) = default;
+
         template <typename... TArgs>
-        _OptionStorage(TArgs&&... args):
+        constexpr _OptionStorage(TArgs&&... args):
             _value{ forward<TArgs>(args)... }
         {}
 
-        _OptionStorage(const _OptionStorage&) = default;
-
-        _OptionStorage& operator=(const _OptionStorage&) = default;
-
-        _OptionStorage(_OptionStorage&&) = default;
-
-        _OptionStorage& operator=(_OptionStorage&&) = default;
-
-        ~_OptionStorage()
+        constexpr ~_OptionStorage()
             requires(RTriviallyDestructible<TVal>)
         = default;
 
-        ~_OptionStorage()
+        constexpr ~_OptionStorage()
             requires(not RTriviallyDestructible<TVal>)
         {}
 
@@ -53,140 +48,154 @@ namespace Atom
 
     private:
         TVal _value;
-        NoInit _dummy;
+        _Dummy _dummy;
     };
 
-    template <typename TVal>
-    union _OptionStorage<MemPtr<TVal>>
+    template <typename TVal_>
+    class _OptionImpl
     {
+        using This = _OptionImpl<TVal_>;
+
+        /// --------------------------------------------------------------------------------------------
+        /// # To Do
+        ///
+        /// - Create `StaticAlignedStorageFor<TVal_>` to replace this.
+        /// --------------------------------------------------------------------------------------------
+        using _TStorage = _OptionStorage<TVal_>;
+
     public:
-        class NoInit
+        using TVal = TVal_;
+
+        class CtorDefault
+        {};
+
+        class CtorCopy
+        {};
+
+        class CtorMove
         {};
 
     public:
-        _OptionStorage() = default;
-
-        _OptionStorage(NoInit) {}
-
-        _OptionStorage(MemPtr<TVal> ptr):
-            _ptr{ ptr }
-        {}
-
-    public:
-        constexpr auto getData() -> MemPtr<TVal>*
-        {
-            return &_ptr;
-        }
-
-        constexpr auto getData() const -> ConstMemPtr<TVal>*
-        {
-            return &_ptr;
-        }
-
-    private:
-        MemPtr<TVal> _ptr;
-    };
-
-    template <typename T>
-    class _OptionImpl
-    {
-        using _Storage = _OptionStorage<T>;
-        using _StorageCtorNoInit = _Storage::NoInit;
-        using This = _OptionImpl<T>;
-
-    public:
-        using TVal = T;
-
-    public:
+        /// ----------------------------------------------------------------------------------------
+        /// Get the default value of [`TVal`].
+        /// ----------------------------------------------------------------------------------------
         static consteval auto GetDefault() -> TVal
         {
             return TVal();
         }
 
     public:
-        constexpr _OptionImpl():
-            _storage{ _StorageCtorNoInit{} }, _isValue{ false }
+        /// ----------------------------------------------------------------------------------------
+        /// # Trivial Default Constructor
+        /// ----------------------------------------------------------------------------------------
+        constexpr _OptionImpl() = default;
+
+        /// ----------------------------------------------------------------------------------------
+        /// # Default Constructor
+        /// ----------------------------------------------------------------------------------------
+        constexpr _OptionImpl(CtorDefault):
+            _isValue{ false }, _storage{}
         {}
 
-        constexpr _OptionImpl(const This& that)
-            requires(RTriviallyCopyConstructible<TVal>)
-        = default;
+        /// ----------------------------------------------------------------------------------------
+        /// # Trivial Copy Constructor
+        /// ----------------------------------------------------------------------------------------
+        constexpr _OptionImpl(const This& that) = default;
 
-        constexpr _OptionImpl(const This& that)
-            requires(not RTriviallyCopyConstructible<TVal>)
-            : This()
+        /// ----------------------------------------------------------------------------------------
+        /// # Copy Constructor
+        /// ----------------------------------------------------------------------------------------
+        constexpr _OptionImpl(CtorCopy, const This& that):
+            This(CtorDefault())
         {
-            constructValueFromOption(that);
+            if (that._isValue)
+            {
+                _constructValue(that._getValue());
+                _isValue = true;
+            }
         }
 
+        /// ----------------------------------------------------------------------------------------
+        /// # Trivial Copy Operator
+        /// ----------------------------------------------------------------------------------------
         constexpr _OptionImpl& operator=(const This& that) = default;
 
-        constexpr _OptionImpl(This&& that)
-            requires(RTriviallyMoveConstructible<TVal>)
-        = default;
+        /// ----------------------------------------------------------------------------------------
+        /// # Trivial Move Constructor
+        /// ----------------------------------------------------------------------------------------
+        constexpr _OptionImpl(This&& that) = default;
 
-        constexpr _OptionImpl(This&& that)
-            requires(not RTriviallyMoveConstructible<TVal>)
-            : This()
+        /// ----------------------------------------------------------------------------------------
+        /// # Move Constructor
+        /// ----------------------------------------------------------------------------------------
+        constexpr _OptionImpl(CtorMove, This&& that):
+            This()
         {
-            constructValueFromOption(mov(that));
+            if (that._isValue)
+            {
+                _constructValue(mov(that._getValue()));
+                _isValue = true;
+            }
         }
 
+        /// ----------------------------------------------------------------------------------------
+        /// # Trivial Move Operator
+        /// ----------------------------------------------------------------------------------------
         constexpr _OptionImpl& operator=(This&& that) = default;
 
         template <typename... TArgs>
+        /// ----------------------------------------------------------------------------------------
+        /// # Value Constructor
+        /// ----------------------------------------------------------------------------------------
         constexpr _OptionImpl(TArgs&&... args):
             _storage{ forward<TArgs>(args)... }, _isValue{ true }
         {}
 
-        constexpr ~_OptionImpl()
-            requires(RTriviallyDestructible<TVal>)
-        = default;
+        /// ----------------------------------------------------------------------------------------
+        /// # Trivial Destructor
+        /// ----------------------------------------------------------------------------------------
+        constexpr ~_OptionImpl() = default;
 
-        constexpr ~_OptionImpl()
-            requires(not RTriviallyDestructible<TVal>)
+    public:
+        /// ----------------------------------------------------------------------------------------
+        /// Copies [`Option`] into this.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto copy(const _OptionImpl& that)
+        {
+            _setValueFromOption<false>(that);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// Moves [`Option`] into this.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto move(_OptionImpl&& that)
+        {
+            _setValueFromOption<true>(that);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// Swaps [`Option`] with `that`.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto swap(_OptionImpl& that)
+        {
+            _swap(that);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// Destroy current value if any.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto destroy()
         {
             if (_isValue)
             {
                 _destroyValue();
+                _isValue = false;
             }
         }
 
-    public:
-        constexpr auto constructValueFromOption(const _OptionImpl& opt)
-        {
-            _constructValueFromOption<false>(opt);
-        }
-
-        constexpr auto constructValueFromOption(_OptionImpl&& opt)
-        {
-            _constructValueFromOption<true>(opt);
-        }
-
-        constexpr auto assignValueFromOption(const _OptionImpl& opt)
-        {
-            _assignValueFromOption<false>(opt);
-        }
-
-        constexpr auto assignValueFromOption(_OptionImpl&& opt)
-        {
-            _assignValueFromOption<true>(opt);
-        }
-
-        constexpr auto swapValueFromOption(_OptionImpl& opt)
-        {
-            _swapValueFromOption(opt);
-        }
-
-        template <typename... TArgs>
-        constexpr auto constructValue(TArgs&&... args)
-        {
-            debug_expects(not _isValue);
-
-            _constructValue(forward<TArgs>(args)...);
-            _isValue = true;
-        }
-
+        /// ----------------------------------------------------------------------------------------
+        /// Destroys current value if any and constructs new value wih `args`.
+        /// ----------------------------------------------------------------------------------------
         template <typename... TArgs>
         constexpr auto emplaceValue(TArgs&&... args)
         {
@@ -202,8 +211,12 @@ namespace Atom
             }
         }
 
+        /// ----------------------------------------------------------------------------------------
+        /// If this contains value, assigns new value to it.
+        /// Else, constructs new value.
+        /// ----------------------------------------------------------------------------------------
         template <typename T1>
-        constexpr auto assignValue(T1&& val)
+        constexpr auto setValue(T1&& val)
         {
             if (not _isValue)
             {
@@ -212,19 +225,46 @@ namespace Atom
             }
             else
             {
-                _assignValue(forward<T1>(val));
+                _setValue(forward<T1>(val));
             }
         }
 
-        constexpr auto destroyValue()
+        /// ----------------------------------------------------------------------------------------
+        /// Get const ref to current value.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto getValue() const -> const TVal&
         {
-            debug_expects(_isValue);
-
-            _destroyValue();
-            _isValue = false;
+            return _getValue();
         }
 
-        constexpr auto destroyValueWithCheck()
+        /// ----------------------------------------------------------------------------------------
+        /// Get ref to current value.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto getValue() -> TVal&
+        {
+            return _getValue();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// Checks if this contains value.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto isValue() const -> bool
+        {
+            return _isValue;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// Checks if this doesn't contains value.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto isNull() const -> bool
+        {
+            return not _isValue;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// Destroys current value if any.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto destroyValue()
         {
             if (_isValue)
             {
@@ -233,63 +273,25 @@ namespace Atom
             }
         }
 
-        constexpr auto getValue() -> TVal&
-        {
-            debug_expects(_isValue);
-
-            return _getValue();
-        }
-
-        constexpr auto getValue() const -> const TVal&
-        {
-            debug_expects(_isValue);
-
-            return _getValue();
-        }
-
-        constexpr auto isValue() const -> bool
-        {
-            return _isValue;
-        }
-
-        constexpr auto isNull() const -> bool
-        {
-            return not _isValue;
-        }
-
     private:
-        template <bool move>
-        constexpr auto _constructValueFromOption(auto&& opt)
+        template <bool move, typename TOpt>
+        constexpr auto _setValueFromOption(TOpt&& that)
         {
-            if (opt._isValue)
-            {
-                if constexpr (move)
-                    _constructValue(mov(opt._getValue()));
-                else
-                    _constructValue(opt._getValue());
-
-                _isValue = true;
-            }
-        }
-
-        template <bool move>
-        constexpr auto _assignValueFromOption(auto&& opt)
-        {
-            if (opt._isValue)
+            if (that._isValue)
             {
                 if (_isValue)
                 {
                     if constexpr (move)
-                        _assignValue(mov(opt._getValue()));
+                        _setValue(mov(that._getValue()));
                     else
-                        _assignValue(opt._getValue());
+                        _setValue(that._getValue());
                 }
                 else
                 {
                     if constexpr (move)
-                        _constructValue(mov(opt._getValue()));
+                        _constructValue(mov(that._getValue()));
                     else
-                        _constructValue(opt._getValue());
+                        _constructValue(that._getValue());
 
                     _isValue = true;
                 }
@@ -304,27 +306,77 @@ namespace Atom
             }
         }
 
-        constexpr auto _swapValueFromOption(_OptionImpl& opt)
+        template <typename TOpt>
+        constexpr auto _copy(const TOpt& that)
         {
-            if (opt._isValue)
+            if (that._isValue)
             {
                 if (_isValue)
                 {
-                    _swapValue(opt._getValue());
+                    _setValue(that._getValue());
                 }
                 else
                 {
-                    _constructValue(mov(opt._getValue()));
+                    _constructValue(that._getValue());
                     _isValue = true;
-                    opt._isValue = false;
                 }
             }
             else
             {
                 if (_isValue)
                 {
-                    opt._constructValue(mov(_getValue()));
-                    opt._isValue = true;
+                    _destroyValue();
+                    _isValue = false;
+                }
+            }
+        }
+
+        template <typename TOpt>
+        constexpr auto _move(TOpt&& that)
+        {
+            if (that._isValue)
+            {
+                if (_isValue)
+                {
+                    _setValue(mov(that._getValue()));
+                }
+                else
+                {
+                    _constructValue(mov(that._getValue()));
+                    _isValue = true;
+                }
+            }
+            else
+            {
+                if (_isValue)
+                {
+                    _destroyValue();
+                    _isValue = false;
+                }
+            }
+        }
+
+        constexpr auto _swap(_OptionImpl& that)
+        {
+            if (that._isValue)
+            {
+                if (_isValue)
+                {
+                    _swapValue(that._getValue());
+                }
+                else
+                {
+                    _constructValue(mov(that._getValue()));
+                    _isValue = true;
+                    that._isValue = false;
+                }
+            }
+            else
+            {
+                if (_isValue)
+                {
+                    that._constructValue(mov(_getValue()));
+                    that._isValue = true;
                     _isValue = false;
                 }
             }
@@ -337,7 +389,7 @@ namespace Atom
         }
 
         template <typename TArg>
-        constexpr auto _assignValue(TArg&& val)
+        constexpr auto _setValue(TArg&& val)
         {
             ObjHelper().AssignAs<TVal>(_storage.getData(), forward<TArg>(val));
         }
@@ -347,9 +399,9 @@ namespace Atom
             ObjHelper().Swap(_getValue(), that);
         }
 
-        constexpr auto _destroyValue()
+        constexpr auto _getValue() const -> const TVal&
         {
-            ObjHelper().DestructAs<TVal>(_storage.getData());
+            return *_storage.getData();
         }
 
         constexpr auto _getValue() -> TVal&
@@ -357,13 +409,13 @@ namespace Atom
             return *_storage.getData();
         }
 
-        constexpr auto _getValue() const -> const TVal&
+        constexpr auto _destroyValue()
         {
-            return *_storage.getData();
+            ObjHelper().DestructAs<TVal>(_storage.getData());
         }
 
     private:
-        _Storage _storage;
         bool _isValue;
+        _TStorage _storage;
     };
 }

@@ -20,12 +20,12 @@ namespace Atom::Private
         constexpr auto WriteString(const T1Hash& hash, TOut&& out)
             requires(ROutput<TOut, Char>)
         {
-            for (byte b : hash.bytes)
-            {
-                StackString<2> chars = Math::HexToChar(b);
-                out += chars[0];
-                out += chars[1];
-            }
+            // for (byte b : hash.bytes)
+            // {
+            //     StackString<2> chars = Math::HexToChar(b);
+            //     out += chars[0];
+            //     out += chars[1];
+            // }
         }
     };
 }

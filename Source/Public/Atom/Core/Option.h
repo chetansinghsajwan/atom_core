@@ -27,7 +27,7 @@ namespace Atom
 
     private:
         using This = Option<T>;
-        using _TImpl = _OptionImpl<T>;
+        using Impl = _OptionImpl<T>;
 
     public:
         using TVal = T;
@@ -39,7 +39,7 @@ namespace Atom
         /// Constructs with no value. [`isValue()`] will return false.
         /// ----------------------------------------------------------------------------------------
         constexpr Option():
-            _impl()
+            _impl(typename Impl::CtorDefault())
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -52,13 +52,12 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Copy Constructor
         ///
-        /// - If `that` contains value, copy constructs `this` value with `that` value.
-        /// - Else constructs wih no value.
+        /// If `that` contains value, copy constructs `this` value with `that` value.
+        /// Else constructs wih no value.
         /// ----------------------------------------------------------------------------------------
         constexpr Option(const Option& that)
             requires(not RTriviallyCopyConstructible<TVal>) and (RCopyConstructible<TVal>)
-            :
-            _impl(that._impl)
+            : _impl(typename Impl::CtorCopy(), that._impl)
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -71,17 +70,17 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Copy Operator
         ///
-        /// - If `that` contains value
-        ///     - If `this` contains value, copy assigns with `that` value.
-        ///     - Else, copy constructs with `that` value.
-        /// - Else
-        ///     - If `this` contains value, destroys `this` value.
-        ///     - Else, does nothing.
+        /// If `that` contains value
+        ///     If `this` contains value, copy assigns with `that` value.
+        ///     Else, copy constructs with `that` value.
+        /// Else
+        ///     If `this` contains value, destroys `this` value.
+        ///     Else, does nothing.
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator=(const Option& that) -> Option&
             requires(not RTriviallyCopyAssignable<TVal>) and (RCopyable<TVal>)
         {
-            _impl.assignValueFromOption(that._impl);
+            _impl.copy(that._impl);
             return *this;
         }
 
@@ -100,8 +99,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr Option(Option&& that)
             requires(not RTriviallyMoveConstructible<TVal>) and (RMoveConstructible<TVal>)
-            :
-            _impl(mov(that._impl))
+            : _impl(typename Impl::CtorMove(), mov(that._impl))
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -114,17 +112,17 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Move Operator
         ///
-        /// - If `that` contains value
-        ///     - If `this` contains value, move assigns with `that` value.
-        ///     - Else, move constructs with `that` value.
-        /// - Else
-        ///     - If `this` contains value, destroys `this` value.
-        ///     - Else, does nothing.
+        /// If `that` contains value
+        ///     If `this` contains value, move assigns with `that` value.
+        ///     Else, move constructs with `that` value.
+        /// Else
+        ///     If `this` contains value, destroys `this` value.
+        ///     Else, does nothing.
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator=(Option&& that) -> Option&
             requires(not RTriviallyMoveAssignable<TVal>) and (RMoveable<TVal>)
         {
-            _impl.assignValueFromOption(mov(that._impl));
+            _impl.move(mov(that._impl));
             return *this;
         }
 
@@ -134,6 +132,7 @@ namespace Atom
         /// Copy constructs `this` value with `val`.
         ///
         /// # Parameters
+        ///
         /// - `val`: Value to construct with.
         /// ----------------------------------------------------------------------------------------
         constexpr Option(const TVal& val):
@@ -143,15 +142,16 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Param Copy Operator
         ///
-        /// - If `this` contains value, copy assigns `this` value with `val`.
-        /// - Else, copy constructs `this` value with `val`.
+        /// If `this` contains value, copy assigns `this` value with `val`.
+        /// Else, copy constructs `this` value with `val`.
         ///
         /// # Parameters
+        ///
         /// - `val`: Value to assign or construct with.
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator=(const TVal& val) -> Option&
         {
-            _impl.assignValue(val);
+            _impl.setValue(val);
             return *this;
         }
 
@@ -161,6 +161,7 @@ namespace Atom
         /// Move constructs `this` value with `value`.
         ///
         /// # Parameters
+        ///
         /// - `val`: Value to construct with.
         /// ----------------------------------------------------------------------------------------
         constexpr Option(TVal&& val):
@@ -170,15 +171,16 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Param Move Operator
         ///
-        /// - If `this` contains value, move assigns `this` value with `val`.
-        /// - Else, move constructs `this` value with `val`.
+        /// If `this` contains value, move assigns `this` value with `val`.
+        /// Else, move constructs `this` value with `val`.
         ///
         /// # Parameters
+        ///
         /// - `val`: Value to assign or construct with.
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator=(TVal&& val) -> Option&
         {
-            _impl.assignValue(mov(val));
+            _impl.setValue(mov(val));
             return *this;
         }
 
@@ -196,7 +198,9 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr ~Option()
             requires(not RTriviallyDestructible<TVal>) and (RDestructible<TVal>)
-        {}
+        {
+            _impl.destroy();
+        }
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -204,6 +208,7 @@ namespace Atom
         /// contructs and new one.
         ///
         /// # Parameters
+        ///
         /// - `args`: Arguments to construct the new value with.
         /// ----------------------------------------------------------------------------------------
         template <typename... TArgs>
@@ -266,13 +271,15 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Get `this` value or.
         ///
-        /// - If `this` contains value, get `this` value.
-        /// - Else, get value `other`.
+        /// If `this` contains value, get `this` value.
+        /// Else, get value `other`.
         ///
         /// # Parameters
+        ///
         /// - `other`: Other value to return.
         ///
         /// # Returns
+        ///
         /// Const reference to `this` value or `other`.
         /// ----------------------------------------------------------------------------------------
         constexpr auto valueOr(const TVal& orVal) const -> const TVal&
@@ -286,7 +293,7 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         constexpr auto valueOr(TVal& orVal) -> TVal&
         {
@@ -299,7 +306,7 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         constexpr auto valueOr(TVal&& orVal) && -> TVal&&
         {
@@ -314,13 +321,15 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Get `this` value or.
         ///
-        /// - If `this` contains value, get `this` value.
-        /// - Else, get value returned by invokable `other`.
+        /// If `this` contains value, get `this` value.
+        /// Else, get value returned by invokable `other`.
         ///
         /// # Parameters
+        ///
         /// - `other`: Invokable to return other value.
         ///
         /// # Returns
+        ///
         /// Const reference to `this` value or other value returned by invokable `other`.
         /// ----------------------------------------------------------------------------------------
         template <typename TInvokable>
@@ -336,7 +345,7 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         template <typename TInvokable>
         constexpr auto valueOrInvoke(TInvokable&& orInvoke) -> TVal&
@@ -351,11 +360,11 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         template <typename TInvokable>
         constexpr auto valueOrInvoke(TInvokable&& orInvoke) && -> TVal&&
-            requires RInvokable<TPure<TInvokable>, TVal&&()>
+            requires RInvokable<TPure<TInvokable>, TVal && ()>
         {
             if (_impl.isNull())
             {
@@ -368,29 +377,32 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Get `this` value or default.
         ///
-        /// - If `this` contains value, get `this` value.
-        /// - Else, get default constructed value.
+        /// If `this` contains value, get `this` value.
+        /// Else, get default constructed value.
         /// ----------------------------------------------------------------------------------------
         constexpr auto valueOrDefault() const& -> const TVal&
             requires(RDefaultConstructible<TVal>)
         {
             if (_impl.isNull())
             {
-                return _TImpl::GetDefault();
+                return Impl::GetDefault();
             }
 
             return _impl.getValue();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        /// Get `this` value or default.
+        ///
+        /// If `this` contains value, get `this` value.
+        /// Else, get default constructed value.
         /// ----------------------------------------------------------------------------------------
         constexpr auto valueOrDefault() && -> TVal&&
             requires(RDefaultConstructible<TVal>)
         {
             if (_impl.isNull())
             {
-                return mov(_TImpl::GetDefault());
+                return mov(Impl::GetDefault());
             }
 
             return mov(_impl.getValue());
@@ -417,36 +429,30 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto reset()
         {
-            return _impl.destroyValueWithCheck();
+            return _impl.destroyValue();
         }
 
         /// ----------------------------------------------------------------------------------------
         /// Swap values and state with `that`.
         ///
-        /// - If `that` contains value
-        ///     - If `this` contains value, swaps `this` value with `that` value.
-        ///     - Else, move constructs `this` value with `that` value.
-        /// - Else
-        ///     - If `this` contains value, move constructs `that` value with `this` value.
-        ///     - Else, does nothing.
+        /// If `that` contains value
+        ///     If `this` contains value, swaps `this` value with `that` value.
+        ///     Else, move constructs `this` value with `that` value.
+        /// Else
+        ///     If `this` contains value, move constructs `that` value with `this` value.
+        ///     Else, does nothing.
         /// ----------------------------------------------------------------------------------------
         constexpr auto swap(Option& that)
         {
-            return _impl.swapValueFromOption(that._impl);
+            return _impl.swap(that._impl);
         }
-
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
-        ////
-        //// Compairision.
-        ////
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
 
         /// --------------------------------------------------------------------------------------------
         /// # Equality Comparision Operator
         ///
-        /// - If `this` and `that` are null, returns `true`.
-        /// - If `this` is null and `that` is not null or vice versa, returns `false`.
-        /// - If `this` and `that` are not null, returns `this.value() == that.value()`.
+        /// If `this` and `that` are null, returns `true`.
+        /// If `this` is null and `that` is not null or vice versa, returns `false`.
+        /// If `this` and `that` are not null, returns `this.value() == that.value()`.
         /// --------------------------------------------------------------------------------------------
         template <typename TThat>
         constexpr auto eq(const Option<TThat>& that) const -> bool
@@ -478,8 +484,8 @@ namespace Atom
         /// --------------------------------------------------------------------------------------------
         /// # Less Than Comparision Operator
         ///
-        /// - If `this` or `that` is null, returns false.
-        /// - Else, returns `this.value() < that.value()`.
+        /// If `this` or `that` is null, returns false.
+        /// Else, returns `this.value() < that.value()`.
         /// --------------------------------------------------------------------------------------------
         template <typename TThat>
         constexpr auto lt(const Option<TThat>& that) const -> bool
@@ -494,8 +500,8 @@ namespace Atom
         /// --------------------------------------------------------------------------------------------
         /// # Greater Than Comparision Operator
         ///
-        /// - If `opt0` or `that` is null, returns false.
-        /// - Else, returns `this.value() > that.value()`.
+        /// If `opt0` or `that` is null, returns false.
+        /// Else, returns `this.value() > that.value()`.
         /// --------------------------------------------------------------------------------------------
         template <typename TThat>
         constexpr auto gt(const Option<TThat>& that) const -> bool
@@ -510,8 +516,8 @@ namespace Atom
         /// --------------------------------------------------------------------------------------------
         /// # Less Than or Equal To Comparision Operator
         ///
-        /// - If `opt0` or `that` is null, returns false.
-        /// - Else, returns `this.value() <= that.value()`.
+        /// If `opt0` or `that` is null, returns false.
+        /// Else, returns `this.value() <= that.value()`.
         /// --------------------------------------------------------------------------------------------
         template <typename TThat>
         constexpr auto le(const Option<TThat>& that) const -> bool
@@ -526,8 +532,8 @@ namespace Atom
         /// --------------------------------------------------------------------------------------------
         /// # Greater Than or Equal To Comparision Operator
         ///
-        /// - If `opt0` or `that` is null, returns false.
-        /// - Else, returns `this.value() >= that.value()`.
+        /// If `opt0` or `that` is null, returns false.
+        /// Else, returns `this.value() >= that.value()`.
         /// --------------------------------------------------------------------------------------------
         template <typename TThat>
         constexpr auto ge(const Option<TThat>& that) const -> bool
@@ -540,6 +546,6 @@ namespace Atom
         }
 
     private:
-        _TImpl _impl;
+        Impl _impl;
     };
 }
