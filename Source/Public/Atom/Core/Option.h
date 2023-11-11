@@ -21,7 +21,7 @@ namespace Atom
         static_assert(not TTI::IsVoid<T>, "Option doesn't support void type.");
 
         static_assert(
-            not TTI::IsRef<T>, "Option doesn't support reference types, instead use pointers.");
+            not TTI::IsRef<T>, "Option doesn't support ref types, instead use pointers.");
 
         static_assert(not TTI::IsQualified<T>, "Option doesn't support qualified types.");
 
@@ -30,6 +30,9 @@ namespace Atom
         using Impl = _OptionImpl<T>;
 
     public:
+        /// ----------------------------------------------------------------------------------------
+        /// Type of value this option holds.
+        /// ----------------------------------------------------------------------------------------
         using TVal = T;
 
     public:
@@ -269,18 +272,18 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Get `this` value or.
+        /// Get `this` value or `orVal`.
         ///
         /// If `this` contains value, get `this` value.
-        /// Else, get value `other`.
+        /// Else, get value `orVal`.
         ///
         /// # Parameters
         ///
-        /// - `other`: Other value to return.
+        /// - `orVal`: Other value to return.
         ///
         /// # Returns
         ///
-        /// Const reference to `this` value or `other`.
+        /// Const ref to `this` value or `orVal`.
         /// ----------------------------------------------------------------------------------------
         constexpr auto valueOr(const TVal& orVal) const -> const TVal&
         {
@@ -293,7 +296,18 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
+        /// Get `this` value or `orVal`.
         ///
+        /// If `this` contains value, get `this` value.
+        /// Else, get value `orVal`.
+        ///
+        /// # Parameters
+        ///
+        /// - `orVal`: Other value to return.
+        ///
+        /// # Returns
+        ///
+        /// Ref to `this` value or `orVal`.
         /// ----------------------------------------------------------------------------------------
         constexpr auto valueOr(TVal& orVal) -> TVal&
         {
@@ -306,7 +320,18 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
+        /// Get `this` value or `orVal`.
         ///
+        /// If `this` contains value, get `this` value.
+        /// Else, get value `orVal`.
+        ///
+        /// # Parameters
+        ///
+        /// - `orVal`: Other value to return.
+        ///
+        /// # Returns
+        ///
+        /// Rvalue ref to `this` value or `orVal`.
         /// ----------------------------------------------------------------------------------------
         constexpr auto valueOr(TVal&& orVal) && -> TVal&&
         {
@@ -322,15 +347,15 @@ namespace Atom
         /// Get `this` value or.
         ///
         /// If `this` contains value, get `this` value.
-        /// Else, get value returned by invokable `other`.
+        /// Else, get value returned by invoking `orInvoke`.
         ///
         /// # Parameters
         ///
-        /// - `other`: Invokable to return other value.
+        /// - `orInvoke`: Invokable to return orInvoke value.
         ///
         /// # Returns
         ///
-        /// Const reference to `this` value or other value returned by invokable `other`.
+        /// Const ref to `this` value or orInvoke value returned by invoking `orInvoke`.
         /// ----------------------------------------------------------------------------------------
         template <typename TInvokable>
         constexpr auto valueOrInvoke(TInvokable&& orInvoke) const -> const TVal&
@@ -345,7 +370,18 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
+        /// Get `this` value or.
         ///
+        /// If `this` contains value, get `this` value.
+        /// Else, get value returned by invoking `orInvoke`.
+        ///
+        /// # Parameters
+        ///
+        /// - `orInvoke`: Invokable to return orInvoke value.
+        ///
+        /// # Returns
+        ///
+        /// Ref to `this` value or orInvoke value returned by invoking `orInvoke`.
         /// ----------------------------------------------------------------------------------------
         template <typename TInvokable>
         constexpr auto valueOrInvoke(TInvokable&& orInvoke) -> TVal&
@@ -360,7 +396,18 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
+        /// Get `this` value or.
         ///
+        /// If `this` contains value, get `this` value.
+        /// Else, get value returned by invoking `orInvoke`.
+        ///
+        /// # Parameters
+        ///
+        /// - `orInvoke`: Invokable to return orInvoke value.
+        ///
+        /// # Returns
+        ///
+        /// Rvalue ref to `this` value or orInvoke value returned by invoking `orInvoke`.
         /// ----------------------------------------------------------------------------------------
         template <typename TInvokable>
         constexpr auto valueOrInvoke(TInvokable&& orInvoke) && -> TVal&&
@@ -425,7 +472,7 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Destroys value if stored.
+        /// Destroys current value if any.
         /// ----------------------------------------------------------------------------------------
         constexpr auto reset()
         {
@@ -448,7 +495,7 @@ namespace Atom
         }
 
         /// --------------------------------------------------------------------------------------------
-        /// # Equality Comparision Operator
+        /// # Equality Comparision
         ///
         /// If `this` and `that` are null, returns `true`.
         /// If `this` is null and `that` is not null or vice versa, returns `false`.
@@ -470,9 +517,9 @@ namespace Atom
         }
 
         /// --------------------------------------------------------------------------------------------
-        /// # Not Equality Comparision Operator
+        /// # Not Equality Comparision
         ///
-        /// Performs negation of [Equality Comparision Operator].
+        /// Performs negation of [Equality Comparision].
         /// --------------------------------------------------------------------------------------------
         template <typename TThat>
         constexpr auto ne(const Option<TThat>& that) const -> bool
@@ -482,7 +529,7 @@ namespace Atom
         }
 
         /// --------------------------------------------------------------------------------------------
-        /// # Less Than Comparision Operator
+        /// # Less Than Comparision
         ///
         /// If `this` or `that` is null, returns false.
         /// Else, returns `this.value() < that.value()`.
@@ -498,7 +545,7 @@ namespace Atom
         }
 
         /// --------------------------------------------------------------------------------------------
-        /// # Greater Than Comparision Operator
+        /// # Greater Than Comparision
         ///
         /// If `opt0` or `that` is null, returns false.
         /// Else, returns `this.value() > that.value()`.
@@ -514,7 +561,7 @@ namespace Atom
         }
 
         /// --------------------------------------------------------------------------------------------
-        /// # Less Than or Equal To Comparision Operator
+        /// # Less Than or Equal To Comparision
         ///
         /// If `opt0` or `that` is null, returns false.
         /// Else, returns `this.value() <= that.value()`.
@@ -530,7 +577,7 @@ namespace Atom
         }
 
         /// --------------------------------------------------------------------------------------------
-        /// # Greater Than or Equal To Comparision Operator
+        /// # Greater Than or Equal To Comparision
         ///
         /// If `opt0` or `that` is null, returns false.
         /// Else, returns `this.value() >= that.value()`.
