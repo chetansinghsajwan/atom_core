@@ -221,7 +221,7 @@ namespace Atom
         template <typename T, typename... Ts>
         class AddFirst<T, TypeList<Ts...>>
         {
-        private:
+        public:
             using Type = TypeList<T, Ts...>;
         };
 
@@ -253,7 +253,8 @@ namespace Atom
         template <template <typename T> typename TPred>
         class RemoveIf<TPred>
         {
-            typedef TypeList<> Type;
+        public:
+            using Type = TypeList<>;
         };
 
         template <template <typename T> typename TPred, typename T, typename... Ts>
@@ -332,7 +333,7 @@ namespace Atom
         template <typename... Ts>
         class AreUnique;
 
-        template < >
+        template <>
         class AreUnique<>
         {
         public:
@@ -344,6 +345,32 @@ namespace Atom
         {
         public:
             static constexpr bool Value = not Has<T, Ts...>::Value and AreUnique<Ts...>::Value;
+        };
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////
+        //// Replace
+        ////
+        ////////////////////////////////////////////////////////////////////////////////////////////
+
+        template <typename TReplace, typename TWith, typename... Ts>
+        class ReplaceAll;
+
+        template <typename TReplace, typename TWith>
+        class ReplaceAll<TReplace, TWith>
+        {
+        public:
+            using Type = TypeList<>;
+        };
+
+        template <typename TReplace, typename TWith, typename T, typename... Ts>
+        class ReplaceAll<TReplace, TWith, T, Ts...>
+        {
+            using _TFinal = TTI::TConditional<TTI::IsSame<TReplace, T>, TWith, T>;
+
+        public:
+            using Type =
+                typename AddFirst<_TFinal, typename ReplaceAll<TReplace, TWith, Ts...>::Type>::Type;
         };
     };
 
@@ -392,6 +419,12 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         template <typename... TsToCheck>
         static constexpr bool Has = (_TypeListOps::template Has<TsToCheck, Ts...>::Value and ...);
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename TToReplace, typename TWith>
+        using ReplaceAll = typename _TypeListOps::template ReplaceAll<TToReplace, TWith, Ts...>::Type;
 
         /// ----------------------------------------------------------------------------------------
         /// # To Do

@@ -3,17 +3,17 @@
 
 using namespace Atom;
 
-auto PrintCmdArgs(i32 argc, char** argv)
+auto PrintCmdArgs(i32 argc, char** args)
 {
     for (i32 i = 1; i < argc; i++)
     {
-        std::cout << argv[i.val()] << std::endl;
+        std::cout << args[i.val()] << std::endl;
     }
 }
 
-auto main(int argc, char** argv) -> int
+auto main(int argc, char** args) -> int
 {
-    PrintCmdArgs(argc, argv);
+    PrintCmdArgs(argc, args);
 
     return 0;
 }
