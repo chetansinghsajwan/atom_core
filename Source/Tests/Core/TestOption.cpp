@@ -56,12 +56,12 @@ TEST_CASE("Atom.Core.Option")
     {
         TrackedType obj = TrackedType();
         Option<TrackedType> opt;
-        opt = obj;
+        opt = mov(obj);
 
         REQUIRE(opt.isValue());
         REQUIRE(opt.value().lastOp == TrackedType::EOperation::MoveConstructor);
 
-        opt = obj;
+        opt = mov(obj);
 
         REQUIRE(opt.isValue());
         REQUIRE(opt.value().lastOp == TrackedType::EOperation::MoveOperator);
