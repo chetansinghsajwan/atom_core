@@ -19,6 +19,21 @@ TEST_CASE("Atom.Core.Option")
         REQUIRE(opt.isNull());
     }
 
+    SECTION("Null Constructor")
+    {
+        Option<i32> opt = nullopt;
+
+        REQUIRE(opt.isNull());
+    }
+
+    SECTION("Null Operator")
+    {
+        Option<i32> opt = i32(0);
+
+        opt = nullopt;
+        REQUIRE(opt.isNull());
+    }
+
     SECTION("Value Copy Constructor")
     {
         TrackedType obj = TrackedType();
@@ -26,15 +41,6 @@ TEST_CASE("Atom.Core.Option")
 
         REQUIRE(opt.isValue());
         REQUIRE(opt.value().lastOp == TrackedType::EOperation::CopyConstructor);
-    }
-
-    SECTION("Value Move Constructor")
-    {
-        TrackedType obj = TrackedType();
-        Option<TrackedType> opt = mov(obj);
-
-        REQUIRE(opt.isValue());
-        REQUIRE(opt.value().lastOp == TrackedType::EOperation::MoveConstructor);
     }
 
     SECTION("Value Copy Operator")
@@ -50,6 +56,15 @@ TEST_CASE("Atom.Core.Option")
 
         REQUIRE(opt.isValue());
         REQUIRE(opt.value().lastOp == TrackedType::EOperation::CopyOperator);
+    }
+
+    SECTION("Value Move Constructor")
+    {
+        TrackedType obj = TrackedType();
+        Option<TrackedType> opt = mov(obj);
+
+        REQUIRE(opt.isValue());
+        REQUIRE(opt.value().lastOp == TrackedType::EOperation::MoveConstructor);
     }
 
     SECTION("Value Move Operator")

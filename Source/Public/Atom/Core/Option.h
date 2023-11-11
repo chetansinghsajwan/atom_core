@@ -5,6 +5,14 @@
 namespace Atom
 {
     /// --------------------------------------------------------------------------------------------
+    /// Type used to initialize Option with no value.
+    /// --------------------------------------------------------------------------------------------
+    class NullOption
+    {};
+
+    constexpr NullOption nullopt = NullOption();
+
+    /// --------------------------------------------------------------------------------------------
     /// The Option class is used to wrap the object of type `TVal`. This class contain either the
     /// value or can be empty representing no value.
     ///
@@ -20,8 +28,7 @@ namespace Atom
     {
         static_assert(not TTI::IsVoid<T>, "Option doesn't support void type.");
 
-        static_assert(
-            not TTI::IsRef<T>, "Option doesn't support ref types, instead use pointers.");
+        static_assert(not TTI::IsRef<T>, "Option doesn't support ref types, instead use pointers.");
 
         static_assert(not TTI::IsQualified<T>, "Option doesn't support qualified types.");
 
@@ -39,7 +46,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Default Constructor
         ///
-        /// Constructs with no value. [`isValue()`] will return false.
+        /// Constructs with no value.
         /// ----------------------------------------------------------------------------------------
         constexpr Option():
             _impl(typename Impl::CtorDefault())
@@ -60,7 +67,8 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr Option(const Option& that)
             requires(not RTriviallyCopyConstructible<TVal>) and (RCopyConstructible<TVal>)
-            : _impl(typename Impl::CtorCopy(), that._impl)
+            :
+            _impl(typename Impl::CtorCopy(), that._impl)
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -102,7 +110,8 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr Option(Option&& that)
             requires(not RTriviallyMoveConstructible<TVal>) and (RMoveConstructible<TVal>)
-            : _impl(typename Impl::CtorMove(), mov(that._impl))
+            :
+            _impl(typename Impl::CtorMove(), mov(that._impl))
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -130,7 +139,26 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Param Copy Constructor
+        /// # Null Constructor
+        ///
+        /// Constructs with no value.
+        /// ----------------------------------------------------------------------------------------
+        constexpr Option(NullOption):
+            _impl(typename Impl::CtorDefault())
+        {}
+
+        /// ----------------------------------------------------------------------------------------
+        /// # Null Operator
+        ///
+        /// Destroys current value if any.
+        /// ----------------------------------------------------------------------------------------
+        constexpr Option& operator=(NullOption)
+        {
+            _impl.destroyValue();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// # Value Copy Constructor
         ///
         /// Copy constructs `this` value with `val`.
         ///
@@ -143,7 +171,7 @@ namespace Atom
         {}
 
         /// ----------------------------------------------------------------------------------------
-        /// # Param Copy Operator
+        /// # Value Copy Operator
         ///
         /// If `this` contains value, copy assigns `this` value with `val`.
         /// Else, copy constructs `this` value with `val`.
@@ -159,7 +187,7 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Param Move Constructor
+        /// # Value Move Constructor
         ///
         /// Move constructs `this` value with `value`.
         ///
@@ -172,7 +200,7 @@ namespace Atom
         {}
 
         /// ----------------------------------------------------------------------------------------
-        /// # Param Move Operator
+        /// # Value Move Operator
         ///
         /// If `this` contains value, move assigns `this` value with `val`.
         /// Else, move constructs `this` value with `val`.
@@ -492,6 +520,26 @@ namespace Atom
         constexpr auto swap(Option& that)
         {
             return _impl.swap(that._impl);
+        }
+
+        /// --------------------------------------------------------------------------------------------
+        /// # Equality Comparision
+        ///
+        /// `true` if this contains value, else `false`.
+        /// --------------------------------------------------------------------------------------------
+        constexpr auto eq(NullOption) const -> bool
+        {
+            return isNull();
+        }
+
+        /// --------------------------------------------------------------------------------------------
+        /// # Not Equality Comparision
+        ///
+        /// `false` if this contains value, else `true`.
+        /// --------------------------------------------------------------------------------------------
+        constexpr auto ne(NullOption) const -> bool
+        {
+            return isValue();
         }
 
         /// --------------------------------------------------------------------------------------------
