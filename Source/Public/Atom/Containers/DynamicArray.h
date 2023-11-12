@@ -13,10 +13,13 @@ namespace Atom
     /// - Add note for case, where element or elements to be inserted are from this array.
     /// --------------------------------------------------------------------------------------------
     template <typename TElem_, typename TAlloc_>
-        requires(not RRef<TElem_>) and (not RIsVoid<TElem_>)
     class BasicDynamicArray
     {
-        using _Impl = _DynamicArrayImpl<TElem_, TAlloc_>;
+        static_assert(not TTI::IsRef<TElem_>, "DynamicArray doesn't supports ref types.");
+        static_assert(not TTI::IsVoid<TElem_>, "DynamicArray doesn't support void.");
+
+    private:
+        using Impl = _DynamicArrayImpl<TElem_, TAlloc_>;
 
     public:
         using TElem = TElem_;
@@ -155,12 +158,14 @@ namespace Atom
         /// Constructs element at index `i` with `args`.
         ///
         /// # Parameters
+        ///
         /// - `i`: Index to insert element at.
         /// - `args...`: Args to construct element with.
         ///
         /// # Time Complexity
         ///
         /// # Iter Invalidation
+        ///
         /// All iters are invalidated.
         /// ----------------------------------------------------------------------------------------
         template <typename... TArgs>
@@ -176,15 +181,18 @@ namespace Atom
         /// Constructs element at pos `it` with `args`.
         ///
         /// # Parameters
+        ///
         /// - `it`: Pos to insert element at.
         /// - `args...`: Args to construct element with.
         ///
         /// # Returns
+        ///
         /// [`TMutIter`] to element inserted.
         ///
         /// # Time Complexity
         ///
         /// # Iter Invalidation
+        ///
         /// All iters are invalidated.
         /// ----------------------------------------------------------------------------------------
         template <typename... TArgs>
@@ -204,15 +212,18 @@ namespace Atom
         /// constructor of element in the arr.
         ///
         /// # Parameters
+        ///
         /// - `i`: Index to insert elements at.
         /// - `range`: Range of elements to insert.
         ///
         /// # Returns
+        ///
         /// Count of elements inserted.
         ///
         /// # Time Complexity
         ///
         /// # Iter Invalidation
+        ///
         /// All iters are invalidated.
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
@@ -229,15 +240,18 @@ namespace Atom
         /// constructor of element in the arr.
         ///
         /// # Parameters
+        ///
         /// - `it`: Pos to insert elements at.
         /// - `range`: Range of elements to insert.
         ///
         /// # Returns
+        ///
         /// [`MutArrayRange`] of elements inserted.
         ///
         /// # Time Complexity
         ///
         /// # Iter Invalidation
+        ///
         /// All iters are invalidated.
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
@@ -256,11 +270,13 @@ namespace Atom
         /// Constructs element at front with `args`.
         ///
         /// # Parameters
+        ///
         /// - `args...`: Args to construct element with.
         ///
         /// # Time Complexity
         ///
         /// # Iter Invalidation
+        ///
         /// All iters are invalidated.
         /// ----------------------------------------------------------------------------------------
         template <typename... TArgs>
@@ -275,14 +291,17 @@ namespace Atom
         /// constructor of element in the arr.
         ///
         /// # Parameters
+        ///
         /// - `range`: Range of elements to insert.
         ///
         /// # Returns
+        ///
         /// [`TMutIter`] to past the last inserted element.
         ///
         /// # Time Complexity
         ///
         /// # Iter Invalidation
+        ///
         /// All iters are invalidated.
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
@@ -297,11 +316,13 @@ namespace Atom
         /// Constructs element at back with `args`.
         ///
         /// # Parameters
+        ///
         /// - `args...`: Args to construct element with.
         ///
         /// # Time Complexity
         ///
         /// # Iter Invalidation
+        ///
         /// All iters are invalidated.
         /// ----------------------------------------------------------------------------------------
         template <typename... TArgs>
@@ -326,14 +347,17 @@ namespace Atom
         /// constructor of element in the arr.
         ///
         /// # Parameters
+        ///
         /// - `range`: Range of elements to insert.
         ///
         /// # Returns
+        ///
         /// [`TMutIter`] to the first inserted element.
         ///
         /// # Time Complexity
         ///
         /// # Iter Invalidation
+        ///
         /// All iters are invalidated.
         /// ----------------------------------------------------------------------------------------
         template <typename TRange>
@@ -360,6 +384,7 @@ namespace Atom
         /// Removes element at index `i`.
         ///
         /// # Parameters
+        ///
         /// - `i`: Index to remove element at.
         /// ----------------------------------------------------------------------------------------
         constexpr auto removeAt(usize i)
@@ -373,11 +398,13 @@ namespace Atom
         /// Removes element at pos `it`.
         ///
         /// # Parameters
+        ///
         /// - `it`: Pos to remove element at.
         ///
         /// # Returns
-        /// [TMutIter] to next element. If `it` was pointing to the last element,
-        /// returns [`iterEnd()`].
+        ///
+        /// [TMutIter] to next element. If `it` was pointing to the last element, returns
+        /// [`iterEnd()`].
         /// ----------------------------------------------------------------------------------------
         constexpr auto removeAt(TIter it) -> TMutIter
         {
@@ -393,13 +420,16 @@ namespace Atom
         /// Removes elements in range [[`from`, `to`]].
         ///
         /// # Parameters
+        ///
         /// - `from`: Start of range to remove elements at.
         /// - `to`: End of range to remove elements at.
         ///
         /// # Returns
+        ///
         /// `from`.
         ///
         /// ## Explanation
+        ///
         /// After removing `to - from` elements, next elements will be shifted back to index `from`.
         /// So the next element will be available at index `from`. If the last element of the arr
         /// was also removed, `from` will be equal to [`count()`].
@@ -419,10 +449,12 @@ namespace Atom
         /// Removes elements in range represented by `range`.
         ///
         /// # Parameters
+        ///
         /// - `it`: Start of range to remove elements at.
         /// - `itEnd`: End of range to remove elements at.
         ///
         /// # Returns
+        ///
         /// [`TMutIter`] to next element of the last removed element. If the last removed element
         /// was also the last element of the arr, returns [`iterEnd()`].
         /// ----------------------------------------------------------------------------------------
@@ -594,7 +626,7 @@ namespace Atom
         }
 
     private:
-        _Impl _impl;
+        Impl _impl;
     };
 
     /// --------------------------------------------------------------------------------------------
