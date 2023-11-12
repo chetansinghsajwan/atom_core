@@ -38,12 +38,12 @@ namespace Atom
     public:
         constexpr auto toStdCharPtr() const -> const char*
         {
-            return _ToStdCharPtr(this->data().raw());
+            return _ToStdCharPtr(this->data().unwrap());
         }
 
         constexpr auto toStdCharPtr() -> char*
         {
-            return _ToStdCharPtr(this->mutData().raw());
+            return _ToStdCharPtr(this->mutData().unwrap());
         }
     };
 }

@@ -19,12 +19,12 @@ namespace Atom::Private
 
         auto Update(ConstMemPtr<void> data, uint32_t dataSize)
         {
-            Sha1Update(&_context, data.raw(), dataSize);
+            Sha1Update(&_context, data.unwrap(), dataSize);
         }
 
         auto Calculate(Sha1Hash& hash)
         {
-            Sha1Finalise(&_context, reinterpret_cast<SHA1_HASH*>(hash.bytes.mutMem().raw()));
+            Sha1Finalise(&_context, reinterpret_cast<SHA1_HASH*>(hash.bytes.mutMem().unwrap()));
         }
 
     public:

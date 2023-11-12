@@ -12,7 +12,7 @@ namespace Atom
         {
             debug_expects(mem != nullptr);
 
-            std::construct_at(mem.raw(), forward<TArgs>(args)...);
+            std::construct_at(mem.unwrap(), forward<TArgs>(args)...);
         }
 
         template <typename TPtr, typename... TArgs>
@@ -21,7 +21,7 @@ namespace Atom
         {
             debug_expects(mem != nullptr);
 
-            std::construct_at(mem.raw(), forward<TArgs>(args)...);
+            std::construct_at(mem.unwrap(), forward<TArgs>(args)...);
         }
 
         template <typename T, typename TPtr, typename TArg>
@@ -56,7 +56,7 @@ namespace Atom
         {
             debug_expects(mem != nullptr);
 
-            std::destroy_at(mem.raw());
+            std::destroy_at(mem.unwrap());
         }
 
 
@@ -66,7 +66,7 @@ namespace Atom
         {
             debug_expects(mem != nullptr);
 
-            std::destroy_at(mem.raw());
+            std::destroy_at(mem.unwrap());
         }
     };
 }

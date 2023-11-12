@@ -22,7 +22,7 @@ namespace Atom
                 requires(RInvokable<TInvokable, TResult(TArgs...)>)
             {
                 _impl = [](MemPtr<void> obj, TResult& result, TArgs&&... args) {
-                    TInvokable& invokable = *reinterpret_cast<TInvokable*>(obj.raw());
+                    TInvokable& invokable = *reinterpret_cast<TInvokable*>(obj.unwrap());
                     new (&result) TResult(invokable(forward<TArgs>(args)...));
                 };
             }
@@ -47,7 +47,7 @@ namespace Atom
             auto Set()
             {
                 _impl = [](MemPtr<void> obj, TArgs&&... args) {
-                    TInvokable& invokable = *reinterpret_cast<TInvokable*>(obj.raw());
+                    TInvokable& invokable = *reinterpret_cast<TInvokable*>(obj.unwrap());
                     invokable(forward<TArgs>(args)...);
                 };
             }

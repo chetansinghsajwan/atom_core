@@ -379,7 +379,7 @@ namespace Atom
             if constexpr (Copyable)
             {
                 _object.copy = [](MemPtr<void> obj, ConstMemPtr<void> other) {
-                    new (obj.raw()) T(ConstMemPtr<T>(other).cval());
+                    new (obj.unwrap()) T(ConstMemPtr<T>(other).cval());
                 };
             }
 
@@ -388,7 +388,7 @@ namespace Atom
                 if constexpr (RMoveConstructible<T>)
                 {
                     _object.move = [](MemPtr<void> obj, MemPtr<void> other) {
-                        new (obj.raw()) T(mov(MemPtr<T>(other).val()));
+                        new (obj.unwrap()) T(mov(MemPtr<T>(other).val()));
                     };
                 }
                 else
@@ -405,7 +405,7 @@ namespace Atom
             }
 
             _object.obj = _AllocMem(_object.size, forceHeap);
-            new (_object.obj.raw()) T(forward<T>(obj));
+            new (_object.obj.unwrap()) T(forward<T>(obj));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -629,7 +629,7 @@ namespace Atom
         {
             if constexpr (StackSize > 0)
             {
-                return _object.obj.raw() == _stackMem;
+                return _object.obj.unwrap() == _stackMem;
             }
 
             return false;

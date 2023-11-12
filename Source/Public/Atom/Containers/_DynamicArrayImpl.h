@@ -339,20 +339,20 @@ namespace Atom
         constexpr auto _constructAt(usize i, TArgs&&... args) -> void
         {
             MemPtr<TElem> src = _getMutData() + i;
-            std::construct_at(src.raw(), forward<TArgs>(args)...);
+            std::construct_at(src.unwrap(), forward<TArgs>(args)...);
         }
 
         constexpr auto _destructAt(usize i) -> void
         {
             MemPtr<TElem> src = _getMutData() + i;
-            std::destroy_at(src.raw());
+            std::destroy_at(src.unwrap());
         }
 
         constexpr auto _destructRange(usize i, usize count) -> void
         {
             MemPtr<TElem> begin = _getMutData() + i;
             MemPtr<TElem> end = begin + count;
-            std::destroy(begin.raw(), end.raw());
+            std::destroy(begin.unwrap(), end.unwrap());
         }
 
         constexpr auto _moveRangeFront(usize i, usize count) -> void
@@ -360,7 +360,7 @@ namespace Atom
             MemPtr<TElem> begin = _getMutData() + i;
             MemPtr<TElem> end = _getMutData() + _getCount() - 1;
             MemPtr<TElem> dest = begin - count;
-            std::move(begin.raw(), end.raw(), dest.raw());
+            std::move(begin.unwrap(), end.unwrap(), dest.unwrap());
         }
 
         constexpr auto _moveRangeBack(usize i, usize count) -> void
@@ -368,14 +368,14 @@ namespace Atom
             MemPtr<TElem> begin = _getMutData() + i;
             MemPtr<TElem> end = _getMutData() + _getCount() - 1;
             MemPtr<TElem> dest = begin + count;
-            std::move_backward(begin.raw(), end.raw(), dest.raw());
+            std::move_backward(begin.unwrap(), end.unwrap(), dest.unwrap());
         }
 
         constexpr auto _moveRangeTo(usize i, MemPtr<TElem> dest) -> void
         {
             MemPtr<TElem> begin = _getMutData() + i;
             MemPtr<TElem> end = _getMutData() + _getCount() - 1;
-            std::move_backward(begin.raw(), end.raw(), dest.raw());
+            std::move_backward(begin.unwrap(), end.unwrap(), dest.unwrap());
         }
 
         constexpr auto _rotateRangeBack(usize i, usize count) -> void
@@ -383,7 +383,7 @@ namespace Atom
             MemPtr<TElem> begin = _getMutData();
             MemPtr<TElem> mid = begin + i;
             MemPtr<TElem> end = begin + _getCount() - 1;
-            std::rotate(begin.raw(), mid.raw(), end.raw());
+            std::rotate(begin.unwrap(), mid.unwrap(), end.unwrap());
         }
 
         template <typename UIter, typename UIterEnd>

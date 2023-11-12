@@ -10,7 +10,7 @@ namespace Atom
     {
         typename TPtr::TVal;
 
-        { ptr.craw() } -> RSameAs<const typename TPtr::TVal*>;
+        { ptr.cunwrap() } -> RSameAs<const typename TPtr::TVal*>;
     };
 
     template <typename TPtr>
@@ -18,7 +18,7 @@ namespace Atom
     {
         requires RConstPtr<TPtr>;
 
-        { ptr.raw() } -> RSameAs<typename TPtr::TVal*>;
+        { ptr.unwrap() } -> RSameAs<typename TPtr::TVal*>;
     };
 
     template <typename TPtr, typename T>
@@ -68,14 +68,14 @@ namespace Atom
         template <typename TPtr>
         constexpr ConstPtr(const TPtr& ptr)
             requires(RConstPtr<TPtr>) and (RConvertibleTo<const typename TPtr::TVal*, const TVal*>)
-            : _ptr{ static_cast<const TVal*>(ptr.craw()) }
+            : _ptr{ static_cast<const TVal*>(ptr.cunwrap()) }
         {}
 
         template <typename TPtr>
         constexpr ConstPtr& operator=(const TPtr& ptr)
             requires(RConstPtr<TPtr>) and (RConvertibleTo<const typename TPtr::TVal*, const TVal*>)
         {
-            _ptr = static_cast<const TVal*>(ptr.craw());
+            _ptr = static_cast<const TVal*>(ptr.cunwrap());
             return *this;
         }
 
@@ -122,12 +122,12 @@ namespace Atom
             return _ptr[n.val()];
         }
 
-        constexpr auto craw() const -> const TVal*
+        constexpr auto cunwrap() const -> const TVal*
         {
             return _ptr;
         }
 
-        constexpr auto raw() const -> const TVal*
+        constexpr auto unwrap() const -> const TVal*
         {
             return _ptr;
         }
@@ -179,14 +179,14 @@ namespace Atom
         template <typename TPtr>
         constexpr ConstPtr(const TPtr& ptr)
             requires(RConstPtr<TPtr>)
-            : _ptr{ static_cast<const void*>(ptr.craw()) }
+            : _ptr{ static_cast<const void*>(ptr.cunwrap()) }
         {}
 
         template <typename TPtr>
         constexpr ConstPtr& operator=(const TPtr& ptr)
             requires(RConstPtr<TPtr>)
         {
-            _ptr = static_cast<const void*>(ptr.craw());
+            _ptr = static_cast<const void*>(ptr.cunwrap());
             return *this;
         }
 
@@ -205,12 +205,12 @@ namespace Atom
         constexpr ~ConstPtr() = default;
 
     public:
-        constexpr auto craw() const -> const void*
+        constexpr auto cunwrap() const -> const void*
         {
             return _ptr;
         }
 
-        constexpr auto raw() const -> const void*
+        constexpr auto unwrap() const -> const void*
         {
             return _ptr;
         }
@@ -269,20 +269,20 @@ namespace Atom
         template <typename TPtr>
         constexpr Ptr(TPtr& ptr)
             requires(RPtr<TPtr>) and (RConvertibleTo<typename TPtr::TVal*, TVal*>)
-            : Base(static_cast<TVal*>(ptr.raw()))
+            : Base(static_cast<TVal*>(ptr.unwrap()))
         {}
 
         template <typename TPtr>
         constexpr Ptr(TPtr&& ptr)
             requires(RPtr<TPtr>) and (RConvertibleTo<typename TPtr::TVal*, TVal*>)
-            : Base(static_cast<TVal*>(ptr.raw()))
+            : Base(static_cast<TVal*>(ptr.unwrap()))
         {}
 
         template <typename TPtr>
         constexpr Ptr& operator=(TPtr& ptr)
             requires(RPtr<TPtr>) and (RConvertibleTo<typename TPtr::TVal*, TVal*>)
         {
-            _ptr = static_cast<TVal*>(ptr.raw());
+            _ptr = static_cast<TVal*>(ptr.unwrap());
             return *this;
         }
 
@@ -324,15 +324,13 @@ namespace Atom
             return _mutPtr()[n.val()];
         }
 
-        constexpr auto raw() -> TVal*
+        constexpr auto unwrap() const -> TVal*
         {
             return _mutPtr();
         }
 
-        using Base::raw;
-
     private:
-        constexpr auto _mutPtr() -> TVal*
+        constexpr auto _mutPtr() const -> TVal*
         {
             return const_cast<TVal*>(_ptr);
         }
@@ -374,20 +372,20 @@ namespace Atom
         template <typename TPtr>
         constexpr Ptr(TPtr& ptr)
             requires(RPtr<TPtr>)
-            : Base(static_cast<void*>(ptr.raw()))
+            : Base(static_cast<void*>(ptr.unwrap()))
         {}
 
         template <typename TPtr>
         constexpr Ptr(TPtr&& ptr)
             requires(RPtr<TPtr>)
-            : Base(static_cast<void*>(ptr.raw()))
+            : Base(static_cast<void*>(ptr.unwrap()))
         {}
 
         template <typename TPtr>
         constexpr Ptr& operator=(TPtr& ptr)
             requires(RPtr<TPtr>)
         {
-            _ptr = static_cast<void*>(ptr.raw());
+            _ptr = static_cast<void*>(ptr.unwrap());
             return *this;
         }
 
@@ -408,12 +406,10 @@ namespace Atom
         constexpr ~Ptr() = default;
 
     public:
-        constexpr auto raw() -> void*
+        constexpr auto unwrap() -> void*
         {
             return _mutPtr();
         }
-
-        using Base::raw;
 
         constexpr auto byteRaw() -> byte*
         {

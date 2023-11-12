@@ -15,12 +15,12 @@ namespace Atom
 
         auto Realloc(MemPtr<void> mem, usize size) -> MemPtr<void>
         {
-            return std::realloc(mem.raw(), size.val());
+            return std::realloc(mem.unwrap(), size.val());
         }
 
         auto Dealloc(MemPtr<void> mem)
         {
-            std::free(mem.raw());
+            std::free(mem.unwrap());
         }
     };
 }

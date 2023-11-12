@@ -19,12 +19,12 @@ namespace Atom::Private
 
         auto Update(ConstMemPtr<void> data, uint32_t dataSize)
         {
-            Md5Update(&_context, data.raw(), dataSize);
+            Md5Update(&_context, data.unwrap(), dataSize);
         }
 
         auto Calculate(Md5Hash& hash)
         {
-            Md5Finalise(&_context, reinterpret_cast<MD5_HASH*>(hash.bytes.mutMem().raw()));
+            Md5Finalise(&_context, reinterpret_cast<MD5_HASH*>(hash.bytes.mutMem().unwrap()));
         }
 
     public:

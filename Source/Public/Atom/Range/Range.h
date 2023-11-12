@@ -186,7 +186,7 @@ namespace Atom
             return len;
         }
 
-        return usize(std::strlen(_ToStdCharPtr(str.raw())));
+        return usize(std::strlen(_ToStdCharPtr(str.unwrap())));
     }
 }
 
