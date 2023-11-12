@@ -8,11 +8,11 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename TPtr, typename TThis>
-    class MemPtrFunctions: public TPtr
+    template <typename TBase, typename TThis>
+    class MemPtrFunctions: public TBase
     {
-        using This = MemPtrFunctions<TPtr, TThis>;
-        using Base = TPtr;
+        using This = MemPtrFunctions<TBase, TThis>;
+        using Base = TBase;
 
     public:
         using TVal = typename Base::TVal;
