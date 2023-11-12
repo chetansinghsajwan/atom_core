@@ -71,4 +71,10 @@ namespace Atom::TTI
 
     template <typename T>
     constexpr bool IsQualified = IsConst<T> || IsVolatile<T>;
+
+    template <typename T>
+    using TPure = TRemoveQuailfiersRef<T>;
+
+    template <typename T>
+    constexpr bool IsPure = not IsQualified<T> and not IsRef<T>;
 }
