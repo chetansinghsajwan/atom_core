@@ -38,7 +38,7 @@ namespace Atom
         {
             debug_expects(isIndexInRange(i));
 
-            return data()[i.val()];
+            return data()[i];
         }
 
         constexpr auto front() const -> const TElem&

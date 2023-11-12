@@ -990,7 +990,7 @@ namespace Atom
         ////
         ////////////////////////////////////////////////////////////////////////////////////////////
 
-        constexpr auto val() const -> TVal
+        constexpr auto unwrap() const -> TVal
         {
             return _val;
         }

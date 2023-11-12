@@ -19,7 +19,7 @@ namespace Atom
         constexpr auto ToFmt(StringView str) -> _FmtStringView
         {
             const char* begin = _ToStdCharPtr(str.data().unwrap());
-            const _usize count = str.count().val();
+            const _usize count = str.count().unwrap();
             return _FmtStringView{ begin, count };
         }
     };

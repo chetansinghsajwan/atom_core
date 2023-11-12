@@ -642,7 +642,7 @@ namespace Atom
         /// # To Do
         /// - Replace with a type to handle storage.
         /// ----------------------------------------------------------------------------------------
-        ATOM_CONDITIONAL_FIELD(StackSize > 0, byte[StackSize.val()]) _stackMem;
+        ATOM_CONDITIONAL_FIELD(StackSize > 0, byte[StackSize.unwrap()]) _stackMem;
 
         /// ----------------------------------------------------------------------------------------
         /// Memory Allocator.

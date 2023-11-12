@@ -115,12 +115,12 @@ namespace Atom
 
         constexpr auto operator[](isize n) const -> const TVal&
         {
-            return _ptr[n.val()];
+            return _ptr[n.unwrap()];
         }
 
         constexpr auto operator[](usize n) const -> const TVal&
         {
-            return _ptr[n.val()];
+            return _ptr[n.unwrap()];
         }
 
         constexpr auto cunwrap() const -> const TVal*
@@ -317,12 +317,12 @@ namespace Atom
 
         constexpr auto operator[](isize n) -> TVal&
         {
-            return _mutPtr()[n.val()];
+            return _mutPtr()[n.unwrap()];
         }
 
         constexpr auto operator[](usize n) -> TVal&
         {
-            return _mutPtr()[n.val()];
+            return _mutPtr()[n.unwrap()];
         }
 
         constexpr auto unwrap() const -> TVal*

@@ -11,7 +11,7 @@ namespace Atom
         using _Types = TypeList<Ts...>;
 
     public:
-        alignas(_Types::MaxAlign.val()) byte storage[_Types::MaxSize];
+        alignas(_Types::MaxAlign.unwrap()) byte storage[_Types::MaxSize];
     };
 
     template <usize size>
@@ -28,28 +28,28 @@ namespace Atom
         {
             debug_expects(i < Size());
 
-            return ConstMemPtr(_storage + i.val());
+            return ConstMemPtr(_storage + i.unwrap());
         }
 
         constexpr auto mutMem(usize i = 0) -> MemPtr<void>
         {
             debug_expects(i < Size());
 
-            return MemPtr(_storage + i.val());
+            return MemPtr(_storage + i.unwrap());
         }
 
         constexpr auto ref(usize i) const -> const byte&
         {
             debug_expects(i < Size());
 
-            return _storage[i.val()];
+            return _storage[i.unwrap()];
         }
 
         constexpr auto mutRef(usize i) -> byte&
         {
             debug_expects(i < Size());
 
-            return _storage[i.val()];
+            return _storage[i.unwrap()];
         }
 
         constexpr auto operator[](usize i) const -> const byte&
@@ -66,7 +66,7 @@ namespace Atom
         {
             for (usize i = usize(0); i < Size(); i++)
             {
-                if (_storage[i.val()] != that._storage[i.val()])
+                if (_storage[i.unwrap()] != that._storage[i.unwrap()])
                     return false;
             }
 
@@ -79,6 +79,6 @@ namespace Atom
         }
 
     public:
-        byte _storage[size.val()];
+        byte _storage[size.unwrap()];
     };
 }

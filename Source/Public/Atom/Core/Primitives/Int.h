@@ -25,7 +25,7 @@ namespace Atom
     {
         if constexpr (RInt<TInt>)
         {
-            return n.val();
+            return n.unwrap();
         }
         else
         {

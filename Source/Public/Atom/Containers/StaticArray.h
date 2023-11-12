@@ -24,7 +24,7 @@ namespace Atom
 
         template <typename... TArgs>
         constexpr BasicStaticArray(TArgs&&... args)
-            requires(RConvertibleTo<TArgs, TElem> and ...) and (sizeof...(TArgs) <= count_.val()):
+            requires(RConvertibleTo<TArgs, TElem> and ...) and (sizeof...(TArgs) <= count_.unwrap()):
             _arr{ 0 } { }
 
     public:
@@ -50,7 +50,7 @@ namespace Atom
 
         constexpr auto iterEnd() const -> TIterEnd
         {
-            return TIterEnd{ _arr + count_.val() };
+            return TIterEnd{ _arr + count_.unwrap() };
         }
 
         constexpr auto mutIter() -> TMutIter
@@ -64,7 +64,7 @@ namespace Atom
         }
 
     private:
-        TElem _arr[count_.val()];
+        TElem _arr[count_.unwrap()];
     };
 
     template <typename TElem, usize count>

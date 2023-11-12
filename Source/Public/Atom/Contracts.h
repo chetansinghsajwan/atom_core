@@ -60,7 +60,7 @@ namespace Atom
                                 "\n\tat: {}: {}: {}"
                                 "\n\tfunc: {}",
                 _ContractTypeToString(violation.type), violation.msg, violation.src.fileName,
-                violation.src.line.val(), violation.src.column.val(), violation.src.funcName);
+                violation.src.line.unwrap(), violation.src.column.unwrap(), violation.src.funcName);
         }
 
     public:
@@ -101,9 +101,9 @@ namespace Atom
             {
                 std::cout << "Contracts " << _ContractTypeToString(violation.type) << " Violation:"
                           << "\n\twith msg: " << violation.msg << "'"
-                          << "\n\tat: " << violation.src.fileName << ":" << violation.src.line.val()
-                          << ":" << violation.src.column.val() << ": " << violation.src.funcName
-                          << std::endl;
+                          << "\n\tat: " << violation.src.fileName << ":"
+                          << violation.src.line.unwrap() << ":" << violation.src.column.unwrap()
+                          << ": " << violation.src.funcName << std::endl;
 
                 std::terminate();
             }

@@ -312,7 +312,7 @@ namespace Atom
     template <typename T>
     constexpr auto MakeRange(const T* begin, usize count)
     {
-        return MakeRange(ConstMemPtr(begin), ConstMemPtr(begin + count.val()));
+        return MakeRange(ConstMemPtr(begin), ConstMemPtr(begin + count.unwrap()));
     }
 
     /// --------------------------------------------------------------------------------------------
@@ -341,6 +341,6 @@ namespace Atom
     constexpr auto MakeRange(const char (&arr)[count])
     {
         const Char* begin_ = static_cast<const Char*>(static_cast<const void*>(arr));
-        return MakeRange(begin_, begin_ + count.val());
+        return MakeRange(begin_, begin_ + count.unwrap());
     }
 }

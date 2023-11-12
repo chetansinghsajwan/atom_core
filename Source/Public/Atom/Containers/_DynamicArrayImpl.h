@@ -41,12 +41,12 @@ namespace Atom
 
         constexpr auto at(usize i) const -> const TElem&
         {
-            return _getData()[i.val()];
+            return _getData()[i];
         }
 
         constexpr auto mutAt(usize i) const -> const TElem&
         {
-            return _getMutData()[i.val()];
+            return _getMutData()[i];
         }
 
         constexpr auto iter(usize i = 0) const -> TIter

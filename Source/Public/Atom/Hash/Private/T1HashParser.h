@@ -121,12 +121,12 @@ namespace Atom::Private
             return hash;
         }
 
-        constexpr auto _parseArr(const Char* str) const -> T1Hash
+        constexpr auto _parseArr(ConstMemPtr<Char> str) const -> T1Hash
         {
             T1Hash hash;
             for (usize i = 0; i < Size * 2; i += 2)
             {
-                byte hex1 = Math::CharToHex(str[i.val()]);
+                byte hex1 = Math::CharToHex(str[i]);
                 if (hex1 == byte(-1))
                 {
                     return T1Hash::Null;
@@ -135,7 +135,7 @@ namespace Atom::Private
                 // Left shift 4 bits to make space for next 4 bits.
                 hex1 = hex1 << 4;
 
-                byte hex2 = Math::CharToHex(str[(i + 1).val()]);
+                byte hex2 = Math::CharToHex(str[i + 1]);
                 if (hex2 == byte(-1))
                 {
                     return T1Hash::Null;

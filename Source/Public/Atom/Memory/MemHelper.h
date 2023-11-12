@@ -282,12 +282,12 @@ namespace Atom
 
         constexpr auto _ShiftFwd(MemPtr<void> mem, usize memCount, usize steps) const -> void
         {
-            std::shift_right(mem.byteRaw(), (mem + memCount).byteRaw(), steps.val());
+            std::shift_right(mem.byteRaw(), (mem + memCount).byteRaw(), steps.unwrap());
         }
 
         constexpr auto _ShiftBwd(MemPtr<void> mem, usize memCount, usize steps) const -> void
         {
-            std::shift_left(mem.byteRaw(), (mem + memCount).byteRaw(), steps.val());
+            std::shift_left(mem.byteRaw(), (mem + memCount).byteRaw(), steps.unwrap());
         }
 
         constexpr auto _RotateFwd(MemPtr<void> mem, usize memCount, usize offset) const -> void
