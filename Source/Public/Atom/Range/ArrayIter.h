@@ -1,5 +1,6 @@
 #pragma once
 #include "Atom/Core.h"
+#include "Atom/TTI.h"
 
 namespace Atom
 {
@@ -7,9 +8,11 @@ namespace Atom
     /// ArrayIter iterates over raw arr.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    requires(not RConst<T>)
     class ArrayIter
     {
+        static_assert(TTI::IsPure<T>, "ArrayIter supports only pure types.");
+        static_assert(not TTI::IsVoid<T>, "ArrayIter doesn't support void.");
+
     public:
         using TElem = T;
 
@@ -44,6 +47,42 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
+        /// Move fwd by 1 step.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto next() -> ArrayIter&
+        {
+            _it++;
+            return *this;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// Move fwd by `steps`.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto next(usize steps) -> ArrayIter&
+        {
+            _it += steps;
+            return *this;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// Move bwd by 1 step.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto prev() -> ArrayIter&
+        {
+            _it--;
+            return *this;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// Move bwd by `steps`.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto prev(usize steps) -> ArrayIter&
+        {
+            _it -= steps;
+            return *this;
+        }
+
+        /// ----------------------------------------------------------------------------------------
         /// Check if this iter is same as `that`. Used to compare wth end.
         /// ----------------------------------------------------------------------------------------
         constexpr auto eq(const ArrayIter& that) const -> bool
@@ -52,21 +91,11 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Move fwd by `steps`.
+        /// Check if this iter is not same as `that`. Used to compare wth end.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto next(usize steps = 1) -> ArrayIter&
+        constexpr auto ne(const ArrayIter& that) const -> bool
         {
-            _it += steps.val();
-            return *this;
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// Move bwd by `steps`.
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto prev(usize steps = 1) -> ArrayIter&
-        {
-            _it -= steps.val();
-            return *this;
+            return not eq(that);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -85,9 +114,12 @@ namespace Atom
     /// MutArrayIter iterates over mut raw arr.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    requires(not RConst<T>)
     class MutArrayIter: public ArrayIter<T>
     {
+        static_assert(TTI::IsPure<T>, "MutArrayIter supports only pure types.");
+        static_assert(not TTI::IsVoid<T>, "MutArrayIter doesn't support void.");
+
+    private:
         using Base = ArrayIter<T>;
 
     public:
@@ -124,18 +156,36 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
+        /// Move fwd by 1 step.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto next() -> MutArrayIter&
+        {
+            Base::next();
+            return *this;
+        }
+
+        /// ----------------------------------------------------------------------------------------
         /// Move fwd by `steps`.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto next(usize steps = 1) -> MutArrayIter&
+        constexpr auto next(usize steps) -> MutArrayIter&
         {
             Base::next(steps);
             return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
+        /// Move bwd by 1 step.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto prev() -> MutArrayIter&
+        {
+            Base::prev();
+            return *this;
+        }
+
+        /// ----------------------------------------------------------------------------------------
         /// Move bwd by `steps`.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto prev(usize steps = 1) -> MutArrayIter&
+        constexpr auto prev(usize steps) -> MutArrayIter&
         {
             Base::prev(steps);
             return *this;
