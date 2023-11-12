@@ -1,5 +1,6 @@
 #pragma once
 #include "Atom/Core/Primitives.h"
+#include "Atom/TTI.h"
 
 namespace Atom
 {
@@ -406,12 +407,12 @@ namespace Atom
         constexpr ~Ptr() = default;
 
     public:
-        constexpr auto unwrap() -> void*
+        constexpr auto unwrap() const -> void*
         {
             return _mutPtr();
         }
 
-        constexpr auto byteRaw() -> byte*
+        constexpr auto byteRaw() const -> byte*
         {
             return static_cast<byte*>(_mutPtr());
         }
@@ -423,7 +424,7 @@ namespace Atom
         }
 
     private:
-        constexpr auto _mutPtr() -> void*
+        constexpr auto _mutPtr() const -> void*
         {
             return const_cast<void*>(_ptr);
         }
