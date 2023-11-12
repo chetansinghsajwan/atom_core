@@ -22,7 +22,7 @@ namespace Atom
         }
 
     private:
-        AlignedUnionStorageFor<Ts...> _storage;
+        StaticStorageFor<Ts...> _storage;
     };
 
     /// --------------------------------------------------------------------------------------------

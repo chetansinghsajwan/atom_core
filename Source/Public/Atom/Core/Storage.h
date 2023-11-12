@@ -5,7 +5,7 @@
 namespace Atom
 {
     template <typename... Ts>
-    class AlignedUnionStorageFor
+    class StaticStorageFor
     {
     private:
         using _Types = TypeList<Ts...>;
