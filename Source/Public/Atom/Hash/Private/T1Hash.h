@@ -1,5 +1,5 @@
 #pragma once
-#include "Atom/Core/Storage.h"
+#include "Atom/Core/StaticStorage.h"
 
 namespace Atom::Private
 {

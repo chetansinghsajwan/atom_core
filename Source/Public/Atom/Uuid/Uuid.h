@@ -1,6 +1,6 @@
 #pragma once
 #include "Atom/Math.h"
-#include "Atom/Core/Storage.h"
+#include "Atom/Core/StaticStorage.h"
 #include "Atom/String/String.h"
 #include "Atom/Containers/OutputReq.h"
 

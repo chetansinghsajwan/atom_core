@@ -2,8 +2,8 @@
 #include "Atom/Core.h"
 #include "Atom/Memory/ObjHelper.h"
 #include "Atom/TTI.h"
-#include "Storage.h"
-#include "TypeList.h"
+#include "Atom/Core/StaticStorage.h"
+#include "Atom/Core/TypeList.h"
 
 namespace Atom
 {
