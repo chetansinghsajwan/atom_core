@@ -36,6 +36,10 @@ namespace Atom
     template <typename TVal_>
     class ConstPtr
     {
+        static_assert(TTI::IsPure<TVal_>, "ConstPtr only supports pure types.");
+        static_assert(not TTI::IsVoid<TVal_>, "ConstPtr doesn't support void.");
+
+    private:
         using This = ConstPtr<TVal_>;
 
     public:
@@ -234,6 +238,10 @@ namespace Atom
     template <typename TVal_, typename _TBase = void>
     class Ptr: public ConstPtr<TVal_>
     {
+        static_assert(TTI::IsPure<TVal_>, "Ptr only supports pure types.");
+        static_assert(not TTI::IsVoid<TVal_>, "Ptr doesn't support void.");
+
+    private:
         using This = Ptr<TVal_>;
         using Base = ConstPtr<TVal_>;
 
