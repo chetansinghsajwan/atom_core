@@ -22,7 +22,7 @@ namespace Atom
                 requires(RInvokable<TInvokable, TResult(TArgs...)>)
             {
                 _impl = [](MemPtr<void> obj, TResult& result, TArgs&&... args) {
-                    TInvokable& invokable = *reinterpret_cast<TInvokable*>(obj.unwrap());
+                    TInvokable& invokable = *static_cast<TInvokable*>(obj.unwrap());
                     new (&result) TResult(invokable(forward<TArgs>(args)...));
                 };
             }

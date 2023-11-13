@@ -13,7 +13,7 @@ namespace Atom
         {}
 
         constexpr MemBlk(MemPtr<void> begin, MemPtr<void> end):
-            mem{ begin }, count{ (usize)(end - begin) }
+            mem{ begin }, count{ end - begin }
         {
             debug_expects(end >= begin);
         }
@@ -267,37 +267,37 @@ namespace Atom
     private:
         constexpr auto _Fill(MemPtr<void> mem, usize count, memunit val) const -> void
         {
-            std::fill(mem.byteRaw(), (mem + count).byteRaw(), val);
+            std::fill(mem.unwrapAsByte(), (mem + count).unwrapAsByte(), val);
         }
 
         constexpr auto _FwdCopy(ConstMemPtr<void> src, usize count, MemPtr<void> dest) const -> void
         {
-            std::copy(src.byteRaw(), (src + count).byteRaw(), dest.byteRaw());
+            std::copy(src.unwrapAsByte(), (src + count).unwrapAsByte(), dest.unwrapAsByte());
         }
 
         constexpr auto _BwdCopy(ConstMemPtr<void> src, usize count, MemPtr<void> dest) const -> void
         {
-            std::copy_backward(src.byteRaw(), (src + count).byteRaw(), dest.byteRaw());
+            std::copy_backward(src.unwrapAsByte(), (src + count).unwrapAsByte(), dest.unwrapAsByte());
         }
 
         constexpr auto _ShiftFwd(MemPtr<void> mem, usize memCount, usize steps) const -> void
         {
-            std::shift_right(mem.byteRaw(), (mem + memCount).byteRaw(), steps.unwrap());
+            std::shift_right(mem.unwrapAsByte(), (mem + memCount).unwrapAsByte(), steps.unwrap());
         }
 
         constexpr auto _ShiftBwd(MemPtr<void> mem, usize memCount, usize steps) const -> void
         {
-            std::shift_left(mem.byteRaw(), (mem + memCount).byteRaw(), steps.unwrap());
+            std::shift_left(mem.unwrapAsByte(), (mem + memCount).unwrapAsByte(), steps.unwrap());
         }
 
         constexpr auto _RotateFwd(MemPtr<void> mem, usize memCount, usize offset) const -> void
         {
-            std::rotate(mem.byteRaw(), (mem + offset).byteRaw(), (mem + memCount).byteRaw());
+            std::rotate(mem.unwrapAsByte(), (mem + offset).unwrapAsByte(), (mem + memCount).unwrapAsByte());
         }
 
         constexpr auto _RotateBwd(MemPtr<void> mem, usize memCount, usize offset) const -> void
         {
-            std::rotate(mem.byteRaw(), (mem + offset).byteRaw(), (mem + memCount).byteRaw());
+            std::rotate(mem.unwrapAsByte(), (mem + offset).unwrapAsByte(), (mem + memCount).unwrapAsByte());
         }
     };
 }

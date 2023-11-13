@@ -216,7 +216,13 @@ namespace Atom
             return _ptr;
         }
 
-        constexpr auto byteRaw() const -> const byte*
+        template <typename T>
+        constexpr auto unwrapAs() const -> const byte*
+        {
+            return static_cast<const T*>(_ptr);
+        }
+
+        constexpr auto unwrapAsByte() const -> const byte*
         {
             return static_cast<const byte*>(_ptr);
         }
@@ -412,7 +418,7 @@ namespace Atom
             return _mutPtr();
         }
 
-        constexpr auto byteRaw() const -> byte*
+        constexpr auto unwrapAsByte() const -> byte*
         {
             return static_cast<byte*>(_mutPtr());
         }
