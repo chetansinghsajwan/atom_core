@@ -1,5 +1,6 @@
 #pragma once
 #include "Atom/Memory/Ptr.h"
+#include "Atom/Contracts.h"
 
 namespace Atom
 {
