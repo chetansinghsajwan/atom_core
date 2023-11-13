@@ -379,7 +379,7 @@ namespace Atom
             if constexpr (Copyable)
             {
                 _object.copy = [](MemPtr<void> obj, ConstMemPtr<void> other) {
-                    new (obj.unwrap()) T(ConstMemPtr<T>(other).cval());
+                    new (obj.unwrap()) T(ConstMemPtr<T>(other).val());
                 };
             }
 
@@ -388,7 +388,7 @@ namespace Atom
                 if constexpr (RMoveConstructible<T>)
                 {
                     _object.move = [](MemPtr<void> obj, MemPtr<void> other) {
-                        new (obj.unwrap()) T(mov(MemPtr<T>(other).val()));
+                        new (obj.unwrap()) T(mov(MemPtr<T>(other).mutVal()));
                     };
                 }
                 else

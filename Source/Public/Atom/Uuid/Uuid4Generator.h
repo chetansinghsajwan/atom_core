@@ -24,7 +24,7 @@ namespace Atom
             Uuid uuid;
             for (usize i = 0; i < 16; i += 4)
             {
-                u32& out = (uuid.bytes.mutMem() + i).reinterpretCast<u32>().val();
+                u32& out = (uuid.bytes.mutMem() + i).reinterpretCast<u32>().mutVal();
                 out = _distribution(_generator);
             }
 

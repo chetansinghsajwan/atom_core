@@ -93,11 +93,6 @@ namespace Atom
         constexpr ~ConstPtr() = default;
 
     public:
-        constexpr auto cval() const -> const TVal&
-        {
-            return *_ptr;
-        }
-
         constexpr auto val() const -> const TVal&
         {
             return *_ptr;
@@ -137,6 +132,26 @@ namespace Atom
         constexpr auto reinterpretCast() const -> ConstPtr<T>
         {
             return reinterpret_cast<T*>(_ptr);
+        }
+
+        constexpr auto eq(std::nullptr_t) const -> bool
+        {
+            return unwrap() == nullptr;
+        }
+
+        constexpr auto ne(std::nullptr_t) const -> bool
+        {
+            return not eq(nullptr);
+        }
+
+        constexpr auto eq(const This& that) const -> bool
+        {
+            return unwrap() == that.unwrap();
+        }
+
+        constexpr auto ne(const This& that) const -> bool
+        {
+            return not eq(that);
         }
 
     protected:
@@ -306,7 +321,7 @@ namespace Atom
         constexpr ~Ptr() = default;
 
     public:
-        constexpr auto val() -> TVal&
+        constexpr auto mutVal() -> TVal&
         {
             return *_mutPtr();
         }
