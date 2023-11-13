@@ -237,7 +237,7 @@ namespace Atom
         const void* _ptr;
     };
 
-    ConstPtr(const void*) -> ConstPtr<const void>;
+    ConstPtr(const void*) -> ConstPtr<void>;
 
     /// --------------------------------------------------------------------------------------------
     ///
