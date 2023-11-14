@@ -23,6 +23,16 @@ namespace Atom
         using Base::operator=;
 
     public:
+        constexpr auto operator[](isize n) const
+        {
+            return Base::unwrap()[n.unwrap()];
+        }
+
+        constexpr auto operator[](usize n) const
+        {
+            return Base::unwrap()[n.unwrap()];
+        }
+
         template <typename TInt>
         constexpr auto operator+(TInt n) const -> TThis
             requires RInt<TInt> or _RInt<TInt>
