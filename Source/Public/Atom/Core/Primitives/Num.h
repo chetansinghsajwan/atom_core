@@ -221,7 +221,7 @@ namespace Atom
         constexpr Num(TNum num)
             requires(_RNum<TNum>)
         {
-            debug_expects(not CheckOverflowOnAssignment(num));
+            Contracts::DebugExpects(not CheckOverflowOnAssignment(num));
 
             _val = _Unwrap(num);
         }
@@ -244,7 +244,7 @@ namespace Atom
         constexpr auto operator=(TNum num) -> TSelf&
             requires(_RNum<TNum>)
         {
-            debug_expects(not CheckOverflowOnAssignment(num));
+            Contracts::DebugExpects(not CheckOverflowOnAssignment(num));
 
             _val = _Unwrap(num);
             return _self();
@@ -284,7 +284,7 @@ namespace Atom
         constexpr auto assign(TNum num) -> TSelf&
             requires(RNum<TNum>) or (_RNum<TNum>)
         {
-            debug_expects(not CheckOverflowOnAssignment(num));
+            Contracts::DebugExpects(not CheckOverflowOnAssignment(num));
 
             _val = _Unwrap(num);
             return _self();
@@ -297,7 +297,7 @@ namespace Atom
         constexpr auto checkedAssign(TNum num) -> TSelf&
             requires(RNum<TNum>) or (_RNum<TNum>)
         {
-            expects(not CheckOverflowOnAssignment(num));
+            Contracts::Expects(not CheckOverflowOnAssignment(num));
 
             _val = _Unwrap(num);
             return _self();
@@ -347,7 +347,7 @@ namespace Atom
         constexpr auto addAssign(TNum num) -> TSelf&
             requires(RNum<TNum>) or (_RNum<TNum>)
         {
-            debug_expects(not checkOverflowOnAdd(num));
+            Contracts::DebugExpects(not checkOverflowOnAdd(num));
 
             _val += _Unwrap(num);
             return _self();
@@ -360,7 +360,7 @@ namespace Atom
         constexpr auto checkedAddAssign(TNum num) -> TSelf&
             requires(RNum<TNum>) or (_RNum<TNum>)
         {
-            expects(not checkOverflowOnAdd(num));
+            Contracts::Expects(not checkOverflowOnAdd(num));
 
             _val += _Unwrap(num);
             return _self();
@@ -373,7 +373,7 @@ namespace Atom
         constexpr auto operator+=(TNum num) -> TSelf&
             requires(RNum<TNum>) or (_RNum<TNum>)
         {
-            debug_expects(not checkOverflowOnAdd(num));
+            Contracts::DebugExpects(not checkOverflowOnAdd(num));
 
             return addAssign(num);
         }
@@ -431,7 +431,7 @@ namespace Atom
         constexpr auto subAssign(TNum num) -> TSelf&
             requires(RNum<TNum>) or (_RNum<TNum>)
         {
-            debug_expects(not checkOverflowOnSub(num));
+            Contracts::DebugExpects(not checkOverflowOnSub(num));
 
             _val -= _Unwrap(num);
             return _self();
@@ -444,7 +444,7 @@ namespace Atom
         constexpr auto checkedSubAssign(TNum num) -> TSelf&
             requires(RNum<TNum>) or (_RNum<TNum>)
         {
-            expects(not checkOverflowOnSub(num));
+            Contracts::Expects(not checkOverflowOnSub(num));
 
             _val -= _Unwrap(num);
             return _self();
@@ -513,7 +513,7 @@ namespace Atom
         constexpr auto mulAssign(TNum num) -> TSelf&
             requires(RNum<TNum>) or (_RNum<TNum>)
         {
-            debug_expects(not checkOverflowOnMul(num));
+            Contracts::DebugExpects(not checkOverflowOnMul(num));
 
             _val *= _Unwrap(num);
             return _self();
@@ -526,7 +526,7 @@ namespace Atom
         constexpr auto checkedMulAssign(TNum num) -> TSelf&
             requires(RNum<TNum>) or (_RNum<TNum>)
         {
-            expects(not checkOverflowOnMul(num));
+            Contracts::Expects(not checkOverflowOnMul(num));
 
             _val *= _Unwrap(num);
             return _self();
@@ -579,7 +579,7 @@ namespace Atom
         constexpr auto divAssign(TNum num) -> TSelf&
             requires(RNum<TNum>) or (_RNum<TNum>)
         {
-            debug_expects(isDivSafe(num));
+            Contracts::DebugExpects(isDivSafe(num));
 
             _val /= _Unwrap(num);
             return _self();
@@ -592,7 +592,7 @@ namespace Atom
         constexpr auto checkedDivAssign(TNum num) -> TSelf&
             requires(RNum<TNum>) or (_RNum<TNum>)
         {
-            expects(isDivSafe(num));
+            Contracts::Expects(isDivSafe(num));
 
             _val /= _Unwrap(num);
             return _self();
@@ -786,7 +786,7 @@ namespace Atom
         constexpr auto clamp(TNum0 num0, TNum1 num1) const -> TSelf
             requires(RNum<TNum0>) or (_RNum<TNum0>) and (RNum<TNum0>) or (_RNum<TNum0>)
         {
-            debug_expects(num0 <= num1, "Left of range is greater than the right.");
+            Contracts::DebugExpects(num0 <= num1, "Left of range is greater than the right.");
 
             if (_val < _Unwrap(num0))
                 return _Make(_Unwrap(num0));
@@ -818,7 +818,7 @@ namespace Atom
         constexpr auto to() const -> TNum
             requires(RNum<TNum>) or (_RNum<TNum>)
         {
-            debug_expects(not checkOverflowOnConversion<TNum>());
+            Contracts::DebugExpects(not checkOverflowOnConversion<TNum>());
 
             return TNum(_val);
         }
@@ -830,7 +830,7 @@ namespace Atom
         constexpr auto checkedTo() const -> TNum
             requires(RNum<TNum>) or (_RNum<TNum>)
         {
-            expects(not checkOverflowOnConversion<TNum>());
+            Contracts::Expects(not checkOverflowOnConversion<TNum>());
 
             return TNum(_val);
         }

@@ -50,7 +50,7 @@ namespace Atom
 
         constexpr auto mutBack() -> TElem&
         {
-            debug_expects(count() > 0);
+            Contracts::DebugExpects(count() > 0);
 
             return mutAt(count() - 1);
         }
@@ -128,7 +128,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto mutAt(usize i) -> TElem&
         {
-            expects(isIndexInRange(i), "Index is out of range.");
+            Contracts::Expects(isIndexInRange(i), "Index is out of range.");
 
             return _impl().mutAt(i);
         }
@@ -144,7 +144,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator[](usize i) -> TElem&
         {
-            debug_expects(isIndexInRange(i), "Index is out of range.");
+            Contracts::DebugExpects(isIndexInRange(i), "Index is out of range.");
 
             return _impl().mutAt(i);
         }
@@ -159,7 +159,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto mutFront() -> TElem&
         {
-            debug_expects(not isEmpty(), "Range is empty.");
+            Contracts::DebugExpects(not isEmpty(), "Range is empty.");
 
             return _impl().mutFront();
         }
@@ -172,7 +172,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto mutBack() -> TElem&
         {
-            debug_expects(not isEmpty(), "Range is empty.");
+            Contracts::DebugExpects(not isEmpty(), "Range is empty.");
 
             return _impl().mutBack();
         }
@@ -192,7 +192,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto mutIter(usize i) const -> TMutIter
         {
-            expects(isIndexInRange(i), "Index is out of range.");
+            Contracts::Expects(isIndexInRange(i), "Index is out of range.");
 
             return _impl().mutIter(i);
         }

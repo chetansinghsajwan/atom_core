@@ -41,12 +41,12 @@ namespace Atom
     inline auto _Panic(std::source_location src, std::string_view msg) -> void;
 }
 
-namespace Atom
+namespace Atom::Contracts
 {
     /// ------------------------------------------------------------------------------------------------
     /// Represents pre condition.
     /// ------------------------------------------------------------------------------------------------
-    constexpr auto expects(bool assert, std::string_view msg = "",
+    constexpr auto Expects(bool assert, std::string_view msg = "",
         std::source_location _src = std::source_location::current())
     {
         _ContractCheck<_ContractType::PreCondition>(_src, assert, msg);
@@ -55,7 +55,7 @@ namespace Atom
     /// ------------------------------------------------------------------------------------------------
     /// Represents debug pre condition.
     /// ------------------------------------------------------------------------------------------------
-    constexpr auto debug_expects(bool assert, std::string_view msg = "",
+    constexpr auto DebugExpects(bool assert, std::string_view msg = "",
         std::source_location _src = std::source_location::current())
     {
         _ContractCheck<_ContractType::DebugPreCondition>(_src, assert, msg);
@@ -64,7 +64,7 @@ namespace Atom
     /// ------------------------------------------------------------------------------------------------
     /// Represents assertion.
     /// ------------------------------------------------------------------------------------------------
-    constexpr auto asserts(bool assert, std::string_view msg = "",
+    constexpr auto Asserts(bool assert, std::string_view msg = "",
         std::source_location _src = std::source_location::current())
     {
         _ContractCheck<_ContractType::Assertion>(_src, assert, msg);
@@ -73,7 +73,7 @@ namespace Atom
     /// ------------------------------------------------------------------------------------------------
     /// Represents debug assertion.
     /// ------------------------------------------------------------------------------------------------
-    constexpr auto debug_asserts(bool assert, std::string_view msg = "",
+    constexpr auto DebugAsserts(bool assert, std::string_view msg = "",
         std::source_location _src = std::source_location::current())
     {
         _ContractCheck<_ContractType::DebugAssertion>(_src, assert, msg);
@@ -82,7 +82,7 @@ namespace Atom
     /// ------------------------------------------------------------------------------------------------
     /// Represents post condition.
     /// ------------------------------------------------------------------------------------------------
-    constexpr auto ensures(bool assert, std::string_view msg = "",
+    constexpr auto Ensures(bool assert, std::string_view msg = "",
         std::source_location _src = std::source_location::current())
     {
         _ContractCheck<_ContractType::PostCondition>(_src, assert, msg);
@@ -91,17 +91,20 @@ namespace Atom
     /// ------------------------------------------------------------------------------------------------
     /// Represents debug post condition.
     /// ------------------------------------------------------------------------------------------------
-    constexpr auto debug_ensures(bool assert, std::string_view msg = "",
+    constexpr auto DebugEnsures(bool assert, std::string_view msg = "",
         std::source_location _src = std::source_location::current())
     {
         _ContractCheck<_ContractType::DebugPostCondition>(_src, assert, msg);
     }
+}
 
+namespace Atom::System
+{
     /// ------------------------------------------------------------------------------------------------
     ///
     /// ------------------------------------------------------------------------------------------------
     template <typename... TArgs>
-    constexpr auto panic(
+    constexpr auto Panic(
         std::string_view msg = "", std::source_location _src = std::source_location::current())
     {
         _Panic(_src, msg);

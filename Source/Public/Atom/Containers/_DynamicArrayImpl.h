@@ -51,7 +51,7 @@ namespace Atom
 
         constexpr auto iter(usize i = 0) const -> TIter
         {
-            debug_expects(isIndexInRange(i));
+            Contracts::DebugExpects(isIndexInRange(i));
 
             return TIter{ _getData() + i };
         }
@@ -63,7 +63,7 @@ namespace Atom
 
         constexpr auto mutIter(usize i = 0) -> TMutIter
         {
-            debug_expects(isIndexInRange(i));
+            Contracts::DebugExpects(isIndexInRange(i));
 
             return TMutIter{ _getMutData() + i };
         }

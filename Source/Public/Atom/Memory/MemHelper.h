@@ -15,7 +15,7 @@ namespace Atom
         constexpr MemBlk(MemPtr<void> begin, MemPtr<void> end):
             mem{ begin }, count{ end - begin }
         {
-            debug_expects(end >= begin);
+            Contracts::DebugExpects(end >= begin);
         }
 
     public:
@@ -42,7 +42,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto Fill(MemBlk mem, memunit val) const
         {
-            debug_expects(mem != nullptr);
+            Contracts::DebugExpects(mem != nullptr);
 
             _Fill(mem.mem, mem.count, val);
         }
@@ -67,10 +67,10 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto FwdCopyTo(const MemBlk src, MemBlk dest) const
         {
-            debug_expects(src != nullptr);
-            debug_expects(dest != nullptr);
+            Contracts::DebugExpects(src != nullptr);
+            Contracts::DebugExpects(dest != nullptr);
 
-            debug_expects(dest.mem < src.mem, "Src mem block overlaps with dest mem block.");
+            Contracts::DebugExpects(dest.mem < src.mem, "Src mem block overlaps with dest mem block.");
 
             _FwdCopy(src.mem, src.count, dest.mem);
         }
@@ -83,10 +83,10 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto BwdCopyTo(const MemBlk src, MemBlk dest) const
         {
-            debug_expects(src != nullptr);
-            debug_expects(dest != nullptr);
+            Contracts::DebugExpects(src != nullptr);
+            Contracts::DebugExpects(dest != nullptr);
 
-            debug_expects(
+            Contracts::DebugExpects(
                 dest.mem > (src.mem + src.count), "Src mem block overlaps with dest mem block.");
 
             _BwdCopy(src.mem, src.count, dest.mem);
@@ -101,10 +101,10 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto CopyTo(const MemBlk src, MemBlk dest) const
         {
-            debug_expects(src != nullptr);
-            debug_expects(dest != nullptr);
+            Contracts::DebugExpects(src != nullptr);
+            Contracts::DebugExpects(dest != nullptr);
 
-            debug_expects(dest.count >= src.count);
+            Contracts::DebugExpects(dest.count >= src.count);
 
             if (dest.mem > src.mem)
             {
@@ -124,8 +124,8 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto CopyFwd(const MemBlk mem, usize outset) const
         {
-            debug_expects(mem != nullptr);
-            debug_expects(outset > 0);
+            Contracts::DebugExpects(mem != nullptr);
+            Contracts::DebugExpects(outset > 0);
 
             _BwdCopy(mem.mem, mem.count, mem.mem + outset);
         }
@@ -138,8 +138,8 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto CopyBwd(const MemBlk mem, usize inset) const
         {
-            debug_expects(mem != nullptr);
-            debug_expects(inset > 0);
+            Contracts::DebugExpects(mem != nullptr);
+            Contracts::DebugExpects(inset > 0);
 
             _FwdCopy(mem.mem, mem.count, mem.mem - inset);
         }
@@ -153,8 +153,8 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto CopyBy(const MemBlk mem, isize offset) const
         {
-            debug_expects(mem != nullptr);
-            debug_expects(offset != 0);
+            Contracts::DebugExpects(mem != nullptr);
+            Contracts::DebugExpects(offset != 0);
 
             if (offset > 0)
             {
@@ -174,8 +174,8 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto ShiftFwd(MemBlk mem, usize steps) const
         {
-            debug_expects(mem != nullptr);
-            debug_expects(steps > 0);
+            Contracts::DebugExpects(mem != nullptr);
+            Contracts::DebugExpects(steps > 0);
 
             _ShiftFwd(mem.mem, mem.count, steps);
         }
@@ -188,8 +188,8 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto ShiftBwd(MemBlk mem, usize steps) const
         {
-            debug_expects(mem != nullptr);
-            debug_expects(steps > 0);
+            Contracts::DebugExpects(mem != nullptr);
+            Contracts::DebugExpects(steps > 0);
 
             _ShiftBwd(mem.mem, mem.count, steps);
         }
@@ -202,8 +202,8 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto ShiftBy(MemBlk mem, isize steps) const
         {
-            debug_expects(mem != nullptr);
-            debug_expects(steps != 0);
+            Contracts::DebugExpects(mem != nullptr);
+            Contracts::DebugExpects(steps != 0);
 
             if (steps > 0)
             {
@@ -223,8 +223,8 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto RotateFwd(MemBlk mem, usize steps) const
         {
-            debug_expects(mem != nullptr);
-            debug_expects(steps > 0);
+            Contracts::DebugExpects(mem != nullptr);
+            Contracts::DebugExpects(steps > 0);
 
             _RotateFwd(mem.mem, mem.count, steps);
         }
@@ -237,8 +237,8 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto RotateBwd(MemBlk mem, usize steps) const
         {
-            debug_expects(mem != nullptr);
-            debug_expects(steps > 0);
+            Contracts::DebugExpects(mem != nullptr);
+            Contracts::DebugExpects(steps > 0);
 
             _RotateBwd(mem.mem, mem.count, steps);
         }
@@ -251,8 +251,8 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto RotateBy(MemBlk mem, isize steps) const
         {
-            debug_expects(mem != nullptr);
-            debug_expects(steps != 0);
+            Contracts::DebugExpects(mem != nullptr);
+            Contracts::DebugExpects(steps != 0);
 
             if (steps > 0)
             {

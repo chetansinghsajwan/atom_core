@@ -144,7 +144,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto val() const -> const TVal&
         {
-            debug_expects(not isNull(), "Null ptr access.");
+            Contracts::DebugExpects(not isNull(), "Null ptr access.");
 
             return *_ptr;
         }
@@ -154,7 +154,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto checkVal() const -> const TVal&
         {
-            expects(not isNull(), "Null ptr access.");
+            Contracts::Expects(not isNull(), "Null ptr access.");
 
             return *_ptr;
         }
@@ -164,7 +164,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator->() const -> const TVal*
         {
-            debug_expects(not isNull(), "Null ptr access.");
+            Contracts::DebugExpects(not isNull(), "Null ptr access.");
 
             return _ptr;
         }
@@ -377,7 +377,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto val() const -> const byte&
         {
-            debug_expects(not isNull(), "Null ptr access.");
+            Contracts::DebugExpects(not isNull(), "Null ptr access.");
 
             return *unwrapAsByte();
         }
@@ -387,7 +387,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto checkVal() const -> const byte&
         {
-            expects(not isNull(), "Null ptr access.");
+            Contracts::Expects(not isNull(), "Null ptr access.");
 
             return *unwrapAsByte();
         }

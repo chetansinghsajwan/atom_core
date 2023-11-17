@@ -100,7 +100,7 @@ namespace Atom
             requires(RJumpIter<TIter>)
         {
             // TODO: Review this. Should we accept steps as difference_type.
-            debug_expects(steps > 0);
+            Contracts::DebugExpects(steps > 0);
 
             Self tmp{ iter };
             tmp.iter.next(steps);
@@ -110,7 +110,7 @@ namespace Atom
         constexpr auto operator-(difference_type steps) -> Self
             requires(RJumpIter<TIter>)
         {
-            debug_expects(steps > 0);
+            Contracts::DebugExpects(steps > 0);
 
             Self tmp{ iter };
             tmp.iter.prev(steps);

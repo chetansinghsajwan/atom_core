@@ -10,7 +10,7 @@ namespace Atom
         constexpr auto ConstructAs(TPtr&& mem, TArgs&&... args) const
             requires(RPtrOf<TPtr, T>)
         {
-            debug_expects(mem != nullptr);
+            Contracts::DebugExpects(mem != nullptr);
 
             std::construct_at(mem.unwrap(), forward<TArgs>(args)...);
         }
@@ -19,7 +19,7 @@ namespace Atom
         constexpr auto Construct(TPtr&& mem, TArgs&&... args) const
             requires(RPtr<TPtr>)
         {
-            debug_expects(mem != nullptr);
+            Contracts::DebugExpects(mem != nullptr);
 
             std::construct_at(mem.unwrap(), forward<TArgs>(args)...);
         }
@@ -28,7 +28,7 @@ namespace Atom
         constexpr auto AssignAs(TPtr&& mem, TArg&& arg) const
             requires(RPtrOf<TPtr, T>)
         {
-            debug_expects(mem != nullptr);
+            Contracts::DebugExpects(mem != nullptr);
 
             *mem = forward<TArg>(arg);
         }
@@ -37,7 +37,7 @@ namespace Atom
         constexpr auto Assign(TPtr&& mem, TArg&& arg) const
             requires(RPtr<TPtr>)
         {
-            debug_expects(mem != nullptr);
+            Contracts::DebugExpects(mem != nullptr);
 
             *mem = forward<TArg>(arg);
         }
@@ -54,7 +54,7 @@ namespace Atom
         constexpr auto DestructAs(TPtr&& mem) const
             requires(RPtrOf<TPtr, T>)
         {
-            debug_expects(mem != nullptr);
+            Contracts::DebugExpects(mem != nullptr);
 
             std::destroy_at(mem.unwrap());
         }
@@ -64,7 +64,7 @@ namespace Atom
         constexpr auto Destruct(TPtr&& mem) const
             requires(RPtr<TPtr>)
         {
-            debug_expects(mem != nullptr);
+            Contracts::DebugExpects(mem != nullptr);
 
             std::destroy_at(mem.unwrap());
         }

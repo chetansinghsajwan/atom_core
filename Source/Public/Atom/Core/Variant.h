@@ -317,7 +317,7 @@ namespace Atom
         constexpr auto as() const -> const T&
             requires(Has<T>())
         {
-            expects(is<T>(), "Access to invalid type.");
+            Contracts::Expects(is<T>(), "Access to invalid type.");
 
             return _impl.template getValueByType<T>();
         }
@@ -332,7 +332,7 @@ namespace Atom
         constexpr auto as() -> T&
             requires(Has<T>())
         {
-            expects(is<T>(), "Access to invalid type.");
+            Contracts::Expects(is<T>(), "Access to invalid type.");
 
             return _impl.template getValueByType<T>();
         }
@@ -350,7 +350,7 @@ namespace Atom
         constexpr auto at() const -> const TAt<i>&
             requires(Has<i>())
         {
-            expects(is<i>(), "Access to invalid type by index.");
+            Contracts::Expects(is<i>(), "Access to invalid type by index.");
 
             return _impl.template getValueByIndex<i>();
         }
@@ -368,7 +368,7 @@ namespace Atom
         constexpr auto at() -> TAt<i>&
             requires(Has<i>())
         {
-            expects(is<i>(), "Access to invalid type by index.");
+            Contracts::Expects(is<i>(), "Access to invalid type by index.");
 
             return _impl.template getValueByIndex<i>();
         }

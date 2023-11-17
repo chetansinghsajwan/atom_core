@@ -171,7 +171,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         auto Invoke(TArgs&&... args) -> TResult
         {
-            expects(ObjectBox::_HasObject(), "InvokableTarget is null.");
+            Contracts::Expects(ObjectBox::_HasObject(), "InvokableTarget is null.");
 
             return _invoker.Invoke(ObjectBox::_GetObject(), forward<TArgs>(args)...);
         }

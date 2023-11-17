@@ -79,8 +79,8 @@ namespace Atom::Private
         /// ----------------------------------------------------------------------------------------
         constexpr auto ProcessBytes(ConstMemPtr<void> data, usize dataSize) -> Self&
         {
-            debug_expects(data != nullptr);
-            debug_expects(dataSize > 0);
+            Contracts::DebugExpects(data != nullptr);
+            Contracts::DebugExpects(dataSize > 0);
 
             // The implementation accepts size of data in u32 but we accept in usize,
             // which could be bigger than u32, so we pass the data to the implementation

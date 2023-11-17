@@ -182,7 +182,7 @@ namespace Atom
         template <typename T>
         constexpr auto getValueByType() const -> const T&
         {
-            debug_expects(GetIndexForType<T>() == getTypeIndex(),
+            Contracts::DebugExpects(GetIndexForType<T>() == getTypeIndex(),
                 "Current type is not same as requested type.");
 
             return _getValueAs<T>();
@@ -191,7 +191,7 @@ namespace Atom
         template <typename T>
         constexpr auto getValueByType() -> T&
         {
-            debug_expects(GetIndexForType<T>() == getTypeIndex(),
+            Contracts::DebugExpects(GetIndexForType<T>() == getTypeIndex(),
                 "Current type is not same as requested type.");
 
             return _getValueAs<T>();
@@ -241,7 +241,7 @@ namespace Atom
             {
                 if constexpr (ThatTypes::Count == 0)
                 {
-                    panic("There is no type for current index.");
+                    System::Panic("There is no type for current index.");
                 }
                 else
                 {
@@ -271,7 +271,7 @@ namespace Atom
             {
                 if constexpr (ThatTypes::Count == 0)
                 {
-                    panic("There is no type for current index.");
+                    System::Panic("There is no type for current index.");
                 }
                 else
                 {
@@ -321,7 +321,7 @@ namespace Atom
             {
                 if constexpr (Types::Count == 0)
                 {
-                    panic("There is no type for current index.");
+                    System::Panic("There is no type for current index.");
                 }
                 else
                 {

@@ -254,7 +254,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto value() & -> TVal&
         {
-            expects(isValue(), "Doesn't contain value.");
+            Contracts::Expects(isValue(), "Doesn't contain value.");
 
             return _impl.getValue();
         }
@@ -264,7 +264,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto value() const& -> const TVal&
         {
-            expects(isValue(), "Doesn't contain value.");
+            Contracts::Expects(isValue(), "Doesn't contain value.");
 
             return _impl.getValue();
         }
@@ -274,7 +274,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto value() && -> TVal&&
         {
-            expects(isValue(), "Doesn't contain value.");
+            Contracts::Expects(isValue(), "Doesn't contain value.");
 
             return mov(_impl.getValue());
         }
@@ -284,7 +284,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator->() -> TVal*
         {
-            debug_expects(isValue(), "Doesn't contain value.");
+            Contracts::DebugExpects(isValue(), "Doesn't contain value.");
 
             return &_impl.getValue();
         }
@@ -294,7 +294,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator->() const -> const TVal*
         {
-            debug_expects(isValue(), "Doesn't contain value.");
+            Contracts::DebugExpects(isValue(), "Doesn't contain value.");
 
             return &_impl.getValue();
         }

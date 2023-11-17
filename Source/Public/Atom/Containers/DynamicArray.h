@@ -167,7 +167,7 @@ namespace Atom
         constexpr auto emplaceAt(usize i, TArgs&&... args)
             requires(RConstructible<TElem, TArgs...>)
         {
-            debug_expects(isIndexInRangeOrEnd(i), "Index is out of range.");
+            Contracts::DebugExpects(isIndexInRangeOrEnd(i), "Index is out of range.");
 
             _impl.emplaceAt(i, forward<TArgs>(args)...);
         }
@@ -191,8 +191,8 @@ namespace Atom
         constexpr auto emplaceAt(TIter it, TArgs&&... args) -> TMutIter
             requires(RConstructible<TElem, TArgs...>)
         {
-            debug_expects(isIterValid(it), "Invalid iter.");
-            debug_expects(isIterInRangeOrEnd(it), "Iter is out of range.");
+            Contracts::DebugExpects(isIterValid(it), "Invalid iter.");
+            Contracts::DebugExpects(isIterInRangeOrEnd(it), "Iter is out of range.");
 
             usize i = indexForIter(it);
             _impl.emplaceAt(i, forward<TArgs>(args)...);
@@ -219,7 +219,7 @@ namespace Atom
         constexpr auto insertRangeAt(usize i, TRange&& range) -> usize
             requires(RRangeOf<TRange, TElem>) and (RConstructible<TElem, typename TRange::TElem>)
         {
-            debug_expects(isIndexInRangeOrEnd(i), "Index is out of range.");
+            Contracts::DebugExpects(isIndexInRangeOrEnd(i), "Index is out of range.");
 
             return _impl.insertRangeAt(i, range.iter(), range.iterEnd());
         }
@@ -244,8 +244,8 @@ namespace Atom
         constexpr auto insertRangeAt(TIter it, TRange&& range)
             requires(RRangeOf<TRange, TElem>) and (RConstructible<TElem, typename TRange::TElem>)
         {
-            debug_expects(isIterValid(it), "Invalid iter.");
-            debug_expects(isIterInRangeOrEnd(it), "Iter is out of range.");
+            Contracts::DebugExpects(isIterValid(it), "Invalid iter.");
+            Contracts::DebugExpects(isIterInRangeOrEnd(it), "Iter is out of range.");
 
             usize i = indexForIter(it);
             usize count = _impl.insertRangeAt(i, range.iter(), range.iterEnd());
@@ -364,7 +364,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto removeAt(usize i)
         {
-            debug_expects(isIndexInRange(i), "Index is out of range.");
+            Contracts::DebugExpects(isIndexInRange(i), "Index is out of range.");
 
             _impl.removeAt(i);
         }
@@ -381,8 +381,8 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto removeAt(TIter it) -> TMutIter
         {
-            debug_expects(isIterValid(it), "Invalid iter.");
-            debug_expects(isIterInRange(it), "Iter is out of range.");
+            Contracts::DebugExpects(isIterValid(it), "Invalid iter.");
+            Contracts::DebugExpects(isIterInRange(it), "Iter is out of range.");
 
             usize i = indexForIter(it);
             _impl.removeAt(i);
@@ -406,10 +406,10 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto removeRange(usize from, usize to) -> usize
         {
-            debug_expects(from <= to, "Invalid range.");
-            debug_expects(isIndexInRange(to), "Index was out of range.");
+            Contracts::DebugExpects(from <= to, "Invalid range.");
+            Contracts::DebugExpects(isIndexInRange(to), "Index was out of range.");
             // TODO: what should we do about fnret?
-            // debug_ensures(fnret <= count(), "Invalid return value.");
+            // Contracts::DebugEnsures(fnret <= count(), "Invalid return value.");
 
             _impl.removeRange(from, to);
             return from;
@@ -428,15 +428,13 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto removeRange(TIter it, TIter itEnd) -> TMutIter
         {
-            debug_expects(isIterValid(it), "Invalid iter.");
-            debug_expects(isIterValid(itEnd), "Invalid iter.");
-            debug_expects(isIterInRange(it), "Iter is out range.");
-            debug_expects(isIterInRange(itEnd), "Iter is out range.");
-            debug_expects(it.compare(itEnd) <= 0, "Invalid range.");
-            // TODO: what should we do about fnret?
-            // debug_ensures(fnret.compare(iterEnd()) <= 0, "Invalid return value.")
+            Contracts::DebugExpects(isIterValid(it), "Invalid iter.");
+            Contracts::DebugExpects(isIterValid(itEnd), "Invalid iter.");
+            Contracts::DebugExpects(isIterInRange(it), "Iter is out range.");
+            Contracts::DebugExpects(isIterInRange(itEnd), "Iter is out range.");
+            Contracts::DebugExpects(it.compare(itEnd) <= 0, "Invalid range.");
 
-                usize from = indexForIter(it);
+            usize from = indexForIter(it);
             usize to = indexForIter(itEnd);
             _impl.removeRange(from, to);
             return _impl.mutIter(from);
@@ -447,7 +445,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto removeFront(usize count_ = 1)
         {
-            debug_expects(count_ <= count());
+            Contracts::DebugExpects(count_ <= count());
 
             _impl.removeFront(count_);
         }
@@ -457,7 +455,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto removeBack(usize count_ = 1)
         {
-            debug_expects(count_ <= count());
+            Contracts::DebugExpects(count_ <= count());
 
             _impl.removeBack(count_);
         }
