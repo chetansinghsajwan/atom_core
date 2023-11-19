@@ -43,14 +43,14 @@ namespace Atom
         class ObjectData
         {
         public:
-            ATOM_CONDITIONAL_FIELD(Copyable, InvokablePtr<void(MemPtr<void>, ConstMemPtr<void>)>) copy;
+            ATOM_CONDITIONAL_FIELD(Copyable, InvokablePtr<void(MutMemPtr<void>, MemPtr<void>)>) copy;
 
-            ATOM_CONDITIONAL_FIELD(Movable, InvokablePtr<void(MemPtr<void>, MemPtr<void>)>) move;
+            ATOM_CONDITIONAL_FIELD(Movable, InvokablePtr<void(MutMemPtr<void>, MutMemPtr<void>)>) move;
 
-            InvokablePtr<void(MemPtr<void> obj)> dtor;
+            InvokablePtr<void(MutMemPtr<void> obj)> dtor;
 
             usize size;
-            MemPtr<void> obj;
+            MutMemPtr<void> obj;
             const TypeInfo* type;
         };
 
@@ -374,12 +374,12 @@ namespace Atom
             _object.size = sizeof(T);
             _object.type = &typeid(T);
 
-            _object.dtor = [](MemPtr<void> obj) { MemPtr<T>(obj)->T::~T(); };
+            _object.dtor = [](MutMemPtr<void> obj) { MutMemPtr<T>(obj)->T::~T(); };
 
             if constexpr (Copyable)
             {
-                _object.copy = [](MemPtr<void> obj, ConstMemPtr<void> other) {
-                    new (obj.unwrap()) T(ConstMemPtr<T>(other).val());
+                _object.copy = [](MutMemPtr<void> obj, MemPtr<void> other) {
+                    new (obj.unwrap()) T(MemPtr<T>(other).val());
                 };
             }
 
@@ -387,8 +387,8 @@ namespace Atom
             {
                 if constexpr (RMoveConstructible<T>)
                 {
-                    _object.move = [](MemPtr<void> obj, MemPtr<void> other) {
-                        new (obj.unwrap()) T(mov(MemPtr<T>(other).mutVal()));
+                    _object.move = [](MutMemPtr<void> obj, MutMemPtr<void> other) {
+                        new (obj.unwrap()) T(mov(MutMemPtr<T>(other).mutVal()));
                     };
                 }
                 else
@@ -430,7 +430,7 @@ namespace Atom
         /// @TPARAM T Type as which to get the object.
         /// ----------------------------------------------------------------------------------------
         template <typename T = void>
-        auto _GetObject() -> MemPtr<T>
+        auto _GetObject() -> MutMemPtr<T>
         {
             return _object.obj;
         }
@@ -579,7 +579,7 @@ namespace Atom
         ///
         /// @RETURNS Pointer to the allocated memory.
         /// ----------------------------------------------------------------------------------------
-        auto _AllocMem(usize size, bool forceHeap = false) -> MemPtr<void>
+        auto _AllocMem(usize size, bool forceHeap = false) -> MutMemPtr<void>
         {
             if constexpr (StackSize > 0)
             {
@@ -652,7 +652,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Heap memory allocated.
         /// ----------------------------------------------------------------------------------------
-        MemPtr<void> _heapMem;
+        MutMemPtr<void> _heapMem;
 
         /// ----------------------------------------------------------------------------------------
         /// Size of heap memory allocated.

@@ -36,12 +36,12 @@ namespace Atom
         {}
 
     public:
-        constexpr auto getData() -> MemPtr<TVal>
+        constexpr auto getData() -> MutMemPtr<TVal>
         {
             return &_value;
         }
 
-        constexpr auto getData() const -> ConstMemPtr<TVal>
+        constexpr auto getData() const -> MemPtr<TVal>
         {
             return &_value;
         }

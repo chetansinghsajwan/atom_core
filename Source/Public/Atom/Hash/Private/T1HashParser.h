@@ -121,7 +121,7 @@ namespace Atom::Private
             return hash;
         }
 
-        constexpr auto _parseArr(ConstMemPtr<Char> str) const -> T1Hash
+        constexpr auto _parseArr(MemPtr<Char> str) const -> T1Hash
         {
             T1Hash hash;
             for (usize i = 0; i < Size * 2; i += 2)

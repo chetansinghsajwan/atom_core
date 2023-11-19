@@ -17,7 +17,7 @@ namespace Atom::Private
             Sha1Initialise(&_context);
         }
 
-        auto Update(ConstMemPtr<void> data, uint32_t dataSize)
+        auto Update(MemPtr<void> data, uint32_t dataSize)
         {
             Sha1Update(&_context, data.unwrap(), dataSize);
         }

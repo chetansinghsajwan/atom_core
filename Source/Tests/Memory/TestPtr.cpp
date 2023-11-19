@@ -3,30 +3,30 @@
 
 using namespace Atom;
 
-TEST_CASE("Atom.Core.Ptr")
+TEST_CASE("Atom.Core.MutPtr")
 {
-    STATIC_REQUIRE(RConstPtr<ConstPtr<i32>>);
+    STATIC_REQUIRE(RConstPtr<Ptr<i32>>);
 
     const i32 val0 = 10;
     const i32 val1 = 11;
 
     SECTION("Default Constructor")
     {
-        const ConstPtr<i32> ptr;
+        const Ptr<i32> ptr;
 
         REQUIRE(ptr.isNull());
     }
 
     SECTION("Null Constructor")
     {
-        const ConstPtr<i32> ptr = nullptr;
+        const Ptr<i32> ptr = nullptr;
 
         REQUIRE(ptr.isNull());
     }
 
     SECTION("Value Constructor")
     {
-        ConstPtr<i32> ptr = &val0;
+        Ptr<i32> ptr = &val0;
 
         REQUIRE(ptr.unwrap() == &val0);
         REQUIRE(ptr.val() == val0);
@@ -34,10 +34,10 @@ TEST_CASE("Atom.Core.Ptr")
 
     SECTION("Copy Constructor")
     {
-        STATIC_REQUIRE(RTriviallyCopyConstructible<ConstPtr<i32>>);
+        STATIC_REQUIRE(RTriviallyCopyConstructible<Ptr<i32>>);
 
-        ConstPtr<i32> ptr0 = &val0;
-        ConstPtr<i32> ptr1 = ptr0;
+        Ptr<i32> ptr0 = &val0;
+        Ptr<i32> ptr1 = ptr0;
 
         REQUIRE(ptr1.unwrap() == ptr0.unwrap());
         REQUIRE(ptr1.val() == ptr0.val());
@@ -47,12 +47,12 @@ TEST_CASE("Atom.Core.Ptr")
 
     SECTION("Destructor")
     {
-        STATIC_REQUIRE(RTriviallyDestructible<ConstPtr<i32>>);
+        STATIC_REQUIRE(RTriviallyDestructible<Ptr<i32>>);
     }
 
     SECTION("Null Operator")
     {
-        ConstPtr<i32> ptr = &val0;
+        Ptr<i32> ptr = &val0;
 
         ptr = nullptr;
 
@@ -61,10 +61,10 @@ TEST_CASE("Atom.Core.Ptr")
 
     SECTION("Copy Operator")
     {
-        STATIC_REQUIRE(RTriviallyCopyAssignable<ConstPtr<i32>>);
+        STATIC_REQUIRE(RTriviallyCopyAssignable<Ptr<i32>>);
 
-        ConstPtr<i32> ptr0 = &val0;
-        ConstPtr<i32> ptr1 = nullptr;
+        Ptr<i32> ptr0 = &val0;
+        Ptr<i32> ptr1 = nullptr;
         ptr1 = &val0;
 
         REQUIRE(ptr1.unwrap() == ptr0.unwrap());
@@ -73,7 +73,7 @@ TEST_CASE("Atom.Core.Ptr")
 
     SECTION("Value Operator")
     {
-        ConstPtr<i32> ptr = nullptr;
+        Ptr<i32> ptr = nullptr;
         ptr = &val0;
 
         REQUIRE(ptr.val() == val0);
@@ -84,7 +84,7 @@ TEST_CASE("Atom.Core.Ptr")
 
     SECTION("Value access")
     {
-        ConstPtr<i32> ptr = nullptr;
+        Ptr<i32> ptr = nullptr;
 
         REQUIRE_THROWS_AS(ptr.checkVal(), ContractViolationException);
 
@@ -94,14 +94,14 @@ TEST_CASE("Atom.Core.Ptr")
 
     SECTION("Casting")
     {
-        ConstPtr<i32> ptr;
-        ConstPtr<i64> ptr1 = ptr.unsafeAs<i64>();
+        Ptr<i32> ptr;
+        Ptr<i64> ptr1 = ptr.unsafeAs<i64>();
     }
 
     SECTION("Compairision")
     {
-        ConstPtr<i32> ptr0 = nullptr;
-        ConstPtr<i32> ptr1 = nullptr;
+        Ptr<i32> ptr0 = nullptr;
+        Ptr<i32> ptr1 = nullptr;
 
         REQUIRE(ptr0.eq(nullptr));
         REQUIRE(ptr1.eq(nullptr));

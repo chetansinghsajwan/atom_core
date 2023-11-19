@@ -8,8 +8,8 @@ TEST_CASE("Atom::Memory::MemHelper")
 {
     MemHelper helper;
 
-    MemPtr<void> src = std::malloc(100);
-    MemPtr<void> dest = std::malloc(100);
+    MutMemPtr<void> src = std::malloc(100);
+    MutMemPtr<void> dest = std::malloc(100);
 
     // TODO: Write tests.
     helper.FwdCopyTo({ src, 5 }, { dest, 10 });

@@ -24,7 +24,7 @@ namespace Atom
         using Base::operator=;
 
     public:
-        constexpr auto data() const -> ConstMemPtr<TElem>
+        constexpr auto data() const -> MemPtr<TElem>
         {
             return _range().data();
         }
@@ -97,7 +97,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Get underlying ptr to arr.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto data() const -> ConstMemPtr<TElem>
+        constexpr auto data() const -> MemPtr<TElem>
         {
             return _impl().data();
         }

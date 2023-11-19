@@ -8,17 +8,17 @@ namespace Atom
     class LegacyMemAllocator
     {
     public:
-        auto Alloc(usize size) -> MemPtr<void>
+        auto Alloc(usize size) -> MutMemPtr<void>
         {
             return std::malloc(size);
         }
 
-        auto Realloc(MemPtr<void> mem, usize size) -> MemPtr<void>
+        auto Realloc(MutMemPtr<void> mem, usize size) -> MutMemPtr<void>
         {
             return std::realloc(mem.unwrap(), size.unwrap());
         }
 
-        auto Dealloc(MemPtr<void> mem)
+        auto Dealloc(MutMemPtr<void> mem)
         {
             std::free(mem.unwrap());
         }

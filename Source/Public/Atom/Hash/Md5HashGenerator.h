@@ -17,7 +17,7 @@ namespace Atom::Private
             Md5Initialise(&_context);
         }
 
-        auto Update(ConstMemPtr<void> data, uint32_t dataSize)
+        auto Update(MemPtr<void> data, uint32_t dataSize)
         {
             Md5Update(&_context, data.unwrap(), dataSize);
         }

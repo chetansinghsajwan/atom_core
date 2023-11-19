@@ -5,13 +5,13 @@
 namespace Atom
 {
     template <typename T>
-    class UniquePtr: public Ptr<T>
+    class UniquePtr: public MutPtr<T>
     {
         static_assert(TTI::IsPure<T>, "UniquePtr only supports pure types.");
         static_assert(not TTI::IsVoid<T>, "UniquePtr doesn't support void.");
 
     private:
-        using Base = Ptr<T>;
+        using Base = MutPtr<T>;
 
     public:
         using TVal = typename Base::TVal;

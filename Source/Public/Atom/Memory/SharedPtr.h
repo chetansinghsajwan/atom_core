@@ -5,13 +5,13 @@
 namespace Atom
 {
     template <typename T>
-    class SharedPtr: public Ptr<T>
+    class SharedPtr: public MutPtr<T>
     {
         static_assert(TTI::IsPure<T>, "SharedPtr only supports pure types.");
         static_assert(not TTI::IsVoid<T>, "SharedPtr doesn't support void.");
 
     private:
-        using Base = Ptr<T>;
+        using Base = MutPtr<T>;
 
     public:
         using TVal = typename Base::TVal;

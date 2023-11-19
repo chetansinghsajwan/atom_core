@@ -166,23 +166,6 @@ namespace Atom
     /// 
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    class ConstMemPtr: public MemPtrFunctions<ConstPtr<T>, ConstMemPtr<T>>
-    {
-        using This = ConstMemPtr<T>;
-        using Base = MemPtrFunctions<ConstPtr<T>, This>;
-
-    public:
-        using Base::Base;
-        using Base::operator=;
-    };
-
-    template <typename T>
-    ConstMemPtr(const T* ptr) -> ConstMemPtr<T>;
-
-    /// --------------------------------------------------------------------------------------------
-    ///
-    /// --------------------------------------------------------------------------------------------
-    template <typename T>
     class MemPtr: public MemPtrFunctions<Ptr<T>, MemPtr<T>>
     {
         using This = MemPtr<T>;
@@ -195,4 +178,21 @@ namespace Atom
 
     template <typename T>
     MemPtr(const T* ptr) -> MemPtr<T>;
+
+    /// --------------------------------------------------------------------------------------------
+    ///
+    /// --------------------------------------------------------------------------------------------
+    template <typename T>
+    class MutMemPtr: public MemPtrFunctions<MutPtr<T>, MutMemPtr<T>>
+    {
+        using This = MutMemPtr<T>;
+        using Base = MemPtrFunctions<MutPtr<T>, This>;
+
+    public:
+        using Base::Base;
+        using Base::operator=;
+    };
+
+    template <typename T>
+    MutMemPtr(const T* ptr) -> MutMemPtr<T>;
 }

@@ -26,7 +26,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Value Constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr ArrayIter(ConstMemPtr<T> it)
+        constexpr ArrayIter(MemPtr<T> it)
             : _it{ it } {}
 
     public:
@@ -41,7 +41,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Access value by ptr.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto data() const -> ConstMemPtr<T>
+        constexpr auto data() const -> MemPtr<T>
         {
             return this->_it;
         }
@@ -107,7 +107,7 @@ namespace Atom
         }
 
     protected:
-        ConstMemPtr<T> _it;
+        MemPtr<T> _it;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -135,7 +135,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Value Constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr MutArrayIter(MemPtr<T> it)
+        constexpr MutArrayIter(MutMemPtr<T> it)
             : Base{ it } {}
 
     public:
@@ -150,9 +150,9 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Access value by mut ptr.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto mutData() -> MemPtr<T>
+        constexpr auto mutData() -> MutMemPtr<T>
         {
-            return const_cast<MemPtr<T>>(Base::data());
+            return const_cast<MutMemPtr<T>>(Base::data());
         }
 
         /// ----------------------------------------------------------------------------------------

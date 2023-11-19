@@ -28,7 +28,7 @@ namespace Atom
         using Base::operator=;
 
     public:
-        constexpr auto mutData() -> MemPtr<TElem>
+        constexpr auto mutData() -> MutMemPtr<TElem>
         {
             return _range().mutData();
         }
@@ -112,7 +112,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Get underlying ptr to arr.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto mutData() -> MemPtr<TElem>
+        constexpr auto mutData() -> MutMemPtr<TElem>
         {
             return _impl().mutData();
         }

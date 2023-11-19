@@ -32,19 +32,19 @@ namespace Atom
     // clang-format on
 
     template <typename T>
-    class Ptr;
+    class MutPtr;
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename TVal_>
-    class ConstPtr
+    class Ptr
     {
-        static_assert(TTI::IsPure<TVal_>, "ConstPtr only supports pure types.");
-        static_assert(not TTI::IsVoid<TVal_>, "ConstPtr doesn't support void.");
+        static_assert(TTI::IsPure<TVal_>, "Ptr only supports pure types.");
+        static_assert(not TTI::IsVoid<TVal_>, "Ptr doesn't support void.");
 
     private:
-        using This = ConstPtr<TVal_>;
+        using This = Ptr<TVal_>;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -56,41 +56,41 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr ConstPtr():
+        constexpr Ptr():
             _ptr{ nullptr }
         {}
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr ConstPtr(const This&) = default;
+        constexpr Ptr(const This&) = default;
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr ConstPtr& operator=(const This&) = default;
+        constexpr Ptr& operator=(const This&) = default;
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr ConstPtr(This&&) = delete;
+        constexpr Ptr(This&&) = delete;
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr ConstPtr& operator=(This&&) = delete;
+        constexpr Ptr& operator=(This&&) = delete;
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr ConstPtr(std::nullptr_t):
+        constexpr Ptr(std::nullptr_t):
             _ptr{ nullptr }
         {}
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr ConstPtr& operator=(std::nullptr_t)
+        constexpr Ptr& operator=(std::nullptr_t)
         {
             _ptr = nullptr;
             return *this;
@@ -100,7 +100,7 @@ namespace Atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename TPtr>
-        constexpr ConstPtr(const TPtr& ptr)
+        constexpr Ptr(const TPtr& ptr)
             requires(RConstPtr<TPtr>) and (RConvertibleTo<const typename TPtr::TVal*, const TVal*>)
             :
             _ptr{ static_cast<const TVal*>(ptr.unwrap()) }
@@ -110,7 +110,7 @@ namespace Atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename TPtr>
-        constexpr ConstPtr& operator=(const TPtr& ptr)
+        constexpr Ptr& operator=(const TPtr& ptr)
             requires(RConstPtr<TPtr>) and (RConvertibleTo<const typename TPtr::TVal*, const TVal*>)
         {
             _ptr = static_cast<const TVal*>(ptr.unwrap());
@@ -120,14 +120,14 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr ConstPtr(const TVal* ptr):
+        constexpr Ptr(const TVal* ptr):
             _ptr{ ptr }
         {}
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr ConstPtr& operator=(const TVal* ptr)
+        constexpr Ptr& operator=(const TVal* ptr)
         {
             _ptr = ptr;
             return *this;
@@ -136,7 +136,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr ~ConstPtr() = default;
+        constexpr ~Ptr() = default;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -173,7 +173,7 @@ namespace Atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename T>
-        constexpr auto as() const -> ConstPtr<T>
+        constexpr auto as() const -> Ptr<T>
             requires RConvertibleTo<const TVal*, const T*>
         {
             return static_cast<const T*>(_ptr);
@@ -183,7 +183,7 @@ namespace Atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename T>
-        constexpr auto unsafeAs() const -> ConstPtr<T>
+        constexpr auto unsafeAs() const -> Ptr<T>
         {
             return reinterpret_cast<const T*>(_ptr);
         }
@@ -192,7 +192,7 @@ namespace Atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename T>
-        constexpr auto dynAs() const -> ConstPtr<T>
+        constexpr auto dynAs() const -> Ptr<T>
             requires RPolymorphic<TVal> and RPolymorphic<T>
         {
             return dynamic_cast<const T*>(_ptr);
@@ -201,7 +201,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto asMut() const -> Ptr<TVal>
+        constexpr auto asMut() const -> MutPtr<TVal>
         {
             return const_cast<TVal*>(_ptr);
         }
@@ -270,15 +270,15 @@ namespace Atom
     };
 
     template <typename T>
-    ConstPtr(const T* ptr) -> ConstPtr<T>;
+    Ptr(const T* ptr) -> Ptr<T>;
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
     template <>
-    class ConstPtr<void>
+    class Ptr<void>
     {
-        using This = ConstPtr<void>;
+        using This = Ptr<void>;
 
     public:
         using TVal = void;
@@ -287,41 +287,41 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Default Constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr ConstPtr():
+        constexpr Ptr():
             _ptr{ nullptr }
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # Copy Constructr
         /// ----------------------------------------------------------------------------------------
-        constexpr ConstPtr(const This&) = default;
+        constexpr Ptr(const This&) = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # Copy Operator
         /// ----------------------------------------------------------------------------------------
-        constexpr ConstPtr& operator=(const This&) = default;
+        constexpr Ptr& operator=(const This&) = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # Move Constuctor
         /// ----------------------------------------------------------------------------------------
-        constexpr ConstPtr(This&&) = delete;
+        constexpr Ptr(This&&) = delete;
 
         /// ----------------------------------------------------------------------------------------
         /// # Move Operator
         /// ----------------------------------------------------------------------------------------
-        constexpr ConstPtr& operator=(This&&) = delete;
+        constexpr Ptr& operator=(This&&) = delete;
 
         /// ----------------------------------------------------------------------------------------
         /// # Null Constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr ConstPtr(std::nullptr_t):
+        constexpr Ptr(std::nullptr_t):
             _ptr{ nullptr }
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # Null Operator
         /// ----------------------------------------------------------------------------------------
-        constexpr ConstPtr& operator=(std::nullptr_t)
+        constexpr Ptr& operator=(std::nullptr_t)
         {
             _ptr = nullptr;
             return *this;
@@ -331,7 +331,7 @@ namespace Atom
         /// # Constructor
         /// ----------------------------------------------------------------------------------------
         template <typename TPtr>
-        constexpr ConstPtr(const TPtr& ptr)
+        constexpr Ptr(const TPtr& ptr)
             requires(RConstPtr<TPtr>)
             :
             _ptr{ static_cast<const void*>(ptr.unwrap()) }
@@ -341,7 +341,7 @@ namespace Atom
         /// # Operator
         /// ----------------------------------------------------------------------------------------
         template <typename TPtr>
-        constexpr ConstPtr& operator=(const TPtr& ptr)
+        constexpr Ptr& operator=(const TPtr& ptr)
             requires(RConstPtr<TPtr>)
         {
             _ptr = static_cast<const void*>(ptr.unwrap());
@@ -352,7 +352,7 @@ namespace Atom
         /// # Value Constructor
         /// ----------------------------------------------------------------------------------------
         template <typename T>
-        constexpr ConstPtr(const T* ptr):
+        constexpr Ptr(const T* ptr):
             _ptr{ static_cast<const void*>(ptr) }
         {}
 
@@ -360,7 +360,7 @@ namespace Atom
         /// # Value Operator
         /// ----------------------------------------------------------------------------------------
         template <typename T>
-        constexpr ConstPtr& operator=(const T* ptr)
+        constexpr Ptr& operator=(const T* ptr)
         {
             _ptr = static_cast<const void*>(ptr);
             return *this;
@@ -369,7 +369,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Destructor
         /// ----------------------------------------------------------------------------------------
-        constexpr ~ConstPtr() = default;
+        constexpr ~Ptr() = default;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -396,7 +396,7 @@ namespace Atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename T>
-        constexpr auto as() const -> ConstPtr<T>
+        constexpr auto as() const -> Ptr<T>
         {
             return static_cast<const T*>(_ptr);
         }
@@ -404,7 +404,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto asMut() const -> Ptr<void>;
+        constexpr auto asMut() const -> MutPtr<void>;
 
         /// ----------------------------------------------------------------------------------------
         ///
@@ -479,20 +479,20 @@ namespace Atom
         const void* _ptr;
     };
 
-    ConstPtr(const void*) -> ConstPtr<void>;
+    Ptr(const void*) -> Ptr<void>;
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename TVal_>
-    class Ptr: public ConstPtr<TVal_>
+    class MutPtr: public Ptr<TVal_>
     {
-        static_assert(TTI::IsPure<TVal_>, "Ptr only supports pure types.");
-        static_assert(not TTI::IsVoid<TVal_>, "Ptr doesn't support void.");
+        static_assert(TTI::IsPure<TVal_>, "MutPtr only supports pure types.");
+        static_assert(not TTI::IsVoid<TVal_>, "MutPtr doesn't support void.");
 
     private:
-        using This = Ptr<TVal_>;
-        using Base = ConstPtr<TVal_>;
+        using This = MutPtr<TVal_>;
+        using Base = Ptr<TVal_>;
 
     public:
         using TVal = Base::TVal;
@@ -501,39 +501,39 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr Ptr() = default;
+        constexpr MutPtr() = default;
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr Ptr(const Ptr&) = default;
+        constexpr MutPtr(const MutPtr&) = default;
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr Ptr& operator=(const Ptr&) = default;
+        constexpr MutPtr& operator=(const MutPtr&) = default;
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr Ptr(Ptr&&) = delete;
+        constexpr MutPtr(MutPtr&&) = delete;
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr Ptr& operator=(Ptr&&) = delete;
+        constexpr MutPtr& operator=(MutPtr&&) = delete;
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr Ptr(std::nullptr_t):
+        constexpr MutPtr(std::nullptr_t):
             Base(nullptr)
         {}
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr Ptr& operator=(std::nullptr_t)
+        constexpr MutPtr& operator=(std::nullptr_t)
         {
             _ptr = nullptr;
             return *this;
@@ -543,7 +543,7 @@ namespace Atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename TPtr>
-        constexpr Ptr(TPtr& ptr)
+        constexpr MutPtr(TPtr& ptr)
             requires(RPtr<TPtr>) and (RConvertibleTo<typename TPtr::TVal*, TVal*>)
             :
             Base(static_cast<TVal*>(ptr.unwrap()))
@@ -553,7 +553,7 @@ namespace Atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename TPtr>
-        constexpr Ptr(TPtr&& ptr)
+        constexpr MutPtr(TPtr&& ptr)
             requires(RPtr<TPtr>) and (RConvertibleTo<typename TPtr::TVal*, TVal*>)
             :
             Base(static_cast<TVal*>(ptr.unwrap()))
@@ -563,7 +563,7 @@ namespace Atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename TPtr>
-        constexpr Ptr& operator=(TPtr& ptr)
+        constexpr MutPtr& operator=(TPtr& ptr)
             requires(RPtr<TPtr>) and (RConvertibleTo<typename TPtr::TVal*, TVal*>)
         {
             _ptr = static_cast<TVal*>(ptr.unwrap());
@@ -573,14 +573,14 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr Ptr(TVal* ptr):
+        constexpr MutPtr(TVal* ptr):
             Base(ptr)
         {}
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr Ptr& operator=(TVal* ptr)
+        constexpr MutPtr& operator=(TVal* ptr)
         {
             _ptr = ptr;
             return *this;
@@ -589,7 +589,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr ~Ptr() = default;
+        constexpr ~MutPtr() = default;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -612,7 +612,7 @@ namespace Atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename T>
-        constexpr auto as() -> Ptr<T>
+        constexpr auto as() -> MutPtr<T>
             requires RPure<T> and RConvertibleTo<TVal*, T>
         {
             return static_cast<T*>(_mutPtr());
@@ -622,7 +622,7 @@ namespace Atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename T>
-        constexpr auto unsafeAs() -> Ptr<T>
+        constexpr auto unsafeAs() -> MutPtr<T>
             requires RPure<T>
         {
             return reinterpret_cast<T*>(_mutPtr());
@@ -632,7 +632,7 @@ namespace Atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename T>
-        constexpr auto dynAs() -> Ptr<T>
+        constexpr auto dynAs() -> MutPtr<T>
             requires RPolymorphic<TVal> and RPure<T> and RPolymorphic<T>
         {
             return dynamic_cast<T*>(_mutPtr());
@@ -641,7 +641,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto asConst() -> ConstPtr<TVal>
+        constexpr auto asConst() -> Ptr<TVal>
         {
             return _mutPtr();
         }
@@ -674,54 +674,54 @@ namespace Atom
     };
 
     template <typename T>
-    Ptr(T* ptr) -> Ptr<T>;
+    MutPtr(T* ptr) -> MutPtr<T>;
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
     template <>
-    class Ptr<void>: public ConstPtr<void>
+    class MutPtr<void>: public Ptr<void>
     {
-        using This = Ptr<void>;
-        using Base = ConstPtr<void>;
+        using This = MutPtr<void>;
+        using Base = Ptr<void>;
 
     public:
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr Ptr() = default;
+        constexpr MutPtr() = default;
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr Ptr(const Ptr&) = default;
+        constexpr MutPtr(const MutPtr&) = default;
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr Ptr& operator=(const Ptr&) = default;
+        constexpr MutPtr& operator=(const MutPtr&) = default;
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr Ptr(Ptr&&) = delete;
+        constexpr MutPtr(MutPtr&&) = delete;
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr Ptr& operator=(Ptr&&) = delete;
+        constexpr MutPtr& operator=(MutPtr&&) = delete;
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr Ptr(std::nullptr_t):
+        constexpr MutPtr(std::nullptr_t):
             Base(nullptr)
         {}
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr Ptr& operator=(std::nullptr_t)
+        constexpr MutPtr& operator=(std::nullptr_t)
         {
             _ptr = nullptr;
             return *this;
@@ -731,7 +731,7 @@ namespace Atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename TPtr>
-        constexpr Ptr(TPtr& ptr)
+        constexpr MutPtr(TPtr& ptr)
             requires(RPtr<TPtr>)
             :
             Base(static_cast<void*>(ptr.unwrap()))
@@ -741,7 +741,7 @@ namespace Atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename TPtr>
-        constexpr Ptr(TPtr&& ptr)
+        constexpr MutPtr(TPtr&& ptr)
             requires(RPtr<TPtr>)
             :
             Base(static_cast<void*>(ptr.unwrap()))
@@ -751,7 +751,7 @@ namespace Atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename TPtr>
-        constexpr Ptr& operator=(TPtr& ptr)
+        constexpr MutPtr& operator=(TPtr& ptr)
             requires(RPtr<TPtr>)
         {
             _ptr = static_cast<void*>(ptr.unwrap());
@@ -762,7 +762,7 @@ namespace Atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename T>
-        constexpr Ptr(T* ptr)
+        constexpr MutPtr(T* ptr)
             requires(not RConst<T>)
             :
             Base(static_cast<void*>(ptr))
@@ -772,7 +772,7 @@ namespace Atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename T>
-        constexpr Ptr& operator=(T* ptr)
+        constexpr MutPtr& operator=(T* ptr)
             requires(not RConst<T>)
         {
             _ptr = static_cast<void*>(ptr);
@@ -782,7 +782,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr ~Ptr() = default;
+        constexpr ~MutPtr() = default;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -807,7 +807,7 @@ namespace Atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename T>
-        constexpr auto as() const -> Ptr<T>
+        constexpr auto as() const -> MutPtr<T>
         {
             return static_cast<T*>(_mutPtr());
         }
@@ -815,7 +815,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto asConst() const -> ConstPtr<void>
+        constexpr auto asConst() const -> Ptr<void>
         {
             return _mutPtr();
         }
@@ -855,12 +855,12 @@ namespace Atom
         using Base::_ptr;
     };
 
-    Ptr(void*) -> Ptr<void>;
+    MutPtr(void*) -> MutPtr<void>;
 
     /// ----------------------------------------------------------------------------------------
     ///
     /// ----------------------------------------------------------------------------------------
-    constexpr auto ConstPtr<void>::asMut() const -> Ptr<void>
+    constexpr auto Ptr<void>::asMut() const -> MutPtr<void>
     {
         return const_cast<void*>(_ptr);
     }

@@ -32,7 +32,7 @@ namespace Atom
             return _itEnd;
         }
 
-        constexpr auto data() const -> ConstMemPtr<TElem>
+        constexpr auto data() const -> MemPtr<TElem>
             requires RArrayIterPair<TIter, TIterEnd>
         {
             return &_it.value();
@@ -172,7 +172,7 @@ namespace Atom
     ///
     /// - Review this implementation after implementing character encoding.
     /// --------------------------------------------------------------------------------------------
-    constexpr auto _RangeFindStrLen(ConstMemPtr<Char> str) -> usize
+    constexpr auto _RangeFindStrLen(MemPtr<Char> str) -> usize
     {
         if (std::is_constant_evaluated())
         {
@@ -205,7 +205,7 @@ namespace Atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    constexpr auto MakeRange(ConstMemPtr<T> begin, ConstMemPtr<T> end)
+    constexpr auto MakeRange(MemPtr<T> begin, MemPtr<T> end)
     {
         return _RangeFromIterPair(ArrayIter(begin), ArrayIter(end));
     }
@@ -214,7 +214,7 @@ namespace Atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    constexpr auto MakeRange(MemPtr<T> begin, MemPtr<T> end)
+    constexpr auto MakeRange(MutMemPtr<T> begin, MutMemPtr<T> end)
     {
         return _MutRangeFromIterPair(MutArrayIter(begin), MutArrayIter(end));
     }
@@ -223,7 +223,7 @@ namespace Atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    constexpr auto MakeRange(ConstMemPtr<T> begin, usize count)
+    constexpr auto MakeRange(MemPtr<T> begin, usize count)
     {
         return _RangeFromIterPair(ArrayIter(begin), ArrayIter(begin + count));
     }
@@ -232,7 +232,7 @@ namespace Atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    constexpr auto MakeRange(MemPtr<T> begin, usize count)
+    constexpr auto MakeRange(MutMemPtr<T> begin, usize count)
     {
         return _MutRangeFromIterPair(MutArrayIter(begin), MutArrayIter(begin + count));
     }
@@ -243,7 +243,7 @@ namespace Atom
     template <typename T, usize count>
     constexpr auto MakeRange(const T (&arr)[count])
     {
-        return _RangeFromIterPair(ArrayIter(ConstMemPtr(arr)), ArrayIter(ConstMemPtr(arr) + count));
+        return _RangeFromIterPair(ArrayIter(MemPtr(arr)), ArrayIter(MemPtr(arr) + count));
     }
 
     /// --------------------------------------------------------------------------------------------
@@ -252,13 +252,13 @@ namespace Atom
     template <typename T, usize count>
     constexpr auto MakeRange(T (&arr)[count])
     {
-        return _MutRangeFromIterPair(MutArrayIter(MemPtr(arr)), MutArrayIter(MemPtr(arr) + count));
+        return _MutRangeFromIterPair(MutArrayIter(MutMemPtr(arr)), MutArrayIter(MutMemPtr(arr) + count));
     }
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    constexpr auto MakeRange(ConstMemPtr<Char> str)
+    constexpr auto MakeRange(MemPtr<Char> str)
     {
         return _RangeFromIterPair(ArrayIter(str), ArrayIter(str + _RangeFindStrLen(str)));
     }
@@ -266,7 +266,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    constexpr auto MakeRange(MemPtr<Char> str)
+    constexpr auto MakeRange(MutMemPtr<Char> str)
     {
         return _MutRangeFromIterPair(MutArrayIter(str), MutArrayIter(str + _RangeFindStrLen(str)));
     }
@@ -294,7 +294,7 @@ namespace Atom
     template <typename T>
     constexpr auto MakeRange(const T* begin, const T* end)
     {
-        return MakeRange(ConstMemPtr(begin), ConstMemPtr(end));
+        return MakeRange(MemPtr(begin), MemPtr(end));
     }
 
     /// --------------------------------------------------------------------------------------------
@@ -303,7 +303,7 @@ namespace Atom
     template <typename T>
     constexpr auto MakeRange(T* begin, T* end)
     {
-        return MakeRange(MemPtr(begin), MemPtr(end));
+        return MakeRange(MutMemPtr(begin), MutMemPtr(end));
     }
 
     /// --------------------------------------------------------------------------------------------
@@ -312,7 +312,7 @@ namespace Atom
     template <typename T>
     constexpr auto MakeRange(const T* begin, usize count)
     {
-        return MakeRange(ConstMemPtr(begin), ConstMemPtr(begin + count.unwrap()));
+        return MakeRange(MemPtr(begin), MemPtr(begin + count.unwrap()));
     }
 
     /// --------------------------------------------------------------------------------------------

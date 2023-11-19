@@ -8,18 +8,18 @@ namespace Atom
     class MemBlk
     {
     public:
-        constexpr MemBlk(MemPtr<void> mem, usize count):
+        constexpr MemBlk(MutMemPtr<void> mem, usize count):
             mem{ mem }, count{ count }
         {}
 
-        constexpr MemBlk(MemPtr<void> begin, MemPtr<void> end):
+        constexpr MemBlk(MutMemPtr<void> begin, MutMemPtr<void> end):
             mem{ begin }, count{ end - begin }
         {
             Contracts::DebugExpects(end >= begin);
         }
 
     public:
-        MemPtr<void> mem;
+        MutMemPtr<void> mem;
         usize count;
     };
 
@@ -265,37 +265,37 @@ namespace Atom
         }
 
     private:
-        constexpr auto _Fill(MemPtr<void> mem, usize count, memunit val) const -> void
+        constexpr auto _Fill(MutMemPtr<void> mem, usize count, memunit val) const -> void
         {
             std::fill(mem.unwrapAsByte(), (mem + count).unwrapAsByte(), val);
         }
 
-        constexpr auto _FwdCopy(ConstMemPtr<void> src, usize count, MemPtr<void> dest) const -> void
+        constexpr auto _FwdCopy(MemPtr<void> src, usize count, MutMemPtr<void> dest) const -> void
         {
             std::copy(src.unwrapAsByte(), (src + count).unwrapAsByte(), dest.unwrapAsByte());
         }
 
-        constexpr auto _BwdCopy(ConstMemPtr<void> src, usize count, MemPtr<void> dest) const -> void
+        constexpr auto _BwdCopy(MemPtr<void> src, usize count, MutMemPtr<void> dest) const -> void
         {
             std::copy_backward(src.unwrapAsByte(), (src + count).unwrapAsByte(), dest.unwrapAsByte());
         }
 
-        constexpr auto _ShiftFwd(MemPtr<void> mem, usize memCount, usize steps) const -> void
+        constexpr auto _ShiftFwd(MutMemPtr<void> mem, usize memCount, usize steps) const -> void
         {
             std::shift_right(mem.unwrapAsByte(), (mem + memCount).unwrapAsByte(), steps.unwrap());
         }
 
-        constexpr auto _ShiftBwd(MemPtr<void> mem, usize memCount, usize steps) const -> void
+        constexpr auto _ShiftBwd(MutMemPtr<void> mem, usize memCount, usize steps) const -> void
         {
             std::shift_left(mem.unwrapAsByte(), (mem + memCount).unwrapAsByte(), steps.unwrap());
         }
 
-        constexpr auto _RotateFwd(MemPtr<void> mem, usize memCount, usize offset) const -> void
+        constexpr auto _RotateFwd(MutMemPtr<void> mem, usize memCount, usize offset) const -> void
         {
             std::rotate(mem.unwrapAsByte(), (mem + offset).unwrapAsByte(), (mem + memCount).unwrapAsByte());
         }
 
-        constexpr auto _RotateBwd(MemPtr<void> mem, usize memCount, usize offset) const -> void
+        constexpr auto _RotateBwd(MutMemPtr<void> mem, usize memCount, usize offset) const -> void
         {
             std::rotate(mem.unwrapAsByte(), (mem + offset).unwrapAsByte(), (mem + memCount).unwrapAsByte());
         }

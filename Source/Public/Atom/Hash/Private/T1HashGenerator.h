@@ -74,10 +74,10 @@ namespace Atom::Private
         ///
         /// # Parameters
         ///
-        /// - `data`: Ptr to the input data.
+        /// - `data`: MutPtr to the input data.
         /// - `dataSize`: Size of the data.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto ProcessBytes(ConstMemPtr<void> data, usize dataSize) -> Self&
+        constexpr auto ProcessBytes(MemPtr<void> data, usize dataSize) -> Self&
         {
             Contracts::DebugExpects(data != nullptr);
             Contracts::DebugExpects(dataSize > 0);

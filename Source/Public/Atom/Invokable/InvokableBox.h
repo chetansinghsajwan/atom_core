@@ -21,13 +21,13 @@ namespace Atom
             auto Set()
                 requires(RInvokable<TInvokable, TResult(TArgs...)>)
             {
-                _impl = [](MemPtr<void> obj, TResult& result, TArgs&&... args) {
+                _impl = [](MutMemPtr<void> obj, TResult& result, TArgs&&... args) {
                     TInvokable& invokable = *static_cast<TInvokable*>(obj.unwrap());
                     new (&result) TResult(invokable(forward<TArgs>(args)...));
                 };
             }
 
-            auto Invoke(MemPtr<void> invokable, TArgs&&... args) -> TResult
+            auto Invoke(MutMemPtr<void> invokable, TArgs&&... args) -> TResult
             {
                 TResult result;
                 _impl(invokable, result, forward<TArgs>(args)...);
@@ -36,7 +36,7 @@ namespace Atom
             }
 
         protected:
-            void (*_impl)(MemPtr<void> invokable, TResult& result, TArgs&&... args);
+            void (*_impl)(MutMemPtr<void> invokable, TResult& result, TArgs&&... args);
         };
 
         template <typename... TArgs>
@@ -46,19 +46,19 @@ namespace Atom
             template <RInvokable<void(TArgs...)> TInvokable>
             auto Set()
             {
-                _impl = [](MemPtr<void> obj, TArgs&&... args) {
+                _impl = [](MutMemPtr<void> obj, TArgs&&... args) {
                     TInvokable& invokable = *reinterpret_cast<TInvokable*>(obj.unwrap());
                     invokable(forward<TArgs>(args)...);
                 };
             }
 
-            auto Invoke(MemPtr<void> invokable, TArgs&&... args)
+            auto Invoke(MutMemPtr<void> invokable, TArgs&&... args)
             {
                 _impl(invokable, forward<TArgs>(args)...);
             }
 
         protected:
-            void (*_impl)(MemPtr<void> invokable, TArgs&&... args);
+            void (*_impl)(MutMemPtr<void> invokable, TArgs&&... args);
         };
     }
 
@@ -185,7 +185,7 @@ namespace Atom
         }
 
         template <typename T>
-        auto GetInvokable() -> MemPtr<T>
+        auto GetInvokable() -> MutMemPtr<T>
         {
             if (typeid(T) != GetInvokableType())
                 return nullptr;

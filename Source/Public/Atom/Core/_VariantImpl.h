@@ -11,12 +11,12 @@ namespace Atom
     class _VariantStorage
     {
     public:
-        constexpr auto getData() -> MemPtr<void>
+        constexpr auto getData() -> MutMemPtr<void>
         {
             return &_storage.storage;
         }
 
-        constexpr auto getData() const -> ConstMemPtr<void>
+        constexpr auto getData() const -> MemPtr<void>
         {
             return &_storage.storage;
         }
@@ -365,13 +365,13 @@ namespace Atom
         }
 
         template <typename T>
-        constexpr auto _getDataAs() -> MemPtr<T>
+        constexpr auto _getDataAs() -> MutMemPtr<T>
         {
             return _storage.getData();
         }
 
         template <typename T>
-        constexpr auto _getDataAs() const -> ConstMemPtr<T>
+        constexpr auto _getDataAs() const -> MemPtr<T>
         {
             return _storage.getData();
         }
