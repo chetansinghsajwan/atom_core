@@ -227,17 +227,6 @@ namespace Atom
             return _ptr;
         }
 
-    public:
-        /// ----------------------------------------------------------------------------------------
-        /// # To Do
-        ///
-        /// - May be we should remove this.
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto operator*() const -> const TVal&
-        {
-            return val();
-        }
-
     protected:
         const TVal* _ptr;
     };
@@ -651,15 +640,6 @@ namespace Atom
         }
 
         using Base::isNull;
-
-    public:
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto operator*() const -> TVal&
-        {
-            return *_mutPtr();
-        }
 
     private:
         constexpr auto _mutPtr() const -> TVal*

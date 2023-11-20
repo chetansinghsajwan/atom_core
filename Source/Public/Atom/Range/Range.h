@@ -177,7 +177,7 @@ namespace Atom
         if (std::is_constant_evaluated())
         {
             usize len = 0;
-            while (*str != '\0')
+            while (str.val() != '\0')
             {
                 str++;
                 len++;

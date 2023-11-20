@@ -257,7 +257,7 @@ namespace Atom
         template <typename T>
         auto GetObject() -> T&
         {
-            return *_GetObject<T>();
+            return _GetObject<T>().mutVal();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -266,7 +266,7 @@ namespace Atom
         template <typename T>
         auto GetObject() const -> const T&
         {
-            return *_GetObject<T>();
+            return _GetObject<T>().val();
         }
 
         /// ----------------------------------------------------------------------------------------
