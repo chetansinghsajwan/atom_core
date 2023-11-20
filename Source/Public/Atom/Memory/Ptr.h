@@ -590,6 +590,8 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator->() const -> TVal*
         {
+            Contracts::DebugExpects(not isNull(), "Null ptr access.");
+
             return _mutPtr();
         }
 

@@ -374,7 +374,7 @@ namespace Atom
             _object.size = sizeof(T);
             _object.type = &typeid(T);
 
-            _object.dtor = [](MutMemPtr<void> obj) { MutMemPtr<T>(obj)->T::~T(); };
+            _object.dtor = [](MutMemPtr<void> obj) { obj.template as<T>().val().T::~T(); };
 
             if constexpr (Copyable)
             {
