@@ -5,8 +5,6 @@ using namespace Atom;
 
 TEST_CASE("Atom.Core.MutPtr")
 {
-    STATIC_REQUIRE(RConstPtr<Ptr<i32>>);
-
     const i32 val0 = 10;
     const i32 val1 = 11;
 
@@ -43,8 +41,6 @@ TEST_CASE("Atom.Core.MutPtr")
         REQUIRE(ptr1.val() == ptr0.val());
     }
 
-    SECTION("Construct from `RConstPtr`") {}
-
     SECTION("Destructor")
     {
         STATIC_REQUIRE(RTriviallyDestructible<Ptr<i32>>);
@@ -79,8 +75,6 @@ TEST_CASE("Atom.Core.MutPtr")
         REQUIRE(ptr.val() == val0);
         REQUIRE(ptr.unwrap() == &val0);
     }
-
-    SECTION("Assign from `RConstPtr`") {}
 
     SECTION("Value access")
     {

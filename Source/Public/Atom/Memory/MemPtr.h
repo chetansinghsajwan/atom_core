@@ -19,8 +19,73 @@ namespace Atom
         using TVal = typename Base::TVal;
 
     public:
+        template <typename T>
+        constexpr MemPtrFunctions(Ptr<T> that):
+            Base(that) {}
+
+        template <typename T>
+        constexpr MemPtrFunctions(MutPtr<T> that):
+            Base(that) {}
+
         using Base::Base;
         using Base::operator=;
+
+    public:
+        /// ----------------------------------------------------------------------------------------
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto next() const -> TThis
+        {
+            return _Make(nullptr);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto prev() const -> TThis
+        {
+            return _Make(nullptr);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto next(usize i) const -> TThis
+        {
+            return _Make(nullptr);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto prev(usize i) const -> TThis
+        {
+            return _Make(nullptr);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto move(isize i) const -> TThis
+        {
+            return _Make(nullptr);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto move(usize i) const -> TThis
+        {
+            return _Make(nullptr);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto sub(This that) const -> TThis
+        {
+            return _Make(_ptr - that.unwrap());
+        }
 
     public:
         constexpr auto operator[](isize n) const
@@ -78,21 +143,33 @@ namespace Atom
             return _Arithmetic(_ptr) - _Arithmetic(ptr._ptr);
         }
 
+        /// ----------------------------------------------------------------------------------------
+        /// 
+        /// ----------------------------------------------------------------------------------------
         constexpr auto gt(This ptr) const -> bool
         {
             return _ptr > ptr._ptr;
         }
 
+        /// ----------------------------------------------------------------------------------------
+        /// 
+        /// ----------------------------------------------------------------------------------------
         constexpr auto ge(This ptr) const -> bool
         {
             return _ptr >= ptr._ptr;
         }
 
+        /// ----------------------------------------------------------------------------------------
+        /// 
+        /// ----------------------------------------------------------------------------------------
         constexpr auto lt(This ptr) const -> bool
         {
             return _ptr < ptr._ptr;
         }
 
+        /// ----------------------------------------------------------------------------------------
+        /// 
+        /// ----------------------------------------------------------------------------------------
         constexpr auto le(This ptr) const -> bool
         {
             return _ptr <= ptr._ptr;
@@ -152,6 +229,9 @@ namespace Atom
         using Base = MemPtrFunctions<Ptr<T>, This>;
 
     public:
+        constexpr MemPtr(const Ptr<T>& that):
+            Base(that) {}
+
         using Base::Base;
         using Base::operator=;
     };
@@ -169,6 +249,9 @@ namespace Atom
         using Base = MemPtrFunctions<MutPtr<T>, This>;
 
     public:
+        constexpr MutMemPtr(const MutPtr<T>& that):
+            Base(that) {}
+
         using Base::Base;
         using Base::operator=;
     };
