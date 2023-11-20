@@ -434,7 +434,7 @@ namespace Atom
     /// 
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    concept RPure = not std::is_const_v<T> and std::is_volatile_v<T> and not std::is_reference_v<T>;
+    concept RPure = not std::is_const_v<T> and not std::is_volatile_v<T> and not std::is_reference_v<T>;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     ////
