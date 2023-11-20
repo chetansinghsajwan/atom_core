@@ -62,7 +62,7 @@ namespace Atom
             requires RInt<TInt> or _RInt<TInt>
         {
             _ptr = _Arithmetic(_ptr) + _UnwrapInt(n);
-            return _this();
+            return _mutThis();
         }
 
         template <typename TInt>
@@ -70,7 +70,7 @@ namespace Atom
             requires RInt<TInt> or _RInt<TInt>
         {
             _ptr = _Arithmetic(_ptr) - _UnwrapInt(n);
-            return _this();
+            return _mutThis();
         }
 
         constexpr auto operator-(This ptr) const -> isize
@@ -78,42 +78,22 @@ namespace Atom
             return _Arithmetic(_ptr) - _Arithmetic(ptr._ptr);
         }
 
-        constexpr auto operator==(std::nullptr_t) const -> bool
-        {
-            return _ptr == nullptr;
-        }
-
-        constexpr auto operator!=(std::nullptr_t) const -> bool
-        {
-            return _ptr != nullptr;
-        }
-
-        constexpr auto operator==(This ptr) const -> bool
-        {
-            return _ptr == ptr._ptr;
-        }
-
-        constexpr auto operator!=(This ptr) const -> bool
-        {
-            return _ptr != ptr._ptr;
-        }
-
-        constexpr auto operator>(This ptr) const -> bool
+        constexpr auto gt(This ptr) const -> bool
         {
             return _ptr > ptr._ptr;
         }
 
-        constexpr auto operator>=(This ptr) const -> bool
+        constexpr auto ge(This ptr) const -> bool
         {
             return _ptr >= ptr._ptr;
         }
 
-        constexpr auto operator<(This ptr) const -> bool
+        constexpr auto lt(This ptr) const -> bool
         {
             return _ptr < ptr._ptr;
         }
 
-        constexpr auto operator<=(This ptr) const -> bool
+        constexpr auto le(This ptr) const -> bool
         {
             return _ptr <= ptr._ptr;
         }
@@ -153,7 +133,7 @@ namespace Atom
             return static_cast<const TThis&>(*this);
         }
 
-        constexpr auto _this() -> TThis&
+        constexpr auto _mutThis() -> TThis&
         {
             return static_cast<TThis&>(*this);
         }
