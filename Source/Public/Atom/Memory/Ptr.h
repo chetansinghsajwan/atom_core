@@ -528,8 +528,7 @@ namespace Atom
         template <typename T>
         constexpr MutPtr(const MutPtr<T>& ptr)
             requires RConvertibleTo<T*, TVal*>
-            :
-            Base(static_cast<TVal*>(ptr.unwrap()))
+            : Base(static_cast<TVal*>(ptr.unwrap()))
         {}
 
         /// ----------------------------------------------------------------------------------------
