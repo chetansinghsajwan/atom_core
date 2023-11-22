@@ -89,7 +89,7 @@ TEST_CASE("Atom.Core.MutPtr")
     SECTION("Casting")
     {
         Ptr<i32> ptr;
-        Ptr<i64> ptr1 = ptr.unsafeAs<i64>();
+        Ptr<i64> ptr1 = ptr.asUnsafe<i64>();
     }
 
     SECTION("Compairision")

@@ -155,7 +155,7 @@ namespace Atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename T>
-        constexpr auto unsafeAs() const -> Ptr<T>
+        constexpr auto asUnsafe() const -> Ptr<T>
             requires RPure<T>
         {
             return reinterpret_cast<const T*>(_ptr);
@@ -165,7 +165,7 @@ namespace Atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename T>
-        constexpr auto dynAs() const -> Ptr<T>
+        constexpr auto asDyn() const -> Ptr<T>
             requires RPolymorphic<TVal> and RPure<T> and RPolymorphic<T>
         {
             return dynamic_cast<const T*>(_ptr);
@@ -608,7 +608,7 @@ namespace Atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename T>
-        constexpr auto unsafeAs() const -> MutPtr<T>
+        constexpr auto asUnsafe() const -> MutPtr<T>
             requires RPure<T>
         {
             return reinterpret_cast<T*>(_mutPtr());
@@ -618,7 +618,7 @@ namespace Atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename T>
-        constexpr auto dynAs() const -> MutPtr<T>
+        constexpr auto asDyn() const -> MutPtr<T>
             requires RPolymorphic<TVal> and RPure<T> and RPolymorphic<T>
         {
             return dynamic_cast<T*>(_mutPtr());
