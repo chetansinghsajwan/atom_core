@@ -26,11 +26,8 @@ namespace Atom
     template <typename T>
     class Option
     {
+        static_assert(TTI::IsPure<T>, "Option supports only pure types");
         static_assert(not TTI::IsVoid<T>, "Option doesn't support void type.");
-
-        static_assert(not TTI::IsRef<T>, "Option doesn't support ref types, instead use pointers.");
-
-        static_assert(not TTI::IsQualified<T>, "Option doesn't support qualified types.");
 
     private:
         using This = Option<T>;
@@ -48,8 +45,8 @@ namespace Atom
         ///
         /// Constructs with no value.
         /// ----------------------------------------------------------------------------------------
-        constexpr Option():
-            _impl(typename Impl::CtorDefault())
+        constexpr Option()
+            : _impl(typename Impl::CtorDefault())
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -67,8 +64,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr Option(const Option& that)
             requires(not RTriviallyCopyConstructible<TVal>) and (RCopyConstructible<TVal>)
-            :
-            _impl(typename Impl::CtorCopy(), that._impl)
+            : _impl(typename Impl::CtorCopy(), that._impl)
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -110,8 +106,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr Option(Option&& that)
             requires(not RTriviallyMoveConstructible<TVal>) and (RMoveConstructible<TVal>)
-            :
-            _impl(typename Impl::CtorMove(), mov(that._impl))
+            : _impl(typename Impl::CtorMove(), mov(that._impl))
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -143,8 +138,8 @@ namespace Atom
         ///
         /// Constructs with no value.
         /// ----------------------------------------------------------------------------------------
-        constexpr Option(NullOption):
-            _impl(typename Impl::CtorDefault())
+        constexpr Option(NullOption)
+            : _impl(typename Impl::CtorDefault())
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -166,8 +161,8 @@ namespace Atom
         ///
         /// - `val`: Value to construct with.
         /// ----------------------------------------------------------------------------------------
-        constexpr Option(const TVal& val):
-            _impl(val)
+        constexpr Option(const TVal& val)
+            : _impl(val)
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -195,8 +190,8 @@ namespace Atom
         ///
         /// - `val`: Value to construct with.
         /// ----------------------------------------------------------------------------------------
-        constexpr Option(TVal&& val):
-            _impl(mov(val))
+        constexpr Option(TVal&& val)
+            : _impl(mov(val))
         {}
 
         /// ----------------------------------------------------------------------------------------
