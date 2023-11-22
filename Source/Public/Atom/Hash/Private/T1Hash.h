@@ -30,7 +30,7 @@ namespace Atom::Private
 
     // FIX: Compilation error in MSVC, checkout /Zc:externConstexpr
     template <usize size>
-#ifdef ATOM_COMP_MSVC
+#ifdef ATOM_COMPILER_MSVC
     inline
 #else
     constexpr
