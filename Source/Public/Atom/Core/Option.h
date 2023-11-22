@@ -245,9 +245,17 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
+        /// Destroys current value if any.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto reset()
+        {
+            return _impl.destroyValue();
+        }
+
+        /// ----------------------------------------------------------------------------------------
         /// Access the value by ref.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto value() & -> TVal&
+        constexpr auto get() const& -> const TVal&
         {
             Contracts::Expects(isValue(), "Doesn't contain value.");
 
@@ -257,31 +265,11 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Access the value by ref.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto value() const& -> const TVal&
+        constexpr auto getMut() & -> TVal&
         {
             Contracts::Expects(isValue(), "Doesn't contain value.");
 
-            return _impl.getValue();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// Access the value by ref.
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto value() && -> TVal&&
-        {
-            Contracts::Expects(isValue(), "Doesn't contain value.");
-
-            return mov(_impl.getValue());
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// Access the value by ptr.
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto operator->() -> TVal*
-        {
-            Contracts::DebugExpects(isValue(), "Doesn't contain value.");
-
-            return &_impl.getValue();
+            return _impl.getMutValue();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -292,6 +280,16 @@ namespace Atom
             Contracts::DebugExpects(isValue(), "Doesn't contain value.");
 
             return &_impl.getValue();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// Access the value by ptr.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto operator->() -> TVal*
+        {
+            Contracts::DebugExpects(isValue(), "Doesn't contain value.");
+
+            return &_impl.getMutValue();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -308,7 +306,7 @@ namespace Atom
         ///
         /// Const ref to `this` value or `orVal`.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto valueOr(const TVal& orVal) const -> const TVal&
+        constexpr auto getOr(const TVal& orVal) const -> const TVal&
         {
             if (_impl.isNull())
             {
@@ -332,38 +330,14 @@ namespace Atom
         ///
         /// Ref to `this` value or `orVal`.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto valueOr(TVal& orVal) -> TVal&
+        constexpr auto getMutOr(TVal& orVal) -> TVal&
         {
             if (_impl.isNull())
             {
                 return orVal;
             }
 
-            return _impl.getValue();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// Get `this` value or `orVal`.
-        ///
-        /// If `this` contains value, get `this` value.
-        /// Else, get value `orVal`.
-        ///
-        /// # Parameters
-        ///
-        /// - `orVal`: Other value to return.
-        ///
-        /// # Returns
-        ///
-        /// Rvalue ref to `this` value or `orVal`.
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto valueOr(TVal&& orVal) && -> TVal&&
-        {
-            if (_impl.isNull())
-            {
-                return mov(orVal);
-            }
-
-            return mov(_impl.getValue());
+            return _impl.getMutValue();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -381,7 +355,7 @@ namespace Atom
         /// Const ref to `this` value or orInvoke value returned by invoking `orInvoke`.
         /// ----------------------------------------------------------------------------------------
         template <typename TInvokable>
-        constexpr auto valueOrInvoke(TInvokable&& orInvoke) const -> const TVal&
+        constexpr auto getOrInvoke(TInvokable&& orInvoke) const -> const TVal&
             requires RInvokable<TPure<TInvokable>, const TVal&()>
         {
             if (_impl.isNull())
@@ -407,7 +381,7 @@ namespace Atom
         /// Ref to `this` value or orInvoke value returned by invoking `orInvoke`.
         /// ----------------------------------------------------------------------------------------
         template <typename TInvokable>
-        constexpr auto valueOrInvoke(TInvokable&& orInvoke) -> TVal&
+        constexpr auto getMutOrInvoke(TInvokable&& orInvoke) -> TVal&
             requires RInvokable<TPure<TInvokable>, TVal&()>
         {
             if (_impl.isNull())
@@ -415,33 +389,7 @@ namespace Atom
                 return orInvoke();
             }
 
-            return _impl.getValue();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// Get `this` value or.
-        ///
-        /// If `this` contains value, get `this` value.
-        /// Else, get value returned by invoking `orInvoke`.
-        ///
-        /// # Parameters
-        ///
-        /// - `orInvoke`: Invokable to return orInvoke value.
-        ///
-        /// # Returns
-        ///
-        /// Rvalue ref to `this` value or orInvoke value returned by invoking `orInvoke`.
-        /// ----------------------------------------------------------------------------------------
-        template <typename TInvokable>
-        constexpr auto valueOrInvoke(TInvokable&& orInvoke) && -> TVal&&
-            requires RInvokable<TPure<TInvokable>, TVal && ()>
-        {
-            if (_impl.isNull())
-            {
-                return orInvoke();
-            }
-
-            return mov(_impl.getValue());
+            return _impl.getMutValue();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -450,7 +398,7 @@ namespace Atom
         /// If `this` contains value, get `this` value.
         /// Else, get default constructed value.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto valueOrDefault() const& -> const TVal&
+        constexpr auto getOrDefault() const& -> const TVal&
             requires(RDefaultConstructible<TVal>)
         {
             if (_impl.isNull())
@@ -459,23 +407,6 @@ namespace Atom
             }
 
             return _impl.getValue();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// Get `this` value or default.
-        ///
-        /// If `this` contains value, get `this` value.
-        /// Else, get default constructed value.
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto valueOrDefault() && -> TVal&&
-            requires(RDefaultConstructible<TVal>)
-        {
-            if (_impl.isNull())
-            {
-                return mov(Impl::GetDefault());
-            }
-
-            return mov(_impl.getValue());
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -492,14 +423,6 @@ namespace Atom
         constexpr auto isNull() const -> bool
         {
             return not _impl.isValue();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// Destroys current value if any.
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto reset()
-        {
-            return _impl.destroyValue();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -542,7 +465,7 @@ namespace Atom
         ///
         /// If `this` and `that` are null, returns `true`.
         /// If `this` is null and `that` is not null or vice versa, returns `false`.
-        /// If `this` and `that` are not null, returns `this.value() == that.value()`.
+        /// If `this` and `that` are not null, returns `this.get() == that.get()`.
         /// --------------------------------------------------------------------------------------------
         template <typename TThat>
         constexpr auto eq(const Option<TThat>& that) const -> bool
@@ -556,7 +479,7 @@ namespace Atom
                 // Both are null.
                 return true;
 
-            return value() == that.value();
+            return get() == that.get();
         }
 
         /// --------------------------------------------------------------------------------------------
@@ -575,7 +498,7 @@ namespace Atom
         /// # Less Than Comparision
         ///
         /// If `this` or `that` is null, returns false.
-        /// Else, returns `this.value() < that.value()`.
+        /// Else, returns `this.get() < that.get()`.
         /// --------------------------------------------------------------------------------------------
         template <typename TThat>
         constexpr auto lt(const Option<TThat>& that) const -> bool
@@ -584,14 +507,14 @@ namespace Atom
             if (isNull() or that.isNull())
                 return false;
 
-            return value() < that.value();
+            return get() < that.get();
         }
 
         /// --------------------------------------------------------------------------------------------
         /// # Greater Than Comparision
         ///
         /// If `opt0` or `that` is null, returns false.
-        /// Else, returns `this.value() > that.value()`.
+        /// Else, returns `this.get() > that.get()`.
         /// --------------------------------------------------------------------------------------------
         template <typename TThat>
         constexpr auto gt(const Option<TThat>& that) const -> bool
@@ -600,14 +523,14 @@ namespace Atom
             if (isNull() or that.isNull())
                 return false;
 
-            return value() > that.value();
+            return get() > that.get();
         }
 
         /// --------------------------------------------------------------------------------------------
         /// # Less Than or Equal To Comparision
         ///
         /// If `opt0` or `that` is null, returns false.
-        /// Else, returns `this.value() <= that.value()`.
+        /// Else, returns `this.get() <= that.get()`.
         /// --------------------------------------------------------------------------------------------
         template <typename TThat>
         constexpr auto le(const Option<TThat>& that) const -> bool
@@ -616,14 +539,14 @@ namespace Atom
             if (isNull() or that.isNull())
                 return false;
 
-            return value() <= that.value();
+            return get() <= that.get();
         }
 
         /// --------------------------------------------------------------------------------------------
         /// # Greater Than or Equal To Comparision
         ///
         /// If `opt0` or `that` is null, returns false.
-        /// Else, returns `this.value() >= that.value()`.
+        /// Else, returns `this.get() >= that.get()`.
         /// --------------------------------------------------------------------------------------------
         template <typename TThat>
         constexpr auto ge(const Option<TThat>& that) const -> bool
@@ -632,7 +555,7 @@ namespace Atom
             if (isNull() or that.isNull())
                 return false;
 
-            return value() >= that.value();
+            return get() >= that.get();
         }
 
     private:

@@ -40,7 +40,7 @@ TEST_CASE("Atom.Core.Option")
         Option<TrackedType> opt = obj;
 
         REQUIRE(opt.isValue());
-        REQUIRE(opt.value().lastOp == TrackedType::EOperation::CopyConstructor);
+        REQUIRE(opt.get().lastOp == TrackedType::EOperation::CopyConstructor);
     }
 
     SECTION("Value Copy Operator")
@@ -50,12 +50,12 @@ TEST_CASE("Atom.Core.Option")
         opt = obj;
 
         REQUIRE(opt.isValue());
-        REQUIRE(opt.value().lastOp == TrackedType::EOperation::CopyConstructor);
+        REQUIRE(opt.get().lastOp == TrackedType::EOperation::CopyConstructor);
 
         opt = obj;
 
         REQUIRE(opt.isValue());
-        REQUIRE(opt.value().lastOp == TrackedType::EOperation::CopyOperator);
+        REQUIRE(opt.get().lastOp == TrackedType::EOperation::CopyOperator);
     }
 
     SECTION("Value Move Constructor")
@@ -64,7 +64,7 @@ TEST_CASE("Atom.Core.Option")
         Option<TrackedType> opt = mov(obj);
 
         REQUIRE(opt.isValue());
-        REQUIRE(opt.value().lastOp == TrackedType::EOperation::MoveConstructor);
+        REQUIRE(opt.get().lastOp == TrackedType::EOperation::MoveConstructor);
     }
 
     SECTION("Value Move Operator")
@@ -74,12 +74,12 @@ TEST_CASE("Atom.Core.Option")
         opt = mov(obj);
 
         REQUIRE(opt.isValue());
-        REQUIRE(opt.value().lastOp == TrackedType::EOperation::MoveConstructor);
+        REQUIRE(opt.get().lastOp == TrackedType::EOperation::MoveConstructor);
 
         opt = mov(obj);
 
         REQUIRE(opt.isValue());
-        REQUIRE(opt.value().lastOp == TrackedType::EOperation::MoveOperator);
+        REQUIRE(opt.get().lastOp == TrackedType::EOperation::MoveOperator);
     }
 
     SECTION("Copy Constructor")
@@ -91,10 +91,10 @@ TEST_CASE("Atom.Core.Option")
         Option<TrackedType> opt1 = opt0;
 
         REQUIRE(opt0.isValue());
-        REQUIRE(opt0.value().lastOp == TrackedType::EOperation::CopyConstructorAsThat);
+        REQUIRE(opt0.get().lastOp == TrackedType::EOperation::CopyConstructorAsThat);
 
         REQUIRE(opt1.isValue());
-        REQUIRE(opt1.value().lastOp == TrackedType::EOperation::CopyConstructor);
+        REQUIRE(opt1.get().lastOp == TrackedType::EOperation::CopyConstructor);
     }
 
     SECTION("Copy Operator")
@@ -107,10 +107,10 @@ TEST_CASE("Atom.Core.Option")
         opt1 = opt0;
 
         REQUIRE(opt0.isValue());
-        REQUIRE(opt0.value().lastOp == TrackedType::EOperation::CopyOperatorAsThat);
+        REQUIRE(opt0.get().lastOp == TrackedType::EOperation::CopyOperatorAsThat);
 
         REQUIRE(opt1.isValue());
-        REQUIRE(opt1.value().lastOp == TrackedType::EOperation::CopyOperator);
+        REQUIRE(opt1.get().lastOp == TrackedType::EOperation::CopyOperator);
 
         const Option<TrackedType> opt2;
         opt1 = opt2;
@@ -127,10 +127,10 @@ TEST_CASE("Atom.Core.Option")
         Option<TrackedType> opt1 = mov(opt0);
 
         REQUIRE(opt0.isValue());
-        REQUIRE(opt0.value().lastOp == TrackedType::EOperation::MoveConstructorAsThat);
+        REQUIRE(opt0.get().lastOp == TrackedType::EOperation::MoveConstructorAsThat);
 
         REQUIRE(opt1.isValue());
-        REQUIRE(opt1.value().lastOp == TrackedType::EOperation::MoveConstructor);
+        REQUIRE(opt1.get().lastOp == TrackedType::EOperation::MoveConstructor);
     }
 
     SECTION("Move Operator")
@@ -143,10 +143,10 @@ TEST_CASE("Atom.Core.Option")
         opt1 = mov(opt0);
 
         REQUIRE(opt0.isValue());
-        REQUIRE(opt0.value().lastOp == TrackedType::EOperation::MoveOperatorAsThat);
+        REQUIRE(opt0.get().lastOp == TrackedType::EOperation::MoveOperatorAsThat);
 
         REQUIRE(opt1.isValue());
-        REQUIRE(opt1.value().lastOp == TrackedType::EOperation::MoveOperator);
+        REQUIRE(opt1.get().lastOp == TrackedType::EOperation::MoveOperator);
 
         Option<TrackedType> opt2;
         opt1 = mov(opt2);
@@ -163,7 +163,7 @@ TEST_CASE("Atom.Core.Option")
 
         {
             Option<TrackedType> opt = TrackedType();
-            lastOp = &opt.value().lastOp;
+            lastOp = &opt.get().lastOp;
         }
 
         REQUIRE(*lastOp == TrackedType::EOperation::Destructor);
@@ -188,9 +188,9 @@ TEST_CASE("Atom.Core.Option")
         opt.emplace(9, 'a', 0.99f);
 
         REQUIRE(opt.isValue());
-        REQUIRE(opt.value().a == 9);
-        REQUIRE(opt.value().b == 'a');
-        REQUIRE(opt.value().c == 0.99f);
+        REQUIRE(opt.get().a == 9);
+        REQUIRE(opt.get().b == 'a');
+        REQUIRE(opt.get().c == 0.99f);
     }
 
     SECTION("Value access")
@@ -199,16 +199,16 @@ TEST_CASE("Atom.Core.Option")
         {
             Option<i32> opt = i32(10);
 
-            REQUIRE(opt.value() == 10);
+            REQUIRE(opt.get() == 10);
         }
 
         SECTION("value()")
         {
             Option<i32> opt;
-            REQUIRE(opt.valueOr(99) == 99);
+            REQUIRE(opt.getOr(99) == 99);
 
             opt = i32(10);
-            REQUIRE(opt.valueOr(99) == 10);
+            REQUIRE(opt.getOr(99) == 10);
         }
 
         SECTION("valueOrInvoke()")
@@ -216,19 +216,19 @@ TEST_CASE("Atom.Core.Option")
             auto invoke = [&]() -> i32 { return 99; };
 
             Option<i32> opt;
-            REQUIRE(opt.valueOrInvoke(invoke) == 99);
+            REQUIRE(opt.getOrInvoke(invoke) == 99);
 
             opt = i32(10);
-            REQUIRE(opt.valueOrInvoke(invoke) == 10);
+            REQUIRE(opt.getOrInvoke(invoke) == 10);
         }
 
         SECTION("valueOrDefault()")
         {
             Option<i32> opt;
-            REQUIRE(opt.valueOrDefault() == 0);
+            REQUIRE(opt.getOrDefault() == 0);
 
             opt = i32(99);
-            REQUIRE(opt.valueOrDefault() == 99);
+            REQUIRE(opt.getOrDefault() == 99);
         }
     }
 
@@ -254,57 +254,57 @@ TEST_CASE("Atom.Core.Option")
         opt0->lastOp = TrackedType::EOperation::None;
 
         REQUIRE(not opt0.eq(opt1));
-        REQUIRE(opt0.value().lastOp == TrackedType::EOperation::None);
+        REQUIRE(opt0.get().lastOp == TrackedType::EOperation::None);
 
         REQUIRE(opt0.ne(opt1));
-        REQUIRE(opt0.value().lastOp == TrackedType::EOperation::None);
+        REQUIRE(opt0.get().lastOp == TrackedType::EOperation::None);
 
         REQUIRE(not opt0.lt(opt1));
-        REQUIRE(opt0.value().lastOp == TrackedType::EOperation::None);
+        REQUIRE(opt0.get().lastOp == TrackedType::EOperation::None);
 
         REQUIRE(not opt0.gt(opt1));
-        REQUIRE(opt0.value().lastOp == TrackedType::EOperation::None);
+        REQUIRE(opt0.get().lastOp == TrackedType::EOperation::None);
 
         REQUIRE(not opt0.le(opt1));
-        REQUIRE(opt0.value().lastOp == TrackedType::EOperation::None);
+        REQUIRE(opt0.get().lastOp == TrackedType::EOperation::None);
 
         REQUIRE(not opt0.ge(opt1));
-        REQUIRE(opt0.value().lastOp == TrackedType::EOperation::None);
+        REQUIRE(opt0.get().lastOp == TrackedType::EOperation::None);
 
         // They will be compared if they both have value state.
         opt1 = TrackedType();
         opt1->lastOp = TrackedType::EOperation::None;
 
         REQUIRE(opt0.eq(opt1));
-        REQUIRE(opt0.value().lastOp == TrackedType::EOperation::EqualOperator);
-        REQUIRE(opt1.value().lastOp == TrackedType::EOperation::EqualOperator);
+        REQUIRE(opt0.get().lastOp == TrackedType::EOperation::EqualOperator);
+        REQUIRE(opt1.get().lastOp == TrackedType::EOperation::EqualOperator);
 
         REQUIRE(not opt0.ne(opt1));
-        REQUIRE(opt0.value().lastOp == TrackedType::EOperation::EqualOperator);
-        REQUIRE(opt1.value().lastOp == TrackedType::EOperation::EqualOperator);
+        REQUIRE(opt0.get().lastOp == TrackedType::EOperation::EqualOperator);
+        REQUIRE(opt1.get().lastOp == TrackedType::EOperation::EqualOperator);
 
         REQUIRE(opt0.lt(opt1));
-        REQUIRE(opt0.value().lastOp == TrackedType::EOperation::LessThanOperator);
-        REQUIRE(opt1.value().lastOp == TrackedType::EOperation::LessThanOperator);
+        REQUIRE(opt0.get().lastOp == TrackedType::EOperation::LessThanOperator);
+        REQUIRE(opt1.get().lastOp == TrackedType::EOperation::LessThanOperator);
 
         REQUIRE(opt0.gt(opt1));
-        REQUIRE(opt0.value().lastOp == TrackedType::EOperation::GreaterThanOperator);
-        REQUIRE(opt1.value().lastOp == TrackedType::EOperation::GreaterThanOperator);
+        REQUIRE(opt0.get().lastOp == TrackedType::EOperation::GreaterThanOperator);
+        REQUIRE(opt1.get().lastOp == TrackedType::EOperation::GreaterThanOperator);
 
         REQUIRE(opt0.le(opt1));
-        REQUIRE(opt0.value().lastOp == TrackedType::EOperation::LessThanOrEqualOperator);
-        REQUIRE(opt1.value().lastOp == TrackedType::EOperation::LessThanOrEqualOperator);
+        REQUIRE(opt0.get().lastOp == TrackedType::EOperation::LessThanOrEqualOperator);
+        REQUIRE(opt1.get().lastOp == TrackedType::EOperation::LessThanOrEqualOperator);
 
         REQUIRE(opt0.ge(opt1));
-        REQUIRE(opt0.value().lastOp == TrackedType::EOperation::GreaterThanOrEqualOperator);
-        REQUIRE(opt1.value().lastOp == TrackedType::EOperation::GreaterThanOrEqualOperator);
+        REQUIRE(opt0.get().lastOp == TrackedType::EOperation::GreaterThanOrEqualOperator);
+        REQUIRE(opt1.get().lastOp == TrackedType::EOperation::GreaterThanOrEqualOperator);
     }
 
     SECTION("Reset")
     {
         TrackedType::EOperation* lastOp;
         Option<TrackedType> opt = TrackedType();
-        lastOp = &opt.value().lastOp;
+        lastOp = &opt.get().lastOp;
 
         opt.reset();
 

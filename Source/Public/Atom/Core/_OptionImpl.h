@@ -110,7 +110,7 @@ namespace Atom
         {
             if (that._isValue)
             {
-                _constructValue(that._getValue());
+                _createValue(that._getValue());
                 _isValue = true;
             }
         }
@@ -133,7 +133,7 @@ namespace Atom
         {
             if (that._isValue)
             {
-                _constructValue(mov(that._getValue()));
+                _createValue(mov(that._getMutValue()));
                 _isValue = true;
             }
         }
@@ -202,11 +202,11 @@ namespace Atom
             if (_isValue)
             {
                 _destroyValue();
-                _constructValue(forward<TArgs>(args)...);
+                _createValue(forward<TArgs>(args)...);
             }
             else
             {
-                _constructValue(forward<TArgs>(args)...);
+                _createValue(forward<TArgs>(args)...);
                 _isValue = true;
             }
         }
@@ -220,7 +220,7 @@ namespace Atom
         {
             if (not _isValue)
             {
-                _constructValue(forward<T1>(val));
+                _createValue(forward<T1>(val));
                 _isValue = true;
             }
             else
@@ -240,9 +240,9 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Get ref to current value.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto getValue() -> TVal&
+        constexpr auto getMutValue() -> TVal&
         {
-            return _getValue();
+            return _getMutValue();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -282,16 +282,16 @@ namespace Atom
                 if (_isValue)
                 {
                     if constexpr (move)
-                        _setValue(mov(that._getValue()));
+                        _setValue(mov(that._getMutValue()));
                     else
                         _setValue(that._getValue());
                 }
                 else
                 {
                     if constexpr (move)
-                        _constructValue(mov(that._getValue()));
+                        _createValue(mov(that._getMutValue()));
                     else
-                        _constructValue(that._getValue());
+                        _createValue(that._getValue());
 
                     _isValue = true;
                 }
@@ -317,7 +317,7 @@ namespace Atom
                 }
                 else
                 {
-                    _constructValue(that._getValue());
+                    _createValue(that._getValue());
                     _isValue = true;
                 }
             }
@@ -342,7 +342,7 @@ namespace Atom
                 }
                 else
                 {
-                    _constructValue(mov(that._getValue()));
+                    _createValue(mov(that._getValue()));
                     _isValue = true;
                 }
             }
@@ -366,7 +366,7 @@ namespace Atom
                 }
                 else
                 {
-                    _constructValue(mov(that._getValue()));
+                    _createValue(mov(that._getMutValue()));
                     _isValue = true;
                     that._isValue = false;
                 }
@@ -375,7 +375,7 @@ namespace Atom
             {
                 if (_isValue)
                 {
-                    that._constructValue(mov(_getValue()));
+                    that._createValue(mov(_getMutValue()));
                     that._isValue = true;
                     _isValue = false;
                 }
@@ -383,7 +383,7 @@ namespace Atom
         }
 
         template <typename... TArgs>
-        constexpr auto _constructValue(TArgs&&... args)
+        constexpr auto _createValue(TArgs&&... args)
         {
             ObjHelper().ConstructAs<TVal>(_storage.getData(), forward<TArgs>(args)...);
         }
@@ -396,7 +396,7 @@ namespace Atom
 
         constexpr auto _swapValue(TVal& that)
         {
-            ObjHelper().Swap(_getValue(), that);
+            ObjHelper().Swap(_getMutValue(), that);
         }
 
         constexpr auto _getValue() const -> const TVal&
@@ -404,7 +404,7 @@ namespace Atom
             return _storage.getData().val();
         }
 
-        constexpr auto _getValue() -> TVal&
+        constexpr auto _getMutValue() -> TVal&
         {
             return _storage.getData().mutVal();
         }
