@@ -27,7 +27,7 @@ namespace Atom
         {
             Contracts::DebugExpects(mem != nullptr);
 
-            mem.mutVal() = forward<TArg>(arg);
+            mem.getMut() = forward<TArg>(arg);
         }
 
         template <typename T, typename TArg>
@@ -35,7 +35,7 @@ namespace Atom
         {
             Contracts::DebugExpects(mem != nullptr);
 
-            mem.mutVal() = forward<TArg>(arg);
+            mem.getMut() = forward<TArg>(arg);
         }
 
         template <typename T>

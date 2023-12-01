@@ -122,7 +122,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto val() const -> const TVal&
+        constexpr auto get() const -> const TVal&
         {
             Contracts::DebugExpects(not isNull(), "Null ptr access.");
 
@@ -132,7 +132,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto checkVal() const -> const TVal&
+        constexpr auto getSafe() const -> const TVal&
         {
             Contracts::Expects(not isNull(), "Null ptr access.");
 
@@ -352,7 +352,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto val() const -> const byte&
+        constexpr auto get() const -> const byte&
         {
             Contracts::DebugExpects(not isNull(), "Null ptr access.");
 
@@ -362,7 +362,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto checkVal() const -> const byte&
+        constexpr auto getSafe() const -> const byte&
         {
             Contracts::Expects(not isNull(), "Null ptr access.");
 
@@ -373,7 +373,7 @@ namespace Atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename T>
-        constexpr auto valAs() const -> const T&
+        constexpr auto getAs() const -> const T&
             requires RPure<T>
         {
             Contracts::DebugExpects(not isNull(), "Null ptr access.");
@@ -385,7 +385,7 @@ namespace Atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename T>
-        constexpr auto checkValAs() const -> const T&
+        constexpr auto getSafeAs() const -> const T&
             requires RPure<T>
         {
             Contracts::Expects(not isNull(), "Null ptr access.");
@@ -591,7 +591,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto mutVal() const -> TVal&
+        constexpr auto getMut() const -> TVal&
         {
             Contracts::DebugExpects(not isNull(), "Null ptr access.");
 
@@ -601,7 +601,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto checkMutVal() const -> TVal&
+        constexpr auto getMutSafe() const -> TVal&
         {
             Contracts::Expects(not isNull(), "Null ptr access.");
 
@@ -785,7 +785,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto mutVal() const -> byte&
+        constexpr auto getMut() const -> byte&
         {
             Contracts::DebugExpects(not isNull(), "Null ptr access.");
 
@@ -795,7 +795,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto checkMutVal() const -> byte&
+        constexpr auto getMutSafe() const -> byte&
         {
             Contracts::Expects(not isNull(), "Null ptr access.");
 
@@ -806,7 +806,7 @@ namespace Atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename T>
-        constexpr auto mutValAs() const -> T&
+        constexpr auto getMutAs() const -> T&
             requires RPure<T>
         {
             Contracts::DebugExpects(not isNull(), "Null ptr access.");
@@ -818,7 +818,7 @@ namespace Atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename T>
-        constexpr auto checkMutValAs() const -> T&
+        constexpr auto getMutSafeAs() const -> T&
             requires RPure<T>
         {
             Contracts::Expects(not isNull(), "Null ptr access.");

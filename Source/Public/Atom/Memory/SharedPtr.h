@@ -229,12 +229,12 @@ namespace Atom
     private:
         constexpr auto _release()
         {
-            _state.mutVal().decreaseCount();
+            _state.getMut().decreaseCount();
 
-            if (_state.mutVal().getCount() == 0)
+            if (_state.getMut().getCount() == 0)
             {
-                _state.mutVal().destroy(_getMutPtr());
-                _state.mutVal().deallocSelf();
+                _state.getMut().destroy(_getMutPtr());
+                _state.getMut().deallocSelf();
             }
         }
 
@@ -261,7 +261,7 @@ namespace Atom
         {
             if (_state != nullptr)
             {
-                _state.mutVal().increaseCount();
+                _state.getMut().increaseCount();
             }
         }
 

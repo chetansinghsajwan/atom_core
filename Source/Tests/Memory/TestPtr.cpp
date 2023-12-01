@@ -27,7 +27,7 @@ TEST_CASE("Atom.Core.MutPtr")
         Ptr<i32> ptr = &val0;
 
         REQUIRE(ptr.unwrap() == &val0);
-        REQUIRE(ptr.val() == val0);
+        REQUIRE(ptr.get() == val0);
     }
 
     SECTION("Copy Constructor")
@@ -38,7 +38,7 @@ TEST_CASE("Atom.Core.MutPtr")
         Ptr<i32> ptr1 = ptr0;
 
         REQUIRE(ptr1.unwrap() == ptr0.unwrap());
-        REQUIRE(ptr1.val() == ptr0.val());
+        REQUIRE(ptr1.get() == ptr0.get());
     }
 
     SECTION("Destructor")
@@ -64,7 +64,7 @@ TEST_CASE("Atom.Core.MutPtr")
         ptr1 = &val0;
 
         REQUIRE(ptr1.unwrap() == ptr0.unwrap());
-        REQUIRE(ptr1.val() == ptr0.val());
+        REQUIRE(ptr1.get() == ptr0.get());
     }
 
     SECTION("Value Operator")
@@ -72,7 +72,7 @@ TEST_CASE("Atom.Core.MutPtr")
         Ptr<i32> ptr = nullptr;
         ptr = &val0;
 
-        REQUIRE(ptr.val() == val0);
+        REQUIRE(ptr.get() == val0);
         REQUIRE(ptr.unwrap() == &val0);
     }
 
@@ -80,10 +80,10 @@ TEST_CASE("Atom.Core.MutPtr")
     {
         Ptr<i32> ptr = nullptr;
 
-        REQUIRE_THROWS_AS(ptr.checkVal(), ContractViolationException);
+        REQUIRE_THROWS_AS(ptr.getSafe(), ContractViolationException);
 
         ptr = &val0;
-        REQUIRE(ptr.checkVal() == val0);
+        REQUIRE(ptr.getSafe() == val0);
     }
 
     SECTION("Casting")

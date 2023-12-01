@@ -691,14 +691,269 @@ namespace Atom
         constexpr This& operator=(T&& obj)
             requires(RCopyable<T>)
         {
-            _impl.setVal(fwd(obj));
-            return *this;
+            return _GetObject<T>().getMut();
         }
 
         /// ----------------------------------------------------------------------------------------
         /// # Destructor
         /// ----------------------------------------------------------------------------------------
-        constexpr ~CopyBox() {}
+        template <typename T>
+        auto GetObject() const -> const T&
+        {
+            return _GetObject<T>().get();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// # Null Equality Operator
+        /// ----------------------------------------------------------------------------------------
+        auto eq(NullType null) const -> bool
+        {
+            return _HasObject();
+        }
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////
+        //// Box Manipulation Functions
+        ////
+        ////////////////////////////////////////////////////////////////////////////////////////////
+
+        /// ----------------------------------------------------------------------------------------
+        /// Copies `other` `ObjectBox` into `this` `ObjectBox`.
+        /// ----------------------------------------------------------------------------------------
+        template <bool OtherMovable, bool OtherAllowNonMovableObject, usize OtherStackSize,
+            typename TOtherMemAllocator>
+            requires Copyable && ROtherBox<Copyable, OtherMovable, OtherAllowNonMovableObject>
+        auto _CopyBox(const ObjectBox<Copyable, OtherMovable, OtherAllowNonMovableObject,
+            OtherStackSize, TOtherMemAllocator>& other)
+        {
+            _CopyObject(other);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// Moves `other` `ObjectBox` into `this` `ObjectBox`.
+        /// ----------------------------------------------------------------------------------------
+        template <bool OtherCopyable, bool OtherMovable, bool OtherAllowNonMovableObject,
+            usize OtherStackSize, typename TOtherMemAllocator>
+            requires Movable && ROtherBox<OtherCopyable, OtherMovable, OtherAllowNonMovableObject>
+        auto _MoveBox(ObjectBox<OtherCopyable, OtherMovable, OtherAllowNonMovableObject,
+            OtherStackSize, TOtherMemAllocator>&& other)
+        {
+            // When allocator type is different, we cannot handle heap memory.
+            // So we only move the object.
+            if constexpr (!RSameAs<TAlloc, TOtherMemAllocator>)
+            {
+                _MoveObject(other);
+                other._DisposeBox();
+                return;
+            }
+
+            _DisposeObject();
+
+            const usize otherObjSize = other._object.size;
+            const bool otherIsUsingStackMem = other._IsUsingStackMem();
+            if (otherIsUsingStackMem && otherObjSize > StackSize && _heapMemSize >= otherObjSize
+                && other._heapMemSize < otherObjSize)
+            {
+                // We cannot deallocate our memory in the above scenario.
+                other._ReleaseMem();
+            }
+            else
+            {
+                _ReleaseMem();
+
+                _heapMem = mov(other._heapMem);
+                _heapMemSize = mov(other._heapMemSize);
+                _allocator = mov(other._allocator);
+            }
+
+            if (otherIsUsingStackMem)
+            {
+                _MoveObject(mov(other));
+            }
+            else
+            {
+                _CopyObjectData(other);
+            }
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// Destroy stored object and releases any allocated memory.
+        /// ----------------------------------------------------------------------------------------
+        auto _DisposeBox()
+        {
+            _DisposeObject();
+            _ReleaseMem();
+        }
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////
+        //// Object Manipulation Functions
+        ////
+        ////////////////////////////////////////////////////////////////////////////////////////////
+
+        /// ----------------------------------------------------------------------------------------
+        /// Stores the object.
+        ///
+        /// @TPARAM T Type of object to store.
+        ///
+        /// @PARAM[IN] obj Object to store.
+        /// @PARAM[IN] forceHeap (default = false) Force store on heap.
+        ///
+        /// @EXPECTS Previous object is not set.
+        /// ----------------------------------------------------------------------------------------
+        template <typename T>
+            requires RObject<T>
+        auto _InitObject(T&& obj, bool forceHeap = false)
+        {
+            _object.size = sizeof(T);
+            _object.type = &typeid(T);
+
+            _object.dtor = [](MutMemPtr<void> obj) { obj.template as<T>().get().T::~T(); };
+
+            if constexpr (Copyable)
+            {
+                _object.copy = [](MutMemPtr<void> obj, MemPtr<void> other) {
+                    new (obj.unwrap()) T(MemPtr<T>(other).get());
+                };
+            }
+
+            if constexpr (Movable)
+            {
+                if constexpr (RMoveConstructible<T>)
+                {
+                    _object.move = [](MutMemPtr<void> obj, MutMemPtr<void> other) {
+                        new (obj.unwrap()) T(mov(MutMemPtr<T>(other).getMut()));
+                    };
+                }
+                else
+                {
+                    _object.move = nullptr;
+                }
+            }
+
+            // If the object is not movable but AllowNonMovableObject is allowed,
+            // we allocate it on heap to avoid object's move constructor.
+            if constexpr (Movable && AllowNonMovableObject && !RMoveConstructible<T>)
+            {
+                forceHeap = true;
+            }
+
+            _object.obj = _AllocMem(_object.size, forceHeap);
+            new (_object.obj.unwrap()) T(forward<T>(obj));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// Destroys previous object if any and stores new object.
+        ///
+        /// @TPARAM T Type of object to store.
+        ///
+        /// @PARAM[IN] obj Object to store.
+        /// @PARAM[IN] forceHeap (default = false) Force store on heap.
+        /// ----------------------------------------------------------------------------------------
+        template <typename T>
+            requires RObject<T>
+        auto _SetObject(T&& obj, bool forceHeap = false)
+        {
+            _DisposeObject();
+            _InitObject(forward<T>(obj));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// Get pointer to stored object.
+        ///
+        /// @TPARAM T Type as which to get the object.
+        /// ----------------------------------------------------------------------------------------
+        template <typename T = void>
+        auto _GetObject() -> MutMemPtr<T>
+        {
+            return _object.obj;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// Get {TypeInfo} or stored object.
+        /// ----------------------------------------------------------------------------------------
+        auto _GetObjectType() const -> const TypeInfo&
+        {
+            return *_object.type;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// Checks if object is not {null}.
+        /// ----------------------------------------------------------------------------------------
+        auto _HasObject() const -> bool
+        {
+            return _object.obj != nullptr;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// Copies the object from `other` `ObjectBox` into `this` `ObjectBox`.
+        ///
+        /// @PARAM[IN] other `ObjectBox` of which to copy object.
+        /// @PARAM[IN] forceHeap (default = false) Force allocate object on heap.
+        /// ----------------------------------------------------------------------------------------
+        template <bool OtherMovable, bool OtherAllowNonMovableObject, usize OtherStackSize,
+            typename TOtherMemAllocator>
+            requires Copyable && ROtherBox<Copyable, OtherMovable, OtherAllowNonMovableObject>
+        auto _CopyObject(const ObjectBox<Copyable, OtherMovable, OtherAllowNonMovableObject,
+                             OtherStackSize, TOtherMemAllocator>& other,
+            bool forceHeap = false)
+        {
+            _DisposeObject();
+
+            _CopyObjectData(other);
+
+            if constexpr (Movable)
+            {
+                forceHeap = forceHeap || _object.move == nullptr;
+            }
+            else
+            {
+                forceHeap = true;
+            }
+
+            _object.obj = _AllocMem(_object.size, forceHeap);
+            _object.copy(_object.obj, other._object.obj);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// Moves the object from `other` `ObjectBox` into `this` `ObjectBox`.
+        ///
+        /// @PARAM[IN] other `ObjectBox` of which to move object.
+        /// @PARAM[IN] forceHeap (default = false) Force allocate object on heap.
+        ///
+        /// @NOTE This doesn't moves the memory from `other` `ObjectBox`.
+        /// ----------------------------------------------------------------------------------------
+        template <bool OtherCopyable, bool OtherMovable, bool OtherAllowNoneMovableObject,
+            usize OtherStackSize, typename TOtherMemAllocator>
+            requires Movable && ROtherBox<OtherCopyable, OtherMovable, OtherAllowNoneMovableObject>
+        auto _MoveObject(ObjectBox<OtherCopyable, OtherMovable, OtherAllowNoneMovableObject,
+                             OtherStackSize, TOtherMemAllocator>&& other,
+            bool forceHeap = false)
+        {
+            _DisposeObject();
+
+            _CopyObjectData(other);
+            forceHeap = forceHeap || _object.move == nullptr;
+
+            _object.obj = _AllocMem(_object.size, forceHeap);
+            _object.move(_object.obj, other._object.obj);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// Disposes current object by calling its destructor.
+        ///
+        /// @NOTE This does'n deallocates memory.
+        ///
+        /// @SEE _ReleaseMem().
+        /// ----------------------------------------------------------------------------------------
+        auto _DisposeObject()
+        {
+            if (_object.obj != nullptr)
+            {
+                _object.dtor(_object.obj);
+                _object = {};
+            }
+        }
 
     private:
         using Base::_impl;

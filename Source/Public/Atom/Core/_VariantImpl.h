@@ -355,13 +355,13 @@ namespace Atom
         template <typename T>
         constexpr auto _getValueAs() -> T&
         {
-            return _getDataAs<T>().mutVal();
+            return _getDataAs<T>().getMut();
         }
 
         template <typename T>
         constexpr auto _getValueAs() const -> const T&
         {
-            return _getDataAs<T>().val();
+            return _getDataAs<T>().get();
         }
 
         template <typename T>

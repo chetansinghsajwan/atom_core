@@ -401,12 +401,12 @@ namespace Atom
 
         constexpr auto _getValue() const -> const TVal&
         {
-            return _storage.getData().val();
+            return _storage.getData().get();
         }
 
         constexpr auto _getMutValue() -> TVal&
         {
-            return _storage.getData().mutVal();
+            return _storage.getData().getMut();
         }
 
         constexpr auto _destroyValue()
