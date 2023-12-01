@@ -1,7 +1,8 @@
 #pragma once
+#include "Atom/Memory/ObjHelper.h"
 #include "Atom/Memory/Ptr.h"
 #include "Atom/Memory/_SharedPtrState.h"
-#include "Atom/Memory/ObjHelper.h"
+#include "Atom/Memory/UniquePtr.h"
 #include "Atom/TTI.h"
 
 namespace Atom
@@ -148,7 +149,8 @@ namespace Atom
         /// # Value Constructor
         /// ----------------------------------------------------------------------------------------
         template <typename TDestroyer, typename TAllocator>
-        constexpr SharedPtr(MutPtr<TVal> ptr, TDestroyer destroyer = SharedPtrDefaultDestroyer<TVal>(),
+        constexpr SharedPtr(MutPtr<TVal> ptr,
+            TDestroyer destroyer = SharedPtrDefaultDestroyer<TVal>(),
             TAllocator allocator = SharedPtrDefaultAllocator())
             : Base(ptr)
         {
@@ -293,5 +295,15 @@ namespace Atom
     {
         return std::make_shared<T>(forward<TArgs>(args)...);
     }
-}
 
+    /// --------------------------------------------------------------------------------------------
+    ///
+    /// --------------------------------------------------------------------------------------------
+    template <typename TVal, typename TDestroyer>
+    template <typename TAllocator, typename TVal1>
+    constexpr auto UniquePtr<TVal, TDestroyer>::_toShared(TAllocator allocator)
+        -> SharedPtr<TVal1>
+    {
+        return MakeSharedWithAlloc(mov(allocator), _getMutPtr());
+    }
+}

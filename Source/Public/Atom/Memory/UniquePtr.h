@@ -1,5 +1,6 @@
 #pragma once
 #include "Atom/Memory/Ptr.h"
+#include "Atom/Memory/SharedPtr.decl.h"
 #include "Atom/TTI.h"
 
 namespace Atom
@@ -190,6 +191,26 @@ namespace Atom
             return _destroyer;
         }
 
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename T = TVal>
+        constexpr auto toShared() -> SharedPtr<T>
+            requires RSameOrDerivedFrom<T, TVal>
+        {
+            return _toShared();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename TAllocator, typename T = TVal>
+        constexpr auto toSharedWithAlloc(TAllocator allocator = TAllocator()) -> SharedPtr<T>
+            requires RSameOrDerivedFrom<T, TVal>
+        {
+            return _toShared();
+        }
+
     private:
         template <typename TVal1>
         constexpr auto _move(UniquePtr<TVal1>&& that)
@@ -219,7 +240,7 @@ namespace Atom
 
         constexpr auto _destroyValue()
         {
-            _destroyer(_mutBase());
+            _destroyer(_getMutPtr());
         }
 
         constexpr auto _getPtr() const -> const TVal*
@@ -237,15 +258,8 @@ namespace Atom
             return Base::set(ptr);
         }
 
-        constexpr auto _base() -> const Base&
-        {
-            return *this;
-        }
-
-        constexpr auto _mutBase() -> Base&
-        {
-            return *this;
-        }
+        template <typename TAllocator, typename TVal1>
+        constexpr auto _toShared(TAllocator allocator) -> SharedPtr<TVal1>;
 
     private:
         TDestroyer _destroyer;
@@ -257,8 +271,8 @@ namespace Atom
         return std::make_unique<T>(forward<TArgs>(args)...);
     }
 
-    template <typename T, typename TAlloc, typename... TArgs>
-    auto MakeUniqueWithAlloc(TAlloc alloc, TArgs&&... args) -> UniquePtr<T>
+    template <typename T, typename TAllocator, typename... TArgs>
+    auto MakeUniqueWithAlloc(TAllocator allocator, TArgs&&... args) -> UniquePtr<T>
     {
         return std::make_unique<T>(forward<TArgs>(args)...);
     }
