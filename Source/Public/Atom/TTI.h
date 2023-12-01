@@ -77,4 +77,7 @@ namespace Atom::TTI
 
     template <typename T>
     constexpr bool IsPure = not IsQualified<T> and not IsRef<T>;
+
+    template <typename T>
+    constexpr bool IsEmpty = std::is_empty_v<T>;
 }
