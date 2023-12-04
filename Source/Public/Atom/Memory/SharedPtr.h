@@ -1,8 +1,8 @@
 #pragma once
 #include "Atom/Memory/ObjHelper.h"
 #include "Atom/Memory/Ptr.h"
-#include "Atom/Memory/_SharedPtrState.h"
 #include "Atom/Memory/UniquePtr.h"
+#include "Atom/Memory/_SharedPtrState.h"
 #include "Atom/TTI.h"
 
 namespace Atom
@@ -177,6 +177,9 @@ namespace Atom
         }
 
     public:
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
         template <typename T, typename TDestroyer, typename TAllocator>
         constexpr auto set(MutPtr<T> ptr, TDestroyer destroyer = SharedPtrDefaultDestroyer<TVal>(),
             TAllocator allocator = SharedPtrDefaultAllocator())
@@ -207,6 +210,9 @@ namespace Atom
             }
         }
 
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
         constexpr auto set(std::nullptr_t)
         {
             _checkAndRelease();
@@ -215,6 +221,9 @@ namespace Atom
             _state = nullptr;
         }
 
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
         constexpr auto release() -> MutPtr<TVal>
         {
             _checkAndRelease();
@@ -224,7 +233,15 @@ namespace Atom
             _state = nullptr;
 
             return ptr;
-        };
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto getCount() const -> usize
+        {
+            return _state.eq(nullptr) ? 0 : _state.get().getCount();
+        }
 
     private:
         constexpr auto _release()
@@ -301,8 +318,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <typename TVal, typename TDestroyer>
     template <typename TAllocator, typename TVal1>
-    constexpr auto UniquePtr<TVal, TDestroyer>::_toShared(TAllocator allocator)
-        -> SharedPtr<TVal1>
+    constexpr auto UniquePtr<TVal, TDestroyer>::_toShared(TAllocator allocator) -> SharedPtr<TVal1>
     {
         return MakeSharedWithAlloc(mov(allocator), _getMutPtr());
     }

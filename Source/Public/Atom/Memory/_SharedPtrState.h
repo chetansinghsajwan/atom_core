@@ -54,7 +54,7 @@ namespace Atom
             _count--;
         }
 
-        constexpr auto getCount() -> usize
+        constexpr auto getCount() const -> usize
         {
             return _count;
         }
