@@ -10,7 +10,7 @@ namespace Atom
     public:
         auto Alloc(usize size) -> MutMemPtr<void>
         {
-            return std::malloc(size);
+            return std::malloc(size.unwrap());
         }
 
         auto Realloc(MutMemPtr<void> mem, usize size) -> MutMemPtr<void>

@@ -1,5 +1,6 @@
 #pragma once
-#include "Atom/Memory/Ptr.h"
+#include "Atom/Core.h"
+#include "Atom/Memory/ObjHelper.h"
 #include "Atom/Memory/SharedPtr.decl.h"
 #include "Atom/TTI.h"
 
@@ -38,7 +39,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// Type of value `This` holds.
         /// ----------------------------------------------------------------------------------------
-        using TVal = typename Base::TVal;
+        using TVal = TInVal;
 
         /// ----------------------------------------------------------------------------------------
         /// Type of destroyer used to destroy value and dealloc memory.
@@ -69,7 +70,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr UniquePtr(UniquePtr&& that)
             : Base(that.unwrap())
-            , _destroyer(mov(that._destoyer))
+            , _destroyer(mov(that._destroyer))
         {
             that._setPtr(nullptr);
         }
@@ -80,6 +81,7 @@ namespace Atom
         constexpr UniquePtr& operator=(UniquePtr&& that)
         {
             _move(mov(that));
+            return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -98,7 +100,7 @@ namespace Atom
         /// # Template Move Operaor
         /// ----------------------------------------------------------------------------------------
         template <typename TVal1>
-        constexpr UniquePtr& operator=(UniquePtr<TVal1>&& that)
+        constexpr UniquePtr& operator=(UniquePtr<TVal1, TDestroyer>&& that)
             requires RSameOrDerivedFrom<TVal1, TVal>
         {
             _move(mov(that));
@@ -107,19 +109,10 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Value Constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr UniquePtr(MutPtr<TVal> ptr, TDestroyer destroyer = TDestroyer())
+        constexpr explicit UniquePtr(MutPtr<TVal> ptr, TDestroyer destroyer = TDestroyer())
             : Base(ptr)
             , _destroyer(mov(destroyer))
         {}
-
-        /// ----------------------------------------------------------------------------------------
-        /// # Value Operator
-        /// ----------------------------------------------------------------------------------------
-        constexpr UniquePtr& operator=(MutPtr<TVal> ptr)
-        {
-            _checkAndDestroyValue();
-            _setPtr(ptr);
-        }
 
         /// ----------------------------------------------------------------------------------------
         /// # Destructor
@@ -143,7 +136,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto set(MutPtr<TVal> ptr, TDestroyer destroyer)
+        constexpr auto set(MutPtr<TVal> ptr, TDestroyer destroyer = TDestroyer())
         {
             _checkAndDestroyValue();
 
@@ -178,22 +171,6 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto destroyer() const -> const TDestroyer&
-        {
-            return _destroyer;
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto mutDestroyer() -> TDestroyer&
-        {
-            return _destroyer;
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
         template <typename T = TVal>
         constexpr auto toShared() -> SharedPtr<T>
             requires RSameOrDerivedFrom<T, TVal>
@@ -213,11 +190,11 @@ namespace Atom
 
     private:
         template <typename TVal1>
-        constexpr auto _move(UniquePtr<TVal1>&& that)
+        constexpr auto _move(UniquePtr<TVal1, TDestroyer>&& that)
         {
             _checkAndDestroyValue();
 
-            _setPtr(that._getPtr());
+            _setPtr(that._getMutPtr());
             _destroyer = mov(that._destroyer);
             that._setPtr(nullptr);
         }
@@ -250,7 +227,7 @@ namespace Atom
 
         constexpr auto _getMutPtr() -> TVal*
         {
-            return Base::mutUnwrap();
+            return Base::unwrap();
         }
 
         constexpr auto _setPtr(TVal* ptr)
