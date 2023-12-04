@@ -48,7 +48,7 @@ namespace Atom
     class _ISharedPtrState
     {
     public:
-        virtual auto destroy(MutMemPtr<void> ptr) -> void = 0;
+        virtual auto destroy(MutPtr<void> ptr) -> void = 0;
 
         virtual auto deallocSelf() -> void = 0;
 
@@ -88,7 +88,7 @@ namespace Atom
         {}
 
     public:
-        virtual auto destroy(MutMemPtr<void> ptr) -> void override final
+        virtual auto destroy(MutPtr<void> ptr) -> void override final
         {
             TDestroyerHelper::getMut()(ptr.template as<TVal>());
         }
