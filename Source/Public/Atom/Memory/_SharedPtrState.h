@@ -7,6 +7,10 @@ namespace Atom
     class EboHelper
     {
     public:
+        constexpr EboHelper(T val)
+            : _val(mov(val)) {}
+
+    public:
         constexpr auto get() const -> const T&
         {
             return _val;
@@ -22,15 +26,19 @@ namespace Atom
     };
 
     template <typename T>
-    requires TTI::IsEmpty<T>
+        requires TTI::IsEmpty<T>
     class EboHelper<T>: private T
-    {
+    {        
+    public:
+        constexpr EboHelper(T val)
+            : T(mov(val)) {}
+
     public:
         constexpr auto get() const -> const T&
         {
             return static_cast<const T&>(*this);
         }
-    
+
         constexpr auto getMut() -> T&
         {
             return static_cast<T&>(*this);
@@ -40,7 +48,7 @@ namespace Atom
     class _ISharedPtrState
     {
     public:
-        virtual auto destroy(MemPtr<void> ptr) -> void = 0;
+        virtual auto destroy(MutMemPtr<void> ptr) -> void = 0;
 
         virtual auto deallocSelf() -> void = 0;
 
@@ -63,7 +71,7 @@ namespace Atom
         usize _count;
     };
 
-    template <typename TDestroyer, typename TAllocator>
+    template <typename TVal, typename TDestroyer, typename TAllocator>
     class _SharedPtrState
         : public _ISharedPtrState
         , private EboHelper<TDestroyer>
@@ -74,14 +82,20 @@ namespace Atom
         using TAllocatorHelper = EboHelper<TAllocator>;
 
     public:
-        virtual auto destroy(MemPtr<void> ptr) -> void override final
+        constexpr _SharedPtrState(TDestroyer destroyer, TAllocator allocator)
+            : TDestroyerHelper(mov(destroyer))
+            , TAllocatorHelper(mov(allocator))
+        {}
+
+    public:
+        virtual auto destroy(MutMemPtr<void> ptr) -> void override final
         {
-            TDestroyerHelper::getMut()(ptr);
+            TDestroyerHelper::getMut()(ptr.template as<TVal>());
         }
 
         virtual auto deallocSelf() -> void override final
         {
-            TAllocatorHelper::getMut().dealloc(this);
+            TAllocatorHelper::getMut().Dealloc(this);
         }
     };
 }

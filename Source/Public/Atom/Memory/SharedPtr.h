@@ -148,10 +148,10 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Value Constructor
         /// ----------------------------------------------------------------------------------------
-        template <typename TDestroyer, typename TAllocator>
-        constexpr SharedPtr(MutPtr<TVal> ptr,
-            TDestroyer destroyer = SharedPtrDefaultDestroyer<TVal>(),
-            TAllocator allocator = SharedPtrDefaultAllocator())
+        template <typename TDestroyer = SharedPtrDefaultDestroyer<TVal>,
+            typename TAllocator = SharedPtrDefaultAllocator>
+        constexpr explicit SharedPtr(MutPtr<TVal> ptr, TDestroyer destroyer = TDestroyer(),
+            TAllocator allocator = TAllocator())
             : Base(ptr)
         {
             if (ptr.ne(nullptr))
@@ -180,9 +180,10 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename T, typename TDestroyer, typename TAllocator>
-        constexpr auto set(MutPtr<T> ptr, TDestroyer destroyer = SharedPtrDefaultDestroyer<TVal>(),
-            TAllocator allocator = SharedPtrDefaultAllocator())
+        template <typename T, typename TDestroyer = SharedPtrDefaultDestroyer<TVal>,
+            typename TAllocator = SharedPtrDefaultAllocator>
+        constexpr auto set(
+            MutPtr<T> ptr, TDestroyer destroyer = TDestroyer(), TAllocator allocator = TAllocator())
             requires RSameOrDerivedFrom<T, TVal>
         {
             if (_getPtr() != nullptr)
@@ -267,7 +268,7 @@ namespace Atom
         constexpr auto _createState(TDestroyer destroyer, TAllocator allocator)
             -> MutPtr<_ISharedPtrState>
         {
-            using State = _SharedPtrState<TDestroyer, TAllocator>();
+            using State = _SharedPtrState<TVal, TDestroyer, TAllocator>;
 
             MutPtr<void> mem = allocator.Alloc(sizeof(State));
             ObjHelper().ConstructAs<State>(mem, mov(destroyer), mov(allocator));
