@@ -97,7 +97,7 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Template Move Operaor
+        /// # Template Move Operator
         /// ----------------------------------------------------------------------------------------
         template <typename TVal1>
         constexpr UniquePtr& operator=(UniquePtr<TVal1, TDestroyer>&& that)
