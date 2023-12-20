@@ -150,6 +150,7 @@ namespace Atom
         constexpr Option& operator=(NullOption)
         {
             _impl.destroyValue();
+            return *this;
         }
 
         /// ----------------------------------------------------------------------------------------

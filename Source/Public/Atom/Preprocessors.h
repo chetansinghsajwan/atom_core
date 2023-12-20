@@ -110,7 +110,7 @@
 #if defined(ATOM_COMPILER_CLANG)
 #    define ATOM_PRAGMA_OPTIMIZE_OFF _Pragma("clang optimize off")
 #    define ATOM_PRAGMA_OPTIMIZE_ON _Pragma("clang optimize on")
-#elif defined(ATOM_COMPILER_GCC)
+#elif defined(ATOM_COMPILER_GNUC)
 #    define ATOM_PRAGMA_OPTIMIZE_OFF _Pragma("GCC push_options") _Pragma("GCC optimize(\"O0\")")
 #    define ATOM_PRAGMA_OPTIMIZE_ON _Pragma("GCC pop_options")
 #elif defined(ATOM_COMPILER_MSVC)
