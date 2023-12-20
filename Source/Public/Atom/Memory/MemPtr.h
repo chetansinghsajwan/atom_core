@@ -1,6 +1,6 @@
 #pragma once
-#include "Atom/Memory/Ptr.h"
 #include "Atom/Contracts.h"
+#include "Atom/Memory/Ptr.h"
 
 namespace Atom
 {
@@ -20,19 +20,21 @@ namespace Atom
 
     public:
         template <typename T>
-        constexpr MemPtrFunctions(Ptr<T> that):
-            Base(that) {}
+        constexpr MemPtrFunctions(Ptr<T> that)
+            : Base(that)
+        {}
 
         template <typename T>
-        constexpr MemPtrFunctions(MutPtr<T> that):
-            Base(that) {}
+        constexpr MemPtrFunctions(MutPtr<T> that)
+            : Base(that)
+        {}
 
         using Base::Base;
         using Base::operator=;
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         constexpr auto next() const -> TThis
         {
@@ -40,7 +42,7 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         constexpr auto prev() const -> TThis
         {
@@ -48,7 +50,7 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         constexpr auto next(usize i) const -> TThis
         {
@@ -56,7 +58,7 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         constexpr auto prev(usize i) const -> TThis
         {
@@ -64,7 +66,7 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         constexpr auto move(isize i) const -> TThis
         {
@@ -72,7 +74,7 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         constexpr auto move(usize i) const -> TThis
         {
@@ -80,7 +82,7 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         constexpr auto sub(This that) const -> TThis
         {
@@ -144,7 +146,7 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         constexpr auto gt(This ptr) const -> bool
         {
@@ -152,7 +154,7 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         constexpr auto ge(This ptr) const -> bool
         {
@@ -160,7 +162,7 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         constexpr auto lt(This ptr) const -> bool
         {
@@ -168,7 +170,7 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         constexpr auto le(This ptr) const -> bool
         {
@@ -220,7 +222,7 @@ namespace Atom
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
     template <typename T>
     class MemPtr: public MemPtrFunctions<Ptr<T>, MemPtr<T>>
@@ -229,8 +231,9 @@ namespace Atom
         using Base = MemPtrFunctions<Ptr<T>, This>;
 
     public:
-        constexpr MemPtr(const Ptr<T>& that):
-            Base(that) {}
+        constexpr MemPtr(const Ptr<T>& that)
+            : Base(that)
+        {}
 
         using Base::Base;
         using Base::operator=;
@@ -249,8 +252,9 @@ namespace Atom
         using Base = MemPtrFunctions<MutPtr<T>, This>;
 
     public:
-        constexpr MutMemPtr(const MutPtr<T>& that):
-            Base(that) {}
+        constexpr MutMemPtr(const MutPtr<T>& that)
+            : Base(that)
+        {}
 
         using Base::Base;
         using Base::operator=;
