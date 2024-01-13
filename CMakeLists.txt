@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.5)
 project(Atom.Core VERSION 0.1.0 LANGUAGES CXX C)
 
+include("$ENV{WJCRYPT}/CMakeLists.txt")
+
 # --------------------------------------------------------------------------------------------------
 # C++20 Global Config
 # --------------------------------------------------------------------------------------------------
