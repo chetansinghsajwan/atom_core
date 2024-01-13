@@ -9,13 +9,6 @@
     let
         system = "x86_64-linux";
         pkgs = nixpkgs.legacyPackages.${system};
-
-	wjcrypt = pkgs.fetchFromGitHub {
-	    owner = "WaterJuice";
-	    repo = "WjCryptLib";
-	    rev = "Version_2.3.0";
-	    sha256 = "sha256-n+Lxj4zubuLjTAJeV7wIIbssV1EICsa1rWjvOYlDh6U";
-	};
     in
     {
         devShells.${system}.default = pkgs.mkShell {
@@ -24,16 +17,10 @@
                 cmake
                 gnumake
                 ninja
-		fmt
-                catch2
-		gcc13
-		clang_17
-		clang-tools_17
+		        gcc13
+		        clang_17
+		        clang-tools_17
             ];
-
-            env = {
-                "WJCRYPT" = wjcrypt;
-            };
         };
     };
 }

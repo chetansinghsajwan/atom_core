@@ -1,28 +1,50 @@
 cmake_minimum_required(VERSION 3.5)
-project(Atom.Core VERSION 0.1.0 LANGUAGES CXX C)
+project(Atom.Core VERSION 0.1.0 LANGUAGES CXX)
 
-include("$ENV{WJCRYPT}/CMakeLists.txt")
+include(FetchContent)
+
+FetchContent_Declare(
+    catch2
+    GIT_REPOSITORY "https://github.com/catchorg/Catch2.git"
+    GIT_TAG        "v3.5.1"
+    GIT_SHALLOW    true
+)
+
+FetchContent_Declare(
+    fmt
+    GIT_REPOSITORY "https://github.com/fmtlib/fmt.git"
+    GIT_TAG        "10.2.1"
+    GIT_SHALLOW    true
+)
+
+FetchContent_Declare(
+    wjcrypt
+    GIT_REPOSITORY "https://github.com/WaterJuice/WjCryptLib.git"
+    GIT_TAG        "Version_2.3.0"
+    GIT_SHALLOW    true
+)
+
+FetchContent_MakeAvailable(catch2 fmt wjcrypt)
 
 # --------------------------------------------------------------------------------------------------
 # C++20 Global Config
 # --------------------------------------------------------------------------------------------------
 # set(CMAKE_EXPERIMENTAL_CXX_MODULE_CMAKE_API "2182bf5c-ef0d-489a-91da-49dbc3090d2a")
 # set(CMAKE_EXPERIMENTAL_CXX_MODULE_DYNDEP "1")
-set(CMAKE_CXX_STANDARD "23")
-set(CMAKE_CXX_STANDARD_REQUIRED "ON")
+set(cmake_cxx_standard "23")
+set(cmake_cxx_standard_required "ON")
 enable_testing()
 
 # --------------------------------------------------------------------------------------------------
 # Atom.Core
 # --------------------------------------------------------------------------------------------------
 
-file(GLOB_RECURSE SOURCES "Source/Private/**.cpp"
+file(GLOB_RECURSE sources "Source/Private/**.cpp"
     "Source/Private/**.h" "Public/**.h")
 
-add_library(Atom.Core STATIC ${SOURCES})
+add_library(Atom.Core STATIC ${sources})
 target_include_directories(Atom.Core PRIVATE "Source/Private/")
 target_include_directories(Atom.Core PUBLIC "Source/Public/")
-target_compile_definitions(Atom.Core PRIVATE ATOM_EXPORT)
 
 target_link_libraries(Atom.Core PUBLIC WjCryptLib)
 target_link_libraries(Atom.Core PUBLIC fmt::fmt-header-only)
