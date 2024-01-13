@@ -1,13 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 project(Atom.Core VERSION 0.1.0 LANGUAGES CXX C)
 
-include(CMake/CPM.cmake)
-set(CPM_SOURCE_CACHE "${CMAKE_SOURCE_DIR}/Build/CPMCache")
-
-CPMAddPackage("gh:fmtlib/fmt#10.1.0")
-CPMAddPackage("gh:catchorg/Catch2@3.4.0")
-CPMAddPackage("gh:WaterJuice/WjCryptLib#Version_2.3.0")
-
 # --------------------------------------------------------------------------------------------------
 # C++20 Global Config
 # --------------------------------------------------------------------------------------------------
