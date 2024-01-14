@@ -17,8 +17,9 @@ namespace Atom
         using TIterEnd = TIterEnd_;
 
     public:
-        constexpr _BasicRangeFromIterPair(TIter it, TIterEnd itEnd):
-            _it{ mov(it) }, _itEnd{ mov(itEnd) }
+        constexpr _BasicRangeFromIterPair(TIter it, TIterEnd itEnd)
+            : _it{ mov(it) }
+            , _itEnd{ mov(itEnd) }
         {}
 
     public:
@@ -59,8 +60,8 @@ namespace Atom
         using TMutIterEnd = TMutIterEnd_;
 
     public:
-        constexpr _BasicMutRangeFromIterPair(TMutIter it, TMutIterEnd itEnd):
-            Base(mov(it), mov(itEnd))
+        constexpr _BasicMutRangeFromIterPair(TMutIter it, TMutIterEnd itEnd)
+            : Base(mov(it), mov(itEnd))
         {}
 
     public:
@@ -151,8 +152,8 @@ namespace Atom
         using Base = _RangeFromIterExtended<TIter, TIterEnd>::T;
 
     public:
-        constexpr _RangeFromIterPair(TIter it, TIterEnd itEnd):
-            Base(mov(it), mov(itEnd))
+        constexpr _RangeFromIterPair(TIter it, TIterEnd itEnd)
+            : Base(mov(it), mov(itEnd))
         {}
     };
 
@@ -162,8 +163,8 @@ namespace Atom
         using Base = _MutRangeFromIterExtended<TMutIter, TMutIterEnd>::T;
 
     public:
-        constexpr _MutRangeFromIterPair(TMutIter it, TMutIterEnd itEnd):
-            Base(mov(it), mov(itEnd))
+        constexpr _MutRangeFromIterPair(TMutIter it, TMutIterEnd itEnd)
+            : Base(mov(it), mov(itEnd))
         {}
     };
 
@@ -198,7 +199,8 @@ namespace Atom
     template <typename T>
     constexpr auto MakeRange(std::initializer_list<T> list)
     {
-        return _RangeFromIterPair(ArrayIter(list.begin()), ArrayIter(list.end()));
+        return _RangeFromIterPair(
+            ArrayIter(MemPtr<T>(list.begin())), ArrayIter(MemPtr<T>(list.end())));
     }
 
     /// --------------------------------------------------------------------------------------------
@@ -252,7 +254,8 @@ namespace Atom
     template <typename T, usize count>
     constexpr auto MakeRange(T (&arr)[count])
     {
-        return _MutRangeFromIterPair(MutArrayIter(MutMemPtr(arr)), MutArrayIter(MutMemPtr(arr) + count));
+        return _MutRangeFromIterPair(
+            MutArrayIter(MutMemPtr(arr)), MutArrayIter(MutMemPtr(arr) + count));
     }
 
     /// --------------------------------------------------------------------------------------------
