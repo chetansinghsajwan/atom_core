@@ -43,9 +43,12 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         using TVal = typename Base::TVal;
 
-    public:
+    private:
+        template <typename T>
+        friend class SharedPtr;
+
         template <typename T, typename TAllocator, typename... TArgs>
-        friend auto MakeSharedWithAlloc(TAllocator alloc, TArgs&&... args) -> SharedPtr<TVal>;
+        friend auto MakeSharedWithAlloc(TAllocator alloc, TArgs&&... args) -> SharedPtr<T>;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -321,7 +324,7 @@ namespace Atom
     template <typename T, typename... TArgs>
     auto MakeShared(TArgs&&... args) -> SharedPtr<T>
     {
-        return MakeSharedWithAlloc<T, SharedPtrDefaultAllocator>(forward<TArgs>(args)...);
+        return MakeSharedWithAlloc<T>(SharedPtrDefaultAllocator(), forward<TArgs>(args)...);
     }
 
     /// --------------------------------------------------------------------------------------------
@@ -329,6 +332,7 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     template <typename T, typename TAllocator, typename... TArgs>
     auto MakeSharedWithAlloc(TAllocator allocator, TArgs&&... args) -> SharedPtr<T>
+
     {
         using State = _SharedPtrState<T, SharedPtrDefaultDestroyer<T>, SharedPtrDefaultAllocator>;
 
@@ -337,7 +341,7 @@ namespace Atom
         MutPtr<T> valuePtr = mem.next(sizeof(State)).as<T>();
 
         ObjHelper().Construct(valuePtr, forward<TArgs>(args)...);
-        return SharedPtr(_SharedPtrPrivateCtor(), statePtr, valuePtr);
+        return SharedPtr<T>(_SharedPtrPrivateCtor(), statePtr, valuePtr);
     }
 }
 
