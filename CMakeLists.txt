@@ -31,18 +31,18 @@ FetchContent_MakeAvailable(catch2 fmt wjcrypt)
 # --------------------------------------------------------------------------------------------------
 # set(CMAKE_EXPERIMENTAL_CXX_MODULE_CMAKE_API "2182bf5c-ef0d-489a-91da-49dbc3090d2a")
 # set(CMAKE_EXPERIMENTAL_CXX_MODULE_DYNDEP "1")
-set(cmake_cxx_standard "23")
-set(cmake_cxx_standard_required "ON")
+set(CMAKE_CXX_STANDARD "23")
+set(CMAKE_CXX_STANDARD_REQUIRED "ON")
 enable_testing()
 
 # --------------------------------------------------------------------------------------------------
 # Atom.Core
 # --------------------------------------------------------------------------------------------------
 
-file(GLOB_RECURSE sources "Source/Private/**.cpp"
+file(GLOB_RECURSE SOURCES "Source/Private/**.cpp"
     "Source/Private/**.h" "Public/**.h")
 
-add_library(Atom.Core STATIC ${sources})
+add_library(Atom.Core STATIC ${SOURCES})
 target_include_directories(Atom.Core PRIVATE "Source/Private/")
 target_include_directories(Atom.Core PUBLIC "Source/Public/")
 
