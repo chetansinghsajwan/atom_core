@@ -10,6 +10,9 @@ namespace Atom
     class SharedPtrDefaultAllocator: public DefaultMemAllocator
     {};
 
+    class _SharedPtrPrivateCtor
+    {};
+
     template <typename T>
     class SharedPtrDefaultDestroyer
     {
@@ -39,6 +42,10 @@ namespace Atom
         /// Type of value `This` holds.
         /// ----------------------------------------------------------------------------------------
         using TVal = typename Base::TVal;
+
+    public:
+        template <typename T, typename TAllocator, typename... TArgs>
+        friend auto MakeSharedWithAlloc(TAllocator alloc, TArgs&&... args) -> SharedPtr<TVal>;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -176,6 +183,12 @@ namespace Atom
             _checkAndRelease();
         }
 
+    private:
+        constexpr SharedPtr(_SharedPtrPrivateCtor, MutPtr<_ISharedPtrState> state, MutPtr<TVal> ptr)
+            : Base(ptr)
+            , _state(state)
+        {}
+
     public:
         /// ----------------------------------------------------------------------------------------
         ///
@@ -302,16 +315,29 @@ namespace Atom
         MutPtr<_ISharedPtrState> _state;
     };
 
+    /// --------------------------------------------------------------------------------------------
+    ///
+    /// --------------------------------------------------------------------------------------------
     template <typename T, typename... TArgs>
     auto MakeShared(TArgs&&... args) -> SharedPtr<T>
     {
-        return std::make_shared<T>(forward<TArgs>(args)...);
+        return MakeSharedWithAlloc<T, SharedPtrDefaultAllocator>(forward<TArgs>(args)...);
     }
 
+    /// --------------------------------------------------------------------------------------------
+    ///
+    /// --------------------------------------------------------------------------------------------
     template <typename T, typename TAllocator, typename... TArgs>
     auto MakeSharedWithAlloc(TAllocator allocator, TArgs&&... args) -> SharedPtr<T>
     {
-        return std::make_shared<T>(forward<TArgs>(args)...);
+        using State = _SharedPtrState<T, SharedPtrDefaultDestroyer<T>, SharedPtrDefaultAllocator>;
+
+        MutMemPtr<void> mem = allocator.Alloc(sizeof(State) + sizeof(T));
+        MutPtr<State> statePtr = mem;
+        MutPtr<T> valuePtr = mem.next(sizeof(State)).as<T>();
+
+        ObjHelper().Construct(valuePtr, forward<TArgs>(args)...);
+        return SharedPtr(_SharedPtrPrivateCtor(), statePtr, valuePtr);
     }
 }
 

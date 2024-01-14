@@ -7,7 +7,7 @@ namespace Atom
     {
     public:
         template <typename T, typename... TArgs>
-        constexpr auto ConstructAs(MutPtr<T> mem, TArgs&&... args) const
+        constexpr auto ConstructAs(MutPtr<void> mem, TArgs&&... args) const
         {
             Contracts::DebugExpects(mem != nullptr);
 
