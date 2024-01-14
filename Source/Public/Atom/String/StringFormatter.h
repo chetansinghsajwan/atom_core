@@ -64,8 +64,8 @@ namespace Atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename TOut, RStringFmtArgFmtable... TArgs>
-            requires ROutput<TOut, Char>
         auto FmtTo(TOut out, FmtString<TArgs...> fmt, TArgs&&... args)
+            requires ROutput<TOut, Char>
         {
             class _OutIterWrap
             {
@@ -80,9 +80,9 @@ namespace Atom
                     return *this;
                 }
 
-                auto operator=(Char ch) -> _OutIterWrap&
+                auto operator=(char ch) -> _OutIterWrap&
                 {
-                    *out += ch;
+                    *out += Char(ch);
                     return *this;
                 }
 
@@ -90,12 +90,12 @@ namespace Atom
                 TOut* out;
             };
 
-            fmt::detail::iterator_buffer<_OutIterWrap, Char> buf{ _OutIterWrap{ &out } };
+            fmt::detail::iterator_buffer<_OutIterWrap, char> buf{ _OutIterWrap{ &out } };
 
             try
             {
-                fmt::detail::vformat_to<Char>(buf, fmt,
-                    fmt::make_format_args<fmt::buffer_context<Char>>(args...),
+                fmt::detail::vformat_to<char>(buf, fmt,
+                    fmt::make_format_args<fmt::buffer_context<char>>(args...),
                     fmt::detail::locale_ref{});
             }
             catch (const _FmtFmtEx& err)
