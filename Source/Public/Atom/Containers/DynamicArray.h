@@ -26,7 +26,7 @@ namespace Atom
         using TAlloc = TAlloc_;
         using TIter = ArrayIter<TElem>;
         using TIterEnd = TIter;
-        using TMutIter = ArrayIter<TElem>;
+        using TMutIter = MutArrayIter<TElem>;
         using TMutIterEnd = TMutIter;
 
     public:

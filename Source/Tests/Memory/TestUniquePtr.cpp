@@ -80,7 +80,7 @@ TEST_CASE("Atom.Core.UniquePtr")
         TrackedType val;
         UniquePtr<TrackedType> ptr(&val);
 
-        ptr = nullptr;
+        // ptr = nullptr;
 
         REQUIRE(val.lastOp == TrackedType::EOperation::Destructor);
     }

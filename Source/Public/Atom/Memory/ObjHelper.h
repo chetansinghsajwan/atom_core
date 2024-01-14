@@ -11,7 +11,7 @@ namespace Atom
         {
             Contracts::DebugExpects(mem != nullptr);
 
-            std::construct_at(mem.unwrap(), forward<TArgs>(args)...);
+            std::construct_at(mem.as<T>().unwrap(), forward<TArgs>(args)...);
         }
 
         template <typename T, typename... TArgs>
