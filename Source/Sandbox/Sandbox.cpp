@@ -1,9 +1,8 @@
 #include "Atom/CoreAll.h"
-#include <iostream>
-
+import atom.core;
 using namespace Atom;
 
-auto PrintCmdArgs(i32 argc, char** args)
+auto print_cmd_args(i32 argc, char** args)
 {
     for (i32 i = 1; i < argc; i++)
     {
@@ -13,7 +12,7 @@ auto PrintCmdArgs(i32 argc, char** args)
 
 auto main(int argc, char** args) -> int
 {
-    PrintCmdArgs(argc, args);
+    print_cmd_args(argc, args);
 
     return 0;
 }
