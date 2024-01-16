@@ -1,7 +1,7 @@
 #pragma once
 #include "Atom/Contracts.h"
 
-#include <algorithm>
+// #include <algorithm>
 
 namespace Atom
 {

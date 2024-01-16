@@ -1,7 +1,7 @@
 #include "Atom/Core/Variant.h"
 #include "Helpers/TrackedType.h"
 #include "catch2/catch_all.hpp"
-#include <catch2/matchers/catch_matchers_floating_point.hpp>
+#include "catch2/matchers/catch_matchers_floating_point.hpp"
 
 using namespace Atom;
 using namespace Atom::Tests;

@@ -1,6 +1,6 @@
 #pragma once
-#include <source_location>
-#include <string_view>
+// #include <source_location>
+// #include <string_view>
 
 #include "Atom/Core/BuildConfig.h"
 #include "Atom/Core/LangExtensions.h"

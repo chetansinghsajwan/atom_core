@@ -4,8 +4,8 @@
 #include "Primitives/Float.h"
 #include "Atom/Memory/MemPtr.h"
 
-#include <string_view>
-#include <typeinfo>
+// #include <typeinfo>
+// #include <string_view>
 
 /// ------------------------------------------------------------------------------------------------
 /// # To Do
@@ -18,10 +18,10 @@ namespace Atom
     // static constexpr NullPtr nullptr;
 
     using NullVal = std::nullptr_t;
-    static constexpr NullVal nullval = NullVal();
+    constexpr NullVal nullval = NullVal();
 
     using NullPos = std::nullptr_t;
-    static constexpr NullPos nullpos = NullPos();
+    constexpr NullPos nullpos = NullPos();
 
     using NullType = std::nullptr_t;
     using TypeInfo = std::type_info;

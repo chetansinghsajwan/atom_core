@@ -3,7 +3,7 @@
 #include "RangeReq.h"
 #include "StdIterWrapForAtomIter.h"
 
-#include <algorithm>
+// #include <algorithm>
 
 namespace Atom
 {

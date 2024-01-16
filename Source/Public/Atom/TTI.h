@@ -1,5 +1,5 @@
 #pragma once
-#include <type_traits>
+// #include <type_traits>
 
 #include "Atom/Core/BuildConfig.h"
 #include "Atom/Core/LangExtensions.h"

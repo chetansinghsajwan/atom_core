@@ -46,11 +46,10 @@ target_sources(Atom.Core
     PUBLIC FILE_SET modules TYPE CXX_MODULES FILES
     "${SOURCES}"
 )
-target_include_directories(Atom.Core PRIVATE "Source/Private/")
-target_include_directories(Atom.Core PUBLIC "Source/Public/")
+target_include_directories(Atom.Core PRIVATE "Source/Public/")
 
-target_link_libraries(Atom.Core PUBLIC WjCryptLib)
-target_link_libraries(Atom.Core PUBLIC fmt::fmt-header-only)
+target_link_libraries(Atom.Core PRIVATE WjCryptLib)
+target_link_libraries(Atom.Core PRIVATE fmt::fmt-header-only)
 
 # --------------------------------------------------------------------------------------------------
 # Atom.Core.Tests

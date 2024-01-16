@@ -3,8 +3,8 @@
 #include "Atom/Core/Requirements.h"
 #include "Byte.h"
 
-#include <cmath>
-#include <numeric>
+// #include <cmath>
+// #include <numeric>
 
 /// ------------------------------------------------------------------------------------------------
 /// # To Do
