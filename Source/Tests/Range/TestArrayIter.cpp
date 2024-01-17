@@ -1,4 +1,4 @@
-#include "Atom/Range/ArrayIter.h"
+import atom.core;
 #include "Range/IterReqChecks.h"
 
 using namespace Atom;

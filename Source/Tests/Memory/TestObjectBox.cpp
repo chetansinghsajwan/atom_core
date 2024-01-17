@@ -1,6 +1,5 @@
-#include "Atom/Contracts.h"
-#include "Atom/Memory/ObjectBox.h"
-#include "catch2/catch_all.hpp"
+import atom.core;
+#include "catch2/catch_test_macros.hpp"
 
 using namespace Atom;
 

@@ -1,7 +1,5 @@
-#include "catch2/catch_all.hpp"
-
-#include "Atom/Uuid/Uuid.h"
-#include "Atom/String/StringView.h"
+import atom.core;
+#include "catch2/catch_test_macros.hpp"
 
 using namespace Atom;
 

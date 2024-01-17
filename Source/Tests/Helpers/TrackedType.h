@@ -1,5 +1,4 @@
 #pragma once
-#include "Atom/Core.h"
 #include "catch2/catch_tostring.hpp"
 
 namespace Atom::Tests

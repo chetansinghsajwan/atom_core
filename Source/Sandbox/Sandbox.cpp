@@ -1,4 +1,5 @@
 import atom.core;
+
 using namespace Atom;
 
 auto print_cmd_args(i32 argc, char** args)

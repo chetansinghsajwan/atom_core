@@ -1,4 +1,4 @@
-#include "Atom/Range/IterReqMocks.h"
+import atom.core;
 #include "Range/IterReqChecks.h"
 
 using namespace Atom;

@@ -1,12 +1,12 @@
 #pragma once
-#include "Atom/Core.h"
+import atom.core;
 
 namespace Atom::Tests
 {
-    enum class ECustomTypeFlags : uint64_t
+    enum class ECustomTypeFlags : _u64
     {
         None = 0,
-        All = uint64_t(-1),
+        All = _u64(-1),
 
         DefaultConstructor = 1 << 0,
         CopyConstructor = 1 << 1,
@@ -34,13 +34,13 @@ namespace Atom::Tests
     constexpr auto operator|(const ECustomTypeFlags& flags, const ECustomTypeFlags& flagsToAdd)
         -> ECustomTypeFlags
     {
-        return (ECustomTypeFlags)((uint64_t)flags | (uint64_t)flagsToAdd);
+        return (ECustomTypeFlags)((_u64)flags | (_u64)flagsToAdd);
     }
 
     constexpr auto operator&(const ECustomTypeFlags& flags, const ECustomTypeFlags& flagsToAdd)
         -> ECustomTypeFlags
     {
-        return (ECustomTypeFlags)((uint64_t)flags & (uint64_t)flagsToAdd);
+        return (ECustomTypeFlags)((_u64)flags & (_u64)flagsToAdd);
     }
 
     class EnumFlagUtils

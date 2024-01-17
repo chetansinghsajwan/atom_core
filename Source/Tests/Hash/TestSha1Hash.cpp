@@ -1,10 +1,5 @@
-#include "catch2/catch_all.hpp"
-
-#include "Atom/Hash/Sha1Hash.h"
-#include "Atom/Hash/Sha1HashGenerator.h"
-#include "Atom/Hash/Sha1HashParser.h"
-#include "Atom/Hash/Sha1HashStringifier.h"
-#include "Atom/String.h"
+import atom.core;
+#include "catch2/catch_test_macros.hpp"
 
 using namespace Atom;
 

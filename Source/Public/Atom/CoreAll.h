@@ -16,3 +16,4 @@
 #include "String.h"
 #include "TTI.h"
 #include "Uuid.h"
+#include "Hash.h"

@@ -1,7 +1,7 @@
-#include "Atom/Core/Option.h"
+import atom.core;
 #include "Helpers/CustomType.h"
 #include "Helpers/TrackedType.h"
-#include "catch2/catch_all.hpp"
+#include "catch2/catch_test_macros.hpp"
 
 using namespace Atom;
 using namespace Atom::Tests;

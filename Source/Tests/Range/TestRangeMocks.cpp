@@ -1,4 +1,4 @@
-#include "Atom/Range/RangeReqMocks.h"
+import atom.core;
 #include "Range/RangeReqChecks.h"
 
 using namespace Atom;
