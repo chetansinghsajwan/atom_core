@@ -242,15 +242,15 @@ namespace atom
         tdestroyer _destroyer;
     };
 
-    template <typename type, typename... args_type>
-    auto make_unique(args_type&&... args) -> unique_ptr<type>
+    template <typename type, typename... arg_types>
+    auto make_unique(arg_types&&... args) -> unique_ptr<type>
     {
-        return std::make_unique<type>(forward<args_type>(args)...);
+        return std::make_unique<type>(forward<arg_types>(args)...);
     }
 
-    template <typename type, typename tallocator, typename... args_type>
-    auto make_unique_with_alloc(tallocator allocator, args_type&&... args) -> unique_ptr<type>
+    template <typename type, typename tallocator, typename... arg_types>
+    auto make_unique_with_alloc(tallocator allocator, arg_types&&... args) -> unique_ptr<type>
     {
-        return std::make_unique<type>(forward<args_type>(args)...);
+        return std::make_unique<type>(forward<arg_types>(args)...);
     }
 }

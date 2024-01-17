@@ -101,14 +101,14 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     /// ensures `type` is `constructible` using `args...`.
     /// --------------------------------------------------------------------------------------------
-    template <typename type, typename... args_type>
-    concept rconstructible = requires(args_type&&... args) { type(forward<args_type>(args)...); };
+    template <typename type, typename... arg_types>
+    concept rconstructible = requires(arg_types&&... args) { type(forward<arg_types>(args)...); };
 
     /// --------------------------------------------------------------------------------------------
     /// ensures `type` is `trivially_constructible` using `args...`.
     /// --------------------------------------------------------------------------------------------
-    template <typename type, typename... args_type>
-    concept rtrivially_constructible = std::is_trivially_constructible_v<type, args_type...>;
+    template <typename type, typename... arg_types>
+    concept rtrivially_constructible = std::is_trivially_constructible_v<type, arg_types...>;
 
     /// --------------------------------------------------------------------------------------------
     /// ensures `type` is `default_constructible`.

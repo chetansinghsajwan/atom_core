@@ -112,10 +112,10 @@ namespace atom
         /// # expects
         /// - current value is null.
         /// ----------------------------------------------------------------------------------------
-        template <typename type, typename... args_type>
-        constexpr auto construct_value_by_type(args_type&&... args)
+        template <typename type, typename... arg_types>
+        constexpr auto construct_value_by_type(arg_types&&... args)
         {
-            _construct_value_as<type>(forward<args_type>(args)...);
+            _construct_value_as<type>(forward<arg_types>(args)...);
             _index = get_index_for_type<type>();
         }
 
@@ -125,10 +125,10 @@ namespace atom
         /// # expects
         /// - current value is null.
         /// ----------------------------------------------------------------------------------------
-        template <usize i, typename... args_type>
-        constexpr auto construct_value_by_index(args_type&&... args)
+        template <usize i, typename... arg_types>
+        constexpr auto construct_value_by_index(arg_types&&... args)
         {
-            construct_value_by_type<type_at_index<i>>(forward<args_type>(args)...);
+            construct_value_by_type<type_at_index<i>>(forward<arg_types>(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -137,12 +137,12 @@ namespace atom
         /// # expects
         /// - current value is null.
         /// ----------------------------------------------------------------------------------------
-        template <typename type, typename... args_type>
-        constexpr auto emplace_value_by_type(args_type&&... args)
+        template <typename type, typename... arg_types>
+        constexpr auto emplace_value_by_type(arg_types&&... args)
         {
             destroy_value();
 
-            _construct_value_as<type>(forward<args_type>(args)...);
+            _construct_value_as<type>(forward<arg_types>(args)...);
             _index = get_index_for_type<type>();
         }
 
@@ -152,10 +152,10 @@ namespace atom
         /// # expects
         /// - current value is null.
         /// ----------------------------------------------------------------------------------------
-        template <usize i, typename... args_type>
-        constexpr auto emplace_value_by_index(args_type&&... args)
+        template <usize i, typename... arg_types>
+        constexpr auto emplace_value_by_index(arg_types&&... args)
         {
-            emplace_value_by_type<type_at_index<i>>(forward<args_type>(args)...);
+            emplace_value_by_type<type_at_index<i>>(forward<arg_types>(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -334,10 +334,10 @@ namespace atom
             _destruct_value_as<type>();
         }
 
-        template <typename type, typename... args_type>
-        constexpr auto _construct_value_as(args_type&&... args)
+        template <typename type, typename... arg_types>
+        constexpr auto _construct_value_as(arg_types&&... args)
         {
-            obj_helper().construct(_get_data_as<type>(), forward<args_type>(args)...);
+            obj_helper().construct(_get_data_as<type>(), forward<arg_types>(args)...);
         }
 
         template <typename type, typename t1>

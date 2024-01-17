@@ -20,8 +20,8 @@ namespace atom
     inline auto _contract_check_impl(
         _contract_type type, std::source_location src, std::string_view msg) -> void;
 
-    template <_contract_type type, typename... args_type>
-    constexpr auto _contract_check(std::source_location src, bool assert, args_type&&... args) -> void
+    template <_contract_type type, typename... arg_types>
+    constexpr auto _contract_check(std::source_location src, bool assert, arg_types&&... args) -> void
     {
         if constexpr (build_config::is_mode_debug() and type == _contract_type::debug_pre_condition
                       or type == _contract_type::debug_assertion
@@ -103,7 +103,7 @@ namespace atom::system
     /// ------------------------------------------------------------------------------------------------
     ///
     /// ------------------------------------------------------------------------------------------------
-    template <typename... args_type>
+    template <typename... arg_types>
     constexpr auto panic(
         std::string_view msg = "", std::source_location _src = std::source_location::current())
     {

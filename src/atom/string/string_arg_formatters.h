@@ -16,8 +16,8 @@ namespace atom
     using _fmt_fmt_ctx_out = ::fmt::detail::buffer_appender<char>;
     using _fmt_fmt_ctx = ::fmt::basic_format_context<_fmt_fmt_ctx_out, char>;
 
-    template <typename... args_type>
-    using _fmt_fmt_string = ::fmt::basic_format_string<char, fmt::type_identity_t<args_type>...>;
+    template <typename... arg_types>
+    using _fmt_fmt_string = ::fmt::basic_format_string<char, fmt::type_identity_t<arg_types>...>;
     using _fmt_run_fmt_string = ::fmt::runtime_format_string<char>;
     using _fmt_string_view = ::fmt::basic_string_view<char>;
 

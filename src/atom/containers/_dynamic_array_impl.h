@@ -83,10 +83,10 @@ namespace atom
             insert_range_back(it, it_end);
         }
 
-        template <typename... args_type>
-        constexpr auto emplace_at(usize i, args_type&&... args)
+        template <typename... arg_types>
+        constexpr auto emplace_at(usize i, arg_types&&... args)
         {
-            return _emplace_at(i, forward<args_type>(args)...);
+            return _emplace_at(i, forward<arg_types>(args)...);
         }
 
         template <typename uiter, typename uiter_end>
@@ -102,10 +102,10 @@ namespace atom
             }
         }
 
-        template <typename... args_type>
-        constexpr auto emplace_front(args_type&&... args)
+        template <typename... arg_types>
+        constexpr auto emplace_front(arg_types&&... args)
         {
-            return _emplace_front(forward<args_type>(args)...);
+            return _emplace_front(forward<arg_types>(args)...);
         }
 
         template <typename uiter, typename uiter_end>
@@ -114,10 +114,10 @@ namespace atom
             return insert_range_at(0, it, it_end);
         }
 
-        template <typename... args_type>
-        constexpr auto emplace_back(args_type&&... args)
+        template <typename... arg_types>
+        constexpr auto emplace_back(arg_types&&... args)
         {
-            return _emplace_at(_get_count() - 1, forward<args_type>(args)...);
+            return _emplace_at(_get_count() - 1, forward<arg_types>(args)...);
         }
 
         template <typename uiter, typename uiter_end>
@@ -231,12 +231,12 @@ namespace atom
         ////////////////////////////////////////////////////////////////////////////////////////////
 
     private:
-        template <typename... args_type>
-        constexpr auto _emplace_at(usize i, args_type&&... args) -> usize
+        template <typename... arg_types>
+        constexpr auto _emplace_at(usize i, arg_types&&... args) -> usize
         {
             _ensure_cap_for(i);
             _move_range_back(i, 1);
-            _construct_at(i, forward<args_type>(args)...);
+            _construct_at(i, forward<arg_types>(args)...);
 
             return i;
         }
@@ -338,11 +338,11 @@ namespace atom
             _set_capacity(new_cap);
         }
 
-        template <typename... args_type>
-        constexpr auto _construct_at(usize i, args_type&&... args) -> void
+        template <typename... arg_types>
+        constexpr auto _construct_at(usize i, arg_types&&... args) -> void
         {
             mut_mem_ptr<elem_type> src = _get_mut_data() + i;
-            std::construct_at(src.unwrap(), forward<args_type>(args)...);
+            std::construct_at(src.unwrap(), forward<arg_types>(args)...);
         }
 
         constexpr auto _destruct_at(usize i) -> void

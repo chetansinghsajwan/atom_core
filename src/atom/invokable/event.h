@@ -27,11 +27,11 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     /// [`event`] is just a frontend to [`event_source`] to prevent users from dispatching events.
     /// --------------------------------------------------------------------------------------------
-    template <typename... args_type>
+    template <typename... arg_types>
     class ievent
     {
     protected:
-        using _tsignature = void(args_type...);
+        using _tsignature = void(arg_types...);
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -78,11 +78,11 @@ namespace atom
     ///
     /// @todo add async dispatching.
     /// --------------------------------------------------------------------------------------------
-    template <typename... args_type>
-    class event_source: public ievent<args_type...>
+    template <typename... arg_types>
+    class event_source: public ievent<arg_types...>
     {
     protected:
-        using _tsignature = typename ievent<args_type...>::_tsignature;
+        using _tsignature = typename ievent<arg_types...>::_tsignature;
         using _tlistener = invokable_box<_tsignature>;
 
     public:
@@ -107,7 +107,7 @@ namespace atom
         ///
         /// @todo add detailed documentation on argument passing.
         /// ----------------------------------------------------------------------------------------
-        auto dispatch(args_type... args)
+        auto dispatch(arg_types... args)
         {
             for (auto& listener : _listeners)
             {

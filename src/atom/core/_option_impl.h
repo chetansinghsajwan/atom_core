@@ -22,9 +22,9 @@ namespace atom
         constexpr _option_storage(_option_storage&&) = default;
         constexpr _option_storage& operator=(_option_storage&&) = default;
 
-        template <typename... args_type>
-        constexpr _option_storage(args_type&&... args)
-            : _value{ forward<args_type>(args)... }
+        template <typename... arg_types>
+        constexpr _option_storage(arg_types&&... args)
+            : _value{ forward<arg_types>(args)... }
         {}
 
         constexpr ~_option_storage()
@@ -144,12 +144,12 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr _option_impl& operator=(this_type&& that) = default;
 
-        template <typename... args_type>
+        template <typename... arg_types>
         /// ----------------------------------------------------------------------------------------
         /// # value constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr _option_impl(args_type&&... args)
-            : _storage{ forward<args_type>(args)... }
+        constexpr _option_impl(arg_types&&... args)
+            : _storage{ forward<arg_types>(args)... }
             , _is_value{ true }
         {}
 
@@ -198,17 +198,17 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// destroys current value if any and constructs new value wih `args`.
         /// ----------------------------------------------------------------------------------------
-        template <typename... args_type>
-        constexpr auto emplace_value(args_type&&... args)
+        template <typename... arg_types>
+        constexpr auto emplace_value(arg_types&&... args)
         {
             if (_is_value)
             {
                 _destroy_value();
-                _create_value(forward<args_type>(args)...);
+                _create_value(forward<arg_types>(args)...);
             }
             else
             {
-                _create_value(forward<args_type>(args)...);
+                _create_value(forward<arg_types>(args)...);
                 _is_value = true;
             }
         }
@@ -384,10 +384,10 @@ namespace atom
             }
         }
 
-        template <typename... args_type>
-        constexpr auto _create_value(args_type&&... args)
+        template <typename... arg_types>
+        constexpr auto _create_value(arg_types&&... args)
         {
-            obj_helper().construct_as<value_type>(_storage.get_data(), forward<args_type>(args)...);
+            obj_helper().construct_as<value_type>(_storage.get_data(), forward<arg_types>(args)...);
         }
 
         template <typename targ>

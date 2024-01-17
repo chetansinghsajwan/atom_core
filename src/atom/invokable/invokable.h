@@ -7,19 +7,19 @@ namespace atom
     template <typename tinvokable, typename... tsignature>
     class _is_invokable_impl;
 
-    template <typename tinvokable, typename result_type, typename... args_type>
-    class _is_invokable_impl<tinvokable, result_type(args_type...)>
+    template <typename tinvokable, typename result_type, typename... arg_types>
+    class _is_invokable_impl<tinvokable, result_type(arg_types...)>
     {
     public:
-        static constexpr bool value = std::is_invocable_r_v<result_type, tinvokable, args_type...>;
+        static constexpr bool value = std::is_invocable_r_v<result_type, tinvokable, arg_types...>;
     };
 
     /// @todo add impl for const invocable.
-    template <typename tinvokable, typename result_type, typename... args_type>
-    class _is_invokable_impl<tinvokable, result_type(args_type...) const>
+    template <typename tinvokable, typename result_type, typename... arg_types>
+    class _is_invokable_impl<tinvokable, result_type(arg_types...) const>
     {
     public:
-        static constexpr bool value = std::is_invocable_r_v<result_type, tinvokable, args_type...>;
+        static constexpr bool value = std::is_invocable_r_v<result_type, tinvokable, arg_types...>;
     };
 
     template <typename tinvokable, typename... tsignature>

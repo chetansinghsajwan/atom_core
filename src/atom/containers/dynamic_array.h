@@ -168,13 +168,13 @@ namespace atom
         ///
         /// all iters are invalidated.
         /// ----------------------------------------------------------------------------------------
-        template <typename... args_type>
-        constexpr auto emplace_at(usize i, args_type&&... args)
-            requires(rconstructible<elem_type, args_type...>)
+        template <typename... arg_types>
+        constexpr auto emplace_at(usize i, arg_types&&... args)
+            requires(rconstructible<elem_type, arg_types...>)
         {
             contracts::debug_expects(is_index_in_range_or_end(i), "index is out of range.");
 
-            _impl.emplace_at(i, forward<args_type>(args)...);
+            _impl.emplace_at(i, forward<arg_types>(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -195,15 +195,15 @@ namespace atom
         ///
         /// all iters are invalidated.
         /// ----------------------------------------------------------------------------------------
-        template <typename... args_type>
-        constexpr auto emplace_at(iter_type it, args_type&&... args) -> mut_iter_type
-            requires(rconstructible<elem_type, args_type...>)
+        template <typename... arg_types>
+        constexpr auto emplace_at(iter_type it, arg_types&&... args) -> mut_iter_type
+            requires(rconstructible<elem_type, arg_types...>)
         {
             contracts::debug_expects(is_iter_valid(it), "invalid iter.");
             contracts::debug_expects(is_iter_in_range_or_end(it), "iter is out of range.");
 
             usize i = index_for_iter(it);
-            _impl.emplace_at(i, forward<args_type>(args)...);
+            _impl.emplace_at(i, forward<arg_types>(args)...);
             return _impl.mut_iter(i);
         }
 
@@ -281,11 +281,11 @@ namespace atom
         ///
         /// all iters are invalidated.
         /// ----------------------------------------------------------------------------------------
-        template <typename... args_type>
-        constexpr auto emplace_front(args_type&&... args)
-            requires(rconstructible<elem_type, args_type...>)
+        template <typename... arg_types>
+        constexpr auto emplace_front(arg_types&&... args)
+            requires(rconstructible<elem_type, arg_types...>)
         {
-            _impl.emplace_front(forward<args_type>(args)...);
+            _impl.emplace_front(forward<arg_types>(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -328,11 +328,11 @@ namespace atom
         ///
         /// all iters are invalidated.
         /// ----------------------------------------------------------------------------------------
-        template <typename... args_type>
-        constexpr auto emplace_back(args_type&&... args)
-            requires(rconstructible<elem_type, args_type...>)
+        template <typename... arg_types>
+        constexpr auto emplace_back(arg_types&&... args)
+            requires(rconstructible<elem_type, arg_types...>)
         {
-            _impl.emplace_back(forward<args_type>(args)...);
+            _impl.emplace_back(forward<arg_types>(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------

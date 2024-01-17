@@ -274,11 +274,11 @@ namespace atom
         /// # see also
         /// - [`tat`]
         /// ----------------------------------------------------------------------------------------
-        template <typename type, typename... args_type>
-        constexpr auto emplace(args_type&&... args)
-            requires(has<type>()) and (rconstructible<type, args_type...>)
+        template <typename type, typename... arg_types>
+        constexpr auto emplace(arg_types&&... args)
+            requires(has<type>()) and (rconstructible<type, arg_types...>)
         {
-            _impl.template emplace_value_by_type<type>(forward<args_type>(args)...);
+            _impl.template emplace_value_by_type<type>(forward<arg_types>(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -287,11 +287,11 @@ namespace atom
         /// # see also
         /// - [`tat`]
         /// ----------------------------------------------------------------------------------------
-        template <usize i, typename... args_type>
-        constexpr auto emplace(args_type&&... args)
-            requires(has<i>()) and (rconstructible<tat<i>, args_type...>)
+        template <usize i, typename... arg_types>
+        constexpr auto emplace(arg_types&&... args)
+            requires(has<i>()) and (rconstructible<tat<i>, arg_types...>)
         {
-            _impl.template emplace_value_by_index<i>(forward<args_type>(args)...);
+            _impl.template emplace_value_by_index<i>(forward<arg_types>(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------

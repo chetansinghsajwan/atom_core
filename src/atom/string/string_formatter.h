@@ -37,8 +37,8 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <rstring_fmt_arg_fmtable... args_type>
-    using fmt_string = _fmt_fmt_string<args_type...>;
+    template <rstring_fmt_arg_fmtable... arg_types>
+    using fmt_string = _fmt_fmt_string<arg_types...>;
 
     //     class fmt_string
     //     {
@@ -51,7 +51,7 @@ namespace atom
     //             _fmt{ _fmt_run_fmt_string{ _fmt_string_view_cnvter().to_fmt(str.str) } } { }
     //
     //     public:
-    //         _fmt_fmt_string<args_type...> _fmt;
+    //         _fmt_fmt_string<arg_types...> _fmt;
     //     };
 
     /// --------------------------------------------------------------------------------------------
@@ -63,8 +63,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename tout, rstring_fmt_arg_fmtable... args_type>
-        auto fmt_to(tout out, fmt_string<args_type...> fmt, args_type&&... args)
+        template <typename tout, rstring_fmt_arg_fmtable... arg_types>
+        auto fmt_to(tout out, fmt_string<arg_types...> fmt, arg_types&&... args)
             requires routput<tout, uchar>
         {
             class _out_iter_wrap
@@ -107,11 +107,11 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <rstring_fmt_arg_fmtable... args_type>
-        auto fmt(fmt_string<args_type...> fmt, args_type&&... args) -> string
+        template <rstring_fmt_arg_fmtable... arg_types>
+        auto fmt(fmt_string<arg_types...> fmt, arg_types&&... args) -> string
         {
             string out;
-            fmt_to(out, fmt, forward<args_type>(args)...);
+            fmt_to(out, fmt, forward<arg_types>(args)...);
 
             return out;
         }

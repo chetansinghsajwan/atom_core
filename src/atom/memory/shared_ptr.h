@@ -47,8 +47,8 @@ namespace atom
         template <typename type>
         friend class shared_ptr;
 
-        template <typename type, typename tallocator, typename... args_type>
-        friend auto make_shared_with_alloc(tallocator alloc, args_type&&... args) -> shared_ptr<type>;
+        template <typename type, typename tallocator, typename... arg_types>
+        friend auto make_shared_with_alloc(tallocator alloc, arg_types&&... args) -> shared_ptr<type>;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -321,17 +321,17 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename type, typename... args_type>
-    auto make_shared(args_type&&... args) -> shared_ptr<type>
+    template <typename type, typename... arg_types>
+    auto make_shared(arg_types&&... args) -> shared_ptr<type>
     {
-        return make_shared_with_alloc<type>(shared_ptr_default_allocator(), forward<args_type>(args)...);
+        return make_shared_with_alloc<type>(shared_ptr_default_allocator(), forward<arg_types>(args)...);
     }
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename type, typename tallocator, typename... args_type>
-    auto make_shared_with_alloc(tallocator allocator, args_type&&... args) -> shared_ptr<type>
+    template <typename type, typename tallocator, typename... arg_types>
+    auto make_shared_with_alloc(tallocator allocator, arg_types&&... args) -> shared_ptr<type>
 
     {
         using state = _shared_ptr_state<type, shared_ptr_default_destroyer<type>, shared_ptr_default_allocator>;
@@ -340,7 +340,7 @@ namespace atom
         mut_ptr<state> state_ptr = mem;
         mut_ptr<type> value_ptr = mem.next(sizeof(state)).as<type>();
 
-        obj_helper().construct(value_ptr, forward<args_type>(args)...);
+        obj_helper().construct(value_ptr, forward<arg_types>(args)...);
         return shared_ptr<type>(_shared_ptr_private_ctor(), state_ptr, value_ptr);
     }
 }

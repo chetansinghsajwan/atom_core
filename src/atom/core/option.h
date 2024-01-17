@@ -238,11 +238,11 @@ namespace atom
         ///
         /// - `args`: arguments to construct the new value with.
         /// ----------------------------------------------------------------------------------------
-        template <typename... args_type>
-        constexpr auto emplace(args_type&&... args)
-            requires(rconstructible<value_type, args_type...>)
+        template <typename... arg_types>
+        constexpr auto emplace(arg_types&&... args)
+            requires(rconstructible<value_type, arg_types...>)
         {
-            _impl.emplace_value(forward<args_type>(args)...);
+            _impl.emplace_value(forward<arg_types>(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------

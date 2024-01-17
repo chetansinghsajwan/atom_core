@@ -6,20 +6,20 @@ namespace atom
     class obj_helper
     {
     public:
-        template <typename type, typename... args_type>
-        constexpr auto construct_as(mut_ptr<void> mem, args_type&&... args) const
+        template <typename type, typename... arg_types>
+        constexpr auto construct_as(mut_ptr<void> mem, arg_types&&... args) const
         {
             contracts::debug_expects(mem != nullptr);
 
-            std::construct_at(mem.as<type>().unwrap(), forward<args_type>(args)...);
+            std::construct_at(mem.as<type>().unwrap(), forward<arg_types>(args)...);
         }
 
-        template <typename type, typename... args_type>
-        constexpr auto construct(mut_ptr<type> mem, args_type&&... args) const
+        template <typename type, typename... arg_types>
+        constexpr auto construct(mut_ptr<type> mem, arg_types&&... args) const
         {
             contracts::debug_expects(mem != nullptr);
 
-            std::construct_at(mem.unwrap(), forward<args_type>(args)...);
+            std::construct_at(mem.unwrap(), forward<arg_types>(args)...);
         }
 
         template <typename type, typename targ>
