@@ -41,9 +41,9 @@ enable_testing()
 add_library(Atom.Core STATIC)
 target_sources(Atom.Core
     PUBLIC FILE_SET modules TYPE CXX_MODULES FILES
-    "src/private/core.cpp"
+    "src/core.cpp"
 )
-target_include_directories(Atom.Core PRIVATE "src/public/")
+target_include_directories(Atom.Core PRIVATE "src/")
 
 target_link_libraries(Atom.Core PRIVATE WjCryptLib)
 target_link_libraries(Atom.Core PRIVATE fmt::fmt-header-only)
@@ -52,10 +52,10 @@ target_link_libraries(Atom.Core PRIVATE fmt::fmt-header-only)
 # Atom.Core.Tests
 # --------------------------------------------------------------------------------------------------
 
-file(GLOB_RECURSE TEST_SOURCES "src/tests/**.cpp")
+file(GLOB_RECURSE TEST_SOURCES "tests/**.cpp")
 
 add_executable(Atom.Core.Tests ${TEST_SOURCES})
-target_include_directories(Atom.Core.Tests PUBLIC "src/tests/")
+target_include_directories(Atom.Core.Tests PUBLIC "tests/")
 
 target_link_libraries(Atom.Core.Tests PUBLIC Atom.Core)
 target_link_libraries(Atom.Core.Tests PUBLIC Catch2::Catch2WithMain)
@@ -66,6 +66,6 @@ add_test(Atom.Core.Tests Atom.Core.Tests)
 # Atom.Core.Sandbox
 # --------------------------------------------------------------------------------------------------
 
-add_executable(Atom.Core.Sandbox "src/sandbox/sandbox.cpp")
-target_include_directories(Atom.Core.Sandbox PRIVATE "src/sandbox/")
+add_executable(Atom.Core.Sandbox "sandbox/sandbox.cpp")
+target_include_directories(Atom.Core.Sandbox PRIVATE "sandbox/")
 target_link_libraries(Atom.Core.Sandbox PUBLIC Atom.Core)
