@@ -18,14 +18,15 @@ namespace Atom
 
         template <usize n>
         constexpr BasicStaticArray(const TElem (&arr)[n])
-            requires(n <= count_):
-            _arr{ arr }
+            requires(n <= count_)
+            : _arr{ arr }
         {}
 
         template <typename... TArgs>
         constexpr BasicStaticArray(TArgs&&... args)
-            requires(RConvertibleTo<TArgs, TElem> and ...) and (sizeof...(TArgs) <= count_.unwrap()):
-            _arr{ 0 } { }
+            requires(RConvertibleTo<TArgs, TElem> and ...) and (sizeof...(TArgs) <= count_.unwrap())
+            : _arr{ 0 }
+        {}
 
     public:
         constexpr auto data() const -> MemPtr<TElem>

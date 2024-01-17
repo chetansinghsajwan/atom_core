@@ -19,15 +19,16 @@ namespace Atom
     /// @TPARAM[IN] T Object type to convert to stirng.
     /// --------------------------------------------------------------------------------------------
     template <typename TStringConverter, typename T>
-    concept RStringConverter = requires(TStringConverter converter, T obj, OutputReqMock<Char> out) {
-        {
-            converter.Convert(obj)
-        } -> RSameAs<String>;
+    concept RStringConverter =
+        requires(TStringConverter converter, T obj, OutputReqMock<Char> out) {
+            {
+                converter.Convert(obj)
+            } -> RSameAs<String>;
 
-        {
-            converter.Convert(obj, out)
-        } -> RSameAs<void>;
-    };
+            {
+                converter.Convert(obj, out)
+            } -> RSameAs<void>;
+        };
 
     /// --------------------------------------------------------------------------------------------
     /// Ensures {StringConverter<T>} for `T` is {RStringConverter}.

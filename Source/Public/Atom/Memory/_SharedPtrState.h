@@ -8,7 +8,8 @@ namespace Atom
     {
     public:
         constexpr EboHelper(T val)
-            : _val(mov(val)) {}
+            : _val(mov(val))
+        {}
 
     public:
         constexpr auto get() const -> const T&
@@ -28,10 +29,11 @@ namespace Atom
     template <typename T>
         requires TTI::IsEmpty<T>
     class EboHelper<T>: private T
-    {        
+    {
     public:
         constexpr EboHelper(T val)
-            : T(mov(val)) {}
+            : T(mov(val))
+        {}
 
     public:
         constexpr auto get() const -> const T&

@@ -8,8 +8,8 @@ namespace Atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename TRange, class _TConstRangeExtensionsImpl = void>
-    class _MutJumpRangeExtensionsImpl:
-        public _MutBidiRangeExtensionsImpl<TRange, _TConstRangeExtensionsImpl>
+    class _MutJumpRangeExtensionsImpl
+        : public _MutBidiRangeExtensionsImpl<TRange, _TConstRangeExtensionsImpl>
     {
         using Base = _MutBidiRangeExtensionsImpl<TRange, _TConstRangeExtensionsImpl>;
 
@@ -22,8 +22,8 @@ namespace Atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
-    class _MutJumpRangeExtensionsImpl<TRange, void>:
-        public _MutBidiRangeExtensionsImpl<TRange, _BidiRangeExtensionsImpl<TRange>>
+    class _MutJumpRangeExtensionsImpl<TRange, void>
+        : public _MutBidiRangeExtensionsImpl<TRange, _BidiRangeExtensionsImpl<TRange>>
     {
         using Base = _MutBidiRangeExtensionsImpl<TRange, _BidiRangeExtensionsImpl<TRange>>;
 
@@ -59,9 +59,9 @@ namespace Atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
-    class MutJumpRangeExtensions<TRange, void>:
-        public MutJumpRangeExtensions<TRange,
-            JumpRangeExtensions<TRange, _MutJumpRangeExtensionsImpl<TRange>>>
+    class MutJumpRangeExtensions<TRange, void>
+        : public MutJumpRangeExtensions<TRange,
+              JumpRangeExtensions<TRange, _MutJumpRangeExtensionsImpl<TRange>>>
     {
         using Base = MutJumpRangeExtensions<TRange,
             JumpRangeExtensions<TRange, _MutJumpRangeExtensionsImpl<TRange>>>;

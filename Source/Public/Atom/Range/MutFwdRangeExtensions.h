@@ -8,8 +8,8 @@ namespace Atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename TRange, typename _TConstRangeExtensionsImpl = void>
-    class _MutFwdRangeExtensionsImpl:
-        public _MutRangeExtensionsImpl<TRange, _TConstRangeExtensionsImpl>
+    class _MutFwdRangeExtensionsImpl
+        : public _MutRangeExtensionsImpl<TRange, _TConstRangeExtensionsImpl>
     {
         using Base = _MutRangeExtensionsImpl<TRange, _TConstRangeExtensionsImpl>;
 
@@ -22,8 +22,8 @@ namespace Atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
-    class _MutFwdRangeExtensionsImpl<TRange, void>:
-        public _MutFwdRangeExtensionsImpl<TRange, _FwdRangeExtensionsImpl<TRange>>
+    class _MutFwdRangeExtensionsImpl<TRange, void>
+        : public _MutFwdRangeExtensionsImpl<TRange, _FwdRangeExtensionsImpl<TRange>>
     {
         using Base = _MutFwdRangeExtensionsImpl<TRange, _FwdRangeExtensionsImpl<TRange>>;
 
@@ -59,9 +59,9 @@ namespace Atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
-    class MutFwdRangeExtensions<TRange, void>:
-        public MutFwdRangeExtensions<TRange,
-            FwdRangeExtensions<TRange, _MutFwdRangeExtensionsImpl<TRange>>>
+    class MutFwdRangeExtensions<TRange, void>
+        : public MutFwdRangeExtensions<TRange,
+              FwdRangeExtensions<TRange, _MutFwdRangeExtensionsImpl<TRange>>>
     {
         using Base = MutFwdRangeExtensions<TRange,
             FwdRangeExtensions<TRange, _MutFwdRangeExtensionsImpl<TRange>>>;

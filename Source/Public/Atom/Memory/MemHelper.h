@@ -8,12 +8,14 @@ namespace Atom
     class MemBlk
     {
     public:
-        constexpr MemBlk(MutMemPtr<void> mem, usize count):
-            mem{ mem }, count{ count }
+        constexpr MemBlk(MutMemPtr<void> mem, usize count)
+            : mem{ mem }
+            , count{ count }
         {}
 
-        constexpr MemBlk(MutMemPtr<void> begin, MutMemPtr<void> end):
-            mem{ begin }, count{ end - begin }
+        constexpr MemBlk(MutMemPtr<void> begin, MutMemPtr<void> end)
+            : mem{ begin }
+            , count{ end - begin }
         {
             Contracts::DebugExpects(end >= begin);
         }
@@ -70,7 +72,8 @@ namespace Atom
             Contracts::DebugExpects(src != nullptr);
             Contracts::DebugExpects(dest != nullptr);
 
-            Contracts::DebugExpects(dest.mem < src.mem, "Src mem block overlaps with dest mem block.");
+            Contracts::DebugExpects(
+                dest.mem < src.mem, "Src mem block overlaps with dest mem block.");
 
             _FwdCopy(src.mem, src.count, dest.mem);
         }
@@ -277,7 +280,8 @@ namespace Atom
 
         constexpr auto _BwdCopy(MemPtr<void> src, usize count, MutMemPtr<void> dest) const -> void
         {
-            std::copy_backward(src.unwrapAsByte(), (src + count).unwrapAsByte(), dest.unwrapAsByte());
+            std::copy_backward(
+                src.unwrapAsByte(), (src + count).unwrapAsByte(), dest.unwrapAsByte());
         }
 
         constexpr auto _ShiftFwd(MutMemPtr<void> mem, usize memCount, usize steps) const -> void
@@ -292,12 +296,14 @@ namespace Atom
 
         constexpr auto _RotateFwd(MutMemPtr<void> mem, usize memCount, usize offset) const -> void
         {
-            std::rotate(mem.unwrapAsByte(), (mem + offset).unwrapAsByte(), (mem + memCount).unwrapAsByte());
+            std::rotate(
+                mem.unwrapAsByte(), (mem + offset).unwrapAsByte(), (mem + memCount).unwrapAsByte());
         }
 
         constexpr auto _RotateBwd(MutMemPtr<void> mem, usize memCount, usize offset) const -> void
         {
-            std::rotate(mem.unwrapAsByte(), (mem + offset).unwrapAsByte(), (mem + memCount).unwrapAsByte());
+            std::rotate(
+                mem.unwrapAsByte(), (mem + offset).unwrapAsByte(), (mem + memCount).unwrapAsByte());
         }
     };
 }

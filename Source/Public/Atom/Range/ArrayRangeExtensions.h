@@ -238,8 +238,8 @@ namespace Atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
-    class ArrayRangeExtensions<TRange, void>:
-        public ArrayRangeExtensions<TRange, _ArrayRangeExtensionsImpl<TRange>>
+    class ArrayRangeExtensions<TRange, void>
+        : public ArrayRangeExtensions<TRange, _ArrayRangeExtensionsImpl<TRange>>
     {
         using Base = ArrayRangeExtensions<TRange, _ArrayRangeExtensionsImpl<TRange>>;
 

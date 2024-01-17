@@ -41,8 +41,8 @@ namespace Atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
-    class FwdRangeExtensions<TRange, void>:
-        public FwdRangeExtensions<TRange, _FwdRangeExtensionsImpl<TRange>>
+    class FwdRangeExtensions<TRange, void>
+        : public FwdRangeExtensions<TRange, _FwdRangeExtensionsImpl<TRange>>
     {
         using Base = FwdRangeExtensions<TRange, _FwdRangeExtensionsImpl<TRange>>;
 

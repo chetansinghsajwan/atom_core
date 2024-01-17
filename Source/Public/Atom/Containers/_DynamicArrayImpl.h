@@ -19,15 +19,18 @@ namespace Atom
         using TMutIterEnd = TMutIter;
 
     public:
-        constexpr _DynamicArrayImpl():
-            _arr{ nullptr }, _count{ 0 }, _capacity{ 0 }, _alloc{}
+        constexpr _DynamicArrayImpl()
+            : _arr{ nullptr }
+            , _count{ 0 }
+            , _capacity{ 0 }
+            , _alloc{}
         {}
 
         constexpr _DynamicArrayImpl(_DynamicArrayImpl&& that) {}
 
         template <typename UIter, typename UIterEnd>
-        constexpr _DynamicArrayImpl(UIter it, UIterEnd itEnd):
-            _DynamicArrayImpl{}
+        constexpr _DynamicArrayImpl(UIter it, UIterEnd itEnd)
+            : _DynamicArrayImpl{}
         {
             insertRangeBack(it, itEnd);
         }

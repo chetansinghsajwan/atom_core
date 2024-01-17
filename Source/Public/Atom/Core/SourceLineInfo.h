@@ -1,6 +1,7 @@
 #pragma once
 #include "Atom/Core/Primitives.h"
 #include "Atom/Preprocessors.h"
+
 // #include <source_location>
 
 namespace Atom

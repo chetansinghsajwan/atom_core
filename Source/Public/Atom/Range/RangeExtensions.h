@@ -19,8 +19,8 @@ namespace Atom
         using TIterEnd = typename _TImpl::TIterEnd;
 
     public:
-        constexpr _RangeExtensionsImpl(TRange& range):
-            _range_(range)
+        constexpr _RangeExtensionsImpl(TRange& range)
+            : _range_(range)
         {}
 
     public:
@@ -302,8 +302,8 @@ namespace Atom
     };
 
     template <typename TRange>
-    class RangeExtensions<TRange, void>:
-        public RangeExtensions<TRange, _RangeExtensionsImpl<TRange>>
+    class RangeExtensions<TRange, void>
+        : public RangeExtensions<TRange, _RangeExtensionsImpl<TRange>>
     {
         using Base = RangeExtensions<TRange, _RangeExtensionsImpl<TRange>>;
 

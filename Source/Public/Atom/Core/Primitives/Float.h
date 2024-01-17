@@ -14,7 +14,7 @@ namespace Atom
     public:
         /// ----------------------------------------------------------------------------------------
         /// # To Do
-        /// 
+        ///
         /// - Review this. [`FloatString`] has different sting requirements.
         /// ----------------------------------------------------------------------------------------
         using TString = FloatString<Base::MaxDigitsCount() + 1>;
@@ -73,7 +73,6 @@ namespace Atom
         using Base::operator=;
 
     public:
-
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////
         //// Comparision
@@ -82,7 +81,8 @@ namespace Atom
 
         constexpr auto eqZeroApprox() const -> bool
         {
-            return _val == 0;;
+            return _val == 0;
+            ;
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////

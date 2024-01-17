@@ -4,7 +4,8 @@ import atom.core;
 
 using namespace Atom;
 
-TEMPLATE_TEST_CASE("Atom.Core.Int", "[primitives]", i8, i16, i32, i64, isize, imax, u8, u16, u32, u64, usize, umax)
+TEMPLATE_TEST_CASE(
+    "Atom.Core.Int", "[primitives]", i8, i16, i32, i64, isize, imax, u8, u16, u32, u64, usize, umax)
 {
     using TInt = TestType;
 

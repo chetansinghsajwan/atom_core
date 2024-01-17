@@ -8,7 +8,7 @@ namespace Atom
 {
     /// --------------------------------------------------------------------------------------------
     /// # Template Parameters
-    /// 
+    ///
     /// - `TGenerator`: Uniform random number generator.
     /// --------------------------------------------------------------------------------------------
     template <typename TGenerator>
@@ -16,7 +16,8 @@ namespace Atom
     {
     public:
         explicit BasicUuidRandomGenerator(u32 seed = 0)
-            : _generator{ seed } {}
+            : _generator{ seed }
+        {}
 
     public:
         auto generate() -> Uuid

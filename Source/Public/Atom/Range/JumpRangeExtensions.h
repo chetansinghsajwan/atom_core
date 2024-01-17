@@ -41,8 +41,8 @@ namespace Atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
-    class JumpRangeExtensions<TRange, void>:
-        public JumpRangeExtensions<TRange, _JumpRangeExtensionsImpl<TRange>>
+    class JumpRangeExtensions<TRange, void>
+        : public JumpRangeExtensions<TRange, _JumpRangeExtensionsImpl<TRange>>
     {
         using Base = JumpRangeExtensions<TRange, _JumpRangeExtensionsImpl<TRange>>;
 

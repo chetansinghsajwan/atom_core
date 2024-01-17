@@ -54,7 +54,6 @@ namespace Atom
             std::destroy_at(mem.unwrap());
         }
 
-
         template <typename T>
         constexpr auto Destruct(MutPtr<T> mem) const
         {

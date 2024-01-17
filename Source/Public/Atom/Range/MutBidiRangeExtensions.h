@@ -8,8 +8,8 @@ namespace Atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename TRange, typename _TConstRangeExtensionsImpl = void>
-    class _MutBidiRangeExtensionsImpl:
-        public _MutFwdRangeExtensionsImpl<TRange, _TConstRangeExtensionsImpl>
+    class _MutBidiRangeExtensionsImpl
+        : public _MutFwdRangeExtensionsImpl<TRange, _TConstRangeExtensionsImpl>
     {
         using Base = _MutFwdRangeExtensionsImpl<TRange, _TConstRangeExtensionsImpl>;
 
@@ -22,8 +22,8 @@ namespace Atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
-    class _MutBidiRangeExtensionsImpl<TRange, void>:
-        public _MutBidiRangeExtensionsImpl<TRange, _BidiRangeExtensionsImpl<TRange>>
+    class _MutBidiRangeExtensionsImpl<TRange, void>
+        : public _MutBidiRangeExtensionsImpl<TRange, _BidiRangeExtensionsImpl<TRange>>
     {
         using Base = _MutBidiRangeExtensionsImpl<TRange, _BidiRangeExtensionsImpl<TRange>>;
 
@@ -59,9 +59,9 @@ namespace Atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
-    class MutBidiRangeExtensions<TRange, void>:
-        public MutBidiRangeExtensions<TRange,
-            BidiRangeExtensions<TRange, _MutBidiRangeExtensionsImpl<TRange>>>
+    class MutBidiRangeExtensions<TRange, void>
+        : public MutBidiRangeExtensions<TRange,
+              BidiRangeExtensions<TRange, _MutBidiRangeExtensionsImpl<TRange>>>
     {
         using Base = MutBidiRangeExtensions<TRange,
             BidiRangeExtensions<TRange, _MutBidiRangeExtensionsImpl<TRange>>>;

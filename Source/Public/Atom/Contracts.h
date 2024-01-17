@@ -4,6 +4,7 @@
 #include "Contracts.decl.h"
 
 #include "fmt/format.h"
+
 // #include <iostream>
 
 namespace Atom
@@ -52,8 +53,8 @@ namespace Atom
     class ContractViolationException: public std::exception
     {
     public:
-        ContractViolationException(ContractViolation violation):
-            violation{ violation }
+        ContractViolationException(ContractViolation violation)
+            : violation{ violation }
         {
             _what = fmt::format("Contracts {} Violation:"
                                 "\n\twith msg: {}"

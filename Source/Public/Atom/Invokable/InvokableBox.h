@@ -137,7 +137,7 @@ namespace Atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename TInvokable>
-        requires RInvokable<TInvokable, TResult(TArgs...)>
+            requires RInvokable<TInvokable, TResult(TArgs...)>
         InvokableBox(TInvokable&& invokable)
             requires(RNotDerivedFrom<TInvokable, _InvokableBoxId>)
             : ObjectBox(forward<TInvokable>(invokable))
@@ -149,10 +149,9 @@ namespace Atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename TInvokable>
-        InvokableBox& operator=(TInvokable&& invokable)
             requires RInvokable<TInvokable, TResult(TArgs...)>
-                and (not RDerivedFrom<TInvokable, _InvokableBoxId>)
-        {
+        auto operator=(TInvokable&& invokable) -> InvokableBox& requires(
+            RNotDerivedFrom<TInvokable, Private::InvokableBoxIdentifier>) {
             ObjectBox::operator=(forward<TInvokable>(invokable));
             _SetInvoker<TInvokable>();
             return *this;

@@ -12,8 +12,8 @@ namespace Atom
         {};
 
     public:
-        constexpr _OptionStorage():
-            _dummy{}
+        constexpr _OptionStorage()
+            : _dummy{}
         {}
 
         constexpr _OptionStorage(const _OptionStorage&) = default;
@@ -23,8 +23,8 @@ namespace Atom
         constexpr _OptionStorage& operator=(_OptionStorage&&) = default;
 
         template <typename... TArgs>
-        constexpr _OptionStorage(TArgs&&... args):
-            _value{ forward<TArgs>(args)... }
+        constexpr _OptionStorage(TArgs&&... args)
+            : _value{ forward<TArgs>(args)... }
         {}
 
         constexpr ~_OptionStorage()
@@ -93,8 +93,9 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Default Constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr _OptionImpl(CtorDefault):
-            _isValue{ false }, _storage{}
+        constexpr _OptionImpl(CtorDefault)
+            : _isValue{ false }
+            , _storage{}
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -105,8 +106,8 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Copy Constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr _OptionImpl(CtorCopy, const This& that):
-            This(CtorDefault())
+        constexpr _OptionImpl(CtorCopy, const This& that)
+            : This(CtorDefault())
         {
             if (that._isValue)
             {
@@ -128,8 +129,8 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Move Constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr _OptionImpl(CtorMove, This&& that):
-            This()
+        constexpr _OptionImpl(CtorMove, This&& that)
+            : This()
         {
             if (that._isValue)
             {
@@ -147,8 +148,9 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Value Constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr _OptionImpl(TArgs&&... args):
-            _storage{ forward<TArgs>(args)... }, _isValue{ true }
+        constexpr _OptionImpl(TArgs&&... args)
+            : _storage{ forward<TArgs>(args)... }
+            , _isValue{ true }
         {}
 
         /// ----------------------------------------------------------------------------------------

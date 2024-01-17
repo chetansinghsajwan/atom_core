@@ -145,7 +145,7 @@ BreakBeforeTernaryOperators: true
 BreakStringLiterals: true
 BreakConstructorInitializers: BeforeComma
 BreakInheritanceList: BeforeComma
-AllowBreakBeforeNoexceptSpecifier: Never
+# AllowBreakBeforeNoexceptSpecifier: Never
 RequiresClausePosition: OwnLine
 
 # --------------------------------------------------------------------------------------------------
@@ -170,7 +170,7 @@ IncludeCategories:
     CaseSensitive: false
 IncludeIsMainRegex: '(Test)?$'
 IncludeIsMainSourceRegex: ''
-SortIncludes: CaseSensitive
+SortIncludes: Never
 
 # --------------------------------------------------------------------------------------------------
 # Penalties

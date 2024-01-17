@@ -8,8 +8,8 @@ namespace Atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename TRange, typename _TConstRangeExtensionsImpl = void>
-    class _MutArrayRangeExtensionsImpl:
-        public _MutJumpRangeExtensionsImpl<TRange, _TConstRangeExtensionsImpl>
+    class _MutArrayRangeExtensionsImpl
+        : public _MutJumpRangeExtensionsImpl<TRange, _TConstRangeExtensionsImpl>
     {
         using Base = _MutJumpRangeExtensionsImpl<TRange, _TConstRangeExtensionsImpl>;
 
@@ -70,8 +70,8 @@ namespace Atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
-    class _MutArrayRangeExtensionsImpl<TRange, void>:
-        public _MutArrayRangeExtensionsImpl<TRange, _ArrayRangeExtensionsImpl<TRange>>
+    class _MutArrayRangeExtensionsImpl<TRange, void>
+        : public _MutArrayRangeExtensionsImpl<TRange, _ArrayRangeExtensionsImpl<TRange>>
     {
         using Base = _MutArrayRangeExtensionsImpl<TRange, _ArrayRangeExtensionsImpl<TRange>>;
 
@@ -231,9 +231,9 @@ namespace Atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
-    class MutArrayRangeExtensions<TRange, void>:
-        public MutArrayRangeExtensions<TRange,
-            ArrayRangeExtensions<TRange, _MutArrayRangeExtensionsImpl<TRange>>>
+    class MutArrayRangeExtensions<TRange, void>
+        : public MutArrayRangeExtensions<TRange,
+              ArrayRangeExtensions<TRange, _MutArrayRangeExtensionsImpl<TRange>>>
     {
         using Base = MutArrayRangeExtensions<TRange,
             ArrayRangeExtensions<TRange, _MutArrayRangeExtensionsImpl<TRange>>>;

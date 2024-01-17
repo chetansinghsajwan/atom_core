@@ -34,10 +34,12 @@ namespace Atom
 
     public:
         constexpr StdIterWrapForAtomIter(TIter& iter)
-            : iter{ iter } {}
+            : iter{ iter }
+        {}
 
         constexpr StdIterWrapForAtomIter(TIter&& iter)
-            : iter{ mov(iter) } {}
+            : iter{ mov(iter) }
+        {}
 
     public:
         constexpr auto operator*() const -> const value_type&

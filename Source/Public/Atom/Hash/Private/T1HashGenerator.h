@@ -90,7 +90,8 @@ namespace Atom::Private
             constexpr u32 maxInput = u32::Max();
             for (usize processed = 0; processed < dataSize; processed += maxInput)
             {
-                _impl.Update(data + processed, maxInput.min(dataSize - processed).to<u32>().unwrap());
+                _impl.Update(
+                    data + processed, maxInput.min(dataSize - processed).to<u32>().unwrap());
             }
 
             return *this;

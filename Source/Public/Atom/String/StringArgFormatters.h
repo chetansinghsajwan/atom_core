@@ -32,12 +32,14 @@ namespace Atom
     class StringFmtErr: public Err
     {
     public:
-        StringFmtErr(StdStringView msg):
-            Err{ msg } {}
+        StringFmtErr(StdStringView msg)
+            : Err{ msg }
+        {}
 
     public:
-        StringFmtErr(const _FmtFmtEx& fmtEx):
-            Err{ fmtEx.what() } {}
+        StringFmtErr(const _FmtFmtEx& fmtEx)
+            : Err{ fmtEx.what() }
+        {}
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -46,7 +48,9 @@ namespace Atom
     class StringFmtParseCtx
     {
     public:
-        constexpr StringFmtParseCtx(_FmtFmtParseCtx& fmtCtx): _fmtCtx{ fmtCtx } {}
+        constexpr StringFmtParseCtx(_FmtFmtParseCtx& fmtCtx)
+            : _fmtCtx{ fmtCtx }
+        {}
 
     public:
         constexpr auto GetRange() -> StringView
@@ -69,7 +73,9 @@ namespace Atom
     class StringFmtCtx
     {
     public:
-        constexpr StringFmtCtx(_FmtFmtCtx& fmtCtx): _fmtCtx{ fmtCtx } {}
+        constexpr StringFmtCtx(_FmtFmtCtx& fmtCtx)
+            : _fmtCtx{ fmtCtx }
+        {}
 
         auto Write(Char ch)
         {

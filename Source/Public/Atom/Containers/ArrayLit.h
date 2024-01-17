@@ -8,8 +8,8 @@ namespace Atom
     {
     public:
         template <usize size>
-        consteval ArrayLit(T (&arr)[size]):
-            ArrayView{ arr, size }
+        consteval ArrayLit(T (&arr)[size])
+            : ArrayView{ arr, size }
         {}
     };
 }

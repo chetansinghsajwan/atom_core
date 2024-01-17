@@ -60,8 +60,7 @@ namespace Atom
 
     constexpr auto operator==(SVector2 lhs, SVector2 rhs) -> bool
     {
-        return lhs.x.sub(rhs.x).eqZeroApprox() &&
-            lhs.y.sub(rhs.y).eqZeroApprox();
+        return lhs.x.sub(rhs.x).eqZeroApprox() && lhs.y.sub(rhs.y).eqZeroApprox();
     }
 
     constexpr auto operator!=(SVector2 lhs, SVector2 rhs) -> bool

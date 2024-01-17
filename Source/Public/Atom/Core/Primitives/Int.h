@@ -87,7 +87,9 @@ namespace Atom
     };
 
     template <typename TImpl>
-    class Int: public Num<TImpl>, public _IntId
+    class Int
+        : public Num<TImpl>
+        , public _IntId
     {
         using Base = Num<TImpl>;
 

@@ -424,7 +424,8 @@ namespace Atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename TToReplace, typename TWith>
-        using ReplaceAll = typename _TypeListOps::template ReplaceAll<TToReplace, TWith, Ts...>::Type;
+        using ReplaceAll =
+            typename _TypeListOps::template ReplaceAll<TToReplace, TWith, Ts...>::Type;
 
         /// ----------------------------------------------------------------------------------------
         /// # To Do

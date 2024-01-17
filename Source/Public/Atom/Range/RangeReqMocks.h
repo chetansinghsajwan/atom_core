@@ -106,8 +106,8 @@ namespace Atom
     /// `RMutArrayRange` mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    class MutArrayRangeReqMock:
-        public _MutRangeReqMock<MutArrayIterReqMock<T>, MutArrayIterReqMock<T>, T>
+    class MutArrayRangeReqMock
+        : public _MutRangeReqMock<MutArrayIterReqMock<T>, MutArrayIterReqMock<T>, T>
     {};
 
     /// --------------------------------------------------------------------------------------------
@@ -121,7 +121,7 @@ namespace Atom
     /// `RMutCommonRange` mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename T>
-    class MutCommonRangeReqMock:
-        public _MutRangeReqMock<MutFwdIterReqMock<T>, MutFwdIterReqMock<T>, T>
+    class MutCommonRangeReqMock
+        : public _MutRangeReqMock<MutFwdIterReqMock<T>, MutFwdIterReqMock<T>, T>
     {};
 }

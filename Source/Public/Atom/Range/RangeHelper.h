@@ -42,7 +42,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-ATOM_PRAGMA_OPTIMIZE_OFF
+        ATOM_PRAGMA_OPTIMIZE_OFF
 
         template <class TRange, typename T>
             requires RMutRange<TRange> and RAssignable<typename TRange::TElem, T>
@@ -51,7 +51,7 @@ ATOM_PRAGMA_OPTIMIZE_OFF
             _Fill(range.iter(), range.iterEnd(), forward<T>(val));
         }
 
-ATOM_PRAGMA_OPTIMIZE_ON
+        ATOM_PRAGMA_OPTIMIZE_ON
 
         /// ----------------------------------------------------------------------------------------
         ///
@@ -207,8 +207,8 @@ ATOM_PRAGMA_OPTIMIZE_ON
         }
 
         template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
-        constexpr auto _FwdCopy(TIter1 iter1, TIterEnd1 iterEnd1, TIter2 iter2,
-            TIterEnd2 iterEnd2) const -> void
+        constexpr auto _FwdCopy(
+            TIter1 iter1, TIterEnd1 iterEnd1, TIter2 iter2, TIterEnd2 iterEnd2) const -> void
         {
             StdIterWrapForAtomIter stdIter1{ iter1 };
             StdIterWrapForAtomIter stdIterEnd1{ iterEnd1 };
@@ -218,8 +218,8 @@ ATOM_PRAGMA_OPTIMIZE_ON
         }
 
         template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
-        constexpr auto _BwdCopy(TIter1 iter1, TIterEnd1 iterEnd1, TIter2 iter2,
-            TIterEnd2 iterEnd2) const -> void
+        constexpr auto _BwdCopy(
+            TIter1 iter1, TIterEnd1 iterEnd1, TIter2 iter2, TIterEnd2 iterEnd2) const -> void
         {
             StdIterWrapForAtomIter stdIter1{ iter1 };
             StdIterWrapForAtomIter stdIterEnd1{ iterEnd1 };
@@ -229,8 +229,8 @@ ATOM_PRAGMA_OPTIMIZE_ON
         }
 
         template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
-        constexpr auto _FwdMove(TIter1 iter1, TIterEnd1 iterEnd1, TIter2 iter2,
-            TIterEnd2 iterEnd2) const -> void
+        constexpr auto _FwdMove(
+            TIter1 iter1, TIterEnd1 iterEnd1, TIter2 iter2, TIterEnd2 iterEnd2) const -> void
         {
             StdIterWrapForAtomIter stdIter1{ iter1 };
             StdIterWrapForAtomIter stdIterEnd1{ iterEnd1 };

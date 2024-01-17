@@ -41,8 +41,8 @@ namespace Atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
-    class BidiRangeExtensions<TRange, void>:
-        public BidiRangeExtensions<TRange, _BidiRangeExtensionsImpl<TRange>>
+    class BidiRangeExtensions<TRange, void>
+        : public BidiRangeExtensions<TRange, _BidiRangeExtensionsImpl<TRange>>
     {
         using Base = BidiRangeExtensions<TRange, _BidiRangeExtensionsImpl<TRange>>;
 

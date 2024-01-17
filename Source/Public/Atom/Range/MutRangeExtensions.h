@@ -41,14 +41,15 @@ namespace Atom
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
-    class _MutRangeExtensionsImpl<TRange, void>:
-        public _MutRangeExtensionsImpl<TRange, _RangeExtensionsImpl<TRange>> {};
+    class _MutRangeExtensionsImpl<TRange, void>
+        : public _MutRangeExtensionsImpl<TRange, _RangeExtensionsImpl<TRange>>
+    {};
 
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
     template <typename TRange, typename _TConstRangeExtensions = void>
     class MutRangeExtensions: public _TConstRangeExtensions
@@ -77,7 +78,7 @@ namespace Atom
         ////////////////////////////////////////////////////////////////////////////////////////////
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         constexpr auto mutIter() -> TMutIter
         {
@@ -85,7 +86,7 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         constexpr auto mutIterEnd() -> TMutIterEnd
         {
@@ -129,14 +130,14 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-ATOM_PRAGMA_OPTIMIZE_OFF
+        ATOM_PRAGMA_OPTIMIZE_OFF
 
         template <typename T1>
         constexpr auto writeElemsNoOptimize(T1& val) const -> void
             requires(RAssignable<TElem, T1>)
         {}
 
-ATOM_PRAGMA_OPTIMIZE_ON
+        ATOM_PRAGMA_OPTIMIZE_ON
 
         /// ----------------------------------------------------------------------------------------
         ///
@@ -192,14 +193,15 @@ ATOM_PRAGMA_OPTIMIZE_ON
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
     template <typename TRange>
-    class MutRangeExtensions<TRange, void>:
-        public MutRangeExtensions<TRange, RangeExtensions<TRange, _MutRangeExtensionsImpl<TRange>>>
+    class MutRangeExtensions<TRange, void>
+        : public MutRangeExtensions<TRange,
+              RangeExtensions<TRange, _MutRangeExtensionsImpl<TRange>>>
     {
-        using Base = MutRangeExtensions<TRange, 
-            RangeExtensions<TRange, _MutRangeExtensionsImpl<TRange>>>;
+        using Base =
+            MutRangeExtensions<TRange, RangeExtensions<TRange, _MutRangeExtensionsImpl<TRange>>>;
 
     public:
         using Base::Base;

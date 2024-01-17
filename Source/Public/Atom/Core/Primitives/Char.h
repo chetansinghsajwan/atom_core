@@ -15,8 +15,9 @@ namespace Atom
         using This = Char;
 
     public:
-        constexpr Char():
-            _val(0) {}
+        constexpr Char()
+            : _val(0)
+        {}
 
         constexpr Char(const This& that) = default;
         constexpr Char& operator=(const This& that) = default;
@@ -24,8 +25,9 @@ namespace Atom
         constexpr Char(This&& that) = default;
         constexpr Char& operator=(This&& that) = default;
 
-        constexpr Char(_char ch):
-            _val(ch) {}
+        constexpr Char(_char ch)
+            : _val(ch)
+        {}
 
         constexpr Char& operator=(_char ch)
         {

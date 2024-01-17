@@ -28,9 +28,19 @@ namespace Atom
         constexpr auto emplace(TArgs&&... args) -> T&
             requires RSameOrDerivedFrom<TPure<T>, TVal>
         {
-            _impl.template emplaceVal<T>(fwd(args)...);
-            return _impl.template getMutValAs<T>();
-        }
+        public:
+            ATOM_CONDITIONAL_FIELD(Copyable, InvokablePtr<void(MutMemPtr<void>, MemPtr<void>)>)
+            copy;
+
+            ATOM_CONDITIONAL_FIELD(Movable, InvokablePtr<void(MutMemPtr<void>, MutMemPtr<void>)>)
+            move;
+
+            InvokablePtr<void(MutMemPtr<void> obj)> dtor;
+
+            usize size;
+            MutMemPtr<void> obj;
+            const TypeInfo* type;
+        };
 
         /// ----------------------------------------------------------------------------------------
         ///
@@ -469,38 +479,18 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Default Constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr Box():
-            Base{}
+        constexpr ObjectBox()
+            : _object()
+            , _heapMem(nullptr)
+            , _heapMemSize(0)
+            , _allocator()
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # Copy Constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr Box(const This& that) = delete;
-
-        /// ----------------------------------------------------------------------------------------
-        /// # Copy Operator
-        /// ----------------------------------------------------------------------------------------
-        constexpr This& operator=(const This& that) = delete;
-
-        /// ----------------------------------------------------------------------------------------
-        /// # Move Constructor
-        /// ----------------------------------------------------------------------------------------
-        constexpr Box(This&& that) = delete;
-
-        /// ----------------------------------------------------------------------------------------
-        /// # Move Operator
-        /// ----------------------------------------------------------------------------------------
-        constexpr This& operator=(This&& that) = delete;
-
-        /// ----------------------------------------------------------------------------------------
-        /// # Template Copy Constructor
-        /// ----------------------------------------------------------------------------------------
-        template <typename T, usize thatBufSize, typename TThatAlloc>
-        constexpr Box(const CopyBox<T, thatBufSize, TThatAlloc>& that)
-            requires IsVoid<TVal> or RSameOrDerivedFrom<T, TVal>
-            :
-            Base{ typename _TImpl::CopyTag(), that._impl }
+        constexpr ObjectBox(NullType null)
+            : ObjectBox()
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -579,32 +569,119 @@ namespace Atom
 
         /// ----------------------------------------------------------------------------------------
         /// # Constructor
-        /// ----------------------------------------------------------------------------------------
-        template <typename T, typename... TArgs>
-        constexpr Box(CtorParam<T> targ, TArgs&&... args)
-            requires(IsVoid<TVal> or RSameOrDerivedFrom<T, TVal>) and RConstructible<T, TArgs...>
-            :
-            Base{ targ, fwd(args)... }
-        {}
-
-        /// ----------------------------------------------------------------------------------------
-        /// # Constructor
+        ///
+        /// Initializes with object.
         /// ----------------------------------------------------------------------------------------
         template <typename T>
-        constexpr Box(T&& obj)
-            requires IsVoid<TVal> or RSameOrDerivedFrom<TPure<T>, TVal>
-            :
-            Base{ fwd(obj) }
-        {}
+            requires RObject<T>
+        ObjectBox(T&& obj)
+            : ObjectBox()
+        {
+            _InitObject(forward<T>(obj));
+        }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Operator
+        /// # Assignment
+        ///
+        /// Assigns new object.
         /// ----------------------------------------------------------------------------------------
         template <typename T>
         constexpr This& operator=(T&& obj)
             requires IsVoid<TVal> or RSameOrDerivedFrom<TPure<T>, TVal>
         {
-            _impl.setVal(fwd(obj));
+            _SetObject(forward<T>(object));
+            return *this;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// # Copy Constructor
+        /// ----------------------------------------------------------------------------------------
+        ObjectBox(const ObjectBox& other)
+            requires Copyable
+            : ObjectBox()
+        {
+            _CopyBox(other);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// # Copy Constructor
+        /// ----------------------------------------------------------------------------------------
+        template <bool OtherMovable, bool OtherAllowNonMovableObject, usize OtherStackSize,
+            typename TOtherMemAllocator>
+            requires Copyable && ROtherBox<Copyable, OtherMovable, OtherAllowNonMovableObject>
+        ObjectBox(const ObjectBox<Copyable, OtherMovable, OtherAllowNonMovableObject,
+            OtherStackSize, TOtherMemAllocator>& other)
+            : ObjectBox()
+        {
+            _CopyBox(other);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// # Copy Assignment
+        /// ----------------------------------------------------------------------------------------
+        auto operator=(const ObjectBox& other) -> ObjectBox&
+            requires Copyable
+        {
+            _CopyBox(other);
+            return *this;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// # Copy Assignment
+        /// ----------------------------------------------------------------------------------------
+        template <bool OtherMovable, bool OtherAllowNonMovableObject, usize OtherStackSize,
+            typename TOtherMemAllocator>
+            requires Copyable && ROtherBox<Copyable, OtherMovable, OtherAllowNonMovableObject>
+        auto operator=(const ObjectBox<Copyable, OtherMovable, OtherAllowNonMovableObject,
+            OtherStackSize, TOtherMemAllocator>& other) -> ObjectBox&
+        {
+            _CopyBox(other);
+            return *this;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// # Move Constructor
+        /// ----------------------------------------------------------------------------------------
+        ObjectBox(ObjectBox&& other)
+            requires Movable
+            : ObjectBox()
+        {
+            _MoveBox(mov(other));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// # Move Constructor
+        /// ----------------------------------------------------------------------------------------
+        template <bool OtherCopyable, bool OtherMovable, bool OtherAllowNonMovableObject,
+            usize OtherStackSize, typename TOtherMemAllocator>
+            requires Movable && ROtherBox<OtherCopyable, OtherMovable, OtherAllowNonMovableObject>
+        ObjectBox(ObjectBox<OtherCopyable, OtherMovable, OtherAllowNonMovableObject, OtherStackSize,
+            TOtherMemAllocator>&& other)
+            : ObjectBox()
+        {
+            _MoveBox(mov(other));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// # Move Assignment
+        /// ----------------------------------------------------------------------------------------
+        auto operator=(ObjectBox&& other) -> ObjectBox&
+            requires Movable
+        {
+            _MoveBox(mov(other));
+            return *this;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// # Move Assignment
+        /// ----------------------------------------------------------------------------------------
+        template <bool OtherCopyable, bool OtherMovable, bool OtherAllowNonMovableObject,
+            usize OtherStackSize, typename TOtherMemAllocator>
+            requires Movable && ROtherBox<OtherCopyable, OtherMovable, OtherAllowNonMovableObject>
+        auto operator=(ObjectBox<OtherCopyable, OtherMovable, OtherAllowNonMovableObject,
+            OtherStackSize, TOtherMemAllocator>&& other) -> ObjectBox&
+        {
+            _MoveBox(mov(other));
             return *this;
         }
 
@@ -1042,7 +1119,10 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Template Move Constructor
+        /// Stack Memory.
+        ///
+        /// # To Do
+        /// - Replace with a type to handle storage.
         /// ----------------------------------------------------------------------------------------
         template <typename T, usize thatBufSize, typename TThatAlloc>
         constexpr MoveBox(CopyMoveBox<T, allowNonMove, thatBufSize, TThatAlloc>&& that):

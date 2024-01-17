@@ -132,8 +132,8 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         auto _RemoveListener(EventKey key) -> usize
         {
-            return _listeners.removeIf([&](const auto& listener)
-                { return listener.GetInvokableType() == key.GetType(); });
+            return _listeners.removeIf(
+                [&](const auto& listener) { return listener.GetInvokableType() == key.GetType(); });
         }
 
         /// ----------------------------------------------------------------------------------------

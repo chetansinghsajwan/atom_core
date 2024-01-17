@@ -33,15 +33,15 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Default Constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr BasicDynamicArray():
-            _impl{}
+        constexpr BasicDynamicArray()
+            : _impl{}
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # Copy Constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr BasicDynamicArray(const BasicDynamicArray& that):
-            _impl{ that.iter(), that.iterEnd() }
+        constexpr BasicDynamicArray(const BasicDynamicArray& that)
+            : _impl{ that.iter(), that.iterEnd() }
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -56,8 +56,8 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         /// # Move Constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr BasicDynamicArray(BasicDynamicArray&& that):
-            _impl{ mov(that._impl) }
+        constexpr BasicDynamicArray(BasicDynamicArray&& that)
+            : _impl{ mov(that._impl) }
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -75,8 +75,7 @@ namespace Atom
         template <typename TRange, typename TRangeUnqualified = TTI::TRemoveQuailfiersRef<TRange>>
         constexpr BasicDynamicArray(TRange&& range)
             requires(RRangeOf<TRangeUnqualified, TElem>)
-            :
-            _impl{ range.iter(), range.iterEnd() }
+            : _impl{ range.iter(), range.iterEnd() }
         {}
 
         /// ----------------------------------------------------------------------------------------

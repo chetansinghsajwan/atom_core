@@ -24,7 +24,7 @@ module;
 
 export module atom.core;
 
-export 
+export
 {
 #include "Atom/CoreAll.h"
 }
