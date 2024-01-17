@@ -29,7 +29,7 @@ FetchContent_MakeAvailable(catch2 fmt wjcrypt)
 # --------------------------------------------------------------------------------------------------
 # C++20 Global Config
 # --------------------------------------------------------------------------------------------------
-include("CMake/enable-modules.cmake")
+include("cmake/enable_modules.cmake")
 set(CMAKE_CXX_STANDARD "23")
 set(CMAKE_CXX_STANDARD_REQUIRED "ON")
 enable_testing()
@@ -38,15 +38,12 @@ enable_testing()
 # Atom.Core
 # --------------------------------------------------------------------------------------------------
 
-file(GLOB_RECURSE SOURCES "Source/Private/**.cpp"
-    "Source/Private/**.h" "Public/**.h")
-
 add_library(Atom.Core STATIC)
 target_sources(Atom.Core
     PUBLIC FILE_SET modules TYPE CXX_MODULES FILES
-    "${SOURCES}"
+    "src/private/core.cpp"
 )
-target_include_directories(Atom.Core PRIVATE "Source/Public/")
+target_include_directories(Atom.Core PRIVATE "src/public/")
 
 target_link_libraries(Atom.Core PRIVATE WjCryptLib)
 target_link_libraries(Atom.Core PRIVATE fmt::fmt-header-only)
@@ -55,10 +52,10 @@ target_link_libraries(Atom.Core PRIVATE fmt::fmt-header-only)
 # Atom.Core.Tests
 # --------------------------------------------------------------------------------------------------
 
-file(GLOB_RECURSE TEST_SOURCES "Source/Tests/**.cpp")
+file(GLOB_RECURSE TEST_SOURCES "src/tests/**.cpp")
 
 add_executable(Atom.Core.Tests ${TEST_SOURCES})
-target_include_directories(Atom.Core.Tests PUBLIC "Source/Tests/")
+target_include_directories(Atom.Core.Tests PUBLIC "src/tests/")
 
 target_link_libraries(Atom.Core.Tests PUBLIC Atom.Core)
 target_link_libraries(Atom.Core.Tests PUBLIC Catch2::Catch2WithMain)
@@ -69,6 +66,6 @@ add_test(Atom.Core.Tests Atom.Core.Tests)
 # Atom.Core.Sandbox
 # --------------------------------------------------------------------------------------------------
 
-add_executable(Atom.Core.Sandbox "Source/Sandbox/Sandbox.cpp")
-target_include_directories(Atom.Core.Sandbox PRIVATE "Sandbox")
+add_executable(Atom.Core.Sandbox "src/sandbox/sandbox.cpp")
+target_include_directories(Atom.Core.Sandbox PRIVATE "src/sandbox/")
 target_link_libraries(Atom.Core.Sandbox PUBLIC Atom.Core)
