@@ -1,194 +1,194 @@
 #pragma once
-#include "Atom/Memory/ObjHelper.h"
-#include "Atom/Memory/Ptr.h"
-#include "Atom/Memory/UniquePtr.h"
-#include "Atom/Memory/_SharedPtrState.h"
-#include "Atom/TTI.h"
+#include "atom/memory/obj_helper.h"
+#include "atom/memory/ptr.h"
+#include "atom/memory/unique_ptr.h"
+#include "atom/memory/_shared_ptr_state.h"
+#include "atom/tti.h"
 
-namespace Atom
+namespace atom
 {
-    class SharedPtrDefaultAllocator: public DefaultMemAllocator
+    class shared_ptr_default_allocator: public default_mem_allocator
     {};
 
-    class _SharedPtrPrivateCtor
+    class _shared_ptr_private_ctor
     {};
 
-    template <typename T>
-    class SharedPtrDefaultDestroyer
+    template <typename type>
+    class shared_ptr_default_destroyer
     {
-        static_assert(TTI::IsPure<T>, "SharedPtrDefaultDestroyer only supports pure types.");
-        static_assert(not TTI::IsVoid<T>, "SharedPtrDefaultDestroyer doesn't support void.");
+        static_assert(tti::is_pure<type>, "shared_ptr_default_destroyer only supports pure types.");
+        static_assert(not tti::is_void<type>, "shared_ptr_default_destroyer doesn't support void.");
 
     public:
-        constexpr auto operator()(MutPtr<T> val)
+        constexpr auto operator()(mut_ptr<type> val)
         {
-            ObjHelper().DestructAs<T>(val);
-            DefaultMemAllocator().Dealloc(val);
+            obj_helper().destruct_as<type>(val);
+            default_mem_allocator().dealloc(val);
         }
     };
 
-    template <typename TInVal>
-    class SharedPtr: public MutPtr<TInVal>
+    template <typename tin_val>
+    class shared_ptr: public mut_ptr<tin_val>
     {
-        static_assert(TTI::IsPure<TInVal>, "SharedPtr only supports pure types.");
-        static_assert(not TTI::IsVoid<TInVal>, "SharedPtr doesn't support void.");
+        static_assert(tti::is_pure<tin_val>, "shared_ptr only supports pure types.");
+        static_assert(not tti::is_void<tin_val>, "shared_ptr doesn't support void.");
 
     private:
-        using This = SharedPtr<TInVal>;
-        using Base = MutPtr<TInVal>;
+        using this_type = shared_ptr<tin_val>;
+        using base_type = mut_ptr<tin_val>;
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// Type of value `This` holds.
+        /// type of value `this_type` holds.
         /// ----------------------------------------------------------------------------------------
-        using TVal = typename Base::TVal;
+        using value_type = typename base_type::value_type;
 
     private:
-        template <typename T>
-        friend class SharedPtr;
+        template <typename type>
+        friend class shared_ptr;
 
-        template <typename T, typename TAllocator, typename... TArgs>
-        friend auto MakeSharedWithAlloc(TAllocator alloc, TArgs&&... args) -> SharedPtr<T>;
+        template <typename type, typename tallocator, typename... args_type>
+        friend auto make_shared_with_alloc(tallocator alloc, args_type&&... args) -> shared_ptr<type>;
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// # Default Constructor
+        /// # default constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr SharedPtr()
-            : Base()
+        constexpr shared_ptr()
+            : base_type()
             , _state(nullptr)
         {}
 
         /// ----------------------------------------------------------------------------------------
-        /// # Copy Constructor
+        /// # copy constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr SharedPtr(const SharedPtr& that) = default;
+        constexpr shared_ptr(const shared_ptr& that) = default;
 
         /// ----------------------------------------------------------------------------------------
-        /// # Template Copy Constructor
+        /// # template copy constructor
         /// ----------------------------------------------------------------------------------------
-        template <typename TThat>
-        constexpr SharedPtr(const SharedPtr<TThat>& that)
-            requires RSameOrDerivedFrom<TThat, TVal>
-            : Base(that.unwrap())
+        template <typename tthat>
+        constexpr shared_ptr(const shared_ptr<tthat>& that)
+            requires rsame_or_derived_from<tthat, value_type>
+            : base_type(that.unwrap())
             , _state(that._state)
         {
-            _checkAndIncreaseSharedCount();
+            _check_and_increase_shared_count();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Copy Operator
+        /// # copy operator
         /// ----------------------------------------------------------------------------------------
-        constexpr SharedPtr& operator=(const SharedPtr& that) = default;
+        constexpr shared_ptr& operator=(const shared_ptr& that) = default;
 
         /// ----------------------------------------------------------------------------------------
-        /// # Template Copy Operator
+        /// # template copy operator
         /// ----------------------------------------------------------------------------------------
-        template <typename TVal1>
-        constexpr SharedPtr& operator=(const SharedPtr<TVal1>& that)
-            requires RSameOrDerivedFrom<TVal1, TVal>
+        template <typename tval1>
+        constexpr shared_ptr& operator=(const shared_ptr<tval1>& that)
+            requires rsame_or_derived_from<tval1, value_type>
         {
-            _checkAndRelease();
+            _check_and_release();
 
-            _setPtr(that._getMutPtr());
+            _set_ptr(that._get_mut_ptr());
             _state = that._state;
 
-            _checkAndIncreaseSharedCount();
+            _check_and_increase_shared_count();
 
             return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Move Constructor
+        /// # move constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr SharedPtr(SharedPtr&& that) = default;
+        constexpr shared_ptr(shared_ptr&& that) = default;
 
         /// ----------------------------------------------------------------------------------------
-        /// # Move Operator
+        /// # move operator
         /// ----------------------------------------------------------------------------------------
-        constexpr SharedPtr& operator=(SharedPtr&& that) = default;
+        constexpr shared_ptr& operator=(shared_ptr&& that) = default;
 
         /// ----------------------------------------------------------------------------------------
-        /// # Template Move Constructor
+        /// # template move constructor
         /// ----------------------------------------------------------------------------------------
-        template <typename TThat>
-        constexpr SharedPtr(SharedPtr<TThat>&& that)
-            requires RSameOrDerivedFrom<TThat, TVal>
-            : Base(that.unwrap())
+        template <typename tthat>
+        constexpr shared_ptr(shared_ptr<tthat>&& that)
+            requires rsame_or_derived_from<tthat, value_type>
+            : base_type(that.unwrap())
             , _state(that._state)
         {
-            that._setPtr(nullptr);
+            that._set_ptr(nullptr);
             that._state = nullptr;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Template Move Operator
+        /// # template move operator
         /// ----------------------------------------------------------------------------------------
-        template <typename TThat>
-        constexpr SharedPtr& operator=(SharedPtr<TThat>&& that)
-            requires RSameOrDerivedFrom<TThat, TVal>
+        template <typename tthat>
+        constexpr shared_ptr& operator=(shared_ptr<tthat>&& that)
+            requires rsame_or_derived_from<tthat, value_type>
         {
-            _checkAndRelease();
+            _check_and_release();
 
-            _setPtr(that._getMutPtr());
+            _set_ptr(that._get_mut_ptr());
             _state = that._state;
 
-            that._setPtr(nullptr);
+            that._set_ptr(nullptr);
             that._state = nullptr;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Null Constructor
+        /// # null constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr SharedPtr(std::nullptr_t)
-            : This()
+        constexpr shared_ptr(std::nullptr_t)
+            : this_type()
         {}
 
         /// ----------------------------------------------------------------------------------------
-        /// # Null Operator
+        /// # null operator
         /// ----------------------------------------------------------------------------------------
-        constexpr SharedPtr& operator=(std::nullptr_t)
+        constexpr shared_ptr& operator=(std::nullptr_t)
         {
-            _checkAndRelease();
+            _check_and_release();
 
-            _setPtr(nullptr);
+            _set_ptr(nullptr);
             _state = nullptr;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Value Constructor
+        /// # value constructor
         /// ----------------------------------------------------------------------------------------
-        template <typename TDestroyer = SharedPtrDefaultDestroyer<TVal>,
-            typename TAllocator = SharedPtrDefaultAllocator>
-        constexpr explicit SharedPtr(MutPtr<TVal> ptr, TDestroyer destroyer = TDestroyer(),
-            TAllocator allocator = TAllocator())
-            : Base(ptr)
+        template <typename tdestroyer = shared_ptr_default_destroyer<value_type>,
+            typename tallocator = shared_ptr_default_allocator>
+        constexpr explicit shared_ptr(mut_ptr<value_type> ptr, tdestroyer destroyer = tdestroyer(),
+            tallocator allocator = tallocator())
+            : base_type(ptr)
         {
             if (ptr.ne(nullptr))
             {
-                _state = _createState<TDestroyer, TAllocator>(mov(destroyer), mov(allocator));
+                _state = _create_state<tdestroyer, tallocator>(mov(destroyer), mov(allocator));
             }
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Value Operator
+        /// # value operator
         /// ----------------------------------------------------------------------------------------
-        constexpr SharedPtr& operator=(MutPtr<TVal> ptr)
+        constexpr shared_ptr& operator=(mut_ptr<value_type> ptr)
         {
             set(ptr);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Destructor
+        /// # destructor
         /// ----------------------------------------------------------------------------------------
-        constexpr ~SharedPtr()
+        constexpr ~shared_ptr()
         {
-            _checkAndRelease();
+            _check_and_release();
         }
 
     private:
-        constexpr SharedPtr(_SharedPtrPrivateCtor, MutPtr<_ISharedPtrState> state, MutPtr<TVal> ptr)
-            : Base(ptr)
+        constexpr shared_ptr(_shared_ptr_private_ctor, mut_ptr<_ishared_ptr_state> state, mut_ptr<value_type> ptr)
+            : base_type(ptr)
             , _state(state)
         {}
 
@@ -196,24 +196,24 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename T, typename TDestroyer = SharedPtrDefaultDestroyer<TVal>,
-            typename TAllocator = SharedPtrDefaultAllocator>
+        template <typename type, typename tdestroyer = shared_ptr_default_destroyer<value_type>,
+            typename tallocator = shared_ptr_default_allocator>
         constexpr auto set(
-            MutPtr<T> ptr, TDestroyer destroyer = TDestroyer(), TAllocator allocator = TAllocator())
-            requires RSameOrDerivedFrom<T, TVal>
+            mut_ptr<type> ptr, tdestroyer destroyer = tdestroyer(), tallocator allocator = tallocator())
+            requires rsame_or_derived_from<type, value_type>
         {
-            if (_getPtr() != nullptr)
+            if (_get_ptr() != nullptr)
             {
                 _release();
 
                 if (ptr != nullptr)
                 {
-                    _setPtr(ptr);
-                    _createState(mov(destroyer), mov(allocator));
+                    _set_ptr(ptr);
+                    _create_state(mov(destroyer), mov(allocator));
                 }
                 else
                 {
-                    _setPtr(nullptr);
+                    _set_ptr(nullptr);
                     _state = nullptr;
                 }
             }
@@ -221,8 +221,8 @@ namespace Atom
             {
                 if (ptr != nullptr)
                 {
-                    _setPtr(ptr);
-                    _createState(mov(destroyer), mov(allocator));
+                    _set_ptr(ptr);
+                    _create_state(mov(destroyer), mov(allocator));
                 }
             }
         }
@@ -232,21 +232,21 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto set(std::nullptr_t)
         {
-            _checkAndRelease();
+            _check_and_release();
 
-            _setPtr(nullptr);
+            _set_ptr(nullptr);
             _state = nullptr;
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto release() -> MutPtr<TVal>
+        constexpr auto release() -> mut_ptr<value_type>
         {
-            _checkAndRelease();
+            _check_and_release();
 
-            MutPtr<TVal> ptr = _getMutPtr();
-            _setPtr(nullptr);
+            mut_ptr<value_type> ptr = _get_mut_ptr();
+            _set_ptr(nullptr);
             _state = nullptr;
 
             return ptr;
@@ -255,105 +255,105 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto getCount() const -> usize
+        constexpr auto get_count() const -> usize
         {
-            return _state.eq(nullptr) ? 0 : _state.get().getCount();
+            return _state.eq(nullptr) ? 0 : _state.get().get_count();
         }
 
     private:
         constexpr auto _release()
         {
-            _state.getMut().decreaseCount();
+            _state.get_mut().decrease_count();
 
-            if (_state.getMut().getCount() == 0)
+            if (_state.get_mut().get_count() == 0)
             {
-                _state.getMut().destroy(_getMutPtr());
-                _state.getMut().deallocSelf();
+                _state.get_mut().destroy(_get_mut_ptr());
+                _state.get_mut().dealloc_self();
             }
         }
 
-        constexpr auto _checkAndRelease()
+        constexpr auto _check_and_release()
         {
-            if (_getPtr() != nullptr)
+            if (_get_ptr() != nullptr)
             {
                 _release();
             }
         }
 
-        template <typename TDestroyer, typename TAllocator>
-        constexpr auto _createState(TDestroyer destroyer, TAllocator allocator)
-            -> MutPtr<_ISharedPtrState>
+        template <typename tdestroyer, typename tallocator>
+        constexpr auto _create_state(tdestroyer destroyer, tallocator allocator)
+            -> mut_ptr<_ishared_ptr_state>
         {
-            using State = _SharedPtrState<TVal, TDestroyer, TAllocator>;
+            using state = _shared_ptr_state<value_type, tdestroyer, tallocator>;
 
-            MutPtr<void> mem = allocator.Alloc(sizeof(State));
-            ObjHelper().ConstructAs<State>(mem, mov(destroyer), mov(allocator));
-            return mem.as<State>();
+            mut_ptr<void> mem = allocator.alloc(sizeof(state));
+            obj_helper().construct_as<state>(mem, mov(destroyer), mov(allocator));
+            return mem.as<state>();
         }
 
-        constexpr auto _checkAndIncreaseSharedCount()
+        constexpr auto _check_and_increase_shared_count()
         {
             if (_state != nullptr)
             {
-                _state.getMut().increaseCount();
+                _state.get_mut().increase_count();
             }
         }
 
-        constexpr auto _setPtr(MutPtr<TVal> ptr)
+        constexpr auto _set_ptr(mut_ptr<value_type> ptr)
         {
-            Base::set(ptr);
+            base_type::set(ptr);
         }
 
-        constexpr auto _getPtr() const -> const TVal*
+        constexpr auto _get_ptr() const -> const value_type*
         {
-            return Base::unwrap();
+            return base_type::unwrap();
         }
 
-        constexpr auto _getMutPtr() -> TVal*
+        constexpr auto _get_mut_ptr() -> value_type*
         {
-            return Base::unwrap();
+            return base_type::unwrap();
         }
 
     private:
-        MutPtr<_ISharedPtrState> _state;
+        mut_ptr<_ishared_ptr_state> _state;
     };
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename T, typename... TArgs>
-    auto MakeShared(TArgs&&... args) -> SharedPtr<T>
+    template <typename type, typename... args_type>
+    auto make_shared(args_type&&... args) -> shared_ptr<type>
     {
-        return MakeSharedWithAlloc<T>(SharedPtrDefaultAllocator(), forward<TArgs>(args)...);
+        return make_shared_with_alloc<type>(shared_ptr_default_allocator(), forward<args_type>(args)...);
     }
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename T, typename TAllocator, typename... TArgs>
-    auto MakeSharedWithAlloc(TAllocator allocator, TArgs&&... args) -> SharedPtr<T>
+    template <typename type, typename tallocator, typename... args_type>
+    auto make_shared_with_alloc(tallocator allocator, args_type&&... args) -> shared_ptr<type>
 
     {
-        using State = _SharedPtrState<T, SharedPtrDefaultDestroyer<T>, SharedPtrDefaultAllocator>;
+        using state = _shared_ptr_state<type, shared_ptr_default_destroyer<type>, shared_ptr_default_allocator>;
 
-        MutMemPtr<void> mem = allocator.Alloc(sizeof(State) + sizeof(T));
-        MutPtr<State> statePtr = mem;
-        MutPtr<T> valuePtr = mem.next(sizeof(State)).as<T>();
+        mut_mem_ptr<void> mem = allocator.alloc(sizeof(state) + sizeof(type));
+        mut_ptr<state> state_ptr = mem;
+        mut_ptr<type> value_ptr = mem.next(sizeof(state)).as<type>();
 
-        ObjHelper().Construct(valuePtr, forward<TArgs>(args)...);
-        return SharedPtr<T>(_SharedPtrPrivateCtor(), statePtr, valuePtr);
+        obj_helper().construct(value_ptr, forward<args_type>(args)...);
+        return shared_ptr<type>(_shared_ptr_private_ctor(), state_ptr, value_ptr);
     }
 }
 
-namespace Atom
+namespace atom
 {
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename TVal, typename TDestroyer>
-    template <typename TAllocator, typename TVal1>
-    constexpr auto UniquePtr<TVal, TDestroyer>::_toShared(TAllocator allocator) -> SharedPtr<TVal1>
+    template <typename value_type, typename tdestroyer>
+    template <typename tallocator, typename tval1>
+    constexpr auto unique_ptr<value_type, tdestroyer>::_to_shared(tallocator allocator) -> shared_ptr<tval1>
     {
-        return MakeSharedWithAlloc(mov(allocator), _getMutPtr());
+        return make_shared_with_alloc(mov(allocator), _get_mut_ptr());
     }
 }

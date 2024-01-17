@@ -1,36 +1,36 @@
 #pragma once
-#include "MutRangeExtensions.h"
-#include "Atom/Invokable/Invokable.h"
+#include "mut_range_extensions.h"
+#include "atom/invokable/invokable.h"
 
-namespace Atom
+namespace atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// # To Do: Implement this.
+    /// # to do: implement this.
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange>
-    concept RDynamicRange = RMutRange<TRange>;
+    template <typename range_type>
+    concept rdynamic_range = rmut_range<range_type>;
 
-    template <typename T>
-    class DynamicRangeExtensionsImpl
+    template <typename type>
+    class dynamic_range_extensions_impl
     {};
 
-    template <typename T>
-    class _DynamicRangeExtensionsImpl
+    template <typename type>
+    class _dynamic_range_extensions_impl
     {};
 
-    template <typename T>
-    class DynamicRangeExtensions
+    template <typename type>
+    class dynamic_range_extensions
     {
-        using _TImpl = DynamicRangeExtensionsImpl<T>;
+        using _timpl = dynamic_range_extensions_impl<type>;
 
     public:
-        using TElem = typename _TImpl::TElem;
-        using TMutIter = typename _TImpl::TMutIter;
-        using TMutIterEnd = typename _TImpl::TMutIterEnd;
+        using elem_type = typename _timpl::elem_type;
+        using mut_iter_type = typename _timpl::mut_iter_type;
+        using mut_iter_end_type = typename _timpl::mut_iter_end_type;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////
-        //// Removal
+        //// removal
         ////
         ////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -38,17 +38,17 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename TPred>
-        constexpr auto removeIf(TPred&& pred) -> usize
-            requires(RInvokable<TPred, bool(const TElem&)>)
+        template <typename tpred>
+        constexpr auto remove_if(tpred&& pred) -> usize
+            requires(rinvokable<tpred, bool(const elem_type&)>)
         {
             usize count = 0;
-            auto itEnd = _impl.iterEnd();
-            for (auto it = _impl.iter(); it != itEnd; it.next())
+            auto it_end = _impl.iter_end();
+            for (auto it = _impl.iter(); it != it_end; it.next())
             {
                 if (pred(it.value()))
                 {
-                    it = _impl.removeAt(it);
+                    it = _impl.remove_at(it);
                     count++;
                 }
             }
@@ -57,6 +57,6 @@ namespace Atom
         }
 
     private:
-        _TImpl _impl;
+        _timpl _impl;
     };
 }

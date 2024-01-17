@@ -1,116 +1,116 @@
 import atom.core;
 #include "catch2/catch_test_macros.hpp"
 
-using namespace Atom;
+using namespace atom;
 
-TEST_CASE("Atom::Hash::Sha1Hash")
+TEST_CASE("atom::hash::sha1_hash")
 {
-    SECTION("Hash Comparision")
+    SECTION("hash comparision")
     {
-        Sha1Hash hash1 = { 0xda, 0x39, 0xa3, 0xee, 0x5e, 0x6b, 0x4b, 0x0d, 0x32, 0x55, 0xbf, 0xef,
+        sha1_hash hash1 = { 0xda, 0x39, 0xa3, 0xee, 0x5e, 0x6b, 0x4b, 0x0d, 0x32, 0x55, 0xbf, 0xef,
             0x95, 0x60, 0x18, 0x90, 0xaf, 0xd8, 0x07, 0x09 };
 
-        Sha1Hash hash2 = { 0xaa, 0x39, 0xa3, 0xee, 0x5e, 0x6b, 0x4b, 0x0d, 0x32, 0x55, 0xbf, 0xef,
+        sha1_hash hash2 = { 0xaa, 0x39, 0xa3, 0xee, 0x5e, 0x6b, 0x4b, 0x0d, 0x32, 0x55, 0xbf, 0xef,
             0x95, 0x60, 0x18, 0x90, 0xaf, 0xd8, 0x07, 0x09 };
 
-        CHECK(hash1.eq(hash1));
-        CHECK(hash1.ne(hash2));
+        REQUIRE(hash1.eq(hash1));
+        REQUIRE(hash1.ne(hash2));
     }
 
-    SECTION("Null Hash")
+    SECTION("null hash")
     {
-        Sha1Hash hash;
-        Sha1Hash nullHash = Sha1Hash::Null;
+        sha1_hash hash;
+        sha1_hash null_hash = sha1_hash::null;
 
-        CHECK(nullHash.eq(Sha1Hash::Null));
+        REQUIRE(null_hash.eq(sha1_hash::null));
 
-        hash = Sha1Hash::Null;
+        hash = sha1_hash::null;
 
-        CHECK(hash.eq(Sha1Hash::Null));
-        CHECK(hash.eq(nullHash));
+        REQUIRE(hash.eq(sha1_hash::null));
+        REQUIRE(hash.eq(null_hash));
     }
 }
 
-TEST_CASE("Atom::Hash::Sha1HashParser")
+TEST_CASE("atom::hash::sha1_hash_parser")
 {
-    SECTION("String to Hash")
+    SECTION("string to hash")
     {
-        Sha1Hash hash =
-            Sha1HashParser().parse(MakeRange("da39a3ee5e6b4b0d3255bfef95601890afd80709"));
+        sha1_hash hash =
+            sha1_hash_parser().parse(make_range("da39a3ee5e6b4b0d3255bfef95601890afd80709"));
 
-        Sha1Hash expected = { 0xda, 0x39, 0xa3, 0xee, 0x5e, 0x6b, 0x4b, 0x0d, 0x32, 0x55, 0xbf,
+        sha1_hash expected = { 0xda, 0x39, 0xa3, 0xee, 0x5e, 0x6b, 0x4b, 0x0d, 0x32, 0x55, 0xbf,
             0xef, 0x95, 0x60, 0x18, 0x90, 0xaf, 0xd8, 0x07, 0x09 };
 
-        CHECK(hash.eq(expected));
+        REQUIRE(hash.eq(expected));
     }
 
-    SECTION("Invalid Hash")
+    SECTION("invalid hash")
     {
-        //! Won't Compile
-        // Sha1Hash hash = Sha1HashParser()
-        //     .parse(MakeRange("da3"));
+        //! won't compile
+        // sha1_hash hash = sha1_hash_parser()
+        //     .parse(make_range("da3"));
         //
-        // CHECK(hash.eq(Sha1Hash));
+        // REQUIRE(hash.eq(sha1_hash));
     }
 }
 
-TEST_CASE("Atom::Hash::Sha1HashStringifier")
+TEST_CASE("atom::hash::sha1_hash_stringifier")
 {
-    Sha1Hash hash = { 0xda, 0x39, 0xa3, 0xee, 0x5e, 0x6b, 0x4b, 0x0d, 0x32, 0x55, 0xbf, 0xef, 0x95,
+    sha1_hash hash = { 0xda, 0x39, 0xa3, 0xee, 0x5e, 0x6b, 0x4b, 0x0d, 0x32, 0x55, 0xbf, 0xef, 0x95,
         0x60, 0x18, 0x90, 0xaf, 0xd8, 0x07, 0x09 };
 
-    String str = Sha1HashStringifier().ToString(hash);
+    string str = sha1_hash_stringifier().to_string(hash);
 
-    StringView expected = MakeRange("da39a3ee5e6b4b0d3255bfef95601890afd80709");
+    string_view expected = make_range("da39a3ee5e6b4b0d3255bfef95601890afd80709");
 
-    CHECK(str.eq(expected));
+    REQUIRE(str.eq(expected));
 }
 
-TEST_CASE("Atom::Hash::Sha1HashGenerator")
+TEST_CASE("atom::hash::sha1_hash_generator")
 {
-    // Tests if the SHA-1 hash of an empty input string is correct.
-    SECTION("TestEmptyInput")
+    // tests if the sha-1 hash of an empty input string is correct.
+    SECTION("test_empty_input")
     {
         const char input[] = "";
 
-        Sha1Hash hash = Sha1HashGenerator().Generate();
+        sha1_hash hash = sha1_hash_generator().generate();
 
-        Sha1Hash expected =
-            Sha1HashParser().parse(MakeRange("da39a3ee5e6b4b0d3255bfef95601890afd80709"));
+        sha1_hash expected =
+            sha1_hash_parser().parse(make_range("da39a3ee5e6b4b0d3255bfef95601890afd80709"));
 
-        CHECK(hash.eq(expected));
+        REQUIRE(hash.eq(expected));
     }
 
-    // Tests if the SHA-1 hash of a single block input string is correct.
-    SECTION("TestSingleBlockInput")
+    // tests if the sha-1 hash of a single block input string is correct.
+    SECTION("test_single_block_input")
     {
-        const char input[] = "The quick brown fox jumps over the lazy dog";
+        const char input[] = "the quick brown fox jumps over the lazy dog";
 
-        Sha1Hash hash = Sha1HashGenerator().ProcessBytes(input, sizeof(input) - 1).Generate();
+        sha1_hash hash = sha1_hash_generator().process_bytes(input, sizeof(input) - 1).generate();
 
-        Sha1Hash expected =
-            Sha1HashParser().parse(MakeRange("2fd4e1c67a2d28fced849ee1bb76e7391b93eb12"));
+        sha1_hash expected =
+            sha1_hash_parser().parse(make_range("2fd4e1c67a2d28fced849ee1bb76e7391b93eb12"));
 
-        CHECK(hash.eq(expected));
+        REQUIRE(hash.eq(expected));
     }
 
-    // Tests if the SHA-1 hash of a multi-block input string is correct.
-    SECTION("TestMultiBlockInput")
+    // tests if the sha-1 hash of a multi-block input string is correct.
+    SECTION("test_multi_block_input")
     {
         const char input[] =
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+            "lorem ipsum dolor sit amet, consectetur adipiscing elit, "
             "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
-            "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris "
-            "nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in "
+            "ut enim ad minim veniam, quis nostrud exercitation ullamco laboris "
+            "nisi ut aliquip ex ea commodo consequat. duis aute irure dolor in "
             "reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. "
-            "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia "
+            "excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia "
             "deserunt mollit anim id est laborum.";
 
-        Sha1Hash hash = Sha1HashGenerator().ProcessBytes(input, sizeof(input) - 1).Generate();
+        sha1_hash hash = sha1_hash_generator().process_bytes(input, sizeof(input) - 1).generate();
 
-        Sha1Hash expected =
-            Sha1HashParser().parse(MakeRange("cd36b370758a259b34845084a6cc38473cb95e27"));
+        sha1_hash expected =
+            sha1_hash_parser().parse(make_range("cd36b370758a259b34845084a6cc38473cb95e27"));
 
-        CHECK(hash.eq(expected));
+        REQUIRE(hash.eq(expected));
     }
 }

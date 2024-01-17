@@ -1,48 +1,48 @@
 #pragma once
-#include "Atom/Core/Primitives.h"
-#include "Atom/Preprocessors.h"
+#include "atom/core/primitives.h"
+#include "atom/preprocessors.h"
 
 // #include <source_location>
 
-namespace Atom
+namespace atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// Info about the source code line.
+    /// info about the source code line.
     /// --------------------------------------------------------------------------------------------
-    class SourceLineInfo
+    class source_line_info
     {
     public:
         /// --------------------------------------------------------------------------------------------
-        /// Get the source line info of the calling site.
+        /// get the source line info of the calling site.
         ///
-        /// # Note
-        /// - This default argument is used to capture the source line info of the calling site.
-        ///   Don't pass any argument for this.
+        /// # note
+        /// - this_type default argument is used to capture the source line info of the calling site.
+        ///   don't pass any argument for this.
         /// --------------------------------------------------------------------------------------------
-#if defined(ATOM_COMPILER_CLANG) && !defined(__cpp_lib_source_location)
-        static consteval auto current(const Char* fileName = __builtin_FILE(),
-            const Char* funcName = __builtin_FUNCTION(), u32 line = __builtin_LINE(),
-            u32 column = __builtin_COLUMN()) -> SourceLineInfo
+#if defined(atom_compiler_clang) && !defined(__cpp_lib_source_location)
+        static consteval auto current(const char* file_name = __builtin_file(),
+            const char* func_name = __builtin_function(), u32 line = __builtin_line(),
+            u32 column = __builtin_column()) -> source_line_info
         {
-            return SourceLineInfo{
-                .line = line, .column = column, .funcName = funcName, .fileName = fileName
+            return source_line_info{
+                .line = line, .column = column, .func_name = func_name, .file_name = file_name
             };
         }
 #else
         static consteval auto current(std::source_location src = std::source_location::current())
-            -> SourceLineInfo
+            -> source_line_info
         {
-            return SourceLineInfo{ .line = src.line(),
+            return source_line_info{ .line = src.line(),
                 .column = src.column(),
-                .funcName = src.function_name(),
-                .fileName = src.file_name() };
+                .func_name = src.function_name(),
+                .file_name = src.file_name() };
         }
 #endif
 
     public:
         u32 line;
         u32 column;
-        std::string_view funcName;
-        std::string_view fileName;
+        std::string_view func_name;
+        std::string_view file_name;
     };
 }

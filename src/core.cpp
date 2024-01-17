@@ -21,10 +21,11 @@ module;
 #include <initializer_list>
 #include <cstring>
 #include <functional>
+#include "fmt/format.h"
 
 export module atom.core;
 
 export
 {
-#include "Atom/CoreAll.h"
+#include "atom/core_all.h"
 }

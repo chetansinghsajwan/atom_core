@@ -1,15 +1,15 @@
 import atom.core;
-#include "Range/IterReqChecks.h"
+#include "range/iter_req_checks.h"
 
-using namespace Atom;
+using namespace atom;
 
-ATOM_SATISFIES_ITER_PAIR(IterReqMock<i32>, IterEndReqMock);
-ATOM_SATISFIES_MUT_ITER_PAIR(MutIterReqMock<i32>, IterEndReqMock);
-ATOM_SATISFIES_FWD_ITER_PAIR(FwdIterReqMock<i32>, IterEndReqMock);
-ATOM_SATISFIES_MUT_FWD_ITER_PAIR(MutFwdIterReqMock<i32>, IterEndReqMock);
-ATOM_SATISFIES_BIDI_ITER_PAIR(BidiIterReqMock<i32>, IterEndReqMock);
-ATOM_SATISFIES_MUT_BIDI_ITER_PAIR(MutBidiIterReqMock<i32>, IterEndReqMock);
-ATOM_SATISFIES_JUMP_ITER_PAIR(JumpIterReqMock<i32>, IterEndReqMock);
-ATOM_SATISFIES_MUT_JUMP_ITER_PAIR(MutJumpIterReqMock<i32>, IterEndReqMock);
-ATOM_SATISFIES_ARR_ITER_PAIR(ArrayIterReqMock<i32>, ArrayIterReqMock<i32>);
-ATOM_SATISFIES_MUT_ARR_ITER_PAIR(MutArrayIterReqMock<i32>, MutArrayIterReqMock<i32>);
+atom_satisfies_iter_pair(iter_req_mock<i32>, iter_end_req_mock);
+atom_satisfies_mut_iter_pair(mut_iter_req_mock<i32>, iter_end_req_mock);
+atom_satisfies_fwd_iter_pair(fwd_iter_req_mock<i32>, iter_end_req_mock);
+atom_satisfies_mut_fwd_iter_pair(mut_fwd_iter_req_mock<i32>, iter_end_req_mock);
+atom_satisfies_bidi_iter_pair(bidi_iter_req_mock<i32>, iter_end_req_mock);
+atom_satisfies_mut_bidi_iter_pair(mut_bidi_iter_req_mock<i32>, iter_end_req_mock);
+atom_satisfies_jump_iter_pair(jump_iter_req_mock<i32>, iter_end_req_mock);
+atom_satisfies_mut_jump_iter_pair(mut_jump_iter_req_mock<i32>, iter_end_req_mock);
+atom_satisfies_arr_iter_pair(array_iter_req_mock<i32>, array_iter_req_mock<i32>);
+atom_satisfies_mut_arr_iter_pair(mut_array_iter_req_mock<i32>, mut_array_iter_req_mock<i32>);

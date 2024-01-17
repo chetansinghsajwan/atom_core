@@ -1,64 +1,64 @@
 #pragma once
-#include "Atom/String.h"
-#include "Atom/TTI.h"
+#include "atom/string.h"
+#include "atom/tti.h"
 
-#include "Atom/Uuid/Uuid.h"
+#include "atom/uuid/uuid.h"
 
-namespace Atom::Private
+namespace atom
 {
-    template <typename THash, typename THashGenerator, EUuidVersion UuidVersion>
-    class UuidNameGenerator
+    template <typename thash, typename thash_generator, euuid_version uuid_version>
+    class _uuid_name_generator
     {
     public:
-        explicit UuidNameGenerator(const Uuid& nsUuid)
-            : _nsUuid(nsUuid)
+        explicit _uuid_name_generator(const uuid& ns_uuid)
+            : _ns_uuid(ns_uuid)
         {}
 
     public:
-        auto generate(StringView name) -> Uuid
+        auto generate(string_view name) -> uuid
         {
             _reset();
-            _processString(name);
-            return _makeUuid();
+            _process_string(name);
+            return _make_uuid();
         }
 
     private:
         auto _reset()
         {
-            _hashGenerator.Reset();
-            _hashGenerator.ProcessBytes(_nsUuid.bytes.mem(), 16);
+            _hash_generator.reset();
+            _hash_generator.process_bytes(_ns_uuid.bytes.mem(), 16);
         }
 
-        auto _processString(StringView str)
+        auto _process_string(string_view str)
         {
             for (uint32_t c : str)
             {
-                _hashGenerator.ProcessByte(static_cast<byte>(c & 0xFF));
+                _hash_generator.process_byte(static_cast<byte>(c & 0xff));
 
-                // TODO: Check this
-                // if constexpr (!TTI::IsSame<Char, char>)
+                // todo: check this
+                // if constexpr (!tti::is_same<uchar, char>)
                 // {
-                //     _hashGenerator.ProcessByte(static_cast<byte>((c >> 8) & 0xFF));
-                //     _hashGenerator.ProcessByte(static_cast<byte>((c >> 16) & 0xFF));
-                //     _hashGenerator.ProcessByte(static_cast<byte>((c >> 24) & 0xFF));
+                //     _hash_generator.process_byte(static_cast<byte>((c >> 8) & 0xff));
+                //     _hash_generator.process_byte(static_cast<byte>((c >> 16) & 0xff));
+                //     _hash_generator.process_byte(static_cast<byte>((c >> 24) & 0xff));
                 // }
             }
         }
 
-        auto _makeUuid() -> Uuid
+        auto _make_uuid() -> uuid
         {
-            THash hash = _hashGenerator.Generate();
+            thash hash = _hash_generator.generate();
 
-            // Variant must be EUuidVariant::RFC (0b10xxxxxx).
-            hash.bytes[8] &= 0xBF;
+            // variant must be euuid_variant::rfc (0b10xxxxxx).
+            hash.bytes[8] &= 0xbf;
             hash.bytes[8] |= 0x80;
 
-            // Set version.
-            // Clear out the relevant bits and apply them
-            hash.bytes[6] &= 0x0F;
-            hash.bytes[6] |= ((_i32)UuidVersion << 4);
+            // set version.
+            // clear out the relevant bits and apply them
+            hash.bytes[6] &= 0x0f;
+            hash.bytes[6] |= ((_i32)uuid_version << 4);
 
-            Uuid uuid;
+            uuid uuid;
             for (usize i = 0; i < 16; i++)
             {
                 uuid.bytes[i] = hash.bytes[i];
@@ -68,36 +68,36 @@ namespace Atom::Private
         }
 
     private:
-        Uuid _nsUuid;
-        THashGenerator _hashGenerator;
+        uuid _ns_uuid;
+        thash_generator _hash_generator;
     };
 }
 
-namespace Atom
+namespace atom
 {
-    class UuidNamespaces
+    class uuid_namespaces
     {
     public:
-        // Name string is a fully-qualified domain name
-        static constexpr Uuid Dns = {
+        // name string is a fully-qualified domain name
+        static constexpr uuid dns = {
             {0x6b, 0xa7, 0xb8, 0x10, 0x9d, 0xad, 0x11, 0xd1, 0x80, 0xb4, 0x00, 0xc0, 0x4f, 0xd4,
              0x30, 0xc8}
         };
 
-        // Name string is a URL
-        static constexpr Uuid Url = {
+        // name string is a url
+        static constexpr uuid url = {
             {0x6b, 0xa7, 0xb8, 0x11, 0x9d, 0xad, 0x11, 0xd1, 0x80, 0xb4, 0x00, 0xc0, 0x4f, 0xd4,
              0x30, 0xc8}
         };
 
-        // Name string is an ISO OID
-        static constexpr Uuid Oid = {
+        // name string is an iso oid
+        static constexpr uuid oid = {
             {0x6b, 0xa7, 0xb8, 0x12, 0x9d, 0xad, 0x11, 0xd1, 0x80, 0xb4, 0x00, 0xc0, 0x4f, 0xd4,
              0x30, 0xc8}
         };
 
-        // Name string is an X.500 DN, in DER or a text output format
-        static constexpr Uuid X500 = {
+        // name string is an x.500 dn, in der or a text output format
+        static constexpr uuid x500 = {
             {0x6b, 0xa7, 0xb8, 0x14, 0x9d, 0xad, 0x11, 0xd1, 0x80, 0xb4, 0x00, 0xc0, 0x4f, 0xd4,
              0x30, 0xc8}
         };

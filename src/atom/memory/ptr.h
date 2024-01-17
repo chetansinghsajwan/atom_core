@@ -1,69 +1,69 @@
 #pragma once
-#include "Atom/Core/Primitives.h"
-#include "Atom/TTI.h"
+#include "atom/core/primitives.h"
+#include "atom/tti.h"
 
-namespace Atom
+namespace atom
 {
-    template <typename T>
-    class MutPtr;
+    template <typename type>
+    class mut_ptr;
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename TVal_>
-    class Ptr
+    template <typename tval_>
+    class ptr
     {
-        static_assert(TTI::IsPure<TVal_>, "Ptr only supports pure types.");
-        static_assert(not TTI::IsVoid<TVal_>, "Ptr doesn't support void.");
+        static_assert(tti::is_pure<tval_>, "ptr only supports pure types.");
+        static_assert(not tti::is_void<tval_>, "ptr doesn't support void.");
 
     private:
-        using This = Ptr<TVal_>;
+        using this_type = ptr<tval_>;
 
     public:
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        using TVal = TVal_;
+        using value_type = tval_;
 
     public:
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr Ptr()
+        constexpr ptr()
             : _ptr(nullptr)
         {}
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr Ptr(const This&) = default;
+        constexpr ptr(const this_type&) = default;
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr Ptr& operator=(const This&) = default;
+        constexpr ptr& operator=(const this_type&) = default;
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr Ptr(This&&) = default;
+        constexpr ptr(this_type&&) = default;
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr Ptr& operator=(This&&) = default;
+        constexpr ptr& operator=(this_type&&) = default;
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr Ptr(std::nullptr_t)
+        constexpr ptr(std::nullptr_t)
             : _ptr(nullptr)
         {}
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr Ptr& operator=(std::nullptr_t)
+        constexpr ptr& operator=(std::nullptr_t)
         {
             _ptr = nullptr;
             return *this;
@@ -72,34 +72,34 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr Ptr(const Ptr<T>& ptr)
-            requires RConvertibleTo<T*, TVal*>
-            : _ptr(static_cast<const TVal*>(ptr.unwrap()))
+        template <typename type>
+        constexpr ptr(const ptr<type>& ptr)
+            requires rconvertible_to<type*, value_type*>
+            : _ptr(static_cast<const value_type*>(ptr.unwrap()))
         {}
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr Ptr& operator=(Ptr<T> ptr)
-            requires RConvertibleTo<T*, TVal*>
+        template <typename type>
+        constexpr ptr& operator=(ptr<type> ptr)
+            requires rconvertible_to<type*, value_type*>
         {
-            _ptr = static_cast<const TVal*>(ptr.unwrap());
+            _ptr = static_cast<const value_type*>(ptr.unwrap());
             return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr Ptr(const TVal* ptr)
+        constexpr ptr(const value_type* ptr)
             : _ptr(ptr)
         {}
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr Ptr& operator=(const TVal* ptr)
+        constexpr ptr& operator=(const value_type* ptr)
         {
             _ptr = ptr;
             return *this;
@@ -108,13 +108,13 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr ~Ptr() = default;
+        constexpr ~ptr() = default;
 
     public:
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto set(Ptr<TVal> ptr)
+        constexpr auto set(ptr<value_type> ptr)
         {
             _ptr = ptr.unwrap();
         }
@@ -122,9 +122,9 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get() const -> const TVal&
+        constexpr auto get() const -> const value_type&
         {
-            Contracts::DebugExpects(not isNull(), "Null ptr access.");
+            contracts::debug_expects(not is_null(), "null ptr access.");
 
             return *_ptr;
         }
@@ -132,9 +132,9 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto getSafe() const -> const TVal&
+        constexpr auto get_safe() const -> const value_type&
         {
-            Contracts::Expects(not isNull(), "Null ptr access.");
+            contracts::expects(not is_null(), "null ptr access.");
 
             return *_ptr;
         }
@@ -142,9 +142,9 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator->() const -> const TVal*
+        constexpr auto operator->() const -> const value_type*
         {
-            Contracts::DebugExpects(not isNull(), "Null ptr access.");
+            contracts::debug_expects(not is_null(), "null ptr access.");
 
             return _ptr;
         }
@@ -152,45 +152,45 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr auto as() const -> Ptr<T>
-            requires RPure<T> and RConvertibleTo<TVal*, T*>
+        template <typename type>
+        constexpr auto as() const -> ptr<type>
+            requires rpure<type> and rconvertible_to<value_type*, type*>
         {
-            return static_cast<const T*>(_ptr);
+            return static_cast<const type*>(_ptr);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr auto asUnsafe() const -> Ptr<T>
-            requires RPure<T>
+        template <typename type>
+        constexpr auto as_unsafe() const -> ptr<type>
+            requires rpure<type>
         {
-            return reinterpret_cast<const T*>(_ptr);
+            return reinterpret_cast<const type*>(_ptr);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr auto asDyn() const -> Ptr<T>
-            requires RPolymorphic<TVal> and RPure<T> and RPolymorphic<T>
+        template <typename type>
+        constexpr auto as_dyn() const -> ptr<type>
+            requires rpolymorphic<value_type> and rpure<type> and rpolymorphic<type>
         {
-            return dynamic_cast<const T*>(_ptr);
+            return dynamic_cast<const type*>(_ptr);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto asMut() const -> MutPtr<TVal>
+        constexpr auto as_mut() const -> mut_ptr<value_type>
         {
-            return const_cast<TVal*>(_ptr);
+            return const_cast<value_type*>(_ptr);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto isNull() const -> bool
+        constexpr auto is_null() const -> bool
         {
             return unwrap() == nullptr;
         }
@@ -214,7 +214,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto eq(const This& that) const -> bool
+        constexpr auto eq(const this_type& that) const -> bool
         {
             return unwrap() == that.unwrap();
         }
@@ -222,7 +222,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto ne(const This& that) const -> bool
+        constexpr auto ne(const this_type& that) const -> bool
         {
             return not eq(that);
         }
@@ -230,121 +230,121 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto unwrap() const -> const TVal*
+        constexpr auto unwrap() const -> const value_type*
         {
             return _ptr;
         }
 
     protected:
-        const TVal* _ptr;
+        const value_type* _ptr;
     };
 
-    template <typename T>
-    Ptr(const T* ptr) -> Ptr<T>;
+    template <typename type>
+    ptr(const type* p) -> ptr<type>;
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
     template <>
-    class Ptr<void>
+    class ptr<void>
     {
-        using This = Ptr<void>;
+        using this_type = ptr<void>;
 
     public:
-        using TVal = void;
+        using value_type = void;
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// # Default Constructor
+        /// # default constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr Ptr()
+        constexpr ptr()
             : _ptr(nullptr)
         {}
 
         /// ----------------------------------------------------------------------------------------
-        /// # Copy Constructr
+        /// # copy constructr
         /// ----------------------------------------------------------------------------------------
-        constexpr Ptr(const This&) = default;
+        constexpr ptr(const this_type&) = default;
 
         /// ----------------------------------------------------------------------------------------
-        /// # Copy Operator
+        /// # copy operator
         /// ----------------------------------------------------------------------------------------
-        constexpr Ptr& operator=(const This&) = default;
+        constexpr ptr& operator=(const this_type&) = default;
 
         /// ----------------------------------------------------------------------------------------
-        /// # Move Constuctor
+        /// # move constuctor
         /// ----------------------------------------------------------------------------------------
-        constexpr Ptr(This&&) = default;
+        constexpr ptr(this_type&&) = default;
 
         /// ----------------------------------------------------------------------------------------
-        /// # Move Operator
+        /// # move operator
         /// ----------------------------------------------------------------------------------------
-        constexpr Ptr& operator=(This&&) = default;
+        constexpr ptr& operator=(this_type&&) = default;
 
         /// ----------------------------------------------------------------------------------------
-        /// # Null Constructor
+        /// # null constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr Ptr(std::nullptr_t)
+        constexpr ptr(std::nullptr_t)
             : _ptr(nullptr)
         {}
 
         /// ----------------------------------------------------------------------------------------
-        /// # Null Operator
+        /// # null operator
         /// ----------------------------------------------------------------------------------------
-        constexpr Ptr& operator=(std::nullptr_t)
+        constexpr ptr& operator=(std::nullptr_t)
         {
             _ptr = nullptr;
             return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Constructor
+        /// # constructor
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr Ptr(const Ptr<T>& ptr)
+        template <typename type>
+        constexpr ptr(const ptr<type>& ptr)
             : _ptr{ static_cast<const void*>(ptr.unwrap()) }
         {}
 
         /// ----------------------------------------------------------------------------------------
-        /// # Operator
+        /// # operator
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr Ptr& operator=(const Ptr<T>& ptr)
+        template <typename type>
+        constexpr ptr& operator=(const ptr<type>& ptr)
         {
             _ptr = static_cast<const void*>(ptr.unwrap());
             return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Value Constructor
+        /// # value constructor
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr Ptr(const T* ptr)
-            requires RPure<T>
+        template <typename type>
+        constexpr ptr(const type* ptr)
+            requires rpure<type>
             : _ptr{ static_cast<const void*>(ptr) }
         {}
 
         /// ----------------------------------------------------------------------------------------
-        /// # Value Operator
+        /// # value operator
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr Ptr& operator=(const T* ptr)
-            requires RPure<T>
+        template <typename type>
+        constexpr ptr& operator=(const type* ptr)
+            requires rpure<type>
         {
             _ptr = static_cast<const void*>(ptr);
             return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Destructor
+        /// # destructor
         /// ----------------------------------------------------------------------------------------
-        constexpr ~Ptr() = default;
+        constexpr ~ptr() = default;
 
     public:
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto set(Ptr<void> ptr)
+        constexpr auto set(ptr<void> ptr)
         {
             _ptr = ptr.unwrap();
         }
@@ -354,63 +354,63 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto get() const -> const byte&
         {
-            Contracts::DebugExpects(not isNull(), "Null ptr access.");
+            contracts::debug_expects(not is_null(), "null ptr access.");
 
-            return *unwrapAsByte();
+            return *unwrap_as_byte();
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto getSafe() const -> const byte&
+        constexpr auto get_safe() const -> const byte&
         {
-            Contracts::Expects(not isNull(), "Null ptr access.");
+            contracts::expects(not is_null(), "null ptr access.");
 
-            return *unwrapAsByte();
+            return *unwrap_as_byte();
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr auto getAs() const -> const T&
-            requires RPure<T>
+        template <typename type>
+        constexpr auto get_as() const -> const type&
+            requires rpure<type>
         {
-            Contracts::DebugExpects(not isNull(), "Null ptr access.");
+            contracts::debug_expects(not is_null(), "null ptr access.");
 
-            return *unwrapAs<T>();
+            return *unwrap_as<type>();
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr auto getSafeAs() const -> const T&
-            requires RPure<T>
+        template <typename type>
+        constexpr auto get_safe_as() const -> const type&
+            requires rpure<type>
         {
-            Contracts::Expects(not isNull(), "Null ptr access.");
+            contracts::expects(not is_null(), "null ptr access.");
 
-            return *unwrapAs<T>();
+            return *unwrap_as<type>();
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr auto as() const -> Ptr<T>
+        template <typename type>
+        constexpr auto as() const -> ptr<type>
         {
-            return static_cast<const T*>(_ptr);
+            return static_cast<const type*>(_ptr);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto asMut() const -> MutPtr<void>;
+        constexpr auto as_mut() const -> mut_ptr<void>;
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto isNull() const -> bool
+        constexpr auto is_null() const -> bool
         {
             return unwrap() == nullptr;
         }
@@ -434,8 +434,8 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr auto eq(const Ptr<T>& that) const -> bool
+        template <typename type>
+        constexpr auto eq(const ptr<type>& that) const -> bool
         {
             return unwrap() == that.unwrap();
         }
@@ -443,8 +443,8 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr auto ne(const Ptr<T>& that) const -> bool
+        template <typename type>
+        constexpr auto ne(const ptr<type>& that) const -> bool
         {
             return not eq(that);
         }
@@ -460,16 +460,16 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr auto unwrapAs() const -> const T*
+        template <typename type>
+        constexpr auto unwrap_as() const -> const type*
         {
-            return static_cast<const T*>(_ptr);
+            return static_cast<const type*>(_ptr);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto unwrapAsByte() const -> const byte*
+        constexpr auto unwrap_as_byte() const -> const byte*
         {
             return static_cast<const byte*>(_ptr);
         }
@@ -478,61 +478,61 @@ namespace Atom
         const void* _ptr;
     };
 
-    Ptr(const void*) -> Ptr<void>;
+    ptr(const void*) -> ptr<void>;
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename TVal_>
-    class MutPtr: public Ptr<TVal_>
+    template <typename tval_>
+    class mut_ptr: public ptr<tval_>
     {
-        static_assert(TTI::IsPure<TVal_>, "MutPtr only supports pure types.");
-        static_assert(not TTI::IsVoid<TVal_>, "MutPtr doesn't support void.");
+        static_assert(tti::is_pure<tval_>, "mut_ptr only supports pure types.");
+        static_assert(not tti::is_void<tval_>, "mut_ptr doesn't support void.");
 
     private:
-        using This = MutPtr<TVal_>;
-        using Base = Ptr<TVal_>;
+        using this_type = mut_ptr<tval_>;
+        using base_type = ptr<tval_>;
 
     public:
-        using TVal = Base::TVal;
+        using value_type = base_type::value_type;
 
     public:
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr MutPtr() = default;
+        constexpr mut_ptr() = default;
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr MutPtr(const MutPtr&) = default;
+        constexpr mut_ptr(const mut_ptr&) = default;
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr MutPtr& operator=(const MutPtr&) = default;
+        constexpr mut_ptr& operator=(const mut_ptr&) = default;
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr MutPtr(MutPtr&&) = default;
+        constexpr mut_ptr(mut_ptr&&) = default;
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr MutPtr& operator=(MutPtr&&) = default;
+        constexpr mut_ptr& operator=(mut_ptr&&) = default;
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr MutPtr(std::nullptr_t)
-            : Base(nullptr)
+        constexpr mut_ptr(std::nullptr_t)
+            : base_type(nullptr)
         {}
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr MutPtr& operator=(std::nullptr_t)
+        constexpr mut_ptr& operator=(std::nullptr_t)
         {
             _ptr = nullptr;
             return *this;
@@ -541,34 +541,34 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr MutPtr(const MutPtr<T>& ptr)
-            requires RConvertibleTo<T*, TVal*>
-            : Base(static_cast<TVal*>(ptr.unwrap()))
+        template <typename type>
+        constexpr mut_ptr(const mut_ptr<type>& ptr)
+            requires rconvertible_to<type*, value_type*>
+            : base_type(static_cast<value_type*>(ptr.unwrap()))
         {}
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr MutPtr& operator=(const MutPtr<T>& ptr)
-            requires RConvertibleTo<T*, TVal*>
+        template <typename type>
+        constexpr mut_ptr& operator=(const mut_ptr<type>& ptr)
+            requires rconvertible_to<type*, value_type*>
         {
-            _ptr = static_cast<TVal*>(ptr.unwrap());
+            _ptr = static_cast<value_type*>(ptr.unwrap());
             return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr MutPtr(TVal* ptr)
-            : Base(ptr)
+        constexpr mut_ptr(value_type* ptr)
+            : base_type(ptr)
         {}
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr MutPtr& operator=(TVal* ptr)
+        constexpr mut_ptr& operator=(value_type* ptr)
         {
             _ptr = ptr;
             return *this;
@@ -577,13 +577,13 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr ~MutPtr() = default;
+        constexpr ~mut_ptr() = default;
 
     public:
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto set(MutPtr<TVal> ptr)
+        constexpr auto set(mut_ptr<value_type> ptr)
         {
             _ptr = ptr.unwrap();
         }
@@ -591,140 +591,140 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto getMut() const -> TVal&
+        constexpr auto get_mut() const -> value_type&
         {
-            Contracts::DebugExpects(not isNull(), "Null ptr access.");
+            contracts::debug_expects(not is_null(), "null ptr access.");
 
-            return *_mutPtr();
+            return *_mut_ptr();
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto getMutSafe() const -> TVal&
+        constexpr auto get_mut_safe() const -> value_type&
         {
-            Contracts::Expects(not isNull(), "Null ptr access.");
+            contracts::expects(not is_null(), "null ptr access.");
 
-            return *_mutPtr();
+            return *_mut_ptr();
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator->() const -> TVal*
+        constexpr auto operator->() const -> value_type*
         {
-            Contracts::DebugExpects(not isNull(), "Null ptr access.");
+            contracts::debug_expects(not is_null(), "null ptr access.");
 
-            return _mutPtr();
+            return _mut_ptr();
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr auto as() const -> MutPtr<T>
-            requires RPure<T> and RConvertibleTo<TVal*, T>
+        template <typename type>
+        constexpr auto as() const -> mut_ptr<type>
+            requires rpure<type> and rconvertible_to<value_type*, type>
         {
-            return static_cast<T*>(_mutPtr());
+            return static_cast<type*>(_mut_ptr());
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr auto asUnsafe() const -> MutPtr<T>
-            requires RPure<T>
+        template <typename type>
+        constexpr auto as_unsafe() const -> mut_ptr<type>
+            requires rpure<type>
         {
-            return reinterpret_cast<T*>(_mutPtr());
+            return reinterpret_cast<type*>(_mut_ptr());
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr auto asDyn() const -> MutPtr<T>
-            requires RPolymorphic<TVal> and RPure<T> and RPolymorphic<T>
+        template <typename type>
+        constexpr auto as_dyn() const -> mut_ptr<type>
+            requires rpolymorphic<value_type> and rpure<type> and rpolymorphic<type>
         {
-            return dynamic_cast<T*>(_mutPtr());
+            return dynamic_cast<type*>(_mut_ptr());
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto asConst() const -> Ptr<TVal>
+        constexpr auto as_const() const -> ptr<value_type>
         {
-            return _mutPtr();
+            return _mut_ptr();
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto unwrap() const -> TVal*
+        constexpr auto unwrap() const -> value_type*
         {
-            return _mutPtr();
+            return _mut_ptr();
         }
 
-        using Base::isNull;
+        using base_type::is_null;
 
     private:
-        constexpr auto _mutPtr() const -> TVal*
+        constexpr auto _mut_ptr() const -> value_type*
         {
-            return const_cast<TVal*>(_ptr);
+            return const_cast<value_type*>(_ptr);
         }
 
     protected:
-        using Base::_ptr;
+        using base_type::_ptr;
     };
 
-    template <typename T>
-    MutPtr(T* ptr) -> MutPtr<T>;
+    template <typename type>
+    mut_ptr(type* ptr) -> mut_ptr<type>;
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
     template <>
-    class MutPtr<void>: public Ptr<void>
+    class mut_ptr<void>: public ptr<void>
     {
-        using This = MutPtr<void>;
-        using Base = Ptr<void>;
+        using this_type = mut_ptr<void>;
+        using base_type = ptr<void>;
 
     public:
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr MutPtr() = default;
+        constexpr mut_ptr() = default;
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr MutPtr(const MutPtr&) = default;
+        constexpr mut_ptr(const mut_ptr&) = default;
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr MutPtr& operator=(const MutPtr&) = default;
+        constexpr mut_ptr& operator=(const mut_ptr&) = default;
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr MutPtr(MutPtr&&) = default;
+        constexpr mut_ptr(mut_ptr&&) = default;
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr MutPtr& operator=(MutPtr&&) = default;
+        constexpr mut_ptr& operator=(mut_ptr&&) = default;
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr MutPtr(std::nullptr_t)
-            : Base(nullptr)
+        constexpr mut_ptr(std::nullptr_t)
+            : base_type(nullptr)
         {}
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr MutPtr& operator=(std::nullptr_t)
+        constexpr mut_ptr& operator=(std::nullptr_t)
         {
             _ptr = nullptr;
             return *this;
@@ -733,16 +733,16 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr MutPtr(const MutPtr<T>& ptr)
-            : Base(static_cast<void*>(ptr.unwrap()))
+        template <typename type>
+        constexpr mut_ptr(const mut_ptr<type>& ptr)
+            : base_type(static_cast<void*>(ptr.unwrap()))
         {}
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr MutPtr& operator=(const MutPtr<T>& ptr)
+        template <typename type>
+        constexpr mut_ptr& operator=(const mut_ptr<type>& ptr)
         {
             _ptr = static_cast<void*>(ptr.unwrap());
             return *this;
@@ -751,18 +751,18 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr MutPtr(T* ptr)
-            requires RPure<T>
-            : Base(static_cast<void*>(ptr))
+        template <typename type>
+        constexpr mut_ptr(type* ptr)
+            requires rpure<type>
+            : base_type(static_cast<void*>(ptr))
         {}
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr MutPtr& operator=(T* ptr)
-            requires RPure<T>
+        template <typename type>
+        constexpr mut_ptr& operator=(type* ptr)
+            requires rpure<type>
         {
             _ptr = static_cast<void*>(ptr);
             return *this;
@@ -771,13 +771,13 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr ~MutPtr() = default;
+        constexpr ~mut_ptr() = default;
 
     public:
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto set(MutPtr<void> ptr)
+        constexpr auto set(mut_ptr<void> ptr)
         {
             _ptr = ptr.unwrap();
         }
@@ -785,62 +785,62 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto getMut() const -> byte&
+        constexpr auto get_mut() const -> byte&
         {
-            Contracts::DebugExpects(not isNull(), "Null ptr access.");
+            contracts::debug_expects(not is_null(), "null ptr access.");
 
-            return *unwrapAsByte();
+            return *unwrap_as_byte();
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto getMutSafe() const -> byte&
+        constexpr auto get_mut_safe() const -> byte&
         {
-            Contracts::Expects(not isNull(), "Null ptr access.");
+            contracts::expects(not is_null(), "null ptr access.");
 
-            return *unwrapAsByte();
+            return *unwrap_as_byte();
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr auto getMutAs() const -> T&
-            requires RPure<T>
+        template <typename type>
+        constexpr auto get_mut_as() const -> type&
+            requires rpure<type>
         {
-            Contracts::DebugExpects(not isNull(), "Null ptr access.");
+            contracts::debug_expects(not is_null(), "null ptr access.");
 
-            return *unwrapAs<T>();
+            return *unwrap_as<type>();
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr auto getMutSafeAs() const -> T&
-            requires RPure<T>
+        template <typename type>
+        constexpr auto get_mut_safe_as() const -> type&
+            requires rpure<type>
         {
-            Contracts::Expects(not isNull(), "Null ptr access.");
+            contracts::expects(not is_null(), "null ptr access.");
 
-            return *unwrapAs<T>();
+            return *unwrap_as<type>();
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr auto as() const -> MutPtr<T>
+        template <typename type>
+        constexpr auto as() const -> mut_ptr<type>
         {
-            return static_cast<T*>(_mutPtr());
+            return static_cast<type*>(_mut_ptr());
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto asConst() const -> Ptr<void>
+        constexpr auto as_const() const -> ptr<void>
         {
-            return _mutPtr();
+            return _mut_ptr();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -848,44 +848,44 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto unwrap() const -> void*
         {
-            return _mutPtr();
+            return _mut_ptr();
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr auto unwrapAs() const -> T*
+        template <typename type>
+        constexpr auto unwrap_as() const -> type*
         {
-            return static_cast<T*>(_mutPtr());
+            return static_cast<type*>(_mut_ptr());
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto unwrapAsByte() const -> byte*
+        constexpr auto unwrap_as_byte() const -> byte*
         {
-            return static_cast<byte*>(_mutPtr());
+            return static_cast<byte*>(_mut_ptr());
         }
 
-        using Base::isNull;
+        using base_type::is_null;
 
     private:
-        constexpr auto _mutPtr() const -> void*
+        constexpr auto _mut_ptr() const -> void*
         {
             return const_cast<void*>(_ptr);
         }
 
     protected:
-        using Base::_ptr;
+        using base_type::_ptr;
     };
 
-    MutPtr(void*) -> MutPtr<void>;
+    mut_ptr(void*) -> mut_ptr<void>;
 
     /// ----------------------------------------------------------------------------------------
     ///
     /// ----------------------------------------------------------------------------------------
-    constexpr auto Ptr<void>::asMut() const -> MutPtr<void>
+    constexpr auto ptr<void>::as_mut() const -> mut_ptr<void>
     {
         return const_cast<void*>(_ptr);
     }

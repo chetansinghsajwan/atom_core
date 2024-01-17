@@ -1,124 +1,124 @@
 import atom.core;
-#include "Helpers/TrackedType.h"
+#include "helpers/tracked_type.h"
 #include "catch2/catch_test_macros.hpp"
 
-using namespace Atom;
-using namespace Atom::Tests;
+using namespace atom;
+using namespace atom::tests;
 
-TEST_CASE("Atom.Core.SharedPtr")
+TEST_CASE("atom.core.shared_ptr")
 {
-    SECTION("Default Constructor")
+    SECTION("default constructor")
     {
-        SharedPtr<TrackedType> ptr;
+        shared_ptr<tracked_type> ptr;
 
         REQUIRE(ptr.eq(nullptr));
     }
 
-    SECTION("Null Constructor")
+    SECTION("null constructor")
     {
-        SharedPtr<TrackedType> ptr;
+        shared_ptr<tracked_type> ptr;
 
         REQUIRE(ptr.eq(nullptr));
     }
 
-    SECTION("Value Constructor")
+    SECTION("value constructor")
     {
-        TrackedType val;
-        SharedPtr<TrackedType> ptr(&val);
+        tracked_type val;
+        shared_ptr<tracked_type> ptr(&val);
 
         REQUIRE(ptr.eq(&val));
-        REQUIRE(ptr.getCount() == 1);
+        REQUIRE(ptr.get_count() == 1);
     }
 
-    SECTION("Copy Constructor")
+    SECTION("copy constructor")
     {
-        TrackedType val;
-        SharedPtr<TrackedType> ptr0(&val);
-        SharedPtr<TrackedType> ptr1(ptr0);
+        tracked_type val;
+        shared_ptr<tracked_type> ptr0(&val);
+        shared_ptr<tracked_type> ptr1(ptr0);
 
         REQUIRE(ptr1.eq(&val));
-        REQUIRE(ptr1.getCount() == 2);
+        REQUIRE(ptr1.get_count() == 2);
     }
 
-    SECTION("Move Constructor")
+    SECTION("move constructor")
     {
-        TrackedType val;
-        SharedPtr<TrackedType> ptr0(&val);
-        SharedPtr<TrackedType> ptr1(mov(ptr0));
+        tracked_type val;
+        shared_ptr<tracked_type> ptr0(&val);
+        shared_ptr<tracked_type> ptr1(mov(ptr0));
 
         REQUIRE(ptr0.eq(nullptr));
-        REQUIRE(ptr0.getCount() == 0);
+        REQUIRE(ptr0.get_count() == 0);
         REQUIRE(ptr1.eq(&val));
-        REQUIRE(ptr1.getCount() == 2);
+        REQUIRE(ptr1.get_count() == 2);
     }
 
-    SECTION("Destructor")
+    SECTION("destructor")
     {
-        TrackedType val;
+        tracked_type val;
 
         {
-            SharedPtr<TrackedType> ptr0(&val);
+            shared_ptr<tracked_type> ptr0(&val);
 
             {
-                SharedPtr<TrackedType> ptr1(ptr0);
+                shared_ptr<tracked_type> ptr1(ptr0);
             }
 
-            REQUIRE(val.lastOp == TrackedType::EOperation::DefaultConstructor);
+            REQUIRE(val.last_op == tracked_type::eoperation::default_constructor);
         }
 
-        REQUIRE(val.lastOp == TrackedType::EOperation::Destructor);
+        REQUIRE(val.last_op == tracked_type::eoperation::destructor);
     }
 
-    SECTION("Null Operator")
+    SECTION("null operator")
     {
-        TrackedType val;
-        SharedPtr<TrackedType> ptr0(&val);
-        SharedPtr<TrackedType> ptr1(ptr0);
+        tracked_type val;
+        shared_ptr<tracked_type> ptr0(&val);
+        shared_ptr<tracked_type> ptr1(ptr0);
 
         ptr0 = nullptr;
 
         REQUIRE(ptr0.eq(nullptr));
-        REQUIRE(ptr0.getCount() == 0);
-        REQUIRE(ptr1.getCount() == 1);
-        REQUIRE(val.lastOp == TrackedType::EOperation::DefaultConstructor);
+        REQUIRE(ptr0.get_count() == 0);
+        REQUIRE(ptr1.get_count() == 1);
+        REQUIRE(val.last_op == tracked_type::eoperation::default_constructor);
 
         REQUIRE(ptr1.eq(nullptr));
-        REQUIRE(ptr1.getCount() == 0);
-        REQUIRE(val.lastOp == TrackedType::EOperation::Destructor);
+        REQUIRE(ptr1.get_count() == 0);
+        REQUIRE(val.last_op == tracked_type::eoperation::destructor);
     }
 
-    SECTION("Copy Operator")
+    SECTION("copy operator")
     {
-        TrackedType val0;
-        TrackedType val1;
-        SharedPtr<TrackedType> ptr0(&val0);
-        SharedPtr<TrackedType> ptr1(&val1);
+        tracked_type val0;
+        tracked_type val1;
+        shared_ptr<tracked_type> ptr0(&val0);
+        shared_ptr<tracked_type> ptr1(&val1);
 
         ptr1 = ptr0;
 
-        REQUIRE(val1.lastOp == TrackedType::EOperation::Destructor);
+        REQUIRE(val1.last_op == tracked_type::eoperation::destructor);
         REQUIRE(ptr1.eq(&val0));
-        REQUIRE(ptr1.getCount() == 2);
+        REQUIRE(ptr1.get_count() == 2);
     }
 
-    SECTION("Move Operator")
+    SECTION("move operator")
     {
-        TrackedType val0;
-        TrackedType val1;
-        SharedPtr<TrackedType> ptr0(&val0);
-        SharedPtr<TrackedType> ptr1(&val1);
+        tracked_type val0;
+        tracked_type val1;
+        shared_ptr<tracked_type> ptr0(&val0);
+        shared_ptr<tracked_type> ptr1(&val1);
 
         ptr1 = mov(ptr0);
 
-        REQUIRE(val1.lastOp == TrackedType::EOperation::Destructor);
+        REQUIRE(val1.last_op == tracked_type::eoperation::destructor);
         REQUIRE(ptr0.eq(nullptr));
-        REQUIRE(ptr0.getCount() == 0);
+        REQUIRE(ptr0.get_count() == 0);
         REQUIRE(ptr1.eq(&val0));
-        REQUIRE(ptr1.getCount() == 1);
+        REQUIRE(ptr1.get_count() == 1);
     }
 
     SECTION("release()")
     {
-        // Same as null operator.
+        // same as null operator.
     }
 }

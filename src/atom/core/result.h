@@ -1,34 +1,34 @@
 #pragma once
-#include "Variant.h"
+#include "variant.h"
 
-namespace Atom
+namespace atom
 {
-    template <typename T, typename... TErrs>
-    class Result: public Variant<T, TErrs...>
+    template <typename type, typename... terrs>
+    class result: public variant<type, terrs...>
     {
-        using Base = Variant<T, TErrs...>;
+        using base_type = variant<type, terrs...>;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 
-    class _ResultVoid
+    class _result_void
     {};
 
-    template <typename... TErrs>
-    class Result<void, TErrs...>: public Variant<_ResultVoid, TErrs...>
+    template <typename... terrs>
+    class result<void, terrs...>: public variant<_result_void, terrs...>
     {
-        using Base = Variant<_ResultVoid, TErrs...>;
+        using base_type = variant<_result_void, terrs...>;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 
-    template <typename... TErrs>
-    constexpr auto Success() -> Result<void, TErrs...>
+    template <typename... terrs>
+    constexpr auto success() -> result<void, terrs...>
     {
-        return { _ResultVoid{} };
+        return { _result_void{} };
     }
 }

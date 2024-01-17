@@ -1,26 +1,26 @@
 import atom.core;
 #include "catch2/catch_test_macros.hpp"
 
-using namespace Atom;
+using namespace atom;
 
-TEST_CASE("Atom::Uuid::Uuid")
+TEST_CASE("atom::uuid::uuid")
 {
-    SECTION("Basics")
+    SECTION("basics")
     {
-        Uuid uuid1 = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
-        Uuid uuid2 = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
-        Uuid uuid3 = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 14 };
+        uuid uuid1 = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+        uuid uuid2 = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+        uuid uuid3 = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 14 };
 
-        CHECK(uuid1.ne(Uuid::Null));
-        CHECK(uuid1.eq(uuid2));
-        CHECK(uuid1.ne(uuid3));
+        REQUIRE(uuid1.ne(uuid::null));
+        REQUIRE(uuid1.eq(uuid2));
+        REQUIRE(uuid1.ne(uuid3));
     }
 
-    SECTION("Stringification")
+    SECTION("stringification")
     {
-        Uuid uuid = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
-        StringView expected = MakeRange("00010203-0405-0607-0809-101112131415");
+        uuid uuid = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+        string_view expected = make_range("00010203-0405-0607-0809-101112131415");
 
-        CHECK(uuid.toString() == expected);
+        REQUIRE(uuid.to_string() == expected);
     }
 }

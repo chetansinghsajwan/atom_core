@@ -1,198 +1,198 @@
 #pragma once
-#include "Atom/Core.h"
+#include "atom/core.h"
 
-namespace Atom
+namespace atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// Mock object used as `IterEnd`.
+    /// mock object used as `iter_end`.
     /// --------------------------------------------------------------------------------------------
-    class IterEndReqMock
+    class iter_end_req_mock
     {};
 
     /// --------------------------------------------------------------------------------------------
-    /// `RIter` mock object.
+    /// `riter` mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    class IterReqMock
+    template <typename type>
+    class iter_req_mock
     {
     public:
-        using TElem = T;
+        using elem_type = type;
 
     public:
-        IterReqMock() = delete;
-        IterReqMock(const IterReqMock& that) = delete;
-        IterReqMock& operator=(const IterReqMock& that) = delete;
+        iter_req_mock() = delete;
+        iter_req_mock(const iter_req_mock& that) = delete;
+        iter_req_mock& operator=(const iter_req_mock& that) = delete;
 
-        IterReqMock(IterReqMock&& that) = default;
-        IterReqMock& operator=(IterReqMock&& that) = default;
-        ~IterReqMock() = default;
+        iter_req_mock(iter_req_mock&& that) = default;
+        iter_req_mock& operator=(iter_req_mock&& that) = default;
+        ~iter_req_mock() = default;
 
     public:
-        auto value() const -> const T&;
-        auto eq(IterEndReqMock end) const -> bool;
-        auto next() -> IterReqMock&;
+        auto value() const -> const type&;
+        auto eq(iter_end_req_mock end) const -> bool;
+        auto next() -> iter_req_mock&;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// `RMutIter` mock object.
+    /// `rmut_iter` mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    class MutIterReqMock
+    template <typename type>
+    class mut_iter_req_mock
     {
     public:
-        using TElem = T;
+        using elem_type = type;
 
     public:
-        MutIterReqMock() = delete;
-        MutIterReqMock(const MutIterReqMock& that) = delete;
-        MutIterReqMock& operator=(const MutIterReqMock& that) = delete;
+        mut_iter_req_mock() = delete;
+        mut_iter_req_mock(const mut_iter_req_mock& that) = delete;
+        mut_iter_req_mock& operator=(const mut_iter_req_mock& that) = delete;
 
-        MutIterReqMock(MutIterReqMock&& that) = default;
-        MutIterReqMock& operator=(MutIterReqMock&& that) = default;
-        ~MutIterReqMock() = default;
+        mut_iter_req_mock(mut_iter_req_mock&& that) = default;
+        mut_iter_req_mock& operator=(mut_iter_req_mock&& that) = default;
+        ~mut_iter_req_mock() = default;
 
     public:
-        auto value() const -> const T&;
-        auto mutValue() -> T&;
-        auto eq(IterEndReqMock end) const -> bool;
-        auto next() -> MutIterReqMock&;
+        auto value() const -> const type&;
+        auto mut_value() -> type&;
+        auto eq(iter_end_req_mock end) const -> bool;
+        auto next() -> mut_iter_req_mock&;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// `RFwdIter` mock object.
+    /// `rfwd_iter` mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    class FwdIterReqMock
+    template <typename type>
+    class fwd_iter_req_mock
     {
     public:
-        using TElem = T;
+        using elem_type = type;
 
     public:
-        auto value() const -> const T&;
-        auto mutValue() -> T&;
-        auto next() -> FwdIterReqMock&;
-        auto eq(IterEndReqMock end) const -> bool;
+        auto value() const -> const type&;
+        auto mut_value() -> type&;
+        auto next() -> fwd_iter_req_mock&;
+        auto eq(iter_end_req_mock end) const -> bool;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// `RMutFwdIter` mock object.
+    /// `rmut_fwd_iter` mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    class MutFwdIterReqMock
+    template <typename type>
+    class mut_fwd_iter_req_mock
     {
     public:
-        using TElem = T;
+        using elem_type = type;
 
     public:
-        auto value() const -> const T&;
-        auto mutValue() -> T&;
-        auto next() -> MutFwdIterReqMock&;
-        auto eq(IterEndReqMock end) const -> bool;
+        auto value() const -> const type&;
+        auto mut_value() -> type&;
+        auto next() -> mut_fwd_iter_req_mock&;
+        auto eq(iter_end_req_mock end) const -> bool;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// `RBidiIter` mock object.
+    /// `rbidi_iter` mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    class BidiIterReqMock
+    template <typename type>
+    class bidi_iter_req_mock
     {
     public:
-        using TElem = T;
+        using elem_type = type;
 
     public:
-        auto value() const -> const T&;
-        auto next() -> BidiIterReqMock&;
-        auto prev() -> BidiIterReqMock&;
-        auto eq(IterEndReqMock end) const -> bool;
+        auto value() const -> const type&;
+        auto next() -> bidi_iter_req_mock&;
+        auto prev() -> bidi_iter_req_mock&;
+        auto eq(iter_end_req_mock end) const -> bool;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// `RMutBidiIter` mock object.
+    /// `rmut_bidi_iter` mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    class MutBidiIterReqMock
+    template <typename type>
+    class mut_bidi_iter_req_mock
     {
     public:
-        using TElem = T;
+        using elem_type = type;
 
     public:
-        auto value() const -> const T&;
-        auto mutValue() -> T&;
-        auto next() -> MutBidiIterReqMock&;
-        auto prev() -> MutBidiIterReqMock&;
-        auto eq(IterEndReqMock end) const -> bool;
+        auto value() const -> const type&;
+        auto mut_value() -> type&;
+        auto next() -> mut_bidi_iter_req_mock&;
+        auto prev() -> mut_bidi_iter_req_mock&;
+        auto eq(iter_end_req_mock end) const -> bool;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// `RJumpIter` mock object.
+    /// `rjump_iter` mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    class JumpIterReqMock
+    template <typename type>
+    class jump_iter_req_mock
     {
     public:
-        using TElem = T;
+        using elem_type = type;
 
     public:
-        auto value() const -> const T&;
-        auto next(usize steps = 1) -> JumpIterReqMock&;
-        auto prev(usize steps = 1) -> JumpIterReqMock&;
-        auto eq(IterEndReqMock end) const -> bool;
-        auto compare(const JumpIterReqMock& that) const -> isize;
+        auto value() const -> const type&;
+        auto next(usize steps = 1) -> jump_iter_req_mock&;
+        auto prev(usize steps = 1) -> jump_iter_req_mock&;
+        auto eq(iter_end_req_mock end) const -> bool;
+        auto compare(const jump_iter_req_mock& that) const -> isize;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// `RMutJumpIter` mock object.
+    /// `rmut_jump_iter` mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    class MutJumpIterReqMock
+    template <typename type>
+    class mut_jump_iter_req_mock
     {
     public:
-        using TElem = T;
+        using elem_type = type;
 
     public:
-        auto value() const -> const T&;
-        auto mutValue() -> T&;
-        auto next(usize steps = 1) -> MutJumpIterReqMock&;
-        auto prev(usize steps = 1) -> MutJumpIterReqMock&;
-        auto eq(IterEndReqMock end) const -> bool;
-        auto compare(const MutJumpIterReqMock& that) const -> isize;
+        auto value() const -> const type&;
+        auto mut_value() -> type&;
+        auto next(usize steps = 1) -> mut_jump_iter_req_mock&;
+        auto prev(usize steps = 1) -> mut_jump_iter_req_mock&;
+        auto eq(iter_end_req_mock end) const -> bool;
+        auto compare(const mut_jump_iter_req_mock& that) const -> isize;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// `RArrayIter` mock object.
+    /// `rarray_iter` mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    class ArrayIterReqMock
+    template <typename type>
+    class array_iter_req_mock
     {
     public:
-        using TElem = T;
+        using elem_type = type;
 
     public:
-        auto value() const -> const T&;
-        auto data() const -> MemPtr<T>;
-        auto next(usize steps = 1) -> ArrayIterReqMock&;
-        auto prev(usize steps = 1) -> ArrayIterReqMock&;
-        auto eq(ArrayIterReqMock end) const -> bool;
-        auto compare(const ArrayIterReqMock& that) const -> isize;
+        auto value() const -> const type&;
+        auto data() const -> mem_ptr<type>;
+        auto next(usize steps = 1) -> array_iter_req_mock&;
+        auto prev(usize steps = 1) -> array_iter_req_mock&;
+        auto eq(array_iter_req_mock end) const -> bool;
+        auto compare(const array_iter_req_mock& that) const -> isize;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// `RMutArrayIter` mock object.
+    /// `rmut_array_iter` mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    class MutArrayIterReqMock
+    template <typename type>
+    class mut_array_iter_req_mock
     {
     public:
-        using TElem = T;
+        using elem_type = type;
 
     public:
-        auto value() const -> const T&;
-        auto mutValue() -> T&;
-        auto data() const -> MemPtr<T>;
-        auto mutData() -> MutMemPtr<T>;
-        auto next(usize steps = 1) -> MutArrayIterReqMock&;
-        auto prev(usize steps = 1) -> MutArrayIterReqMock&;
-        auto eq(MutArrayIterReqMock end) const -> bool;
-        auto compare(const MutArrayIterReqMock& that) const -> isize;
+        auto value() const -> const type&;
+        auto mut_value() -> type&;
+        auto data() const -> mem_ptr<type>;
+        auto mut_data() -> mut_mem_ptr<type>;
+        auto next(usize steps = 1) -> mut_array_iter_req_mock&;
+        auto prev(usize steps = 1) -> mut_array_iter_req_mock&;
+        auto eq(mut_array_iter_req_mock end) const -> bool;
+        auto compare(const mut_array_iter_req_mock& that) const -> isize;
     };
 }

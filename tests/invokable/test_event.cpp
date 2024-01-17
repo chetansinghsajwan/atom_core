@@ -1,12 +1,12 @@
 import atom.core;
 #include "catch2/catch_test_macros.hpp"
 
-using namespace Atom;
+using namespace atom;
 
-TEST_CASE("Invokable/Event")
+TEST_CASE("invokable/event")
 {
-    EventSource<i32> eventSource;
-    IEvent<i32>& event = eventSource;
+    event_source<i32> event_source;
+    ievent<i32>& event = event_source;
 
-    EventKey key = event += [](i32 id) {};
+    event_key key = event += [](i32 id) {};
 }

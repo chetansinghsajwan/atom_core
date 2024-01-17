@@ -1,24 +1,24 @@
 #pragma once
-#include "Atom/Core.h"
+#include "atom/core.h"
 
 // #include <memory>
 
-namespace Atom
+namespace atom
 {
-    class LegacyMemAllocator
+    class legacy_mem_allocator
     {
     public:
-        auto Alloc(usize size) -> MutMemPtr<void>
+        auto alloc(usize size) -> mut_mem_ptr<void>
         {
             return std::malloc(size.unwrap());
         }
 
-        auto Realloc(MutMemPtr<void> mem, usize size) -> MutMemPtr<void>
+        auto realloc(mut_mem_ptr<void> mem, usize size) -> mut_mem_ptr<void>
         {
             return std::realloc(mem.unwrap(), size.unwrap());
         }
 
-        auto Dealloc(MutMemPtr<void> mem)
+        auto dealloc(mut_mem_ptr<void> mem)
         {
             std::free(mem.unwrap());
         }

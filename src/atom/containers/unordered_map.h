@@ -1,10 +1,10 @@
 #pragma once
-#include "InsertableReq.h"
+#include "insertable_req.h"
 
 // #include <unordered_map>
 
-namespace Atom
+namespace atom
 {
-    template <typename TKey, typename TElement>
-    using UnorderedMap = ::std::unordered_map<TKey, TElement>;
+    template <typename tkey, typename telement>
+    using unordered_map = ::std::unordered_map<tkey, telement>;
 }

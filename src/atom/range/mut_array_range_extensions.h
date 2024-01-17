@@ -1,36 +1,36 @@
 #pragma once
-#include "ArrayRangeExtensions.h"
-#include "MutJumpRangeExtensions.h"
+#include "array_range_extensions.h"
+#include "mut_jump_range_extensions.h"
 
-namespace Atom
+namespace atom
 {
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange, typename _TConstRangeExtensionsImpl = void>
-    class _MutArrayRangeExtensionsImpl
-        : public _MutJumpRangeExtensionsImpl<TRange, _TConstRangeExtensionsImpl>
+    template <typename range_type, typename _tconst_range_extensions_impl = void>
+    class _mut_array_range_extensions_impl
+        : public _mut_jump_range_extensions_impl<range_type, _tconst_range_extensions_impl>
     {
-        using Base = _MutJumpRangeExtensionsImpl<TRange, _TConstRangeExtensionsImpl>;
+        using base_type = _mut_jump_range_extensions_impl<range_type, _tconst_range_extensions_impl>;
 
     protected:
-        using _TImpl = typename Base::_TImpl;
+        using _timpl = typename base_type::_timpl;
 
     public:
-        using TElem = typename Base::TElem;
-        using TIter = typename Base::TIter;
-        using TIterEnd = typename Base::TIterEnd;
-        using TMutIter = typename Base::TMutIter;
-        using TMutIterEnd = typename Base::TMutIterEnd;
+        using elem_type = typename base_type::elem_type;
+        using iter_type = typename base_type::iter_type;
+        using iter_end_type = typename base_type::iter_end_type;
+        using mut_iter_type = typename base_type::mut_iter_type;
+        using mut_iter_end_type = typename base_type::mut_iter_end_type;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
 
     public:
-        constexpr auto mutData() -> MutMemPtr<TElem>
+        constexpr auto mut_data() -> mut_mem_ptr<elem_type>
         {
-            return _range().mutData();
+            return _range().mut_data();
         }
 
         constexpr auto count() const -> usize
@@ -38,208 +38,208 @@ namespace Atom
             return _range().count();
         }
 
-        constexpr auto mutAt(usize i) -> TElem&
+        constexpr auto mut_at(usize i) -> elem_type&
         {
-            return (mutData() + i).getMut();
+            return (mut_data() + i).get_mut();
         }
 
-        constexpr auto mutFront() -> TElem&
+        constexpr auto mut_front() -> elem_type&
         {
-            return mutAt(0);
+            return mut_at(0);
         }
 
-        constexpr auto mutBack() -> TElem&
+        constexpr auto mut_back() -> elem_type&
         {
-            Contracts::DebugExpects(count() > 0);
+            contracts::debug_expects(count() > 0);
 
-            return mutAt(count() - 1);
+            return mut_at(count() - 1);
         }
 
-        constexpr auto mutIter(usize i) -> TMutIter
+        constexpr auto mut_iter(usize i) -> mut_iter_type
         {
-            return Base::mutIter().next(i);
+            return base_type::mut_iter().next(i);
         }
 
-        using Base::mutIter;
+        using base_type::mut_iter;
 
     protected:
-        using Base::_range;
+        using base_type::_range;
     };
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange>
-    class _MutArrayRangeExtensionsImpl<TRange, void>
-        : public _MutArrayRangeExtensionsImpl<TRange, _ArrayRangeExtensionsImpl<TRange>>
+    template <typename range_type>
+    class _mut_array_range_extensions_impl<range_type, void>
+        : public _mut_array_range_extensions_impl<range_type, _array_range_extensions_impl<range_type>>
     {
-        using Base = _MutArrayRangeExtensionsImpl<TRange, _ArrayRangeExtensionsImpl<TRange>>;
+        using base_type = _mut_array_range_extensions_impl<range_type, _array_range_extensions_impl<range_type>>;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange, typename _TConstRangeExtensions = void>
-    class MutArrayRangeExtensions: public MutJumpRangeExtensions<TRange, _TConstRangeExtensions>
+    template <typename range_type, typename _tconst_range_extensions = void>
+    class mut_array_range_extensions: public mut_jump_range_extensions<range_type, _tconst_range_extensions>
     {
-        using Base = MutJumpRangeExtensions<TRange, _TConstRangeExtensions>;
+        using base_type = mut_jump_range_extensions<range_type, _tconst_range_extensions>;
 
     protected:
-        using _TImpl = typename Base::_TImpl;
+        using _timpl = typename base_type::_timpl;
 
     public:
-        using TElem = typename Base::TElem;
-        using TIter = typename Base::TIter;
-        using TIterEnd = typename Base::TIterEnd;
-        using TMutIter = typename Base::TMutIter;
-        using TMutIterEnd = typename Base::TMutIterEnd;
+        using elem_type = typename base_type::elem_type;
+        using iter_type = typename base_type::iter_type;
+        using iter_end_type = typename base_type::iter_end_type;
+        using mut_iter_type = typename base_type::mut_iter_type;
+        using mut_iter_end_type = typename base_type::mut_iter_end_type;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
 
     public:
         ////////////////////////////////////////////////////////////////////////////////////////////////
         ////
-        //// Access
+        //// access
         ////
         ////////////////////////////////////////////////////////////////////////////////////////////////
 
         /// ----------------------------------------------------------------------------------------
-        /// Get underlying ptr to arr.
+        /// get underlying ptr to arr.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto mutData() -> MutMemPtr<TElem>
+        constexpr auto mut_data() -> mut_mem_ptr<elem_type>
         {
-            return _impl().mutData();
+            return _impl().mut_data();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Access element by index.
+        /// access element by index.
         ///
-        /// # Parameters
-        /// - `i`: Index of element to access.
+        /// # parameters
+        /// - `i`: index of element to access.
         ///
-        /// # Time Complexity
-        /// Constant.
+        /// # time complexity
+        /// constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto mutAt(usize i) -> TElem&
+        constexpr auto mut_at(usize i) -> elem_type&
         {
-            Contracts::Expects(isIndexInRange(i), "Index is out of range.");
+            contracts::expects(is_index_in_range(i), "index is out of range.");
 
-            return _impl().mutAt(i);
+            return _impl().mut_at(i);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Access element by index.
+        /// access element by index.
         ///
-        /// # Parameters
-        /// - `i`: Index of element to access.
+        /// # parameters
+        /// - `i`: index of element to access.
         ///
-        /// # Time Complexity
-        /// Constant.
+        /// # time complexity
+        /// constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator[](usize i) -> TElem&
+        constexpr auto operator[](usize i) -> elem_type&
         {
-            Contracts::DebugExpects(isIndexInRange(i), "Index is out of range.");
+            contracts::debug_expects(is_index_in_range(i), "index is out of range.");
 
-            return _impl().mutAt(i);
+            return _impl().mut_at(i);
         }
 
-        using Base::operator[];
+        using base_type::operator[];
 
         /// ----------------------------------------------------------------------------------------
-        /// Access first element.
+        /// access first element.
         ///
-        /// # Time Complexity
-        /// Constant.
+        /// # time complexity
+        /// constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto mutFront() -> TElem&
+        constexpr auto mut_front() -> elem_type&
         {
-            Contracts::DebugExpects(not isEmpty(), "Range is empty.");
+            contracts::debug_expects(not is_empty(), "range is empty.");
 
-            return _impl().mutFront();
+            return _impl().mut_front();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Access last element.
+        /// access last element.
         ///
-        /// # Time Complexity
-        /// Constant.
+        /// # time complexity
+        /// constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto mutBack() -> TElem&
+        constexpr auto mut_back() -> elem_type&
         {
-            Contracts::DebugExpects(not isEmpty(), "Range is empty.");
+            contracts::debug_expects(not is_empty(), "range is empty.");
 
-            return _impl().mutBack();
+            return _impl().mut_back();
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////
         ////
-        //// Iteration
+        //// iteration
         ////
         ////////////////////////////////////////////////////////////////////////////////////////////////
 
         /// ----------------------------------------------------------------------------------------
-        /// Get iter to element at index `i`.
+        /// get iter to element at index `i`.
         ///
-        /// # Parameters
+        /// # parameters
         ///
-        /// - `i`: Index of the element to get iter at.
+        /// - `i`: index of the element to get iter at.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto mutIter(usize i) const -> TMutIter
+        constexpr auto mut_iter(usize i) const -> mut_iter_type
         {
-            Contracts::Expects(isIndexInRange(i), "Index is out of range.");
+            contracts::expects(is_index_in_range(i), "index is out of range.");
 
-            return _impl().mutIter(i);
+            return _impl().mut_iter(i);
         }
 
-        using Base::mutIter;
+        using base_type::mut_iter;
 
         ////////////////////////////////////////////////////////////////////////////////////////////////
         ////
-        //// View
+        //// view
         ////
         ////////////////////////////////////////////////////////////////////////////////////////////////
 
         /// ----------------------------------------------------------------------------------------
-        /// # To Do: Review this.
+        /// # to do: review this.
         /// ----------------------------------------------------------------------------------------
         constexpr auto range(usize from, usize to) const {}
 
         /// ----------------------------------------------------------------------------------------
-        /// # To Do: Review this.
+        /// # to do: review this.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto rangeFrom(usize from) const {}
+        constexpr auto range_from(usize from) const {}
 
         /// ----------------------------------------------------------------------------------------
-        /// # To Do: Review this.
+        /// # to do: review this.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto rangeTo(usize to) const {}
+        constexpr auto range_to(usize to) const {}
 
-        using Base::isEmpty;
-        using Base::isIndexInRange;
+        using base_type::is_empty;
+        using base_type::is_index_in_range;
 
     protected:
-        using Base::_impl;
+        using base_type::_impl;
     };
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange>
-    class MutArrayRangeExtensions<TRange, void>
-        : public MutArrayRangeExtensions<TRange,
-              ArrayRangeExtensions<TRange, _MutArrayRangeExtensionsImpl<TRange>>>
+    template <typename range_type>
+    class mut_array_range_extensions<range_type, void>
+        : public mut_array_range_extensions<range_type,
+              array_range_extensions<range_type, _mut_array_range_extensions_impl<range_type>>>
     {
-        using Base = MutArrayRangeExtensions<TRange,
-            ArrayRangeExtensions<TRange, _MutArrayRangeExtensionsImpl<TRange>>>;
+        using base_type = mut_array_range_extensions<range_type,
+            array_range_extensions<range_type, _mut_array_range_extensions_impl<range_type>>>;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 }

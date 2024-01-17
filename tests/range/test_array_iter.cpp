@@ -1,7 +1,7 @@
 import atom.core;
-#include "Range/IterReqChecks.h"
+#include "range/iter_req_checks.h"
 
-using namespace Atom;
+using namespace atom;
 
-ATOM_SATISFIES_ARR_ITER_TEMP(ArrayIter);
-ATOM_SATISFIES_MUT_ARR_ITER_TEMP(ArrayIter);
+atom_satisfies_arr_iter_temp(array_iter);
+atom_satisfies_mut_arr_iter_temp(array_iter);

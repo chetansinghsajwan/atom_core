@@ -1,6 +1,6 @@
 #pragma once
-#include "Atom/Uuid/Uuid.h"
-#include "Atom/Uuid/Uuid3Generator.h"
-#include "Atom/Uuid/Uuid4Generator.h"
-#include "Atom/Uuid/Uuid5Generator.h"
-#include "Atom/Uuid/UuidParser.h"
+#include "atom/uuid/uuid.h"
+#include "atom/uuid/uuid3_generator.h"
+#include "atom/uuid/uuid4_generator.h"
+#include "atom/uuid/uuid5_generator.h"
+#include "atom/uuid/uuid_parser.h"

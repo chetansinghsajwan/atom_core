@@ -1,197 +1,197 @@
 #pragma once
-#include "Atom/Core.h"
-#include "Atom/TTI.h"
+#include "atom/core.h"
+#include "atom/tti.h"
 
-namespace Atom
+namespace atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// ArrayIter iterates over raw arr.
+    /// array_iter iterates over raw arr.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    class ArrayIter
+    template <typename type>
+    class array_iter
     {
-        static_assert(TTI::IsPure<T>, "ArrayIter supports only pure types.");
-        static_assert(not TTI::IsVoid<T>, "ArrayIter doesn't support void.");
+        static_assert(tti::is_pure<type>, "array_iter supports only pure types.");
+        static_assert(not tti::is_void<type>, "array_iter doesn't support void.");
 
     public:
-        using TElem = T;
+        using elem_type = type;
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// # Default Constructor
+        /// # default constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr ArrayIter()
+        constexpr array_iter()
             : _it{ nullptr }
         {}
 
         /// ----------------------------------------------------------------------------------------
-        /// # Value Constructor
+        /// # value constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr ArrayIter(MemPtr<T> it)
+        constexpr array_iter(mem_ptr<type> it)
             : _it{ it }
         {}
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// Access value by ref.
+        /// access value by ref.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto value() const -> const T&
+        constexpr auto value() const -> const type&
         {
             return _it.get();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Access value by ptr.
+        /// access value by ptr.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto data() const -> MemPtr<T>
+        constexpr auto data() const -> mem_ptr<type>
         {
             return this->_it;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Move fwd by 1 step.
+        /// move fwd by 1 step.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto next() -> ArrayIter&
+        constexpr auto next() -> array_iter&
         {
             _it++;
             return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Move fwd by `steps`.
+        /// move fwd by `steps`.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto next(usize steps) -> ArrayIter&
+        constexpr auto next(usize steps) -> array_iter&
         {
             _it += steps;
             return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Move bwd by 1 step.
+        /// move bwd by 1 step.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto prev() -> ArrayIter&
+        constexpr auto prev() -> array_iter&
         {
             _it--;
             return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Move bwd by `steps`.
+        /// move bwd by `steps`.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto prev(usize steps) -> ArrayIter&
+        constexpr auto prev(usize steps) -> array_iter&
         {
             _it -= steps;
             return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Check if this iter is same as `that`. Used to compare wth end.
+        /// check if this iter is same as `that`. used to compare wth end.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto eq(const ArrayIter& that) const -> bool
+        constexpr auto eq(const array_iter& that) const -> bool
         {
             return this->_it == that._it;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Check if this iter is not same as `that`. Used to compare wth end.
+        /// check if this iter is not same as `that`. used to compare wth end.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto ne(const ArrayIter& that) const -> bool
+        constexpr auto ne(const array_iter& that) const -> bool
         {
             return not eq(that);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Compares `this` data with `that` data.
+        /// compares `this` data with `that` data.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto compare(const ArrayIter& that) const -> isize
+        constexpr auto compare(const array_iter& that) const -> isize
         {
             return this->_it - that._it;
         }
 
     protected:
-        MemPtr<T> _it;
+        mem_ptr<type> _it;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// MutArrayIter iterates over mut raw arr.
+    /// mut_array_iter iterates over mut raw arr.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    class MutArrayIter: public ArrayIter<T>
+    template <typename type>
+    class mut_array_iter: public array_iter<type>
     {
-        static_assert(TTI::IsPure<T>, "MutArrayIter supports only pure types.");
-        static_assert(not TTI::IsVoid<T>, "MutArrayIter doesn't support void.");
+        static_assert(tti::is_pure<type>, "mut_array_iter supports only pure types.");
+        static_assert(not tti::is_void<type>, "mut_array_iter doesn't support void.");
 
     private:
-        using Base = ArrayIter<T>;
+        using base_type = array_iter<type>;
 
     public:
-        using TElem = T;
+        using elem_type = type;
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// # Default Constructor
+        /// # default constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr MutArrayIter()
-            : Base{}
+        constexpr mut_array_iter()
+            : base_type{}
         {}
 
         /// ----------------------------------------------------------------------------------------
-        /// # Value Constructor
+        /// # value constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr MutArrayIter(MutMemPtr<T> it)
-            : Base{ it }
+        constexpr mut_array_iter(mut_mem_ptr<type> it)
+            : base_type{ it }
         {}
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// Access value by mut ref.
+        /// access value by mut ref.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto mutValue() -> T&
+        constexpr auto mut_value() -> type&
         {
-            return const_cast<T&>(Base::value());
+            return const_cast<type&>(base_type::value());
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Access value by mut ptr.
+        /// access value by mut ptr.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto mutData() -> MutMemPtr<T>
+        constexpr auto mut_data() -> mut_mem_ptr<type>
         {
-            return const_cast<MutMemPtr<T>>(Base::data());
+            return const_cast<mut_mem_ptr<type>>(base_type::data());
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Move fwd by 1 step.
+        /// move fwd by 1 step.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto next() -> MutArrayIter&
+        constexpr auto next() -> mut_array_iter&
         {
-            Base::next();
+            base_type::next();
             return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Move fwd by `steps`.
+        /// move fwd by `steps`.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto next(usize steps) -> MutArrayIter&
+        constexpr auto next(usize steps) -> mut_array_iter&
         {
-            Base::next(steps);
+            base_type::next(steps);
             return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Move bwd by 1 step.
+        /// move bwd by 1 step.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto prev() -> MutArrayIter&
+        constexpr auto prev() -> mut_array_iter&
         {
-            Base::prev();
+            base_type::prev();
             return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Move bwd by `steps`.
+        /// move bwd by `steps`.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto prev(usize steps) -> MutArrayIter&
+        constexpr auto prev(usize steps) -> mut_array_iter&
         {
-            Base::prev(steps);
+            base_type::prev(steps);
             return *this;
         }
     };

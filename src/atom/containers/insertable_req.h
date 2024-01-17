@@ -1,64 +1,64 @@
 #pragma once
-#include "Atom/Range.h"
+#include "atom/range.h"
 
-namespace Atom
+namespace atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// `Insertable` represents a type that allows inserting objects of some type into it.
+    /// `insertable` represents a type that allows inserting objects of some type into it.
     ///
-    /// `FrontInsertable` represents a type that allows inserting objects of some type
+    /// `front_insertable` represents a type that allows inserting objects of some type
     /// into front of container.
     ///
-    /// `FrontInsertable` represents a type that allows inserting objects of some type
+    /// `front_insertable` represents a type that allows inserting objects of some type
     /// into back of container.
     ///
-    /// `KeyInsertable` represents a type that allows inserting objects of some type
+    /// `key_insertable` represents a type that allows inserting objects of some type
     /// at specified index of container.
     ///
-    /// `IndexInsertable` represents a type that allows inserting objects of some type
+    /// `index_insertable` represents a type that allows inserting objects of some type
     /// at specified index of container.
     /// --------------------------------------------------------------------------------------------
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures `TInsertable` is `Insertable` for type `T`.
+    /// ensures `tinsertable` is `insertable` for type `type`.
     /// --------------------------------------------------------------------------------------------
-    template <typename TInsertable, typename T>
-    concept RInsertable = requires(TInsertable insertable, T el, RangeReqMock<T> range) {
-        insertable.Insert(el);
-        insertable.Insert(range);
+    template <typename tinsertable, typename type>
+    concept rinsertable = requires(tinsertable insertable, type el, range_req_mock<type> range) {
+        insertable.insert(el);
+        insertable.insert(range);
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures `TInsertable` is `FrontInsertable` for type `T`.
+    /// ensures `tinsertable` is `front_insertable` for type `type`.
     /// --------------------------------------------------------------------------------------------
-    template <typename TFrontInsertable, typename T>
-    concept RFrontInsertable = requires(TFrontInsertable insertable, T el, RangeReqMock<T> range) {
-        insertable.InsertFront(el);
-        insertable.InsertFront(range);
+    template <typename tfront_insertable, typename type>
+    concept rfront_insertable = requires(tfront_insertable insertable, type el, range_req_mock<type> range) {
+        insertable.insert_front(el);
+        insertable.insert_front(range);
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures `TInsertable` is `BackInsertable` for type `T`.
+    /// ensures `tinsertable` is `back_insertable` for type `type`.
     /// --------------------------------------------------------------------------------------------
-    template <typename TInsertable, typename T>
-    concept RBackInsertable = requires(TInsertable insertable, T el, RangeReqMock<T> range) {
-        insertable.InsertBack(el);
-        insertable.InsertBack(range);
+    template <typename tinsertable, typename type>
+    concept rback_insertable = requires(tinsertable insertable, type el, range_req_mock<type> range) {
+        insertable.insert_back(el);
+        insertable.insert_back(range);
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures `TInsertable` is `KeyInsertable` for type `T`.
+    /// ensures `tinsertable` is `key_insertable` for type `type`.
     /// --------------------------------------------------------------------------------------------
-    template <typename TInsertable, typename TKey, typename T>
-    concept RKeyInsertable =
-        requires(TInsertable insertable, TKey key, T el, RangeReqMock<T> range) {
-            insertable.Insert(key, el);
-            insertable.Insert(key, range);
+    template <typename tinsertable, typename tkey, typename type>
+    concept rkey_insertable =
+        requires(tinsertable insertable, tkey key, type el, range_req_mock<type> range) {
+            insertable.insert(key, el);
+            insertable.insert(key, range);
         };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures `TInsertable` is `IndexInsertable` for type `T`.
+    /// ensures `tinsertable` is `index_insertable` for type `type`.
     /// --------------------------------------------------------------------------------------------
-    template <typename TInsertable, typename T>
-    concept RIndexInsertable = RKeyInsertable<TInsertable, usize, T>;
+    template <typename tinsertable, typename type>
+    concept rindex_insertable = rkey_insertable<tinsertable, usize, type>;
 }

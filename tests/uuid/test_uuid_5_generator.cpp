@@ -1,17 +1,17 @@
 import atom.core;
 #include "catch2/catch_test_macros.hpp"
 
-using namespace Atom;
+using namespace atom;
 
-TEST_CASE("Atom::Uuid::Uuid5Generator")
+TEST_CASE("atom::uuid::uuid5generator")
 {
-    Uuid5Generator generator(UuidNamespaces::Oid);
-    Uuid uuid1 = generator.generate(MakeRange("Hello"));
-    Uuid uuid2 = generator.generate(MakeRange("Hello"));
+    uuid5generator generator(uuid_namespaces::oid);
+    uuid uuid1 = generator.generate(make_range("hello"));
+    uuid uuid2 = generator.generate(make_range("hello"));
 
-    CHECK(uuid1 != Uuid::Null);
-    CHECK(uuid1 == uuid2);
+    REQUIRE(uuid1 != uuid::null);
+    REQUIRE(uuid1 == uuid2);
 
-    CHECK(uuid1.getVersion() == EUuidVersion::V5);
-    CHECK(uuid2.getVersion() == EUuidVersion::V5);
+    REQUIRE(uuid1.get_version() == euuid_version::v5);
+    REQUIRE(uuid2.get_version() == euuid_version::v5);
 }

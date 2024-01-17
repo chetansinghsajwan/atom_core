@@ -1,102 +1,102 @@
 #pragma once
-#include "Atom/Range.h"
+#include "atom/range.h"
 
-namespace Atom
+namespace atom
 {
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename TElem_>
-    class BasicArrayView
+    template <typename in_elem_type>
+    class basic_array_view
     {
-        using This = BasicArrayView;
+        using this_type = basic_array_view;
 
     public:
-        using TElem = TElem_;
-        using TIter = ArrayIter<TElem>;
-        using TIterEnd = TIter;
-        using TMutIter = MutArrayIter<TElem>;
-        using TMutIterEnd = TMutIter;
+        using elem_type = in_elem_type;
+        using iter_type = array_iter<elem_type>;
+        using iter_end_type = iter_type;
+        using mut_iter_type = mut_array_iter<elem_type>;
+        using mut_iter_end_type = mut_iter_type;
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// # Default Constructor
+        /// # default constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr BasicArrayView()
+        constexpr basic_array_view()
             : _data(nullptr)
             , _count(0)
         {}
 
         /// ----------------------------------------------------------------------------------------
-        /// # Trivial Copy Constructor
+        /// # trivial copy constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr BasicArrayView(const This& that) = default;
+        constexpr basic_array_view(const this_type& that) = default;
 
         /// ----------------------------------------------------------------------------------------
-        /// # Trivial Copy Operator
+        /// # trivial copy operator
         /// ----------------------------------------------------------------------------------------
-        constexpr BasicArrayView& operator=(const This& that) = default;
+        constexpr basic_array_view& operator=(const this_type& that) = default;
 
         /// ----------------------------------------------------------------------------------------
-        /// # Trivial Move Constructor
+        /// # trivial move constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr BasicArrayView(This&& that) = default;
+        constexpr basic_array_view(this_type&& that) = default;
 
         /// ----------------------------------------------------------------------------------------
-        /// # Trivial Move Operator
+        /// # trivial move operator
         /// ----------------------------------------------------------------------------------------
-        constexpr BasicArrayView& operator=(This&& that) = default;
+        constexpr basic_array_view& operator=(this_type&& that) = default;
 
         /// ----------------------------------------------------------------------------------------
-        /// # Array Constructor
+        /// # array constructor
         /// ----------------------------------------------------------------------------------------
         template <usize count>
-        constexpr BasicArrayView(const TElem (&arr)[count])
+        constexpr basic_array_view(const elem_type (&arr)[count])
             : _data(arr)
             , _count(count)
         {}
 
         /// ----------------------------------------------------------------------------------------
-        /// # Array Operator
+        /// # array operator
         /// ----------------------------------------------------------------------------------------
         template <usize count>
-        constexpr BasicArrayView& operator=(const TElem (&arr)[count])
+        constexpr basic_array_view& operator=(const elem_type (&arr)[count])
         {
             _data = arr;
             _count = count;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Range Constructor
+        /// # range constructor
         /// ----------------------------------------------------------------------------------------
-        template <typename TRange>
-        constexpr BasicArrayView(const TRange& range)
-            requires(RArrayRangeOf<TRange, TElem>)
+        template <typename range_type>
+        constexpr basic_array_view(const range_type& range)
+            requires(rarray_range_of<range_type, elem_type>)
             : _data(range.data())
             , _count(range.count())
         {}
 
         /// ----------------------------------------------------------------------------------------
-        /// # Range Operator
+        /// # range operator
         /// ----------------------------------------------------------------------------------------
-        template <typename TRange>
-        constexpr BasicArrayView& operator=(const TRange& range)
-            requires(RArrayRangeOf<TRange, TElem>)
+        template <typename range_type>
+        constexpr basic_array_view& operator=(const range_type& range)
+            requires(rarray_range_of<range_type, elem_type>)
         {
             _data = range.data();
             _count = range.count();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Trivial Destructor
+        /// # trivial destructor
         /// ----------------------------------------------------------------------------------------
-        constexpr ~BasicArrayView() = default;
+        constexpr ~basic_array_view() = default;
 
     public:
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto data() const -> MemPtr<TElem>
+        constexpr auto data() const -> mem_ptr<elem_type>
         {
             return _data;
         }
@@ -104,7 +104,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto mutData() -> MutMemPtr<TElem>
+        constexpr auto mut_data() -> mut_mem_ptr<elem_type>
         {
             return _data;
         }
@@ -120,50 +120,50 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto iter() const -> TIter
+        constexpr auto iter() const -> iter_type
         {
-            return TIter(_data);
+            return iter_type(_data);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto iterEnd() const -> TIterEnd
+        constexpr auto iter_end() const -> iter_end_type
         {
-            return TIterEnd(_data + _count);
+            return iter_end_type(_data + _count);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto mutIter() -> TMutIter
+        constexpr auto mut_iter() -> mut_iter_type
         {
-            return TMutIter(_data);
+            return mut_iter_type(_data);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto mutIterEnd() -> TMutIterEnd
+        constexpr auto mut_iter_end() -> mut_iter_end_type
         {
-            return TMutIterEnd(_data + _count);
+            return mut_iter_end_type(_data + _count);
         }
 
     private:
-        MemPtr<TElem> _data;
+        mem_ptr<elem_type> _data;
         usize _count;
     };
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename TElem>
-    class ArrayView: public ArrayRangeExtensions<BasicArrayView<TElem>>
+    template <typename elem_type>
+    class array_view: public array_range_extensions<basic_array_view<elem_type>>
     {
-        using Base = ArrayRangeExtensions<BasicArrayView<TElem>>;
+        using base_type = array_range_extensions<basic_array_view<elem_type>>;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 }

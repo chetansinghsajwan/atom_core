@@ -1,8 +1,8 @@
 #pragma once
-#include "Atom/Text/AsciiEncoding.h"
-#include "BasicDynamicString.h"
+#include "atom/text/ascii_encoding.h"
+#include "basic_dynamic_string.h"
 
-namespace Atom
+namespace atom
 {
-    using AsciiDynamicString = BasicDynamicString<AsciiEncoding>;
+    using ascii_dynamic_string = basic_dynamic_string<ascii_encoding>;
 }

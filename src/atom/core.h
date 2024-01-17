@@ -1,5 +1,5 @@
 #pragma once
-#include "Core/LangExtensions.h"
-#include "Core/BuildConfig.h"
-#include "Core/Primitives.h"
-#include "Core/Requirements.h"
+#include "core/lang_extensions.h"
+#include "core/build_config.h"
+#include "core/primitives.h"
+#include "core/requirements.h"

@@ -1,13 +1,13 @@
 #pragma once
-#include "Atom/Memory/DefaultMemAllocator.h"
+#include "atom/memory/default_mem_allocator.h"
 
-namespace Atom
+namespace atom
 {
-    class SharedPtrDefaultAllocator;
+    class shared_ptr_default_allocator;
 
-    template <typename T>
-    class SharedPtrDefaultDestroyer;
+    template <typename type>
+    class shared_ptr_default_destroyer;
 
-    template <typename T>
-    class SharedPtr;
+    template <typename type>
+    class shared_ptr;
 }

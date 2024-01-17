@@ -1,5 +1,5 @@
 #pragma once
-#include "Atom/Math/Core.h"
-#include "Atom/Math/Vector1.h"
-#include "Atom/Math/Vector2.h"
-#include "Atom/Math/Vector3.h"
+#include "atom/math/core.h"
+#include "atom/math/vector1.h"
+#include "atom/math/vector2.h"
+#include "atom/math/vector3.h"

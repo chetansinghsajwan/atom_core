@@ -1,96 +1,96 @@
 #pragma once
-#include "StringArgFormatters.h"
+#include "string_arg_formatters.h"
 
-namespace Atom
+namespace atom
 {
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    class _FmtStringViewCnvter
+    class _fmt_string_view_cnvter
     {
     public:
-        constexpr auto FromFmt(_FmtStringView str) -> StringView
+        constexpr auto from_fmt(_fmt_string_view str) -> string_view
         {
-            const Char* begin = _FromStdCharPtr(str.data());
+            const uchar* begin = _from_std_char_ptr(str.data());
             usize count = str.size();
-            return StringView{ MakeRange(begin, count) };
+            return string_view{ make_range(begin, count) };
         }
 
-        constexpr auto ToFmt(StringView str) -> _FmtStringView
+        constexpr auto to_fmt(string_view str) -> _fmt_string_view
         {
-            const char* begin = _ToStdCharPtr(str.data().unwrap());
+            const char* begin = _to_std_char_ptr(str.data().unwrap());
             const _usize count = str.count().unwrap();
-            return _FmtStringView{ begin, count };
+            return _fmt_string_view{ begin, count };
         }
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Wrapper over {StringView} to represent format string. This is done to avoid compile
+    /// wrapper over {string_view} to represent format string. this_type is done to avoid compile
     /// time checks.
     /// --------------------------------------------------------------------------------------------
-    class RunFmtString
+    class run_fmt_string
     {
     public:
-        StringView str;
+        string_view str;
     };
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <RStringFmtArgFmtable... TArgs>
-    using FmtString = _FmtFmtString<TArgs...>;
+    template <rstring_fmt_arg_fmtable... args_type>
+    using fmt_string = _fmt_fmt_string<args_type...>;
 
-    //     class FmtString
+    //     class fmt_string
     //     {
     //     public:
-    //         template <typename T>
-    //         consteval FmtString(const T& strv) { }
-    //             _fmt{ _FmtStringViewCnvter().ToFmt(strv) } { }
+    //         template <typename type>
+    //         consteval fmt_string(const type& strv) { }
+    //             _fmt{ _fmt_string_view_cnvter().to_fmt(strv) } { }
     //
-    //         FmtString(RunFmtString str) { }
-    //             _fmt{ _FmtRunFmtString{ _FmtStringViewCnvter().ToFmt(str.str) } } { }
+    //         fmt_string(run_fmt_string str) { }
+    //             _fmt{ _fmt_run_fmt_string{ _fmt_string_view_cnvter().to_fmt(str.str) } } { }
     //
     //     public:
-    //         _FmtFmtString<TArgs...> _fmt;
+    //         _fmt_fmt_string<args_type...> _fmt;
     //     };
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    class StringFmter
+    class string_fmter
     {
     public:
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename TOut, RStringFmtArgFmtable... TArgs>
-        auto FmtTo(TOut out, FmtString<TArgs...> fmt, TArgs&&... args)
-            requires ROutput<TOut, Char>
+        template <typename tout, rstring_fmt_arg_fmtable... args_type>
+        auto fmt_to(tout out, fmt_string<args_type...> fmt, args_type&&... args)
+            requires routput<tout, uchar>
         {
-            class _OutIterWrap
+            class _out_iter_wrap
             {
             public:
-                auto operator++(int) -> _OutIterWrap&
+                auto operator++(int) -> _out_iter_wrap&
                 {
                     return *this;
                 }
 
-                auto operator*() -> _OutIterWrap&
+                auto operator*() -> _out_iter_wrap&
                 {
                     return *this;
                 }
 
-                auto operator=(char ch) -> _OutIterWrap&
+                auto operator=(char ch) -> _out_iter_wrap&
                 {
-                    *out += Char(ch);
+                    *out += uchar(ch);
                     return *this;
                 }
 
             public:
-                TOut* out;
+                tout* out;
             };
 
-            fmt::detail::iterator_buffer<_OutIterWrap, char> buf{ _OutIterWrap{ &out } };
+            fmt::detail::iterator_buffer<_out_iter_wrap, char> buf{ _out_iter_wrap{ &out } };
 
             try
             {
@@ -98,20 +98,20 @@ namespace Atom
                     fmt::make_format_args<fmt::buffer_context<char>>(args...),
                     fmt::detail::locale_ref{});
             }
-            catch (const _FmtFmtEx& err)
+            catch (const _fmt_fmt_ex& err)
             {
-                throw StringFmtErr(err);
+                throw string_fmt_err(err);
             }
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <RStringFmtArgFmtable... TArgs>
-        auto Fmt(FmtString<TArgs...> fmt, TArgs&&... args) -> String
+        template <rstring_fmt_arg_fmtable... args_type>
+        auto fmt(fmt_string<args_type...> fmt, args_type&&... args) -> string
         {
-            String out;
-            FmtTo(out, fmt, forward<TArgs>(args)...);
+            string out;
+            fmt_to(out, fmt, forward<args_type>(args)...);
 
             return out;
         }

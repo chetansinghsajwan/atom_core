@@ -1,131 +1,131 @@
 #pragma once
-#include "RangeReq.h"
-#include "Atom/TTI.h"
-#include "Atom/Contracts.h"
+#include "range_req.h"
+#include "atom/tti.h"
+#include "atom/contracts.h"
 
-namespace Atom
+namespace atom
 {
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename TIter>
-    using StdIterCatForAtomIter = TTI::TConditional<not RIter<TIter>, void,
-        TTI::TConditional<not RFwdIter<TIter>, std::input_iterator_tag,
-            TTI::TConditional<not RBidiIter<TIter>, std::forward_iterator_tag,
-                TTI::TConditional<not RJumpIter<TIter>, std::bidirectional_iterator_tag,
-                    TTI::TConditional<not RArrayIter<TIter>, std::random_access_iterator_tag,
+    template <typename iter_type>
+    using std_iter_cat_for_atom_iter = tti::tconditional<not riter<iter_type>, void,
+        tti::tconditional<not rfwd_iter<iter_type>, std::input_iterator_tag,
+            tti::tconditional<not rbidi_iter<iter_type>, std::forward_iterator_tag,
+                tti::tconditional<not rjump_iter<iter_type>, std::bidirectional_iterator_tag,
+                    tti::tconditional<not rarray_iter<iter_type>, std::random_access_iterator_tag,
                         std::contiguous_iterator_tag>>>>>;
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename TIter>
-    class StdIterWrapForAtomIter
+    template <typename iter_type>
+    class std_iter_wrap_for_atom_iter
     {
-        using Self = StdIterWrapForAtomIter<TIter>;
+        using self = std_iter_wrap_for_atom_iter<iter_type>;
 
     public:
-        using value_type = typename TIter::TElem;
+        using value_type = typename iter_type::elem_type;
         using size_type = _usize;
         using difference_type = _isize;
-        using iterator_category = StdIterCatForAtomIter<TIter>;
+        using iterator_category = std_iter_cat_for_atom_iter<iter_type>;
         using pointer = value_type*;
         using reference = value_type&;
 
     public:
-        constexpr StdIterWrapForAtomIter(TIter& iter)
+        constexpr std_iter_wrap_for_atom_iter(iter_type& iter)
             : iter{ iter }
         {}
 
-        constexpr StdIterWrapForAtomIter(TIter&& iter)
+        constexpr std_iter_wrap_for_atom_iter(iter_type&& iter)
             : iter{ mov(iter) }
         {}
 
     public:
         constexpr auto operator*() const -> const value_type&
-            requires(RIter<TIter>)
+            requires(riter<iter_type>)
         {
             return iter.value();
         }
 
         constexpr auto operator*() -> value_type&
-            requires(RMutIter<TIter>)
+            requires(rmut_iter<iter_type>)
         {
-            return iter.mutValue();
+            return iter.mut_value();
         }
 
-        template <class TIterEnd>
-        constexpr auto operator==(const StdIterWrapForAtomIter<TIterEnd>& that) const -> bool
-            requires(RIterWithEnd<TIter, TIterEnd>)
+        template <class iter_end_type>
+        constexpr auto operator==(const std_iter_wrap_for_atom_iter<iter_end_type>& that) const -> bool
+            requires(riter_with_end<iter_type, iter_end_type>)
         {
             return iter.eq(that.iter);
         }
 
-        template <class TIterEnd>
-        constexpr auto operator!=(const StdIterWrapForAtomIter<TIterEnd>& that) const -> bool
-            requires(RIterWithEnd<TIter, TIterEnd>)
+        template <class iter_end_type>
+        constexpr auto operator!=(const std_iter_wrap_for_atom_iter<iter_end_type>& that) const -> bool
+            requires(riter_with_end<iter_type, iter_end_type>)
         {
             return not iter.eq(that.iter);
         }
 
-        constexpr auto operator++() -> Self&
-            requires(RIter<TIter>)
+        constexpr auto operator++() -> self&
+            requires(riter<iter_type>)
         {
             iter.next();
             return *this;
         }
 
-        constexpr auto operator++(int) -> Self
-            requires(RIter<TIter>)
+        constexpr auto operator++(int) -> self
+            requires(riter<iter_type>)
         {
-            Self tmp{ iter };
+            self tmp{ iter };
             tmp.iter.next();
             return tmp;
         }
 
-        constexpr auto operator--() -> Self&
-            requires(RBidiIter<TIter>)
+        constexpr auto operator--() -> self&
+            requires(rbidi_iter<iter_type>)
         {
             iter.prev();
             return *this;
         }
 
-        constexpr auto operator--(int) const -> Self
-            requires(RBidiIter<TIter>)
+        constexpr auto operator--(int) const -> self
+            requires(rbidi_iter<iter_type>)
         {
-            Self tmp{ iter };
+            self tmp{ iter };
             tmp.iter.prev();
             return tmp;
         }
 
-        constexpr auto operator+(difference_type steps) -> Self
-            requires(RJumpIter<TIter>)
+        constexpr auto operator+(difference_type steps) -> self
+            requires(rjump_iter<iter_type>)
         {
-            // TODO: Review this. Should we accept steps as difference_type.
-            Contracts::DebugExpects(steps > 0);
+            // todo: review this. should we accept steps as difference_type.
+            contracts::debug_expects(steps > 0);
 
-            Self tmp{ iter };
+            self tmp{ iter };
             tmp.iter.next(steps);
             return tmp;
         }
 
-        constexpr auto operator-(difference_type steps) -> Self
-            requires(RJumpIter<TIter>)
+        constexpr auto operator-(difference_type steps) -> self
+            requires(rjump_iter<iter_type>)
         {
-            Contracts::DebugExpects(steps > 0);
+            contracts::debug_expects(steps > 0);
 
-            Self tmp{ iter };
+            self tmp{ iter };
             tmp.iter.prev(steps);
             return tmp;
         }
 
-        constexpr auto operator-(const Self& that) const -> difference_type
-            requires(RJumpIter<TIter>)
+        constexpr auto operator-(const self& that) const -> difference_type
+            requires(rjump_iter<iter_type>)
         {
             return iter.compare(that.iter);
         }
 
     public:
-        TIter iter;
+        iter_type iter;
     };
 }

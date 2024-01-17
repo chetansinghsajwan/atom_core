@@ -1,101 +1,101 @@
 import atom.core;
 #include "catch2/catch_test_macros.hpp"
 
-using namespace Atom;
+using namespace atom;
 
-TEST_CASE("Atom.Core.MutPtr")
+TEST_CASE("atom.core.mut_ptr")
 {
     const i32 val0 = 10;
     const i32 val1 = 11;
 
-    SECTION("Default Constructor")
+    SECTION("default constructor")
     {
-        const Ptr<i32> ptr;
+        const ptr<i32> ptr;
 
-        REQUIRE(ptr.isNull());
+        REQUIRE(ptr.is_null());
     }
 
-    SECTION("Null Constructor")
+    SECTION("null constructor")
     {
-        const Ptr<i32> ptr = nullptr;
+        const ptr<i32> ptr = nullptr;
 
-        REQUIRE(ptr.isNull());
+        REQUIRE(ptr.is_null());
     }
 
-    SECTION("Value Constructor")
+    SECTION("value constructor")
     {
-        Ptr<i32> ptr = &val0;
+        ptr<i32> ptr = &val0;
 
         REQUIRE(ptr.unwrap() == &val0);
         REQUIRE(ptr.get() == val0);
     }
 
-    SECTION("Copy Constructor")
+    SECTION("copy constructor")
     {
-        STATIC_REQUIRE(RTriviallyCopyConstructible<Ptr<i32>>);
+        STATIC_REQUIRE(rtrivially_copy_constructible<ptr<i32>>);
 
-        Ptr<i32> ptr0 = &val0;
-        Ptr<i32> ptr1 = ptr0;
+        ptr<i32> ptr0 = &val0;
+        ptr<i32> ptr1 = ptr0;
 
         REQUIRE(ptr1.unwrap() == ptr0.unwrap());
         REQUIRE(ptr1.get() == ptr0.get());
     }
 
-    SECTION("Destructor")
+    SECTION("destructor")
     {
-        STATIC_REQUIRE(RTriviallyDestructible<Ptr<i32>>);
+        STATIC_REQUIRE(rtrivially_destructible<ptr<i32>>);
     }
 
-    SECTION("Null Operator")
+    SECTION("null operator")
     {
-        Ptr<i32> ptr = &val0;
+        ptr<i32> ptr = &val0;
 
         ptr = nullptr;
 
-        REQUIRE(ptr.isNull());
+        REQUIRE(ptr.is_null());
     }
 
-    SECTION("Copy Operator")
+    SECTION("copy operator")
     {
-        STATIC_REQUIRE(RTriviallyCopyAssignable<Ptr<i32>>);
+        STATIC_REQUIRE(rtrivially_copy_assignable<ptr<i32>>);
 
-        Ptr<i32> ptr0 = &val0;
-        Ptr<i32> ptr1 = nullptr;
+        ptr<i32> ptr0 = &val0;
+        ptr<i32> ptr1 = nullptr;
         ptr1 = &val0;
 
         REQUIRE(ptr1.unwrap() == ptr0.unwrap());
         REQUIRE(ptr1.get() == ptr0.get());
     }
 
-    SECTION("Value Operator")
+    SECTION("value operator")
     {
-        Ptr<i32> ptr = nullptr;
+        ptr<i32> ptr = nullptr;
         ptr = &val0;
 
         REQUIRE(ptr.get() == val0);
         REQUIRE(ptr.unwrap() == &val0);
     }
 
-    SECTION("Value access")
+    SECTION("value access")
     {
-        Ptr<i32> ptr = nullptr;
+        ptr<i32> ptr = nullptr;
 
-        REQUIRE_THROWS_AS(ptr.getSafe(), ContractViolationException);
+        REQUIRE_THROWS_AS(ptr.get_safe(), contract_violation_exception);
 
         ptr = &val0;
-        REQUIRE(ptr.getSafe() == val0);
+        REQUIRE(ptr.get_safe() == val0);
     }
 
-    SECTION("Casting")
+    SECTION("casting")
     {
-        Ptr<i32> ptr;
-        Ptr<i64> ptr1 = ptr.asUnsafe<i64>();
+        ptr<i32> ptr0;
+        ptr<i64> ptr1 = ptr0.as_unsafe<i64>();
     }
 
-    SECTION("Compairision")
+    SECTION("compairision")
     {
-        Ptr<i32> ptr0 = nullptr;
-        Ptr<i32> ptr1 = nullptr;
+        ptr<i32> ptr0 = nullptr;
+        ptr<i32> ptr1 = nullptr;
 
         REQUIRE(ptr0.eq(nullptr));
         REQUIRE(ptr1.eq(nullptr));

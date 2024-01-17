@@ -1,35 +1,35 @@
 #pragma once
-#include "Atom/Core.h"
+#include "atom/core.h"
 
-namespace Atom
+namespace atom
 {
-    class Utf16Encoding
+    class utf16encoding
     {
     public:
-        using TChar = char16;
-        using TRune = char32;
+        using tchar = char16;
+        using trune = char32;
 
     public:
-        static constexpr TChar Null = u'\0';
-        static constexpr bool IsMultiCharEncoding = true;
+        static constexpr tchar null = u'\0';
+        static constexpr bool is_multi_char_encoding = true;
 
     public:
-        static constexpr auto IsContinuationChar(TChar ch) -> bool
+        static constexpr auto is_continuation_char(tchar ch) -> bool
         {
             return (ch & 0b11000000) == 0b10000000;
         }
 
-        static constexpr auto ParseStartingChar(TChar ch) -> usize
+        static constexpr auto parse_starting_char(tchar ch) -> usize
         {
             return 0;
         }
 
-        static constexpr auto IsStartingChar(TChar ch) -> bool
+        static constexpr auto is_starting_char(tchar ch) -> bool
         {
-            return ParseStartingChar(ch) != 0;
+            return parse_starting_char(ch) != 0;
         }
     };
 
-    using Utf16Char = typename Utf16Encoding::TChar;
-    using Utf16Rune = typename Utf16Encoding::TRune;
+    using utf16char = typename utf16encoding::tchar;
+    using utf16rune = typename utf16encoding::trune;
 }

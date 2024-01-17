@@ -1,39 +1,39 @@
 #pragma once
-#include "Atom/Core.h"
-#include "Atom/String/StackString.h"
+#include "atom/core.h"
+#include "atom/string/stack_string.h"
 
-namespace Atom::Math
+namespace atom::math
 {
-    constexpr auto CharToHex(Char ch) -> byte
+    constexpr auto char_to_hex(char ch) -> byte
     {
         if (ch >= '0' && ch <= '9')
             return byte(ch - '0');
         if (ch >= 'a' && ch <= 'f')
             return byte(10 + ch - 'a');
-        if (ch >= 'A' && ch <= 'F')
-            return byte(10 + ch - 'A');
+        if (ch >= 'a' && ch <= 'f')
+            return byte(10 + ch - 'a');
 
         return -1;
     }
 
-    constexpr auto HexToChar(byte hex) -> StackString<2>
+    constexpr auto hex_to_char(byte hex) -> stack_string<2>
     {
         constexpr char chars[] = "0123456789abcdef";
 
         byte high = hex >> 4;
         byte low = hex & 0b00001111;
 
-        StackString<2> str;
+        stack_string<2> str;
         str[0] = chars[high];
         str[1] = chars[low];
         return str;
 
-        // TODO: fix this.
+        // todo: fix this.
         // return { chars[high], chars[low] };
     }
 
-    constexpr auto IsHexChar(Char ch) -> bool
+    constexpr auto is_hex_char(char ch) -> bool
     {
-        return (ch >= '0' && ch <= '9') || (ch >= 'a' && ch <= 'f') || (ch >= 'A' && ch <= 'F');
+        return (ch >= '0' && ch <= '9') || (ch >= 'a' && ch <= 'f') || (ch >= 'a' && ch <= 'f');
     }
 }

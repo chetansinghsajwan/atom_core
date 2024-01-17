@@ -1,45 +1,45 @@
 #pragma once
-#include "Atom/Core.h"
-#include "Atom/Memory/Lockable.h"
+#include "atom/core.h"
+#include "atom/memory/lockable.h"
 
-namespace Atom
+namespace atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// Locks the lock on construction and unlocks at destruction. This is done to guarantee
+    /// locks the lock on construction and unlocks at destruction. this_type is done to guarantee
     /// exception safety.
     /// --------------------------------------------------------------------------------------------
-    template <typename TLockable>
-        requires(RLockable<TLockable>)
-    class LockGuard
+    template <typename tlockable>
+        requires(rlockable<tlockable>)
+    class lock_guard
     {
     public:
         /// ----------------------------------------------------------------------------------------
-        /// Constructor. Locks the lock.
+        /// constructor. locks the lock.
         ///
-        /// @PARAM[IN] lock Lockable to lock.
+        /// @param[in] lock lockable to lock.
         ///
-        /// @THROWS UnkownException Exception thrown by {lock.Lock()}.
+        /// @throws unkown_exception exception thrown by {lock.lock()}.
         /// ----------------------------------------------------------------------------------------
-        LockGuard(TLockable& lock)
+        lock_guard(tlockable& lock)
             : _lock(lock)
         {
-            _lock.Lock();
+            _lock.lock();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Destructor. Unlocks the lock.
+        /// destructor. unlocks the lock.
         ///
-        /// @THROWS UnkownException Exception thrown by {lock.Lock()}.
+        /// @throws unkown_exception exception thrown by {lock.lock()}.
         /// ----------------------------------------------------------------------------------------
-        ~LockGuard()
+        ~lock_guard()
         {
-            _lock.Unlock();
+            _lock.unlock();
         }
 
     private:
         /// ----------------------------------------------------------------------------------------
-        /// Lockable object.
+        /// lockable object.
         /// ----------------------------------------------------------------------------------------
-        TLockable& _lock;
+        tlockable& _lock;
     };
 }

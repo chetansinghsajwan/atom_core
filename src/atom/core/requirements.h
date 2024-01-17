@@ -1,489 +1,501 @@
 #pragma once
-#include "Atom/Core/LangExtensions.h"
+#include "atom/core/lang_extensions.h"
 
 // #include <concepts>
 // #include <type_traits>
 
 // clang-format off
-namespace Atom
+namespace atom
 {
     ////////////////////////////////////////////////////////////////////////////////////////////////
     ////
-    //// Basic Concepts
+    //// basic concepts
     ////
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures `T0` is same as `T1`.
+    /// ensures `t0` is same as `t1`.
     /// --------------------------------------------------------------------------------------------
-    template <typename T0, typename T1>
-    concept RSameAs = std::same_as<T0, T1>;
+    template <typename t0, typename t1>
+    concept rsame_as = std::same_as<t0, t1>;
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures `T0` is `void`.
+    /// ensures `t0` is `void`.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    concept RIsVoid = RSameAs<T, void>;
+    template <typename type>
+    concept ris_void = rsame_as<type, void>;
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures unqualified type of `T0` is same as unqualified type of `T1`.
+    /// ensures unqualified type of `t0` is same as unqualified type of `t1`.
     /// --------------------------------------------------------------------------------------------
-    template <typename T0, typename T1>
-    concept RSameAsUnqualified = std::same_as<std::remove_cvref_t<T0>, std::remove_cvref_t<T1>>;
+    template <typename t0, typename t1>
+    concept rsame_as_unqualified = std::same_as<std::remove_cvref_t<t0>, std::remove_cvref_t<t1>>;
 
     /// --------------------------------------------------------------------------------------------
-    /// Enusres `T` is const-qualified.
+    /// enusres `type` is const-qualified.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    concept RConst = std::is_const_v<T>;
+    template <typename type>
+    concept rconst = std::is_const_v<type>;
 
     /// --------------------------------------------------------------------------------------------
-    /// Enusres `T` is volatile-qualified.
+    /// enusres `type` is volatile-qualified.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    concept RVolatile = std::is_volatile_v<T>;
+    template <typename type>
+    concept rvolatile = std::is_volatile_v<type>;
 
     /// --------------------------------------------------------------------------------------------
-    /// Enusres `T` is ref.
+    /// enusres `type` is ref.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    concept RRef = std::is_reference_v<T>;
+    template <typename type>
+    concept rref = std::is_reference_v<type>;
 
     /// --------------------------------------------------------------------------------------------
-    /// Enusres `T` is l-value ref.
+    /// enusres `type` is l-value ref.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    concept RLValueRef = std::is_lvalue_reference_v<T>;
+    template <typename type>
+    concept rlvalue_ref = std::is_lvalue_reference_v<type>;
 
     /// --------------------------------------------------------------------------------------------
-    /// Enusres `T` is r-value ref.
+    /// enusres `type` is r-value ref.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    concept RRValueRef = std::is_rvalue_reference_v<T>;
+    template <typename type>
+    concept rrvalue_ref = std::is_rvalue_reference_v<type>;
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures `TFrom` is `Convertible` to `TTo`.
+    /// ensures `tfrom` is `convertible` to `tto`.
     /// --------------------------------------------------------------------------------------------
-    template <typename TFrom, typename TTo>
-    concept RConvertibleTo = requires(TFrom from) { static_cast<TTo>(from); };
+    template <typename tfrom, typename tto>
+    concept rconvertible_to = requires(tfrom from) { static_cast<tto>(from); };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures `TDerived` is derived from `TBase`.
+    /// ensures `tderived` is derived from `tbase`.
     /// --------------------------------------------------------------------------------------------
-    template <typename TDerived, typename TBase>
-    concept RDerivedFrom =
-        std::derived_from<std::remove_cvref_t<TDerived>, std::remove_cvref_t<TBase>>;
+    template <typename tderived, typename tbase>
+    concept rderived_from =
+        std::derived_from<std::remove_cvref_t<tderived>, std::remove_cvref_t<tbase>>;
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures `TDerived` is same as or derived from `TBase`.
+    /// ensures `tderived` not is derived from `tbase`.
     /// --------------------------------------------------------------------------------------------
-    template <typename TDerived, typename TBase>
-    concept RSameOrDerivedFrom = RSameAs<TDerived, TBase> || RDerivedFrom<TDerived, TBase>;
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    ////
-    //// Object concepts
-    ////
-    ////////////////////////////////////////////////////////////////////////////////////////////////
+    template <typename tderived, typename tbase>
+    concept rnot_derived_from = (!rderived_from<tderived, tbase>);
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures `T` is `Constructible` using `args...`.
+    /// ensures `tderived` is same as or derived from `tbase`.
     /// --------------------------------------------------------------------------------------------
-    template <typename T, typename... TArgs>
-    concept RConstructible = requires(TArgs&&... args) { T(forward<TArgs>(args)...); };
+    template <typename tderived, typename tbase>
+    concept rsame_or_derived_from = rsame_as<tderived, tbase> || rderived_from<tderived, tbase>;
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures `T` is `TriviallyConstructible` using `args...`.
+    /// ensures `tderived` is not same as or derived from `tbase`.
     /// --------------------------------------------------------------------------------------------
-    template <typename T, typename... TArgs>
-    concept RTriviallyConstructible = std::is_trivially_constructible_v<T, TArgs...>;
-
-    /// --------------------------------------------------------------------------------------------
-    /// Ensures `T` is `DefaultConstructible`.
-    /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    concept RDefaultConstructible = RConstructible<T>;
-
-    /// --------------------------------------------------------------------------------------------
-    /// Ensures `T` is `TriviallyDefaultConstructible`.
-    /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    concept RTriviallyDefaultConstructible = RTriviallyConstructible<T>;
-
-    /// --------------------------------------------------------------------------------------------
-    /// Ensures each type in `Ts...` is `DefaultConstructible`.
-    /// --------------------------------------------------------------------------------------------
-    template <typename... Ts>
-    concept RDefaultConstructibleAll = (RDefaultConstructible<Ts> and ...);
-
-    /// --------------------------------------------------------------------------------------------
-    /// Ensures each type in `Ts...` is `TriviallyDefaultConstructible`.
-    /// --------------------------------------------------------------------------------------------
-    template <typename... Ts>
-    concept RTriviallyDefaultConstructibleAll = (RTriviallyDefaultConstructible<Ts> and ...);
-
-    /// --------------------------------------------------------------------------------------------
-    /// Ensures `T` is `CopyConstructible`.
-    /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    concept RCopyConstructible = RConstructible<T, const T&>;
-
-    /// --------------------------------------------------------------------------------------------
-    /// Ensures `T` is `TriviallyCopyConstructible`.
-    /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    concept RTriviallyCopyConstructible = RTriviallyConstructible<T, const T&>;
-
-    /// --------------------------------------------------------------------------------------------
-    /// Ensures each type in `Ts...` is `CopyConstructible`.
-    /// --------------------------------------------------------------------------------------------
-    template <typename... Ts>
-    concept RCopyConstructibleAll = (RCopyConstructible<Ts> and ...);
-
-    /// --------------------------------------------------------------------------------------------
-    /// Ensures each type in `Ts...` is `TriviallyCopyConstructible`.
-    /// --------------------------------------------------------------------------------------------
-    template <typename... Ts>
-    concept RTriviallyCopyConstructibleAll = (RTriviallyCopyConstructible<Ts> and ...);
-
-    /// --------------------------------------------------------------------------------------------
-    /// Ensures `T` is `MoveConstructible`.
-    /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    concept RMoveConstructible = RConstructible<T, T&&>;
-
-    /// --------------------------------------------------------------------------------------------
-    /// Ensures `T` is `TriviallyMoveConstructible`.
-    /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    concept RTriviallyMoveConstructible = RTriviallyConstructible<T, T&&>;
-
-    /// --------------------------------------------------------------------------------------------
-    /// Ensures each type in `Ts...` is `MoveConstructible`.
-    /// --------------------------------------------------------------------------------------------
-    template <typename... Ts>
-    concept RMoveConstructibleAll = (RMoveConstructible<Ts> and ...);
-
-    /// --------------------------------------------------------------------------------------------
-    /// Ensures each type in `Ts...` is `TriviallyMoveConstructible`.
-    /// --------------------------------------------------------------------------------------------
-    template <typename... Ts>
-    concept RTriviallyMoveConstructibleAll = (RTriviallyMoveConstructible<Ts> and ...);
-
-    /// --------------------------------------------------------------------------------------------
-    /// Ensures `T` is `DefaultInitializable`.
-    /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    concept RDefaultInitializable = requires {
-        requires RDefaultConstructible<T>;
-
-        (void)new T;
-        T{};
-    };
-
-    /// --------------------------------------------------------------------------------------------
-    /// Ensures each type in `Ts...` is `DefaultInitializable`.
-    /// --------------------------------------------------------------------------------------------
-    template <typename... Ts>
-    concept RDefaultInitializableAll = (RDefaultInitializable<Ts> and ...);
-
-    /// --------------------------------------------------------------------------------------------
-    /// Ensures `T0` is `Assignable` using `T1`.
-    /// --------------------------------------------------------------------------------------------
-    template <typename T0, typename T1>
-    concept RAssignable = requires(T0 v0, T1 v1)
-    {
-        { v0 = forward<T1>(v1) } -> RSameAs<T0&>;
-    };
-
-    /// --------------------------------------------------------------------------------------------
-    /// Ensures `T` is `TriviallyAssignable` using `from`.
-    /// --------------------------------------------------------------------------------------------
-    template <typename T0, typename T1>
-    concept RTriviallyAssignable = std::is_trivially_assignable_v<T0, T1>;
-
-    /// --------------------------------------------------------------------------------------------
-    /// Ensures `T` is `CopyAssignable`.
-    /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    concept RCopyAssignable = RAssignable<T, const T&>;
-
-    /// --------------------------------------------------------------------------------------------
-    /// Ensures `T` is `TriviallyCopyAssignable`.
-    /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    concept RTriviallyCopyAssignable = RTriviallyAssignable<T&, const T&>;
-
-    /// --------------------------------------------------------------------------------------------
-    /// Ensures each type in `Ts...` is `CopyAssignable`.
-    /// --------------------------------------------------------------------------------------------
-    template <typename... Ts>
-    concept RCopyAssignableAll = (RCopyAssignable<Ts> and ...);
-
-    /// --------------------------------------------------------------------------------------------
-    /// Ensures each type in `Ts...` is `TriviallyCopyAssignable`.
-    /// --------------------------------------------------------------------------------------------
-    template <typename... Ts>
-    concept RTriviallyCopyAssignableAll = (RTriviallyCopyAssignable<Ts> and ...);
-
-    /// --------------------------------------------------------------------------------------------
-    /// Ensures `T` is `MoveAssignable`.
-    /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    concept RMoveAssignable = RAssignable<T, T&&>;
-
-    /// --------------------------------------------------------------------------------------------
-    /// Ensures `T` is `TriviallyMoveAssignable`.
-    /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    concept RTriviallyMoveAssignable = RTriviallyAssignable<T&, T&&>;
-
-    /// --------------------------------------------------------------------------------------------
-    /// Ensures each type in `Ts...` is `MoveAssignable`.
-    /// --------------------------------------------------------------------------------------------
-    template <typename... Ts>
-    concept RMoveAssignableAll = (RMoveAssignable<Ts> and ...);
-
-    /// --------------------------------------------------------------------------------------------
-    /// Ensures each type in `Ts...` is `TriviallyMoveAssignable`.
-    /// --------------------------------------------------------------------------------------------
-    template <typename... Ts>
-    concept RTriviallyMoveAssignableAll = (RTriviallyMoveAssignable<Ts> and ...);
-
-    /// --------------------------------------------------------------------------------------------
-    /// Ensures `T` is``CopyConstructible` and `CopyAssignable`.
-    /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    concept RCopyable = RCopyConstructible<T> && RCopyAssignable<T>;
-
-    /// --------------------------------------------------------------------------------------------
-    /// Ensures `T` is``CopyConstructible` and `TriviallyCopyAssignable`.
-    /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    concept RTriviallyCopyable = RTriviallyCopyConstructible<T> && RTriviallyCopyAssignable<T>;
-
-    /// --------------------------------------------------------------------------------------------
-    /// Ensures each type in `Ts...` is `Copyable`.
-    /// --------------------------------------------------------------------------------------------
-    template <typename... Ts>
-    concept RCopyableAll = (RCopyable<Ts> and ...);
-
-    /// --------------------------------------------------------------------------------------------
-    /// Ensures each type in `Ts...` is `TriviallyCopyable`.
-    /// --------------------------------------------------------------------------------------------
-    template <typename... Ts>
-    concept RTriviallyCopyableAll = (RTriviallyCopyable<Ts> and ...);
-
-    /// --------------------------------------------------------------------------------------------
-    /// Ensures `T` is `MoveConstructible` and `MoveAssignable`.
-    /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    concept RMoveable = RMoveConstructible<T> && RMoveAssignable<T>;
-
-    /// --------------------------------------------------------------------------------------------
-    /// Ensures `T` is `MoveConstructible` and `TriviallyMoveAssignable`.
-    /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    concept RTriviallyMoveable = RTriviallyMoveConstructible<T> && RTriviallyMoveAssignable<T>;
-
-    /// --------------------------------------------------------------------------------------------
-    /// Ensures each type in `Ts...` is `Moveable`.
-    /// --------------------------------------------------------------------------------------------
-    template <typename... Ts>
-    concept RMoveableAll = (RMoveable<Ts> and ...);
-
-    /// --------------------------------------------------------------------------------------------
-    /// Ensures each type in `Ts...` is `TriviallyMoveable`.
-    /// --------------------------------------------------------------------------------------------
-    template <typename... Ts>
-    concept RTriviallyMoveableAll = (RTriviallyMoveable<Ts> and ...);
-
-    /// --------------------------------------------------------------------------------------------
-    /// Ensures `T0` is `Swappable` with `T1`.
-    /// --------------------------------------------------------------------------------------------
-    template <typename T0, typename T1>
-    concept RSwappableWith = RAssignable<T0, T1> && RAssignable<T1, T0>;
-
-    /// --------------------------------------------------------------------------------------------
-    /// Ensures `T0` is `TriviallySwappable` with `T2`.
-    /// --------------------------------------------------------------------------------------------
-    template <typename T0, typename T1>
-    concept RTriviallySwappableWith = RTriviallyAssignable<T0, T1> && RTriviallyAssignable<T1, T0>;
-
-    /// --------------------------------------------------------------------------------------------
-    /// Ensures `T` is `Swappable` with itself.
-    /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    concept RSwappable = RSwappableWith<T, T>;
-
-    /// --------------------------------------------------------------------------------------------
-    /// Ensures `T` is `TriviallySwappable` with itself.
-    /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    concept RTriviallySwappable = RTriviallySwappableWith<T, T>;
-
-    /// --------------------------------------------------------------------------------------------
-    /// Ensures `T` is `Destructible`.
-    /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    concept RDestructible = std::destructible<T>;
-
-    /// --------------------------------------------------------------------------------------------
-    /// Ensures `T` is `TrivallyDestructible`.
-    /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    concept RTriviallyDestructible = std::is_trivially_destructible_v<T>;
-
-    /// --------------------------------------------------------------------------------------------
-    /// Ensures each type in `Ts...` is `Destructible`.
-    /// --------------------------------------------------------------------------------------------
-    template <typename... Ts>
-    concept RDestructibleAll = (RDestructible<Ts> and ...);
-
-    /// --------------------------------------------------------------------------------------------
-    /// Ensures each type in `Ts...` is `TrivallyDestructible`.
-    /// --------------------------------------------------------------------------------------------
-    template <typename... Ts>
-    concept RTriviallyDestructibleAll = (RTriviallyDestructible<Ts> and ...);
+    template <typename tderived, typename tbase>
+    concept rnot_same_or_derived_from = !rsame_or_derived_from<tderived, tbase>;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     ////
-    //// Comparision Concepts.
+    //// object concepts
     ////
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures `T0` and `T1` are `EqualityComparable`.
+    /// ensures `type` is `constructible` using `args...`.
     /// --------------------------------------------------------------------------------------------
-    template <typename T0, typename T1>
-    concept _REqualityComparableWith = requires(const T0 v0, const T1 v1)
-    {
-        { v0 == v1 } -> RSameAs<bool>;
-        { v0 != v1 } -> RSameAs<bool>;
+    template <typename type, typename... args_type>
+    concept rconstructible = requires(args_type&&... args) { type(forward<args_type>(args)...); };
+
+    /// --------------------------------------------------------------------------------------------
+    /// ensures `type` is `trivially_constructible` using `args...`.
+    /// --------------------------------------------------------------------------------------------
+    template <typename type, typename... args_type>
+    concept rtrivially_constructible = std::is_trivially_constructible_v<type, args_type...>;
+
+    /// --------------------------------------------------------------------------------------------
+    /// ensures `type` is `default_constructible`.
+    /// --------------------------------------------------------------------------------------------
+    template <typename type>
+    concept rdefault_constructible = rconstructible<type>;
+
+    /// --------------------------------------------------------------------------------------------
+    /// ensures `type` is `trivially_default_constructible`.
+    /// --------------------------------------------------------------------------------------------
+    template <typename type>
+    concept rtrivially_default_constructible = rtrivially_constructible<type>;
+
+    /// --------------------------------------------------------------------------------------------
+    /// ensures each type in `ts...` is `default_constructible`.
+    /// --------------------------------------------------------------------------------------------
+    template <typename... ts>
+    concept rdefault_constructible_all = (rdefault_constructible<ts> and ...);
+
+    /// --------------------------------------------------------------------------------------------
+    /// ensures each type in `ts...` is `trivially_default_constructible`.
+    /// --------------------------------------------------------------------------------------------
+    template <typename... ts>
+    concept rtrivially_default_constructible_all = (rtrivially_default_constructible<ts> and ...);
+
+    /// --------------------------------------------------------------------------------------------
+    /// ensures `type` is `copy_constructible`.
+    /// --------------------------------------------------------------------------------------------
+    template <typename type>
+    concept rcopy_constructible = rconstructible<type, const type&>;
+
+    /// --------------------------------------------------------------------------------------------
+    /// ensures `type` is `trivially_copy_constructible`.
+    /// --------------------------------------------------------------------------------------------
+    template <typename type>
+    concept rtrivially_copy_constructible = rtrivially_constructible<type, const type&>;
+
+    /// --------------------------------------------------------------------------------------------
+    /// ensures each type in `ts...` is `copy_constructible`.
+    /// --------------------------------------------------------------------------------------------
+    template <typename... ts>
+    concept rcopy_constructible_all = (rcopy_constructible<ts> and ...);
+
+    /// --------------------------------------------------------------------------------------------
+    /// ensures each type in `ts...` is `trivially_copy_constructible`.
+    /// --------------------------------------------------------------------------------------------
+    template <typename... ts>
+    concept rtrivially_copy_constructible_all = (rtrivially_copy_constructible<ts> and ...);
+
+    /// --------------------------------------------------------------------------------------------
+    /// ensures `type` is `move_constructible`.
+    /// --------------------------------------------------------------------------------------------
+    template <typename type>
+    concept rmove_constructible = rconstructible<type, type&&>;
+
+    /// --------------------------------------------------------------------------------------------
+    /// ensures `type` is `trivially_move_constructible`.
+    /// --------------------------------------------------------------------------------------------
+    template <typename type>
+    concept rtrivially_move_constructible = rtrivially_constructible<type, type&&>;
+
+    /// --------------------------------------------------------------------------------------------
+    /// ensures each type in `ts...` is `move_constructible`.
+    /// --------------------------------------------------------------------------------------------
+    template <typename... ts>
+    concept rmove_constructible_all = (rmove_constructible<ts> and ...);
+
+    /// --------------------------------------------------------------------------------------------
+    /// ensures each type in `ts...` is `trivially_move_constructible`.
+    /// --------------------------------------------------------------------------------------------
+    template <typename... ts>
+    concept rtrivially_move_constructible_all = (rtrivially_move_constructible<ts> and ...);
+
+    /// --------------------------------------------------------------------------------------------
+    /// ensures `type` is `default_initializable`.
+    /// --------------------------------------------------------------------------------------------
+    template <typename type>
+    concept rdefault_initializable = requires {
+        requires rdefault_constructible<type>;
+
+        (void)new type;
+        type{};
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures `T0` and `T1` are `EqualityComparable`.
+    /// ensures each type in `ts...` is `default_initializable`.
     /// --------------------------------------------------------------------------------------------
-    template <typename T0, typename T1>
-    concept REqualityComparableWith = requires(const T0 v0, const T1 v1)
+    template <typename... ts>
+    concept rdefault_initializable_all = (rdefault_initializable<ts> and ...);
+
+    /// --------------------------------------------------------------------------------------------
+    /// ensures `t0` is `assignable` using `t1`.
+    /// --------------------------------------------------------------------------------------------
+    template <typename t0, typename t1>
+    concept rassignable = requires(t0 v0, t1 v1)
     {
-        { v0.eq(v1) } -> RSameAs<bool>;
-        { v0.ne(v1) } -> RSameAs<bool>;
+        { v0 = forward<t1>(v1) } -> rsame_as<t0&>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures `T` is `EqualityComparable`.
+    /// ensures `type` is `trivially_assignable` using `from`.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    concept REqualityComparable = REqualityComparableWith<T, T>;
+    template <typename t0, typename t1>
+    concept rtrivially_assignable = std::is_trivially_assignable_v<t0, t1>;
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures `T0` and `T1` are `Comparable`.
+    /// ensures `type` is `copy_assignable`.
     /// --------------------------------------------------------------------------------------------
-    template <typename T0, typename T1>
-    concept _RComparableWith = requires(const T0 v0, const T1 v1)
+    template <typename type>
+    concept rcopy_assignable = rassignable<type, const type&>;
+
+    /// --------------------------------------------------------------------------------------------
+    /// ensures `type` is `trivially_copy_assignable`.
+    /// --------------------------------------------------------------------------------------------
+    template <typename type>
+    concept rtrivially_copy_assignable = rtrivially_assignable<type&, const type&>;
+
+    /// --------------------------------------------------------------------------------------------
+    /// ensures each type in `ts...` is `copy_assignable`.
+    /// --------------------------------------------------------------------------------------------
+    template <typename... ts>
+    concept rcopy_assignable_all = (rcopy_assignable<ts> and ...);
+
+    /// --------------------------------------------------------------------------------------------
+    /// ensures each type in `ts...` is `trivially_copy_assignable`.
+    /// --------------------------------------------------------------------------------------------
+    template <typename... ts>
+    concept rtrivially_copy_assignable_all = (rtrivially_copy_assignable<ts> and ...);
+
+    /// --------------------------------------------------------------------------------------------
+    /// ensures `type` is `move_assignable`.
+    /// --------------------------------------------------------------------------------------------
+    template <typename type>
+    concept rmove_assignable = rassignable<type, type&&>;
+
+    /// --------------------------------------------------------------------------------------------
+    /// ensures `type` is `trivially_move_assignable`.
+    /// --------------------------------------------------------------------------------------------
+    template <typename type>
+    concept rtrivially_move_assignable = rtrivially_assignable<type&, type&&>;
+
+    /// --------------------------------------------------------------------------------------------
+    /// ensures each type in `ts...` is `move_assignable`.
+    /// --------------------------------------------------------------------------------------------
+    template <typename... ts>
+    concept rmove_assignable_all = (rmove_assignable<ts> and ...);
+
+    /// --------------------------------------------------------------------------------------------
+    /// ensures each type in `ts...` is `trivially_move_assignable`.
+    /// --------------------------------------------------------------------------------------------
+    template <typename... ts>
+    concept rtrivially_move_assignable_all = (rtrivially_move_assignable<ts> and ...);
+
+    /// --------------------------------------------------------------------------------------------
+    /// ensures `type` is``copy_constructible` and `copy_assignable`.
+    /// --------------------------------------------------------------------------------------------
+    template <typename type>
+    concept rcopyable = rcopy_constructible<type> && rcopy_assignable<type>;
+
+    /// --------------------------------------------------------------------------------------------
+    /// ensures `type` is``copy_constructible` and `trivially_copy_assignable`.
+    /// --------------------------------------------------------------------------------------------
+    template <typename type>
+    concept rtrivially_copyable = rtrivially_copy_constructible<type> && rtrivially_copy_assignable<type>;
+
+    /// --------------------------------------------------------------------------------------------
+    /// ensures each type in `ts...` is `copyable`.
+    /// --------------------------------------------------------------------------------------------
+    template <typename... ts>
+    concept rcopyable_all = (rcopyable<ts> and ...);
+
+    /// --------------------------------------------------------------------------------------------
+    /// ensures each type in `ts...` is `trivially_copyable`.
+    /// --------------------------------------------------------------------------------------------
+    template <typename... ts>
+    concept rtrivially_copyable_all = (rtrivially_copyable<ts> and ...);
+
+    /// --------------------------------------------------------------------------------------------
+    /// ensures `type` is `move_constructible` and `move_assignable`.
+    /// --------------------------------------------------------------------------------------------
+    template <typename type>
+    concept rmoveable = rmove_constructible<type> && rmove_assignable<type>;
+
+    /// --------------------------------------------------------------------------------------------
+    /// ensures `type` is `move_constructible` and `trivially_move_assignable`.
+    /// --------------------------------------------------------------------------------------------
+    template <typename type>
+    concept rtrivially_moveable = rtrivially_move_constructible<type> && rtrivially_move_assignable<type>;
+
+    /// --------------------------------------------------------------------------------------------
+    /// ensures each type in `ts...` is `moveable`.
+    /// --------------------------------------------------------------------------------------------
+    template <typename... ts>
+    concept rmoveable_all = (rmoveable<ts> and ...);
+
+    /// --------------------------------------------------------------------------------------------
+    /// ensures each type in `ts...` is `trivially_moveable`.
+    /// --------------------------------------------------------------------------------------------
+    template <typename... ts>
+    concept rtrivially_moveable_all = (rtrivially_moveable<ts> and ...);
+
+    /// --------------------------------------------------------------------------------------------
+    /// ensures `t0` is `swappable` with `t1`.
+    /// --------------------------------------------------------------------------------------------
+    template <typename t0, typename t1>
+    concept rswappable_with = rassignable<t0, t1> && rassignable<t1, t0>;
+
+    /// --------------------------------------------------------------------------------------------
+    /// ensures `t0` is `trivially_swappable` with `t2`.
+    /// --------------------------------------------------------------------------------------------
+    template <typename t0, typename t1>
+    concept rtrivially_swappable_with = rtrivially_assignable<t0, t1> && rtrivially_assignable<t1, t0>;
+
+    /// --------------------------------------------------------------------------------------------
+    /// ensures `type` is `swappable` with itself.
+    /// --------------------------------------------------------------------------------------------
+    template <typename type>
+    concept rswappable = rswappable_with<type, type>;
+
+    /// --------------------------------------------------------------------------------------------
+    /// ensures `type` is `trivially_swappable` with itself.
+    /// --------------------------------------------------------------------------------------------
+    template <typename type>
+    concept rtrivially_swappable = rtrivially_swappable_with<type, type>;
+
+    /// --------------------------------------------------------------------------------------------
+    /// ensures `type` is `destructible`.
+    /// --------------------------------------------------------------------------------------------
+    template <typename type>
+    concept rdestructible = std::destructible<type>;
+
+    /// --------------------------------------------------------------------------------------------
+    /// ensures `type` is `trivally_destructible`.
+    /// --------------------------------------------------------------------------------------------
+    template <typename type>
+    concept rtrivially_destructible = std::is_trivially_destructible_v<type>;
+
+    /// --------------------------------------------------------------------------------------------
+    /// ensures each type in `ts...` is `destructible`.
+    /// --------------------------------------------------------------------------------------------
+    template <typename... ts>
+    concept rdestructible_all = (rdestructible<ts> and ...);
+
+    /// --------------------------------------------------------------------------------------------
+    /// ensures each type in `ts...` is `trivally_destructible`.
+    /// --------------------------------------------------------------------------------------------
+    template <typename... ts>
+    concept rtrivially_destructible_all = (rtrivially_destructible<ts> and ...);
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////
+    //// comparision concepts.
+    ////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /// --------------------------------------------------------------------------------------------
+    /// ensures `t0` and `t1` are `equality_comparable`.
+    /// --------------------------------------------------------------------------------------------
+    template <typename t0, typename t1>
+    concept _requality_comparable_with = requires(const t0 v0, const t1 v1)
     {
-        requires _REqualityComparableWith<T0, T1>;
-
-        { v0 < v1 } -> RSameAs<bool>;
-        { v0 > v1 } -> RSameAs<bool>;
-        { v0 <= v1 } -> RSameAs<bool>;
-        { v0 >= v1 } -> RSameAs<bool>;
+        { v0 == v1 } -> rsame_as<bool>;
+        { v0 != v1 } -> rsame_as<bool>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures `T0` and `T1` are `Comparable`.
+    /// ensures `t0` and `t1` are `equality_comparable`.
     /// --------------------------------------------------------------------------------------------
-    template <typename T0, typename T1>
-    concept RComparableWith = requires(const T0 v0, const T1 v1)
+    template <typename t0, typename t1>
+    concept requality_comparable_with = requires(const t0 v0, const t1 v1)
     {
-        requires REqualityComparableWith<T0, T1>;
-
-        { v0.lt(v1) } -> RSameAs<bool>;
-        { v0.gt(v1) } -> RSameAs<bool>;
-        { v0.le(v1) } -> RSameAs<bool>;
-        { v0.ge(v1) } -> RSameAs<bool>;
+        { v0.eq(v1) } -> rsame_as<bool>;
+        { v0.ne(v1) } -> rsame_as<bool>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures `T` is `Comparable`.
+    /// ensures `type` is `equality_comparable`.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    concept RComparable = RComparableWith<T, T>;
+    template <typename type>
+    concept requality_comparable = requality_comparable_with<type, type>;
+
+    /// --------------------------------------------------------------------------------------------
+    /// ensures `t0` and `t1` are `comparable`.
+    /// --------------------------------------------------------------------------------------------
+    template <typename t0, typename t1>
+    concept _rcomparable_with = requires(const t0 v0, const t1 v1)
+    {
+        requires _requality_comparable_with<t0, t1>;
+
+        { v0 < v1 } -> rsame_as<bool>;
+        { v0 > v1 } -> rsame_as<bool>;
+        { v0 <= v1 } -> rsame_as<bool>;
+        { v0 >= v1 } -> rsame_as<bool>;
+    };
+
+    /// --------------------------------------------------------------------------------------------
+    /// ensures `t0` and `t1` are `comparable`.
+    /// --------------------------------------------------------------------------------------------
+    template <typename t0, typename t1>
+    concept rcomparable_with = requires(const t0 v0, const t1 v1)
+    {
+        requires requality_comparable_with<t0, t1>;
+
+        { v0.lt(v1) } -> rsame_as<bool>;
+        { v0.gt(v1) } -> rsame_as<bool>;
+        { v0.le(v1) } -> rsame_as<bool>;
+        { v0.ge(v1) } -> rsame_as<bool>;
+    };
+
+    /// --------------------------------------------------------------------------------------------
+    /// ensures `type` is `comparable`.
+    /// --------------------------------------------------------------------------------------------
+    template <typename type>
+    concept rcomparable = rcomparable_with<type, type>;
 
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    concept RPolymorphic = std::is_polymorphic_v<T>;
+    template <typename type>
+    concept rpolymorphic = std::is_polymorphic_v<type>;
 
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    concept RPure = not std::is_const_v<T> and not std::is_volatile_v<T> and not std::is_reference_v<T>;
+    template <typename type>
+    concept rpure = not std::is_const_v<type> and not std::is_volatile_v<type> and not std::is_reference_v<type>;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     ////
-    //// Type Concepts
+    //// type concepts
     ////
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures `T` is {SemiRegular}.
+    /// ensures `type` is {semi_regular}.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    concept RSemiRegular = RCopyable<T> && RDefaultInitializable<T>;
+    template <typename type>
+    concept rsemi_regular = rcopyable<type> && rdefault_initializable<type>;
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures `T` is {Regular}.
+    /// ensures `type` is {regular}.
     /// --------------------------------------------------------------------------------------------
-    template <class T>
-    concept Regular = RSemiRegular<T> && REqualityComparable<T>;
+    template <class type>
+    concept regular = rsemi_regular<type> && requality_comparable<type>;
 }
 
-namespace Atom
+namespace atom
 {
-    template <typename T0, typename T1>
-    constexpr auto operator==(const T0& v0, const T1& v1) -> bool
-        requires REqualityComparableWith<T0, T1>
+    template <typename t0, typename t1>
+    constexpr auto operator==(const t0& v0, const t1& v1) -> bool
+        requires requality_comparable_with<t0, t1>
     {
         return v0.eq(v1);
     }
 
-    template <typename T0, typename T1>
-    constexpr auto operator!=(const T0& v0, const T1& v1) -> bool
-        requires REqualityComparableWith<T0, T1>
+    template <typename t0, typename t1>
+    constexpr auto operator!=(const t0& v0, const t1& v1) -> bool
+        requires requality_comparable_with<t0, t1>
     {
         return v0.ne(v1);
     }
 
-    template <typename T0, typename T1>
-    constexpr auto operator<(const T0& v0, const T1& v1) -> bool
-        requires RComparableWith<T0, T1>
+    template <typename t0, typename t1>
+    constexpr auto operator<(const t0& v0, const t1& v1) -> bool
+        requires rcomparable_with<t0, t1>
     {
         return v0.lt(v1);
     }
 
-    template <typename T0, typename T1>
-    constexpr auto operator>(const T0& v0, const T1& v1) -> bool
-        requires RComparableWith<T0, T1>
+    template <typename t0, typename t1>
+    constexpr auto operator>(const t0& v0, const t1& v1) -> bool
+        requires rcomparable_with<t0, t1>
     {
         return v0.gt(v1);
     }
 
-    template <typename T0, typename T1>
-    constexpr auto operator<=(const T0& v0, const T1& v1) -> bool
-        requires RComparableWith<T0, T1>
+    template <typename t0, typename t1>
+    constexpr auto operator<=(const t0& v0, const t1& v1) -> bool
+        requires rcomparable_with<t0, t1>
     {
         return v0.le(v1);
     }
 
-    template <typename T0, typename T1>
-    constexpr auto operator>=(const T0& v0, const T1& v1) -> bool
+    template <typename t0, typename t1>
+    constexpr auto operator>=(const t0& v0, const t1& v1) -> bool
     
-        requires RComparableWith<T0, T1>
+        requires rcomparable_with<t0, t1>
     {
         return v0.ge(v1);
     }

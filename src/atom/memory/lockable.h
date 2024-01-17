@@ -1,21 +1,21 @@
 #pragma once
-#include "Atom/Core.h"
+#include "atom/core.h"
 
-namespace Atom
+namespace atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// Requirements for Lockable type.
+    /// requirements for lockable type.
     /// --------------------------------------------------------------------------------------------
-    template <typename TLockable>
-    concept RLockable = requires(TLockable lock) {
+    template <typename tlockable>
+    concept rlockable = requires(tlockable lock) {
         {
-            lock.Lock()
-        } -> RSameAs<void>;
+            lock.lock()
+        } -> rsame_as<void>;
         {
-            lock.TryLock()
-        } -> RSameAs<bool>;
+            lock.try_lock()
+        } -> rsame_as<bool>;
         {
-            lock.Unlock()
-        } -> RSameAs<void>;
+            lock.unlock()
+        } -> rsame_as<void>;
     };
 }

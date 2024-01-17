@@ -1,8 +1,8 @@
 #pragma once
-#include "Atom/Core.h"
+#include "atom/core.h"
 
-namespace Atom
+namespace atom
 {
-    template <typename TCharEncoding>
-    using BasicChar = typename TCharEncoding::TChar;
+    template <typename tchar_encoding>
+    using basic_char = typename tchar_encoding::tchar;
 }

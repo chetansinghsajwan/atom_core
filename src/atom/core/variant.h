@@ -1,410 +1,410 @@
 #pragma once
-#include "_VariantImpl.h"
+#include "_variant_impl.h"
 
-namespace Atom
+namespace atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// # To Do
-    /// - Check Requirements for assignments.
-    /// - Check if requirements using TypeList functionality can be made concepts.
+    /// # to do
+    /// - check requirements for assignments.
+    /// - check if requirements using type_list functionality can be made concepts.
     /// --------------------------------------------------------------------------------------------
-    template <typename... Ts>
-        requires(TypeList<Ts...>::AreUnique) and (TypeList<Ts...>::Count > 0)
-                and (not TypeList<Ts...>::template Has<void>)
-    class Variant
+    template <typename... ts>
+        requires(type_list<ts...>::are_unique) and (type_list<ts...>::count > 0)
+                and (not type_list<ts...>::template has<void>)
+    class variant
     {
     private:
-        using _Impl = _VariantImpl<Ts...>;
+        using _impl_type = _variant_impl<ts...>;
 
-        template <typename... TOthers>
-            requires(TypeList<TOthers...>::AreUnique) and (TypeList<TOthers...>::Count > 0)
-                    and (not TypeList<TOthers...>::template Has<void>)
-        friend class Variant;
+        template <typename... tothers>
+            requires(type_list<tothers...>::are_unique) and (type_list<tothers...>::count > 0)
+                    and (not type_list<tothers...>::template has<void>)
+        friend class variant;
 
-        using Self = Variant<Ts...>;
-
-    public:
-        /// ----------------------------------------------------------------------------------------
-        /// TypeList of this variant.
-        /// ----------------------------------------------------------------------------------------
-        using Types = TypeList<Ts...>;
+        using self = variant<ts...>;
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// Check if this variant supports type `T`.
+        /// type_list of this variant.
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        static consteval auto Has() -> bool
+        using types = type_list<ts...>;
+
+    public:
+        /// ----------------------------------------------------------------------------------------
+        /// check if this variant supports type `type`.
+        /// ----------------------------------------------------------------------------------------
+        template <typename type>
+        static consteval auto has() -> bool
         {
-            return _Impl::template HasType<T>();
+            return _impl_type::template has_type<type>();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Check if index `i` can be used to access value.
+        /// check if index `i` can be used to access value.
         /// ----------------------------------------------------------------------------------------
         template <usize i>
-        static consteval auto Has() -> bool
+        static consteval auto has() -> bool
         {
-            return _Impl::template HasIndex<i>();
+            return _impl_type::template has_index<i>();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Get type at index.
+        /// get type at index.
         /// ----------------------------------------------------------------------------------------
         template <usize i>
-            requires(Has<i>())
-        using TAt = typename _Impl::template TypeAtIndex<i>;
+            requires(has<i>())
+        using tat = typename _impl_type::template type_at_index<i>;
 
         /// ----------------------------------------------------------------------------------------
-        /// Index of type. This index than can be used to access value of type at that index.
+        /// index of type. this_type index than can be used to access value of type at that index.
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        static consteval auto IndexOf() -> usize
-            requires(Has<T>())
+        template <typename type>
+        static consteval auto index_of() -> usize
+            requires(has<type>())
         {
-            return _Impl::template GetIndexForType<T>();
+            return _impl_type::template get_index_for_type<type>();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Count of types this variant supports.
+        /// count of types this variant supports.
         /// ----------------------------------------------------------------------------------------
         static consteval auto count() -> usize
         {
-            return _Impl::GetTypeCount();
+            return _impl_type::get_type_count();
         }
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// # Default Constructor
+        /// # default constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr Variant()
-            requires(RDefaultConstructible<TAt<0>>)
+        constexpr variant()
+            requires(rdefault_constructible<tat<0>>)
         {
-            _impl.template constructValueByIndex<0>();
+            _impl.template construct_value_by_index<0>();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Trivial Copy Constructor
+        /// # trivial copy constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr Variant(const Variant& that) = default;
+        constexpr variant(const variant& that) = default;
 
         /// ----------------------------------------------------------------------------------------
-        /// # Copy Constructor
+        /// # copy constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr Variant(const Variant& that)
-            requires(RCopyConstructibleAll<Ts...>) and (not RTriviallyCopyConstructibleAll<Ts...>)
+        constexpr variant(const variant& that)
+            requires(rcopy_constructible_all<ts...>) and (not rtrivially_copy_constructible_all<ts...>)
         {
-            _impl.constructValueFromVariant(that._impl);
+            _impl.construct_value_from_variant(that._impl);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Copy Constructor Template
+        /// # copy constructor template
         /// ----------------------------------------------------------------------------------------
-        template <typename... TOthers>
-        constexpr Variant(const Variant<TOthers...>& that)
-            requires(Types::template Has<TOthers...>) and (RCopyConstructibleAll<TOthers...>)
+        template <typename... tothers>
+        constexpr variant(const variant<tothers...>& that)
+            requires(types::template has<tothers...>) and (rcopy_constructible_all<tothers...>)
         {
-            _impl.constructValueFromVariant(that._impl);
+            _impl.construct_value_from_variant(that._impl);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Trivial Copy Assignment Operator
+        /// # trivial copy assignment operator
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator=(const Variant& that) -> Variant& = default;
+        constexpr auto operator=(const variant& that) -> variant& = default;
 
         /// ----------------------------------------------------------------------------------------
-        /// # Copy Assignment Operator
+        /// # copy assignment operator
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator=(const Variant& that) -> Variant&
-            requires(RCopyConstructibleAll<Ts...>) and (RCopyAssignableAll<Ts...>)
-                    and (not RTriviallyCopyConstructibleAll<Ts...>)
-                    and (not RTriviallyCopyAssignableAll<Ts...>)
+        constexpr auto operator=(const variant& that) -> variant&
+            requires(rcopy_constructible_all<ts...>) and (rcopy_assignable_all<ts...>)
+                    and (not rtrivially_copy_constructible_all<ts...>)
+                    and (not rtrivially_copy_assignable_all<ts...>)
         {
-            _impl.setValueFromVariant(that._impl);
+            _impl.set_value_from_variant(that._impl);
             return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Copy Assignment Operator Template
+        /// # copy assignment operator template
         /// ----------------------------------------------------------------------------------------
-        template <typename... TOthers>
-        constexpr auto operator=(const Variant<TOthers...>& that) -> Variant&
-            requires(Types::template Has<TOthers...>) and (RCopyConstructibleAll<TOthers...>)
-                    and (RCopyAssignableAll<TOthers...>)
+        template <typename... tothers>
+        constexpr auto operator=(const variant<tothers...>& that) -> variant&
+            requires(types::template has<tothers...>) and (rcopy_constructible_all<tothers...>)
+                    and (rcopy_assignable_all<tothers...>)
         {
-            _impl.setValueFromVariant(that._impl);
+            _impl.set_value_from_variant(that._impl);
             return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Trivial Move Constructor
+        /// # trivial move constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr Variant(Variant&& that) = default;
+        constexpr variant(variant&& that) = default;
 
         /// ----------------------------------------------------------------------------------------
-        /// # Move Constructor
+        /// # move constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr Variant(Variant&& that)
-            requires(RMoveConstructibleAll<Ts...>) and (not RTriviallyMoveConstructibleAll<Ts...>)
+        constexpr variant(variant&& that)
+            requires(rmove_constructible_all<ts...>) and (not rtrivially_move_constructible_all<ts...>)
         {
-            _impl.constructValueFromVariant(mov(that._impl));
+            _impl.construct_value_from_variant(mov(that._impl));
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Move Constructor Template
+        /// # move constructor template
         /// ----------------------------------------------------------------------------------------
-        template <typename... TOthers>
-        constexpr Variant(Variant<TOthers...>&& that)
-            requires(Types::template Has<TOthers...>) and (RMoveConstructibleAll<TOthers...>)
+        template <typename... tothers>
+        constexpr variant(variant<tothers...>&& that)
+            requires(types::template has<tothers...>) and (rmove_constructible_all<tothers...>)
         {
-            _impl.constructValueFromVariant(mov(that._impl));
+            _impl.construct_value_from_variant(mov(that._impl));
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Trivial Move Assignment Operator
+        /// # trivial move assignment operator
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator=(Variant&& that) -> Variant& = default;
+        constexpr auto operator=(variant&& that) -> variant& = default;
 
         /// ----------------------------------------------------------------------------------------
-        /// # Move Assignment Operator
+        /// # move assignment operator
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator=(Variant&& that) -> Variant&
-            requires(RMoveConstructibleAll<Ts...>) and (RMoveAssignableAll<Ts...>)
-                    and (not RTriviallyMoveConstructibleAll<Ts...>)
-                    and (not RTriviallyMoveAssignableAll<Ts...>)
+        constexpr auto operator=(variant&& that) -> variant&
+            requires(rmove_constructible_all<ts...>) and (rmove_assignable_all<ts...>)
+                    and (not rtrivially_move_constructible_all<ts...>)
+                    and (not rtrivially_move_assignable_all<ts...>)
         {
-            _impl.setValueFromVariant(mov(that._impl));
+            _impl.set_value_from_variant(mov(that._impl));
             return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Move Assignment Operator Template
+        /// # move assignment operator template
         /// ----------------------------------------------------------------------------------------
-        template <typename... TOthers>
-        constexpr auto operator=(Variant<TOthers...>&& that) -> Variant&
-            requires(Types::template Has<TOthers...>) and (RMoveConstructibleAll<Ts...>)
-                    and (RMoveAssignableAll<Ts...>)
+        template <typename... tothers>
+        constexpr auto operator=(variant<tothers...>&& that) -> variant&
+            requires(types::template has<tothers...>) and (rmove_constructible_all<ts...>)
+                    and (rmove_assignable_all<ts...>)
         {
-            _impl.setValueFromVariant(mov(that._impl));
+            _impl.set_value_from_variant(mov(that._impl));
             return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Value Copy Constructor
+        /// # value copy constructor
         ///
-        /// Copy constructs variant with value of type T.
+        /// copy constructs variant with value of type type.
         ///
-        /// # Parameters
-        /// - `value`: Value to construct with.
+        /// # parameters
+        /// - `value`: value to construct with.
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr Variant(const T& value)
-            requires(Has<T>())
+        template <typename type>
+        constexpr variant(const type& value)
+            requires(has<type>())
         {
-            _impl.template constructValueByType<T>(value);
+            _impl.template construct_value_by_type<type>(value);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Value Move Constructor
+        /// # value move constructor
         ///
-        /// Move constructs variant with value of type T.
+        /// move constructs variant with value of type type.
         ///
-        /// # Parameters
-        /// - `value`: Value to construct with.
+        /// # parameters
+        /// - `value`: value to construct with.
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr Variant(T&& value)
-            requires(Has<T>())
+        template <typename type>
+        constexpr variant(type&& value)
+            requires(has<type>())
         {
-            _impl.template constructValueByType<T>(mov(value));
+            _impl.template construct_value_by_type<type>(mov(value));
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Value Copy Operator
+        /// # value copy operator
         ///
-        /// Destroys previous value assigns new value.
+        /// destroys previous value assigns new value.
         ///
-        /// # Parameters
-        /// - `value`: Value to assign.
+        /// # parameters
+        /// - `value`: value to assign.
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr auto operator=(const T& value) -> Variant&
-            requires(Has<T>())
+        template <typename type>
+        constexpr auto operator=(const type& value) -> variant&
+            requires(has<type>())
         {
-            _impl.setValue(value);
+            _impl.set_value(value);
             return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Value Move Operator
+        /// # value move operator
         ///
-        /// Destroys previous value assigns new value.
+        /// destroys previous value assigns new value.
         ///
-        /// # Parameters
-        /// - `value`: Value to assign.
+        /// # parameters
+        /// - `value`: value to assign.
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr auto operator=(T&& value) -> Variant&
-            requires(Has<T>())
+        template <typename type>
+        constexpr auto operator=(type&& value) -> variant&
+            requires(has<type>())
         {
-            _impl.setValue(mov(value));
+            _impl.set_value(mov(value));
             return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Trivial Destructor
+        /// # trivial destructor
         /// ----------------------------------------------------------------------------------------
-        constexpr ~Variant() = default;
+        constexpr ~variant() = default;
 
         /// ----------------------------------------------------------------------------------------
-        /// # Destructor
+        /// # destructor
         ///
-        /// Destructs value.
+        /// destructs value.
         /// ----------------------------------------------------------------------------------------
-        constexpr ~Variant()
-            requires(not RTriviallyDestructibleAll<Ts...>)
+        constexpr ~variant()
+            requires(not rtrivially_destructible_all<ts...>)
         {
-            _impl.destroyValue();
+            _impl.destroy_value();
         }
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// Constructs the type `T` and sets the value.
+        /// constructs the type `type` and sets the value.
         ///
-        /// # See Also
-        /// - [`TAt`]
+        /// # see also
+        /// - [`tat`]
         /// ----------------------------------------------------------------------------------------
-        template <typename T, typename... TArgs>
-        constexpr auto emplace(TArgs&&... args)
-            requires(Has<T>()) and (RConstructible<T, TArgs...>)
+        template <typename type, typename... args_type>
+        constexpr auto emplace(args_type&&... args)
+            requires(has<type>()) and (rconstructible<type, args_type...>)
         {
-            _impl.template emplaceValueByType<T>(forward<TArgs>(args)...);
+            _impl.template emplace_value_by_type<type>(forward<args_type>(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Constructs the type for index `i` and sets the value.
+        /// constructs the type for index `i` and sets the value.
         ///
-        /// # See Also
-        /// - [`TAt`]
+        /// # see also
+        /// - [`tat`]
         /// ----------------------------------------------------------------------------------------
-        template <usize i, typename... TArgs>
-        constexpr auto emplace(TArgs&&... args)
-            requires(Has<i>()) and (RConstructible<TAt<i>, TArgs...>)
+        template <usize i, typename... args_type>
+        constexpr auto emplace(args_type&&... args)
+            requires(has<i>()) and (rconstructible<tat<i>, args_type...>)
         {
-            _impl.template emplaceValueByIndex<i>(forward<TArgs>(args)...);
+            _impl.template emplace_value_by_index<i>(forward<args_type>(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Sets the value to `value`.
+        /// sets the value to `value`.
         ///
-        /// # Parameters
-        /// - `value`: Value to set.
+        /// # parameters
+        /// - `value`: value to set.
         /// ----------------------------------------------------------------------------------------
-        template <typename TFwd, typename T = TTI::TRemoveQuailfiersRef<TFwd>>
-        constexpr auto set(TFwd&& value)
-            requires(Has<T>()) and (RConstructible<T, TFwd>)
+        template <typename tfwd, typename type = tti::tremove_quailfiers_ref<tfwd>>
+        constexpr auto set(tfwd&& value)
+            requires(has<type>()) and (rconstructible<type, tfwd>)
         {
-            _impl.setValue(forward<TFwd>(value));
+            _impl.set_value(forward<tfwd>(value));
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Access the value as type `T`.
+        /// access the value as type `type`.
         ///
-        /// # Template Parameters
-        /// - `T`: Type to access variant's value as.
+        /// # template parameters
+        /// - `type`: type to access variant's value as.
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr auto as() const -> const T&
-            requires(Has<T>())
+        template <typename type>
+        constexpr auto as() const -> const type&
+            requires(has<type>())
         {
-            Contracts::Expects(is<T>(), "Access to invalid type.");
+            contracts::expects(is<type>(), "access to invalid type.");
 
-            return _impl.template getValueByType<T>();
+            return _impl.template get_value_by_type<type>();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Access the value as type `T`.
+        /// access the value as type `type`.
         ///
-        /// # Template Parameters
-        /// - `T`: Type to access variant's value as.
+        /// # template parameters
+        /// - `type`: type to access variant's value as.
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr auto as() -> T&
-            requires(Has<T>())
+        template <typename type>
+        constexpr auto as() -> type&
+            requires(has<type>())
         {
-            Contracts::Expects(is<T>(), "Access to invalid type.");
+            contracts::expects(is<type>(), "access to invalid type.");
 
-            return _impl.template getValueByType<T>();
+            return _impl.template get_value_by_type<type>();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Access the value at index `i`.
+        /// access the value at index `i`.
         ///
-        /// # Template Parameters
-        /// - `i`: Index of type to access variants value as.
+        /// # template parameters
+        /// - `i`: index of type to access variants value as.
         ///
-        /// # See Also
-        /// - [`TAt`]
+        /// # see also
+        /// - [`tat`]
         /// ----------------------------------------------------------------------------------------
         template <usize i>
-        constexpr auto at() const -> const TAt<i>&
-            requires(Has<i>())
+        constexpr auto at() const -> const tat<i>&
+            requires(has<i>())
         {
-            Contracts::Expects(is<i>(), "Access to invalid type by index.");
+            contracts::expects(is<i>(), "access to invalid type by index.");
 
-            return _impl.template getValueByIndex<i>();
+            return _impl.template get_value_by_index<i>();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Access the value at index `i`.
+        /// access the value at index `i`.
         ///
-        /// # Template Parameters
-        /// - `i`: Index of type to access variants value as.
+        /// # template parameters
+        /// - `i`: index of type to access variants value as.
         ///
-        /// # See Also
-        /// - [`TAt`]
+        /// # see also
+        /// - [`tat`]
         /// ----------------------------------------------------------------------------------------
         template <usize i>
-        constexpr auto at() -> TAt<i>&
-            requires(Has<i>())
+        constexpr auto at() -> tat<i>&
+            requires(has<i>())
         {
-            Contracts::Expects(is<i>(), "Access to invalid type by index.");
+            contracts::expects(is<i>(), "access to invalid type by index.");
 
-            return _impl.template getValueByIndex<i>();
+            return _impl.template get_value_by_index<i>();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Checks if current value is of type `T`.
+        /// checks if current value is of type `type`.
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
+        template <typename type>
         constexpr auto is() const -> bool
-            requires(Has<T>())
+            requires(has<type>())
         {
-            return _impl.template isType<T>();
+            return _impl.template is_type<type>();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Checks if current value is of type accessed by index `i`.
+        /// checks if current value is of type accessed by index `i`.
         ///
-        /// # See Also
-        /// - [`TAt`]
+        /// # see also
+        /// - [`tat`]
         /// ----------------------------------------------------------------------------------------
         template <usize i>
         constexpr auto is() const -> bool
-            requires(Has<i>())
+            requires(has<i>())
         {
-            return _impl.template isIndex<i>();
+            return _impl.template is_index<i>();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Get the index to current type.
+        /// get the index to current type.
         /// ----------------------------------------------------------------------------------------
         constexpr auto index() const -> usize
         {
-            return _impl.getTypeIndex();
+            return _impl.get_type_index();
         }
 
     private:
-        _Impl _impl;
+        _impl_type _impl;
     };
 }

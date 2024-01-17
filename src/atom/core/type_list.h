@@ -1,443 +1,449 @@
 #pragma once
-#include "Atom/Core.h"
-#include "Atom/TTI.h"
+#include "atom/core.h"
+#include "atom/tti.h"
 
-namespace Atom
+namespace atom
 {
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename... Ts>
-    class TypeList;
+    template <typename... ts>
+    class type_list;
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    namespace _TypeListOps
+    namespace _type_list_ops
     {
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////
-        //// Count
+        //// count
         ////
         ////////////////////////////////////////////////////////////////////////////////////////////
 
-        template <typename... Ts>
-        class Count
+        template <typename... ts>
+        class count
         {
         public:
-            static constexpr usize Value = sizeof...(Ts);
+            static constexpr usize value = sizeof...(ts);
         };
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////
-        //// MaxSize
+        //// max_size
         ////
         ////////////////////////////////////////////////////////////////////////////////////////////
 
-        template <usize max, typename... Ts>
-        class MaxSize;
+        template <usize max, typename... ts>
+        class max_size;
 
-        template <usize max, typename T, typename... Ts>
-        class MaxSize<max, T, Ts...>
+        template <usize max, typename in_type, typename... ts>
+        class max_size<max, in_type, ts...>
         {
         private:
-            static constexpr usize _ThisSize = sizeof(T);
+            static constexpr usize _this_size = sizeof(in_type);
 
         public:
-            static constexpr usize Value =
-                MaxSize<(_ThisSize > max ? _ThisSize : max), Ts...>::Value;
+            static constexpr usize value =
+                max_size<(_this_size > max ? _this_size : max), ts...>::value;
         };
 
         template <usize max>
-        class MaxSize<max>
+        class max_size<max>
         {
         private:
-            static constexpr usize _ThisSize = 0;
+            static constexpr usize _this_size = 0;
 
         public:
-            static constexpr usize Value = _ThisSize > max ? _ThisSize : max;
+            static constexpr usize value = _this_size > max ? _this_size : max;
         };
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////
-        //// MinSize
+        //// min_size
         ////
         ////////////////////////////////////////////////////////////////////////////////////////////
 
-        template <usize min, typename... Ts>
-        class MinSize;
+        template <usize min, typename... ts>
+        class min_size;
 
-        template <usize min, typename T, typename... Ts>
-        class MinSize<min, T, Ts...>
+        template <usize min, typename in_type, typename... ts>
+        class min_size<min, in_type, ts...>
         {
         private:
-            static constexpr usize _ThisSize = alignof(T);
+            static constexpr usize _this_size = alignof(in_type);
 
         public:
-            static constexpr usize Value =
-                MinSize<(_ThisSize < min ? _ThisSize : min), Ts...>::Value;
+            static constexpr usize value =
+                min_size<(_this_size < min ? _this_size : min), ts...>::value;
         };
 
         template <usize min>
-        class MinSize<min>
+        class min_size<min>
         {
         private:
-            static constexpr usize _ThisSize = 0;
+            static constexpr usize _this_size = 0;
 
         public:
-            static constexpr usize Value = _ThisSize < min ? _ThisSize : min;
+            static constexpr usize value = _this_size < min ? _this_size : min;
         };
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////
-        //// MaxAlign
+        //// max_align
         ////
         ////////////////////////////////////////////////////////////////////////////////////////////
 
-        template <usize max, typename... Ts>
-        class MaxAlign;
+        template <usize max, typename... ts>
+        class max_align;
 
-        template <usize max, typename T, typename... Ts>
-        class MaxAlign<max, T, Ts...>
+        template <usize max, typename in_type, typename... ts>
+        class max_align<max, in_type, ts...>
         {
         private:
-            static constexpr usize _ThisAlign = alignof(T);
+            static constexpr usize _this_align = alignof(in_type);
 
         public:
-            static constexpr usize Value =
-                MaxAlign<(_ThisAlign > max ? _ThisAlign : max), Ts...>::Value;
+            static constexpr usize value =
+                max_align<(_this_align > max ? _this_align : max), ts...>::value;
         };
 
         template <usize max>
-        class MaxAlign<max>
+        class max_align<max>
         {
         private:
-            static constexpr usize _ThisAlign = 0;
+            static constexpr usize _this_align = 0;
 
         public:
-            static constexpr usize Value = _ThisAlign > max ? _ThisAlign : max;
+            static constexpr usize value = _this_align > max ? _this_align : max;
         };
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////
-        //// MinAlign
+        //// min_align
         ////
         ////////////////////////////////////////////////////////////////////////////////////////////
 
-        template <usize min, typename... Ts>
-        class MinAlign;
+        template <usize min, typename... ts>
+        class min_align;
 
-        template <usize min, typename T, typename... Ts>
-        class MinAlign<min, T, Ts...>
+        template <usize min, typename in_type, typename... ts>
+        class min_align<min, in_type, ts...>
         {
         private:
-            static constexpr usize _ThisAlign = sizeof(T);
+            static constexpr usize _this_align = sizeof(in_type);
 
         public:
-            static constexpr usize Value =
-                MinAlign<(_ThisAlign < min ? _ThisAlign : min), Ts...>::Value;
+            static constexpr usize value =
+                min_align<(_this_align < min ? _this_align : min), ts...>::value;
         };
 
         template <usize min>
-        class MinAlign<min>
+        class min_align<min>
         {
         private:
-            static constexpr usize _ThisAlign = 0;
+            static constexpr usize _this_align = 0;
 
         public:
-            static constexpr usize Value = _ThisAlign < min ? _ThisAlign : min;
+            static constexpr usize value = _this_align < min ? _this_align : min;
         };
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////
-        //// At
+        //// at
         ////
         ////////////////////////////////////////////////////////////////////////////////////////////
 
-        template <usize indexToGet, usize index, typename... Ts>
-        class At;
+        template <usize index_to_get, usize index, typename... ts>
+        class at;
 
-        template <usize indexToGet, usize index, typename T, typename... Ts>
-        class At<indexToGet, index, T, Ts...>
+        template <usize index_to_get, usize index, typename in_type, typename... ts>
+        class at<index_to_get, index, in_type, ts...>
         {
         public:
-            using Type = TTI::TConditional<indexToGet == index, T,
-                typename At<indexToGet, index + 1, Ts...>::Type>;
+            using type = tti::tconditional<index_to_get == index, in_type,
+                typename at<index_to_get, index + 1, ts...>::type>;
         };
 
-        template <usize indexToGet, usize index>
-        class At<indexToGet, index>
+        template <usize index_to_get, usize index>
+        class at<index_to_get, index>
         {
         public:
-            using Type = void;
-        };
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        ////
-        //// IndexOf
-        ////
-        ////////////////////////////////////////////////////////////////////////////////////////////
-
-        template <typename TToGet, usize index, typename... Ts>
-        class IndexOf;
-
-        template <typename TToGet, usize index, typename T, typename... Ts>
-        class IndexOf<TToGet, index, T, Ts...>
-        {
-        public:
-            static constexpr usize Value =
-                RSameAs<TToGet, T> ? index : IndexOf<TToGet, index + 1, Ts...>::Value;
-        };
-
-        template <typename TToGet, usize index>
-        class IndexOf<TToGet, index>
-        {
-        public:
-            static constexpr usize Value = -1;
+            using type = void;
         };
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////
-        //// Has
+        //// index_of
         ////
         ////////////////////////////////////////////////////////////////////////////////////////////
 
-        template <typename T, typename... Ts>
-        class Has
+        template <typename tto_get, usize index, typename... ts>
+        class index_of;
+
+        template <typename tto_get, usize index, typename in_type, typename... ts>
+        class index_of<tto_get, index, in_type, ts...>
         {
         public:
-            static constexpr bool Value = IndexOf<T, 0, Ts...>::Value != -1;
+            static constexpr usize value =
+                rsame_as<tto_get, in_type> ? index : index_of<tto_get, index + 1, ts...>::value;
+        };
+
+        template <typename tto_get, usize index>
+        class index_of<tto_get, index>
+        {
+        public:
+            static constexpr usize value = -1;
         };
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////
-        //// AddFirst
+        //// has
         ////
         ////////////////////////////////////////////////////////////////////////////////////////////
 
-        template <typename T, typename TList>
-        class AddFirst;
-
-        template <typename T, typename... Ts>
-        class AddFirst<T, TypeList<Ts...>>
+        template <typename in_type, typename... ts>
+        class has
         {
         public:
-            using Type = TypeList<T, Ts...>;
+            static constexpr bool value = index_of<in_type, 0, ts...>::value != -1;
         };
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////
-        //// AddLast
+        //// add_first
         ////
         ////////////////////////////////////////////////////////////////////////////////////////////
 
-        template <typename T, typename TList>
-        class AddLast;
+        template <typename in_type, typename tlist>
+        class add_first;
 
-        template <typename T, typename... Ts>
-        class AddLast<T, TypeList<Ts...>>
+        template <typename in_type, typename... ts>
+        class add_first<in_type, type_list<ts...>>
         {
         public:
-            using Type = TypeList<Ts..., T>;
+            using type = type_list<in_type, ts...>;
         };
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////
-        //// RemoveIf
+        //// add_last
         ////
         ////////////////////////////////////////////////////////////////////////////////////////////
 
-        template <template <typename T> typename TPred, typename... Ts>
-        class RemoveIf;
+        template <typename in_type, typename tlist>
+        class add_last;
 
-        template <template <typename T> typename TPred>
-        class RemoveIf<TPred>
+        template <typename in_type, typename... ts>
+        class add_last<in_type, type_list<ts...>>
         {
         public:
-            using Type = TypeList<>;
-        };
-
-        template <template <typename T> typename TPred, typename T, typename... Ts>
-        class RemoveIf<TPred, T, Ts...>
-        {
-        public:
-            using Type = TTI::TConditional<TPred<T>::Value,
-                typename AddFirst<T, typename RemoveIf<TPred, Ts...>::Type>::Type,
-                typename RemoveIf<TPred, Ts...>::Type>;
+            using type = type_list<ts..., in_type>;
         };
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////
-        //// Remove
+        //// remove_if
         ////
         ////////////////////////////////////////////////////////////////////////////////////////////
 
-        template <typename T, typename... Ts>
-        class Remove
+        template <template <typename in_type> typename predicate_type, typename... ts>
+        class remove_if;
+
+        template <template <typename in_type> typename predicate_type>
+        class remove_if<predicate_type>
         {
-            template <typename TCheck>
-            class _Pred
+        public:
+            using type = type_list<>;
+        };
+
+        template <template <typename in_type> typename predicate_type, typename in_type,
+            typename... ts>
+        class remove_if<predicate_type, in_type, ts...>
+        {
+        public:
+            using type = tti::tconditional<predicate_type<in_type>::value,
+                typename add_first<in_type,
+                    typename remove_if<predicate_type, ts...>::in_type>::type,
+                typename remove_if<predicate_type, ts...>::type>;
+        };
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////
+        //// remove
+        ////
+        ////////////////////////////////////////////////////////////////////////////////////////////
+
+        template <typename in_type, typename... ts>
+        class remove
+        {
+            template <typename check_type>
+            class _pred
             {
-                static constexpr bool Value = RSameAs<T, TCheck>;
+                static constexpr bool value = rsame_as<in_type, check_type>;
             };
 
         public:
-            using Type = typename RemoveIf<_Pred, Ts...>::Type;
+            using type = typename remove_if<_pred, ts...>::type;
         };
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////
-        //// RemoveFirst
+        //// remove_first
         ////
         ////////////////////////////////////////////////////////////////////////////////////////////
 
-        template <typename... Ts>
-        class RemoveFirst;
+        template <typename... ts>
+        class remove_first;
 
-        template <typename T, typename... Ts>
-        class RemoveFirst<T, Ts...>
+        template <typename in_type, typename... ts>
+        class remove_first<in_type, ts...>
         {
         public:
-            using Type = TypeList<Ts...>;
+            using type = type_list<ts...>;
         };
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////
-        //// RemoveLast
+        //// remove_last
         ////
         ////////////////////////////////////////////////////////////////////////////////////////////
 
-        template <typename... Ts>
-        class RemoveLast;
+        template <typename... ts>
+        class remove_last;
 
-        template <typename T, typename... Ts>
-        class RemoveLast<T, Ts...>
+        template <typename in_type, typename... ts>
+        class remove_last<in_type, ts...>
         {
         public:
-            using Type = typename AddFirst<T, RemoveLast<Ts...>>::Type;
+            using type = typename add_first<in_type, remove_last<ts...>>::type;
         };
 
-        template <typename T>
-        class RemoveLast<T>
+        template <typename in_type>
+        class remove_last<in_type>
         {
         public:
-            using Type = TypeList<>;
+            using type = type_list<>;
         };
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////
-        //// AreUnique
+        //// are_unique
         ////
         ////////////////////////////////////////////////////////////////////////////////////////////
 
-        template <typename... Ts>
-        class AreUnique;
+        template <typename... ts>
+        class are_unique;
 
         template <>
-        class AreUnique<>
+        class are_unique<>
         {
         public:
-            static constexpr bool Value = true;
+            static constexpr bool value = true;
         };
 
-        template <typename T, typename... Ts>
-        class AreUnique<T, Ts...>
+        template <typename in_type, typename... ts>
+        class are_unique<in_type, ts...>
         {
         public:
-            static constexpr bool Value = not Has<T, Ts...>::Value and AreUnique<Ts...>::Value;
+            static constexpr bool value =
+                not has<in_type, ts...>::value and are_unique<ts...>::value;
         };
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////
-        //// Replace
+        //// replace
         ////
         ////////////////////////////////////////////////////////////////////////////////////////////
 
-        template <typename TReplace, typename TWith, typename... Ts>
-        class ReplaceAll;
+        template <typename replace_type, typename with_type, typename... ts>
+        class replace_all;
 
-        template <typename TReplace, typename TWith>
-        class ReplaceAll<TReplace, TWith>
+        template <typename replace_type, typename with_type>
+        class replace_all<replace_type, with_type>
         {
         public:
-            using Type = TypeList<>;
+            using type = type_list<>;
         };
 
-        template <typename TReplace, typename TWith, typename T, typename... Ts>
-        class ReplaceAll<TReplace, TWith, T, Ts...>
+        template <typename replace_type, typename with_type, typename in_type, typename... ts>
+        class replace_all<replace_type, with_type, in_type, ts...>
         {
-            using _TFinal = TTI::TConditional<TTI::IsSame<TReplace, T>, TWith, T>;
+            using final_type =
+                tti::tconditional<tti::is_same<replace_type, in_type>, with_type, in_type>;
 
         public:
-            using Type =
-                typename AddFirst<_TFinal, typename ReplaceAll<TReplace, TWith, Ts...>::Type>::Type;
+            using type = typename add_first<final_type,
+                typename replace_all<replace_type, with_type, ts...>::in_type>::type;
         };
     };
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename... Ts>
-    class TypeList
+    template <typename... ts>
+    class type_list
     {
     public:
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        static constexpr usize Count = _TypeListOps::template Count<Ts...>::Value;
+        static constexpr usize count = _type_list_ops::template count<ts...>::value;
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        static constexpr usize MaxSize = _TypeListOps::template MaxSize<0, Ts...>::Value;
+        static constexpr usize max_size = _type_list_ops::template max_size<0, ts...>::value;
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        static constexpr usize MinSize = _TypeListOps::template MaxSize<0, Ts...>::Value;
+        static constexpr usize min_size = _type_list_ops::template max_size<0, ts...>::value;
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        static constexpr usize MaxAlign = _TypeListOps::template MaxAlign<0, Ts...>::Value;
+        static constexpr usize max_align = _type_list_ops::template max_align<0, ts...>::value;
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        static constexpr usize MinAlign = _TypeListOps::template MaxAlign<0, Ts...>::Value;
+        static constexpr usize min_align = _type_list_ops::template max_align<0, ts...>::value;
 
         /// ----------------------------------------------------------------------------------------
-        /// # To Do
-        /// - Try to remove the explicit 0 index.
+        /// # to do
+        /// - try to remove the explicit 0 index.
         /// ----------------------------------------------------------------------------------------
         template <usize i>
-            requires(i < Count)
-        using At = typename _TypeListOps::template At<i, 0, Ts...>::Type;
+            requires(i < count)
+        using at = typename _type_list_ops::template at<i, 0, ts...>::type;
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename... TsToCheck>
-        static constexpr bool Has = (_TypeListOps::template Has<TsToCheck, Ts...>::Value and ...);
+        template <typename... ts_to_check>
+        static constexpr bool has =
+            (_type_list_ops::template has<ts_to_check, ts...>::value and ...);
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename TToReplace, typename TWith>
-        using ReplaceAll =
-            typename _TypeListOps::template ReplaceAll<TToReplace, TWith, Ts...>::Type;
+        template <typename tto_replace, typename with_type>
+        using replace_all =
+            typename _type_list_ops::template replace_all<tto_replace, with_type, ts...>::type;
 
         /// ----------------------------------------------------------------------------------------
-        /// # To Do
-        /// - Try to remove the explicit 0 index.
+        /// # to do
+        /// - try to remove the explicit 0 index.
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
-            requires(Has<T>)
-        static constexpr usize IndexOf = _TypeListOps::template IndexOf<T, 0, Ts...>::Value;
+        template <typename in_type>
+            requires(has<in_type>)
+        static constexpr usize index_of =
+            _type_list_ops::template index_of<in_type, 0, ts...>::value;
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        static constexpr bool AreUnique = _TypeListOps::template AreUnique<Ts...>::Value;
+        static constexpr bool are_unique = _type_list_ops::template are_unique<ts...>::value;
     };
 }

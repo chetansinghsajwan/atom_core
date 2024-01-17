@@ -1,0 +1,423 @@
+#pragma once
+#include "atom/contracts.h"
+#include "atom/core.h"
+#include "atom/memory/obj_helper.h"
+
+namespace atom
+{
+    template <typename value_type>
+    union _option_storage
+    {
+        class _dummy
+        {};
+
+    public:
+        constexpr _option_storage()
+            : _dummy{}
+        {}
+
+        constexpr _option_storage(const _option_storage&) = default;
+        constexpr _option_storage& operator=(const _option_storage&) = default;
+
+        constexpr _option_storage(_option_storage&&) = default;
+        constexpr _option_storage& operator=(_option_storage&&) = default;
+
+        template <typename... args_type>
+        constexpr _option_storage(args_type&&... args)
+            : _value{ forward<args_type>(args)... }
+        {}
+
+        constexpr ~_option_storage()
+            requires(rtrivially_destructible<value_type>)
+        = default;
+
+        constexpr ~_option_storage()
+            requires(not rtrivially_destructible<value_type>)
+        {}
+
+    public:
+        constexpr auto get_data() -> mut_mem_ptr<value_type>
+        {
+            return &_value;
+        }
+
+        constexpr auto get_data() const -> mem_ptr<value_type>
+        {
+            return &_value;
+        }
+
+    private:
+        value_type _value;
+        _dummy _dummy;
+    };
+
+    template <typename tval_>
+    class _option_impl
+    {
+        using this_type = _option_impl<tval_>;
+
+        /// --------------------------------------------------------------------------------------------
+        /// # to do
+        ///
+        /// - create `static_aligned_storage_for<tval_>` to replace this.
+        /// --------------------------------------------------------------------------------------------
+        using _tstorage = _option_storage<tval_>;
+
+    public:
+        using value_type = tval_;
+
+        class ctor_default
+        {};
+
+        class ctor_copy
+        {};
+
+        class ctor_move
+        {};
+
+    public:
+        /// ----------------------------------------------------------------------------------------
+        /// get the default value of [`value_type`].
+        /// ----------------------------------------------------------------------------------------
+        static consteval auto get_default() -> value_type
+        {
+            return value_type();
+        }
+
+    public:
+        /// ----------------------------------------------------------------------------------------
+        /// # trivial default constructor
+        /// ----------------------------------------------------------------------------------------
+        constexpr _option_impl() = default;
+
+        /// ----------------------------------------------------------------------------------------
+        /// # default constructor
+        /// ----------------------------------------------------------------------------------------
+        constexpr _option_impl(ctor_default)
+            : _is_value{ false }
+            , _storage{}
+        {}
+
+        /// ----------------------------------------------------------------------------------------
+        /// # trivial copy constructor
+        /// ----------------------------------------------------------------------------------------
+        constexpr _option_impl(const this_type& that) = default;
+
+        /// ----------------------------------------------------------------------------------------
+        /// # copy constructor
+        /// ----------------------------------------------------------------------------------------
+        constexpr _option_impl(ctor_copy, const this_type& that)
+            : this_type(ctor_default())
+        {
+            if (that._is_value)
+            {
+                _create_value(that._get_value());
+                _is_value = true;
+            }
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// # trivial copy operator
+        /// ----------------------------------------------------------------------------------------
+        constexpr _option_impl& operator=(const this_type& that) = default;
+
+        /// ----------------------------------------------------------------------------------------
+        /// # trivial move constructor
+        /// ----------------------------------------------------------------------------------------
+        constexpr _option_impl(this_type&& that) = default;
+
+        /// ----------------------------------------------------------------------------------------
+        /// # move constructor
+        /// ----------------------------------------------------------------------------------------
+        constexpr _option_impl(ctor_move, this_type&& that)
+            : this_type()
+        {
+            if (that._is_value)
+            {
+                _create_value(mov(that._get_mut_value()));
+                _is_value = true;
+            }
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// # trivial move operator
+        /// ----------------------------------------------------------------------------------------
+        constexpr _option_impl& operator=(this_type&& that) = default;
+
+        template <typename... args_type>
+        /// ----------------------------------------------------------------------------------------
+        /// # value constructor
+        /// ----------------------------------------------------------------------------------------
+        constexpr _option_impl(args_type&&... args)
+            : _storage{ forward<args_type>(args)... }
+            , _is_value{ true }
+        {}
+
+        /// ----------------------------------------------------------------------------------------
+        /// # trivial destructor
+        /// ----------------------------------------------------------------------------------------
+        constexpr ~_option_impl() = default;
+
+    public:
+        /// ----------------------------------------------------------------------------------------
+        /// copies [`option`] into this.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto copy(const _option_impl& that)
+        {
+            _set_value_from_option<false>(that);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// moves [`option`] into this.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto move(_option_impl&& that)
+        {
+            _set_value_from_option<true>(that);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// swaps [`option`] with `that`.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto swap(_option_impl& that)
+        {
+            _swap(that);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// destroy current value if any.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto destroy()
+        {
+            if (_is_value)
+            {
+                _destroy_value();
+                _is_value = false;
+            }
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// destroys current value if any and constructs new value wih `args`.
+        /// ----------------------------------------------------------------------------------------
+        template <typename... args_type>
+        constexpr auto emplace_value(args_type&&... args)
+        {
+            if (_is_value)
+            {
+                _destroy_value();
+                _create_value(forward<args_type>(args)...);
+            }
+            else
+            {
+                _create_value(forward<args_type>(args)...);
+                _is_value = true;
+            }
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// if this contains value, assigns new value to it.
+        /// else, constructs new value.
+        /// ----------------------------------------------------------------------------------------
+        template <typename t1>
+        constexpr auto set_value(t1&& val)
+        {
+            if (not _is_value)
+            {
+                _create_value(forward<t1>(val));
+                _is_value = true;
+            }
+            else
+            {
+                _set_value(forward<t1>(val));
+            }
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// get const ref to current value.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto get_value() const -> const value_type&
+        {
+            return _get_value();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// get ref to current value.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto get_mut_value() -> value_type&
+        {
+            return _get_mut_value();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// checks if this contains value.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto is_value() const -> bool
+        {
+            return _is_value;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// checks if this doesn't contains value.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto is_null() const -> bool
+        {
+            return not _is_value;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// destroys current value if any.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto destroy_value()
+        {
+            if (_is_value)
+            {
+                _destroy_value();
+                _is_value = false;
+            }
+        }
+
+    private:
+        template <bool move, typename topt>
+        constexpr auto _set_value_from_option(topt&& that)
+        {
+            if (that._is_value)
+            {
+                if (_is_value)
+                {
+                    if constexpr (move)
+                        _set_value(mov(that._get_mut_value()));
+                    else
+                        _set_value(that._get_value());
+                }
+                else
+                {
+                    if constexpr (move)
+                        _create_value(mov(that._get_mut_value()));
+                    else
+                        _create_value(that._get_value());
+
+                    _is_value = true;
+                }
+            }
+            else
+            {
+                if (_is_value)
+                {
+                    _destroy_value();
+                    _is_value = false;
+                }
+            }
+        }
+
+        template <typename topt>
+        constexpr auto _copy(const topt& that)
+        {
+            if (that._is_value)
+            {
+                if (_is_value)
+                {
+                    _set_value(that._get_value());
+                }
+                else
+                {
+                    _create_value(that._get_value());
+                    _is_value = true;
+                }
+            }
+            else
+            {
+                if (_is_value)
+                {
+                    _destroy_value();
+                    _is_value = false;
+                }
+            }
+        }
+
+        template <typename topt>
+        constexpr auto _move(topt&& that)
+        {
+            if (that._is_value)
+            {
+                if (_is_value)
+                {
+                    _set_value(mov(that._get_value()));
+                }
+                else
+                {
+                    _create_value(mov(that._get_value()));
+                    _is_value = true;
+                }
+            }
+            else
+            {
+                if (_is_value)
+                {
+                    _destroy_value();
+                    _is_value = false;
+                }
+            }
+        }
+
+        constexpr auto _swap(_option_impl& that)
+        {
+            if (that._is_value)
+            {
+                if (_is_value)
+                {
+                    _swap_value(that._get_value());
+                }
+                else
+                {
+                    _create_value(mov(that._get_mut_value()));
+                    _is_value = true;
+                    that._is_value = false;
+                }
+            }
+            else
+            {
+                if (_is_value)
+                {
+                    that._create_value(mov(_get_mut_value()));
+                    that._is_value = true;
+                    _is_value = false;
+                }
+            }
+        }
+
+        template <typename... args_type>
+        constexpr auto _create_value(args_type&&... args)
+        {
+            obj_helper().construct_as<value_type>(_storage.get_data(), forward<args_type>(args)...);
+        }
+
+        template <typename targ>
+        constexpr auto _set_value(targ&& val)
+        {
+            obj_helper().assign_as<value_type>(_storage.get_data(), forward<targ>(val));
+        }
+
+        constexpr auto _swap_value(value_type& that)
+        {
+            obj_helper().swap(_get_mut_value(), that);
+        }
+
+        constexpr auto _get_value() const -> const value_type&
+        {
+            return _storage.get_data().get();
+        }
+
+        constexpr auto _get_mut_value() -> value_type&
+        {
+            return _storage.get_data().get_mut();
+        }
+
+        constexpr auto _destroy_value()
+        {
+            obj_helper().destruct_as<value_type>(_storage.get_data());
+        }
+
+    private:
+        bool _is_value;
+        _tstorage _storage;
+    };
+}

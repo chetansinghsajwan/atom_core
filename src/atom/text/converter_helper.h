@@ -1,87 +1,87 @@
-export module Atom.Core.Text:Encodings._ConverterHelper;
+export module atom.core.text:encodings._converter_helper;
 
-namespace Atom::Text
+namespace atom::text
 {
     /// --------------------------------------------------------------------------------------------
-    /// Requirements for {CharEncodingConverter} API.
+    /// requirements for {char_encoding_converter} api.
     /// --------------------------------------------------------------------------------------------
-    export template <typename TConverter, typename TInEncoding, typename TOutEncoding>
-    concept RCharEncodingConverter =
-        requires(TConverter converter, Internal::RangeMock<BasicChar<TInEncoding>> in,
-            Internal::OutputMock<BasicChar<TOutEncoding>> out) {
-            requires RDefaultConstructible<TConverter>;
+    export template <typename tconverter, typename tin_encoding, typename tout_encoding>
+    concept rchar_encoding_converter =
+        requires(tconverter converter, internal::range_mock<basic_char<tin_encoding>> in,
+            internal::output_mock<basic_char<tout_encoding>> out) {
+            requires rdefault_constructible<tconverter>;
 
             {
-                converter.Convert(in)
-            } -> RSameAs<BasicString<TOutEncoding>>;
+                converter.convert(in)
+            } -> rsame_as<basic_string<tout_encoding>>;
 
             {
-                converter.Convert(in, out)
-            } -> RSameAs<void>;
+                converter.convert(in, out)
+            } -> rsame_as<void>;
         };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures {CharEncodingConverter<TInEncoding, TOutEncoding>} satisfies
-    /// {RCharEncodingConverter<TInEncoding, TOutEncoding>}.
+    /// ensures {char_encoding_converter<tin_encoding, tout_encoding>} satisfies
+    /// {rchar_encoding_converter<tin_encoding, tout_encoding>}.
     /// --------------------------------------------------------------------------------------------
-    export template <typename TInEncoding, typename TOutEncoding>
-    concept RCharEncodingConvertible =
-        RCharEncodingConverter<CharEncodingConverter<TInEncoding, TOutEncoding>, TInEncoding,
-            TOutEncoding>;
+    export template <typename tin_encoding, typename tout_encoding>
+    concept rchar_encoding_convertible =
+        rchar_encoding_converter<char_encoding_converter<tin_encoding, tout_encoding>, tin_encoding,
+            tout_encoding>;
 }
 
-namespace Atom::Text
+namespace atom::text
 {
     /// --------------------------------------------------------------------------------------------
-    /// Converts data from {TInEncoding} character encoding to {TOutEncoding}.
+    /// converts data from {tin_encoding} character encoding to {tout_encoding}.
     ///
-    /// @TPARAM TImpl Conversion impl.
-    /// @TPARAM TInEncoding Character encoding to convert data from.
-    /// @TPARAM TOutEncoding Character encoding to convert data to.
+    /// @tparam impl_type conversion impl.
+    /// @tparam tin_encoding character encoding to convert data from.
+    /// @tparam tout_encoding character encoding to convert data to.
     /// --------------------------------------------------------------------------------------------
-    template <typename TImpl, typename TInEncoding, typename TOutEncoding>
-    class _CharEncodingConverterHelper
+    template <typename impl_type, typename tin_encoding, typename tout_encoding>
+    class _char_encoding_converter_helper
     {
     public:
-        using TInChar = typename TInEncoding::TChar;
-        using TOutChar = typename TOutEncoding::TChar;
-        using TOutString = Internal::String<TOutEncoding>;
+        using tin_char = typename tin_encoding::tchar;
+        using tout_char = typename tout_encoding::tchar;
+        using tout_string = internal::string<tout_encoding>;
 
     public:
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename TInput, typename TOut>
-            requires(RRangeOf<TInput, TInChar>) and (ROutput<TOut, TOutChar>)
-        constexpr auto ConvertTo(const TInput& in, TOut out)
+        template <typename tinput, typename tout>
+            requires(rrange_of<tinput, tin_char>) and (routput<tout, tout_char>)
+        constexpr auto convert_to(const tinput& in, tout out)
         {
             auto end = in.end();
             for (auto it = in.begin(); it != end; it++)
             {
-                TImpl::ConvertChar(it, out);
+                impl_type::convert_char(it, out);
             }
         }
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Specialization for same {CharEncoding}.
+    /// specialization for same {char_encoding}.
     /// --------------------------------------------------------------------------------------------
-    template <typename TImpl, typename TEncoding>
-    class _CharEncodingConverterHelper<TImpl, TEncoding, TEncoding>
+    template <typename impl_type, typename tencoding>
+    class _char_encoding_converter_helper<impl_type, tencoding, tencoding>
     {
     public:
-        using TChar = BasicChar<TCharEncoding>;
-        using TString = BasicString<TCharEncoding>;
+        using tchar = basic_char<tchar_encoding>;
+        using string_type = basic_string<tchar_encoding>;
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// Writes input to output as is.
+        /// writes input to output as is.
         /// ----------------------------------------------------------------------------------------
-        template <typename TInput, typename TOut>
-            requires(RRangeOf<TInput, const TChar>) and (ROutput<TOut, TChar>)
-        constexpr auto Convert(TInput&& in, TOut& out)
+        template <typename tinput, typename tout>
+            requires(rrange_of<tinput, const tchar>) and (routput<tout, tchar>)
+        constexpr auto convert(tinput&& in, tout& out)
         {
-            out += forward<TInput>(in);
+            out += forward<tinput>(in);
         }
     };
 }

@@ -1,73 +1,73 @@
 #pragma once
-#include "BidiRangeExtensions.h"
-#include "MutFwdRangeExtensions.h"
+#include "bidi_range_extensions.h"
+#include "mut_fwd_range_extensions.h"
 
-namespace Atom
+namespace atom
 {
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange, typename _TConstRangeExtensionsImpl = void>
-    class _MutBidiRangeExtensionsImpl
-        : public _MutFwdRangeExtensionsImpl<TRange, _TConstRangeExtensionsImpl>
+    template <typename range_type, typename _tconst_range_extensions_impl = void>
+    class _mut_bidi_range_extensions_impl
+        : public _mut_fwd_range_extensions_impl<range_type, _tconst_range_extensions_impl>
     {
-        using Base = _MutFwdRangeExtensionsImpl<TRange, _TConstRangeExtensionsImpl>;
+        using base_type = _mut_fwd_range_extensions_impl<range_type, _tconst_range_extensions_impl>;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange>
-    class _MutBidiRangeExtensionsImpl<TRange, void>
-        : public _MutBidiRangeExtensionsImpl<TRange, _BidiRangeExtensionsImpl<TRange>>
+    template <typename range_type>
+    class _mut_bidi_range_extensions_impl<range_type, void>
+        : public _mut_bidi_range_extensions_impl<range_type, _bidi_range_extensions_impl<range_type>>
     {
-        using Base = _MutBidiRangeExtensionsImpl<TRange, _BidiRangeExtensionsImpl<TRange>>;
+        using base_type = _mut_bidi_range_extensions_impl<range_type, _bidi_range_extensions_impl<range_type>>;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange, typename _TConstRangeExtensions = void>
-    class MutBidiRangeExtensions: public MutFwdRangeExtensions<TRange, _TConstRangeExtensions>
+    template <typename range_type, typename _tconst_range_extensions = void>
+    class mut_bidi_range_extensions: public mut_fwd_range_extensions<range_type, _tconst_range_extensions>
     {
-        using Base = MutFwdRangeExtensions<TRange, _TConstRangeExtensions>;
+        using base_type = mut_fwd_range_extensions<range_type, _tconst_range_extensions>;
 
     protected:
-        using _TImpl = typename Base::_TImpl;
+        using _timpl = typename base_type::_timpl;
 
     public:
-        using TElem = typename Base::TElem;
-        using TIter = typename Base::TIter;
-        using TIterEnd = typename Base::TIterEnd;
-        using TMutIter = typename Base::TMutIter;
-        using TMutIterEnd = typename Base::TMutIterEnd;
+        using elem_type = typename base_type::elem_type;
+        using iter_type = typename base_type::iter_type;
+        using iter_end_type = typename base_type::iter_end_type;
+        using mut_iter_type = typename base_type::mut_iter_type;
+        using mut_iter_end_type = typename base_type::mut_iter_end_type;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange>
-    class MutBidiRangeExtensions<TRange, void>
-        : public MutBidiRangeExtensions<TRange,
-              BidiRangeExtensions<TRange, _MutBidiRangeExtensionsImpl<TRange>>>
+    template <typename range_type>
+    class mut_bidi_range_extensions<range_type, void>
+        : public mut_bidi_range_extensions<range_type,
+              bidi_range_extensions<range_type, _mut_bidi_range_extensions_impl<range_type>>>
     {
-        using Base = MutBidiRangeExtensions<TRange,
-            BidiRangeExtensions<TRange, _MutBidiRangeExtensionsImpl<TRange>>>;
+        using base_type = mut_bidi_range_extensions<range_type,
+            bidi_range_extensions<range_type, _mut_bidi_range_extensions_impl<range_type>>>;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 }

@@ -3,29 +3,29 @@
 // #include <iostream>
 // #include <type_traits>
 
-namespace Atom
+namespace atom
 {
-    template <typename T>
-    constexpr auto mov(T&& t) -> typename std::remove_reference<T>::type&&
+    template <typename type>
+    constexpr auto mov(type&& t) -> typename std::remove_reference<type>::type&&
     {
-        return static_cast<typename std::remove_reference<T>::type&&>(t);
+        return static_cast<typename std::remove_reference<type>::type&&>(t);
     }
 
-    template <typename T>
-    constexpr T&& forward(typename std::remove_reference<T>::type& t)
+    template <typename type>
+    constexpr type&& forward(typename std::remove_reference<type>::type& t)
     {
-        return static_cast<T&&>(t);
+        return static_cast<type&&>(t);
     }
 
-    template <typename T>
-    constexpr T&& forward(typename std::remove_reference<T>::type&& t)
+    template <typename type>
+    constexpr type&& forward(typename std::remove_reference<type>::type&& t)
     {
         static_assert(
-            !std::is_lvalue_reference<T>::value, "Can not forward an rvalue as an lvalue.");
+            !std::is_lvalue_reference<type>::value, "can not forward an rvalue as an lvalue.");
 
-        return static_cast<T&&>(t);
+        return static_cast<type&&>(t);
     }
 
-    template <typename T>
-    using TPure = std::remove_cvref_t<T>;
+    template <typename type>
+    using tpure = std::remove_cvref_t<type>;
 }

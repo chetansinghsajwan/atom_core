@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Atom
+namespace atom
 {
     using _byte = unsigned char;
     using byte = _byte;

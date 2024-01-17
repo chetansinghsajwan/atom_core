@@ -1,10 +1,10 @@
 #pragma once
 // #include <initializer_list>
 
-#include "Atom/Core.h"
+#include "atom/core.h"
 
-namespace Atom
+namespace atom
 {
-    template <typename T>
-    using InitList = std::initializer_list<T>;
+    template <typename type>
+    using init_list = std::initializer_list<type>;
 }

@@ -1,126 +1,126 @@
 #pragma once
-#include "Atom/Math.h"
-#include "Atom/Core/StaticStorage.h"
-#include "Atom/String/String.h"
-#include "Atom/Containers/OutputReq.h"
+#include "atom/math.h"
+#include "atom/core/static_storage.h"
+#include "atom/string/string.h"
+#include "atom/containers/output_req.h"
 
-namespace Atom
+namespace atom
 {
-    enum class EUuidVersion : byte
+    enum class euuid_version : byte
     {
-        None = 0,
+        none = 0,
 
-        V1 = 1,
-        V2 = 2,
-        V3 = 3,
-        V4 = 4,
-        V5 = 5,
+        v1 = 1,
+        v2 = 2,
+        v3 = 3,
+        v4 = 4,
+        v5 = 5,
 
-        TimeBased = V1,
-        DceSecurity = V2,
-        NameBasedMD5 = V3,
-        RandomNumberBased = V4,
-        NameBasedSHA1 = V5
+        time_based = v1,
+        dce_security = v2,
+        name_based_md5_ = v3,
+        random_number_based = v4,
+        name_based_sha1_ = v5
     };
 
-    enum class EUuidVariant : byte
+    enum class euuid_variant : byte
     {
-        NCS,
-        RFC,
-        Microsoft,
-        Reserved
+        ncs,
+        rfc,
+        microsoft,
+        reserved
     };
 
-    class Uuid
+    class uuid
     {
     public:
-        static const Uuid Null;
+        static const uuid null;
 
     public:
-        constexpr auto getVariant() const -> EUuidVariant
+        constexpr auto get_variant() const -> euuid_variant
         {
             if ((bytes[8] & 0x80) == 0x00)
-                return EUuidVariant::NCS;
-            else if ((bytes[8] & 0xC0) == 0x80)
-                return EUuidVariant::RFC;
-            else if ((bytes[8] & 0xE0) == 0xC0)
-                return EUuidVariant::Microsoft;
+                return euuid_variant::ncs;
+            else if ((bytes[8] & 0xc0) == 0x80)
+                return euuid_variant::rfc;
+            else if ((bytes[8] & 0xe0) == 0xc0)
+                return euuid_variant::microsoft;
 
-            return EUuidVariant::Reserved;
+            return euuid_variant::reserved;
         }
 
-        constexpr auto getVersion() const -> EUuidVersion
+        constexpr auto get_version() const -> euuid_version
         {
-            if ((bytes[6] & 0xF0) == 0x10)
-                return EUuidVersion::V1;
-            else if ((bytes[6] & 0xF0) == 0x20)
-                return EUuidVersion::V2;
-            else if ((bytes[6] & 0xF0) == 0x30)
-                return EUuidVersion::V3;
-            else if ((bytes[6] & 0xF0) == 0x40)
-                return EUuidVersion::V4;
-            else if ((bytes[6] & 0xF0) == 0x50)
-                return EUuidVersion::V5;
+            if ((bytes[6] & 0xf0) == 0x10)
+                return euuid_version::v1;
+            else if ((bytes[6] & 0xf0) == 0x20)
+                return euuid_version::v2;
+            else if ((bytes[6] & 0xf0) == 0x30)
+                return euuid_version::v3;
+            else if ((bytes[6] & 0xf0) == 0x40)
+                return euuid_version::v4;
+            else if ((bytes[6] & 0xf0) == 0x50)
+                return euuid_version::v5;
 
-            return EUuidVersion::None;
+            return euuid_version::none;
         }
 
-        constexpr auto eq(const Uuid& that) const -> bool
-        {
-            return bytes == that.bytes;
-        }
-
-        constexpr auto ne(const Uuid& that) const -> bool
+        constexpr auto eq(const uuid& that) const -> bool
         {
             return bytes == that.bytes;
         }
 
-        constexpr auto operator==(const Uuid& that) const -> bool
+        constexpr auto ne(const uuid& that) const -> bool
+        {
+            return bytes == that.bytes;
+        }
+
+        constexpr auto operator==(const uuid& that) const -> bool
         {
             return eq(that);
         }
 
-        constexpr auto operator!=(const Uuid& that) const -> bool
+        constexpr auto operator!=(const uuid& that) const -> bool
         {
             return ne(that);
         }
 
-        template <typename TOut>
-        constexpr auto writeString(TOut&& out) const
-            requires(ROutput<TOut, Char>)
+        template <typename tout>
+        constexpr auto write_string(tout&& out) const
+            requires(routput<tout, uchar>)
         {
-            out += Math::HexToChar(bytes[0]);
-            out += Math::HexToChar(bytes[1]);
-            out += Math::HexToChar(bytes[2]);
-            out += Math::HexToChar(bytes[3]);
+            out += math::hex_to_char(bytes[0]);
+            out += math::hex_to_char(bytes[1]);
+            out += math::hex_to_char(bytes[2]);
+            out += math::hex_to_char(bytes[3]);
             out += '-';
-            out += Math::HexToChar(bytes[4]);
-            out += Math::HexToChar(bytes[5]);
+            out += math::hex_to_char(bytes[4]);
+            out += math::hex_to_char(bytes[5]);
             out += '-';
-            out += Math::HexToChar(bytes[6]);
-            out += Math::HexToChar(bytes[7]);
+            out += math::hex_to_char(bytes[6]);
+            out += math::hex_to_char(bytes[7]);
             out += '-';
-            out += Math::HexToChar(bytes[8]);
-            out += Math::HexToChar(bytes[9]);
+            out += math::hex_to_char(bytes[8]);
+            out += math::hex_to_char(bytes[9]);
             out += '-';
-            out += Math::HexToChar(bytes[10]);
-            out += Math::HexToChar(bytes[11]);
-            out += Math::HexToChar(bytes[12]);
-            out += Math::HexToChar(bytes[13]);
-            out += Math::HexToChar(bytes[14]);
-            out += Math::HexToChar(bytes[15]);
+            out += math::hex_to_char(bytes[10]);
+            out += math::hex_to_char(bytes[11]);
+            out += math::hex_to_char(bytes[12]);
+            out += math::hex_to_char(bytes[13]);
+            out += math::hex_to_char(bytes[14]);
+            out += math::hex_to_char(bytes[15]);
         }
 
-        constexpr auto toString() const -> String
+        constexpr auto to_string() const -> string
         {
-            String out;
-            writeString(out);
+            string out;
+            write_string(out);
             return out;
         }
 
     public:
-        StaticStorage<16> bytes;
+        static_storage<16> bytes;
     };
 
-    constexpr inline const Uuid Uuid::Null = Uuid{ 0 };
+    constexpr inline const uuid uuid::null = uuid{ 0 };
 }

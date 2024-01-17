@@ -1,140 +1,140 @@
-export module Atom.Core.Text:Encodings._LazyConverterHelper;
+export module atom.core.text:encodings._lazy_converter_helper;
 
-namespace Atom::Text
+namespace atom::text
 {
     /// --------------------------------------------------------------------------------------------
-    /// Requirements for {_CharEncodingLazyConverterHelper} API.
+    /// requirements for {_char_encoding_lazy_converter_helper} api.
     /// --------------------------------------------------------------------------------------------
-    template <typename TConverter, typename TInEncoding, typename TOutEncoding>
-    concept RCharEncodingLazyConverter =
+    template <typename tconverter, typename tin_encoding, typename tout_encoding>
+    concept rchar_encoding_lazy_converter =
         requires {
-            requires RRangeOf<TConverter, BasicChar<TOutEncoding>>;
-            requires RMultiPassRangeOf<TConverter, BasicChar<TOutEncoding>>;
+            requires rrange_of<tconverter, basic_char<tout_encoding>>;
+            requires rmulti_pass_range_of<tconverter, basic_char<tout_encoding>>;
         }
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures {_CharEncodingLazyConverterHelper<TInEncoding, TOutEncoding>} satisfies
-    /// {RCharEncodingLazyConverter<TInEncoding, TOutEncoding>}.
+    /// ensures {_char_encoding_lazy_converter_helper<tin_encoding, tout_encoding>} satisfies
+    /// {rchar_encoding_lazy_converter<tin_encoding, tout_encoding>}.
     /// --------------------------------------------------------------------------------------------
-    template <typename TInEncoding, typename TOutEncoding>
-    concept RCharEncodingLazyConvertible =
-        RCharEncodingLazyConverter<_CharEncodingLazyConverterHelper<TInEncoding, TOutEncoding,
-                                       Internal::FwdIterMock<BasicChar<TInEncoding>>>,
-            TInEncoding, TOutEncoding>;
+    template <typename tin_encoding, typename tout_encoding>
+    concept rchar_encoding_lazy_convertible =
+        rchar_encoding_lazy_converter<_char_encoding_lazy_converter_helper<tin_encoding, tout_encoding,
+                                       internal::fwd_iter_mock<basic_char<tin_encoding>>>,
+            tin_encoding, tout_encoding>;
 }
 
-namespace Atom::Text
+namespace atom::text
 {
     /// --------------------------------------------------------------------------------------------
-    /// Converts data from {TInEncoding} character encoding to {TOutEncoding} on demand.
-    /// This doesn't process the whole string, only the requested part.
+    /// converts data from {tin_encoding} character encoding to {tout_encoding} on demand.
+    /// this_type doesn't process the whole string, only the requested part.
     /// --------------------------------------------------------------------------------------------
-    template <typename TImpl, typename TInEncoding, typename TOutEncoding, typename TInput>
-    class _CharEncodingLazyConverterHelper
+    template <typename impl_type, typename tin_encoding, typename tout_encoding, typename tinput>
+    class _char_encoding_lazy_converter_helper
     {
     public:
-        using TIter =
-            _CharEncodingLazyConverterHelperIter<TImpl, TInEncoding, TOutEncoding, TInput>;
+        using iter_type =
+            _char_encoding_lazy_converter_helper_iter<impl_type, tin_encoding, tout_encoding, tinput>;
 
-        using TIterEnd = _CharEncodingLazyConverterHelperIterEnd;
+        using iter_end_type = _char_encoding_lazy_converter_helper_iter_end;
 
     public:
-        constexpr auto iter() -> TIter
+        constexpr auto iter() -> iter_type
         {
-            return TIter(_impl, _input);
+            return iter_type(_impl, _input);
         }
 
-        constexpr auto iterEnd() -> TIter
+        constexpr auto iter_end() -> iter_type
         {
-            return TIterEnd();
+            return iter_end_type();
         }
 
-        constexpr auto begin() -> TIter
+        constexpr auto begin() -> iter_type
         {
             return iter();
         }
 
-        constexpr auto end() -> TIterEnd
+        constexpr auto end() -> iter_end_type
         {
-            return iterEnd();
+            return iter_end();
         }
 
     protected:
-        TImpl _impl;
-        TInput& _input;
+        impl_type _impl;
+        tinput& _input;
     };
 
-    class _CharEncodingLazyConverterHelperIterEnd
+    class _char_encoding_lazy_converter_helper_iter_end
     {};
 
     /// --------------------------------------------------------------------------------------------
-    /// Converts data from {TInEncoding} character encoding to {TOutEncoding} on demand.
-    /// This doesn't process the whole string, only the requested part.
+    /// converts data from {tin_encoding} character encoding to {tout_encoding} on demand.
+    /// this_type doesn't process the whole string, only the requested part.
     /// --------------------------------------------------------------------------------------------
-    template <typename TImpl, typename TInEncoding, typename TOutEncoding, typename TInput>
-    class _CharEncodingLazyConverterHelperIter
+    template <typename impl_type, typename tin_encoding, typename tout_encoding, typename tinput>
+    class _char_encoding_lazy_converter_helper_iter
     {
     public:
-        using TThis = _CharEncodingLazyConverterHelperIter;
-        using TIterEnd = _CharEncodingLazyConverterHelperIterEnd;
-        using TInChar = typename TInEncoding::TChar;
-        using TOutChar = typename TOutEncoding::TChar;
+        using this_final_type = _char_encoding_lazy_converter_helper_iter;
+        using iter_end_type = _char_encoding_lazy_converter_helper_iter_end;
+        using tin_char = typename tin_encoding::tchar;
+        using tout_char = typename tout_encoding::tchar;
 
     public:
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr _CharEncodingLazyConverterHelperIter(TImpl&& impl, TInput&& in)
-            : _impl{ forward<TImpl>(impl) }
-            , _input{ forward<TInput>(input) }
+        constexpr _char_encoding_lazy_converter_helper_iter(impl_type&& impl, tinput&& in)
+            : _impl{ forward<impl_type>(impl) }
+            , _input{ forward<tinput>(input) }
             , _out{ 0 }
-            , _outIndex{ -1 }
+            , _out_index{ -1 }
         {
-            _ProcessNextChar();
+            _process_next_char();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Get the current Char.
+        /// get the current char.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator*() -> TOutChar&
+        constexpr auto operator*() -> tout_char&
         {
-            return _out[_outIndex];
+            return _out[_out_index];
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Advances the iter.
+        /// advances the iter.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator++() -> TSelf&
+        constexpr auto operator++() -> self_type&
         {
-            if (_outIndex == -1)
+            if (_out_index == -1)
             {
-                _ProcessNextChar();
+                _process_next_char();
             }
 
-            _outIndex--;
+            _out_index--;
             return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Will be removed in CPP2;
+        /// will be removed in cpp2;
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator++(int) -> TSelf&
+        constexpr auto operator++(int) -> self_type&
         {
             return ++*this;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Checks if the iter has reached its end.
+        /// checks if the iter has reached its end.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator==(TIterEnd end) const -> bool
+        constexpr auto operator==(iter_end_type end) const -> bool
         {
-            return _outIndex > 0 || _input.HasNext();
+            return _out_index > 0 || _input.has_next();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Will be removed in CPP2;
+        /// will be removed in cpp2;
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator!=(TIterEnd end) const -> bool
+        constexpr auto operator!=(iter_end_type end) const -> bool
         {
             return !(*this == end);
         }
@@ -143,56 +143,56 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        auto _ProcessNextChar()
+        auto _process_next_char()
         {
-            if (_inIter == _inIterEnd)
+            if (_in_iter == _in_iter_end)
             {
                 throw 0;
             }
 
-            _outRune = TImpl::ConvertChar(*_inIter);
+            _out_rune = impl_type::convert_char(*_in_iter);
         }
 
     protected:
-        TImpl _impl;
-        TInIter _inIter;
-        TInIterEnd _inIterEnd;
+        impl_type _impl;
+        tin_iter _in_iter;
+        tin_iter_end _in_iter_end;
 
-        TInRune _inRune;
-        TOutRune _outRune;
+        tin_rune _in_rune;
+        tout_rune _out_rune;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// {_CharEncodingLazyConverterHelper} specialization for same character encodings.
+    /// {_char_encoding_lazy_converter_helper} specialization for same character encodings.
     /// --------------------------------------------------------------------------------------------
-    template <typename TImpl, typename TCharEncoding, typename TInput>
-    class _CharEncodingLazyConverterHelper<TImpl, TCharEncoding, TCharEncoding, TInput>
+    template <typename impl_type, typename tchar_encoding, typename tinput>
+    class _char_encoding_lazy_converter_helper<impl_type, tchar_encoding, tchar_encoding, tinput>
     {
     private:
-        using TChar = BasicChar<TCharEncoding>;
+        using tchar = basic_char<tchar_encoding>;
 
     public:
-        constexpr _CharEncodingLazyConverterHelper(TInput&& input)
+        constexpr _char_encoding_lazy_converter_helper(tinput&& input)
             : _input{ input }
         {}
 
     public:
-        constexpr auto Get() -> TChar
+        constexpr auto get() -> tchar
         {
-            return _input.Get();
+            return _input.get();
         }
 
-        constexpr auto Next() -> bool
+        constexpr auto next() -> bool
         {
-            return _input.Next();
+            return _input.next();
         }
 
-        constexpr auto HasNext() const -> bool
+        constexpr auto has_next() const -> bool
         {
-            return _input.HasNext();
+            return _input.has_next();
         }
 
     protected:
-        TInput _input;
+        tinput _input;
     };
 };

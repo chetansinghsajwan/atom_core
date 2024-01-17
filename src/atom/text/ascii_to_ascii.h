@@ -1,20 +1,20 @@
-export module Atom.Core.Text:Encodings.AsciiToAscii;
+export module atom.core.text:encodings.ascii_to_ascii;
 
-namespace Atom
+namespace atom
 {
     template <>
-    class _AsciiToAsciiConversionImpl
+    class _ascii_to_ascii_conversion_impl
     {
     public:
-        template <typename TIn, typename TOut>
-        constexpr void ConvertChar(const TIn& in, TOut& out)
+        template <typename tin, typename tout>
+        constexpr void convert_char(const tin& in, tout& out)
         {}
     };
 
-    using AsciiToAsciiConverter =
-        _CharEncodingConverterHelper<_AsciiToAsciiConversionImpl, AsciiEncoding, AsciiEncoding>;
+    using ascii_to_ascii_converter =
+        _char_encoding_converter_helper<_ascii_to_ascii_conversion_impl, ascii_encoding, ascii_encoding>;
 
-    template <typename TInput>
-    using AsciiToAsciiLazyConverter = _CharEncodingLazyConverterHelper<_AsciiToAsciiConversionImpl,
-        AsciiEncoding, AsciiEncoding, TInput>;
+    template <typename tinput>
+    using ascii_to_ascii_lazy_converter = _char_encoding_lazy_converter_helper<_ascii_to_ascii_conversion_impl,
+        ascii_encoding, ascii_encoding, tinput>;
 }

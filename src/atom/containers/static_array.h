@@ -1,40 +1,40 @@
 #pragma once
-#include "Atom/Range/MutArrayRangeExtensions.h"
+#include "atom/range/mut_array_range_extensions.h"
 
-namespace Atom
+namespace atom
 {
-    template <typename TElem_, usize count_>
-    class BasicStaticArray
+    template <typename in_elem_type, usize count_>
+    class basic_static_array
     {
     public:
-        using TElem = TElem_;
-        using TIter = ArrayIter<TElem>;
-        using TIterEnd = TIter;
-        using TMutIter = MutArrayIter<TElem>;
-        using TMutIterEnd = TMutIter;
+        using elem_type = in_elem_type;
+        using iter_type = array_iter<elem_type>;
+        using iter_end_type = iter_type;
+        using mut_iter_type = mut_array_iter<elem_type>;
+        using mut_iter_end_type = mut_iter_type;
 
     public:
-        constexpr BasicStaticArray() = default;
+        constexpr basic_static_array() = default;
 
         template <usize n>
-        constexpr BasicStaticArray(const TElem (&arr)[n])
+        constexpr basic_static_array(const elem_type (&arr)[n])
             requires(n <= count_)
             : _arr{ arr }
         {}
 
-        template <typename... TArgs>
-        constexpr BasicStaticArray(TArgs&&... args)
-            requires(RConvertibleTo<TArgs, TElem> and ...) and (sizeof...(TArgs) <= count_.unwrap())
+        template <typename... args_type>
+        constexpr basic_static_array(args_type&&... args)
+            requires(rconvertible_to<args_type, elem_type> and ...) and (sizeof...(args_type) <= count_.unwrap())
             : _arr{ 0 }
         {}
 
     public:
-        constexpr auto data() const -> MemPtr<TElem>
+        constexpr auto data() const -> mem_ptr<elem_type>
         {
             return _arr;
         }
 
-        constexpr auto mutData() -> MutMemPtr<TElem>
+        constexpr auto mut_data() -> mut_mem_ptr<elem_type>
         {
             return _arr;
         }
@@ -44,37 +44,37 @@ namespace Atom
             return count_;
         }
 
-        constexpr auto iter() const -> TIter
+        constexpr auto iter() const -> iter_type
         {
-            return TIter{ _arr };
+            return iter_type{ _arr };
         }
 
-        constexpr auto iterEnd() const -> TIterEnd
+        constexpr auto iter_end() const -> iter_end_type
         {
-            return TIterEnd{ _arr + count_.unwrap() };
+            return iter_end_type{ _arr + count_.unwrap() };
         }
 
-        constexpr auto mutIter() -> TMutIter
+        constexpr auto mut_iter() -> mut_iter_type
         {
-            return TMutIter{ _arr };
+            return mut_iter_type{ _arr };
         }
 
-        constexpr auto mutIterEnd() -> TMutIterEnd
+        constexpr auto mut_iter_end() -> mut_iter_end_type
         {
-            return TMutIterEnd{ _arr + count_ };
+            return mut_iter_end_type{ _arr + count_ };
         }
 
     private:
-        TElem _arr[count_.unwrap()];
+        elem_type _arr[count_.unwrap()];
     };
 
-    template <typename TElem, usize count>
-    class StaticArray: public MutArrayRangeExtensions<BasicStaticArray<TElem, count>>
+    template <typename elem_type, usize count>
+    class static_array: public mut_array_range_extensions<basic_static_array<elem_type, count>>
     {
-        using Base = MutArrayRangeExtensions<BasicStaticArray<TElem, count>>;
+        using base_type = mut_array_range_extensions<basic_static_array<elem_type, count>>;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 }

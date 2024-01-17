@@ -1,48 +1,47 @@
 import atom.core;
 #include "catch2/catch_test_macros.hpp"
 
-using namespace Atom;
+using namespace atom;
 
-TEST_CASE("Atom.Core.Box")
+TEST_CASE("object_box.implementation")
 {
-    SECTION("Copy Constructors")
-    {
+    using tbox = object_box<true, true, true, 50, default_mem_allocator>;
 
-    TBox box0 = 10;
-    TBox box1 = 10;
+    tbox box0 = 10;
+    tbox box1 = 10;
 
-    CHECK(box0.GetObject<i32>() == 10);
-    CHECK(box1.GetObject<i32>() == 10);
+    REQUIRE(box0.get_object<i32>() == 10);
+    REQUIRE(box1.get_object<i32>() == 10);
 
     box0 = 20;
 
-    CHECK(box0.GetObject<i32>() == 20);
-    CHECK(box1.GetObject<i32>() == 10);
+    REQUIRE(box0.get_object<i32>() == 20);
+    REQUIRE(box1.get_object<i32>() == 10);
 
     box0 = box1;
 
-    CHECK(box0.GetObject<i32>() == 10);
+    REQUIRE(box0.get_object<i32>() == 10);
 }
 
-TEST_CASE("ObjectBox.Conversion")
+TEST_CASE("object_box.conversion")
 {
-    using TBox1 = ObjectBox<true, true, true, 50, DefaultMemAllocator>;
-    using TBox2 = ObjectBox<true, true, false, 50, DefaultMemAllocator>;
-    using TBox3 = ObjectBox<true, false, true, 50, DefaultMemAllocator>;
-    using TBox4 = ObjectBox<true, false, false, 50, DefaultMemAllocator>;
-    using TBox5 = ObjectBox<false, true, true, 50, DefaultMemAllocator>;
-    using TBox6 = ObjectBox<false, true, false, 50, DefaultMemAllocator>;
-    using TBox7 = ObjectBox<false, false, true, 50, DefaultMemAllocator>;
-    using TBox8 = ObjectBox<false, false, false, 50, DefaultMemAllocator>;
+    using tbox1 = object_box<true, true, true, 50, default_mem_allocator>;
+    using tbox2 = object_box<true, true, false, 50, default_mem_allocator>;
+    using tbox3 = object_box<true, false, true, 50, default_mem_allocator>;
+    using tbox4 = object_box<true, false, false, 50, default_mem_allocator>;
+    using tbox5 = object_box<false, true, true, 50, default_mem_allocator>;
+    using tbox6 = object_box<false, true, false, 50, default_mem_allocator>;
+    using tbox7 = object_box<false, false, true, 50, default_mem_allocator>;
+    using tbox8 = object_box<false, false, false, 50, default_mem_allocator>;
 
-    TBox1 box1 = 0;
-    TBox2 box2 = 0;
-    TBox3 box3 = 0;
-    TBox4 box4 = 0;
-    TBox5 box5 = 0;
-    TBox6 box6 = 0;
-    TBox7 box7 = 0;
-    TBox8 box8 = 0;
+    tbox1 box1 = 0;
+    tbox2 box2 = 0;
+    tbox3 box3 = 0;
+    tbox4 box4 = 0;
+    tbox5 box5 = 0;
+    tbox6 box6 = 0;
+    tbox7 box7 = 0;
+    tbox8 box8 = 0;
 
     // | y | y | y |
     box1 = box1; // | y | y | y |

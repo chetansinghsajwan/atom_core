@@ -1,94 +1,94 @@
 #pragma once
-#include "Atom/Core.h"
-#include "Atom/Exceptions.h"
-#include "Atom/Memory/Lockable.h"
+#include "atom/core.h"
+#include "atom/exceptions.h"
+#include "atom/memory/lockable.h"
 
-namespace Atom
+namespace atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// NullLockable is a stateless object that doesn't has any locking mechanism.
-    /// It's used where a Lockable implementation is needed but thread-safety is not needed.
+    /// null_lockable is a stateless object that doesn't has any locking mechanism.
+    /// it's used where a lockable implementation is needed but thread-safety is not needed.
     ///
-    /// @TODO: Should we delete its constructors and operators to match {SimpleMutex}?
+    /// @todo: should we delete its constructors and operators to match {simple_mutex}?
     /// --------------------------------------------------------------------------------------------
-    class NullLockable
+    class null_lockable
     {
     public:
         /// ----------------------------------------------------------------------------------------
-        /// DefaultConstructor. Does nothing.
+        /// default_constructor. does nothing.
         /// ----------------------------------------------------------------------------------------
-        constexpr NullLockable() {}
+        constexpr null_lockable() {}
 
         /// ----------------------------------------------------------------------------------------
-        /// CopyConstructor is default.
+        /// copy_constructor is default.
         /// ----------------------------------------------------------------------------------------
-        constexpr NullLockable(const NullLockable& other) {}
+        constexpr null_lockable(const null_lockable& other) {}
 
         /// ----------------------------------------------------------------------------------------
-        /// MoveConstructor is default.
+        /// move_constructor is default.
         /// ----------------------------------------------------------------------------------------
-        constexpr NullLockable(NullLockable&& other) {}
+        constexpr null_lockable(null_lockable&& other) {}
 
         /// ----------------------------------------------------------------------------------------
-        /// CopyOperator is default.
+        /// copy_operator is default.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator=(const NullLockable& other) -> NullLockable&
+        constexpr auto operator=(const null_lockable& other) -> null_lockable&
         {
             return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// MoveOperator is default.
+        /// move_operator is default.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator=(NullLockable&& other) -> NullLockable&
+        constexpr auto operator=(null_lockable&& other) -> null_lockable&
         {
             return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Destructor. Does nothing.
+        /// destructor. does nothing.
         /// ----------------------------------------------------------------------------------------
-        constexpr ~NullLockable() {}
+        constexpr ~null_lockable() {}
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// Does nothing.
+        /// does nothing.
         /// ----------------------------------------------------------------------------------------
-        constexpr void Lock() {}
+        constexpr void lock() {}
 
         /// ----------------------------------------------------------------------------------------
-        /// Always returns true.
+        /// always returns true.
         /// ----------------------------------------------------------------------------------------
-        constexpr bool TryLock()
+        constexpr bool try_lock()
         {
             return true;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Does nothing.
+        /// does nothing.
         /// ----------------------------------------------------------------------------------------
-        constexpr void Unlock() {}
+        constexpr void unlock() {}
     };
 
-    static_assert(RLockable<NullLockable>);
+    static_assert(rlockable<null_lockable>);
 
     /// --------------------------------------------------------------------------------------------
-    /// Specialization for NullLockable to avoid any performance overhead.
+    /// specialization for null_lockable to avoid any performance overhead.
     /// --------------------------------------------------------------------------------------------
     template <>
-    class LockGuard<NullLockable>
+    class lock_guard<null_lockable>
     {
     public:
         /// ----------------------------------------------------------------------------------------
-        /// Constructor. Does nothing.
+        /// constructor. does nothing.
         ///
-        /// @PARAM[IN] lock NullLockable reference. (UNUSED).
+        /// @param[in] lock null_lockable reference. (unused).
         /// ----------------------------------------------------------------------------------------
-        constexpr LockGuard(NullLockable& lock) {}
+        constexpr lock_guard(null_lockable& lock) {}
 
         /// ----------------------------------------------------------------------------------------
-        /// Destructor. Does nothing.
+        /// destructor. does nothing.
         /// ----------------------------------------------------------------------------------------
-        constexpr ~LockGuard() {}
+        constexpr ~lock_guard() {}
     };
 }

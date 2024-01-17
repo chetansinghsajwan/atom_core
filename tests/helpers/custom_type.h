@@ -1,53 +1,53 @@
 #pragma once
 import atom.core;
 
-namespace Atom::Tests
+namespace atom::tests
 {
-    enum class ECustomTypeFlags : _u64
+    enum class ecustom_type_flags : _u64
     {
-        None = 0,
-        All = _u64(-1),
+        none = 0,
+        all = _u64(-1),
 
-        DefaultConstructor = 1 << 0,
-        CopyConstructor = 1 << 1,
-        CopyOperator = 1 << 2,
-        MoveConstructor = 1 << 3,
-        MoveOperator = 1 << 4,
-        Destructor = 1 << 5,
+        default_constructor = 1 << 0,
+        copy_constructor = 1 << 1,
+        copy_operator = 1 << 2,
+        move_constructor = 1 << 3,
+        move_operator = 1 << 4,
+        destructor = 1 << 5,
 
-        TrivialDefaultConstructor = 1 << 6,
-        TrivialCopyConstructor = 1 << 7,
-        TrivialCopyOperator = 1 << 8,
-        TrivialMoveConstructor = 1 << 9,
-        TrivialMoveOperator = 1 << 10,
-        TrivialDestructor = 1 << 11,
+        trivial_default_constructor = 1 << 6,
+        trivial_copy_constructor = 1 << 7,
+        trivial_copy_operator = 1 << 8,
+        trivial_move_constructor = 1 << 9,
+        trivial_move_operator = 1 << 10,
+        trivial_destructor = 1 << 11,
 
-        Trivial = 1 << 12,
+        trivial = 1 << 12,
 
-        EqualToOperator = 1 << 13,
-        LessThanToOperator = 1 << 14,
-        GreaterThanToOperator = 1 << 15,
-        LessThanOrEqualToOperator = 1 << 16,
-        GreaterThanOrEqualToOperator = 1 << 17,
+        equal_to_operator = 1 << 13,
+        less_than_to_operator = 1 << 14,
+        greater_than_to_operator = 1 << 15,
+        less_than_or_equal_to_operator = 1 << 16,
+        greater_than_or_equal_to_operator = 1 << 17,
     };
 
-    constexpr auto operator|(const ECustomTypeFlags& flags, const ECustomTypeFlags& flagsToAdd)
-        -> ECustomTypeFlags
+    constexpr auto operator|(const ecustom_type_flags& flags, const ecustom_type_flags& flags_to_add)
+        -> ecustom_type_flags
     {
-        return (ECustomTypeFlags)((_u64)flags | (_u64)flagsToAdd);
+        return (ecustom_type_flags)((_u64)flags | (_u64)flags_to_add);
     }
 
-    constexpr auto operator&(const ECustomTypeFlags& flags, const ECustomTypeFlags& flagsToAdd)
-        -> ECustomTypeFlags
+    constexpr auto operator&(const ecustom_type_flags& flags, const ecustom_type_flags& flags_to_add)
+        -> ecustom_type_flags
     {
-        return (ECustomTypeFlags)((_u64)flags & (_u64)flagsToAdd);
+        return (ecustom_type_flags)((_u64)flags & (_u64)flags_to_add);
     }
 
-    class EnumFlagUtils
+    class enum_flag_utils
     {
     public:
-        template <typename TEnum>
-        static constexpr auto HasFlag(const TEnum& e, const TEnum& flag) -> bool
+        template <typename tenum>
+        static constexpr auto has_flag(const tenum& e, const tenum& flag) -> bool
         {
             return (e & flag) == flag;
         }
@@ -56,207 +56,207 @@ namespace Atom::Tests
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <ECustomTypeFlags flags>
-    class CustomType
+    template <ecustom_type_flags flags>
+    class custom_type
     {
     public:
         /// ----------------------------------------------------------------------------------------
-        /// # Trivial Default Constructor
+        /// # trivial default constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr CustomType()
-            requires(EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::TrivialDefaultConstructor))
+        constexpr custom_type()
+            requires(enum_flag_utils::has_flag(flags, ecustom_type_flags::trivial_default_constructor))
         = default;
 
         /// ----------------------------------------------------------------------------------------
-        /// # Default Constructor
+        /// # default constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr CustomType()
-            requires(EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::DefaultConstructor))
-                    and (not EnumFlagUtils::HasFlag(
-                        flags, ECustomTypeFlags::TrivialDefaultConstructor))
+        constexpr custom_type()
+            requires(enum_flag_utils::has_flag(flags, ecustom_type_flags::default_constructor))
+                    and (not enum_flag_utils::has_flag(
+                        flags, ecustom_type_flags::trivial_default_constructor))
         {}
 
         /// ----------------------------------------------------------------------------------------
-        /// # Trivial Copy Constructor
+        /// # trivial copy constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr CustomType(const CustomType& that)
-            requires(EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::TrivialCopyConstructor))
+        constexpr custom_type(const custom_type& that)
+            requires(enum_flag_utils::has_flag(flags, ecustom_type_flags::trivial_copy_constructor))
         = default;
 
         /// ----------------------------------------------------------------------------------------
-        /// # Copy Constructor
+        /// # copy constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr CustomType(const CustomType& that)
-            requires(EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::CopyConstructor))
-                    and (not EnumFlagUtils::HasFlag(
-                        flags, ECustomTypeFlags::TrivialCopyConstructor))
+        constexpr custom_type(const custom_type& that)
+            requires(enum_flag_utils::has_flag(flags, ecustom_type_flags::copy_constructor))
+                    and (not enum_flag_utils::has_flag(
+                        flags, ecustom_type_flags::trivial_copy_constructor))
         {}
 
         /// ----------------------------------------------------------------------------------------
-        /// # Trivial Copy Operator
+        /// # trivial copy operator
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator=(const CustomType& that) -> CustomType& requires(
-            EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::TrivialCopyOperator)) = default;
+        constexpr auto operator=(const custom_type& that) -> custom_type& requires(
+            enum_flag_utils::has_flag(flags, ecustom_type_flags::trivial_copy_operator)) = default;
 
         /// ----------------------------------------------------------------------------------------
-        /// # Copy Operator
+        /// # copy operator
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator=(const CustomType& that) -> CustomType& requires(
-            EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::CopyOperator))
-            and (not EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::TrivialCopyOperator))
+        constexpr auto operator=(const custom_type& that) -> custom_type& requires(
+            enum_flag_utils::has_flag(flags, ecustom_type_flags::copy_operator))
+            and (not enum_flag_utils::has_flag(flags, ecustom_type_flags::trivial_copy_operator))
         {
             return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Trivial Move Constructor
+        /// # trivial move constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr CustomType(CustomType&& that)
-            requires(EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::TrivialMoveConstructor))
+        constexpr custom_type(custom_type&& that)
+            requires(enum_flag_utils::has_flag(flags, ecustom_type_flags::trivial_move_constructor))
         = default;
 
         /// ----------------------------------------------------------------------------------------
-        /// # Move Constructor
+        /// # move constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr CustomType(CustomType&& that)
-            requires(EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::MoveConstructor))
-                    and (not EnumFlagUtils::HasFlag(
-                        flags, ECustomTypeFlags::TrivialMoveConstructor))
+        constexpr custom_type(custom_type&& that)
+            requires(enum_flag_utils::has_flag(flags, ecustom_type_flags::move_constructor))
+                    and (not enum_flag_utils::has_flag(
+                        flags, ecustom_type_flags::trivial_move_constructor))
         {}
 
         /// ----------------------------------------------------------------------------------------
-        /// # Trivial Move Operator
+        /// # trivial move operator
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator=(CustomType&& that) -> CustomType& requires(
-            EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::TrivialMoveOperator)) = default;
+        constexpr auto operator=(custom_type&& that) -> custom_type& requires(
+            enum_flag_utils::has_flag(flags, ecustom_type_flags::trivial_move_operator)) = default;
 
         /// ----------------------------------------------------------------------------------------
-        /// # Move Operator
+        /// # move operator
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator=(CustomType&& that) -> CustomType& requires(
-            EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::MoveOperator))
-            and (not EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::TrivialMoveOperator))
+        constexpr auto operator=(custom_type&& that) -> custom_type& requires(
+            enum_flag_utils::has_flag(flags, ecustom_type_flags::move_operator))
+            and (not enum_flag_utils::has_flag(flags, ecustom_type_flags::trivial_move_operator))
         {
             return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Trivial Destructor
+        /// # trivial destructor
         /// ----------------------------------------------------------------------------------------
-        constexpr CustomType(CustomType&& that)
-            requires(EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::TrivialDestructor))
+        constexpr custom_type(custom_type&& that)
+            requires(enum_flag_utils::has_flag(flags, ecustom_type_flags::trivial_destructor))
         = default;
 
         /// ----------------------------------------------------------------------------------------
-        /// # Destructor
+        /// # destructor
         /// ----------------------------------------------------------------------------------------
-        constexpr CustomType(CustomType&& that)
-            requires(EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::Destructor))
-                    and (not EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::TrivialDestructor))
+        constexpr custom_type(custom_type&& that)
+            requires(enum_flag_utils::has_flag(flags, ecustom_type_flags::destructor))
+                    and (not enum_flag_utils::has_flag(flags, ecustom_type_flags::trivial_destructor))
         {}
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// # Equal To Opeartor
+        /// # equal to opeartor
         /// ----------------------------------------------------------------------------------------
-        constexpr auto eq(const CustomType& that) const -> bool
-            requires(EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::EqualToOperator))
+        constexpr auto eq(const custom_type& that) const -> bool
+            requires(enum_flag_utils::has_flag(flags, ecustom_type_flags::equal_to_operator))
         {
             return true;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Not Equal To Opeartor
+        /// # not equal to opeartor
         /// ----------------------------------------------------------------------------------------
-        constexpr auto ne(const CustomType& that) const -> bool
-            requires(EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::EqualToOperator))
+        constexpr auto ne(const custom_type& that) const -> bool
+            requires(enum_flag_utils::has_flag(flags, ecustom_type_flags::equal_to_operator))
         {
             return not(*this == that);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Less Than Opeartor
+        /// # less than opeartor
         /// ----------------------------------------------------------------------------------------
-        constexpr auto lt(const CustomType& that) const -> bool
-            requires(EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::LessThanToOperator))
+        constexpr auto lt(const custom_type& that) const -> bool
+            requires(enum_flag_utils::has_flag(flags, ecustom_type_flags::less_than_to_operator))
         {
             return true;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Greater Than Opeartor
+        /// # greater than opeartor
         /// ----------------------------------------------------------------------------------------
-        constexpr auto gt(const CustomType& that) const -> bool
-            requires(EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::GreaterThanToOperator))
+        constexpr auto gt(const custom_type& that) const -> bool
+            requires(enum_flag_utils::has_flag(flags, ecustom_type_flags::greater_than_to_operator))
         {
             return true;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Less Than Or Equal To Opeartor
+        /// # less than or equal to opeartor
         /// ----------------------------------------------------------------------------------------
-        constexpr auto le(const CustomType& that) const -> bool
-            requires(EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::LessThanOrEqualToOperator))
+        constexpr auto le(const custom_type& that) const -> bool
+            requires(enum_flag_utils::has_flag(flags, ecustom_type_flags::less_than_or_equal_to_operator))
         {
             return true;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Greater Than Or Equal To Opeartor
+        /// # greater than or equal to opeartor
         /// ----------------------------------------------------------------------------------------
-        constexpr auto ge(const CustomType& that) const -> bool
-            requires(EnumFlagUtils::HasFlag(flags, ECustomTypeFlags::GreaterThanOrEqualToOperator))
+        constexpr auto ge(const custom_type& that) const -> bool
+            requires(enum_flag_utils::has_flag(flags, ecustom_type_flags::greater_than_or_equal_to_operator))
         {
             return true;
         }
     };
 
-    class NonDefaultConstructibleMock
+    class non_default_constructible_mock
     {
     public:
-        NonDefaultConstructibleMock() = delete;
+        non_default_constructible_mock() = delete;
     };
 
-    using CopyConstructibleMock = CustomType<ECustomTypeFlags::CopyConstructor>;
+    using copy_constructible_mock = custom_type<ecustom_type_flags::copy_constructor>;
 
-    using CopyAssignableMock = CustomType<ECustomTypeFlags::CopyOperator>;
+    using copy_assignable_mock = custom_type<ecustom_type_flags::copy_operator>;
 
-    using CopyableMock =
-        CustomType<ECustomTypeFlags::CopyConstructor | ECustomTypeFlags::CopyOperator>;
+    using copyable_mock =
+        custom_type<ecustom_type_flags::copy_constructor | ecustom_type_flags::copy_operator>;
 
-    using MoveConstructibleMock = CustomType<ECustomTypeFlags::MoveConstructor>;
+    using move_constructible_mock = custom_type<ecustom_type_flags::move_constructor>;
 
-    using MoveAssignableMock = CustomType<ECustomTypeFlags::MoveOperator>;
+    using move_assignable_mock = custom_type<ecustom_type_flags::move_operator>;
 
-    using MoveableMock =
-        CustomType<ECustomTypeFlags::CopyConstructor | ECustomTypeFlags::CopyOperator
-                   | ECustomTypeFlags::MoveConstructor | ECustomTypeFlags::MoveOperator>;
+    using moveable_mock =
+        custom_type<ecustom_type_flags::copy_constructor | ecustom_type_flags::copy_operator
+                   | ecustom_type_flags::move_constructor | ecustom_type_flags::move_operator>;
 
-    using DestructibleMock = CustomType<ECustomTypeFlags::Destructor>;
+    using destructible_mock = custom_type<ecustom_type_flags::destructor>;
 
-    using TriviallyCopyConstructibleMock = CustomType<ECustomTypeFlags::TrivialCopyConstructor>;
+    using trivially_copy_constructible_mock = custom_type<ecustom_type_flags::trivial_copy_constructor>;
 
-    using TriviallyCopyAssignableMock = CustomType<ECustomTypeFlags::TrivialCopyOperator>;
+    using trivially_copy_assignable_mock = custom_type<ecustom_type_flags::trivial_copy_operator>;
 
-    using TriviallyCopyableMock = CustomType<ECustomTypeFlags::TrivialCopyConstructor
-                                             | ECustomTypeFlags::TrivialCopyOperator>;
+    using trivially_copyable_mock = custom_type<ecustom_type_flags::trivial_copy_constructor
+                                             | ecustom_type_flags::trivial_copy_operator>;
 
-    using TriviallyMoveConstructibleMock = CustomType<ECustomTypeFlags::TrivialMoveConstructor>;
+    using trivially_move_constructible_mock = custom_type<ecustom_type_flags::trivial_move_constructor>;
 
-    using TriviallyMoveAssignableMock = CustomType<ECustomTypeFlags::TrivialMoveOperator>;
+    using trivially_move_assignable_mock = custom_type<ecustom_type_flags::trivial_move_operator>;
 
-    using TriviallyMoveableMock =
-        CustomType<ECustomTypeFlags::TrivialCopyConstructor | ECustomTypeFlags::TrivialCopyOperator
-                   | ECustomTypeFlags::TrivialMoveConstructor
-                   | ECustomTypeFlags::TrivialMoveOperator>;
+    using trivially_moveable_mock =
+        custom_type<ecustom_type_flags::trivial_copy_constructor | ecustom_type_flags::trivial_copy_operator
+                   | ecustom_type_flags::trivial_move_constructor
+                   | ecustom_type_flags::trivial_move_operator>;
 
-    using TriviallyDestructibleMock = CustomType<ECustomTypeFlags::TrivialDestructor>;
+    using trivially_destructible_mock = custom_type<ecustom_type_flags::trivial_destructor>;
 
-    using EqualityComparableMock = CustomType<ECustomTypeFlags::EqualToOperator>;
+    using equality_comparable_mock = custom_type<ecustom_type_flags::equal_to_operator>;
 
-    using ComparableMock =
-        CustomType<ECustomTypeFlags::EqualToOperator | ECustomTypeFlags::LessThanToOperator
-                   | ECustomTypeFlags::GreaterThanToOperator
-                   | ECustomTypeFlags::LessThanOrEqualToOperator
-                   | ECustomTypeFlags::GreaterThanOrEqualToOperator>;
+    using comparable_mock =
+        custom_type<ecustom_type_flags::equal_to_operator | ecustom_type_flags::less_than_to_operator
+                   | ecustom_type_flags::greater_than_to_operator
+                   | ecustom_type_flags::less_than_or_equal_to_operator
+                   | ecustom_type_flags::greater_than_or_equal_to_operator>;
 }

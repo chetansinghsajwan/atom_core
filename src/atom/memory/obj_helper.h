@@ -1,63 +1,63 @@
 #pragma once
-#include "MemHelper.h"
+#include "mem_helper.h"
 
-namespace Atom
+namespace atom
 {
-    class ObjHelper
+    class obj_helper
     {
     public:
-        template <typename T, typename... TArgs>
-        constexpr auto ConstructAs(MutPtr<void> mem, TArgs&&... args) const
+        template <typename type, typename... args_type>
+        constexpr auto construct_as(mut_ptr<void> mem, args_type&&... args) const
         {
-            Contracts::DebugExpects(mem != nullptr);
+            contracts::debug_expects(mem != nullptr);
 
-            std::construct_at(mem.as<T>().unwrap(), forward<TArgs>(args)...);
+            std::construct_at(mem.as<type>().unwrap(), forward<args_type>(args)...);
         }
 
-        template <typename T, typename... TArgs>
-        constexpr auto Construct(MutPtr<T> mem, TArgs&&... args) const
+        template <typename type, typename... args_type>
+        constexpr auto construct(mut_ptr<type> mem, args_type&&... args) const
         {
-            Contracts::DebugExpects(mem != nullptr);
+            contracts::debug_expects(mem != nullptr);
 
-            std::construct_at(mem.unwrap(), forward<TArgs>(args)...);
+            std::construct_at(mem.unwrap(), forward<args_type>(args)...);
         }
 
-        template <typename T, typename TArg>
-        constexpr auto AssignAs(MutPtr<T> mem, TArg&& arg) const
+        template <typename type, typename targ>
+        constexpr auto assign_as(mut_ptr<type> mem, targ&& arg) const
         {
-            Contracts::DebugExpects(mem != nullptr);
+            contracts::debug_expects(mem != nullptr);
 
-            mem.getMut() = forward<TArg>(arg);
+            mem.get_mut() = forward<targ>(arg);
         }
 
-        template <typename T, typename TArg>
-        constexpr auto Assign(MutPtr<T> mem, TArg&& arg) const
+        template <typename type, typename targ>
+        constexpr auto assign(mut_ptr<type> mem, targ&& arg) const
         {
-            Contracts::DebugExpects(mem != nullptr);
+            contracts::debug_expects(mem != nullptr);
 
-            mem.getMut() = forward<TArg>(arg);
+            mem.get_mut() = forward<targ>(arg);
         }
 
-        template <typename T>
-        constexpr auto Swap(T& t1, T& t2) const
+        template <typename type>
+        constexpr auto swap(type& t1, type& t2) const
         {
-            T tmp = mov(t1);
+            type tmp = mov(t1);
             t1 = mov(t2);
             t2 = mov(tmp);
         }
 
-        template <typename T>
-        constexpr auto DestructAs(MutPtr<T> mem) const
+        template <typename type>
+        constexpr auto destruct_as(mut_ptr<type> mem) const
         {
-            Contracts::DebugExpects(mem != nullptr);
+            contracts::debug_expects(mem != nullptr);
 
             std::destroy_at(mem.unwrap());
         }
 
-        template <typename T>
-        constexpr auto Destruct(MutPtr<T> mem) const
+        template <typename type>
+        constexpr auto destruct(mut_ptr<type> mem) const
         {
-            Contracts::DebugExpects(mem != nullptr);
+            contracts::debug_expects(mem != nullptr);
 
             std::destroy_at(mem.unwrap());
         }

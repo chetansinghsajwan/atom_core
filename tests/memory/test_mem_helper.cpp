@@ -2,17 +2,17 @@ import atom.core;
 #include "catch2/catch_test_macros.hpp"
 // #include <memory>
 
-using namespace Atom;
+using namespace atom;
 
-TEST_CASE("Atom::Memory::MemHelper")
+TEST_CASE("atom::memory::mem_helper")
 {
-    MemHelper helper;
+    mem_helper helper;
 
-    MutMemPtr<void> src = std::malloc(100);
-    MutMemPtr<void> dest = std::malloc(100);
+    mut_mem_ptr<void> src = std::malloc(100);
+    mut_mem_ptr<void> dest = std::malloc(100);
 
-    // TODO: Write tests.
-    helper.FwdCopyTo({ src, 5 }, { dest, 10 });
+    // todo: write tests.
+    helper.fwd_copy_to({ src, 5 }, { dest, 10 });
 
     std::free(src.unwrap());
     std::free(dest.unwrap());

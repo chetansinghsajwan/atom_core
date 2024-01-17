@@ -1,10 +1,10 @@
 #pragma once
 // #include <atomic>
 
-#include "Atom/Core.h"
+#include "atom/core.h"
 
-namespace Atom
+namespace atom
 {
-    template <typename T>
-    using Atomic = std::atomic<T>;
+    template <typename type>
+    using atomic = std::atomic<type>;
 }

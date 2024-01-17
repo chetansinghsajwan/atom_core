@@ -1,15 +1,15 @@
 #pragma once
-#include "Atom/Containers/StaticArray.h"
-#include "_StringImpl.h"
+#include "atom/containers/static_array.h"
+#include "_string_impl.h"
 
-namespace Atom
+namespace atom
 {
-    // TODO: Fix this, cannot inherit to preserve aggregate initialization.
-    template <typename TEncoding, usize Size>
-    using BasicStackString = StaticArray<BasicChar<TEncoding>, Size>;
-    // using BasicStackString = _StringImpl
+    // todo: fix this, cannot inherit to preserve aggregate initialization.
+    template <typename tencoding, usize size>
+    using basic_stack_string = static_array<basic_char<tencoding>, size>;
+    // using basic_stack_string = _string_impl
     // <
-    //     TEncoding,
-    //     StaticArray<BasicChar<TEncoding>, Size>
+    //     tencoding,
+    //     static_array<basic_char<tencoding>, size>
     // >;
 }

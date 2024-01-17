@@ -1,90 +1,90 @@
 #pragma once
 // #include <mutex>
 
-#include "Atom/Core.h"
-#include "Atom/Memory/Lockable.h"
+#include "atom/core.h"
+#include "atom/memory/lockable.h"
 
-namespace Atom
+namespace atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// SimpleMutex implementation.
+    /// simple_mutex implementation.
     ///
-    /// @TODO Implement this class without {std::lock}.
+    /// @todo implement this class without {std::lock}.
     /// --------------------------------------------------------------------------------------------
-    class SimpleMutex
+    class simple_mutex
     {
     public:
         /// ----------------------------------------------------------------------------------------
-        /// DefaultConstructor.
+        /// default_constructor.
         ///
-        /// @POST Mutex is not locked.
+        /// @post mutex is not locked.
         /// ----------------------------------------------------------------------------------------
-        SimpleMutex() {}
+        simple_mutex() {}
 
         /// ----------------------------------------------------------------------------------------
-        /// CopyConstructor is deleted.
+        /// copy_constructor is deleted.
         /// ----------------------------------------------------------------------------------------
-        SimpleMutex(const SimpleMutex& other) = delete;
+        simple_mutex(const simple_mutex& other) = delete;
 
         /// ----------------------------------------------------------------------------------------
-        /// MoveConstructor is delete.
+        /// move_constructor is delete.
         /// ----------------------------------------------------------------------------------------
-        SimpleMutex(SimpleMutex&& other) = delete;
+        simple_mutex(simple_mutex&& other) = delete;
 
         /// ----------------------------------------------------------------------------------------
-        /// CopyOperator is deleted.
+        /// copy_operator is deleted.
         /// ----------------------------------------------------------------------------------------
-        auto operator=(const SimpleMutex& other) = delete;
+        auto operator=(const simple_mutex& other) = delete;
 
         /// ----------------------------------------------------------------------------------------
-        /// MoveOperator is delete.
+        /// move_operator is delete.
         /// ----------------------------------------------------------------------------------------
-        auto operator=(SimpleMutex&& other) = delete;
+        auto operator=(simple_mutex&& other) = delete;
 
         /// ----------------------------------------------------------------------------------------
-        /// Destructor.
+        /// destructor.
         ///
-        /// @NOTE If lock is locked by some thread and lock is destroyed, behaviour is undefined.
+        /// @note if lock is locked by some thread and lock is destroyed, behaviour is undefined.
         /// ----------------------------------------------------------------------------------------
-        ~SimpleMutex() {}
+        ~simple_mutex() {}
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// Locks the lock. If the lock is already locked by some thread then blocks the calling
+        /// locks the lock. if the lock is already locked by some thread then blocks the calling
         /// thread until lock is acquired.
         ///
-        /// @SEE TryLock().
+        /// @see try_lock().
         /// ----------------------------------------------------------------------------------------
-        auto Lock()
+        auto lock()
         {
             _impl.lock();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Tries to lock the lock. If the lock is already locked by some thread then returns but
+        /// tries to lock the lock. if the lock is already locked by some thread then returns but
         /// doesn't blocks the thread.
         ///
-        /// @RETURNS `true` if lock acquired, else `false`.
+        /// @returns `true` if lock acquired, else `false`.
         /// ----------------------------------------------------------------------------------------
-        auto TryLock() -> bool
+        auto try_lock() -> bool
         {
             return _impl.try_lock();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Unlocks the lock.
+        /// unlocks the lock.
         /// ----------------------------------------------------------------------------------------
-        auto Unlock()
+        auto unlock()
         {
             _impl.unlock();
         }
 
     private:
         /// ----------------------------------------------------------------------------------------
-        /// Mutex implementation.
+        /// mutex implementation.
         /// ----------------------------------------------------------------------------------------
         std::mutex _impl;
     };
 
-    static_assert(RLockable<SimpleMutex>);
+    static_assert(rlockable<simple_mutex>);
 }

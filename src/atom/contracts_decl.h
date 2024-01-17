@@ -2,30 +2,30 @@
 // #include <source_location>
 // #include <string_view>
 
-#include "Atom/Core/BuildConfig.h"
-#include "Atom/Core/LangExtensions.h"
+#include "atom/core/build_config.h"
+#include "atom/core/lang_extensions.h"
 
-namespace Atom
+namespace atom
 {
-    enum class _ContractType
+    enum class _contract_type
     {
-        PreCondition,
-        Assertion,
-        PostCondition,
-        DebugPreCondition,
-        DebugAssertion,
-        DebugPostCondition
+        pre_condition,
+        assertion,
+        post_condition,
+        debug_pre_condition,
+        debug_assertion,
+        debug_post_condition
     };
 
-    inline auto _ContractCheckImpl(
-        _ContractType type, std::source_location src, std::string_view msg) -> void;
+    inline auto _contract_check_impl(
+        _contract_type type, std::source_location src, std::string_view msg) -> void;
 
-    template <_ContractType type, typename... TArgs>
-    constexpr auto _ContractCheck(std::source_location src, bool assert, TArgs&&... args) -> void
+    template <_contract_type type, typename... args_type>
+    constexpr auto _contract_check(std::source_location src, bool assert, args_type&&... args) -> void
     {
-        if constexpr (BuildConfig::IsModeDebug() and type == _ContractType::DebugPreCondition
-                      or type == _ContractType::DebugAssertion
-                      or type == _ContractType::DebugPostCondition)
+        if constexpr (build_config::is_mode_debug() and type == _contract_type::debug_pre_condition
+                      or type == _contract_type::debug_assertion
+                      or type == _contract_type::debug_post_condition)
             return;
 
         if (assert)
@@ -35,78 +35,78 @@ namespace Atom
             throw 0;
 
         std::string_view msg = "";
-        _ContractCheckImpl(type, src, msg);
+        _contract_check_impl(type, src, msg);
     }
 
-    inline auto _Panic(std::source_location src, std::string_view msg) -> void;
+    inline auto _panic(std::source_location src, std::string_view msg) -> void;
 }
 
-namespace Atom::Contracts
+namespace atom::contracts
 {
     /// ------------------------------------------------------------------------------------------------
-    /// Represents pre condition.
+    /// represents pre condition.
     /// ------------------------------------------------------------------------------------------------
-    constexpr auto Expects(bool assert, std::string_view msg = "",
+    constexpr auto expects(bool assert, std::string_view msg = "",
         std::source_location _src = std::source_location::current())
     {
-        _ContractCheck<_ContractType::PreCondition>(_src, assert, msg);
+        _contract_check<_contract_type::pre_condition>(_src, assert, msg);
     }
 
     /// ------------------------------------------------------------------------------------------------
-    /// Represents debug pre condition.
+    /// represents debug pre condition.
     /// ------------------------------------------------------------------------------------------------
-    constexpr auto DebugExpects(bool assert, std::string_view msg = "",
+    constexpr auto debug_expects(bool assert, std::string_view msg = "",
         std::source_location _src = std::source_location::current())
     {
-        _ContractCheck<_ContractType::DebugPreCondition>(_src, assert, msg);
+        _contract_check<_contract_type::debug_pre_condition>(_src, assert, msg);
     }
 
     /// ------------------------------------------------------------------------------------------------
-    /// Represents assertion.
+    /// represents assertion.
     /// ------------------------------------------------------------------------------------------------
-    constexpr auto Asserts(bool assert, std::string_view msg = "",
+    constexpr auto asserts(bool assert, std::string_view msg = "",
         std::source_location _src = std::source_location::current())
     {
-        _ContractCheck<_ContractType::Assertion>(_src, assert, msg);
+        _contract_check<_contract_type::assertion>(_src, assert, msg);
     }
 
     /// ------------------------------------------------------------------------------------------------
-    /// Represents debug assertion.
+    /// represents debug assertion.
     /// ------------------------------------------------------------------------------------------------
-    constexpr auto DebugAsserts(bool assert, std::string_view msg = "",
+    constexpr auto debug_asserts(bool assert, std::string_view msg = "",
         std::source_location _src = std::source_location::current())
     {
-        _ContractCheck<_ContractType::DebugAssertion>(_src, assert, msg);
+        _contract_check<_contract_type::debug_assertion>(_src, assert, msg);
     }
 
     /// ------------------------------------------------------------------------------------------------
-    /// Represents post condition.
+    /// represents post condition.
     /// ------------------------------------------------------------------------------------------------
-    constexpr auto Ensures(bool assert, std::string_view msg = "",
+    constexpr auto ensures(bool assert, std::string_view msg = "",
         std::source_location _src = std::source_location::current())
     {
-        _ContractCheck<_ContractType::PostCondition>(_src, assert, msg);
+        _contract_check<_contract_type::post_condition>(_src, assert, msg);
     }
 
     /// ------------------------------------------------------------------------------------------------
-    /// Represents debug post condition.
+    /// represents debug post condition.
     /// ------------------------------------------------------------------------------------------------
-    constexpr auto DebugEnsures(bool assert, std::string_view msg = "",
+    constexpr auto debug_ensures(bool assert, std::string_view msg = "",
         std::source_location _src = std::source_location::current())
     {
-        _ContractCheck<_ContractType::DebugPostCondition>(_src, assert, msg);
+        _contract_check<_contract_type::debug_post_condition>(_src, assert, msg);
     }
 }
 
-namespace Atom::System
+namespace atom::system
 {
     /// ------------------------------------------------------------------------------------------------
     ///
     /// ------------------------------------------------------------------------------------------------
-    template <typename... TArgs>
-    constexpr auto Panic(
+    template <typename... args_type>
+    constexpr auto panic(
         std::string_view msg = "", std::source_location _src = std::source_location::current())
     {
-        _Panic(_src, msg);
+        _panic(_src, msg);
     }
 }

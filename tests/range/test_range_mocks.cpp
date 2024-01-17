@@ -1,17 +1,17 @@
 import atom.core;
-#include "Range/RangeReqChecks.h"
+#include "range/range_req_checks.h"
 
-using namespace Atom;
+using namespace atom;
 
-ATOM_SATISFIES_RANGE_TEMP(RangeReqMock);
-ATOM_SATISFIES_MUT_RANGE_TEMP(MutRangeReqMock);
-ATOM_SATISFIES_FWD_RANGE_TEMP(FwdRangeReqMock);
-ATOM_SATISFIES_MUT_FWD_RANGE_TEMP(MutFwdRangeReqMock);
-ATOM_SATISFIES_BIDI_RANGE_TEMP(BidiRangeReqMock);
-ATOM_SATISFIES_MUT_BIDI_RANGE_TEMP(MutBidiRangeReqMock);
-ATOM_SATISFIES_JUMP_RANGE_TEMP(JumpRangeReqMock);
-ATOM_SATISFIES_MUT_JUMP_RANGE_TEMP(MutJumpRangeReqMock);
-ATOM_SATISFIES_ARR_RANGE_TEMP(ArrayRangeReqMock);
-ATOM_SATISFIES_MUT_ARR_RANGE_TEMP(MutArrayRangeReqMock);
-ATOM_SATISFIES_COMMON_RANGE_TEMP(CommonRangeReqMock);
-ATOM_SATISFIES_MUT_COMMON_RANGE_TEMP(MutCommonRangeReqMock);
+atom_satisfies_range_temp(range_req_mock);
+atom_satisfies_mut_range_temp(mut_range_req_mock);
+atom_satisfies_fwd_range_temp(fwd_range_req_mock);
+atom_satisfies_mut_fwd_range_temp(mut_fwd_range_req_mock);
+atom_satisfies_bidi_range_temp(bidi_range_req_mock);
+atom_satisfies_mut_bidi_range_temp(mut_bidi_range_req_mock);
+atom_satisfies_jump_range_temp(jump_range_req_mock);
+atom_satisfies_mut_jump_range_temp(mut_jump_range_req_mock);
+atom_satisfies_arr_range_temp(array_range_req_mock);
+atom_satisfies_mut_arr_range_temp(mut_array_range_req_mock);
+atom_satisfies_common_range_temp(common_range_req_mock);
+atom_satisfies_mut_common_range_temp(mut_common_range_req_mock);

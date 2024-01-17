@@ -1,109 +1,109 @@
 import atom.core;
-#include "Helpers/TrackedType.h"
+#include "helpers/tracked_type.h"
 #include "catch2/catch_test_macros.hpp"
 
-using namespace Atom;
-using namespace Atom::Tests;
+using namespace atom;
+using namespace atom::tests;
 
-TEST_CASE("Atom.Core.UniquePtr")
+TEST_CASE("atom.core.unique_ptr")
 {
-    SECTION("Default Constructor")
+    SECTION("default constructor")
     {
-        UniquePtr<TrackedType> ptr;
+        unique_ptr<tracked_type> ptr;
 
         REQUIRE(ptr.eq(nullptr));
     }
 
-    SECTION("Null Constructor")
+    SECTION("null constructor")
     {
-        UniquePtr<TrackedType> ptr(nullptr);
+        unique_ptr<tracked_type> ptr(nullptr);
 
         REQUIRE(ptr.eq(nullptr));
     }
 
-    SECTION("Value Constructor")
+    SECTION("value constructor")
     {
-        TrackedType val;
-        UniquePtr<TrackedType> ptr(&val);
+        tracked_type val;
+        unique_ptr<tracked_type> ptr(&val);
 
         REQUIRE(ptr.eq(&val));
     }
 
-    SECTION("Copy Constructor")
+    SECTION("copy constructor")
     {
-        STATIC_REQUIRE(not RCopyConstructible<UniquePtr<TrackedType>>);
+        STATIC_REQUIRE(not rcopy_constructible<unique_ptr<tracked_type>>);
     }
 
-    SECTION("Move Constructor")
+    SECTION("move constructor")
     {
-        TrackedType val;
-        UniquePtr<TrackedType> ptr1(&val);
-        UniquePtr<TrackedType> ptr2(mov(ptr1));
+        tracked_type val;
+        unique_ptr<tracked_type> ptr1(&val);
+        unique_ptr<tracked_type> ptr2(mov(ptr1));
 
         REQUIRE(ptr1.eq(nullptr));
         REQUIRE(ptr2.eq(&val));
     }
 
-    SECTION("Destructor")
+    SECTION("destructor")
     {
-        TrackedType val;
+        tracked_type val;
 
         {
-            UniquePtr<TrackedType> ptr(&val);
+            unique_ptr<tracked_type> ptr(&val);
         }
 
-        REQUIRE(val.lastOp == TrackedType::EOperation::Destructor);
+        REQUIRE(val.last_op == tracked_type::eoperation::destructor);
     }
 
-    SECTION("Copy Operator")
+    SECTION("copy operator")
     {
-        STATIC_REQUIRE(not RCopyAssignable<UniquePtr<TrackedType>>);
+        STATIC_REQUIRE(not rcopy_assignable<unique_ptr<tracked_type>>);
     }
 
-    SECTION("Move Operator")
+    SECTION("move operator")
     {
-        TrackedType val1;
-        TrackedType val2;
-        UniquePtr<TrackedType> ptr1(&val1);
-        UniquePtr<TrackedType> ptr2(&val2);
+        tracked_type val1;
+        tracked_type val2;
+        unique_ptr<tracked_type> ptr1(&val1);
+        unique_ptr<tracked_type> ptr2(&val2);
 
         ptr2 = mov(ptr1);
 
         REQUIRE(ptr1.eq(nullptr));
         REQUIRE(ptr2.eq(&val1));
-        REQUIRE(val1.lastOp == TrackedType::EOperation::DefaultConstructor);
-        REQUIRE(val2.lastOp == TrackedType::EOperation::Destructor);
+        REQUIRE(val1.last_op == tracked_type::eoperation::default_constructor);
+        REQUIRE(val2.last_op == tracked_type::eoperation::destructor);
     }
 
-    SECTION("Null Operator")
+    SECTION("null operator")
     {
-        TrackedType val;
-        UniquePtr<TrackedType> ptr(&val);
+        tracked_type val;
+        unique_ptr<tracked_type> ptr(&val);
 
         // ptr = nullptr;
 
-        REQUIRE(val.lastOp == TrackedType::EOperation::Destructor);
+        REQUIRE(val.last_op == tracked_type::eoperation::destructor);
     }
 
     SECTION("release()")
     {
-        TrackedType val;
-        UniquePtr<TrackedType> ptr(&val);
+        tracked_type val;
+        unique_ptr<tracked_type> ptr(&val);
 
         ptr.release();
 
         REQUIRE(ptr.eq(nullptr));
-        REQUIRE(val.lastOp == TrackedType::EOperation::DefaultConstructor);
+        REQUIRE(val.last_op == tracked_type::eoperation::default_constructor);
     }
 
     SECTION("destroy()")
     {
-        TrackedType val;
-        UniquePtr<TrackedType> ptr(&val);
+        tracked_type val;
+        unique_ptr<tracked_type> ptr(&val);
 
         ptr.destroy();
 
         REQUIRE(ptr.eq(nullptr));
-        REQUIRE(val.lastOp == TrackedType::EOperation::Destructor);
+        REQUIRE(val.last_op == tracked_type::eoperation::destructor);
     }
 }

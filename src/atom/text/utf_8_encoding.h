@@ -1,26 +1,26 @@
 #pragma once
-#include "Atom/Core/Core.h"
+#include "atom/core/core.h"
 
-namespace Atom::Text
+namespace atom::text
 {
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    export class Utf8Encoding
+    export class utf8encoding
     {
     public:
-        using TChar = char8;
-        using TRune = char32;
+        using tchar = char8;
+        using trune = char32;
 
     public:
-        static constexpr TChar Null = u8('\0');
-        static constexpr bool IsMultiCharEncoding = true;
+        static constexpr tchar null = u8('\0');
+        static constexpr bool is_multi_char_encoding = true;
 
     public:
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        static constexpr auto IsContinuationChar(TChar ch) -> bool
+        static constexpr auto is_continuation_char(tchar ch) -> bool
         {
             return (ch & 0b11000000) == 0b10000000;
         }
@@ -28,7 +28,7 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        static constexpr auto ParseStartingChar(TChar ch) -> usize
+        static constexpr auto parse_starting_char(tchar ch) -> usize
         {
             if ((ch & 0b10000000) == 0b00000000)
                 return 1;
@@ -45,12 +45,12 @@ namespace Atom::Text
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        static constexpr auto IsStartingChar(TChar ch) -> bool
+        static constexpr auto is_starting_char(tchar ch) -> bool
         {
-            return ParseStartingChar(ch) != 0;
+            return parse_starting_char(ch) != 0;
         }
     };
 
-    using UTF8Char = typename UTF8Encoding::TChar;
-    using UTF8Rune = typename UTF8Encoding::TRune;
+    using utf8char = typename utf8encoding::tchar;
+    using utf8rune = typename utf8encoding::trune;
 }

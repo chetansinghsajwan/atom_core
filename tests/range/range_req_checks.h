@@ -2,85 +2,85 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////
-//// Implementations
+//// implementations
 ////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#define _ATOM_SATISFIES_RANGE(RRange, TRange)                                                      \
-    static_assert(RRange<TRange>, "{" #TRange "} does not satisfy {" #RRange "} requirements.");
+#define _atom_satisfies_range(rrange, range_type)                                                      \
+    static_assert(rrange<range_type>, "{" #range_type "} does not satisfy {" #rrange "} requirements.");
 
-#define _ATOM_SATISFIES_RANGE_OF(RRange, TRange, T)                                                \
-    static_assert(RRange<TRange, T>,                                                               \
-        "{" #TRange "} does not satisfy {" #RRange "} requirements for type {" #T "}.");
+#define _atom_satisfies_range_of(rrange, range_type, type)                                                \
+    static_assert(rrange<range_type, type>,                                                               \
+        "{" #range_type "} does not satisfy {" #rrange "} requirements for type {" #type "}.");
 
-#define _ATOM_SATISFIES_RANGE_TEMP(RRange, TRange)                                                 \
+#define _atom_satisfies_range_temp(rrange, range_type)                                                 \
     static_assert(                                                                                 \
-        RRange<TRange<i32>>, "{" #TRange "} does not satisfy {" #RRange "} requirements.");
+        rrange<range_type<i32>>, "{" #range_type "} does not satisfy {" #rrange "} requirements.");
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////
-//// Checks
+//// checks
 ////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#define ATOM_SATISFIES_RANGE(TRange) _ATOM_SATISFIES_RANGE(RRange, TRange)
-#define ATOM_SATISFIES_RANGE_OF(TRange, T) _ATOM_SATISFIES_RANGE_OF(RRangeOf, TRange, T)
-#define ATOM_SATISFIES_RANGE_TEMP(TRange) _ATOM_SATISFIES_RANGE_TEMP(RRange, TRange)
+#define atom_satisfies_range(range_type) _atom_satisfies_range(rrange, range_type)
+#define atom_satisfies_range_of(range_type, type) _atom_satisfies_range_of(rrange_of, range_type, type)
+#define atom_satisfies_range_temp(range_type) _atom_satisfies_range_temp(rrange, range_type)
 
-#define ATOM_SATISFIES_MUT_RANGE(TRange) _ATOM_SATISFIES_RANGE(RMutRange, TRange)
-#define ATOM_SATISFIES_MUT_RANGE_OF(TRange, T) _ATOM_SATISFIES_RANGE_OF(RMutRangeOf, TRange, T)
-#define ATOM_SATISFIES_MUT_RANGE_TEMP(TRange) _ATOM_SATISFIES_RANGE_TEMP(RMutRange, TRange)
+#define atom_satisfies_mut_range(range_type) _atom_satisfies_range(rmut_range, range_type)
+#define atom_satisfies_mut_range_of(range_type, type) _atom_satisfies_range_of(rmut_range_of, range_type, type)
+#define atom_satisfies_mut_range_temp(range_type) _atom_satisfies_range_temp(rmut_range, range_type)
 
-#define ATOM_SATISFIES_FWD_RANGE(TRange) _ATOM_SATISFIES_RANGE(RFwdRange, TRange)
-#define ATOM_SATISFIES_FWD_RANGE_OF(TRange, T) _ATOM_SATISFIES_RANGE_OF(RFwdRangeOf, TRange, T)
-#define ATOM_SATISFIES_FWD_RANGE_TEMP(TRange) _ATOM_SATISFIES_RANGE_TEMP(RFwdRange, TRange)
+#define atom_satisfies_fwd_range(range_type) _atom_satisfies_range(rfwd_range, range_type)
+#define atom_satisfies_fwd_range_of(range_type, type) _atom_satisfies_range_of(rfwd_range_of, range_type, type)
+#define atom_satisfies_fwd_range_temp(range_type) _atom_satisfies_range_temp(rfwd_range, range_type)
 
-#define ATOM_SATISFIES_MUT_FWD_RANGE(TRange) _ATOM_SATISFIES_RANGE(RMutFwdRange, TRange)
-#define ATOM_SATISFIES_MUT_FWD_RANGE_OF(TRange, T)                                                 \
-    _ATOM_SATISFIES_RANGE_OF(RMutFwdRangeOf, TRange, T)
-#define ATOM_SATISFIES_MUT_FWD_RANGE_TEMP(TRange) _ATOM_SATISFIES_RANGE_TEMP(RMutFwdRange, TRange)
+#define atom_satisfies_mut_fwd_range(range_type) _atom_satisfies_range(rmut_fwd_range, range_type)
+#define atom_satisfies_mut_fwd_range_of(range_type, type)                                                 \
+    _atom_satisfies_range_of(rmut_fwd_range_of, range_type, type)
+#define atom_satisfies_mut_fwd_range_temp(range_type) _atom_satisfies_range_temp(rmut_fwd_range, range_type)
 
-#define ATOM_SATISFIES_BIDI_RANGE(TRange) _ATOM_SATISFIES_RANGE(RBidiRange, TRange)
-#define ATOM_SATISFIES_BIDI_RANGE_OF(TRange, T) _ATOM_SATISFIES_RANGE_OF(RBidiRangeOf, TRange, T)
-#define ATOM_SATISFIES_BIDI_RANGE_TEMP(TRange) _ATOM_SATISFIES_RANGE_TEMP(RBidiRange, TRange)
+#define atom_satisfies_bidi_range(range_type) _atom_satisfies_range(rbidi_range, range_type)
+#define atom_satisfies_bidi_range_of(range_type, type) _atom_satisfies_range_of(rbidi_range_of, range_type, type)
+#define atom_satisfies_bidi_range_temp(range_type) _atom_satisfies_range_temp(rbidi_range, range_type)
 
-#define ATOM_SATISFIES_MUT_BIDI_RANGE(TRange) _ATOM_SATISFIES_RANGE(RMutBidiRange, TRange)
-#define ATOM_SATISFIES_MUT_BIDI_RANGE_OF(TRange, T)                                                \
-    _ATOM_SATISFIES_RANGE_OF(RMutBidiRangeOf, TRange, T)
-#define ATOM_SATISFIES_MUT_BIDI_RANGE_TEMP(TRange) _ATOM_SATISFIES_RANGE_TEMP(RMutBidiRange, TRange)
+#define atom_satisfies_mut_bidi_range(range_type) _atom_satisfies_range(rmut_bidi_range, range_type)
+#define atom_satisfies_mut_bidi_range_of(range_type, type)                                                \
+    _atom_satisfies_range_of(rmut_bidi_range_of, range_type, type)
+#define atom_satisfies_mut_bidi_range_temp(range_type) _atom_satisfies_range_temp(rmut_bidi_range, range_type)
 
-#define ATOM_SATISFIES_JUMP_RANGE(TRange) _ATOM_SATISFIES_RANGE(RJumpRange, TRange)
-#define ATOM_SATISFIES_JUMP_RANGE_OF(TRange, T) _ATOM_SATISFIES_RANGE_OF(RJumpRangeOf, TRange, T)
-#define ATOM_SATISFIES_JUMP_RANGE_TEMP(TRange) _ATOM_SATISFIES_RANGE_TEMP(RJumpRange, TRange)
+#define atom_satisfies_jump_range(range_type) _atom_satisfies_range(rjump_range, range_type)
+#define atom_satisfies_jump_range_of(range_type, type) _atom_satisfies_range_of(rjump_range_of, range_type, type)
+#define atom_satisfies_jump_range_temp(range_type) _atom_satisfies_range_temp(rjump_range, range_type)
 
-#define ATOM_SATISFIES_MUT_JUMP_RANGE(TRange) _ATOM_SATISFIES_RANGE(RMutJumpRange, TRange)
-#define ATOM_SATISFIES_MUT_JUMP_RANGE_OF(TRange, T)                                                \
-    _ATOM_SATISFIES_RANGE_OF(RMutJumpRangeOf, TRange, T)
-#define ATOM_SATISFIES_MUT_JUMP_RANGE_TEMP(TRange) _ATOM_SATISFIES_RANGE_TEMP(RMutJumpRange, TRange)
+#define atom_satisfies_mut_jump_range(range_type) _atom_satisfies_range(rmut_jump_range, range_type)
+#define atom_satisfies_mut_jump_range_of(range_type, type)                                                \
+    _atom_satisfies_range_of(rmut_jump_range_of, range_type, type)
+#define atom_satisfies_mut_jump_range_temp(range_type) _atom_satisfies_range_temp(rmut_jump_range, range_type)
 
-#define ATOM_SATISFIES_ARR_RANGE(TRange) _ATOM_SATISFIES_RANGE(RArrayRange, TRange)
-#define ATOM_SATISFIES_ARR_RANGE_OF(TRange, T) _ATOM_SATISFIES_RANGE_OF(RArrayRangeOf, TRange, T)
-#define ATOM_SATISFIES_ARR_RANGE_TEMP(TRange) _ATOM_SATISFIES_RANGE_TEMP(RArrayRange, TRange)
+#define atom_satisfies_arr_range(range_type) _atom_satisfies_range(rarray_range, range_type)
+#define atom_satisfies_arr_range_of(range_type, type) _atom_satisfies_range_of(rarray_range_of, range_type, type)
+#define atom_satisfies_arr_range_temp(range_type) _atom_satisfies_range_temp(rarray_range, range_type)
 
-#define ATOM_SATISFIES_MUT_ARR_RANGE(TRange) _ATOM_SATISFIES_RANGE(RMutArrayRange, TRange)
-#define ATOM_SATISFIES_MUT_ARR_RANGE_OF(TRange, T)                                                 \
-    _ATOM_SATISFIES_RANGE_OF(RMutArrayRangeOf, TRange, T)
-#define ATOM_SATISFIES_MUT_ARR_RANGE_TEMP(TRange) _ATOM_SATISFIES_RANGE_TEMP(RMutArrayRange, TRange)
+#define atom_satisfies_mut_arr_range(range_type) _atom_satisfies_range(rmut_array_range, range_type)
+#define atom_satisfies_mut_arr_range_of(range_type, type)                                                 \
+    _atom_satisfies_range_of(rmut_array_range_of, range_type, type)
+#define atom_satisfies_mut_arr_range_temp(range_type) _atom_satisfies_range_temp(rmut_array_range, range_type)
 
-#define ATOM_SATISFIES_REV_RANGE(TRange) _ATOM_SATISFIES_RANGE(RRevRange, TRange)
-#define ATOM_SATISFIES_REV_RANGE_OF(TRange, T) _ATOM_SATISFIES_RANGE_OF(RRevRangeOf, TRange, T)
-#define ATOM_SATISFIES_REV_RANGE_TEMP(TRange) _ATOM_SATISFIES_RANGE_TEMP(RRevRange, TRange)
+#define atom_satisfies_rev_range(range_type) _atom_satisfies_range(rrev_range, range_type)
+#define atom_satisfies_rev_range_of(range_type, type) _atom_satisfies_range_of(rrev_range_of, range_type, type)
+#define atom_satisfies_rev_range_temp(range_type) _atom_satisfies_range_temp(rrev_range, range_type)
 
-#define ATOM_SATISFIES_MUT_REV_RANGE(TRange) _ATOM_SATISFIES_RANGE(RMutRevRange, TRange)
-#define ATOM_SATISFIES_MUT_REV_RANGE_OF(TRange, T)                                                 \
-    _ATOM_SATISFIES_RANGE_OF(RMutRevRangeOf, TRange, T)
-#define ATOM_SATISFIES_MUT_REV_RANGE_TEMP(TRange) _ATOM_SATISFIES_RANGE_TEMP(RMutRevRange, TRange)
+#define atom_satisfies_mut_rev_range(range_type) _atom_satisfies_range(rmut_rev_range, range_type)
+#define atom_satisfies_mut_rev_range_of(range_type, type)                                                 \
+    _atom_satisfies_range_of(rmut_rev_range_of, range_type, type)
+#define atom_satisfies_mut_rev_range_temp(range_type) _atom_satisfies_range_temp(rmut_rev_range, range_type)
 
-#define ATOM_SATISFIES_COMMON_RANGE(TRange) _ATOM_SATISFIES_RANGE(RCommonRange, TRange)
-#define ATOM_SATISFIES_COMMON_RANGE_OF(TRange, T)                                                  \
-    _ATOM_SATISFIES_RANGE_OF(RCommonRangeOf, TRange, T)
-#define ATOM_SATISFIES_COMMON_RANGE_TEMP(TRange) _ATOM_SATISFIES_RANGE_TEMP(RCommonRange, TRange)
+#define atom_satisfies_common_range(range_type) _atom_satisfies_range(rcommon_range, range_type)
+#define atom_satisfies_common_range_of(range_type, type)                                                  \
+    _atom_satisfies_range_of(rcommon_range_of, range_type, type)
+#define atom_satisfies_common_range_temp(range_type) _atom_satisfies_range_temp(rcommon_range, range_type)
 
-#define ATOM_SATISFIES_MUT_COMMON_RANGE(TRange) _ATOM_SATISFIES_RANGE(RMutCommonRange, TRange)
-#define ATOM_SATISFIES_MUT_COMMON_RANGE_TEMP(TRange)                                               \
-    _ATOM_SATISFIES_RANGE_TEMP(RMutCommonRange, TRange)
+#define atom_satisfies_mut_common_range(range_type) _atom_satisfies_range(rmut_common_range, range_type)
+#define atom_satisfies_mut_common_range_temp(range_type)                                               \
+    _atom_satisfies_range_temp(rmut_common_range, range_type)

@@ -1,171 +1,171 @@
 #pragma once
 #include "catch2/catch_tostring.hpp"
 
-namespace Atom::Tests
+namespace atom::tests
 {
     /// --------------------------------------------------------------------------------------------
-    /// Type used to track object state.
+    /// type used to track object state.
     /// --------------------------------------------------------------------------------------------
-    class TrackedType
+    class tracked_type
     {
     public:
         /// ----------------------------------------------------------------------------------------
-        /// Enum used to represent state.
+        /// enum used to represent state.
         /// ----------------------------------------------------------------------------------------
-        enum class EOperation
+        enum class eoperation
         {
-            None,
+            none,
 
-            DefaultConstructor,
-            CopyConstructor,
-            CopyConstructorAsThat,
-            CopyOperator,
-            CopyOperatorAsThat,
-            MoveConstructor,
-            MoveConstructorAsThat,
-            MoveOperator,
-            MoveOperatorAsThat,
-            Destructor,
+            default_constructor,
+            copy_constructor,
+            copy_constructor_as_that,
+            copy_operator,
+            copy_operator_as_that,
+            move_constructor,
+            move_constructor_as_that,
+            move_operator,
+            move_operator_as_that,
+            destructor,
 
-            EqualOperator,
-            LessThanOperator,
-            GreaterThanOperator,
-            LessThanOrEqualOperator,
-            GreaterThanOrEqualOperator
+            equal_operator,
+            less_than_operator,
+            greater_than_operator,
+            less_than_or_equal_operator,
+            greater_than_or_equal_operator
         };
 
-        static constexpr auto ToStringView(EOperation op) -> std::string_view
+        static constexpr auto to_string_view(eoperation op) -> std::string_view
         {
             switch (op)
             {
-                case EOperation::None:                       return "None";
-                case EOperation::DefaultConstructor:         return "DefaultConstructor";
-                case EOperation::CopyConstructor:            return "CopyConstructor";
-                case EOperation::CopyConstructorAsThat:      return "CopyConstructorAsThat";
-                case EOperation::CopyOperator:               return "CopyOperator";
-                case EOperation::CopyOperatorAsThat:         return "CopyOperatorAsThat";
-                case EOperation::MoveConstructor:            return "MoveConstructor";
-                case EOperation::MoveConstructorAsThat:      return "MoveConstructorAsThat";
-                case EOperation::MoveOperator:               return "MoveOperator";
-                case EOperation::MoveOperatorAsThat:         return "MoveOperatorAsThat";
-                case EOperation::Destructor:                 return "Destructor";
-                case EOperation::EqualOperator:              return "EqualOperator";
-                case EOperation::LessThanOperator:           return "LessThanOperator";
-                case EOperation::GreaterThanOperator:        return "GreaterThanOperator";
-                case EOperation::LessThanOrEqualOperator:    return "LessThanOrEqualOperator";
-                case EOperation::GreaterThanOrEqualOperator: return "GreaterThanOrEqualOperator";
-                default:                                     return "UNKNOWN";
+                case eoperation::none:                       return "none";
+                case eoperation::default_constructor:         return "default_constructor";
+                case eoperation::copy_constructor:            return "copy_constructor";
+                case eoperation::copy_constructor_as_that:      return "copy_constructor_as_that";
+                case eoperation::copy_operator:               return "copy_operator";
+                case eoperation::copy_operator_as_that:         return "copy_operator_as_that";
+                case eoperation::move_constructor:            return "move_constructor";
+                case eoperation::move_constructor_as_that:      return "move_constructor_as_that";
+                case eoperation::move_operator:               return "move_operator";
+                case eoperation::move_operator_as_that:         return "move_operator_as_that";
+                case eoperation::destructor:                 return "destructor";
+                case eoperation::equal_operator:              return "equal_operator";
+                case eoperation::less_than_operator:           return "less_than_operator";
+                case eoperation::greater_than_operator:        return "greater_than_operator";
+                case eoperation::less_than_or_equal_operator:    return "less_than_or_equal_operator";
+                case eoperation::greater_than_or_equal_operator: return "greater_than_or_equal_operator";
+                default:                                     return "unknown";
             }
         }
 
     public:
-        constexpr TrackedType()
+        constexpr tracked_type()
         {
-            lastOp = EOperation::DefaultConstructor;
+            last_op = eoperation::default_constructor;
         }
 
-        constexpr TrackedType(const TrackedType& that)
+        constexpr tracked_type(const tracked_type& that)
         {
-            lastOp = EOperation::CopyConstructor;
-            that.lastOp = EOperation::CopyConstructorAsThat;
+            last_op = eoperation::copy_constructor;
+            that.last_op = eoperation::copy_constructor_as_that;
         }
 
-        constexpr auto operator=(const TrackedType& that) -> TrackedType&
+        constexpr auto operator=(const tracked_type& that) -> tracked_type&
         {
-            lastOp = EOperation::CopyOperator;
-            that.lastOp = EOperation::CopyOperatorAsThat;
+            last_op = eoperation::copy_operator;
+            that.last_op = eoperation::copy_operator_as_that;
             return *this;
         }
 
-        constexpr TrackedType(TrackedType&& that)
+        constexpr tracked_type(tracked_type&& that)
         {
-            lastOp = EOperation::MoveConstructor;
-            that.lastOp = EOperation::MoveConstructorAsThat;
+            last_op = eoperation::move_constructor;
+            that.last_op = eoperation::move_constructor_as_that;
         }
 
-        constexpr auto operator=(TrackedType&& that) -> TrackedType&
+        constexpr auto operator=(tracked_type&& that) -> tracked_type&
         {
-            lastOp = EOperation::MoveOperator;
-            that.lastOp = EOperation::MoveOperatorAsThat;
+            last_op = eoperation::move_operator;
+            that.last_op = eoperation::move_operator_as_that;
             return *this;
         }
 
-        constexpr ~TrackedType()
+        constexpr ~tracked_type()
         {
-            lastOp = EOperation::Destructor;
+            last_op = eoperation::destructor;
         }
 
     public:
-        constexpr auto eq(const TrackedType& that) const -> bool
+        constexpr auto eq(const tracked_type& that) const -> bool
         {
-            lastOp = EOperation::EqualOperator;
-            that.lastOp = EOperation::EqualOperator;
+            last_op = eoperation::equal_operator;
+            that.last_op = eoperation::equal_operator;
             return true;
         }
 
-        constexpr auto ne(const TrackedType& that) const -> bool
+        constexpr auto ne(const tracked_type& that) const -> bool
         {
             return not(*this == that);
         }
 
-        constexpr auto lt(const TrackedType& that) const -> bool
+        constexpr auto lt(const tracked_type& that) const -> bool
         {
-            lastOp = EOperation::LessThanOperator;
-            that.lastOp = EOperation::LessThanOperator;
+            last_op = eoperation::less_than_operator;
+            that.last_op = eoperation::less_than_operator;
             return true;
         }
 
-        constexpr auto gt(const TrackedType& that) const -> bool
+        constexpr auto gt(const tracked_type& that) const -> bool
         {
-            lastOp = EOperation::GreaterThanOperator;
-            that.lastOp = EOperation::GreaterThanOperator;
+            last_op = eoperation::greater_than_operator;
+            that.last_op = eoperation::greater_than_operator;
             return true;
         }
 
-        constexpr auto le(const TrackedType& that) const -> bool
+        constexpr auto le(const tracked_type& that) const -> bool
         {
-            lastOp = EOperation::LessThanOrEqualOperator;
-            that.lastOp = EOperation::LessThanOrEqualOperator;
+            last_op = eoperation::less_than_or_equal_operator;
+            that.last_op = eoperation::less_than_or_equal_operator;
             return true;
         }
 
-        constexpr auto ge(const TrackedType& that) const -> bool
+        constexpr auto ge(const tracked_type& that) const -> bool
         {
-            lastOp = EOperation::GreaterThanOrEqualOperator;
-            that.lastOp = EOperation::GreaterThanOrEqualOperator;
+            last_op = eoperation::greater_than_or_equal_operator;
+            that.last_op = eoperation::greater_than_or_equal_operator;
             return true;
         }
 
     public:
-        mutable EOperation lastOp;
+        mutable eoperation last_op;
     };
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    class TrackedTypeOf: public TrackedType
+    template <typename type>
+    class tracked_type_of: public tracked_type
     {
-        using Base = TrackedType;
+        using base_type = tracked_type;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
 
     public:
-        T value;
+        type value;
     };
 }
 
 namespace Catch
 {
     template <>
-    class StringMaker<Atom::Tests::TrackedType::EOperation>
+    class StringMaker<atom::tests::tracked_type::eoperation>
     {
     public:
-        static constexpr auto convert(Atom::Tests::TrackedType::EOperation op) -> std::string
+        static constexpr auto convert(atom::tests::tracked_type::eoperation op) -> std::string
         {
-            return std::string(Atom::Tests::TrackedType::ToStringView(op));
+            return std::string(atom::tests::tracked_type::to_string_view(op));
         }
     };
 }

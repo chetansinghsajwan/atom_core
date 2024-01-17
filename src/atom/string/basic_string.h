@@ -1,8 +1,8 @@
 #pragma once
-#include "BasicBufString.h"
+#include "basic_buf_string.h"
 
-namespace Atom
+namespace atom
 {
-    template <typename TEncoding, typename TAlloc = DefaultMemAllocator>
-    using BasicString = BasicBufString<TEncoding, 24, TAlloc>;
+    template <typename tencoding, typename allocator_type = default_mem_allocator>
+    using basic_string = basic_buf_string<tencoding, 24, allocator_type>;
 }

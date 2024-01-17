@@ -1,106 +1,107 @@
 #pragma once
-#include "Atom/Contracts.h"
-#include "Atom/Invokable/Invokable.h"
-#include "Atom/Memory/DefaultMemAllocator.h"
-#include "Atom/Range.h"
-#include "_DynamicArrayImpl.h"
+#include "atom/contracts.h"
+#include "atom/invokable/invokable.h"
+#include "atom/memory/default_mem_allocator.h"
+#include "atom/range.h"
+#include "_dynamic_array_impl.h"
 
-namespace Atom
+namespace atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// # To Do
-    /// - Write time complexities after writing implementation.
-    /// - Add note for case, where element or elements to be inserted are from this array.
+    /// # to do
+    /// - write time complexities after writing implementation.
+    /// - add note for case, where element or elements to be inserted are from this array.
     /// --------------------------------------------------------------------------------------------
-    template <typename TElem_, typename TAlloc_>
-    class BasicDynamicArray
+    template <typename in_elem_type, typename in_allocator_type>
+    class basic_dynamic_array
     {
-        static_assert(not TTI::IsRef<TElem_>, "DynamicArray doesn't supports ref types.");
-        static_assert(not TTI::IsVoid<TElem_>, "DynamicArray doesn't support void.");
+        static_assert(not tti::is_ref<in_elem_type>, "dynamic_array doesn't supports ref types.");
+        static_assert(not tti::is_void<in_elem_type>, "dynamic_array doesn't support void.");
 
     private:
-        using Impl = _DynamicArrayImpl<TElem_, TAlloc_>;
+        using _impl_type = _dynamic_array_impl<in_elem_type, in_allocator_type>;
 
     public:
-        using TElem = TElem_;
-        using TAlloc = TAlloc_;
-        using TIter = ArrayIter<TElem>;
-        using TIterEnd = TIter;
-        using TMutIter = MutArrayIter<TElem>;
-        using TMutIterEnd = TMutIter;
+        using elem_type = in_elem_type;
+        using allocator_type = in_allocator_type;
+        using iter_type = array_iter<elem_type>;
+        using iter_end_type = iter_type;
+        using mut_iter_type = mut_array_iter<elem_type>;
+        using mut_iter_end_type = mut_iter_type;
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// # Default Constructor
+        /// # default constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr BasicDynamicArray()
+        constexpr basic_dynamic_array()
             : _impl{}
         {}
 
         /// ----------------------------------------------------------------------------------------
-        /// # Copy Constructor
+        /// # copy constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr BasicDynamicArray(const BasicDynamicArray& that)
-            : _impl{ that.iter(), that.iterEnd() }
+        constexpr basic_dynamic_array(const basic_dynamic_array& that)
+            : _impl{ that.iter(), that.iter_end() }
         {}
 
         /// ----------------------------------------------------------------------------------------
-        /// # Copy Operator
+        /// # copy operator
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator=(const BasicDynamicArray& that) -> BasicDynamicArray&
+        constexpr auto operator=(const basic_dynamic_array& that) -> basic_dynamic_array&
         {
-            _impl.assignRange(that.iter(), that.iterEnd());
+            _impl.assign_range(that.iter(), that.iter_end());
             return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Move Constructor
+        /// # move constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr BasicDynamicArray(BasicDynamicArray&& that)
+        constexpr basic_dynamic_array(basic_dynamic_array&& that)
             : _impl{ mov(that._impl) }
         {}
 
         /// ----------------------------------------------------------------------------------------
-        /// # Move Operator
+        /// # move operator
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator=(BasicDynamicArray&& that) -> BasicDynamicArray&
+        constexpr auto operator=(basic_dynamic_array&& that) -> basic_dynamic_array&
         {
             _impl.storage().move(mov(that));
             return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Range Constructor
+        /// # range constructor
         /// ----------------------------------------------------------------------------------------
-        template <typename TRange, typename TRangeUnqualified = TTI::TRemoveQuailfiersRef<TRange>>
-        constexpr BasicDynamicArray(TRange&& range)
-            requires(RRangeOf<TRangeUnqualified, TElem>)
-            : _impl{ range.iter(), range.iterEnd() }
+        template <typename range_type,
+            typename trange_unqualified = tti::tremove_quailfiers_ref<range_type>>
+        constexpr basic_dynamic_array(range_type&& range)
+            requires(rrange_of<trange_unqualified, elem_type>)
+            : _impl{ range.iter(), range.iter_end() }
         {}
 
         /// ----------------------------------------------------------------------------------------
-        /// # Range Operator
+        /// # range operator
         /// ----------------------------------------------------------------------------------------
-        template <typename TRange>
-        constexpr BasicDynamicArray& operator=(TRange&& range)
-            requires(RRangeOf<TRange, TElem>)
+        template <typename range_type>
+        constexpr basic_dynamic_array& operator=(range_type&& range)
+            requires(rrange_of<range_type, elem_type>)
         {
-            _impl.assignRange(range.iter(), range.iterEnd());
+            _impl.assign_range(range.iter(), range.iter_end());
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Destructor
+        /// # destructor
         /// ----------------------------------------------------------------------------------------
-        constexpr ~BasicDynamicArray()
+        constexpr ~basic_dynamic_array()
         {
-            _impl.onDestruct();
+            _impl.on_destruct();
         }
 
     public:
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto data() const -> MemPtr<TElem>
+        constexpr auto data() const -> mem_ptr<elem_type>
         {
             return _impl.data();
         }
@@ -108,9 +109,9 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto mutData() -> MutMemPtr<TElem>
+        constexpr auto mut_data() -> mut_mem_ptr<elem_type>
         {
-            return _impl.mutData();
+            return _impl.mut_data();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -124,7 +125,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto iter(usize i = 0) const -> TIter
+        constexpr auto iter(usize i = 0) const -> iter_type
         {
             return _impl.iter(i);
         }
@@ -132,399 +133,404 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto iterEnd() const -> TIterEnd
+        constexpr auto iter_end() const -> iter_end_type
         {
-            return _impl.iterEnd();
+            return _impl.iter_end();
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto mutIter(usize i = 0) -> TMutIter
+        constexpr auto mut_iter(usize i = 0) -> mut_iter_type
         {
-            return _impl.mutIter(i);
+            return _impl.mut_iter(i);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto mutIterEnd() -> TMutIterEnd
+        constexpr auto mut_iter_end() -> mut_iter_end_type
         {
-            return _impl.mutIterEnd();
+            return _impl.mut_iter_end();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Constructs element at index `i` with `args`.
+        /// constructs element at index `i` with `args`.
         ///
-        /// # Parameters
+        /// # parameters
         ///
-        /// - `i`: Index to insert element at.
-        /// - `args...`: Args to construct element with.
+        /// - `i`: index to insert element at.
+        /// - `args...`: args to construct element with.
         ///
-        /// # Time Complexity
+        /// # time complexity
         ///
-        /// # Iter Invalidation
+        /// # iter invalidation
         ///
-        /// All iters are invalidated.
+        /// all iters are invalidated.
         /// ----------------------------------------------------------------------------------------
-        template <typename... TArgs>
-        constexpr auto emplaceAt(usize i, TArgs&&... args)
-            requires(RConstructible<TElem, TArgs...>)
+        template <typename... args_type>
+        constexpr auto emplace_at(usize i, args_type&&... args)
+            requires(rconstructible<elem_type, args_type...>)
         {
-            Contracts::DebugExpects(isIndexInRangeOrEnd(i), "Index is out of range.");
+            contracts::debug_expects(is_index_in_range_or_end(i), "index is out of range.");
 
-            _impl.emplaceAt(i, forward<TArgs>(args)...);
+            _impl.emplace_at(i, forward<args_type>(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Constructs element at pos `it` with `args`.
+        /// constructs element at pos `it` with `args`.
         ///
-        /// # Parameters
+        /// # parameters
         ///
-        /// - `it`: Pos to insert element at.
-        /// - `args...`: Args to construct element with.
+        /// - `it`: pos to insert element at.
+        /// - `args...`: args to construct element with.
         ///
-        /// # Returns
+        /// # returns
         ///
-        /// [`TMutIter`] to element inserted.
+        /// [`mut_iter_type`] to element inserted.
         ///
-        /// # Time Complexity
+        /// # time complexity
         ///
-        /// # Iter Invalidation
+        /// # iter invalidation
         ///
-        /// All iters are invalidated.
+        /// all iters are invalidated.
         /// ----------------------------------------------------------------------------------------
-        template <typename... TArgs>
-        constexpr auto emplaceAt(TIter it, TArgs&&... args) -> TMutIter
-            requires(RConstructible<TElem, TArgs...>)
+        template <typename... args_type>
+        constexpr auto emplace_at(iter_type it, args_type&&... args) -> mut_iter_type
+            requires(rconstructible<elem_type, args_type...>)
         {
-            Contracts::DebugExpects(isIterValid(it), "Invalid iter.");
-            Contracts::DebugExpects(isIterInRangeOrEnd(it), "Iter is out of range.");
+            contracts::debug_expects(is_iter_valid(it), "invalid iter.");
+            contracts::debug_expects(is_iter_in_range_or_end(it), "iter is out of range.");
 
-            usize i = indexForIter(it);
-            _impl.emplaceAt(i, forward<TArgs>(args)...);
-            return _impl.mutIter(i);
+            usize i = index_for_iter(it);
+            _impl.emplace_at(i, forward<args_type>(args)...);
+            return _impl.mut_iter(i);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Inserts elements at index `i`. Forwards each value returned by `range.iter()` to
+        /// inserts elements at index `i`. forwards each value returned by `range.iter()` to
         /// constructor of element in the arr.
         ///
-        /// # Parameters
+        /// # parameters
         ///
-        /// - `i`: Index to insert elements at.
-        /// - `range`: Range of elements to insert.
+        /// - `i`: index to insert elements at.
+        /// - `range`: range of elements to insert.
         ///
-        /// # Returns
+        /// # returns
         ///
-        /// Count of elements inserted.
+        /// count of elements inserted.
         ///
-        /// # Time Complexity
+        /// # time complexity
         ///
-        /// # Iter Invalidation
+        /// # iter invalidation
         ///
-        /// All iters are invalidated.
+        /// all iters are invalidated.
         /// ----------------------------------------------------------------------------------------
-        template <typename TRange>
-        constexpr auto insertRangeAt(usize i, TRange&& range) -> usize
-            requires(RRangeOf<TRange, TElem>) and (RConstructible<TElem, typename TRange::TElem>)
+        template <typename range_type>
+        constexpr auto insert_range_at(usize i, range_type&& range) -> usize
+            requires(rrange_of<range_type, elem_type>)
+                    and (rconstructible<elem_type, typename range_type::elem_type>)
         {
-            Contracts::DebugExpects(isIndexInRangeOrEnd(i), "Index is out of range.");
+            contracts::debug_expects(is_index_in_range_or_end(i), "index is out of range.");
 
-            return _impl.insertRangeAt(i, range.iter(), range.iterEnd());
+            return _impl.insert_range_at(i, range.iter(), range.iter_end());
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Inserts elements at pos `it`. Forwards each value returned by `range.iter()` to
+        /// inserts elements at pos `it`. forwards each value returned by `range.iter()` to
         /// constructor of element in the arr.
         ///
-        /// # Parameters
+        /// # parameters
         ///
-        /// - `it`: Pos to insert elements at.
-        /// - `range`: Range of elements to insert.
+        /// - `it`: pos to insert elements at.
+        /// - `range`: range of elements to insert.
         ///
-        /// # Returns
+        /// # returns
         ///
-        /// [`MutArrayRange`] of elements inserted.
+        /// [`mut_array_range`] of elements inserted.
         ///
-        /// # Time Complexity
+        /// # time complexity
         ///
-        /// # Iter Invalidation
+        /// # iter invalidation
         ///
-        /// All iters are invalidated.
+        /// all iters are invalidated.
         /// ----------------------------------------------------------------------------------------
-        template <typename TRange>
-        constexpr auto insertRangeAt(TIter it, TRange&& range)
-            requires(RRangeOf<TRange, TElem>) and (RConstructible<TElem, typename TRange::TElem>)
+        template <typename range_type>
+        constexpr auto insert_range_at(iter_type it, range_type&& range)
+            requires(rrange_of<range_type, elem_type>)
+                    and (rconstructible<elem_type, typename range_type::elem_type>)
         {
-            Contracts::DebugExpects(isIterValid(it), "Invalid iter.");
-            Contracts::DebugExpects(isIterInRangeOrEnd(it), "Iter is out of range.");
+            contracts::debug_expects(is_iter_valid(it), "invalid iter.");
+            contracts::debug_expects(is_iter_in_range_or_end(it), "iter is out of range.");
 
-            usize i = indexForIter(it);
-            usize count = _impl.insertRangeAt(i, range.iter(), range.iterEnd());
-            return MakeRange(_impl.mutIter(i), _impl.mutIter(i + count));
+            usize i = index_for_iter(it);
+            usize count = _impl.insert_range_at(i, range.iter(), range.iter_end());
+            return make_range(_impl.mut_iter(i), _impl.mut_iter(i + count));
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Constructs element at front with `args`.
+        /// constructs element at front with `args`.
         ///
-        /// # Parameters
+        /// # parameters
         ///
-        /// - `args...`: Args to construct element with.
+        /// - `args...`: args to construct element with.
         ///
-        /// # Time Complexity
+        /// # time complexity
         ///
-        /// # Iter Invalidation
+        /// # iter invalidation
         ///
-        /// All iters are invalidated.
+        /// all iters are invalidated.
         /// ----------------------------------------------------------------------------------------
-        template <typename... TArgs>
-        constexpr auto emplaceFront(TArgs&&... args)
-            requires(RConstructible<TElem, TArgs...>)
+        template <typename... args_type>
+        constexpr auto emplace_front(args_type&&... args)
+            requires(rconstructible<elem_type, args_type...>)
         {
-            _impl.emplaceFront(forward<TArgs>(args)...);
+            _impl.emplace_front(forward<args_type>(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Inserts elements at front. Forwards each value returned by `range.iter()` to
+        /// inserts elements at front. forwards each value returned by `range.iter()` to
         /// constructor of element in the arr.
         ///
-        /// # Parameters
+        /// # parameters
         ///
-        /// - `range`: Range of elements to insert.
+        /// - `range`: range of elements to insert.
         ///
-        /// # Returns
+        /// # returns
         ///
-        /// [`TMutIter`] to past the last inserted element.
+        /// [`mut_iter_type`] to past the last inserted element.
         ///
-        /// # Time Complexity
+        /// # time complexity
         ///
-        /// # Iter Invalidation
+        /// # iter invalidation
         ///
-        /// All iters are invalidated.
+        /// all iters are invalidated.
         /// ----------------------------------------------------------------------------------------
-        template <typename TRange>
-        constexpr auto insertRangeFront(TRange&& range) -> TMutIter
-            requires(RRangeOf<TRange, TElem>) and (RConstructible<TElem, typename TRange::TElem>)
+        template <typename range_type>
+        constexpr auto insert_range_front(range_type&& range) -> mut_iter_type
+            requires(rrange_of<range_type, elem_type>)
+                    and (rconstructible<elem_type, typename range_type::elem_type>)
         {
-            usize count = _impl.insertRangeFront(forward<TRange&&>(range));
-            return _impl.mutIter(count);
+            usize count = _impl.insert_range_front(forward<range_type&&>(range));
+            return _impl.mut_iter(count);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Constructs element at back with `args`.
+        /// constructs element at back with `args`.
         ///
-        /// # Parameters
+        /// # parameters
         ///
-        /// - `args...`: Args to construct element with.
+        /// - `args...`: args to construct element with.
         ///
-        /// # Time Complexity
+        /// # time complexity
         ///
-        /// # Iter Invalidation
+        /// # iter invalidation
         ///
-        /// All iters are invalidated.
+        /// all iters are invalidated.
         /// ----------------------------------------------------------------------------------------
-        template <typename... TArgs>
-        constexpr auto emplaceBack(TArgs&&... args)
-            requires(RConstructible<TElem, TArgs...>)
+        template <typename... args_type>
+        constexpr auto emplace_back(args_type&&... args)
+            requires(rconstructible<elem_type, args_type...>)
         {
-            _impl.emplaceBack(forward<TArgs>(args)...);
+            _impl.emplace_back(forward<args_type>(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename TArg>
-        constexpr auto operator+=(TArg&& el)
-            requires(RConstructible<TElem, TArg>)
+        template <typename targ>
+        constexpr auto operator+=(targ&& el)
+            requires(rconstructible<elem_type, targ>)
         {
-            _impl.emplaceBack(forward<TArg>(el));
+            _impl.emplace_back(forward<targ>(el));
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Inserts elements at back. Forwards each value returned by `range.iter()` to
+        /// inserts elements at back. forwards each value returned by `range.iter()` to
         /// constructor of element in the arr.
         ///
-        /// # Parameters
+        /// # parameters
         ///
-        /// - `range`: Range of elements to insert.
+        /// - `range`: range of elements to insert.
         ///
-        /// # Returns
+        /// # returns
         ///
-        /// [`TMutIter`] to the first inserted element.
+        /// [`mut_iter_type`] to the first inserted element.
         ///
-        /// # Time Complexity
+        /// # time complexity
         ///
-        /// # Iter Invalidation
+        /// # iter invalidation
         ///
-        /// All iters are invalidated.
+        /// all iters are invalidated.
         /// ----------------------------------------------------------------------------------------
-        template <typename TRange>
-        constexpr auto insertRangeBack(TRange&& range) -> TMutIter
-            requires(RRangeOf<TRange, TElem>) and (RConstructible<TElem, typename TRange::TElem>)
+        template <typename range_type>
+        constexpr auto insert_range_back(range_type&& range) -> mut_iter_type
+            requires(rrange_of<range_type, elem_type>)
+                    and (rconstructible<elem_type, typename range_type::elem_type>)
         {
-            usize count = _impl.insertRangeBack(range.iter(), range.iterEnd());
-            return _impl.mutIter(_impl.count() - count);
+            usize count = _impl.insert_range_back(range.iter(), range.iter_end());
+            return _impl.mut_iter(_impl.count() - count);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # To Do:
-        /// - What happens when the elem type accepts range as parameter?
+        /// # to do:
+        /// - what happens when the elem type accepts range as parameter?
         /// ----------------------------------------------------------------------------------------
-        template <typename TRange, typename TRangeUnqualified = TTI::TRemoveQuailfiersRef<TRange>>
-        constexpr auto operator+=(TRange&& range)
-            requires(RRangeOf<TRangeUnqualified, TElem>)
-                    and (RConstructible<TElem, typename TRangeUnqualified::TElem>)
+        template <typename range_type,
+            typename trange_unqualified = tti::tremove_quailfiers_ref<range_type>>
+        constexpr auto operator+=(range_type&& range)
+            requires(rrange_of<trange_unqualified, elem_type>)
+                    and (rconstructible<elem_type, typename trange_unqualified::elem_type>)
         {
-            _impl.insertRangeBack(mov(range.iter()), mov(range.iterEnd()));
+            _impl.insert_range_back(mov(range.iter()), mov(range.iter_end()));
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Removes element at index `i`.
+        /// removes element at index `i`.
         ///
-        /// # Parameters
+        /// # parameters
         ///
-        /// - `i`: Index to remove element at.
+        /// - `i`: index to remove element at.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto removeAt(usize i)
+        constexpr auto remove_at(usize i)
         {
-            Contracts::DebugExpects(isIndexInRange(i), "Index is out of range.");
+            contracts::debug_expects(is_index_in_range(i), "index is out of range.");
 
-            _impl.removeAt(i);
+            _impl.remove_at(i);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Removes element at pos `it`.
+        /// removes element at pos `it`.
         ///
-        /// # Parameters
+        /// # parameters
         ///
-        /// - `it`: Pos to remove element at.
+        /// - `it`: pos to remove element at.
         ///
-        /// # Returns
+        /// # returns
         ///
-        /// [TMutIter] to next element. If `it` was pointing to the last element, returns
-        /// [`iterEnd()`].
+        /// [mut_iter_type] to next element. if `it` was pointing to the last element, returns
+        /// [`iter_end()`].
         /// ----------------------------------------------------------------------------------------
-        constexpr auto removeAt(TIter it) -> TMutIter
+        constexpr auto remove_at(iter_type it) -> mut_iter_type
         {
-            Contracts::DebugExpects(isIterValid(it), "Invalid iter.");
-            Contracts::DebugExpects(isIterInRange(it), "Iter is out of range.");
+            contracts::debug_expects(is_iter_valid(it), "invalid iter.");
+            contracts::debug_expects(is_iter_in_range(it), "iter is out of range.");
 
-            usize i = indexForIter(it);
-            _impl.removeAt(i);
-            return _impl.mutIter(i);
+            usize i = index_for_iter(it);
+            _impl.remove_at(i);
+            return _impl.mut_iter(i);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Removes elements in range [[`from`, `to`]].
+        /// removes elements in range [[`from`, `to`]].
         ///
-        /// # Parameters
+        /// # parameters
         ///
-        /// - `from`: Start of range to remove elements at.
-        /// - `to`: End of range to remove elements at.
+        /// - `from`: start of range to remove elements at.
+        /// - `to`: end of range to remove elements at.
         ///
-        /// # Returns
+        /// # returns
         ///
         /// `from`.
         ///
-        /// ## Explanation
+        /// ## explanation
         ///
-        /// After removing `to - from` elements, next elements will be shifted back to index `from`.
-        /// So the next element will be available at index `from`. If the last element of the arr
+        /// after removing `to - from` elements, next elements will be shifted back to index `from`.
+        /// so the next element will be available at index `from`. if the last element of the arr
         /// was also removed, `from` will be equal to [`count()`].
         /// ----------------------------------------------------------------------------------------
-        constexpr auto removeRange(usize from, usize to) -> usize
+        constexpr auto remove_range(usize from, usize to) -> usize
         {
-            Contracts::DebugExpects(from <= to, "Invalid range.");
-            Contracts::DebugExpects(isIndexInRange(to), "Index was out of range.");
-            // TODO: what should we do about fnret?
-            // Contracts::DebugEnsures(fnret <= count(), "Invalid return value.");
+            contracts::debug_expects(from <= to, "invalid range.");
+            contracts::debug_expects(is_index_in_range(to), "index was out of range.");
+            // todo: what should we do about fnret?
+            // contracts::debug_ensures(fnret <= count(), "invalid return value.");
 
-            _impl.removeRange(from, to);
+            _impl.remove_range(from, to);
             return from;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Removes elements in range represented by `range`.
+        /// removes elements in range represented by `range`.
         ///
-        /// # Parameters
+        /// # parameters
         ///
-        /// - `it`: Start of range to remove elements at.
-        /// - `itEnd`: End of range to remove elements at.
+        /// - `it`: start of range to remove elements at.
+        /// - `it_end`: end of range to remove elements at.
         ///
-        /// # Returns
+        /// # returns
         ///
-        /// [`TMutIter`] to next element of the last removed element. If the last removed element
-        /// was also the last element of the arr, returns [`iterEnd()`].
+        /// [`mut_iter_type`] to next element of the last removed element. if the last removed element
+        /// was also the last element of the arr, returns [`iter_end()`].
         /// ----------------------------------------------------------------------------------------
-        constexpr auto removeRange(TIter it, TIter itEnd) -> TMutIter
+        constexpr auto remove_range(iter_type it, iter_type it_end) -> mut_iter_type
         {
-            Contracts::DebugExpects(isIterValid(it), "Invalid iter.");
-            Contracts::DebugExpects(isIterValid(itEnd), "Invalid iter.");
-            Contracts::DebugExpects(isIterInRange(it), "Iter is out range.");
-            Contracts::DebugExpects(isIterInRange(itEnd), "Iter is out range.");
-            Contracts::DebugExpects(it.compare(itEnd) <= 0, "Invalid range.");
+            contracts::debug_expects(is_iter_valid(it), "invalid iter.");
+            contracts::debug_expects(is_iter_valid(it_end), "invalid iter.");
+            contracts::debug_expects(is_iter_in_range(it), "iter is out range.");
+            contracts::debug_expects(is_iter_in_range(it_end), "iter is out range.");
+            contracts::debug_expects(it.compare(it_end) <= 0, "invalid range.");
 
-            usize from = indexForIter(it);
-            usize to = indexForIter(itEnd);
-            _impl.removeRange(from, to);
-            return _impl.mutIter(from);
+            usize from = index_for_iter(it);
+            usize to = index_for_iter(it_end);
+            _impl.remove_range(from, to);
+            return _impl.mut_iter(from);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Removes `count_` elements from front.
+        /// removes `count_` elements from front.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto removeFront(usize count_ = 1)
+        constexpr auto remove_front(usize count_ = 1)
         {
-            Contracts::DebugExpects(count_ <= count());
+            contracts::debug_expects(count_ <= count());
 
-            _impl.removeFront(count_);
+            _impl.remove_front(count_);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Removes `count_` elements from back.
+        /// removes `count_` elements from back.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto removeBack(usize count_ = 1)
+        constexpr auto remove_back(usize count_ = 1)
         {
-            Contracts::DebugExpects(count_ <= count());
+            contracts::debug_expects(count_ <= count());
 
-            _impl.removeBack(count_);
+            _impl.remove_back(count_);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename TPred>
-        constexpr auto removeIf(TPred&& pred) -> usize
-            requires(RInvokable<TPred, bool(const TElem&)>)
+        template <typename tpred>
+        constexpr auto remove_if(tpred&& pred) -> usize
+            requires(rinvokable<tpred, bool(const elem_type&)>)
         {
-            usize removedCount = 0;
+            usize removed_count = 0;
             for (usize i = 0; i < _impl.count(); i++)
             {
                 if (pred(_impl.data()[i]))
                 {
-                    _impl.removeAt(i);
+                    _impl.remove_at(i);
                     i--;
-                    removedCount++;
+                    removed_count++;
                 }
             }
 
-            return removedCount;
+            return removed_count;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Removes all elements.
+        /// removes all elements.
         ///
-        /// # Note
-        /// - Doesn't free storage.
+        /// # note
+        /// - doesn't free storage.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto removeAll()
+        constexpr auto remove_all()
         {
-            _impl.removeAll();
+            _impl.remove_all();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Reserves memory for `count` elements. If there is already enough memory reserved,
+        /// reserves memory for `count` elements. if there is already enough memory reserved,
         /// does nothing.
         /// ----------------------------------------------------------------------------------------
         constexpr auto reserve(usize count)
@@ -533,23 +539,23 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Reserves memory for `count` count more elements.
+        /// reserves memory for `count` count more elements.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto reserveMore(usize count)
+        constexpr auto reserve_more(usize count)
         {
-            return _impl.reserveMore(count);
+            return _impl.reserve_more(count);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Releases unused memory.
+        /// releases unused memory.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto releaseMem()
+        constexpr auto release_mem()
         {
-            return _impl.releaseUnusedMem();
+            return _impl.release_unused_mem();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Total count of places, with elements and reserved.
+        /// total count of places, with elements and reserved.
         /// ----------------------------------------------------------------------------------------
         constexpr auto capacity() const -> usize
         {
@@ -557,9 +563,9 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Count of places reserved for elements.
+        /// count of places reserved for elements.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto reservedCount() const -> usize
+        constexpr auto reserved_count() const -> usize
         {
             return _impl.capacity() - _impl.count();
         }
@@ -567,77 +573,79 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto alloc() const -> const TAlloc&
+        constexpr auto alloc() const -> const allocator_type&
         {
             return _impl.alloc();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Checks if index `i` is in range [`0`, [`count()`]).
+        /// checks if index `i` is in range [`0`, [`count()`]).
         /// ----------------------------------------------------------------------------------------
-        constexpr bool isIndexInRange(usize i) const
+        constexpr bool is_index_in_range(usize i) const
         {
-            return _impl.isIndexInRange(i);
+            return _impl.is_index_in_range(i);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Checks if index `i` is in range [`0`, [`count()`]].
+        /// checks if index `i` is in range [`0`, [`count()`]].
         /// ----------------------------------------------------------------------------------------
-        constexpr bool isIndexInRangeOrEnd(usize i) const
+        constexpr bool is_index_in_range_or_end(usize i) const
         {
-            return _impl.isIndexInRangeOrEnd(i);
+            return _impl.is_index_in_range_or_end(i);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Get index for iter `it`.
+        /// get index for iter `it`.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto indexForIter(TIter it) const -> usize
+        constexpr auto index_for_iter(iter_type it) const -> usize
         {
-            return _impl.indexForIter(it);
+            return _impl.index_for_iter(it);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Checks for iter has been invalidated. This is done through a value which is changed
+        /// checks for iter has been invalidated. this_type is done through a value which is changed
         /// for the container every time iters are invalidated.
         ///
-        /// # To Do
-        /// - Implement iter validation.
+        /// # to do
+        /// - implement iter validation.
         /// ----------------------------------------------------------------------------------------
-        constexpr bool isIterValid(TIter it) const
+        constexpr bool is_iter_valid(iter_type it) const
         {
-            return _impl.isIterValid(it);
+            return _impl.is_iter_valid(it);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Checks if iter `pos` is in range [[`iter()`], [`iterEnd()`]).
+        /// checks if iter `pos` is in range [[`iter()`], [`iter_end()`]).
         /// ----------------------------------------------------------------------------------------
-        constexpr bool isIterInRange(TIter it) const
+        constexpr bool is_iter_in_range(iter_type it) const
         {
-            return _impl.isIterInRange(it);
+            return _impl.is_iter_in_range(it);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Checks if iter `pos` is in range [[`iter()`], [`iterEnd()`]].
+        /// checks if iter `pos` is in range [[`iter()`], [`iter_end()`]].
         /// ----------------------------------------------------------------------------------------
-        constexpr bool isIterInRangeOrEnd(TIter it) const
+        constexpr bool is_iter_in_range_or_end(iter_type it) const
         {
-            return _impl.isIterInRangeOrEnd(it);
+            return _impl.is_iter_in_range_or_end(it);
         }
 
     private:
-        Impl _impl;
+        _impl_type _impl;
     };
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename TElem, typename TAlloc = DefaultMemAllocator>
-    class DynamicArray: public MutArrayRangeExtensions<BasicDynamicArray<TElem, TAlloc>>
+    template <typename elem_type, typename allocator_type = default_mem_allocator>
+    class dynamic_array
+        : public mut_array_range_extensions<basic_dynamic_array<elem_type, allocator_type>>
     {
-        using Base = MutArrayRangeExtensions<BasicDynamicArray<TElem, TAlloc>>;
+        using base_type =
+            mut_array_range_extensions<basic_dynamic_array<elem_type, allocator_type>>;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 }

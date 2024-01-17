@@ -1,29 +1,29 @@
 #pragma once
-#include "Num.h"
+#include "num.h"
 
 // #include <cstdint>
 
 /// ------------------------------------------------------------------------------------------------
-/// # To Do
+/// # to do
 ///
-/// - Refactor this.
+/// - refactor this.
 /// ------------------------------------------------------------------------------------------------
-namespace Atom
+namespace atom
 {
-    class _IntId
+    class _int_id
     {};
 
-    template <typename TInt>
-    concept _RInt = std::is_integral_v<TInt>;
+    template <typename tint>
+    concept _rint = std::is_integral_v<tint>;
 
-    template <typename TInt>
-    concept RInt = std::derived_from<TInt, _IntId>;
+    template <typename tint>
+    concept rint = std::derived_from<tint, _int_id>;
 
-    template <typename TInt>
-    constexpr auto _UnwrapInt(TInt n)
-        requires RInt<TInt> or _RInt<TInt>
+    template <typename tint>
+    constexpr auto _unwrap_int(tint n)
+        requires rint<tint> or _rint<tint>
     {
-        if constexpr (RInt<TInt>)
+        if constexpr (rint<tint>)
         {
             return n.unwrap();
         }
@@ -34,33 +34,33 @@ namespace Atom
     }
 
     template <size_t>
-    class IntString;
+    class int_string;
 
-    template <typename TSelf, typename TVal, typename TLimit = TVal>
-    class _IntImpl: public _NumImpl<TSelf, TVal, TLimit>
+    template <typename self_type, typename value_type, typename tlimit = value_type>
+    class _int_impl: public _num_impl<self_type, value_type, tlimit>
     {
-        using Base = _NumImpl<TSelf, TVal, TLimit>;
-        using Self = _IntImpl<TSelf, TVal, TLimit>;
+        using base_type = _num_impl<self_type, value_type, tlimit>;
+        using self = _int_impl<self_type, value_type, tlimit>;
 
     public:
-        using TString = IntString<Base::MaxDigitsCount() + 1>;
+        using string_type = int_string<base_type::max_digits_count() + 1>;
 
     public:
-        static constexpr auto ToString(TVal val) -> TString;
+        static constexpr auto to_string(value_type val) -> string_type;
 
-        template <typename TOut>
-        static constexpr auto ToStringOut(TVal val, TOut&& out) -> TOut
+        template <typename tout>
+        static constexpr auto to_string_out(value_type val, tout&& out) -> tout
         {
-            TString str = ToString(val);
+            string_type str = to_string(val);
             out += str;
             return out;
         }
 
     private:
-        static constexpr auto _ToString(TVal val, Char* str) -> Char*
+        static constexpr auto _to_string(value_type val, uchar* str) -> uchar*
         {
             bool neg = false;
-            if constexpr (std::is_signed_v<TVal>)
+            if constexpr (std::is_signed_v<value_type>)
             {
                 if (val < 0)
                 {
@@ -86,16 +86,16 @@ namespace Atom
         }
     };
 
-    template <typename TImpl>
-    class Int
-        : public Num<TImpl>
-        , public _IntId
+    template <typename impl_type>
+    class _int
+        : public num<impl_type>
+        , public _int_id
     {
-        using Base = Num<TImpl>;
+        using base_type = num<impl_type>;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 
     using _i8 = std::int8_t;
@@ -134,255 +134,255 @@ namespace Atom
     using _isize = std::ptrdiff_t;
     using _usize = std::size_t;
 
-    class i8: public Int<_IntImpl<i8, _i8>>
+    class i8: public _int<_int_impl<i8, _i8>>
     {
-        using Base = Int<_IntImpl<i8, _i8>>;
+        using base_type = _int<_int_impl<i8, _i8>>;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 
-    class i16: public Int<_IntImpl<i16, _i16>>
+    class i16: public _int<_int_impl<i16, _i16>>
     {
-        using Base = Int<_IntImpl<i16, _i16>>;
+        using base_type = _int<_int_impl<i16, _i16>>;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 
-    class i32: public Int<_IntImpl<i32, _i32>>
+    class i32: public _int<_int_impl<i32, _i32>>
     {
-        using Base = Int<_IntImpl<i32, _i32>>;
+        using base_type = _int<_int_impl<i32, _i32>>;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 
-    class i64: public Int<_IntImpl<i64, _i64>>
+    class i64: public _int<_int_impl<i64, _i64>>
     {
-        using Base = Int<_IntImpl<i64, _i64>>;
+        using base_type = _int<_int_impl<i64, _i64>>;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 
-    class u8: public Int<_IntImpl<u8, _u8>>
+    class u8: public _int<_int_impl<u8, _u8>>
     {
-        using Base = Int<_IntImpl<u8, _u8>>;
+        using base_type = _int<_int_impl<u8, _u8>>;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 
-    class u16: public Int<_IntImpl<u16, _u16>>
+    class u16: public _int<_int_impl<u16, _u16>>
     {
-        using Base = Int<_IntImpl<u16, _u16>>;
+        using base_type = _int<_int_impl<u16, _u16>>;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 
-    class u32: public Int<_IntImpl<u32, _u32>>
+    class u32: public _int<_int_impl<u32, _u32>>
     {
-        using Base = Int<_IntImpl<u32, _u32>>;
+        using base_type = _int<_int_impl<u32, _u32>>;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 
-    class u64: public Int<_IntImpl<u64, _u64>>
+    class u64: public _int<_int_impl<u64, _u64>>
     {
-        using Base = Int<_IntImpl<u64, _u64>>;
+        using base_type = _int<_int_impl<u64, _u64>>;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 
-    class ileast8: public Int<_IntImpl<ileast8, _ileast8, _i8>>
+    class ileast8: public _int<_int_impl<ileast8, _ileast8, _i8>>
     {
-        using Base = Int<_IntImpl<ileast8, _ileast8, _i8>>;
+        using base_type = _int<_int_impl<ileast8, _ileast8, _i8>>;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 
-    class ileast16: public Int<_IntImpl<ileast16, _ileast16, _i16>>
+    class ileast16: public _int<_int_impl<ileast16, _ileast16, _i16>>
     {
-        using Base = Int<_IntImpl<ileast16, _ileast16, _i16>>;
+        using base_type = _int<_int_impl<ileast16, _ileast16, _i16>>;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 
-    class ileast32: public Int<_IntImpl<ileast32, _ileast32, _i32>>
+    class ileast32: public _int<_int_impl<ileast32, _ileast32, _i32>>
     {
-        using Base = Int<_IntImpl<ileast32, _ileast32, _i32>>;
+        using base_type = _int<_int_impl<ileast32, _ileast32, _i32>>;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 
-    class ileast64: public Int<_IntImpl<ileast64, _ileast64, _i64>>
+    class ileast64: public _int<_int_impl<ileast64, _ileast64, _i64>>
     {
-        using Base = Int<_IntImpl<ileast64, _ileast64, _i64>>;
+        using base_type = _int<_int_impl<ileast64, _ileast64, _i64>>;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 
-    class uleast8: public Int<_IntImpl<uleast8, _uleast8, _u8>>
+    class uleast8: public _int<_int_impl<uleast8, _uleast8, _u8>>
     {
-        using Base = Int<_IntImpl<uleast8, _uleast8, _u8>>;
+        using base_type = _int<_int_impl<uleast8, _uleast8, _u8>>;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 
-    class uleast16: public Int<_IntImpl<uleast16, _uleast16, _u16>>
+    class uleast16: public _int<_int_impl<uleast16, _uleast16, _u16>>
     {
-        using Base = Int<_IntImpl<uleast16, _uleast16, _u16>>;
+        using base_type = _int<_int_impl<uleast16, _uleast16, _u16>>;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 
-    class uleast32: public Int<_IntImpl<uleast32, _uleast32, _u32>>
+    class uleast32: public _int<_int_impl<uleast32, _uleast32, _u32>>
     {
-        using Base = Int<_IntImpl<uleast32, _uleast32, _u32>>;
+        using base_type = _int<_int_impl<uleast32, _uleast32, _u32>>;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 
-    class uleast64: public Int<_IntImpl<uleast64, _uleast64, _u64>>
+    class uleast64: public _int<_int_impl<uleast64, _uleast64, _u64>>
     {
-        using Base = Int<_IntImpl<uleast64, _uleast64, _u64>>;
+        using base_type = _int<_int_impl<uleast64, _uleast64, _u64>>;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 
-    class ifast8: public Int<_IntImpl<ifast8, _ifast8, _i8>>
+    class ifast8: public _int<_int_impl<ifast8, _ifast8, _i8>>
     {
-        using Base = Int<_IntImpl<ifast8, _ifast8, _i8>>;
+        using base_type = _int<_int_impl<ifast8, _ifast8, _i8>>;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 
-    class ifast16: public Int<_IntImpl<ifast16, _ifast16, _i16>>
+    class ifast16: public _int<_int_impl<ifast16, _ifast16, _i16>>
     {
-        using Base = Int<_IntImpl<ifast16, _ifast16, _i16>>;
+        using base_type = _int<_int_impl<ifast16, _ifast16, _i16>>;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 
-    class ifast32: public Int<_IntImpl<ifast32, _ifast32, _i32>>
+    class ifast32: public _int<_int_impl<ifast32, _ifast32, _i32>>
     {
-        using Base = Int<_IntImpl<ifast32, _ifast32, _i32>>;
+        using base_type = _int<_int_impl<ifast32, _ifast32, _i32>>;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 
-    class ifast64: public Int<_IntImpl<ifast64, _ifast64, _i64>>
+    class ifast64: public _int<_int_impl<ifast64, _ifast64, _i64>>
     {
-        using Base = Int<_IntImpl<ifast64, _ifast64, _i64>>;
+        using base_type = _int<_int_impl<ifast64, _ifast64, _i64>>;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 
-    class ufast8: public Int<_IntImpl<ufast8, _ufast8, _u8>>
+    class ufast8: public _int<_int_impl<ufast8, _ufast8, _u8>>
     {
-        using Base = Int<_IntImpl<ufast8, _ufast8, _u8>>;
+        using base_type = _int<_int_impl<ufast8, _ufast8, _u8>>;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 
-    class ufast16: public Int<_IntImpl<ufast16, _ufast16, _u16>>
+    class ufast16: public _int<_int_impl<ufast16, _ufast16, _u16>>
     {
-        using Base = Int<_IntImpl<ufast16, _ufast16, _u16>>;
+        using base_type = _int<_int_impl<ufast16, _ufast16, _u16>>;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 
-    class ufast32: public Int<_IntImpl<ufast32, _ufast32, _u32>>
+    class ufast32: public _int<_int_impl<ufast32, _ufast32, _u32>>
     {
-        using Base = Int<_IntImpl<ufast32, _ufast32, _u32>>;
+        using base_type = _int<_int_impl<ufast32, _ufast32, _u32>>;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 
-    class ufast64: public Int<_IntImpl<ufast64, _ufast64, _u64>>
+    class ufast64: public _int<_int_impl<ufast64, _ufast64, _u64>>
     {
-        using Base = Int<_IntImpl<ufast64, _ufast64, _u64>>;
+        using base_type = _int<_int_impl<ufast64, _ufast64, _u64>>;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 
-    class imax: public Int<_IntImpl<imax, _imax>>
+    class imax: public _int<_int_impl<imax, _imax>>
     {
-        using Base = Int<_IntImpl<imax, _imax>>;
+        using base_type = _int<_int_impl<imax, _imax>>;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 
-    class umax: public Int<_IntImpl<umax, _umax>>
+    class umax: public _int<_int_impl<umax, _umax>>
     {
-        using Base = Int<_IntImpl<umax, _umax>>;
+        using base_type = _int<_int_impl<umax, _umax>>;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 
-    class isize: public Int<_IntImpl<isize, _isize>>
+    class isize: public _int<_int_impl<isize, _isize>>
     {
-        using Base = Int<_IntImpl<isize, _isize>>;
+        using base_type = _int<_int_impl<isize, _isize>>;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 
-    class usize: public Int<_IntImpl<usize, _usize>>
+    class usize: public _int<_int_impl<usize, _usize>>
     {
-        using Base = Int<_IntImpl<usize, _usize>>;
+        using base_type = _int<_int_impl<usize, _usize>>;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 };

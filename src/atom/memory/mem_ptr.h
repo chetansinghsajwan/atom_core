@@ -1,154 +1,154 @@
 #pragma once
-#include "Atom/Contracts.h"
-#include "Atom/Memory/Ptr.h"
+#include "atom/contracts.h"
+#include "atom/memory/ptr.h"
 
-namespace Atom
+namespace atom
 {
     using memunit = byte;
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename TBase, typename TThis>
-    class MemPtrFunctions: public TBase
+    template <typename tbase, typename this_final_type>
+    class mem_ptr_functions: public tbase
     {
-        using This = MemPtrFunctions<TBase, TThis>;
-        using Base = TBase;
+        using this_type = mem_ptr_functions<tbase, this_final_type>;
+        using base_type = tbase;
 
     public:
-        using TVal = typename Base::TVal;
+        using value_type = typename base_type::value_type;
 
     public:
-        template <typename T>
-        constexpr MemPtrFunctions(Ptr<T> that)
-            : Base(that)
+        template <typename type>
+        constexpr mem_ptr_functions(ptr<type> that)
+            : base_type(that)
         {}
 
-        template <typename T>
-        constexpr MemPtrFunctions(MutPtr<T> that)
-            : Base(that)
+        template <typename type>
+        constexpr mem_ptr_functions(mut_ptr<type> that)
+            : base_type(that)
         {}
 
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
 
     public:
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto next() const -> TThis
+        constexpr auto next() const -> this_final_type
         {
-            return _Make(nullptr);
+            return _make(nullptr);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto prev() const -> TThis
+        constexpr auto prev() const -> this_final_type
         {
-            return _Make(nullptr);
+            return _make(nullptr);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto next(usize i) const -> TThis
+        constexpr auto next(usize i) const -> this_final_type
         {
-            return _Make(nullptr);
+            return _make(nullptr);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto prev(usize i) const -> TThis
+        constexpr auto prev(usize i) const -> this_final_type
         {
-            return _Make(nullptr);
+            return _make(nullptr);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto move(isize i) const -> TThis
+        constexpr auto move(isize i) const -> this_final_type
         {
-            return _Make(nullptr);
+            return _make(nullptr);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto move(usize i) const -> TThis
+        constexpr auto move(usize i) const -> this_final_type
         {
-            return _Make(nullptr);
+            return _make(nullptr);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto sub(This that) const -> TThis
+        constexpr auto sub(this_type that) const -> this_final_type
         {
-            return _Make(_ptr - that.unwrap());
+            return _make(_ptr - that.unwrap());
         }
 
     public:
         constexpr auto operator[](isize n) const
         {
-            return Base::unwrap()[n.unwrap()];
+            return base_type::unwrap()[n.unwrap()];
         }
 
         constexpr auto operator[](usize n) const
         {
-            return Base::unwrap()[n.unwrap()];
+            return base_type::unwrap()[n.unwrap()];
         }
 
-        template <typename TInt>
-        constexpr auto operator+(TInt n) const -> TThis
-            requires RInt<TInt> or _RInt<TInt>
+        template <typename tint>
+        constexpr auto operator+(tint n) const -> this_final_type
+            requires rint<tint> or _rint<tint>
         {
-            return _Make(_Arithmetic(_ptr) + _UnwrapInt(n));
+            return _make(_arithmetic(_ptr) + _unwrap_int(n));
         }
 
-        template <typename TInt>
-        constexpr auto operator-(TInt n) const -> TThis
-            requires RInt<TInt> or _RInt<TInt>
+        template <typename tint>
+        constexpr auto operator-(tint n) const -> this_final_type
+            requires rint<tint> or _rint<tint>
         {
-            return _Make(_Arithmetic(_ptr) - _UnwrapInt(n));
+            return _make(_arithmetic(_ptr) - _unwrap_int(n));
         }
 
-        constexpr auto operator++(int) -> TThis
+        constexpr auto operator++(int) -> this_final_type
         {
-            return _Make(_Arithmetic(_ptr) + 1);
+            return _make(_arithmetic(_ptr) + 1);
         }
 
-        constexpr auto operator--(int) -> TThis
+        constexpr auto operator--(int) -> this_final_type
         {
-            return _Make(_Arithmetic(_ptr) - 1);
+            return _make(_arithmetic(_ptr) - 1);
         }
 
-        template <typename TInt>
-        constexpr auto operator+=(TInt n) -> TThis&
-            requires RInt<TInt> or _RInt<TInt>
+        template <typename tint>
+        constexpr auto operator+=(tint n) -> this_final_type&
+            requires rint<tint> or _rint<tint>
         {
-            _ptr = _Arithmetic(_ptr) + _UnwrapInt(n);
-            return _mutThis();
+            _ptr = _arithmetic(_ptr) + _unwrap_int(n);
+            return _mut_this();
         }
 
-        template <typename TInt>
-        constexpr auto operator-=(TInt n) -> TThis&
-            requires RInt<TInt> or _RInt<TInt>
+        template <typename tint>
+        constexpr auto operator-=(tint n) -> this_final_type&
+            requires rint<tint> or _rint<tint>
         {
-            _ptr = _Arithmetic(_ptr) - _UnwrapInt(n);
-            return _mutThis();
+            _ptr = _arithmetic(_ptr) - _unwrap_int(n);
+            return _mut_this();
         }
 
-        constexpr auto operator-(This ptr) const -> isize
+        constexpr auto operator-(this_type ptr) const -> isize
         {
-            return _Arithmetic(_ptr) - _Arithmetic(ptr._ptr);
+            return _arithmetic(_ptr) - _arithmetic(ptr._ptr);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto gt(This ptr) const -> bool
+        constexpr auto gt(this_type ptr) const -> bool
         {
             return _ptr > ptr._ptr;
         }
@@ -156,7 +156,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto ge(This ptr) const -> bool
+        constexpr auto ge(this_type ptr) const -> bool
         {
             return _ptr >= ptr._ptr;
         }
@@ -164,7 +164,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto lt(This ptr) const -> bool
+        constexpr auto lt(this_type ptr) const -> bool
         {
             return _ptr < ptr._ptr;
         }
@@ -172,15 +172,15 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto le(This ptr) const -> bool
+        constexpr auto le(this_type ptr) const -> bool
         {
             return _ptr <= ptr._ptr;
         }
 
     private:
-        static constexpr auto _Arithmetic(const TVal* ptr)
+        static constexpr auto _arithmetic(const value_type* ptr)
         {
-            if constexpr (RSameAs<TVal, void>)
+            if constexpr (rsame_as<value_type, void>)
             {
                 return static_cast<const byte*>(ptr);
             }
@@ -190,9 +190,9 @@ namespace Atom
             }
         }
 
-        static constexpr auto _Arithmetic(TVal* ptr)
+        static constexpr auto _arithmetic(value_type* ptr)
         {
-            if constexpr (RSameAs<TVal, void>)
+            if constexpr (rsame_as<value_type, void>)
             {
                 return static_cast<byte*>(ptr);
             }
@@ -202,64 +202,64 @@ namespace Atom
             }
         }
 
-        static constexpr auto _Make(const TVal* ptr) -> TThis
+        static constexpr auto _make(const value_type* ptr) -> this_final_type
         {
-            return TThis(const_cast<TVal*>(ptr));
+            return this_final_type(const_cast<value_type*>(ptr));
         }
 
-        constexpr auto _this() const -> const TThis&
+        constexpr auto _this() const -> const this_final_type&
         {
-            return static_cast<const TThis&>(*this);
+            return static_cast<const this_final_type&>(*this);
         }
 
-        constexpr auto _mutThis() -> TThis&
+        constexpr auto _mut_this() -> this_final_type&
         {
-            return static_cast<TThis&>(*this);
+            return static_cast<this_final_type&>(*this);
         }
 
     protected:
-        using Base::_ptr;
+        using base_type::_ptr;
     };
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    class MemPtr: public MemPtrFunctions<Ptr<T>, MemPtr<T>>
+    template <typename type>
+    class mem_ptr: public mem_ptr_functions<ptr<type>, mem_ptr<type>>
     {
-        using This = MemPtr<T>;
-        using Base = MemPtrFunctions<Ptr<T>, This>;
+        using this_type = mem_ptr<type>;
+        using base_type = mem_ptr_functions<ptr<type>, this_type>;
 
     public:
-        constexpr MemPtr(const Ptr<T>& that)
-            : Base(that)
+        constexpr mem_ptr(const ptr<type>& that)
+            : base_type(that)
         {}
 
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 
-    template <typename T>
-    MemPtr(const T* ptr) -> MemPtr<T>;
+    template <typename type>
+    mem_ptr(const type* ptr) -> mem_ptr<type>;
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    class MutMemPtr: public MemPtrFunctions<MutPtr<T>, MutMemPtr<T>>
+    template <typename type>
+    class mut_mem_ptr: public mem_ptr_functions<mut_ptr<type>, mut_mem_ptr<type>>
     {
-        using This = MutMemPtr<T>;
-        using Base = MemPtrFunctions<MutPtr<T>, This>;
+        using this_type = mut_mem_ptr<type>;
+        using base_type = mem_ptr_functions<mut_ptr<type>, this_type>;
 
     public:
-        constexpr MutMemPtr(const MutPtr<T>& that)
-            : Base(that)
+        constexpr mut_mem_ptr(const mut_ptr<type>& that)
+            : base_type(that)
         {}
 
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 
-    template <typename T>
-    MutMemPtr(const T* ptr) -> MutMemPtr<T>;
+    template <typename type>
+    mut_mem_ptr(const type* ptr) -> mut_mem_ptr<type>;
 }

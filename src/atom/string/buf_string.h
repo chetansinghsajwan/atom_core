@@ -1,9 +1,9 @@
 #pragma once
-#include "BasicBufString.h"
-#include "DefaultEncoding.h"
+#include "basic_buf_string.h"
+#include "default_encoding.h"
 
-namespace Atom
+namespace atom
 {
-    template <usize BufSize>
-    using BufString = BasicBufString<CharEncoding, BufSize>;
+    template <usize buf_size>
+    using buf_string = basic_buf_string<char_encoding, buf_size>;
 }

@@ -1,35 +1,30 @@
 #pragma once
-#include "Byte.h"
+#include "byte.h"
 
-namespace Atom
+namespace atom
 {
-    using ch = char;
-    using ch8 = char8_t;
-    using ch16 = char16_t;
-    using ch32 = char32_t;
-
     using _char = char;
 
-    class Char
+    class uchar
     {
-        using This = Char;
+        using this_type = uchar;
 
     public:
-        constexpr Char()
+        constexpr uchar()
             : _val(0)
         {}
 
-        constexpr Char(const This& that) = default;
-        constexpr Char& operator=(const This& that) = default;
+        constexpr uchar(const this_type& that) = default;
+        constexpr uchar& operator=(const this_type& that) = default;
 
-        constexpr Char(This&& that) = default;
-        constexpr Char& operator=(This&& that) = default;
+        constexpr uchar(this_type&& that) = default;
+        constexpr uchar& operator=(this_type&& that) = default;
 
-        constexpr Char(_char ch)
+        constexpr uchar(_char ch)
             : _val(ch)
         {}
 
-        constexpr Char& operator=(_char ch)
+        constexpr uchar& operator=(_char ch)
         {
             _val = ch;
             return *this;
@@ -40,75 +35,75 @@ namespace Atom
             return byte(_val);
         }
 
-        constexpr ~Char() = default;
+        constexpr ~uchar() = default;
 
     public:
-        constexpr auto eq(Char ch) const -> bool
+        constexpr auto eq(uchar ch) const -> bool
         {
             return _val == ch._val;
         }
 
-        constexpr auto ne(Char ch) const -> bool
+        constexpr auto ne(uchar ch) const -> bool
         {
             return _val != ch._val;
         }
 
-        constexpr auto lt(Char ch) const -> bool
+        constexpr auto lt(uchar ch) const -> bool
         {
             return _val < ch._val;
         }
 
-        constexpr auto gt(Char ch) const -> bool
+        constexpr auto gt(uchar ch) const -> bool
         {
             return _val > ch._val;
         }
 
-        constexpr auto le(Char ch) const -> bool
+        constexpr auto le(uchar ch) const -> bool
         {
             return _val <= ch._val;
         }
 
-        constexpr auto ge(Char ch) const -> bool
+        constexpr auto ge(uchar ch) const -> bool
         {
             return _val >= ch._val;
         }
 
-        constexpr auto operator+(Char ch) const -> Char
+        constexpr auto operator+(uchar ch) const -> uchar
         {
-            return Char(_val + ch._val);
+            return uchar(_val + ch._val);
         }
 
-        constexpr auto operator-(char ch) const -> Char
+        constexpr auto operator-(uchar ch) const -> uchar
         {
-            return Char(_val - ch);
+            return uchar(_val - ch);
         }
 
-        constexpr auto operator+(int n) const -> Char
+        constexpr auto operator+(int n) const -> uchar
         {
-            return Char(_val + n);
+            return uchar(_val + n);
         }
 
     public:
         _char _val;
     };
 
-    constexpr auto _ToStdCharPtr(const Char* ptr) -> const char*
+    constexpr auto _to_std_char_ptr(const uchar* ptr) -> const char*
     {
         return static_cast<const char*>(static_cast<const void*>(ptr));
     }
 
-    constexpr auto _ToStdCharPtr(Char* ptr) -> char*
+    constexpr auto _to_std_char_ptr(uchar* ptr) -> char*
     {
         return static_cast<char*>(static_cast<void*>(ptr));
     }
 
-    constexpr auto _FromStdCharPtr(const char* ptr) -> const Char*
+    constexpr auto _from_std_char_ptr(const char* ptr) -> const uchar*
     {
-        return static_cast<const Char*>(static_cast<const void*>(ptr));
+        return static_cast<const uchar*>(static_cast<const void*>(ptr));
     }
 
-    constexpr auto _FromStdCharPtr(char* ptr) -> Char*
+    constexpr auto _from_std_char_ptr(char* ptr) -> uchar*
     {
-        return static_cast<Char*>(static_cast<void*>(ptr));
+        return static_cast<uchar*>(static_cast<void*>(ptr));
     }
 }

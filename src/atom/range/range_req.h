@@ -1,323 +1,323 @@
 #pragma once
-#include "IterReq.h"
+#include "iter_req.h"
 
 // clang-format off
-namespace Atom
+namespace atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// Basic range requirements.
+    /// basic range requirements.
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange>
-    concept _RRange = requires(const TRange& range)
+    template <typename range_type>
+    concept _rrange = requires(const range_type& range)
     {
-        typename TRange::TElem;
-        typename TRange::TIter;
-        typename TRange::TIterEnd;
+        typename range_type::elem_type;
+        typename range_type::iter_type;
+        typename range_type::iter_end_type;
 
-        requires RSameAs<typename TRange::TElem, typename TRange::TIter::TElem>;
+        requires rsame_as<typename range_type::elem_type, typename range_type::iter_type::elem_type>;
 
-        { range.iter() } -> RSameAs<typename TRange::TIter>;
-        { range.iterEnd() } -> RSameAs<typename TRange::TIterEnd>;
+        { range.iter() } -> rsame_as<typename range_type::iter_type>;
+        { range.iter_end() } -> rsame_as<typename range_type::iter_end_type>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Basic range requirements.
+    /// basic range requirements.
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange, typename T>
-    concept _RRangeOf = requires(const TRange& range)
+    template <typename range_type, typename type>
+    concept _rrange_of = requires(const range_type& range)
     {
-        requires _RRange<TRange>;
-        requires RConvertibleTo<typename TRange::TElem, T>;
+        requires _rrange<range_type>;
+        requires rconvertible_to<typename range_type::elem_type, type>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Basic mut range requirements.
+    /// basic mut range requirements.
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange>
-    concept _RMutRange = requires(TRange& range)
+    template <typename range_type>
+    concept _rmut_range = requires(range_type& range)
     {
-        requires _RRange<TRange>;
+        requires _rrange<range_type>;
 
-        typename TRange::TMutIter;
-        typename TRange::TMutIterEnd;
+        typename range_type::mut_iter_type;
+        typename range_type::mut_iter_end_type;
 
-        { range.mutIter() } -> RSameAs<typename TRange::TMutIter>;
-        { range.mutIterEnd() } -> RSameAs<typename TRange::TMutIterEnd>;
+        { range.mut_iter() } -> rsame_as<typename range_type::mut_iter_type>;
+        { range.mut_iter_end() } -> rsame_as<typename range_type::mut_iter_end_type>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Basic mut range requirements.
+    /// basic mut range requirements.
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange, typename T>
-    concept _RMutRangeOf = requires(TRange& range)
+    template <typename range_type, typename type>
+    concept _rmut_range_of = requires(range_type& range)
     {
-        requires _RMutRange<TRange>;
-        requires RConvertibleTo<typename TRange::TElem, T>;
+        requires _rmut_range<range_type>;
+        requires rconvertible_to<typename range_type::elem_type, type>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures `TRange` is `Range`.
+    /// ensures `range_type` is `range`.
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange>
-    concept RRange = requires
+    template <typename range_type>
+    concept rrange = requires
     {
-        requires _RRange<TRange>;
-        requires RIterPair<typename TRange::TIter, typename TRange::TIterEnd>;
+        requires _rrange<range_type>;
+        requires riter_pair<typename range_type::iter_type, typename range_type::iter_end_type>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures `TRange` is `Range` of type `T`.
+    /// ensures `range_type` is `range` of type `type`.
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange, typename T>
-    concept RRangeOf = requires
+    template <typename range_type, typename type>
+    concept rrange_of = requires
     {
-        requires _RRangeOf<TRange, T>;
-        requires RIterPairOf<typename TRange::TIter, typename TRange::TIterEnd, T>;
+        requires _rrange_of<range_type, type>;
+        requires riter_pair_of<typename range_type::iter_type, typename range_type::iter_end_type, type>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures `TRange` is `MutRange`.
+    /// ensures `range_type` is `mut_range`.
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange>
-    concept RMutRange = requires
+    template <typename range_type>
+    concept rmut_range = requires
     {
-        requires _RMutRange<TRange>;
-        requires RIterPair<typename TRange::TIter, typename TRange::TIterEnd>;
-        requires RMutIterPair<typename TRange::TMutIter, typename TRange::TMutIterEnd>;
+        requires _rmut_range<range_type>;
+        requires riter_pair<typename range_type::iter_type, typename range_type::iter_end_type>;
+        requires rmut_iter_pair<typename range_type::mut_iter_type, typename range_type::mut_iter_end_type>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures `TRange` is `MutRange` of type `T`.
+    /// ensures `range_type` is `mut_range` of type `type`.
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange, typename T>
-    concept RMutRangeOf = requires
+    template <typename range_type, typename type>
+    concept rmut_range_of = requires
     {
-        requires _RMutRangeOf<TRange, T>;
-        requires RIterPairOf<typename TRange::TIter, typename TRange::TIterEnd, T>;
-        requires RMutIterPairOf<typename TRange::TMutIter, typename TRange::TMutIterEnd, T>;
+        requires _rmut_range_of<range_type, type>;
+        requires riter_pair_of<typename range_type::iter_type, typename range_type::iter_end_type, type>;
+        requires rmut_iter_pair_of<typename range_type::mut_iter_type, typename range_type::mut_iter_end_type, type>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures `TRange` is `FwdRange`.
+    /// ensures `range_type` is `fwd_range`.
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange>
-    concept RFwdRange = requires
+    template <typename range_type>
+    concept rfwd_range = requires
     {
-        requires _RRange<TRange>;
-        requires RFwdIterPair<typename TRange::TIter, typename TRange::TIterEnd>;
+        requires _rrange<range_type>;
+        requires rfwd_iter_pair<typename range_type::iter_type, typename range_type::iter_end_type>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures `TRange` is `FwdRange` of type `T`.
+    /// ensures `range_type` is `fwd_range` of type `type`.
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange, typename T>
-    concept RFwdRangeOf = requires
+    template <typename range_type, typename type>
+    concept rfwd_range_of = requires
     {
-        requires _RRangeOf<TRange, T>;
-        requires RFwdIterPairOf<typename TRange::TIter, typename TRange::TIterEnd, T>;
+        requires _rrange_of<range_type, type>;
+        requires rfwd_iter_pair_of<typename range_type::iter_type, typename range_type::iter_end_type, type>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures `TRange` is `MutFwdRange`.
+    /// ensures `range_type` is `mut_fwd_range`.
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange>
-    concept RMutFwdRange = requires
+    template <typename range_type>
+    concept rmut_fwd_range = requires
     {
-        requires _RMutRange<TRange>;
-        requires RFwdIterPair<typename TRange::TIter, typename TRange::TIterEnd>;
-        requires RMutFwdIterPair<typename TRange::TMutIter, typename TRange::TMutIterEnd>;
+        requires _rmut_range<range_type>;
+        requires rfwd_iter_pair<typename range_type::iter_type, typename range_type::iter_end_type>;
+        requires rmut_fwd_iter_pair<typename range_type::mut_iter_type, typename range_type::mut_iter_end_type>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures `TRange` is `MutFwdRange` of type `T`.
+    /// ensures `range_type` is `mut_fwd_range` of type `type`.
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange, typename T>
-    concept RMutFwdRangeOf = requires
+    template <typename range_type, typename type>
+    concept rmut_fwd_range_of = requires
     {
-        requires _RMutRangeOf<TRange, T>;
-        requires RFwdIterPairOf<typename TRange::TIter, typename TRange::TIterEnd, T>;
-        requires RMutFwdIterPairOf<typename TRange::TMutIter, typename TRange::TMutIterEnd, T>;
+        requires _rmut_range_of<range_type, type>;
+        requires rfwd_iter_pair_of<typename range_type::iter_type, typename range_type::iter_end_type, type>;
+        requires rmut_fwd_iter_pair_of<typename range_type::mut_iter_type, typename range_type::mut_iter_end_type, type>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures `TRange` is `BidiRange`.
+    /// ensures `range_type` is `bidi_range`.
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange>
-    concept RBidiRange = requires
+    template <typename range_type>
+    concept rbidi_range = requires
     {
-        requires _RRange<TRange>;
-        requires RBidiIterPair<typename TRange::TIter, typename TRange::TIterEnd>;
+        requires _rrange<range_type>;
+        requires rbidi_iter_pair<typename range_type::iter_type, typename range_type::iter_end_type>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures `TRange` is `BidiRange` of type `T`.
+    /// ensures `range_type` is `bidi_range` of type `type`.
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange, typename T>
-    concept RBidiRangeOf = requires
+    template <typename range_type, typename type>
+    concept rbidi_range_of = requires
     {
-        requires _RRangeOf<TRange, T>;
-        requires RBidiIterPairOf<typename TRange::TIter, typename TRange::TIterEnd, T>;
+        requires _rrange_of<range_type, type>;
+        requires rbidi_iter_pair_of<typename range_type::iter_type, typename range_type::iter_end_type, type>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures `TRange` is `MutBidiRange`.
+    /// ensures `range_type` is `mut_bidi_range`.
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange>
-    concept RMutBidiRange = requires
+    template <typename range_type>
+    concept rmut_bidi_range = requires
     {
-        requires _RMutRange<TRange>;
-        requires RBidiIterPair<typename TRange::TIter, typename TRange::TIterEnd>;
-        requires RMutBidiIterPair<typename TRange::TMutIter, typename TRange::TMutIterEnd>;
+        requires _rmut_range<range_type>;
+        requires rbidi_iter_pair<typename range_type::iter_type, typename range_type::iter_end_type>;
+        requires rmut_bidi_iter_pair<typename range_type::mut_iter_type, typename range_type::mut_iter_end_type>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures `TRange` is `MutBidiRange` of type `T`.
+    /// ensures `range_type` is `mut_bidi_range` of type `type`.
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange, typename T>
-    concept RMutBidiRangeOf = requires
+    template <typename range_type, typename type>
+    concept rmut_bidi_range_of = requires
     {
-        requires _RMutRangeOf<TRange, T>;
-        requires RBidiIterPairOf<typename TRange::TIter, typename TRange::TIterEnd, T>;
-        requires RMutBidiIterPairOf<typename TRange::TMutIter, typename TRange::TMutIterEnd, T>;
+        requires _rmut_range_of<range_type, type>;
+        requires rbidi_iter_pair_of<typename range_type::iter_type, typename range_type::iter_end_type, type>;
+        requires rmut_bidi_iter_pair_of<typename range_type::mut_iter_type, typename range_type::mut_iter_end_type, type>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures `TRange` is `JumpRange`.
+    /// ensures `range_type` is `jump_range`.
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange>
-    concept RJumpRange = requires
+    template <typename range_type>
+    concept rjump_range = requires
     {
-        requires _RRange<TRange>;
-        requires RJumpIterPair<typename TRange::TIter, typename TRange::TIterEnd>;
+        requires _rrange<range_type>;
+        requires rjump_iter_pair<typename range_type::iter_type, typename range_type::iter_end_type>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures `TRange` is `JumpRange` of type `T`.
+    /// ensures `range_type` is `jump_range` of type `type`.
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange, typename T>
-    concept RJumpRangeOf = requires
+    template <typename range_type, typename type>
+    concept rjump_range_of = requires
     {
-        requires _RRangeOf<TRange, T>;
-        requires RJumpIterPairOf<typename TRange::TIter, typename TRange::TIterEnd, T>;
+        requires _rrange_of<range_type, type>;
+        requires rjump_iter_pair_of<typename range_type::iter_type, typename range_type::iter_end_type, type>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures `TRange` is `MutJumpRange`.
+    /// ensures `range_type` is `mut_jump_range`.
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange>
-    concept RMutJumpRange = requires
+    template <typename range_type>
+    concept rmut_jump_range = requires
     {
-        requires _RMutRange<TRange>;
-        requires RJumpIterPair<typename TRange::TIter, typename TRange::TIterEnd>;
-        requires RMutJumpIterPair<typename TRange::TMutIter, typename TRange::TMutIterEnd>;
+        requires _rmut_range<range_type>;
+        requires rjump_iter_pair<typename range_type::iter_type, typename range_type::iter_end_type>;
+        requires rmut_jump_iter_pair<typename range_type::mut_iter_type, typename range_type::mut_iter_end_type>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures `TRange` is `MutJumpRange` of type `T`.
+    /// ensures `range_type` is `mut_jump_range` of type `type`.
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange, typename T>
-    concept RMutJumpRangeOf = requires
+    template <typename range_type, typename type>
+    concept rmut_jump_range_of = requires
     {
-        requires _RMutRangeOf<TRange, T>;
-        requires RJumpIterPairOf<typename TRange::TIter, typename TRange::TIterEnd, T>;
-        requires RMutJumpIterPairOf<typename TRange::TMutIter, typename TRange::TMutIterEnd, T>;
+        requires _rmut_range_of<range_type, type>;
+        requires rjump_iter_pair_of<typename range_type::iter_type, typename range_type::iter_end_type, type>;
+        requires rmut_jump_iter_pair_of<typename range_type::mut_iter_type, typename range_type::mut_iter_end_type, type>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures `TRange` is `ArrayRange`.
+    /// ensures `range_type` is `array_range`.
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange>
-    concept RArrayRange = requires
+    template <typename range_type>
+    concept rarray_range = requires
     {
-        requires _RRange<TRange>;
-        requires RArrayIterPair<typename TRange::TIter, typename TRange::TIterEnd>;
+        requires _rrange<range_type>;
+        requires rarray_iter_pair<typename range_type::iter_type, typename range_type::iter_end_type>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures `TRange` is `ArrayRange` of type `T`.
+    /// ensures `range_type` is `array_range` of type `type`.
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange, typename T>
-    concept RArrayRangeOf = requires
+    template <typename range_type, typename type>
+    concept rarray_range_of = requires
     {
-        requires _RRangeOf<TRange, T>;
-        requires RArrayIterPairOf<typename TRange::TIter, typename TRange::TIterEnd, T>;
+        requires _rrange_of<range_type, type>;
+        requires rarray_iter_pair_of<typename range_type::iter_type, typename range_type::iter_end_type, type>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures `TRange` is `MutArrayRange`.
+    /// ensures `range_type` is `mut_array_range`.
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange>
-    concept RMutArrayRange = requires
+    template <typename range_type>
+    concept rmut_array_range = requires
     {
-        requires _RMutRange<TRange>;
-        requires RArrayIterPair<typename TRange::TIter, typename TRange::TIterEnd>;
-        requires RMutArrayIterPair<typename TRange::TMutIter, typename TRange::TMutIterEnd>;
+        requires _rmut_range<range_type>;
+        requires rarray_iter_pair<typename range_type::iter_type, typename range_type::iter_end_type>;
+        requires rmut_array_iter_pair<typename range_type::mut_iter_type, typename range_type::mut_iter_end_type>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures `TRange` is `MutArrayRange` of type `T`.
+    /// ensures `range_type` is `mut_array_range` of type `type`.
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange, typename T>
-    concept RMutArrayRangeOf = requires
+    template <typename range_type, typename type>
+    concept rmut_array_range_of = requires
     {
-        requires _RMutRangeOf<TRange, T>;
-        requires RArrayIterPairOf<typename TRange::TIter, typename TRange::TIterEnd, T>;
-        requires RMutArrayIterPairOf<typename TRange::TMutIter, typename TRange::TMutIterEnd, T>;
+        requires _rmut_range_of<range_type, type>;
+        requires rarray_iter_pair_of<typename range_type::iter_type, typename range_type::iter_end_type, type>;
+        requires rmut_array_iter_pair_of<typename range_type::mut_iter_type, typename range_type::mut_iter_end_type, type>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures `TRange` is `RevRange`.
+    /// ensures `range_type` is `rev_range`.
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange, typename>
-    concept RRevRange = requires
+    template <typename range_type, typename>
+    concept rrev_range = requires
     {
-        requires RBidiRange<TRange>;
+        requires rbidi_range<range_type>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures `TRange` is `RevRange` of type `T`.
+    /// ensures `range_type` is `rev_range` of type `type`.
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange, typename T>
-    concept RRevRangeOf = requires
+    template <typename range_type, typename type>
+    concept rrev_range_of = requires
     {
-        requires RBidiRangeOf<TRange, T>;
+        requires rbidi_range_of<range_type, type>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures `TRange` is `MutRevRange`.
+    /// ensures `range_type` is `mut_rev_range`.
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange>
-    concept RMutRevRange = requires
+    template <typename range_type>
+    concept rmut_rev_range = requires
     {
-        requires RMutBidiRange<TRange>;
+        requires rmut_bidi_range<range_type>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures `TRange` is `MutRevRange` of type `T`.
+    /// ensures `range_type` is `mut_rev_range` of type `type`.
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange, typename T>
-    concept RMutRevRangeOf = requires
+    template <typename range_type, typename type>
+    concept rmut_rev_range_of = requires
     {
-        requires RMutBidiRangeOf<TRange, T>;
+        requires rmut_bidi_range_of<range_type, type>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures `TRange` is `CommonRange`.
+    /// ensures `range_type` is `common_range`.
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange>
-    concept RCommonRange = requires
+    template <typename range_type>
+    concept rcommon_range = requires
     {
-        requires _RRange<TRange>;
-        requires RSameAs<typename TRange::TIter, typename TRange::TIterEnd>;
+        requires _rrange<range_type>;
+        requires rsame_as<typename range_type::iter_type, typename range_type::iter_end_type>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures `TRange` is `MutCommonRange`.
+    /// ensures `range_type` is `mut_common_range`.
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange>
-    concept RMutCommonRange = requires
+    template <typename range_type>
+    concept rmut_common_range = requires
     {
-        requires RCommonRange<TRange>;
-        requires RSameAs<typename TRange::TMutIter, typename TRange::TMutIterEnd>;
+        requires rcommon_range<range_type>;
+        requires rsame_as<typename range_type::mut_iter_type, typename range_type::mut_iter_end_type>;
     };
 }

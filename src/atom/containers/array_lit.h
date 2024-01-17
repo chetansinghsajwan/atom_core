@@ -1,15 +1,15 @@
 #pragma once
-#include "ArrayView.h"
+#include "array_view.h"
 
-namespace Atom
+namespace atom
 {
-    template <typename T>
-    class ArrayLit: public ArrayView<T>
+    template <typename type>
+    class array_lit: public array_view<type>
     {
     public:
         template <usize size>
-        consteval ArrayLit(T (&arr)[size])
-            : ArrayView{ arr, size }
+        consteval array_lit(type (&arr)[size])
+            : array_view{ arr, size }
         {}
     };
 }

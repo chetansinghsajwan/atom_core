@@ -1,24 +1,24 @@
-#include "Atom/Core.h"
+#include "atom/core.h"
 
-namespace Atom
+namespace atom
 {
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename T, typename... Ts>
-    class ClassOf: public ClassOf<Ts...>
+    template <typename type, typename... ts>
+    class class_of: public class_of<ts...>
     {
     public:
-        T value;
+        type value;
     };
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    class ClassOf<T>
+    template <typename type>
+    class class_of<type>
     {
     public:
-        T value;
+        type value;
     };
 }

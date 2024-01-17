@@ -1,16 +1,16 @@
 #pragma once
-#include "Atom/Core/Exceptions.h"
+#include "atom/core/exceptions.h"
 
-namespace Atom::Text
+namespace atom::text
 {
     /// --------------------------------------------------------------------------------------------
-    /// Exception representing error during processing character encoding.
+    /// exception representing error during processing character encoding.
     /// --------------------------------------------------------------------------------------------
-    class EncodingException: public Exception
+    class encoding_exception: public exception
     {
     public:
-        EncodingException(String msg)
-            : Exception(mov(msg))
+        encoding_exception(string msg)
+            : exception(mov(msg))
         {}
     };
 }

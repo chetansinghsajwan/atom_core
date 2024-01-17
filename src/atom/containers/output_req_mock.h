@@ -1,19 +1,19 @@
 #pragma once
-#include "OutputReq.h"
+#include "output_req.h"
 
-namespace Atom
+namespace atom
 {
-    template <typename T>
-    class OutputReqMock
+    template <typename type>
+    class output_req_mock
     {
     public:
-        template <typename U>
-        auto operator+=(U&& el)
-            requires(RSameAsUnqualified<U, T>);
+        template <typename u>
+        auto operator+=(u&& el)
+            requires(rsame_as_unqualified<u, type>);
 
     public:
-        template <typename TRange>
-        auto operator+=(const TRange& range)
-            requires(RRangeOf<TRange, T>);
+        template <typename range_type>
+        auto operator+=(const range_type& range)
+            requires(rrange_of<range_type, type>);
     };
 }

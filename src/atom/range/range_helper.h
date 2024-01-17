@@ -1,42 +1,42 @@
 #pragma once
-#include "RangeReq.h"
-#include "StdIterWrapForAtomIter.h"
+#include "range_req.h"
+#include "std_iter_wrap_for_atom_iter.h"
 
 // #include <algorithm>
 
-namespace Atom
+namespace atom
 {
-    class RangeHelper
+    class range_helper
     {
     public:
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <class TRange>
-            requires RRange<TRange>
-        constexpr auto CanGetCount() const -> bool
+        template <class range_type>
+            requires rrange<range_type>
+        constexpr auto can_get_count() const -> bool
         {
-            return RFwdRange<TRange>;
+            return rfwd_range<range_type>;
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <class TRange>
-            requires RFwdRange<TRange>
-        constexpr auto GetCount(const TRange& range) const -> usize
+        template <class range_type>
+            requires rfwd_range<range_type>
+        constexpr auto get_count(const range_type& range) const -> usize
         {
-            return _GetCount(range.iter(), range.iterEnd());
+            return _get_count(range.iter(), range.iter_end());
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <class TRange, class T>
-            requires RMutRange<TRange> and RAssignable<typename TRange::TElem, T>
-        constexpr auto Fill(TRange&& range, T&& val) const -> void
+        template <class range_type, class type>
+            requires rmut_range<range_type> and rassignable<typename range_type::elem_type, type>
+        constexpr auto fill(range_type&& range, type&& val) const -> void
         {
-            _Fill(range.iter(), range.iterEnd(), forward<T>(val));
+            _fill(range.iter(), range.iter_end(), forward<type>(val));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -44,11 +44,11 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ATOM_PRAGMA_OPTIMIZE_OFF
 
-        template <class TRange, typename T>
-            requires RMutRange<TRange> and RAssignable<typename TRange::TElem, T>
-        constexpr auto FillExplicit(TRange&& range, T&& val) const -> void
+        template <class range_type, typename type>
+            requires rmut_range<range_type> and rassignable<typename range_type::elem_type, type>
+        constexpr auto fill_explicit(range_type&& range, type&& val) const -> void
         {
-            _Fill(range.iter(), range.iterEnd(), forward<T>(val));
+            _fill(range.iter(), range.iter_end(), forward<type>(val));
         }
 
         ATOM_PRAGMA_OPTIMIZE_ON
@@ -56,273 +56,273 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <class TRange1, class TRange2>
-            requires RRange<TRange1> and RMutRange<TRange2>
-                     and RAssignable<typename TRange2::TElem, typename TRange1::TElem>
-        constexpr auto FwdCopyTo(const TRange1& range1, TRange2&& range2) const -> void
+        template <class trange1, class trange2>
+            requires rrange<trange1> and rmut_range<trange2>
+                     and rassignable<typename trange2::elem_type, typename trange1::elem_type>
+        constexpr auto fwd_copy_to(const trange1& range1, trange2&& range2) const -> void
         {
-            _FwdCopy(range1.iter(), range1.iterEnd(), range2.iter(), range2.iterEnd());
+            _fwd_copy(range1.iter(), range1.iter_end(), range2.iter(), range2.iter_end());
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <class TRange1, class TRange2>
-            requires RRange<TRange1> and RMutRange<TRange2>
-                     and RAssignable<typename TRange2::TElem, typename TRange1::TElem>
-        constexpr auto BwdCopyTo(const TRange1& range1, TRange2&& range2) const -> void
+        template <class trange1, class trange2>
+            requires rrange<trange1> and rmut_range<trange2>
+                     and rassignable<typename trange2::elem_type, typename trange1::elem_type>
+        constexpr auto bwd_copy_to(const trange1& range1, trange2&& range2) const -> void
         {
-            _BwdCopy(range1.iter(), range1.iterEnd(), range2.iter(), range2.iterEnd());
+            _bwd_copy(range1.iter(), range1.iter_end(), range2.iter(), range2.iter_end());
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <class TRange1, class TRange2>
-            requires RMutRange<TRange1> and RMutRange<TRange2>
-                     and RAssignable<typename TRange2::TElem, typename TRange1::TElem>
-        constexpr auto FwdMoveTo(TRange1&& range1, TRange2&& range2) const -> void
+        template <class trange1, class trange2>
+            requires rmut_range<trange1> and rmut_range<trange2>
+                     and rassignable<typename trange2::elem_type, typename trange1::elem_type>
+        constexpr auto fwd_move_to(trange1&& range1, trange2&& range2) const -> void
         {
-            _FwdMove(range1.iter(), range1.iterEnd(), range2.iter(), range2.iterEnd());
+            _fwd_move(range1.iter(), range1.iter_end(), range2.iter(), range2.iter_end());
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <class TRange1, class TRange2>
-            requires RMutRange<TRange1> and RMutRange<TRange2>
-                     and RAssignable<typename TRange2::TElem, typename TRange1::TElem>
-        constexpr auto BwdMoveTo(TRange1&& range1, TRange2&& range2) const -> void
+        template <class trange1, class trange2>
+            requires rmut_range<trange1> and rmut_range<trange2>
+                     and rassignable<typename trange2::elem_type, typename trange1::elem_type>
+        constexpr auto bwd_move_to(trange1&& range1, trange2&& range2) const -> void
         {
-            _BwdMove(range1.iter(), range1.iterEnd(), range2.iter(), range2.iterEnd());
+            _bwd_move(range1.iter(), range1.iter_end(), range2.iter(), range2.iter_end());
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <class TRange>
-            requires RMutFwdRange<TRange> and RMoveAssignable<typename TRange::TElem>
-        constexpr auto ShiftFwd(TRange&& range, usize steps) const -> void
+        template <class range_type>
+            requires rmut_fwd_range<range_type> and rmove_assignable<typename range_type::elem_type>
+        constexpr auto shift_fwd(range_type&& range, usize steps) const -> void
         {
-            _FwdShift(range.iter(), range.iterEnd(), steps);
+            _fwd_shift(range.iter(), range.iter_end(), steps);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <class TRange>
-            requires RMutFwdRange<TRange> and RMoveAssignable<typename TRange::TElem>
-        constexpr auto ShiftBwd(TRange&& range, usize steps) const -> void
+        template <class range_type>
+            requires rmut_fwd_range<range_type> and rmove_assignable<typename range_type::elem_type>
+        constexpr auto shift_bwd(range_type&& range, usize steps) const -> void
         {
-            _BwdShift(range.iter(), range.iterEnd(), steps);
+            _bwd_shift(range.iter(), range.iter_end(), steps);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <class TRange>
-            requires RMutFwdRange<TRange> and RSwappable<typename TRange::TElem>
-        constexpr auto ShiftBy(TRange&& range, isize steps) const -> void
+        template <class range_type>
+            requires rmut_fwd_range<range_type> and rswappable<typename range_type::elem_type>
+        constexpr auto shift_by(range_type&& range, isize steps) const -> void
         {
             if (steps > 0)
             {
-                _BwdShift(range.iter(), range.iterEnd(), steps);
+                _bwd_shift(range.iter(), range.iter_end(), steps);
             }
             else
             {
-                _FwdShift(range.iter(), range.iterEnd(), -steps);
+                _fwd_shift(range.iter(), range.iter_end(), -steps);
             }
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <class TRange>
-            requires RMutRange<TRange> and RSwappable<typename TRange::TElem>
-        constexpr auto RotateFwd(TRange&& range, usize steps) const -> void
+        template <class range_type>
+            requires rmut_range<range_type> and rswappable<typename range_type::elem_type>
+        constexpr auto rotate_fwd(range_type&& range, usize steps) const -> void
         {
-            _FwdRotate(range.iter(), range.iterEnd(), steps);
+            _fwd_rotate(range.iter(), range.iter_end(), steps);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <class TRange>
-            requires RMutRange<TRange> and RSwappable<typename TRange::TElem>
-        constexpr auto RotateBwd(TRange&& range, usize steps) const -> void
+        template <class range_type>
+            requires rmut_range<range_type> and rswappable<typename range_type::elem_type>
+        constexpr auto rotate_bwd(range_type&& range, usize steps) const -> void
         {
-            _BwdRotate(range.iter(), range.iterEnd(), steps);
+            _bwd_rotate(range.iter(), range.iter_end(), steps);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <class TRange>
-            requires RMutRange<TRange> and RSwappable<typename TRange::TElem>
-        constexpr auto RotateBy(TRange&& range, isize steps) const -> void
+        template <class range_type>
+            requires rmut_range<range_type> and rswappable<typename range_type::elem_type>
+        constexpr auto rotate_by(range_type&& range, isize steps) const -> void
         {
             if (steps > 0)
             {
-                _BwdRotate(range.iter(), range.iterEnd(), steps);
+                _bwd_rotate(range.iter(), range.iter_end(), steps);
             }
             else
             {
-                _FwdRotate(range.iter(), range.iterEnd(), -steps);
+                _fwd_rotate(range.iter(), range.iter_end(), -steps);
             }
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <class TRange>
-            requires RMutRange<TRange> and RDestructible<typename TRange::TElem>
-        constexpr auto Destruct(TRange&& range) const -> void
+        template <class range_type>
+            requires rmut_range<range_type> and rdestructible<typename range_type::elem_type>
+        constexpr auto destruct(range_type&& range) const -> void
         {
-            _Destruct(range.iter(), range.iterEnd());
+            _destruct(range.iter(), range.iter_end());
         }
 
     private:
-        template <class TIter, class TIterEnd>
-        constexpr auto _GetCount(TIter iter, TIterEnd iterEnd) const -> usize
+        template <class iter_type, class iter_end_type>
+        constexpr auto _get_count(iter_type iter, iter_end_type iter_end) const -> usize
         {
-            if constexpr (RJumpIterPair<TIter, TIterEnd>)
+            if constexpr (rjump_iter_pair<iter_type, iter_end_type>)
             {
-                return iter.compare(iterEnd).abs().template to<usize>();
+                return iter.compare(iter_end).abs().template to<usize>();
             }
 
             usize count = 0;
-            for (; not iter.eq(iterEnd); iter.next())
+            for (; not iter.eq(iter_end); iter.next())
                 count++;
 
             return count;
         }
 
-        template <class TIter, class TIterEnd, typename T>
-        constexpr auto _Fill(TIter iter, TIterEnd iterEnd, T&& val) const -> void
+        template <class iter_type, class iter_end_type, typename type>
+        constexpr auto _fill(iter_type iter, iter_end_type iter_end, type&& val) const -> void
         {
-            StdIterWrapForAtomIter stdIter{ iter };
-            StdIterWrapForAtomIter stdIterEnd{ iterEnd };
+            std_iter_wrap_for_atom_iter std_iter{ iter };
+            std_iter_wrap_for_atom_iter std_iter_end{ iter_end };
 
-            std::fill(stdIter, stdIterEnd, forward<T>(val));
+            std::fill(std_iter, std_iter_end, forward<type>(val));
         }
 
-        template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
-        constexpr auto _FwdCopy(
-            TIter1 iter1, TIterEnd1 iterEnd1, TIter2 iter2, TIterEnd2 iterEnd2) const -> void
+        template <class titer1, class titer_end1, class titer2, class titer_end2>
+        constexpr auto _fwd_copy(
+            titer1 iter1, titer_end1 iter_end1, titer2 iter2, titer_end2 iter_end2) const -> void
         {
-            StdIterWrapForAtomIter stdIter1{ iter1 };
-            StdIterWrapForAtomIter stdIterEnd1{ iterEnd1 };
-            StdIterWrapForAtomIter stdIter2{ iter2 };
+            std_iter_wrap_for_atom_iter std_iter1{ iter1 };
+            std_iter_wrap_for_atom_iter std_iter_end1{ iter_end1 };
+            std_iter_wrap_for_atom_iter std_iter2{ iter2 };
 
-            std::copy(stdIter1, stdIterEnd1, stdIter2);
+            std::copy(std_iter1, std_iter_end1, std_iter2);
         }
 
-        template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
-        constexpr auto _BwdCopy(
-            TIter1 iter1, TIterEnd1 iterEnd1, TIter2 iter2, TIterEnd2 iterEnd2) const -> void
+        template <class titer1, class titer_end1, class titer2, class titer_end2>
+        constexpr auto _bwd_copy(
+            titer1 iter1, titer_end1 iter_end1, titer2 iter2, titer_end2 iter_end2) const -> void
         {
-            StdIterWrapForAtomIter stdIter1{ iter1 };
-            StdIterWrapForAtomIter stdIterEnd1{ iterEnd1 };
-            StdIterWrapForAtomIter stdIter2{ iter2 };
+            std_iter_wrap_for_atom_iter std_iter1{ iter1 };
+            std_iter_wrap_for_atom_iter std_iter_end1{ iter_end1 };
+            std_iter_wrap_for_atom_iter std_iter2{ iter2 };
 
-            std::copy_backward(stdIter1, stdIterEnd1, stdIter2);
+            std::copy_backward(std_iter1, std_iter_end1, std_iter2);
         }
 
-        template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
-        constexpr auto _FwdMove(
-            TIter1 iter1, TIterEnd1 iterEnd1, TIter2 iter2, TIterEnd2 iterEnd2) const -> void
+        template <class titer1, class titer_end1, class titer2, class titer_end2>
+        constexpr auto _fwd_move(
+            titer1 iter1, titer_end1 iter_end1, titer2 iter2, titer_end2 iter_end2) const -> void
         {
-            StdIterWrapForAtomIter stdIter1{ iter1 };
-            StdIterWrapForAtomIter stdIterEnd1{ iterEnd1 };
-            StdIterWrapForAtomIter stdIter2{ iter2 };
+            std_iter_wrap_for_atom_iter std_iter1{ iter1 };
+            std_iter_wrap_for_atom_iter std_iter_end1{ iter_end1 };
+            std_iter_wrap_for_atom_iter std_iter2{ iter2 };
 
-            std::move(stdIter1, stdIterEnd1, stdIter2);
+            std::move(std_iter1, std_iter_end1, std_iter2);
         }
 
-        template <class TIter1, class TIterEnd1, class TIter2, class TIterEnd2>
-        constexpr auto _BwdMove(
-            TIter1 iter1, TIterEnd1 iterEnd1, TIter2 iter2, TIterEnd2 iterEnd2) const -> void
+        template <class titer1, class titer_end1, class titer2, class titer_end2>
+        constexpr auto _bwd_move(
+            titer1 iter1, titer_end1 iter_end1, titer2 iter2, titer_end2 iter_end2) const -> void
         {
-            StdIterWrapForAtomIter stdIter1{ iter1 };
-            StdIterWrapForAtomIter stdIterEnd1{ iterEnd1 };
-            StdIterWrapForAtomIter stdIter2{ iter2 };
+            std_iter_wrap_for_atom_iter std_iter1{ iter1 };
+            std_iter_wrap_for_atom_iter std_iter_end1{ iter_end1 };
+            std_iter_wrap_for_atom_iter std_iter2{ iter2 };
 
-            std::move_backward(stdIter1, stdIterEnd1, stdIter2);
+            std::move_backward(std_iter1, std_iter_end1, std_iter2);
         }
 
-        template <class TIter, class TIterEnd>
-        constexpr auto _FwdShift(TIter iter, TIterEnd iterEnd, usize steps) const -> void
+        template <class iter_type, class iter_end_type>
+        constexpr auto _fwd_shift(iter_type iter, iter_end_type iter_end, usize steps) const -> void
         {
-            if constexpr (RArrayIterPair<TIter, TIterEnd>)
+            if constexpr (rarray_iter_pair<iter_type, iter_end_type>)
             {
-                std::shift_right(iter.data(), iterEnd.data(), steps);
+                std::shift_right(iter.data(), iter_end.data(), steps);
                 return;
             }
 
-            StdIterWrapForAtomIter stdIter{ iter };
-            StdIterWrapForAtomIter stdIterEnd{ iterEnd };
+            std_iter_wrap_for_atom_iter std_iter{ iter };
+            std_iter_wrap_for_atom_iter std_iter_end{ iter_end };
 
-            std::shift_right(stdIter, stdIterEnd, steps);
+            std::shift_right(std_iter, std_iter_end, steps);
         }
 
-        template <class TIter, class TIterEnd>
-        constexpr auto _BwdShift(TIter iter, TIterEnd iterEnd, usize steps) const -> void
+        template <class iter_type, class iter_end_type>
+        constexpr auto _bwd_shift(iter_type iter, iter_end_type iter_end, usize steps) const -> void
         {
-            if constexpr (RArrayIterPair<TIter, TIterEnd>)
+            if constexpr (rarray_iter_pair<iter_type, iter_end_type>)
             {
-                std::shift_left(iter.data(), iterEnd.data(), steps);
+                std::shift_left(iter.data(), iter_end.data(), steps);
                 return;
             }
 
-            StdIterWrapForAtomIter stdIter{ iter };
-            StdIterWrapForAtomIter stdIterEnd{ iterEnd };
+            std_iter_wrap_for_atom_iter std_iter{ iter };
+            std_iter_wrap_for_atom_iter std_iter_end{ iter_end };
 
-            std::shift_left(stdIter, stdIterEnd, steps);
+            std::shift_left(std_iter, std_iter_end, steps);
         }
 
-        template <class TIter, class TIterEnd>
-        constexpr auto _BwdRotate(TIter iter, TIterEnd iterEnd, usize steps) const -> void
+        template <class iter_type, class iter_end_type>
+        constexpr auto _bwd_rotate(iter_type iter, iter_end_type iter_end, usize steps) const -> void
         {
-            if constexpr (RArrayIterPair<TIter, TIterEnd>)
+            if constexpr (rarray_iter_pair<iter_type, iter_end_type>)
             {
-                std::rotate(iter.data(), iter.data() + steps, iterEnd.data());
+                std::rotate(iter.data(), iter.data() + steps, iter_end.data());
                 return;
             }
 
-            StdIterWrapForAtomIter stdIter{ iter };
-            StdIterWrapForAtomIter stdIterEnd{ iterEnd };
+            std_iter_wrap_for_atom_iter std_iter{ iter };
+            std_iter_wrap_for_atom_iter std_iter_end{ iter_end };
 
-            std::rotate(stdIter, stdIter + steps, stdIterEnd);
+            std::rotate(std_iter, std_iter + steps, std_iter_end);
         }
 
-        template <class TIter, class TIterEnd>
-        constexpr auto _FwdRotate(TIter iter, TIterEnd iterEnd, isize steps) const -> void
+        template <class iter_type, class iter_end_type>
+        constexpr auto _fwd_rotate(iter_type iter, iter_end_type iter_end, isize steps) const -> void
         {
-            if constexpr (RArrayIterPair<TIter, TIterEnd>)
+            if constexpr (rarray_iter_pair<iter_type, iter_end_type>)
             {
-                std::rotate(iter.data(), iterEnd.data() - steps, iterEnd.data());
+                std::rotate(iter.data(), iter_end.data() - steps, iter_end.data());
                 return;
             }
 
-            StdIterWrapForAtomIter stdIter{ iter };
-            StdIterWrapForAtomIter stdIterEnd{ iterEnd };
+            std_iter_wrap_for_atom_iter std_iter{ iter };
+            std_iter_wrap_for_atom_iter std_iter_end{ iter_end };
 
-            std::rotate(stdIter, stdIterEnd - steps, stdIterEnd);
+            std::rotate(std_iter, std_iter_end - steps, std_iter_end);
         }
 
-        template <class TIter, class TIterEnd>
-        constexpr auto _Destruct(TIter iter, TIterEnd iterEnd) const -> void
+        template <class iter_type, class iter_end_type>
+        constexpr auto _destruct(iter_type iter, iter_end_type iter_end) const -> void
         {
-            if constexpr (RArrayIterPair<TIter, TIterEnd>)
+            if constexpr (rarray_iter_pair<iter_type, iter_end_type>)
             {
-                std::destroy(iter.data(), iterEnd.data());
+                std::destroy(iter.data(), iter_end.data());
                 return;
             }
 
-            StdIterWrapForAtomIter stdIter{ iter };
-            StdIterWrapForAtomIter stdIterEnd{ iterEnd };
+            std_iter_wrap_for_atom_iter std_iter{ iter };
+            std_iter_wrap_for_atom_iter std_iter_end{ iter_end };
 
-            std::destroy(stdIter, stdIterEnd);
+            std::destroy(std_iter, std_iter_end);
         }
     };
 }

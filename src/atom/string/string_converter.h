@@ -1,70 +1,70 @@
 #pragma once
-#include "Atom/Containers/OutputReqMock.h"
-#include "Atom/TTI.h"
+#include "atom/containers/output_req_mock.h"
+#include "atom/tti.h"
 
-#include "Atom/String/String.h"
+#include "atom/string/string.h"
 
-namespace Atom
+namespace atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// Converts `T` object to {String}.
+    /// converts `type` object to {string}.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    class StringConverter;
+    template <typename type>
+    class string_converter;
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures {TStringConverter} can convert `T` object to {String}.
+    /// ensures {tstring_converter} can convert `type` object to {string}.
     ///
-    /// @TPARAM[IN] TConverter Converter type to convert to stirng.
-    /// @TPARAM[IN] T Object type to convert to stirng.
+    /// @tparam[in] tconverter converter type to convert to stirng.
+    /// @tparam[in] type object type to convert to stirng.
     /// --------------------------------------------------------------------------------------------
-    template <typename TStringConverter, typename T>
-    concept RStringConverter =
-        requires(TStringConverter converter, T obj, OutputReqMock<Char> out) {
+    template <typename tstring_converter, typename type>
+    concept rstring_converter =
+        requires(tstring_converter converter, type obj, output_req_mock<uchar> out) {
             {
-                converter.Convert(obj)
-            } -> RSameAs<String>;
+                converter.convert(obj)
+            } -> rsame_as<string>;
 
             {
-                converter.Convert(obj, out)
-            } -> RSameAs<void>;
+                converter.convert(obj, out)
+            } -> rsame_as<void>;
         };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures {StringConverter<T>} for `T` is {RStringConverter}.
+    /// ensures {string_converter<type>} for `type` is {rstring_converter}.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    concept RStringConvertible = RStringConverter<StringConverter<T>, T>;
+    template <typename type>
+    concept rstring_convertible = rstring_converter<string_converter<type>, type>;
 
     /// --------------------------------------------------------------------------------------------
-    /// {StirngConverter} specialization for `T` containing {const}, {volatile} or {lvalue}
+    /// {stirng_converter} specialization for `type` containing {const}, {volatile} or {lvalue}
     /// and {rvalue} reference.
     ///
-    /// @TODO Needs refactoring.
+    /// @todo needs refactoring.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-        requires(!RSameAs<T, TTI::TRemoveCVRef<T>>) and RStringConvertible<TTI::TRemoveCVRef<T>>
-    class StringConverter<T>: StringConverter<TTI::TRemoveCVRef<T>>
+    template <typename type>
+        requires(!rsame_as<type, tti::tremove_cvref<type>>) and rstring_convertible<tti::tremove_cvref<type>>
+    class string_converter<type>: string_converter<tti::tremove_cvref<type>>
     {};
 
     /// --------------------------------------------------------------------------------------------
-    /// {StringConverter} specialization for {String}.
+    /// {string_converter} specialization for {string}.
     /// --------------------------------------------------------------------------------------------
     template <>
-    class StringConverter<String>
+    class string_converter<string>
     {
     public:
-        constexpr auto Convert(String&& str) -> String
+        constexpr auto convert(string&& str) -> string
         {
             return mov(str);
         }
 
-        constexpr auto Convert(const String& str) -> String
+        constexpr auto convert(const string& str) -> string
         {
-            return String{ str };
+            return string{ str };
         }
 
-        constexpr auto Convert(const String& str, ROutput<Char> auto out) -> void
+        constexpr auto convert(const string& str, routput<uchar> auto out) -> void
         {
             out += str;
         }

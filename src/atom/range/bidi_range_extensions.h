@@ -1,53 +1,53 @@
 #pragma once
-#include "FwdRangeExtensions.h"
+#include "fwd_range_extensions.h"
 
-namespace Atom
+namespace atom
 {
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange>
-    class _BidiRangeExtensionsImpl: public _FwdRangeExtensionsImpl<TRange>
+    template <typename range_type>
+    class _bidi_range_extensions_impl: public _fwd_range_extensions_impl<range_type>
     {
-        using Base = _FwdRangeExtensionsImpl<TRange>;
+        using base_type = _fwd_range_extensions_impl<range_type>;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange, typename _TRangeExtensionsImpl = void>
-    class BidiRangeExtensions: public FwdRangeExtensions<TRange, _TRangeExtensionsImpl>
+    template <typename range_type, typename _trange_extensions_impl = void>
+    class bidi_range_extensions: public fwd_range_extensions<range_type, _trange_extensions_impl>
     {
-        using Base = FwdRangeExtensions<TRange, _TRangeExtensionsImpl>;
+        using base_type = fwd_range_extensions<range_type, _trange_extensions_impl>;
 
     protected:
-        using _TImpl = typename Base::_TImpl;
+        using _timpl = typename base_type::_timpl;
 
     public:
-        using TElem = typename Base::TElem;
-        using TIter = typename Base::TIter;
-        using TIterEnd = typename Base::TIterEnd;
+        using elem_type = typename base_type::elem_type;
+        using iter_type = typename base_type::iter_type;
+        using iter_end_type = typename base_type::iter_end_type;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange>
-    class BidiRangeExtensions<TRange, void>
-        : public BidiRangeExtensions<TRange, _BidiRangeExtensionsImpl<TRange>>
+    template <typename range_type>
+    class bidi_range_extensions<range_type, void>
+        : public bidi_range_extensions<range_type, _bidi_range_extensions_impl<range_type>>
     {
-        using Base = BidiRangeExtensions<TRange, _BidiRangeExtensionsImpl<TRange>>;
+        using base_type = bidi_range_extensions<range_type, _bidi_range_extensions_impl<range_type>>;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 }

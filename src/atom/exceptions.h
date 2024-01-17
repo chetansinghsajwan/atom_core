@@ -1,2 +1,2 @@
 #pragma once
-#include "Atom/Exceptions/Exceptions.h"
+#include "atom/exceptions/exceptions.h"

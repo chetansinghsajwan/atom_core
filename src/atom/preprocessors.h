@@ -136,15 +136,15 @@
 /// ------------------------------------------------------------------------------------------------
 /// ATOM_CONDITIONAL_FIELD
 /// ------------------------------------------------------------------------------------------------
-#define ATOM_CONDITIONAL_FIELD(Condition, T)                                                       \
+#define ATOM_CONDITIONAL_FIELD(Condition, type)                                                       \
     ATOM_ATTR_NO_UNIQUE_ADDRESS                                                                    \
-    _Atom::ConditionalField<(Condition), T>
+    _atom::conditional_field<(Condition), type>
 
-namespace _Atom
+namespace _atom
 {
-    class _Empty
+    class _empty
     {};
 
-    template <bool cond, typename T>
-    using ConditionalField = std::conditional_t<cond, T, _Empty>;
+    template <bool cond, typename type>
+    using conditional_field = std::conditional_t<cond, type, _empty>;
 }

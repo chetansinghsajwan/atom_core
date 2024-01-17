@@ -1,30 +1,27 @@
 #pragma once
-#include "Atom/Core.h"
-#include "Atom/TTI.h"
+#include "atom/core.h"
+#include "atom/tti.h"
 
-namespace Atom
+namespace atom
 {
-    namespace Private
+    template <typename tinvokable, typename... tsignature>
+    class _is_invokable_impl;
+
+    template <typename tinvokable, typename result_type, typename... args_type>
+    class _is_invokable_impl<tinvokable, result_type(args_type...)>
     {
-        template <typename TInvokable, typename... TSignature>
-        class IsInvokableImpl;
+    public:
+        static constexpr bool value = std::is_invocable_r_v<result_type, tinvokable, args_type...>;
+    };
 
-        template <typename TInvokable, typename TResult, typename... TArgs>
-        class IsInvokableImpl<TInvokable, TResult(TArgs...)>
-        {
-        public:
-            static constexpr bool Value = std::is_invocable_r_v<TResult, TInvokable, TArgs...>;
-        };
+    /// @todo add impl for const invocable.
+    template <typename tinvokable, typename result_type, typename... args_type>
+    class _is_invokable_impl<tinvokable, result_type(args_type...) const>
+    {
+    public:
+        static constexpr bool value = std::is_invocable_r_v<result_type, tinvokable, args_type...>;
+    };
 
-        /// @TODO Add impl for const invocable.
-        template <typename TInvokable, typename TResult, typename... TArgs>
-        class IsInvokableImpl<TInvokable, TResult(TArgs...) const>
-        {
-        public:
-            static constexpr bool Value = std::is_invocable_r_v<TResult, TInvokable, TArgs...>;
-        };
-    }
-
-    template <typename TInvokable, typename... TSignature>
-    concept RInvokable = Private::IsInvokableImpl<TInvokable, TSignature...>::Value;
+    template <typename tinvokable, typename... tsignature>
+    concept rinvokable = _is_invokable_impl<tinvokable, tsignature...>::value;
 }

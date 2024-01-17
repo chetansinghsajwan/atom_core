@@ -1,39 +1,31 @@
 #pragma once
-#include "Primitives/Byte.h"
-#include "Primitives/Char.h"
-#include "Primitives/Float.h"
-#include "Atom/Memory/MemPtr.h"
+#include "primitives/byte.h"
+#include "primitives/char.h"
+#include "primitives/int.h"
+#include "primitives/float.h"
+#include "atom/memory/mem_ptr.h"
 
 // #include <typeinfo>
 // #include <string_view>
 
 /// ------------------------------------------------------------------------------------------------
-/// # To Do
+/// # to do
 ///
-/// - Review these types, maybe we should remove them.
+/// - review these types, maybe we should remove them.
 /// ------------------------------------------------------------------------------------------------
-namespace Atom
+namespace atom
 {
-    using NullPtr = std::nullptr_t;
-    // static constexpr NullPtr nullptr;
+    using nullptr_t = ::std::nullptr_t;
+    // static constexpr nullptr_t nullptr;
 
-    using NullVal = std::nullptr_t;
-    constexpr NullVal nullval = NullVal();
+    using null_val = nullptr_t;
+    constexpr null_val nullval = null_val();
 
-    using NullPos = std::nullptr_t;
-    constexpr NullPos nullpos = NullPos();
+    using null_pos = nullptr_t;
+    constexpr null_pos nullpos = null_pos();
 
-    using NullType = std::nullptr_t;
-    using TypeInfo = std::type_info;
+    using null_type = nullptr_t;
+    using type_info = std::type_info;
 
-    using StdStringView = std::string_view;
-
-    template <typename T>
-    using Ptr = T*;
-
-    using memptr = void*;
-
-    template <typename T>
-    class CtorParam
-    {};
+    using std_string_view = std::string_view;
 }

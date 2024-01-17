@@ -1,75 +1,75 @@
 #pragma once
-#include "InsertableReq.h"
+#include "insertable_req.h"
 
-namespace Atom
+namespace atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// `RInsertable` mock object.
+    /// `rinsertable` mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    class InsertableReqMock
+    template <typename type>
+    class insertable_req_mock
     {
     public:
-        template <typename U>
-        auto Insert(U&& el)
-            requires(RSameAsUnqualified<U, T>);
+        template <typename u>
+        auto insert(u&& el)
+            requires(rsame_as_unqualified<u, type>);
 
-        template <typename TRange>
-        auto Insert(const TRange& range)
-            requires(RRangeOf<TRange, T>);
+        template <typename range_type>
+        auto insert(const range_type& range)
+            requires(rrange_of<range_type, type>);
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// `RFrontInsertable` mock object.
+    /// `rfront_insertable` mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    class FrontInsertableReqMock
+    template <typename type>
+    class front_insertable_req_mock
     {
     public:
-        template <typename U>
-        auto InsertFront(U&& el)
-            requires(RSameAsUnqualified<U, T>);
+        template <typename u>
+        auto insert_front(u&& el)
+            requires(rsame_as_unqualified<u, type>);
 
-        template <typename TRange>
-        auto InsertFront(const TRange& range)
-            requires(RRangeOf<TRange, T>);
+        template <typename range_type>
+        auto insert_front(const range_type& range)
+            requires(rrange_of<range_type, type>);
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// `RBackInsertable` mock object.
+    /// `rback_insertable` mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    class BackInsertableReqMock
+    template <typename type>
+    class back_insertable_req_mock
     {
     public:
-        template <typename U>
-        auto InsertBack(U&& el)
-            requires(RSameAsUnqualified<U, T>);
+        template <typename u>
+        auto insert_back(u&& el)
+            requires(rsame_as_unqualified<u, type>);
 
-        template <typename TRange>
-        auto InsertBack(const TRange& range)
-            requires(RRangeOf<TRange, T>);
+        template <typename range_type>
+        auto insert_back(const range_type& range)
+            requires(rrange_of<range_type, type>);
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// `RKeyInsertable` mock object.
+    /// `rkey_insertable` mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename TKey, typename T>
-    class KeyInsertableReqMock
+    template <typename tkey, typename type>
+    class key_insertable_req_mock
     {
     public:
-        template <typename U>
-        auto Insert(TKey key, U&& el)
-            requires(RSameAsUnqualified<U, T>);
+        template <typename u>
+        auto insert(tkey key, u&& el)
+            requires(rsame_as_unqualified<u, type>);
 
-        template <typename TRange>
-        auto Insert(TKey key, const TRange& range)
-            requires(RRangeOf<TRange, T>);
+        template <typename range_type>
+        auto insert(tkey key, const range_type& range)
+            requires(rrange_of<range_type, type>);
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// `RIndexInsertable` mock object.
+    /// `rindex_insertable` mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    using IndexInsertableReqMock = KeyInsertableReqMock<usize, T>;
+    template <typename type>
+    using index_insertable_req_mock = key_insertable_req_mock<usize, type>;
 }

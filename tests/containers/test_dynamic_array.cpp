@@ -1,29 +1,29 @@
 import atom.core;
 #include "catch2/catch_test_macros.hpp"
 
-using namespace Atom;
+using namespace atom;
 
-TEST_CASE("Atom.Containers.DynamicArray")
+TEST_CASE("atom.containers.dynamic_array")
 {
-    DynamicArray<i32> arr;
+    dynamic_array<i32> arr;
 
     REQUIRE(arr.count() == 0);
     REQUIRE(arr.data() == nullptr);
 
-    //     REQUIRE(arr.Begin()         == arr.End());
-    //     REQUIRE(arr.ConstBegin()    == arr.ConstEnd());
-    //     REQUIRE(arr.RevBegin()      == arr.RevEnd());
-    //     REQUIRE(arr.ConstRevBegin() == arr.ConstRevEnd());
+    //     REQUIRE(arr.begin()         == arr.end());
+    //     REQUIRE(arr.const_begin()    == arr.const_end());
+    //     REQUIRE(arr.rev_begin()      == arr.rev_end());
+    //     REQUIRE(arr.const_rev_begin() == arr.const_rev_end());
     //
-    //     arr.InsertAt(arr.Begin(), 0);
-    //     arr.InsertAt(arr.Begin(), { 1, 2 });
+    //     arr.insert_at(arr.begin(), 0);
+    //     arr.insert_at(arr.begin(), { 1, 2 });
     //
-    //     arr.InsertFront(0);
-    //     arr.InsertFront({ 1, 2 });
+    //     arr.insert_front(0);
+    //     arr.insert_front({ 1, 2 });
     //
-    //     arr.InsertBack(0);
-    //     arr.InsertBack({ 1, 2 });
+    //     arr.insert_back(0);
+    //     arr.insert_back({ 1, 2 });
     //
-    //     arr.RemoveAt(arr.Begin());
-    //     arr.RemoveRange({ arr.Begin(), arr.End() });
+    //     arr.remove_at(arr.begin());
+    //     arr.remove_range({ arr.begin(), arr.end() });
 }

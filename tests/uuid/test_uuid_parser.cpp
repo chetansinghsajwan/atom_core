@@ -1,15 +1,15 @@
 import atom.core;
 #include "catch2/catch_test_macros.hpp"
 
-using namespace Atom;
+using namespace atom;
 
-TEST_CASE("Atom::Uuid::UuidParser")
+TEST_CASE("atom::uuid::uuid_parser")
 {
-    constexpr char str[] = "00010203-0405-0607-0809-0A0B0C0D0E0F";
+    constexpr char str[] = "00010203-0405-0607-0809-0a0b0c0d0e0f";
 
-    Uuid uuid = UuidParser().parse(MakeRange(str));
+    uuid uuid = uuid_parser().parse(make_range(str));
 
-    constexpr Uuid expected = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+    constexpr class uuid expected = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
 
-    CHECK(uuid.eq(expected));
+    REQUIRE(uuid.eq(expected));
 }

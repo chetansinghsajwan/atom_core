@@ -1,96 +1,96 @@
 #pragma once
-#include "RangeExtensions.h"
+#include "range_extensions.h"
 
-namespace Atom
+namespace atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// Implementation for [`MutRangeExtensions`].
+    /// implementation for [`mut_range_extensions`].
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange, typename _TConstExtensionsImpl = void>
-    class _MutRangeExtensionsImpl: public _TConstExtensionsImpl
+    template <typename range_type, typename _tconst_extensions_impl = void>
+    class _mut_range_extensions_impl: public _tconst_extensions_impl
     {
-        using Base = _TConstExtensionsImpl;
+        using base_type = _tconst_extensions_impl;
 
     protected:
-        using _TImpl = typename Base::_TImpl;
+        using _timpl = typename base_type::_timpl;
 
     public:
-        using TElem = typename Base::TElem;
-        using TIter = typename Base::TIter;
-        using TIterEnd = typename Base::TIterEnd;
-        using TMutIter = typename _TImpl::TMutIter;
-        using TMutIterEnd = typename _TImpl::TMutIterEnd;
+        using elem_type = typename base_type::elem_type;
+        using iter_type = typename base_type::iter_type;
+        using iter_end_type = typename base_type::iter_end_type;
+        using mut_iter_type = typename _timpl::mut_iter_type;
+        using mut_iter_end_type = typename _timpl::mut_iter_end_type;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
 
     public:
-        constexpr auto mutIter() -> TMutIter
+        constexpr auto mut_iter() -> mut_iter_type
         {
-            return _range().mutIter();
+            return _range().mut_iter();
         }
 
-        constexpr auto mutIterEnd() -> TMutIterEnd
+        constexpr auto mut_iter_end() -> mut_iter_end_type
         {
-            return _range().mutIterEnd();
+            return _range().mut_iter_end();
         }
 
     protected:
-        using Base::_range;
+        using base_type::_range;
     };
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange>
-    class _MutRangeExtensionsImpl<TRange, void>
-        : public _MutRangeExtensionsImpl<TRange, _RangeExtensionsImpl<TRange>>
+    template <typename range_type>
+    class _mut_range_extensions_impl<range_type, void>
+        : public _mut_range_extensions_impl<range_type, _range_extensions_impl<range_type>>
     {};
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange, typename _TConstRangeExtensions = void>
-    class MutRangeExtensions: public _TConstRangeExtensions
+    template <typename range_type, typename _tconst_range_extensions = void>
+    class mut_range_extensions: public _tconst_range_extensions
     {
-        using Base = _TConstRangeExtensions;
+        using base_type = _tconst_range_extensions;
 
     protected:
-        using _TImpl = typename Base::_TImpl;
+        using _timpl = typename base_type::_timpl;
 
     public:
-        using TElem = typename Base::TElem;
-        using TIter = typename Base::TIter;
-        using TIterEnd = typename Base::TIterEnd;
-        using TMutIter = typename _TImpl::TMutIter;
-        using TMutIterEnd = typename _TImpl::TMutIterEnd;
+        using elem_type = typename base_type::elem_type;
+        using iter_type = typename base_type::iter_type;
+        using iter_end_type = typename base_type::iter_end_type;
+        using mut_iter_type = typename _timpl::mut_iter_type;
+        using mut_iter_end_type = typename _timpl::mut_iter_end_type;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
 
     public:
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////
-        //// Iteration
+        //// iteration
         ////
         ////////////////////////////////////////////////////////////////////////////////////////////
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto mutIter() -> TMutIter
+        constexpr auto mut_iter() -> mut_iter_type
         {
-            return _impl().mutIter();
+            return _impl().mut_iter();
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto mutIterEnd() -> TMutIterEnd
+        constexpr auto mut_iter_end() -> mut_iter_end_type
         {
-            return _impl().mutIterEnd();
+            return _impl().mut_iter_end();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -98,33 +98,33 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto begin()
         {
-            return StdIterWrapForAtomIter{ _impl().mutIter() };
+            return std_iter_wrap_for_atom_iter{ _impl().mut_iter() };
         }
 
-        using Base::begin;
+        using base_type::begin;
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
         constexpr auto end()
         {
-            return StdIterWrapForAtomIter{ _impl().mutIterEnd() };
+            return std_iter_wrap_for_atom_iter{ _impl().mut_iter_end() };
         }
 
-        using Base::end;
+        using base_type::end;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////
-        //// Write
+        //// write
         ////
         ////////////////////////////////////////////////////////////////////////////////////////////
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename T1>
-        constexpr auto writeElems(T1& val) const -> void
-            requires(RAssignable<TElem, T1>)
+        template <typename t1>
+        constexpr auto write_elems(t1& val) const -> void
+            requires(rassignable<elem_type, t1>)
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -132,9 +132,9 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ATOM_PRAGMA_OPTIMIZE_OFF
 
-        template <typename T1>
-        constexpr auto writeElemsNoOptimize(T1& val) const -> void
-            requires(RAssignable<TElem, T1>)
+        template <typename t1>
+        constexpr auto write_elems_no_optimize(t1& val) const -> void
+            requires(rassignable<elem_type, t1>)
         {}
 
         ATOM_PRAGMA_OPTIMIZE_ON
@@ -142,69 +142,69 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto shiftFwd(usize steps)
-            requires(RMoveAssignable<TElem>)
+        constexpr auto shift_fwd(usize steps)
+            requires(rmove_assignable<elem_type>)
         {}
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto shiftBwd(usize steps)
-            requires(RMoveAssignable<TElem>)
+        constexpr auto shift_bwd(usize steps)
+            requires(rmove_assignable<elem_type>)
         {}
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto shiftBy(isize steps)
-            requires(RSwappable<TElem>)
+        constexpr auto shift_by(isize steps)
+            requires(rswappable<elem_type>)
         {}
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto rotateFwd(usize steps)
-            requires(RSwappable<TElem>)
+        constexpr auto rotate_fwd(usize steps)
+            requires(rswappable<elem_type>)
         {}
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto rotateBwd(usize steps)
-            requires(RSwappable<TElem>)
+        constexpr auto rotate_bwd(usize steps)
+            requires(rswappable<elem_type>)
         {}
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto rotateBy(isize steps)
-            requires(RSwappable<TElem>)
+        constexpr auto rotate_by(isize steps)
+            requires(rswappable<elem_type>)
         {}
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto destroyElems()
-            requires(RDestructible<TElem>)
+        constexpr auto destroy_elems()
+            requires(rdestructible<elem_type>)
         {}
 
     protected:
-        using Base::_impl;
+        using base_type::_impl;
     };
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange>
-    class MutRangeExtensions<TRange, void>
-        : public MutRangeExtensions<TRange,
-              RangeExtensions<TRange, _MutRangeExtensionsImpl<TRange>>>
+    template <typename range_type>
+    class mut_range_extensions<range_type, void>
+        : public mut_range_extensions<range_type,
+              range_extensions<range_type, _mut_range_extensions_impl<range_type>>>
     {
-        using Base =
-            MutRangeExtensions<TRange, RangeExtensions<TRange, _MutRangeExtensionsImpl<TRange>>>;
+        using base_type =
+            mut_range_extensions<range_type, range_extensions<range_type, _mut_range_extensions_impl<range_type>>>;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 }

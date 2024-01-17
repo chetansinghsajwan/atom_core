@@ -1,28 +1,28 @@
 #pragma once
 
-namespace Atom
+namespace atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// Ascii char encoding.
+    /// ascii char encoding.
     /// --------------------------------------------------------------------------------------------
-    class AsciiEncoding
+    class ascii_encoding
     {
     public:
-        using TChar = Char;
-        using TRune = Char;
+        using tchar = uchar;
+        using trune = uchar;
 
     public:
-        static constexpr TChar Null = '\0';
-        static constexpr bool IsMultiCharEncoding = false;
+        static constexpr tchar null = '\0';
+        static constexpr bool is_multi_char_encoding = false;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// {Char} for {AsciiEncoding}.
+    /// {char} for {ascii_encoding}.
     /// --------------------------------------------------------------------------------------------
-    using AsciiChar = typename AsciiEncoding::TChar;
+    using ascii_char = typename ascii_encoding::tchar;
 
     /// --------------------------------------------------------------------------------------------
-    /// {Rune} for {AsciiEncoding}.
+    /// {rune} for {ascii_encoding}.
     /// --------------------------------------------------------------------------------------------
-    using AsciiRune = typename AsciiEncoding::TRune;
+    using ascii_rune = typename ascii_encoding::trune;
 }

@@ -1,9 +1,9 @@
 #pragma once
-#include "Atom/Containers/DynamicArray.h"
-#include "_StringImpl.h"
+#include "atom/containers/dynamic_array.h"
+#include "_string_impl.h"
 
-namespace Atom
+namespace atom
 {
-    template <typename TEncoding, typename TAlloc = DefaultMemAllocator>
-    using BasicDynamicString = _StringImpl<TEncoding, DynamicArray<BasicChar<TEncoding>, TAlloc>>;
+    template <typename tencoding, typename allocator_type = default_mem_allocator>
+    using basic_dynamic_string = _string_impl<tencoding, dynamic_array<basic_char<tencoding>, allocator_type>>;
 }

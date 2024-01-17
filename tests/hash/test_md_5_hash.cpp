@@ -1,111 +1,111 @@
 import atom.core;
 #include "catch2/catch_test_macros.hpp"
 
-using namespace Atom;
+using namespace atom;
 
-TEST_CASE("Atom::Hash::Md5Hash")
+TEST_CASE("atom::hash::md5_hash")
 {
-    SECTION("Hash Comparision")
+    SECTION("hash comparision")
     {
-        Md5Hash hash1 = { 0xda, 0x39, 0xa3, 0xee, 0x5e, 0x6b, 0x4b, 0x0d, 0x32, 0x55, 0xbf, 0xef,
+        md5_hash hash1 = { 0xda, 0x39, 0xa3, 0xee, 0x5e, 0x6b, 0x4b, 0x0d, 0x32, 0x55, 0xbf, 0xef,
             0x95, 0x60, 0x18, 0x90 };
 
-        Md5Hash hash2 = { 0xaa, 0x39, 0xa3, 0xee, 0x5e, 0x6b, 0x4b, 0x0d, 0x32, 0x55, 0xbf, 0xef,
+        md5_hash hash2 = { 0xaa, 0x39, 0xa3, 0xee, 0x5e, 0x6b, 0x4b, 0x0d, 0x32, 0x55, 0xbf, 0xef,
             0x95, 0x60, 0x18, 0x90 };
 
-        CHECK(hash1.eq(hash1));
-        CHECK(hash1.ne(hash2));
+        REQUIRE(hash1.eq(hash1));
+        REQUIRE(hash1.ne(hash2));
     }
 
-    SECTION("Null Hash")
+    SECTION("null hash")
     {
-        Md5Hash hash;
-        Md5Hash nullHash = Md5Hash::Null;
+        md5_hash hash;
+        md5_hash null_hash = md5_hash::null;
 
-        CHECK(nullHash.eq(Md5Hash::Null));
+        REQUIRE(null_hash.eq(md5_hash::null));
 
-        hash = Md5Hash::Null;
+        hash = md5_hash::null;
 
-        CHECK(hash.eq(Md5Hash::Null));
-        CHECK(hash.eq(nullHash));
+        REQUIRE(hash.eq(md5_hash::null));
+        REQUIRE(hash.eq(null_hash));
     }
 }
 
-TEST_CASE("Atom::Hash::Md5HashParser")
+TEST_CASE("atom::hash::md5_hash_parser")
 {
-    SECTION("String to Hash")
+    SECTION("string to hash")
     {
-        Md5Hash hash = Md5HashParser().parse(MakeRange("da39a3ee5e6b4b0d3255bfef95601890"));
+        md5_hash hash = md5_hash_parser().parse(make_range("da39a3ee5e6b4b0d3255bfef95601890"));
 
-        Md5Hash expected = { 0xda, 0x39, 0xa3, 0xee, 0x5e, 0x6b, 0x4b, 0x0d, 0x32, 0x55, 0xbf, 0xef,
+        md5_hash expected = { 0xda, 0x39, 0xa3, 0xee, 0x5e, 0x6b, 0x4b, 0x0d, 0x32, 0x55, 0xbf, 0xef,
             0x95, 0x60, 0x18, 0x90 };
 
-        CHECK(hash.eq(expected));
+        REQUIRE(hash.eq(expected));
     }
 
-    SECTION("Invalid Hash")
+    SECTION("invalid hash")
     {
-        //! Won't Compile
-        // Md5Hash hash = Md5HashParser()
+        //! won't compile
+        // md5_hash hash = md5_hash_parser()
         //     .parse("da3");
         //
-        // CHECK(hash.eq(Md5Hash));
+        // REQUIRE(hash.eq(md5_hash));
     }
 }
 
-TEST_CASE("Atom::Hash::Md5HashStringifier")
+TEST_CASE("atom::hash::md5_hash_stringifier")
 {
-    Md5Hash hash = { 0xda, 0x39, 0xa3, 0xee, 0x5e, 0x6b, 0x4b, 0x0d, 0x32, 0x55, 0xbf, 0xef, 0x95,
+    md5_hash hash = { 0xda, 0x39, 0xa3, 0xee, 0x5e, 0x6b, 0x4b, 0x0d, 0x32, 0x55, 0xbf, 0xef, 0x95,
         0x60, 0x18, 0x90 };
 
-    String str = Md5HashStringifier().ToString(hash);
+    string str = md5_hash_stringifier().to_string(hash);
 
-    StringView expected = MakeRange("da39a3ee5e6b4b0d3255bfef95601890");
+    string_view expected = make_range("da39a3ee5e6b4b0d3255bfef95601890");
 
-    CHECK(str.eq(expected));
+    REQUIRE(str.eq(expected));
 }
 
-TEST_CASE("Atom::Hash::Md5HashGenerator")
+TEST_CASE("atom::hash::md5_hash_generator")
 {
-    // Tests if the SHA-1 hash of an empty input string is correct.
-    SECTION("TestEmptyInput")
+    // tests if the sha-1 hash of an empty input string is correct.
+    SECTION("test_empty_input")
     {
         constexpr char input[] = "";
 
-        Md5Hash hash = Md5HashGenerator().Generate();
+        md5_hash hash = md5_hash_generator().generate();
 
-        Md5Hash expected = Md5HashParser().parse(MakeRange("d41d8cd98f00b204e9800998ecf8427e"));
+        md5_hash expected = md5_hash_parser().parse(make_range("d41d8cd98f00b204e9800998ecf8427e"));
 
-        CHECK(hash.eq(expected));
+        REQUIRE(hash.eq(expected));
     }
 
-    // Tests if the SHA-1 hash of a single block input string is correct.
-    SECTION("TestSingleBlockInput")
+    // tests if the sha-1 hash of a single block input string is correct.
+    SECTION("test_single_block_input")
     {
-        constexpr char input[] = "The quick brown fox jumps over the lazy dog";
+        constexpr char input[] = "the quick brown fox jumps over the lazy dog";
 
-        Md5Hash hash = Md5HashGenerator().ProcessBytes(input, sizeof(input) - 1).Generate();
+        md5_hash hash = md5_hash_generator().process_bytes(input, sizeof(input) - 1).generate();
 
-        Md5Hash expected = Md5HashParser().parse(MakeRange("9e107d9d372bb6826bd81d3542a419d6"));
+        md5_hash expected = md5_hash_parser().parse(make_range("9e107d9d372bb6826bd81d3542a419d6"));
 
-        CHECK(hash.eq(expected));
+        REQUIRE(hash.eq(expected));
     }
 
-    // Tests if the SHA-1 hash of a multi-block input string is correct.
-    SECTION("TestMultiBlockInput")
+    // tests if the sha-1 hash of a multi-block input string is correct.
+    SECTION("test_multi_block_input")
     {
         constexpr char input[] =
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor "
-            "incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud "
-            "exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure "
+            "lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor "
+            "incididunt ut labore et dolore magna aliqua. ut enim ad minim veniam, quis nostrud "
+            "exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. duis aute irure "
             "dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla "
-            "pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia "
+            "pariatur. excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia "
             "deserunt mollit anim id est laborum.";
 
-        Md5Hash hash = Md5HashGenerator().ProcessBytes(input, sizeof(input) - 1).Generate();
+        md5_hash hash = md5_hash_generator().process_bytes(input, sizeof(input) - 1).generate();
 
-        Md5Hash expected = Md5HashParser().parse(MakeRange("db89bb5ceab87f9c0fcc2ab36c189c2c"));
+        md5_hash expected = md5_hash_parser().parse(make_range("db89bb5ceab87f9c0fcc2ab36c189c2c"));
 
-        CHECK(hash.eq(expected));
+        REQUIRE(hash.eq(expected));
     }
 }

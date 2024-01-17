@@ -1,146 +1,146 @@
 #pragma once
-#include "Atom/Core.h"
-#include "Atom/Memory/ObjHelper.h"
-#include "Atom/Memory/SharedPtr.decl.h"
-#include "Atom/TTI.h"
+#include "atom/core.h"
+#include "atom/memory/obj_helper.h"
+#include "atom/memory/shared_ptr_decl.h"
+#include "atom/tti.h"
 
-namespace Atom
+namespace atom
 {
-    template <typename T>
-    class UniquePtrDefaultDestroyer
+    template <typename type>
+    class unique_ptr_default_destroyer
     {
-        static_assert(TTI::IsPure<T>, "UniquePtrDefaultDestroyer only supports pure types.");
-        static_assert(not TTI::IsVoid<T>, "UniquePtrDefaultDestroyer doesn't support void.");
+        static_assert(tti::is_pure<type>, "unique_ptr_default_destroyer only supports pure types.");
+        static_assert(not tti::is_void<type>, "unique_ptr_default_destroyer doesn't support void.");
 
     public:
-        constexpr auto operator()(MutPtr<T> val)
+        constexpr auto operator()(mut_ptr<type> val)
         {
-            ObjHelper().DestructAs<T>(val);
-            DefaultMemAllocator().Dealloc(val);
+            obj_helper().destruct_as<type>(val);
+            default_mem_allocator().dealloc(val);
         }
     };
 
-    template <typename TInVal, typename TInDestroyer = UniquePtrDefaultDestroyer<TInVal>>
-    class UniquePtr: public MutPtr<TInVal>
+    template <typename tin_val, typename tin_destroyer = unique_ptr_default_destroyer<tin_val>>
+    class unique_ptr: public mut_ptr<tin_val>
     {
-        static_assert(TTI::IsPure<TInVal>, "UniquePtr only supports pure types.");
-        static_assert(not TTI::IsVoid<TInVal>, "UniquePtr doesn't support void.");
-        static_assert(TTI::IsPure<TInDestroyer>);
-        static_assert(not TTI::IsVoid<TInDestroyer>);
+        static_assert(tti::is_pure<tin_val>, "unique_ptr only supports pure types.");
+        static_assert(not tti::is_void<tin_val>, "unique_ptr doesn't support void.");
+        static_assert(tti::is_pure<tin_destroyer>);
+        static_assert(not tti::is_void<tin_destroyer>);
 
     private:
-        template <typename TVal1, typename TDestroyer1>
-        friend class UniquePtr;
+        template <typename tval1, typename tdestroyer1>
+        friend class unique_ptr;
 
     private:
-        using Base = MutPtr<TInVal>;
+        using base_type = mut_ptr<tin_val>;
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// Type of value `This` holds.
+        /// type of value `this_type` holds.
         /// ----------------------------------------------------------------------------------------
-        using TVal = TInVal;
+        using value_type = tin_val;
 
         /// ----------------------------------------------------------------------------------------
-        /// Type of destroyer used to destroy value and dealloc memory.
+        /// type of destroyer used to destroy value and dealloc memory.
         /// ----------------------------------------------------------------------------------------
-        using TDestroyer = TInDestroyer;
+        using tdestroyer = tin_destroyer;
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// # Default Constructor
+        /// # default constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr UniquePtr(TDestroyer destroyer = TDestroyer())
-            : Base()
+        constexpr unique_ptr(tdestroyer destroyer = tdestroyer())
+            : base_type()
             , _destroyer(mov(destroyer))
         {}
 
         /// ----------------------------------------------------------------------------------------
-        /// # Copy Constructor
+        /// # copy constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr UniquePtr(const UniquePtr& that) = delete;
+        constexpr unique_ptr(const unique_ptr& that) = delete;
 
         /// ----------------------------------------------------------------------------------------
-        /// # Copy Operator
+        /// # copy operator
         /// ----------------------------------------------------------------------------------------
-        constexpr UniquePtr& operator=(const UniquePtr& that) = delete;
+        constexpr unique_ptr& operator=(const unique_ptr& that) = delete;
 
         /// ----------------------------------------------------------------------------------------
-        /// # Move Constructor
+        /// # move constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr UniquePtr(UniquePtr&& that)
-            : Base(that.unwrap())
+        constexpr unique_ptr(unique_ptr&& that)
+            : base_type(that.unwrap())
             , _destroyer(mov(that._destroyer))
         {
-            that._setPtr(nullptr);
+            that._set_ptr(nullptr);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Move Operator
+        /// # move operator
         /// ----------------------------------------------------------------------------------------
-        constexpr UniquePtr& operator=(UniquePtr&& that)
+        constexpr unique_ptr& operator=(unique_ptr&& that)
         {
             _move(mov(that));
             return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Template Move Constructor
+        /// # template move constructor
         /// ----------------------------------------------------------------------------------------
-        template <typename TVal1>
-        constexpr UniquePtr(UniquePtr<TVal1, TDestroyer>&& that)
-            requires RSameOrDerivedFrom<TVal1, TVal>
-            : Base(that.unwrap())
+        template <typename tval1>
+        constexpr unique_ptr(unique_ptr<tval1, tdestroyer>&& that)
+            requires rsame_or_derived_from<tval1, value_type>
+            : base_type(that.unwrap())
             , _destroyer(mov(that._destroyer))
         {
-            that._setPtr(nullptr);
+            that._set_ptr(nullptr);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Template Move Operator
+        /// # template move operator
         /// ----------------------------------------------------------------------------------------
-        template <typename TVal1>
-        constexpr UniquePtr& operator=(UniquePtr<TVal1, TDestroyer>&& that)
-            requires RSameOrDerivedFrom<TVal1, TVal>
+        template <typename tval1>
+        constexpr unique_ptr& operator=(unique_ptr<tval1, tdestroyer>&& that)
+            requires rsame_or_derived_from<tval1, value_type>
         {
             _move(mov(that));
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Value Constructor
+        /// # value constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr explicit UniquePtr(MutPtr<TVal> ptr, TDestroyer destroyer = TDestroyer())
-            : Base(ptr)
+        constexpr explicit unique_ptr(mut_ptr<value_type> ptr, tdestroyer destroyer = tdestroyer())
+            : base_type(ptr)
             , _destroyer(mov(destroyer))
         {}
 
         /// ----------------------------------------------------------------------------------------
-        /// # Destructor
+        /// # destructor
         /// ----------------------------------------------------------------------------------------
-        constexpr ~UniquePtr()
+        constexpr ~unique_ptr()
         {
-            _checkAndDestroyValue();
+            _check_and_destroy_value();
         }
 
     public:
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto set(MutPtr<TVal> ptr)
+        constexpr auto set(mut_ptr<value_type> ptr)
         {
-            _checkAndDestroyValue();
+            _check_and_destroy_value();
 
-            _setPtr(ptr.unwrap());
+            _set_ptr(ptr.unwrap());
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto set(MutPtr<TVal> ptr, TDestroyer destroyer = TDestroyer())
+        constexpr auto set(mut_ptr<value_type> ptr, tdestroyer destroyer = tdestroyer())
         {
-            _checkAndDestroyValue();
+            _check_and_destroy_value();
 
-            _setPtr(ptr.unwrap());
+            _set_ptr(ptr.unwrap());
             _destroyer = mov(destroyer);
         }
 
@@ -149,15 +149,15 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto set(std::nullptr_t)
         {
-            _checkAndDestroyValue();
+            _check_and_destroy_value();
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto release() -> MutPtr<TVal>
+        constexpr auto release() -> mut_ptr<value_type>
         {
-            return _releaseValue();
+            return _release_value();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -165,92 +165,92 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto destroy()
         {
-            _checkAndDestroyValue();
+            _check_and_destroy_value();
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename T = TVal>
-        constexpr auto toShared() -> SharedPtr<T>
-            requires RSameOrDerivedFrom<T, TVal>
+        template <typename type = value_type>
+        constexpr auto to_shared() -> shared_ptr<type>
+            requires rsame_or_derived_from<type, value_type>
         {
-            return _toShared();
+            return _to_shared();
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename TAllocator, typename T = TVal>
-        constexpr auto toSharedWithAlloc(TAllocator allocator = TAllocator()) -> SharedPtr<T>
-            requires RSameOrDerivedFrom<T, TVal>
+        template <typename tallocator, typename type = value_type>
+        constexpr auto to_shared_with_alloc(tallocator allocator = tallocator()) -> shared_ptr<type>
+            requires rsame_or_derived_from<type, value_type>
         {
-            return _toShared();
+            return _to_shared();
         }
 
     private:
-        template <typename TVal1>
-        constexpr auto _move(UniquePtr<TVal1, TDestroyer>&& that)
+        template <typename tval1>
+        constexpr auto _move(unique_ptr<tval1, tdestroyer>&& that)
         {
-            _checkAndDestroyValue();
+            _check_and_destroy_value();
 
-            _setPtr(that._getMutPtr());
+            _set_ptr(that._get_mut_ptr());
             _destroyer = mov(that._destroyer);
-            that._setPtr(nullptr);
+            that._set_ptr(nullptr);
         }
 
-        constexpr auto _checkAndDestroyValue()
+        constexpr auto _check_and_destroy_value()
         {
-            if (_getPtr() != nullptr)
+            if (_get_ptr() != nullptr)
             {
-                _destroyValue();
-                _setPtr(nullptr);
+                _destroy_value();
+                _set_ptr(nullptr);
             }
         }
 
-        constexpr auto _releaseValue() -> TVal*
+        constexpr auto _release_value() -> value_type*
         {
-            TVal* ptr = _getMutPtr();
-            _setPtr(nullptr);
+            value_type* ptr = _get_mut_ptr();
+            _set_ptr(nullptr);
             return ptr;
         }
 
-        constexpr auto _destroyValue()
+        constexpr auto _destroy_value()
         {
-            _destroyer(_getMutPtr());
+            _destroyer(_get_mut_ptr());
         }
 
-        constexpr auto _getPtr() const -> const TVal*
+        constexpr auto _get_ptr() const -> const value_type*
         {
-            return Base::unwrap();
+            return base_type::unwrap();
         }
 
-        constexpr auto _getMutPtr() -> TVal*
+        constexpr auto _get_mut_ptr() -> value_type*
         {
-            return Base::unwrap();
+            return base_type::unwrap();
         }
 
-        constexpr auto _setPtr(TVal* ptr)
+        constexpr auto _set_ptr(value_type* ptr)
         {
-            return Base::set(ptr);
+            return base_type::set(ptr);
         }
 
-        template <typename TAllocator, typename TVal1>
-        constexpr auto _toShared(TAllocator allocator) -> SharedPtr<TVal1>;
+        template <typename tallocator, typename tval1>
+        constexpr auto _to_shared(tallocator allocator) -> shared_ptr<tval1>;
 
     private:
-        TDestroyer _destroyer;
+        tdestroyer _destroyer;
     };
 
-    template <typename T, typename... TArgs>
-    auto MakeUnique(TArgs&&... args) -> UniquePtr<T>
+    template <typename type, typename... args_type>
+    auto make_unique(args_type&&... args) -> unique_ptr<type>
     {
-        return std::make_unique<T>(forward<TArgs>(args)...);
+        return std::make_unique<type>(forward<args_type>(args)...);
     }
 
-    template <typename T, typename TAllocator, typename... TArgs>
-    auto MakeUniqueWithAlloc(TAllocator allocator, TArgs&&... args) -> UniquePtr<T>
+    template <typename type, typename tallocator, typename... args_type>
+    auto make_unique_with_alloc(tallocator allocator, args_type&&... args) -> unique_ptr<type>
     {
-        return std::make_unique<T>(forward<TArgs>(args)...);
+        return std::make_unique<type>(forward<args_type>(args)...);
     }
 }

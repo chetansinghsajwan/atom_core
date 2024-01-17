@@ -1,565 +1,565 @@
 #pragma once
-#include "Atom/Invokable/Invokable.h"
-#include "_OptionImpl.h"
+#include "atom/invokable/invokable.h"
+#include "_option_impl.h"
 
-namespace Atom
+namespace atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// Type used to initialize Option with no value.
+    /// type used to initialize option with no value.
     /// --------------------------------------------------------------------------------------------
-    class NullOption
+    class null_option
     {};
 
-    constexpr NullOption nullopt = NullOption();
+    constexpr null_option nullopt = null_option();
 
     /// --------------------------------------------------------------------------------------------
-    /// The Option class is used to wrap the object of type `TVal`. This class contain either the
+    /// the option class is used to wrap the object of type `value_type`. this_type class contain either the
     /// value or can be empty representing no value.
     ///
-    /// This is useful when we want to return a value that may or may not exist, without
-    /// using null pointers or exceptions. Or just want to add the ability of being null to a type
+    /// this_type is useful when we want to return a value that may or may not exist, without
+    /// using null pointers or exceptions. or just want to add the ability of being null to a type
     /// like `i32`.
     ///
-    /// # Template Parameters
-    /// - `T`: Type of value to store.
+    /// # template parameters
+    /// - `type`: type of value to store.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    class Option
+    template <typename type>
+    class option
     {
-        static_assert(TTI::IsPure<T>, "Option supports only pure types");
-        static_assert(not TTI::IsVoid<T>, "Option doesn't support void type.");
+        static_assert(tti::is_pure<type>, "option supports only pure types");
+        static_assert(not tti::is_void<type>, "option doesn't support void type.");
 
     private:
-        using This = Option<T>;
-        using Impl = _OptionImpl<T>;
+        using this_type = option<type>;
+        using impl = _option_impl<type>;
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// Type of value this option holds.
+        /// type of value this option holds.
         /// ----------------------------------------------------------------------------------------
-        using TVal = T;
+        using value_type = type;
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// # Default Constructor
+        /// # default constructor
         ///
-        /// Constructs with no value.
+        /// constructs with no value.
         /// ----------------------------------------------------------------------------------------
-        constexpr Option()
-            : _impl(typename Impl::CtorDefault())
+        constexpr option()
+            : _impl(typename impl::ctor_default())
         {}
 
         /// ----------------------------------------------------------------------------------------
-        /// # Trivial Copy Constructor.
+        /// # trivial copy constructor.
         /// ----------------------------------------------------------------------------------------
-        constexpr Option(const Option& that)
-            requires(RTriviallyCopyConstructible<TVal>)
+        constexpr option(const option& that)
+            requires(rtrivially_copy_constructible<value_type>)
         = default;
 
         /// ----------------------------------------------------------------------------------------
-        /// # Copy Constructor
+        /// # copy constructor
         ///
-        /// If `that` contains value, copy constructs `this` value with `that` value.
-        /// Else constructs wih no value.
+        /// if `that` contains value, copy constructs `this` value with `that` value.
+        /// else constructs wih no value.
         /// ----------------------------------------------------------------------------------------
-        constexpr Option(const Option& that)
-            requires(not RTriviallyCopyConstructible<TVal>) and (RCopyConstructible<TVal>)
-            : _impl(typename Impl::CtorCopy(), that._impl)
+        constexpr option(const option& that)
+            requires(not rtrivially_copy_constructible<value_type>) and (rcopy_constructible<value_type>)
+            : _impl(typename impl::ctor_copy(), that._impl)
         {}
 
         /// ----------------------------------------------------------------------------------------
-        /// # Trivial Copy Operator
+        /// # trivial copy operator
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator=(const Option& that) -> Option&
-            requires(RTriviallyCopyAssignable<TVal>)
+        constexpr auto operator=(const option& that) -> option&
+            requires(rtrivially_copy_assignable<value_type>)
         = default;
 
         /// ----------------------------------------------------------------------------------------
-        /// # Copy Operator
+        /// # copy operator
         ///
-        /// If `that` contains value
-        ///     If `this` contains value, copy assigns with `that` value.
-        ///     Else, copy constructs with `that` value.
-        /// Else
-        ///     If `this` contains value, destroys `this` value.
-        ///     Else, does nothing.
+        /// if `that` contains value
+        ///     if `this` contains value, copy assigns with `that` value.
+        ///     else, copy constructs with `that` value.
+        /// else
+        ///     if `this` contains value, destroys `this` value.
+        ///     else, does nothing.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator=(const Option& that) -> Option&
-            requires(not RTriviallyCopyAssignable<TVal>) and (RCopyable<TVal>)
+        constexpr auto operator=(const option& that) -> option&
+            requires(not rtrivially_copy_assignable<value_type>) and (rcopyable<value_type>)
         {
             _impl.copy(that._impl);
             return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Trivial Move Constructor
+        /// # trivial move constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr Option(Option&& that)
-            requires(RTriviallyMoveConstructible<TVal>)
+        constexpr option(option&& that)
+            requires(rtrivially_move_constructible<value_type>)
         = default;
 
         /// ----------------------------------------------------------------------------------------
-        /// # Move Constructor
+        /// # move constructor
         ///
-        /// If `that` contains value, move constructs `this` value with `that` value.
-        /// Else constructs wih no value.
+        /// if `that` contains value, move constructs `this` value with `that` value.
+        /// else constructs wih no value.
         /// ----------------------------------------------------------------------------------------
-        constexpr Option(Option&& that)
-            requires(not RTriviallyMoveConstructible<TVal>) and (RMoveConstructible<TVal>)
-            : _impl(typename Impl::CtorMove(), mov(that._impl))
+        constexpr option(option&& that)
+            requires(not rtrivially_move_constructible<value_type>) and (rmove_constructible<value_type>)
+            : _impl(typename impl::ctor_move(), mov(that._impl))
         {}
 
         /// ----------------------------------------------------------------------------------------
-        /// # Trivial Move Operator
+        /// # trivial move operator
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator=(Option&& that) -> Option&
-            requires(RTriviallyMoveAssignable<TVal>)
+        constexpr auto operator=(option&& that) -> option&
+            requires(rtrivially_move_assignable<value_type>)
         = default;
 
         /// ----------------------------------------------------------------------------------------
-        /// # Move Operator
+        /// # move operator
         ///
-        /// If `that` contains value
-        ///     If `this` contains value, move assigns with `that` value.
-        ///     Else, move constructs with `that` value.
-        /// Else
-        ///     If `this` contains value, destroys `this` value.
-        ///     Else, does nothing.
+        /// if `that` contains value
+        ///     if `this` contains value, move assigns with `that` value.
+        ///     else, move constructs with `that` value.
+        /// else
+        ///     if `this` contains value, destroys `this` value.
+        ///     else, does nothing.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator=(Option&& that) -> Option&
-            requires(not RTriviallyMoveAssignable<TVal>) and (RMoveable<TVal>)
+        constexpr auto operator=(option&& that) -> option&
+            requires(not rtrivially_move_assignable<value_type>) and (rmoveable<value_type>)
         {
             _impl.move(mov(that._impl));
             return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Null Constructor
+        /// # null constructor
         ///
-        /// Constructs with no value.
+        /// constructs with no value.
         /// ----------------------------------------------------------------------------------------
-        constexpr Option(NullOption)
-            : _impl(typename Impl::CtorDefault())
+        constexpr option(null_option)
+            : _impl(typename impl::ctor_default())
         {}
 
         /// ----------------------------------------------------------------------------------------
-        /// # Null Operator
+        /// # null operator
         ///
-        /// Destroys current value if any.
+        /// destroys current value if any.
         /// ----------------------------------------------------------------------------------------
-        constexpr Option& operator=(NullOption)
+        constexpr option& operator=(null_option)
         {
-            _impl.destroyValue();
+            _impl.destroy_value();
             return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Value Copy Constructor
+        /// # value copy constructor
         ///
-        /// Copy constructs `this` value with `val`.
+        /// copy constructs `this` value with `val`.
         ///
-        /// # Parameters
+        /// # parameters
         ///
-        /// - `val`: Value to construct with.
+        /// - `val`: value to construct with.
         /// ----------------------------------------------------------------------------------------
-        constexpr Option(const TVal& val)
+        constexpr option(const value_type& val)
             : _impl(val)
         {}
 
         /// ----------------------------------------------------------------------------------------
-        /// # Value Copy Operator
+        /// # value copy operator
         ///
-        /// If `this` contains value, copy assigns `this` value with `val`.
-        /// Else, copy constructs `this` value with `val`.
+        /// if `this` contains value, copy assigns `this` value with `val`.
+        /// else, copy constructs `this` value with `val`.
         ///
-        /// # Parameters
+        /// # parameters
         ///
-        /// - `val`: Value to assign or construct with.
+        /// - `val`: value to assign or construct with.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator=(const TVal& val) -> Option&
+        constexpr auto operator=(const value_type& val) -> option&
         {
-            _impl.setValue(val);
+            _impl.set_value(val);
             return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Value Move Constructor
+        /// # value move constructor
         ///
-        /// Move constructs `this` value with `value`.
+        /// move constructs `this` value with `value`.
         ///
-        /// # Parameters
+        /// # parameters
         ///
-        /// - `val`: Value to construct with.
+        /// - `val`: value to construct with.
         /// ----------------------------------------------------------------------------------------
-        constexpr Option(TVal&& val)
+        constexpr option(value_type&& val)
             : _impl(mov(val))
         {}
 
         /// ----------------------------------------------------------------------------------------
-        /// # Value Move Operator
+        /// # value move operator
         ///
-        /// If `this` contains value, move assigns `this` value with `val`.
-        /// Else, move constructs `this` value with `val`.
+        /// if `this` contains value, move assigns `this` value with `val`.
+        /// else, move constructs `this` value with `val`.
         ///
-        /// # Parameters
+        /// # parameters
         ///
-        /// - `val`: Value to assign or construct with.
+        /// - `val`: value to assign or construct with.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator=(TVal&& val) -> Option&
+        constexpr auto operator=(value_type&& val) -> option&
         {
-            _impl.setValue(mov(val));
+            _impl.set_value(mov(val));
             return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Trivial Destructor
+        /// # trivial destructor
         /// ----------------------------------------------------------------------------------------
-        constexpr ~Option()
-            requires(RTriviallyDestructible<TVal>)
+        constexpr ~option()
+            requires(rtrivially_destructible<value_type>)
         = default;
 
         /// ----------------------------------------------------------------------------------------
-        /// # Destructor
+        /// # destructor
         ///
-        /// Destroys value if stored.
+        /// destroys value if stored.
         /// ----------------------------------------------------------------------------------------
-        constexpr ~Option()
-            requires(not RTriviallyDestructible<TVal>) and (RDestructible<TVal>)
+        constexpr ~option()
+            requires(not rtrivially_destructible<value_type>) and (rdestructible<value_type>)
         {
             _impl.destroy();
         }
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// Construct value with `args`. If a value already exists, destroys that value and
+        /// construct value with `args`. if a value already exists, destroys that value and
         /// contructs and new one.
         ///
-        /// # Parameters
+        /// # parameters
         ///
-        /// - `args`: Arguments to construct the new value with.
+        /// - `args`: arguments to construct the new value with.
         /// ----------------------------------------------------------------------------------------
-        template <typename... TArgs>
-        constexpr auto emplace(TArgs&&... args)
-            requires(RConstructible<TVal, TArgs...>)
+        template <typename... args_type>
+        constexpr auto emplace(args_type&&... args)
+            requires(rconstructible<value_type, args_type...>)
         {
-            _impl.emplaceValue(forward<TArgs>(args)...);
+            _impl.emplace_value(forward<args_type>(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Destroys current value if any.
+        /// destroys current value if any.
         /// ----------------------------------------------------------------------------------------
         constexpr auto reset()
         {
-            return _impl.destroyValue();
+            return _impl.destroy_value();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Access the value by ref.
+        /// access the value by ref.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get() const& -> const TVal&
+        constexpr auto get() const& -> const value_type&
         {
-            Contracts::Expects(isValue(), "Doesn't contain value.");
+            contracts::expects(is_value(), "doesn't contain value.");
 
-            return _impl.getValue();
+            return _impl.get_value();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Access the value by ref.
+        /// access the value by ref.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto getMut() & -> TVal&
+        constexpr auto get_mut() & -> value_type&
         {
-            Contracts::Expects(isValue(), "Doesn't contain value.");
+            contracts::expects(is_value(), "doesn't contain value.");
 
-            return _impl.getMutValue();
+            return _impl.get_mut_value();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Access the value by ptr.
+        /// access the value by ptr.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator->() const -> const TVal*
+        constexpr auto operator->() const -> const value_type*
         {
-            Contracts::DebugExpects(isValue(), "Doesn't contain value.");
+            contracts::debug_expects(is_value(), "doesn't contain value.");
 
-            return &_impl.getValue();
+            return &_impl.get_value();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Access the value by ptr.
+        /// access the value by ptr.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator->() -> TVal*
+        constexpr auto operator->() -> value_type*
         {
-            Contracts::DebugExpects(isValue(), "Doesn't contain value.");
+            contracts::debug_expects(is_value(), "doesn't contain value.");
 
-            return &_impl.getMutValue();
+            return &_impl.get_mut_value();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Get `this` value or `orVal`.
+        /// get `this` value or `or_val`.
         ///
-        /// If `this` contains value, get `this` value.
-        /// Else, get value `orVal`.
+        /// if `this` contains value, get `this` value.
+        /// else, get value `or_val`.
         ///
-        /// # Parameters
+        /// # parameters
         ///
-        /// - `orVal`: Other value to return.
+        /// - `or_val`: other value to return.
         ///
-        /// # Returns
+        /// # returns
         ///
-        /// Const ref to `this` value or `orVal`.
+        /// const ref to `this` value or `or_val`.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto getOr(const TVal& orVal) const -> const TVal&
+        constexpr auto get_or(const value_type& or_val) const -> const value_type&
         {
-            if (_impl.isNull())
+            if (_impl.is_null())
             {
-                return orVal;
+                return or_val;
             }
 
-            return _impl.getValue();
+            return _impl.get_value();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Get `this` value or `orVal`.
+        /// get `this` value or `or_val`.
         ///
-        /// If `this` contains value, get `this` value.
-        /// Else, get value `orVal`.
+        /// if `this` contains value, get `this` value.
+        /// else, get value `or_val`.
         ///
-        /// # Parameters
+        /// # parameters
         ///
-        /// - `orVal`: Other value to return.
+        /// - `or_val`: other value to return.
         ///
-        /// # Returns
+        /// # returns
         ///
-        /// Ref to `this` value or `orVal`.
+        /// ref to `this` value or `or_val`.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto getMutOr(TVal& orVal) -> TVal&
+        constexpr auto get_mut_or(value_type& or_val) -> value_type&
         {
-            if (_impl.isNull())
+            if (_impl.is_null())
             {
-                return orVal;
+                return or_val;
             }
 
-            return _impl.getMutValue();
+            return _impl.get_mut_value();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Get `this` value or.
+        /// get `this` value or.
         ///
-        /// If `this` contains value, get `this` value.
-        /// Else, get value returned by invoking `orInvoke`.
+        /// if `this` contains value, get `this` value.
+        /// else, get value returned by invoking `or_invoke`.
         ///
-        /// # Parameters
+        /// # parameters
         ///
-        /// - `orInvoke`: Invokable to return orInvoke value.
+        /// - `or_invoke`: invokable to return or_invoke value.
         ///
-        /// # Returns
+        /// # returns
         ///
-        /// Const ref to `this` value or orInvoke value returned by invoking `orInvoke`.
+        /// const ref to `this` value or or_invoke value returned by invoking `or_invoke`.
         /// ----------------------------------------------------------------------------------------
-        template <typename TInvokable>
-        constexpr auto getOrInvoke(TInvokable&& orInvoke) const -> const TVal&
-            requires RInvokable<TPure<TInvokable>, const TVal&()>
+        template <typename tinvokable>
+        constexpr auto get_or_invoke(tinvokable&& or_invoke) const -> const value_type&
+            requires rinvokable<tpure<tinvokable>, const value_type&()>
         {
-            if (_impl.isNull())
+            if (_impl.is_null())
             {
-                return orInvoke();
+                return or_invoke();
             }
 
-            return _impl.getValue();
+            return _impl.get_value();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Get `this` value or.
+        /// get `this` value or.
         ///
-        /// If `this` contains value, get `this` value.
-        /// Else, get value returned by invoking `orInvoke`.
+        /// if `this` contains value, get `this` value.
+        /// else, get value returned by invoking `or_invoke`.
         ///
-        /// # Parameters
+        /// # parameters
         ///
-        /// - `orInvoke`: Invokable to return orInvoke value.
+        /// - `or_invoke`: invokable to return or_invoke value.
         ///
-        /// # Returns
+        /// # returns
         ///
-        /// Ref to `this` value or orInvoke value returned by invoking `orInvoke`.
+        /// ref to `this` value or or_invoke value returned by invoking `or_invoke`.
         /// ----------------------------------------------------------------------------------------
-        template <typename TInvokable>
-        constexpr auto getMutOrInvoke(TInvokable&& orInvoke) -> TVal&
-            requires RInvokable<TPure<TInvokable>, TVal&()>
+        template <typename tinvokable>
+        constexpr auto get_mut_or_invoke(tinvokable&& or_invoke) -> value_type&
+            requires rinvokable<tpure<tinvokable>, value_type&()>
         {
-            if (_impl.isNull())
+            if (_impl.is_null())
             {
-                return orInvoke();
+                return or_invoke();
             }
 
-            return _impl.getMutValue();
+            return _impl.get_mut_value();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Get `this` value or default.
+        /// get `this` value or default.
         ///
-        /// If `this` contains value, get `this` value.
-        /// Else, get default constructed value.
+        /// if `this` contains value, get `this` value.
+        /// else, get default constructed value.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto getOrDefault() const& -> const TVal&
-            requires(RDefaultConstructible<TVal>)
+        constexpr auto get_or_default() const& -> const value_type&
+            requires(rdefault_constructible<value_type>)
         {
-            if (_impl.isNull())
+            if (_impl.is_null())
             {
-                return Impl::GetDefault();
+                return impl::get_default();
             }
 
-            return _impl.getValue();
+            return _impl.get_value();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Is `this` contains value or not.
+        /// is `this` contains value or not.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto isValue() const -> bool
+        constexpr auto is_value() const -> bool
         {
-            return _impl.isValue();
+            return _impl.is_value();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Is `this` contains value or not.
+        /// is `this` contains value or not.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto isNull() const -> bool
+        constexpr auto is_null() const -> bool
         {
-            return not _impl.isValue();
+            return not _impl.is_value();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Swap values and state with `that`.
+        /// swap values and state with `that`.
         ///
-        /// If `that` contains value
-        ///     If `this` contains value, swaps `this` value with `that` value.
-        ///     Else, move constructs `this` value with `that` value.
-        /// Else
-        ///     If `this` contains value, move constructs `that` value with `this` value.
-        ///     Else, does nothing.
+        /// if `that` contains value
+        ///     if `this` contains value, swaps `this` value with `that` value.
+        ///     else, move constructs `this` value with `that` value.
+        /// else
+        ///     if `this` contains value, move constructs `that` value with `this` value.
+        ///     else, does nothing.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto swap(Option& that)
+        constexpr auto swap(option& that)
         {
             return _impl.swap(that._impl);
         }
 
         /// --------------------------------------------------------------------------------------------
-        /// # Equality Comparision
+        /// # equality comparision
         ///
         /// `true` if this contains value, else `false`.
         /// --------------------------------------------------------------------------------------------
-        constexpr auto eq(NullOption) const -> bool
+        constexpr auto eq(null_option) const -> bool
         {
-            return isNull();
+            return is_null();
         }
 
         /// --------------------------------------------------------------------------------------------
-        /// # Not Equality Comparision
+        /// # not equality comparision
         ///
         /// `false` if this contains value, else `true`.
         /// --------------------------------------------------------------------------------------------
-        constexpr auto ne(NullOption) const -> bool
+        constexpr auto ne(null_option) const -> bool
         {
-            return isValue();
+            return is_value();
         }
 
         /// --------------------------------------------------------------------------------------------
-        /// # Equality Comparision
+        /// # equality comparision
         ///
-        /// If `this` and `that` are null, returns `true`.
-        /// If `this` is null and `that` is not null or vice versa, returns `false`.
-        /// If `this` and `that` are not null, returns `this.get() == that.get()`.
+        /// if `this` and `that` are null, returns `true`.
+        /// if `this` is null and `that` is not null or vice versa, returns `false`.
+        /// if `this` and `that` are not null, returns `this.get() == that.get()`.
         /// --------------------------------------------------------------------------------------------
-        template <typename TThat>
-        constexpr auto eq(const Option<TThat>& that) const -> bool
-            requires(REqualityComparableWith<TVal, TThat>)
+        template <typename tthat>
+        constexpr auto eq(const option<tthat>& that) const -> bool
+            requires(requality_comparable_with<value_type, tthat>)
         {
-            if (isValue() != that.isValue())
-                // One is null and one has value.
+            if (is_value() != that.is_value())
+                // one is null and one has value.
                 return false;
 
-            if (isNull())
-                // Both are null.
+            if (is_null())
+                // both are null.
                 return true;
 
             return get() == that.get();
         }
 
         /// --------------------------------------------------------------------------------------------
-        /// # Not Equality Comparision
+        /// # not equality comparision
         ///
-        /// Performs negation of [Equality Comparision].
+        /// performs negation of [equality comparision].
         /// --------------------------------------------------------------------------------------------
-        template <typename TThat>
-        constexpr auto ne(const Option<TThat>& that) const -> bool
-            requires(REqualityComparableWith<TVal, TThat>)
+        template <typename tthat>
+        constexpr auto ne(const option<tthat>& that) const -> bool
+            requires(requality_comparable_with<value_type, tthat>)
         {
             return not eq(that);
         }
 
         /// --------------------------------------------------------------------------------------------
-        /// # Less Than Comparision
+        /// # less than comparision
         ///
-        /// If `this` or `that` is null, returns false.
-        /// Else, returns `this.get() < that.get()`.
+        /// if `this` or `that` is null, returns false.
+        /// else, returns `this.get() < that.get()`.
         /// --------------------------------------------------------------------------------------------
-        template <typename TThat>
-        constexpr auto lt(const Option<TThat>& that) const -> bool
-            requires(RComparableWith<TVal, TThat>)
+        template <typename tthat>
+        constexpr auto lt(const option<tthat>& that) const -> bool
+            requires(rcomparable_with<value_type, tthat>)
         {
-            if (isNull() or that.isNull())
+            if (is_null() or that.is_null())
                 return false;
 
             return get() < that.get();
         }
 
         /// --------------------------------------------------------------------------------------------
-        /// # Greater Than Comparision
+        /// # greater than comparision
         ///
-        /// If `opt0` or `that` is null, returns false.
-        /// Else, returns `this.get() > that.get()`.
+        /// if `opt0` or `that` is null, returns false.
+        /// else, returns `this.get() > that.get()`.
         /// --------------------------------------------------------------------------------------------
-        template <typename TThat>
-        constexpr auto gt(const Option<TThat>& that) const -> bool
-            requires(RComparableWith<TVal, TThat>)
+        template <typename tthat>
+        constexpr auto gt(const option<tthat>& that) const -> bool
+            requires(rcomparable_with<value_type, tthat>)
         {
-            if (isNull() or that.isNull())
+            if (is_null() or that.is_null())
                 return false;
 
             return get() > that.get();
         }
 
         /// --------------------------------------------------------------------------------------------
-        /// # Less Than or Equal To Comparision
+        /// # less than or equal to comparision
         ///
-        /// If `opt0` or `that` is null, returns false.
-        /// Else, returns `this.get() <= that.get()`.
+        /// if `opt0` or `that` is null, returns false.
+        /// else, returns `this.get() <= that.get()`.
         /// --------------------------------------------------------------------------------------------
-        template <typename TThat>
-        constexpr auto le(const Option<TThat>& that) const -> bool
-            requires(RComparableWith<TVal, TThat>)
+        template <typename tthat>
+        constexpr auto le(const option<tthat>& that) const -> bool
+            requires(rcomparable_with<value_type, tthat>)
         {
-            if (isNull() or that.isNull())
+            if (is_null() or that.is_null())
                 return false;
 
             return get() <= that.get();
         }
 
         /// --------------------------------------------------------------------------------------------
-        /// # Greater Than or Equal To Comparision
+        /// # greater than or equal to comparision
         ///
-        /// If `opt0` or `that` is null, returns false.
-        /// Else, returns `this.get() >= that.get()`.
+        /// if `opt0` or `that` is null, returns false.
+        /// else, returns `this.get() >= that.get()`.
         /// --------------------------------------------------------------------------------------------
-        template <typename TThat>
-        constexpr auto ge(const Option<TThat>& that) const -> bool
-            requires(RComparableWith<TVal, TThat>)
+        template <typename tthat>
+        constexpr auto ge(const option<tthat>& that) const -> bool
+            requires(rcomparable_with<value_type, tthat>)
         {
-            if (isNull() or that.isNull())
+            if (is_null() or that.is_null())
                 return false;
 
             return get() >= that.get();
         }
 
     private:
-        Impl _impl;
+        impl _impl;
     };
 }

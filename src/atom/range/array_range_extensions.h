@@ -1,30 +1,30 @@
 #pragma once
-#include "JumpRangeExtensions.h"
+#include "jump_range_extensions.h"
 
-namespace Atom
+namespace atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// Implementation of [`ArrayRangeExtensions`].
+    /// implementation of [`array_range_extensions`].
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange>
-    class _ArrayRangeExtensionsImpl: public _JumpRangeExtensionsImpl<TRange>
+    template <typename range_type>
+    class _array_range_extensions_impl: public _jump_range_extensions_impl<range_type>
     {
-        using Base = _JumpRangeExtensionsImpl<TRange>;
+        using base_type = _jump_range_extensions_impl<range_type>;
 
     protected:
-        using _TImpl = typename Base::_TImpl;
+        using _timpl = typename base_type::_timpl;
 
     public:
-        using TElem = typename Base::TElem;
-        using TIter = typename Base::TIter;
-        using TIterEnd = typename Base::TIterEnd;
+        using elem_type = typename base_type::elem_type;
+        using iter_type = typename base_type::iter_type;
+        using iter_end_type = typename base_type::iter_end_type;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
 
     public:
-        constexpr auto data() const -> MemPtr<TElem>
+        constexpr auto data() const -> mem_ptr<elem_type>
         {
             return _range().data();
         }
@@ -34,134 +34,134 @@ namespace Atom
             return _range().count();
         }
 
-        constexpr auto at(usize i) const -> const TElem&
+        constexpr auto at(usize i) const -> const elem_type&
         {
-            Contracts::DebugExpects(isIndexInRange(i));
+            contracts::debug_expects(is_index_in_range(i));
 
             return data()[i];
         }
 
-        constexpr auto front() const -> const TElem&
+        constexpr auto front() const -> const elem_type&
         {
             return at(0);
         }
 
-        constexpr auto back() const -> const TElem&
+        constexpr auto back() const -> const elem_type&
         {
             return back(count() - 1);
         }
 
-        constexpr auto isIndexInRange(usize i) const -> bool
+        constexpr auto is_index_in_range(usize i) const -> bool
         {
             return i < count();
         }
 
-        constexpr auto iter(usize i) const -> TIter
+        constexpr auto iter(usize i) const -> iter_type
         {
-            return Base::iter().next(i);
+            return base_type::iter().next(i);
         }
 
-        using Base::iter;
+        using base_type::iter;
 
     protected:
-        using Base::_range;
+        using base_type::_range;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// [ArrayRangeExtensions].
+    /// [array_range_extensions].
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange, typename _TRangeExtensionsImpl_ = void>
-    class ArrayRangeExtensions: public JumpRangeExtensions<TRange, _TRangeExtensionsImpl_>
+    template <typename range_type, typename _trange_extensions_impl_ = void>
+    class array_range_extensions: public jump_range_extensions<range_type, _trange_extensions_impl_>
     {
-        using Base = JumpRangeExtensions<TRange, _TRangeExtensionsImpl_>;
+        using base_type = jump_range_extensions<range_type, _trange_extensions_impl_>;
 
     protected:
-        using _TImpl = typename Base::_TImpl;
+        using _timpl = typename base_type::_timpl;
 
     public:
-        using TElem = typename Base::TElem;
-        using TIter = typename Base::TIter;
-        using TIterEnd = typename Base::TIterEnd;
+        using elem_type = typename base_type::elem_type;
+        using iter_type = typename base_type::iter_type;
+        using iter_end_type = typename base_type::iter_end_type;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
 
     public:
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////
-        //// Access
+        //// access
         ////
         ////////////////////////////////////////////////////////////////////////////////////////////
 
         /// ----------------------------------------------------------------------------------------
-        /// Get underlying ptr to arr.
+        /// get underlying ptr to arr.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto data() const -> MemPtr<TElem>
+        constexpr auto data() const -> mem_ptr<elem_type>
         {
             return _impl().data();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Access element by index.
+        /// access element by index.
         ///
-        /// # Parameters
-        /// - `i`: Index of element to access.
+        /// # parameters
+        /// - `i`: index of element to access.
         ///
-        /// # Time Complexity
-        /// Constant.
+        /// # time complexity
+        /// constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto at(usize i) const -> const TElem&
+        constexpr auto at(usize i) const -> const elem_type&
         {
-            Contracts::Expects(isIndexInRange(i), "Index is out of range.");
+            contracts::expects(is_index_in_range(i), "index is out of range.");
 
             return _impl().at(i);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Access element by index.
+        /// access element by index.
         ///
-        /// # Parameters
-        /// - `i`: Index of element to access.
+        /// # parameters
+        /// - `i`: index of element to access.
         ///
-        /// # Time Complexity
-        /// Constant.
+        /// # time complexity
+        /// constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator[](usize i) const -> const TElem&
+        constexpr auto operator[](usize i) const -> const elem_type&
         {
-            Contracts::DebugExpects(isIndexInRange(i), "Index is out of range.");
+            contracts::debug_expects(is_index_in_range(i), "index is out of range.");
 
             return _impl().at(i);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Access first element.
+        /// access first element.
         ///
-        /// # Time Complexity
-        /// Constant.
+        /// # time complexity
+        /// constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto front() const -> const TElem&
+        constexpr auto front() const -> const elem_type&
         {
-            Contracts::DebugExpects(not isEmpty(), "Range is empty.");
+            contracts::debug_expects(not is_empty(), "range is empty.");
 
             return _impl().front();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Access last element.
+        /// access last element.
         ///
-        /// # Time Complexity
-        /// Constant.
+        /// # time complexity
+        /// constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto back() const -> const TElem&
+        constexpr auto back() const -> const elem_type&
         {
-            Contracts::DebugExpects(not isEmpty(), "Range is empty.");
+            contracts::debug_expects(not is_empty(), "range is empty.");
 
             return _impl().back();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Get count of elements.
+        /// get count of elements.
         /// ----------------------------------------------------------------------------------------
         constexpr auto count() const -> usize
         {
@@ -169,82 +169,82 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Is range empty.
+        /// is range empty.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto isEmpty() const -> bool
+        constexpr auto is_empty() const -> bool
         {
             return _impl().count() == 0;
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////
-        //// Iteration
+        //// iteration
         ////
         ////////////////////////////////////////////////////////////////////////////////////////////
 
         /// ----------------------------------------------------------------------------------------
-        /// Get iter to element at index `i`.
+        /// get iter to element at index `i`.
         ///
-        /// # Parameters
+        /// # parameters
         ///
-        /// - `i`: Index of the element to get iter at.
+        /// - `i`: index of the element to get iter at.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto iter(usize i) const -> TIter
+        constexpr auto iter(usize i) const -> iter_type
         {
-            Contracts::Expects(isIndexInRange(i), "Index is out of range.");
+            contracts::expects(is_index_in_range(i), "index is out of range.");
 
             return _impl().iter(i);
         }
 
-        using Base::iter;
+        using base_type::iter;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////
-        //// View
+        //// view
         ////
         ////////////////////////////////////////////////////////////////////////////////////////////
 
         /// ----------------------------------------------------------------------------------------
-        /// # To Do: Review this.
+        /// # to do: review this.
         /// ----------------------------------------------------------------------------------------
         constexpr auto range(usize from, usize to) const {}
 
         /// ----------------------------------------------------------------------------------------
-        /// # To Do: Review this.
+        /// # to do: review this.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto rangeFrom(usize from) const {}
+        constexpr auto range_from(usize from) const {}
 
         /// ----------------------------------------------------------------------------------------
-        /// # To Do: Review this.
+        /// # to do: review this.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto rangeTo(usize to) const {}
+        constexpr auto range_to(usize to) const {}
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////
-        //// Validation
+        //// validation
         ////
         ////////////////////////////////////////////////////////////////////////////////////////////
 
-        constexpr auto isIndexInRange(usize i) const -> bool
+        constexpr auto is_index_in_range(usize i) const -> bool
         {
-            return _impl().isIndexInRange(i);
+            return _impl().is_index_in_range(i);
         }
 
     protected:
-        using Base::_impl;
+        using base_type::_impl;
     };
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename TRange>
-    class ArrayRangeExtensions<TRange, void>
-        : public ArrayRangeExtensions<TRange, _ArrayRangeExtensionsImpl<TRange>>
+    template <typename range_type>
+    class array_range_extensions<range_type, void>
+        : public array_range_extensions<range_type, _array_range_extensions_impl<range_type>>
     {
-        using Base = ArrayRangeExtensions<TRange, _ArrayRangeExtensionsImpl<TRange>>;
+        using base_type = array_range_extensions<range_type, _array_range_extensions_impl<range_type>>;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 }

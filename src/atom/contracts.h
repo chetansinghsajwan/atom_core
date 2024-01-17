@@ -1,67 +1,67 @@
 #pragma once
-#include "Atom/Core.h"
-#include "Atom/Core/SourceLineInfo.h"
-#include "Contracts.decl.h"
+#include "atom/core.h"
+#include "atom/core/source_line_info.h"
+#include "contracts_decl.h"
 
-#include "fmt/format.h"
+// #include "fmt/format.h"
 
 // #include <iostream>
 
-namespace Atom
+namespace atom
 {
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    enum class ContractType
+    enum class contract_type
     {
-        PreCondition,
-        Assertion,
-        PostCondition,
-        DebugPreCondition,
-        DebugAssertion,
-        DebugPostCondition
+        pre_condition,
+        assertion,
+        post_condition,
+        debug_pre_condition,
+        debug_assertion,
+        debug_post_condition
     };
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    class ContractViolation
+    class contract_violation
     {
     public:
-        ContractType type;
+        contract_type type;
         std::string_view msg;
-        SourceLineInfo src;
+        source_line_info src;
     };
 
-    constexpr auto _ContractTypeToString(ContractType type) -> std::string_view
+    constexpr auto _contract_type_to_string(contract_type type) -> std::string_view
     {
         switch (type)
         {
-            case ContractType::PreCondition:       return "PreCondition";
-            case ContractType::Assertion:          return "Assertion";
-            case ContractType::PostCondition:      return "PostCondition";
-            case ContractType::DebugPreCondition:  return "DebugPreCondition";
-            case ContractType::DebugAssertion:     return "DebugAssertion";
-            case ContractType::DebugPostCondition: return "DebugPostCondition";
-            default:                               return "[INVALID_VALUE]";
+            case contract_type::pre_condition:       return "pre_condition";
+            case contract_type::assertion:          return "assertion";
+            case contract_type::post_condition:      return "post_condition";
+            case contract_type::debug_pre_condition:  return "debug_pre_condition";
+            case contract_type::debug_assertion:     return "debug_assertion";
+            case contract_type::debug_post_condition: return "debug_post_condition";
+            default:                               return "[invalid_value]";
         }
     }
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    class ContractViolationException: public std::exception
+    class contract_violation_exception: public std::exception
     {
     public:
-        ContractViolationException(ContractViolation violation)
+        contract_violation_exception(contract_violation violation)
             : violation{ violation }
         {
-            _what = fmt::format("Contracts {} Violation:"
+            _what = fmt::format("contracts {} violation:"
                                 "\n\twith msg: {}"
                                 "\n\tat: {}: {}: {}"
                                 "\n\tfunc: {}",
-                _ContractTypeToString(violation.type), violation.msg, violation.src.fileName,
-                violation.src.line.unwrap(), violation.src.column.unwrap(), violation.src.funcName);
+                _contract_type_to_string(violation.type), violation.msg, violation.src.file_name,
+                violation.src.line.unwrap(), violation.src.column.unwrap(), violation.src.func_name);
         }
 
     public:
@@ -71,7 +71,7 @@ namespace Atom
         }
 
     public:
-        ContractViolation violation;
+        contract_violation violation;
 
     private:
         std::string _what;
@@ -80,31 +80,31 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    class ContractViolationHandler
+    class contract_violation_handler
     {
     public:
-        virtual auto handle(const ContractViolation& violation) -> void = 0;
+        virtual auto handle(const contract_violation& violation) -> void = 0;
     };
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    class DefaultContractViolationHandler final: public ContractViolationHandler
+    class default_contract_violation_handler final: public contract_violation_handler
     {
     public:
-        virtual auto handle(const ContractViolation& violation) -> void override
+        virtual auto handle(const contract_violation& violation) -> void override
         {
-            if constexpr (BuildConfig::IsModeDebug())
+            if constexpr (build_config::is_mode_debug())
             {
-                throw ContractViolationException{ violation };
+                throw contract_violation_exception{ violation };
             }
             else
             {
-                std::cout << "Contracts " << _ContractTypeToString(violation.type) << " Violation:"
+                std::cout << "contracts " << _contract_type_to_string(violation.type) << " violation:"
                           << "\n\twith msg: " << violation.msg << "'"
-                          << "\n\tat: " << violation.src.fileName << ":"
+                          << "\n\tat: " << violation.src.file_name << ":"
                           << violation.src.line.unwrap() << ":" << violation.src.column.unwrap()
-                          << ": " << violation.src.funcName << std::endl;
+                          << ": " << violation.src.func_name << std::endl;
 
                 std::terminate();
             }
@@ -114,54 +114,54 @@ namespace Atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    class ContractViolationHandlerManager
+    class contract_violation_handler_manager
     {
     public:
-        static auto GetHandler() -> ContractViolationHandler&
+        static auto get_handler() -> contract_violation_handler&
         {
-            return *_Handler;
+            return *_handler;
         }
 
-        static auto SetHandler(ContractViolationHandler* handler)
+        static auto set_handler(contract_violation_handler* handler)
         {
-            _Handler = handler;
-            if (_Handler == nullptr)
+            _handler = handler;
+            if (_handler == nullptr)
             {
-                _Handler = &_DefaultHandler;
+                _handler = &_default_handler;
             }
         }
 
-        static auto SetHandlerToDefault()
+        static auto set_handler_to_default()
         {
-            _Handler = &_DefaultHandler;
+            _handler = &_default_handler;
         }
 
     private:
-        static DefaultContractViolationHandler _DefaultHandler;
-        static ContractViolationHandler* _Handler;
+        static default_contract_violation_handler _default_handler;
+        static contract_violation_handler* _handler;
     };
 
-    inline DefaultContractViolationHandler ContractViolationHandlerManager::_DefaultHandler =
-        DefaultContractViolationHandler();
-    inline ContractViolationHandler* ContractViolationHandlerManager::_Handler = &_DefaultHandler;
+    inline default_contract_violation_handler contract_violation_handler_manager::_default_handler =
+        default_contract_violation_handler();
+    inline contract_violation_handler* contract_violation_handler_manager::_handler = &_default_handler;
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    inline auto _ContractCheckImpl(
-        _ContractType type, std::source_location src, std::string_view msg) -> void
+    inline auto _contract_check_impl(
+        _contract_type type, std::source_location src, std::string_view msg) -> void
     {
-        SourceLineInfo srcInfo{ .line = src.line(),
+        source_line_info src_info{ .line = src.line(),
             .column = src.column(),
-            .funcName = src.function_name(),
-            .fileName = src.file_name() };
+            .func_name = src.function_name(),
+            .file_name = src.file_name() };
 
-        ContractViolation violation{ .type = ContractType(type), .msg = msg, .src = srcInfo };
+        contract_violation violation{ .type = contract_type(type), .msg = msg, .src = src_info };
 
-        ContractViolationHandlerManager::GetHandler().handle(violation);
+        contract_violation_handler_manager::get_handler().handle(violation);
     }
 
-    inline auto _Panic(std::source_location src, std::string_view msg) -> void
+    inline auto _panic(std::source_location src, std::string_view msg) -> void
     {
         std::cerr << msg << std::endl;
         std::terminate();

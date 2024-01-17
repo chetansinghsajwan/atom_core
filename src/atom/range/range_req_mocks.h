@@ -1,127 +1,127 @@
 #pragma once
-#include "IterReqMocks.h"
+#include "iter_req_mocks.h"
 
-namespace Atom
+namespace atom
 {
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename _TIter, typename _TIterEnd, typename T>
-    class _RangeReqMock
+    template <typename _titer, typename _titer_end, typename type>
+    class _range_req_mock
     {
     public:
-        using TElem = T;
-        using TIter = _TIter;
-        using TIterEnd = _TIterEnd;
+        using elem_type = type;
+        using iter_type = _titer;
+        using iter_end_type = _titer_end;
 
     public:
-        auto iter() const -> TIter;
-        auto iterEnd() const -> TIterEnd;
+        auto iter() const -> iter_type;
+        auto iter_end() const -> iter_end_type;
     };
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename _TIter, typename _TIterEnd, typename T>
-    class _MutRangeReqMock
+    template <typename _titer, typename _titer_end, typename type>
+    class _mut_range_req_mock
     {
     public:
-        using TElem = T;
-        using TIter = _TIter;
-        using TIterEnd = _TIterEnd;
-        using TMutIter = _TIter;
-        using TMutIterEnd = _TIterEnd;
+        using elem_type = type;
+        using iter_type = _titer;
+        using iter_end_type = _titer_end;
+        using mut_iter_type = _titer;
+        using mut_iter_end_type = _titer_end;
 
     public:
-        auto iter() const -> TIter;
-        auto iterEnd() const -> TIterEnd;
-        auto mutIter() -> TMutIter;
-        auto mutIterEnd() -> TMutIterEnd;
+        auto iter() const -> iter_type;
+        auto iter_end() const -> iter_end_type;
+        auto mut_iter() -> mut_iter_type;
+        auto mut_iter_end() -> mut_iter_end_type;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// `RRange` mock object.
+    /// `rrange` mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    class RangeReqMock: public _RangeReqMock<IterReqMock<T>, IterEndReqMock, T>
+    template <typename type>
+    class range_req_mock: public _range_req_mock<iter_req_mock<type>, iter_end_req_mock, type>
     {};
 
     /// --------------------------------------------------------------------------------------------
-    /// `RMutRange` mock object.
+    /// `rmut_range` mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    class MutRangeReqMock: public _MutRangeReqMock<MutIterReqMock<T>, IterEndReqMock, T>
+    template <typename type>
+    class mut_range_req_mock: public _mut_range_req_mock<mut_iter_req_mock<type>, iter_end_req_mock, type>
     {};
 
     /// --------------------------------------------------------------------------------------------
-    /// `RFwdRange` mock object.
+    /// `rfwd_range` mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    class FwdRangeReqMock: public _RangeReqMock<FwdIterReqMock<T>, IterEndReqMock, T>
+    template <typename type>
+    class fwd_range_req_mock: public _range_req_mock<fwd_iter_req_mock<type>, iter_end_req_mock, type>
     {};
 
     /// --------------------------------------------------------------------------------------------
-    /// `RMutFwdRange` mock object.
+    /// `rmut_fwd_range` mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    class MutFwdRangeReqMock: public _MutRangeReqMock<MutFwdIterReqMock<T>, IterEndReqMock, T>
+    template <typename type>
+    class mut_fwd_range_req_mock: public _mut_range_req_mock<mut_fwd_iter_req_mock<type>, iter_end_req_mock, type>
     {};
 
     /// --------------------------------------------------------------------------------------------
-    /// `RBidiRange` mock object.
+    /// `rbidi_range` mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    class BidiRangeReqMock: public _RangeReqMock<BidiIterReqMock<T>, IterEndReqMock, T>
+    template <typename type>
+    class bidi_range_req_mock: public _range_req_mock<bidi_iter_req_mock<type>, iter_end_req_mock, type>
     {};
 
     /// --------------------------------------------------------------------------------------------
-    /// `RMutBidiRange` mock object.
+    /// `rmut_bidi_range` mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    class MutBidiRangeReqMock: public _MutRangeReqMock<MutBidiIterReqMock<T>, IterEndReqMock, T>
+    template <typename type>
+    class mut_bidi_range_req_mock: public _mut_range_req_mock<mut_bidi_iter_req_mock<type>, iter_end_req_mock, type>
     {};
 
     /// --------------------------------------------------------------------------------------------
-    /// `RJumpRange` mock object.
+    /// `rjump_range` mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    class JumpRangeReqMock: public _RangeReqMock<JumpIterReqMock<T>, IterEndReqMock, T>
+    template <typename type>
+    class jump_range_req_mock: public _range_req_mock<jump_iter_req_mock<type>, iter_end_req_mock, type>
     {};
 
     /// --------------------------------------------------------------------------------------------
-    /// `RMutJumpRange` mock object.
+    /// `rmut_jump_range` mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    class MutJumpRangeReqMock: public _MutRangeReqMock<MutJumpIterReqMock<T>, IterEndReqMock, T>
+    template <typename type>
+    class mut_jump_range_req_mock: public _mut_range_req_mock<mut_jump_iter_req_mock<type>, iter_end_req_mock, type>
     {};
 
     /// --------------------------------------------------------------------------------------------
-    /// `RArrayRange` mock object.
+    /// `rarray_range` mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    class ArrayRangeReqMock: public _RangeReqMock<ArrayIterReqMock<T>, ArrayIterReqMock<T>, T>
+    template <typename type>
+    class array_range_req_mock: public _range_req_mock<array_iter_req_mock<type>, array_iter_req_mock<type>, type>
     {};
 
     /// --------------------------------------------------------------------------------------------
-    /// `RMutArrayRange` mock object.
+    /// `rmut_array_range` mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    class MutArrayRangeReqMock
-        : public _MutRangeReqMock<MutArrayIterReqMock<T>, MutArrayIterReqMock<T>, T>
+    template <typename type>
+    class mut_array_range_req_mock
+        : public _mut_range_req_mock<mut_array_iter_req_mock<type>, mut_array_iter_req_mock<type>, type>
     {};
 
     /// --------------------------------------------------------------------------------------------
-    /// `RCommonRange` mock object.
+    /// `rcommon_range` mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    class CommonRangeReqMock: public _RangeReqMock<IterReqMock<T>, IterReqMock<T>, T>
+    template <typename type>
+    class common_range_req_mock: public _range_req_mock<iter_req_mock<type>, iter_req_mock<type>, type>
     {};
 
     /// --------------------------------------------------------------------------------------------
-    /// `RMutCommonRange` mock object.
+    /// `rmut_common_range` mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    class MutCommonRangeReqMock
-        : public _MutRangeReqMock<MutFwdIterReqMock<T>, MutFwdIterReqMock<T>, T>
+    template <typename type>
+    class mut_common_range_req_mock
+        : public _mut_range_req_mock<mut_fwd_iter_req_mock<type>, mut_fwd_iter_req_mock<type>, type>
     {};
 }

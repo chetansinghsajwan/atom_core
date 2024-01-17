@@ -1,14 +1,14 @@
 #pragma once
-#include "Atom/Core.h"
+#include "atom/core.h"
 
-namespace Atom
+namespace atom
 {
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    class Err
+    class err
     {
     public:
-        StdStringView msg;
+        std_string_view msg;
     };
 }

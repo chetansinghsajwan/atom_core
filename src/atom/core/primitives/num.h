@@ -1,52 +1,52 @@
 #pragma once
-#include "Atom/Contracts.decl.h"
-#include "Atom/Core/Requirements.h"
-#include "Byte.h"
+#include "atom/contracts_decl.h"
+#include "atom/core/requirements.h"
+#include "byte.h"
 
 // #include <cmath>
 // #include <numeric>
 
 /// ------------------------------------------------------------------------------------------------
-/// # To Do
+/// # to do
 ///
-/// - Needs refactoring.
+/// - needs refactoring.
 /// ------------------------------------------------------------------------------------------------
-namespace Atom
+namespace atom
 {
-    class _NumId
+    class _num_id
     {};
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename TNum>
-    concept _RNum = std::is_integral_v<TNum> or std::is_floating_point_v<TNum>;
+    template <typename tnum>
+    concept _rnum = std::is_integral_v<tnum> or std::is_floating_point_v<tnum>;
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename TNum>
-    concept RNum = requires(TNum num) { requires RDerivedFrom<TNum, _NumId>; };
+    template <typename tnum>
+    concept rnum = requires(tnum num) { requires rderived_from<tnum, _num_id>; };
 
-    template <typename TSelf_, typename TVal_, typename TLimit>
-    class _NumImpl
+    template <typename tself_, typename tval_, typename tlimit>
+    class _num_impl
     {
     public:
-        using TSelf = TSelf_;
-        using TVal = TVal_;
+        using self_type = tself_;
+        using value_type = tval_;
 
     public:
-        static consteval auto Min() -> TVal
+        static consteval auto min() -> value_type
         {
-            return TVal(std::numeric_limits<TLimit>::min());
+            return value_type(std::numeric_limits<tlimit>::min());
         }
 
-        static consteval auto Max() -> TVal
+        static consteval auto max() -> value_type
         {
-            return TVal(std::numeric_limits<TLimit>::max());
+            return value_type(std::numeric_limits<tlimit>::max());
         }
 
-        static consteval auto CountDigits(TVal val) -> size_t
+        static consteval auto count_digits(value_type val) -> size_t
         {
             size_t count = 0;
             while (val > 0)
@@ -58,95 +58,95 @@ namespace Atom
             return count;
         }
 
-        static consteval auto MinDigitsCount() -> size_t
+        static consteval auto min_digits_count() -> size_t
         {
-            return CountDigits(Min());
+            return count_digits(min());
         }
 
-        static consteval auto MaxDigitsCount() -> size_t
+        static consteval auto max_digits_count() -> size_t
         {
-            return CountDigits(Max());
+            return count_digits(max());
         }
 
-        static constexpr auto Abs(TVal val) -> TVal
+        static constexpr auto abs(value_type val) -> value_type
         {
-            if constexpr (std::is_unsigned_v<TVal>)
+            if constexpr (std::is_unsigned_v<value_type>)
                 return val;
 
             return std::abs(val);
         }
 
-        static consteval auto IsSigned() -> bool
+        static consteval auto is_signed() -> bool
         {
-            return std::is_signed_v<TVal>;
+            return std::is_signed_v<value_type>;
         }
     };
 
-    template <typename TImpl_>
-    class Num: public _NumId
+    template <typename in_impl_type>
+    class num: public _num_id
     {
-        using Self = Num<TImpl_>;
+        using self = num<in_impl_type>;
 
     public:
-        using TImpl = TImpl_;
-        using TSelf = typename TImpl::TSelf;
-        using TVal = typename TImpl::TVal;
-        using TString = typename TImpl::TString;
+        using impl_type = in_impl_type;
+        using self_type = typename impl_type::self_type;
+        using value_type = typename impl_type::value_type;
+        using string_type = typename impl_type::string_type;
 
     public:
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        static consteval auto Min() -> TSelf
+        static consteval auto min() -> self_type
         {
-            return _Make(TImpl::Min());
+            return _make(impl_type::min());
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        static consteval auto Max() -> TSelf
+        static consteval auto max() -> self_type
         {
-            return _Make(TImpl::Max());
+            return _make(impl_type::max());
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        static consteval auto Bits() -> TSelf
+        static consteval auto bits() -> self_type
         {
-            return _Make(sizeof(TVal) * sizeof(byte));
+            return _make(sizeof(value_type) * sizeof(byte));
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        static consteval auto IsSigned() -> bool
+        static consteval auto is_signed() -> bool
         {
-            return TImpl::IsSigned();
+            return impl_type::is_signed();
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename TNum>
-        static consteval auto IsConversionSafe() -> bool
-            requires(RNum<TNum>) or (_RNum<TNum>)
+        template <typename tnum>
+        static consteval auto is_conversion_safe() -> bool
+            requires(rnum<tnum>) or (_rnum<tnum>)
         {
-            // It's better to ask the target type if it can accept our range values.
-            if constexpr (RNum<TNum>)
+            // it's better to ask the target type if it can accept our range values.
+            if constexpr (rnum<tnum>)
             {
-                return TNum::template IsAssignmentSafe<TSelf>();
+                return tnum::template is_assignment_safe<self_type>();
             }
             else
             {
-                if constexpr (IsSigned() != std::is_signed_v<TNum>)
+                if constexpr (is_signed() != std::is_signed_v<tnum>)
                     return false;
 
-                if constexpr (TImpl::Min() < std::numeric_limits<TNum>::min())
+                if constexpr (impl_type::min() < std::numeric_limits<tnum>::min())
                     return false;
 
-                if constexpr (TImpl::Max() > std::numeric_limits<TNum>::max())
+                if constexpr (impl_type::max() > std::numeric_limits<tnum>::max())
                     return false;
 
                 return true;
@@ -156,30 +156,30 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename TNum>
-        static consteval auto IsAssignmentSafe() -> bool
-            requires(RNum<TNum>) or (_RNum<TNum>)
+        template <typename tnum>
+        static consteval auto is_assignment_safe() -> bool
+            requires(rnum<tnum>) or (_rnum<tnum>)
         {
-            if constexpr (RNum<TNum>)
+            if constexpr (rnum<tnum>)
             {
-                if constexpr (IsSigned() != TNum::IsSigned())
+                if constexpr (is_signed() != tnum::is_signed())
                     return false;
 
-                if constexpr (TNum::TImpl::Min() < TImpl::Min())
+                if constexpr (tnum::impl_type::min() < impl_type::min())
                     return false;
 
-                if constexpr (TNum::TImpl::Max() > TImpl::Max())
+                if constexpr (tnum::impl_type::max() > impl_type::max())
                     return false;
             }
             else
             {
-                if constexpr (IsSigned() != std::is_signed_v<TNum>)
+                if constexpr (is_signed() != std::is_signed_v<tnum>)
                     return false;
 
-                if constexpr (std::numeric_limits<TNum>::min() < TImpl::Min())
+                if constexpr (std::numeric_limits<tnum>::min() < impl_type::min())
                     return false;
 
-                if constexpr (std::numeric_limits<TNum>::max() > TImpl::Max())
+                if constexpr (std::numeric_limits<tnum>::max() > impl_type::max())
                     return false;
             }
 
@@ -188,154 +188,154 @@ namespace Atom
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// # To Do
+        /// # to do
         ///
-        /// - No default constructor should be provided. Value should be initialized explicitly.
+        /// - no default constructor should be provided. value should be initialized explicitly.
         /// ----------------------------------------------------------------------------------------
-        constexpr Num() = default;
+        constexpr num() = default;
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename TNum>
-        constexpr Num(TNum num)
-            requires(RNum<TNum>) and (IsAssignmentSafe<TNum>())
+        template <typename tnum>
+        constexpr num(tnum num)
+            requires(rnum<tnum>) and (is_assignment_safe<tnum>())
         {
-            _val = _Unwrap(num);
+            _val = _unwrap(num);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename TNum>
-        explicit constexpr Num(TNum num)
-            requires(RNum<TNum>) and (not IsAssignmentSafe<TNum>())
+        template <typename tnum>
+        explicit constexpr num(tnum num)
+            requires(rnum<tnum>) and (not is_assignment_safe<tnum>())
         {
-            _val = _Unwrap(num);
+            _val = _unwrap(num);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename TNum>
-        constexpr Num(TNum num)
-            requires(_RNum<TNum>)
+        template <typename tnum>
+        constexpr num(tnum num)
+            requires(_rnum<tnum>)
         {
-            Contracts::DebugExpects(not CheckOverflowOnAssignment(num));
+            contracts::debug_expects(not check_overflow_on_assignment(num));
 
-            _val = _Unwrap(num);
+            _val = _unwrap(num);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename TNum>
-        constexpr auto operator=(TNum num) -> TSelf&
-            requires(RNum<TNum>) and (IsAssignmentSafe<TNum>())
+        template <typename tnum>
+        constexpr auto operator=(tnum num) -> self_type&
+            requires(rnum<tnum>) and (is_assignment_safe<tnum>())
         {
-            _val = _Unwrap(num);
+            _val = _unwrap(num);
             return _self();
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename TNum>
-        constexpr auto operator=(TNum num) -> TSelf&
-            requires(_RNum<TNum>)
+        template <typename tnum>
+        constexpr auto operator=(tnum num) -> self_type&
+            requires(_rnum<tnum>)
         {
-            Contracts::DebugExpects(not CheckOverflowOnAssignment(num));
+            contracts::debug_expects(not check_overflow_on_assignment(num));
 
-            _val = _Unwrap(num);
+            _val = _unwrap(num);
             return _self();
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename TNum>
-        constexpr operator TNum() const
-            requires(_RNum<TNum>) and (Self::IsConversionSafe<TNum>())
+        template <typename tnum>
+        constexpr operator tnum() const
+            requires(_rnum<tnum>) and (self::is_conversion_safe<tnum>())
         {
-            return to<TNum>();
+            return to<tnum>();
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename TNum>
-        explicit constexpr operator TNum() const
-            requires(_RNum<TNum>) and (not Self::IsConversionSafe<TNum>())
+        template <typename tnum>
+        explicit constexpr operator tnum() const
+            requires(_rnum<tnum>) and (not self::is_conversion_safe<tnum>())
         {
-            return to<TNum>();
+            return to<tnum>();
         }
 
     public:
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////
-        //// Assignment
+        //// assignment
         ////
         ////////////////////////////////////////////////////////////////////////////////////////////
 
         /// ----------------------------------------------------------------------------------------
-        /// Assigns num.
+        /// assigns num.
         /// ----------------------------------------------------------------------------------------
-        template <typename TNum>
-        constexpr auto assign(TNum num) -> TSelf&
-            requires(RNum<TNum>) or (_RNum<TNum>)
+        template <typename tnum>
+        constexpr auto assign(tnum num) -> self_type&
+            requires(rnum<tnum>) or (_rnum<tnum>)
         {
-            Contracts::DebugExpects(not CheckOverflowOnAssignment(num));
+            contracts::debug_expects(not check_overflow_on_assignment(num));
 
-            _val = _Unwrap(num);
+            _val = _unwrap(num);
             return _self();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Assigns num.
+        /// assigns num.
         /// ----------------------------------------------------------------------------------------
-        template <typename TNum>
-        constexpr auto checkedAssign(TNum num) -> TSelf&
-            requires(RNum<TNum>) or (_RNum<TNum>)
+        template <typename tnum>
+        constexpr auto checked_assign(tnum num) -> self_type&
+            requires(rnum<tnum>) or (_rnum<tnum>)
         {
-            Contracts::Expects(not CheckOverflowOnAssignment(num));
+            contracts::expects(not check_overflow_on_assignment(num));
 
-            _val = _Unwrap(num);
+            _val = _unwrap(num);
             return _self();
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////
-        //// Arithmetic
+        //// arithmetic
         ////
         ////////////////////////////////////////////////////////////////////////////////////////////
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// Adds
+        /// adds
         /// ----------------------------------------------------------------------------------------
-        template <typename TNum>
-        constexpr auto add(TNum num) const -> TSelf
-            requires(RNum<TNum>) or (_RNum<TNum>)
+        template <typename tnum>
+        constexpr auto add(tnum num) const -> self_type
+            requires(rnum<tnum>) or (_rnum<tnum>)
         {
-            return _clone().addAssign(num);
+            return _clone().add_assign(num);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename TNum>
-        constexpr auto checkedAdd(TNum num) const -> TSelf
-            requires(RNum<TNum>) or (_RNum<TNum>)
+        template <typename tnum>
+        constexpr auto checked_add(tnum num) const -> self_type
+            requires(rnum<tnum>) or (_rnum<tnum>)
         {
-            return _clone().addAssign(num);
+            return _clone().add_assign(num);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename TNum>
-        constexpr auto operator+(TNum num) const -> TSelf
-            requires(RNum<TNum>) or (_RNum<TNum>)
+        template <typename tnum>
+        constexpr auto operator+(tnum num) const -> self_type
+            requires(rnum<tnum>) or (_rnum<tnum>)
         {
             return add(num);
         }
@@ -343,83 +343,83 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename TNum>
-        constexpr auto addAssign(TNum num) -> TSelf&
-            requires(RNum<TNum>) or (_RNum<TNum>)
+        template <typename tnum>
+        constexpr auto add_assign(tnum num) -> self_type&
+            requires(rnum<tnum>) or (_rnum<tnum>)
         {
-            Contracts::DebugExpects(not checkOverflowOnAdd(num));
+            contracts::debug_expects(not check_overflow_on_add(num));
 
-            _val += _Unwrap(num);
+            _val += _unwrap(num);
             return _self();
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename TNum>
-        constexpr auto checkedAddAssign(TNum num) -> TSelf&
-            requires(RNum<TNum>) or (_RNum<TNum>)
+        template <typename tnum>
+        constexpr auto checked_add_assign(tnum num) -> self_type&
+            requires(rnum<tnum>) or (_rnum<tnum>)
         {
-            Contracts::Expects(not checkOverflowOnAdd(num));
+            contracts::expects(not check_overflow_on_add(num));
 
-            _val += _Unwrap(num);
+            _val += _unwrap(num);
             return _self();
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename TNum>
-        constexpr auto operator+=(TNum num) -> TSelf&
-            requires(RNum<TNum>) or (_RNum<TNum>)
+        template <typename tnum>
+        constexpr auto operator+=(tnum num) -> self_type&
+            requires(rnum<tnum>) or (_rnum<tnum>)
         {
-            Contracts::DebugExpects(not checkOverflowOnAdd(num));
+            contracts::debug_expects(not check_overflow_on_add(num));
 
-            return addAssign(num);
+            return add_assign(num);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator++(int) -> TSelf&
+        constexpr auto operator++(int) -> self_type&
         {
-            return addAssign(1);
+            return add_assign(1);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator+() -> TSelf
+        constexpr auto operator+() -> self_type
         {
-            return _Make(+_val);
+            return _make(+_val);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename TNum>
-        constexpr auto sub(TNum num) const -> TSelf
-            requires(RNum<TNum>) or (_RNum<TNum>)
+        template <typename tnum>
+        constexpr auto sub(tnum num) const -> self_type
+            requires(rnum<tnum>) or (_rnum<tnum>)
         {
-            return _clone().subAssign(num);
+            return _clone().sub_assign(num);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename TNum>
-        constexpr auto checkedSub(TNum num) const -> TSelf
-            requires(RNum<TNum>) or (_RNum<TNum>)
+        template <typename tnum>
+        constexpr auto checked_sub(tnum num) const -> self_type
+            requires(rnum<tnum>) or (_rnum<tnum>)
         {
-            return _clone().subAssign(num);
+            return _clone().sub_assign(num);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Call [`sub(num)`].
+        /// call [`sub(num)`].
         /// ----------------------------------------------------------------------------------------
-        template <typename TNum>
-        constexpr auto operator-(TNum num) const -> TSelf
-            requires(RNum<TNum>) or (_RNum<TNum>)
+        template <typename tnum>
+        constexpr auto operator-(tnum num) const -> self_type
+            requires(rnum<tnum>) or (_rnum<tnum>)
         {
             return sub(num);
         }
@@ -427,81 +427,81 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename TNum>
-        constexpr auto subAssign(TNum num) -> TSelf&
-            requires(RNum<TNum>) or (_RNum<TNum>)
+        template <typename tnum>
+        constexpr auto sub_assign(tnum num) -> self_type&
+            requires(rnum<tnum>) or (_rnum<tnum>)
         {
-            Contracts::DebugExpects(not checkOverflowOnSub(num));
+            contracts::debug_expects(not check_overflow_on_sub(num));
 
-            _val -= _Unwrap(num);
+            _val -= _unwrap(num);
             return _self();
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename TNum>
-        constexpr auto checkedSubAssign(TNum num) -> TSelf&
-            requires(RNum<TNum>) or (_RNum<TNum>)
+        template <typename tnum>
+        constexpr auto checked_sub_assign(tnum num) -> self_type&
+            requires(rnum<tnum>) or (_rnum<tnum>)
         {
-            Contracts::Expects(not checkOverflowOnSub(num));
+            contracts::expects(not check_overflow_on_sub(num));
 
-            _val -= _Unwrap(num);
+            _val -= _unwrap(num);
             return _self();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Calls [`subAssign(num)`].
+        /// calls [`sub_assign(num)`].
         /// ----------------------------------------------------------------------------------------
-        template <typename TNum>
-        constexpr auto operator-=(TNum num) -> TSelf&
-            requires(RNum<TNum>) or (_RNum<TNum>)
+        template <typename tnum>
+        constexpr auto operator-=(tnum num) -> self_type&
+            requires(rnum<tnum>) or (_rnum<tnum>)
         {
-            return subAssign(num);
+            return sub_assign(num);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Calls [`subAssign(1)`].
+        /// calls [`sub_assign(1)`].
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator--(int) -> TSelf&
+        constexpr auto operator--(int) -> self_type&
         {
-            return subAssign(1);
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto operator-() -> TSelf
-        {
-            return _Make(-_val);
+            return sub_assign(1);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename TNum>
-        constexpr auto mul(TNum num) const -> TSelf
-            requires(RNum<TNum>) or (_RNum<TNum>)
+        constexpr auto operator-() -> self_type
         {
-            return _clone().mulAssign(num);
+            return _make(-_val);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename TNum>
-        constexpr auto checkedMul(TNum num) const -> TSelf
-            requires(RNum<TNum>) or (_RNum<TNum>)
+        template <typename tnum>
+        constexpr auto mul(tnum num) const -> self_type
+            requires(rnum<tnum>) or (_rnum<tnum>)
         {
-            return _clone().mulAssign(num);
+            return _clone().mul_assign(num);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Calls [`mul(num)`].
+        ///
         /// ----------------------------------------------------------------------------------------
-        template <typename TNum>
-        constexpr auto operator*(TNum num) const -> TSelf
-            requires(RNum<TNum>) or (_RNum<TNum>)
+        template <typename tnum>
+        constexpr auto checked_mul(tnum num) const -> self_type
+            requires(rnum<tnum>) or (_rnum<tnum>)
+        {
+            return _clone().mul_assign(num);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// calls [`mul(num)`].
+        /// ----------------------------------------------------------------------------------------
+        template <typename tnum>
+        constexpr auto operator*(tnum num) const -> self_type
+            requires(rnum<tnum>) or (_rnum<tnum>)
         {
             return mul(num);
         }
@@ -509,65 +509,65 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename TNum>
-        constexpr auto mulAssign(TNum num) -> TSelf&
-            requires(RNum<TNum>) or (_RNum<TNum>)
+        template <typename tnum>
+        constexpr auto mul_assign(tnum num) -> self_type&
+            requires(rnum<tnum>) or (_rnum<tnum>)
         {
-            Contracts::DebugExpects(not checkOverflowOnMul(num));
+            contracts::debug_expects(not check_overflow_on_mul(num));
 
-            _val *= _Unwrap(num);
+            _val *= _unwrap(num);
             return _self();
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename TNum>
-        constexpr auto checkedMulAssign(TNum num) -> TSelf&
-            requires(RNum<TNum>) or (_RNum<TNum>)
+        template <typename tnum>
+        constexpr auto checked_mul_assign(tnum num) -> self_type&
+            requires(rnum<tnum>) or (_rnum<tnum>)
         {
-            Contracts::Expects(not checkOverflowOnMul(num));
+            contracts::expects(not check_overflow_on_mul(num));
 
-            _val *= _Unwrap(num);
+            _val *= _unwrap(num);
             return _self();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Calls [`mulAssign(num)`].
+        /// calls [`mul_assign(num)`].
         /// ----------------------------------------------------------------------------------------
-        template <typename TNum>
-        constexpr auto operator*=(TNum num) -> TSelf&
-            requires(RNum<TNum>) or (_RNum<TNum>)
+        template <typename tnum>
+        constexpr auto operator*=(tnum num) -> self_type&
+            requires(rnum<tnum>) or (_rnum<tnum>)
         {
-            return mulAssign(num);
+            return mul_assign(num);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename TNum>
-        constexpr auto div(TNum num) const -> TSelf
-            requires(RNum<TNum>) or (_RNum<TNum>)
+        template <typename tnum>
+        constexpr auto div(tnum num) const -> self_type
+            requires(rnum<tnum>) or (_rnum<tnum>)
         {
-            return _clone().divAssign(num);
+            return _clone().div_assign(num);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename TNum>
-        constexpr auto checkedDiv(TNum num) const -> TSelf
-            requires(RNum<TNum>) or (_RNum<TNum>)
+        template <typename tnum>
+        constexpr auto checked_div(tnum num) const -> self_type
+            requires(rnum<tnum>) or (_rnum<tnum>)
         {
-            return _clone().divAssign(num);
+            return _clone().div_assign(num);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Calls [`div(num)`].
+        /// calls [`div(num)`].
         /// ----------------------------------------------------------------------------------------
-        template <typename TNum>
-        constexpr auto operator/(TNum num) const -> TSelf
-            requires(RNum<TNum>) or (_RNum<TNum>)
+        template <typename tnum>
+        constexpr auto operator/(tnum num) const -> self_type
+            requires(rnum<tnum>) or (_rnum<tnum>)
         {
             return div(num);
         }
@@ -575,124 +575,57 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename TNum>
-        constexpr auto divAssign(TNum num) -> TSelf&
-            requires(RNum<TNum>) or (_RNum<TNum>)
+        template <typename tnum>
+        constexpr auto div_assign(tnum num) -> self_type&
+            requires(rnum<tnum>) or (_rnum<tnum>)
         {
-            Contracts::DebugExpects(isDivSafe(num));
+            contracts::debug_expects(is_div_safe(num));
 
-            _val /= _Unwrap(num);
+            _val /= _unwrap(num);
             return _self();
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename TNum>
-        constexpr auto checkedDivAssign(TNum num) -> TSelf&
-            requires(RNum<TNum>) or (_RNum<TNum>)
+        template <typename tnum>
+        constexpr auto checked_div_assign(tnum num) -> self_type&
+            requires(rnum<tnum>) or (_rnum<tnum>)
         {
-            Contracts::Expects(isDivSafe(num));
+            contracts::expects(is_div_safe(num));
 
-            _val /= _Unwrap(num);
+            _val /= _unwrap(num);
             return _self();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Calls [`divAssign(num)`].
+        /// calls [`div_assign(num)`].
         /// ----------------------------------------------------------------------------------------
-        template <typename TNum>
-        constexpr auto operator/=(TNum num) -> TSelf&
-            requires(RNum<TNum>) or (_RNum<TNum>)
+        template <typename tnum>
+        constexpr auto operator/=(tnum num) -> self_type&
+            requires(rnum<tnum>) or (_rnum<tnum>)
         {
-            return divAssign(num);
+            return div_assign(num);
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////
-        //// Bit Operations
-        ////
-        ////////////////////////////////////////////////////////////////////////////////////////////
-
-    public:
-        constexpr auto leftShift() {}
-
-        constexpr auto rightShift() {}
-
-        constexpr auto leftRotate() {}
-
-        constexpr auto rightRotate() {}
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        ////
-        //// Compairision
+        //// bit operations
         ////
         ////////////////////////////////////////////////////////////////////////////////////////////
 
     public:
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename TNum>
-        constexpr auto eq(TNum num) const -> bool
-            requires(RNum<TNum>) or (_RNum<TNum>)
-        {
-            return _val == _Unwrap(num);
-        }
+        constexpr auto left_shift() {}
 
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename TNum>
-        constexpr auto ne(TNum num) const -> bool
-            requires(RNum<TNum>) or (_RNum<TNum>)
-        {
-            return _val != _Unwrap(num);
-        }
+        constexpr auto right_shift() {}
 
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename TNum>
-        constexpr auto lt(TNum num) const -> bool
-            requires(RNum<TNum>) or (_RNum<TNum>)
-        {
-            return _val < _Unwrap(num);
-        }
+        constexpr auto left_rotate() {}
 
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename TNum>
-        constexpr auto le(TNum num) const -> bool
-            requires(RNum<TNum>) or (_RNum<TNum>)
-        {
-            return _val <= _Unwrap(num);
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename TNum>
-        constexpr auto gt(TNum num) const -> bool
-            requires(RNum<TNum>) or (_RNum<TNum>)
-        {
-            return _val > _Unwrap(num);
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename TNum>
-        constexpr auto ge(TNum num) const -> bool
-            requires(RNum<TNum>) or (_RNum<TNum>)
-        {
-            return _val >= _Unwrap(num);
-        }
+        constexpr auto right_rotate() {}
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////
-        //// Utils
+        //// compairision
         ////
         ////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -700,68 +633,135 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto countDigits() const -> TSelf
+        template <typename tnum>
+        constexpr auto eq(tnum num) const -> bool
+            requires(rnum<tnum>) or (_rnum<tnum>)
         {
-            return _Make(TImpl::CountDigits(_val));
+            return _val == _unwrap(num);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto abs() const -> TSelf
+        template <typename tnum>
+        constexpr auto ne(tnum num) const -> bool
+            requires(rnum<tnum>) or (_rnum<tnum>)
         {
-            return _Make(TImpl::Abs(_val));
+            return _val != _unwrap(num);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto pow() const -> TSelf
+        template <typename tnum>
+        constexpr auto lt(tnum num) const -> bool
+            requires(rnum<tnum>) or (_rnum<tnum>)
         {
-            return _Make(TImpl::Pow(_val));
+            return _val < _unwrap(num);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto sqrt() const -> TSelf
+        template <typename tnum>
+        constexpr auto le(tnum num) const -> bool
+            requires(rnum<tnum>) or (_rnum<tnum>)
         {
-            return _Make(TImpl::Sqrt(_val));
+            return _val <= _unwrap(num);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto root() const -> TSelf
+        template <typename tnum>
+        constexpr auto gt(tnum num) const -> bool
+            requires(rnum<tnum>) or (_rnum<tnum>)
         {
-            return _Make(TImpl::Root(_val));
+            return _val > _unwrap(num);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto log() const -> TSelf
+        template <typename tnum>
+        constexpr auto ge(tnum num) const -> bool
+            requires(rnum<tnum>) or (_rnum<tnum>)
         {
-            return _Make(TImpl::Log(_val));
+            return _val >= _unwrap(num);
+        }
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////
+        //// utils
+        ////
+        ////////////////////////////////////////////////////////////////////////////////////////////
+
+    public:
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto count_digits() const -> self_type
+        {
+            return _make(impl_type::count_digits(_val));
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto log10() const -> TSelf
+        constexpr auto abs() const -> self_type
         {
-            return _Make(TImpl::Log10(_val));
+            return _make(impl_type::abs(_val));
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename TNum>
-        constexpr auto min(TNum num) const -> TSelf
-            requires(RNum<TNum>) or (_RNum<TNum>)
+        constexpr auto pow() const -> self_type
         {
-            if (_val > _Unwrap(num))
-                return _Make(_Unwrap(num));
+            return _make(impl_type::pow(_val));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto sqrt() const -> self_type
+        {
+            return _make(impl_type::sqrt(_val));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto root() const -> self_type
+        {
+            return _make(impl_type::root(_val));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto log() const -> self_type
+        {
+            return _make(impl_type::log(_val));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto log10() const -> self_type
+        {
+            return _make(impl_type::log10(_val));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename tnum>
+        constexpr auto min(tnum num) const -> self_type
+            requires(rnum<tnum>) or (_rnum<tnum>)
+        {
+            if (_val > _unwrap(num))
+                return _make(_unwrap(num));
 
             return _clone();
         }
@@ -769,12 +769,12 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename TNum>
-        constexpr auto max(TNum num) const -> TSelf
-            requires(RNum<TNum>) or (_RNum<TNum>)
+        template <typename tnum>
+        constexpr auto max(tnum num) const -> self_type
+            requires(rnum<tnum>) or (_rnum<tnum>)
         {
-            if (_val < _Unwrap(num))
-                return _Make(_Unwrap(num));
+            if (_val < _unwrap(num))
+                return _make(_unwrap(num));
 
             return _clone();
         }
@@ -782,17 +782,17 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename TNum0, typename TNum1>
-        constexpr auto clamp(TNum0 num0, TNum1 num1) const -> TSelf
-            requires(RNum<TNum0>) or (_RNum<TNum0>) and (RNum<TNum0>) or (_RNum<TNum0>)
+        template <typename tnum0, typename tnum1>
+        constexpr auto clamp(tnum0 num0, tnum1 num1) const -> self_type
+            requires(rnum<tnum0>) or (_rnum<tnum0>) and (rnum<tnum0>) or (_rnum<tnum0>)
         {
-            Contracts::DebugExpects(num0 <= num1, "Left of range is greater than the right.");
+            contracts::debug_expects(num0 <= num1, "left of range is greater than the right.");
 
-            if (_val < _Unwrap(num0))
-                return _Make(_Unwrap(num0));
+            if (_val < _unwrap(num0))
+                return _make(_unwrap(num0));
 
-            if (_val > _Unwrap(num1))
-                return _Make(_Unwrap(num1));
+            if (_val > _unwrap(num1))
+                return _make(_unwrap(num1));
 
             return _clone();
         }
@@ -800,78 +800,78 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto clone() const -> TSelf
+        constexpr auto clone() const -> self_type
         {
             return _clone();
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////
-        //// Conversion
+        //// conversion
         ////
         ////////////////////////////////////////////////////////////////////////////////////////////
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename TNum>
-        constexpr auto to() const -> TNum
-            requires(RNum<TNum>) or (_RNum<TNum>)
+        template <typename tnum>
+        constexpr auto to() const -> tnum
+            requires(rnum<tnum>) or (_rnum<tnum>)
         {
-            Contracts::DebugExpects(not checkOverflowOnConversion<TNum>());
+            contracts::debug_expects(not check_overflow_on_conversion<tnum>());
 
-            return TNum(_val);
+            return tnum(_val);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename TNum>
-        constexpr auto checkedTo() const -> TNum
-            requires(RNum<TNum>) or (_RNum<TNum>)
+        template <typename tnum>
+        constexpr auto checked_to() const -> tnum
+            requires(rnum<tnum>) or (_rnum<tnum>)
         {
-            Contracts::Expects(not checkOverflowOnConversion<TNum>());
+            contracts::expects(not check_overflow_on_conversion<tnum>());
 
-            return TNum(_val);
+            return tnum(_val);
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////
-        //// Checks
+        //// checks
         ////
         ////////////////////////////////////////////////////////////////////////////////////////////
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename TNum>
-        static constexpr auto CheckOverflowOnAssignment(TNum num) -> bool
-            requires(RNum<TNum>) or (_RNum<TNum>)
+        template <typename tnum>
+        static constexpr auto check_overflow_on_assignment(tnum num) -> bool
+            requires(rnum<tnum>) or (_rnum<tnum>)
         {
-            if constexpr (RNum<TNum>)
+            if constexpr (rnum<tnum>)
             {
-                if constexpr (IsSigned() != TNum::IsSigned())
+                if constexpr (is_signed() != tnum::is_signed())
                     return false;
 
-                if constexpr (TNum::TImpl::Min() < TImpl::Min())
-                    if (_Unwrap(num) < TImpl::Min())
+                if constexpr (tnum::impl_type::min() < impl_type::min())
+                    if (_unwrap(num) < impl_type::min())
                         return true;
 
-                if constexpr (TNum::TImpl::Max() > TImpl::Max())
-                    if (_Unwrap(num) > TImpl::Max())
+                if constexpr (tnum::impl_type::max() > impl_type::max())
+                    if (_unwrap(num) > impl_type::max())
                         return true;
             }
             else
             {
-                if constexpr (IsSigned() != std::is_signed_v<TNum>)
+                if constexpr (is_signed() != std::is_signed_v<tnum>)
                     return false;
 
-                if constexpr (std::numeric_limits<TNum>::min() < TImpl::Min())
-                    if (num < TImpl::Min())
+                if constexpr (std::numeric_limits<tnum>::min() < impl_type::min())
+                    if (num < impl_type::min())
                         return true;
 
-                if constexpr (std::numeric_limits<TNum>::max() > TImpl::Max())
-                    if (num > TImpl::Max())
+                if constexpr (std::numeric_limits<tnum>::max() > impl_type::max())
+                    if (num > impl_type::max())
                         return true;
             }
 
@@ -881,23 +881,23 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename TNum>
-        constexpr auto checkOverflowOnConversion() const -> bool
-            requires(RNum<TNum>) or (_RNum<TNum>)
+        template <typename tnum>
+        constexpr auto check_overflow_on_conversion() const -> bool
+            requires(rnum<tnum>) or (_rnum<tnum>)
         {
-            // It's better to ask the target type if it can accept our range values.
-            if constexpr (RNum<TNum>)
+            // it's better to ask the target type if it can accept our range values.
+            if constexpr (rnum<tnum>)
             {
-                return TNum::template CheckOverflowOnAssignment<TSelf>(_val);
+                return tnum::template check_overflow_on_assignment<self_type>(_val);
             }
             else
             {
-                if constexpr (TImpl::Min() < std::numeric_limits<TNum>::min())
-                    if (_val < std::numeric_limits<TNum>::min())
+                if constexpr (impl_type::min() < std::numeric_limits<tnum>::min())
+                    if (_val < std::numeric_limits<tnum>::min())
                         return true;
 
-                if constexpr (TImpl::Min() > std::numeric_limits<TNum>::max())
-                    if (_val > std::numeric_limits<TNum>::max())
+                if constexpr (impl_type::min() > std::numeric_limits<tnum>::max())
+                    if (_val > std::numeric_limits<tnum>::max())
                         return true;
 
                 return false;
@@ -907,11 +907,11 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename TNum>
-        constexpr auto checkOverflowOnAdd(TNum num) const -> bool
-            requires(RNum<TNum>) or (_RNum<TNum>)
+        template <typename tnum>
+        constexpr auto check_overflow_on_add(tnum num) const -> bool
+            requires(rnum<tnum>) or (_rnum<tnum>)
         {
-            if ((TImpl::Max() - _val) < _Unwrap(num))
+            if ((impl_type::max() - _val) < _unwrap(num))
                 return true;
 
             return false;
@@ -920,11 +920,11 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename TNum>
-        constexpr auto checkOverflowOnSub(TNum num) const -> bool
-            requires(RNum<TNum>) or (_RNum<TNum>)
+        template <typename tnum>
+        constexpr auto check_overflow_on_sub(tnum num) const -> bool
+            requires(rnum<tnum>) or (_rnum<tnum>)
         {
-            if ((_val - TImpl::Min()) < _Unwrap(num))
+            if ((_val - impl_type::min()) < _unwrap(num))
                 return true;
 
             return false;
@@ -933,28 +933,28 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename TNum>
-        constexpr auto checkOverflowOnMul(TNum num) const -> bool
-            requires(RNum<TNum>) or (_RNum<TNum>)
+        template <typename tnum>
+        constexpr auto check_overflow_on_mul(tnum num) const -> bool
+            requires(rnum<tnum>) or (_rnum<tnum>)
         {
-            auto limit = TImpl::Max() - _val;
+            auto limit = impl_type::max() - _val;
             auto div = limit / _val;
-            if (div < _Unwrap(num))
+            if (div < _unwrap(num))
                 return true;
 
             return false;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # To Do
+        /// # to do
         ///
-        /// - Complete implementation.
+        /// - complete implementation.
         /// ----------------------------------------------------------------------------------------
-        template <typename TNum>
-        constexpr auto isDivSafe(TNum num) const -> bool
-            requires(RNum<TNum>) or (_RNum<TNum>)
+        template <typename tnum>
+        constexpr auto is_div_safe(tnum num) const -> bool
+            requires(rnum<tnum>) or (_rnum<tnum>)
         {
-            if (_Unwrap(num) == -1 and _val == TImpl::Min())
+            if (_unwrap(num) == -1 and _val == impl_type::min())
                 return false;
 
             return true;
@@ -962,7 +962,7 @@ namespace Atom
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////
-        //// String Conversion
+        //// string conversion
         ////
         ////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -970,69 +970,69 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto toString() const -> TString
+        constexpr auto to_string() const -> string_type
         {
-            return TImpl::ToString(_val);
+            return impl_type::to_string(_val);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename TOut>
-        constexpr auto toStringOut(TOut&& out) const -> TOut&
+        template <typename tout>
+        constexpr auto to_string_out(tout&& out) const -> tout&
         {
-            return TImpl::ToStringOut(_val, forward<TOut>(out));
+            return impl_type::to_string_out(_val, forward<tout>(out));
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////
-        //// Misc
+        //// misc
         ////
         ////////////////////////////////////////////////////////////////////////////////////////////
 
-        constexpr auto unwrap() const -> TVal
+        constexpr auto unwrap() const -> value_type
         {
             return _val;
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////
-        //// Implementaions
+        //// implementaions
         ////
         ////////////////////////////////////////////////////////////////////////////////////////////
 
     protected:
-        constexpr auto _self() const -> const TSelf&
+        constexpr auto _self() const -> const self_type&
         {
-            return static_cast<const TSelf&>(*this);
+            return static_cast<const self_type&>(*this);
         }
 
-        constexpr auto _self() -> TSelf&
+        constexpr auto _self() -> self_type&
         {
-            return static_cast<TSelf&>(*this);
+            return static_cast<self_type&>(*this);
         }
 
-        constexpr auto _clone() const -> TSelf
+        constexpr auto _clone() const -> self_type
         {
-            return _Make(_val);
+            return _make(_val);
         }
 
-        static constexpr auto _Make(TVal val) -> TSelf
+        static constexpr auto _make(value_type val) -> self_type
         {
-            return TSelf(val);
+            return self_type(val);
         }
 
-        template <typename TNum>
-        static constexpr auto _Unwrap(TNum num)
-            requires(RNum<TNum>) or (_RNum<TNum>)
+        template <typename tnum>
+        static constexpr auto _unwrap(tnum num)
+            requires(rnum<tnum>) or (_rnum<tnum>)
         {
-            if constexpr (RNum<TNum>)
+            if constexpr (rnum<tnum>)
                 return num._val;
             else
                 return num;
         }
 
     public:
-        TVal _val;
+        value_type _val;
     };
 };

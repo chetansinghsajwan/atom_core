@@ -1,37 +1,37 @@
 #pragma once
-#include "Atom/Math.h"
-#include "Atom/Range.h"
-#include "Atom/String.h"
-#include "Uuid.h"
+#include "atom/math.h"
+#include "atom/range.h"
+#include "atom/string.h"
+#include "uuid.h"
 
-namespace Atom
+namespace atom
 {
-    class UuidParser
+    class uuid_parser
     {
     public:
-        template <typename TRange>
-        constexpr auto parse(const TRange& range) const -> Uuid
-            requires(RRangeOf<TRange, Char>)
+        template <typename range_type>
+        constexpr auto parse(const range_type& range) const -> uuid
+            requires(rrange_of<range_type, uchar>)
         {
-            RangeHelper helper;
-            if constexpr (helper.CanGetCount<TRange>())
+            range_helper helper;
+            if constexpr (helper.can_get_count<range_type>())
             {
-                return _parseCounted(range.iter(), helper.GetCount(range));
+                return _parse_counted(range.iter(), helper.get_count(range));
             }
             else
             {
-                return _parseUncounted(range.iter(), range.iterEnd());
+                return _parse_uncounted(range.iter(), range.iter_end());
             }
         }
 
     private:
-        template <typename TIter>
-        constexpr auto _parseCounted(TIter it, usize itCount) const -> Uuid
+        template <typename iter_type>
+        constexpr auto _parse_counted(iter_type it, usize it_count) const -> uuid
         {
-            if (itCount != 36)
-                return Uuid::Null;
+            if (it_count != 36)
+                return uuid::null;
 
-            Uuid uuid;   // output result
+            uuid uuid;   // output result
             usize i = 0; // index of byte to write
             usize j = 0; // index of char to read
 
@@ -41,7 +41,7 @@ namespace Atom
                 {
                     if (it.value() != '-')
                     {
-                        return Uuid::Null;
+                        return uuid::null;
                     }
 
                     j++;
@@ -49,16 +49,16 @@ namespace Atom
                     continue;
                 }
 
-                byte high = Math::CharToHex(it.value());
+                byte high = math::char_to_hex(it.value());
                 if (high == byte(-1))
-                    return Uuid::Null;
+                    return uuid::null;
 
                 j++;
                 it.next();
 
-                byte low = Math::CharToHex(it.value());
+                byte low = math::char_to_hex(it.value());
                 if (low == byte(-1))
-                    return Uuid::Null;
+                    return uuid::null;
 
                 uuid.bytes[i++] = (high << 4) | low;
 
@@ -69,23 +69,23 @@ namespace Atom
             return uuid;
         }
 
-        template <typename TIter, typename TIterEnd>
-        constexpr auto _parseUncounted(TIter it, TIterEnd itEnd) const -> Uuid
+        template <typename iter_type, typename iter_end_type>
+        constexpr auto _parse_uncounted(iter_type it, iter_end_type it_end) const -> uuid
         {
-            Uuid uuid;   // output result
+            uuid uuid;   // output result
             usize i = 0; // index of byte to write
             usize j = 0; // index of char to read
 
             while (i < 16)
             {
-                if (it.eq(itEnd))
-                    return Uuid::Null;
+                if (it.eq(it_end))
+                    return uuid::null;
 
                 if (j == 8 || j == 13 || j == 18 || j == 23)
                 {
                     if (it.value() != '-')
                     {
-                        return Uuid::Null;
+                        return uuid::null;
                     }
 
                     j++;
@@ -93,18 +93,18 @@ namespace Atom
                     continue;
                 }
 
-                byte high = Math::CharToHex(it.value());
+                byte high = math::char_to_hex(it.value());
                 if (high == byte(-1))
-                    return Uuid::Null;
+                    return uuid::null;
 
                 j++;
                 it.next();
-                if (it.eq(itEnd))
-                    return Uuid::Null;
+                if (it.eq(it_end))
+                    return uuid::null;
 
-                byte low = Math::CharToHex(it.value());
+                byte low = math::char_to_hex(it.value());
                 if (low == byte(-1))
-                    return Uuid::Null;
+                    return uuid::null;
 
                 uuid.bytes[i++] = (high << 4) | low;
 
@@ -112,9 +112,9 @@ namespace Atom
                 it.next();
             }
 
-            if (not it.eq(itEnd))
+            if (not it.eq(it_end))
             {
-                return Uuid::Null;
+                return uuid::null;
             }
 
             return uuid;

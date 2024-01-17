@@ -1,19 +1,19 @@
 #pragma once
-#include "DynamicArray.h"
+#include "dynamic_array.h"
 
-namespace Atom
+namespace atom
 {
-    template <typename TAlloc>
-    class _BufArrayAllocWrap: public TAlloc
+    template <typename allocator_type>
+    class _buf_array_alloc_wrap: public allocator_type
     {};
 
-    template <typename T, usize bufSize, typename TAlloc>
-    class BufArray: public DynamicArray<T, _BufArrayAllocWrap<TAlloc>>
+    template <typename type, usize buf_size, typename allocator_type>
+    class buf_array: public dynamic_array<type, _buf_array_alloc_wrap<allocator_type>>
     {
-        using Base = DynamicArray<T, _BufArrayAllocWrap<TAlloc>>;
+        using base_type = dynamic_array<type, _buf_array_alloc_wrap<allocator_type>>;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 }

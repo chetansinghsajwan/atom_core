@@ -1,18 +1,18 @@
-export module Atom.Core.Text.Encodings.UTF16;
+export module atom.core.text.encodings.utf16;
 
-namespace Atom::Text
+namespace atom::text
 {
-    class UTF32Encoding
+    class utf32encoding
     {
     public:
-        using TChar = char32;
-        using TRune = char32;
+        using tchar = char32;
+        using trune = char32;
 
     public:
-        static constexpr TChar Null = U'\0';
-        static constexpr bool IsMultiCharEncoding = false;
+        static constexpr tchar null = u'\0';
+        static constexpr bool is_multi_char_encoding = false;
     };
 
-    using UTF32Char = typename UTF32Encoding::TChar;
-    using UTF32Rune = typename UTF32Encoding::TRune;
+    using utf32char = typename utf32encoding::tchar;
+    using utf32rune = typename utf32encoding::trune;
 }

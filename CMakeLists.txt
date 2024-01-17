@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(Atom.Core VERSION 0.1.0 LANGUAGES CXX)
+project(atom.core VERSION 0.1.0 LANGUAGES CXX)
 
 include(FetchContent)
 
@@ -35,37 +35,38 @@ set(CMAKE_CXX_STANDARD_REQUIRED "ON")
 enable_testing()
 
 # --------------------------------------------------------------------------------------------------
-# Atom.Core
+# atom.core
 # --------------------------------------------------------------------------------------------------
 
-add_library(Atom.Core STATIC)
-target_sources(Atom.Core
+add_library(atom.core STATIC)
+target_sources(atom.core
     PUBLIC FILE_SET modules TYPE CXX_MODULES FILES
     "src/core.cpp"
 )
-target_include_directories(Atom.Core PRIVATE "src/")
+target_include_directories(atom.core PRIVATE "src/")
 
-target_link_libraries(Atom.Core PRIVATE WjCryptLib)
-target_link_libraries(Atom.Core PRIVATE fmt::fmt-header-only)
-
-# --------------------------------------------------------------------------------------------------
-# Atom.Core.Tests
-# --------------------------------------------------------------------------------------------------
-
-file(GLOB_RECURSE TEST_SOURCES "tests/**.cpp")
-
-add_executable(Atom.Core.Tests ${TEST_SOURCES})
-target_include_directories(Atom.Core.Tests PUBLIC "tests/")
-
-target_link_libraries(Atom.Core.Tests PUBLIC Atom.Core)
-target_link_libraries(Atom.Core.Tests PUBLIC Catch2::Catch2WithMain)
-
-add_test(Atom.Core.Tests Atom.Core.Tests)
+target_link_libraries(atom.core PRIVATE WjCryptLib)
+target_link_libraries(atom.core PRIVATE fmt::fmt-header-only)
+target_compile_options(atom.core PUBLIC "-ferror-limit=1000")
 
 # --------------------------------------------------------------------------------------------------
-# Atom.Core.Sandbox
+# atom.core.tests
 # --------------------------------------------------------------------------------------------------
 
-add_executable(Atom.Core.Sandbox "sandbox/sandbox.cpp")
-target_include_directories(Atom.Core.Sandbox PRIVATE "sandbox/")
-target_link_libraries(Atom.Core.Sandbox PUBLIC Atom.Core)
+file(GLOB_RECURSE test_sources "tests/**.cpp")
+
+add_executable(atom.core.tests ${test_sources})
+target_include_directories(atom.core.tests PUBLIC "tests/")
+
+target_link_libraries(atom.core.tests PUBLIC atom.core)
+target_link_libraries(atom.core.tests PUBLIC Catch2::Catch2WithMain)
+
+add_test(atom.core.tests atom.core.tests)
+
+# --------------------------------------------------------------------------------------------------
+# atom.core.sandbox
+# --------------------------------------------------------------------------------------------------
+
+add_executable(atom.core.sandbox "sandbox/sandbox.cpp")
+target_include_directories(atom.core.sandbox PRIVATE "sandbox/")
+target_link_libraries(atom.core.sandbox PUBLIC atom.core)

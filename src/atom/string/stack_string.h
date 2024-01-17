@@ -1,44 +1,44 @@
 #pragma once
-#include "BasicStackString.h"
-#include "DefaultEncoding.h"
+#include "basic_stack_string.h"
+#include "default_encoding.h"
 
-namespace Atom
+namespace atom
 {
     template <usize size>
-    using StackString = BasicStackString<CharEncoding, size>;
+    using stack_string = basic_stack_string<char_encoding, size>;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     ////
-    //// Primitives Implementations
-    //// These implementations could not be defined before due to circular depenedencies.
+    //// primitives implementations
+    //// these implementations could not be defined before due to circular depenedencies.
     ////
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     template <size_t size>
-    class IntString: public StackString<size>
+    class int_string: public stack_string<size>
     {
-        using Base = StackString<size>;
+        using base_type = stack_string<size>;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 
     template <size_t size>
-    class FloatString: public StackString<size>
+    class float_string: public stack_string<size>
     {
-        using Base = StackString<size>;
+        using base_type = stack_string<size>;
 
     public:
-        using Base::Base;
-        using Base::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 
-    template <typename TSelf, typename TVal, typename TLimit>
-    constexpr auto _IntImpl<TSelf, TVal, TLimit>::ToString(TVal val) -> TString
+    template <typename self_type, typename value_type, typename tlimit>
+    constexpr auto _int_impl<self_type, value_type, tlimit>::to_string(value_type val) -> string_type
     {
-        TString str;
-        Char* begin = _ToString(val, str.mutData() + str.count() - 1);
+        string_type str;
+        char* begin = _to_string(val, str.mut_data() + str.count() - 1);
         begin--;
         while (begin >= str.data())
         {
@@ -49,11 +49,11 @@ namespace Atom
         return str;
     }
 
-    template <typename TSelf, typename TVal>
-    constexpr auto _FloatImpl<TSelf, TVal>::ToString(TVal val) -> TString
+    template <typename self_type, typename value_type>
+    constexpr auto _float_impl<self_type, value_type>::to_string(value_type val) -> string_type
     {
-        TString str;
-        Char* begin = _ToString(val, str.mutData() + str.count() - 1);
+        string_type str;
+        char* begin = _to_string(val, str.mut_data() + str.count() - 1);
         begin--;
         while (begin >= str.data())
         {

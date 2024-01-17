@@ -1,6 +1,6 @@
 import atom.core;
 
-using namespace Atom;
+using namespace atom;
 
 auto print_cmd_args(i32 argc, char** args)
 {

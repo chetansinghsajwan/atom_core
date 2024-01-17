@@ -1,905 +1,397 @@
 #pragma once
-#include "Atom/Core/Requirements.h"
-#include "Atom/Memory/DefaultMemAllocator.h"
-#include "Atom/TTI.h"
-#include "_BoxImpl.h"
+#include "atom/core.h"
+#include "atom/exceptions.h"
+#include "atom/invokable/invokable_ptr.h"
+#include "atom/tti.h"
 
-namespace Atom
+#include "default_mem_allocator.h"
+
+namespace atom
 {
-    template <typename _TImpl_>
-    class BoxFunctions
+    namespace internal
     {
-    protected:
-        using _TImpl = _TImpl_;
-
-    public:
-        using TVal = typename _TImpl::TVal;
-
-    public:
-        constexpr BoxFunctions(auto&&... args):
-            _impl{ fwd(args)... }
-        {}
-
-    public:
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// `object_box_identifier` is used to check if the type is same as or derived from
+        /// `object_box` template.
         /// ----------------------------------------------------------------------------------------
-        template <typename T, typename... TArgs>
-        constexpr auto emplace(TArgs&&... args) -> T&
-            requires RSameOrDerivedFrom<TPure<T>, TVal>
+        class object_box_identifier
+        {};
+    }
+
+    /// --------------------------------------------------------------------------------------------
+    /// stores object inside using type erasure.
+    ///
+    /// # template parameters
+    /// - `copyable`: should the `object_box` be `copy_constructible` and `copy_assignable`.
+    /// - `movable`: should the `object_box` be `move_constructible` and `move_assignable`.
+    /// - `allow_non_movable_object`: should the `object` be `move_constructible` when `movable` is
+    ///     true. `object` can be allocated on heap if it's not movable.
+    /// - `stack_size`: size of stack to store object, to avoid heap allocation.
+    /// - `allocator_type`: `mem_allocator` to allocate memory to store object.
+    /// --------------------------------------------------------------------------------------------
+    template <bool copyable, bool movable, bool allow_non_movable_object, usize stack_size,
+        typename allocator_type = default_mem_allocator>
+    class object_box: public internal::object_box_identifier
+    {
+        template <bool other_copyable, bool other_movable, bool other_allow_non_movable_object,
+            usize other_stack_size, typename tother_mem_allocator>
+        friend class object_box;
+
+        /// --------------------------------------------------------------------------------------------
+        /// stores data for object. like, `copy_constructor`, `move_constructor` and `object_size`.
+        /// --------------------------------------------------------------------------------------------
+        class object_data
         {
         public:
-            ATOM_CONDITIONAL_FIELD(Copyable, InvokablePtr<void(MutMemPtr<void>, MemPtr<void>)>)
+            ATOM_CONDITIONAL_FIELD(copyable, invokable_ptr<void(mut_mem_ptr<void>, mem_ptr<void>)>)
             copy;
 
-            ATOM_CONDITIONAL_FIELD(Movable, InvokablePtr<void(MutMemPtr<void>, MutMemPtr<void>)>)
+            ATOM_CONDITIONAL_FIELD(movable, invokable_ptr<void(mut_mem_ptr<void>, mut_mem_ptr<void>)>)
             move;
 
-            InvokablePtr<void(MutMemPtr<void> obj)> dtor;
+            invokable_ptr<void(mut_mem_ptr<void> obj)> dtor;
 
             usize size;
-            MutMemPtr<void> obj;
-            const TypeInfo* type;
+            mut_mem_ptr<void> obj;
+            const type_info* type;
         };
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// requirements for `object` accepted by this `object_box`.
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr auto set(T&& obj) -> T&
-            requires RSameOrDerivedFrom<TPure<T>, TVal>
-        {
-            _impl._setVal(fwd(obj));
-            return _impl.template getMutValAs<T>();
-        }
+        template <typename type>
+        static constexpr bool robject = requires {
+            // `object_box` variants are not stored inside `object_box` variants.
+            requires rnot_derived_from<type, internal::object_box_identifier>;
+
+            // if box is `copyable` then the object should also be {copy_constructibl``.
+            requires !copyable || rcopy_constructible<type>;
+
+            // if box is `movable` then the object should also be `move_constructible` unless
+            // `non_movable_object` is allowed.
+            requires !movable || (rmove_constructible<type> || allow_non_movable_object);
+        };
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// requirements for other `object_box` accepted by this `object_box`.
+        /// for example, `copy_constructor` and `move_constructor`.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto destroy()
-        {
-            _impl.destroy();
-        }
+        template <bool other_copyable, bool other_movable, bool other_allow_non_movable_object>
+        static constexpr bool rother_box = requires {
+            // if this {box} is `copyable` the {other_box} should also be `copyable`.
+            requires !copyable || other_copyable;
 
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto get() const -> const TVal&
-        {
-            debug_expects(hasVal(), "Value is null.");
+            // if this {box} is `movable` the {other_box} should also be `movable` unless
+            // `non_movable_object` is allowed.
+            requires !movable || (other_movable || allow_non_movable_object);
 
-            return _impl.getVal();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto getMut() -> TVal&
-        {
-            debug_expects(hasVal(), "Value is null.");
-
-            return _impl.getValMut();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto checkGet() const -> const TVal&
-        {
-            expects(hasVal(), "Value is null.");
-
-            return _impl.getVal();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto checkGetMut() -> TVal&
-        {
-            expects(hasVal(), "Value is null.");
-
-            return _impl.getValMut();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr auto getAs() const -> const T&
-            requires RSameOrDerivedFrom<TPure<T>, TVal>
-        {
-            debug_expects(hasVal(), "Value is null.");
-
-            return _impl.template getValAs<T>();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr auto getMutAs() -> T&
-            requires RSameOrDerivedFrom<TPure<T>, TVal>
-        {
-            debug_expects(hasVal(), "Value is null.");
-
-            return _impl.template getMutValAs<T>();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr auto checkGetAs() const -> const T&
-            requires RSameOrDerivedFrom<TPure<T>, TVal>
-        {
-            expects(hasVal(), "Value is null.");
-
-            return _impl.template getValAs<T>();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr auto checkGetMutAs() -> T&
-            requires RSameOrDerivedFrom<TPure<T>, TVal>
-        {
-            expects(hasVal(), "Value is null.");
-
-            return _impl.template getMutValAs<T>();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto mem() const -> const Ptr<TVal>
-        {
-            return _impl.mem();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto mutMem() -> Ptr<TVal>
-        {
-            return _impl.mutMem();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto checkMem() const -> const Ptr<TVal>
-        {
-            expects(hasVal(), "Value is null.");
-
-            return _impl.mem();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto checkMutMem() -> Ptr<TVal>
-        {
-            expects(hasVal(), "Value is null.");
-
-            return _impl.mutMem();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr auto memAs() const -> const Ptr<T>
-            requires RSameOrDerivedFrom<TPure<T>, TVal>
-        {
-            return _impl.template memAs<T>();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr auto mutMemAs() -> Ptr<T>
-            requires RSameOrDerivedFrom<TPure<T>, TVal>
-        {
-            return _impl.template mutMemAs<T>();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr auto checkMemAs() const -> const Ptr<T>
-            requires RSameOrDerivedFrom<TPure<T>, TVal>
-        {
-            expects(hasVal(), "Value is null.");
-
-            return _impl.template memAs<T>();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr auto checkMutMemAs() -> Ptr<T>
-            requires RSameOrDerivedFrom<TPure<T>, TVal>
-        {
-            expects(hasVal(), "Value is null.");
-
-            return _impl.template mutMemAs<T>();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto valType() const -> const TypeInfo&
-        {
-            return _impl.objType();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto valSize() const -> usize
-        {
-            return _impl.objSize();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto hasVal() const -> bool
-        {
-            return _impl.hasVal();
-        }
-
-    protected:
-        _TImpl _impl;
-    };
-
-    template <typename _TImpl_>
-        requires(RIsVoid<typename _TImpl_::TVal>)
-    class BoxFunctions<_TImpl_>
-    {
-    protected:
-        using _TImpl = _TImpl_;
-
-    public:
-        using TVal = void;
-
-    public:
-        constexpr BoxFunctions(auto&&... args):
-            _impl{ fwd(args)... }
-        {}
+            // if this {box} does not allow `non_movable_object` then {other_box} should also not
+            // allow {non_movable_objec``.
+            requires !movable || (allow_non_movable_object || !other_allow_non_movable_object);
+        };
 
     public:
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// # default constructor
         /// ----------------------------------------------------------------------------------------
-        template <typename T, typename... TArgs>
-        constexpr auto emplace(TArgs&&... args) -> T&
-            requires(not RIsVoid<T>)
-        {
-            _impl.template emplaceVal<T>(fwd(args)...);
-            return _impl.template getMutValAs<T>();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr auto set(T&& obj) -> T&
-        {
-            _impl._setVal(fwd(obj));
-            return _impl.template getMutValAs<T>();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto destroy()
-        {
-            _impl.destroy();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr auto getAs() const -> const T&
-        {
-            debug_expects(hasVal(), "Value is null.");
-
-            return _impl.template getValAs<T>();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr auto getMutAs() -> T&
-        {
-            debug_expects(hasVal(), "Value is null.");
-
-            return _impl.template getMutValAs<T>();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr auto checkGetAs() const -> const T&
-        {
-            expects(hasVal(), "Value is null.");
-
-            return _impl.template getValAs<T>();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr auto checkGetMutAs() -> T&
-        {
-            expects(hasVal(), "Value is null.");
-
-            return _impl.template getMutValAs<T>();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto mem() const -> const memptr
-        {
-            return _impl.getMem();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto mutMem() -> memptr
-        {
-            return _impl.getMutMem();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto checkMem() const -> const memptr
-        {
-            expects(hasVal(), "Value is null.");
-
-            return _impl.getMem();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto checkMutMem() -> memptr
-        {
-            expects(hasVal(), "Value is null.");
-
-            return _impl.getMutMem();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr auto memAs() const -> const Ptr<T>
-            requires(not RIsVoid<T>)
-        {
-            return _impl.template memAs<T>();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr auto mutMemAs() -> Ptr<T>
-            requires(not RIsVoid<T>)
-        {
-            return _impl.template mutMemAs<T>();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr auto checkMemAs() const -> const memptr
-            requires(not RIsVoid<T>)
-        {
-            expects(hasVal(), "Value is null.");
-
-            return _impl.template getMemAs<T>();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr auto checkMutMemAs() -> memptr
-            requires(not RIsVoid<T>)
-        {
-            expects(hasVal(), "Value is null.");
-
-            return _impl.template getMutMemAs<T>();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto valType() const -> const TypeInfo&
-        {
-            return _impl.getValType();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto valSize() const -> usize
-        {
-            return _impl.objSize();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto hasVal() const -> bool
-        {
-            return _impl.hasVal();
-        }
-
-    protected:
-        _TImpl _impl;
-    };
-
-    template <typename TVal, usize bufSize = 50, typename TAlloc = DefaultMemAllocator>
-    class Box;
-
-    template <typename TVal, usize bufSize = 50, typename TAlloc = DefaultMemAllocator>
-    class CopyBox;
-
-    template <typename TVal, bool allowNonMove = true, usize bufSize = 50,
-        typename TAlloc = DefaultMemAllocator>
-    class MoveBox;
-
-    template <typename TVal, bool allowNonMove = true, usize bufSize = 50,
-        typename TAlloc = DefaultMemAllocator>
-    class CopyMoveBox;
-
-    template <typename TVal, usize bufSize, typename TAlloc>
-    class Box: public BoxFunctions<_BoxImpl<TVal, false, false, false, bufSize, TAlloc>>
-    {
-        using This = Box<TVal, bufSize, TAlloc>;
-        using Base = BoxFunctions<_BoxImpl<TVal, false, false, false, bufSize, TAlloc>>;
-        using _TImpl = typename Base::_TImpl;
-
-    public:
-        /// ----------------------------------------------------------------------------------------
-        /// # Default Constructor
-        /// ----------------------------------------------------------------------------------------
-        constexpr ObjectBox()
+        constexpr object_box()
             : _object()
-            , _heapMem(nullptr)
-            , _heapMemSize(0)
+            , _heap_mem(nullptr)
+            , _heap_mem_size(0)
             , _allocator()
         {}
 
         /// ----------------------------------------------------------------------------------------
-        /// # Copy Constructor
+        /// # null constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr ObjectBox(NullType null)
-            : ObjectBox()
+        constexpr object_box(null_type null)
+            : object_box()
         {}
 
         /// ----------------------------------------------------------------------------------------
-        /// # Template Copy Operator
+        /// # null assignment
         /// ----------------------------------------------------------------------------------------
-        template <typename T, usize thatBufSize, typename TThatAlloc>
-        constexpr This& operator=(const CopyBox<T, thatBufSize, TThatAlloc>& that)
-            requires IsVoid<TVal> or RSameOrDerivedFrom<T, TVal>
+        auto operator=(null_type null) -> object_box&
         {
-            _impl.copyBox(that._impl);
+            _dispose_object();
             return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Template Copy Constructor
-        /// ----------------------------------------------------------------------------------------
-        template <typename T, usize thatBufSize, typename TThatAlloc>
-        constexpr Box(const CopyMoveBox<T, true, thatBufSize, TThatAlloc>& that)
-            requires IsVoid<TVal> or RSameOrDerivedFrom<T, TVal>
-            :
-            Base{ typename _TImpl::CopyTag(), that._impl }
-        {}
-
-        /// ----------------------------------------------------------------------------------------
-        /// # Template Copy Operator
-        /// ----------------------------------------------------------------------------------------
-        template <typename T, usize thatBufSize, typename TThatAlloc>
-        constexpr This& operator=(const CopyMoveBox<T, true, thatBufSize, TThatAlloc>& that)
-            requires IsVoid<TVal> or RSameOrDerivedFrom<T, TVal>
-        {
-            _impl.copyBox(that._impl);
-            return *this;
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// # Template Move Constructor
-        /// ----------------------------------------------------------------------------------------
-        template <typename T, usize thatBufSize, typename TThatAlloc>
-        constexpr Box(MoveBox<T, true, thatBufSize, TThatAlloc>&& that)
-            requires IsVoid<TVal> or RSameOrDerivedFrom<T, TVal>
-            :
-            Base{ typename _TImpl::MoveTag(), that._impl }
-        {}
-
-        /// ----------------------------------------------------------------------------------------
-        /// # Template Move Operator
-        /// ----------------------------------------------------------------------------------------
-        template <typename T, usize thatBufSize, typename TThatAlloc>
-        constexpr This& operator=(MoveBox<T, true, thatBufSize, TThatAlloc>&& that)
-            requires (IsVoid<TVal>) or RSameOrDerivedFrom<T, TVal>
-        {
-            _impl.moveBox(that._impl);
-            return *this;
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// # Template Move Constructor
-        /// ----------------------------------------------------------------------------------------
-        template <typename T, usize thatBufSize, typename TThatAlloc>
-        constexpr Box(CopyMoveBox<T, true, thatBufSize, TThatAlloc>&& that)
-            requires IsVoid<TVal> or RSameOrDerivedFrom<T, TVal>
-            :
-            Base{ typename _TImpl::MoveTag(), that._impl }
-        {}
-
-        /// ----------------------------------------------------------------------------------------
-        /// # Template Move Operator
-        /// ----------------------------------------------------------------------------------------
-        template <typename T, usize thatBufSize, typename TThatAlloc>
-        constexpr This& operator=(CopyMoveBox<T, true, thatBufSize, TThatAlloc>&& that)
-            requires IsVoid<TVal> or RSameOrDerivedFrom<T, TVal>
-        {
-            _impl.moveBox(that._impl);
-            return *this;
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// # Constructor
+        /// # constructor
         ///
-        /// Initializes with object.
+        /// initializes with object.
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
-            requires RObject<T>
-        ObjectBox(T&& obj)
-            : ObjectBox()
+        template <typename type>
+            requires robject<type>
+        object_box(type&& obj)
+            : object_box()
         {
-            _InitObject(forward<T>(obj));
+            _init_object(forward<type>(obj));
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Assignment
+        /// # assignment
         ///
-        /// Assigns new object.
+        /// assigns new object.
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr This& operator=(T&& obj)
-            requires IsVoid<TVal> or RSameOrDerivedFrom<TPure<T>, TVal>
+        template <typename type>
+            requires robject<type>
+        auto operator=(type&& object) -> object_box&
         {
-            _SetObject(forward<T>(object));
+            _set_object(forward<type>(object));
             return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Copy Constructor
+        /// # copy constructor
         /// ----------------------------------------------------------------------------------------
-        ObjectBox(const ObjectBox& other)
-            requires Copyable
-            : ObjectBox()
+        object_box(const object_box& other)
+            requires copyable
+            : object_box()
         {
-            _CopyBox(other);
+            _copy_box(other);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Copy Constructor
+        /// # copy constructor
         /// ----------------------------------------------------------------------------------------
-        template <bool OtherMovable, bool OtherAllowNonMovableObject, usize OtherStackSize,
-            typename TOtherMemAllocator>
-            requires Copyable && ROtherBox<Copyable, OtherMovable, OtherAllowNonMovableObject>
-        ObjectBox(const ObjectBox<Copyable, OtherMovable, OtherAllowNonMovableObject,
-            OtherStackSize, TOtherMemAllocator>& other)
-            : ObjectBox()
+        template <bool other_movable, bool other_allow_non_movable_object, usize other_stack_size,
+            typename tother_mem_allocator>
+            requires copyable && rother_box<copyable, other_movable, other_allow_non_movable_object>
+        object_box(const object_box<copyable, other_movable, other_allow_non_movable_object,
+            other_stack_size, tother_mem_allocator>& other)
+            : object_box()
         {
-            _CopyBox(other);
+            _copy_box(other);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Copy Assignment
+        /// # copy assignment
         /// ----------------------------------------------------------------------------------------
-        auto operator=(const ObjectBox& other) -> ObjectBox&
-            requires Copyable
+        auto operator=(const object_box& other) -> object_box&
+            requires copyable
         {
-            _CopyBox(other);
+            _copy_box(other);
             return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Copy Assignment
+        /// # copy assignment
         /// ----------------------------------------------------------------------------------------
-        template <bool OtherMovable, bool OtherAllowNonMovableObject, usize OtherStackSize,
-            typename TOtherMemAllocator>
-            requires Copyable && ROtherBox<Copyable, OtherMovable, OtherAllowNonMovableObject>
-        auto operator=(const ObjectBox<Copyable, OtherMovable, OtherAllowNonMovableObject,
-            OtherStackSize, TOtherMemAllocator>& other) -> ObjectBox&
+        template <bool other_movable, bool other_allow_non_movable_object, usize other_stack_size,
+            typename tother_mem_allocator>
+            requires copyable && rother_box<copyable, other_movable, other_allow_non_movable_object>
+        auto operator=(const object_box<copyable, other_movable, other_allow_non_movable_object,
+            other_stack_size, tother_mem_allocator>& other) -> object_box&
         {
-            _CopyBox(other);
+            _copy_box(other);
             return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Move Constructor
+        /// # move constructor
         /// ----------------------------------------------------------------------------------------
-        ObjectBox(ObjectBox&& other)
-            requires Movable
-            : ObjectBox()
+        object_box(object_box&& other)
+            requires movable
+            : object_box()
         {
-            _MoveBox(mov(other));
+            _move_box(mov(other));
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Move Constructor
+        /// # move constructor
         /// ----------------------------------------------------------------------------------------
-        template <bool OtherCopyable, bool OtherMovable, bool OtherAllowNonMovableObject,
-            usize OtherStackSize, typename TOtherMemAllocator>
-            requires Movable && ROtherBox<OtherCopyable, OtherMovable, OtherAllowNonMovableObject>
-        ObjectBox(ObjectBox<OtherCopyable, OtherMovable, OtherAllowNonMovableObject, OtherStackSize,
-            TOtherMemAllocator>&& other)
-            : ObjectBox()
+        template <bool other_copyable, bool other_movable, bool other_allow_non_movable_object,
+            usize other_stack_size, typename tother_mem_allocator>
+            requires movable && rother_box<other_copyable, other_movable, other_allow_non_movable_object>
+        object_box(object_box<other_copyable, other_movable, other_allow_non_movable_object, other_stack_size,
+            tother_mem_allocator>&& other)
+            : object_box()
         {
-            _MoveBox(mov(other));
+            _move_box(mov(other));
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Move Assignment
+        /// # move assignment
         /// ----------------------------------------------------------------------------------------
-        auto operator=(ObjectBox&& other) -> ObjectBox&
-            requires Movable
+        auto operator=(object_box&& other) -> object_box&
+            requires movable
         {
-            _MoveBox(mov(other));
+            _move_box(mov(other));
             return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Move Assignment
+        /// # move assignment
         /// ----------------------------------------------------------------------------------------
-        template <bool OtherCopyable, bool OtherMovable, bool OtherAllowNonMovableObject,
-            usize OtherStackSize, typename TOtherMemAllocator>
-            requires Movable && ROtherBox<OtherCopyable, OtherMovable, OtherAllowNonMovableObject>
-        auto operator=(ObjectBox<OtherCopyable, OtherMovable, OtherAllowNonMovableObject,
-            OtherStackSize, TOtherMemAllocator>&& other) -> ObjectBox&
+        template <bool other_copyable, bool other_movable, bool other_allow_non_movable_object,
+            usize other_stack_size, typename tother_mem_allocator>
+            requires movable && rother_box<other_copyable, other_movable, other_allow_non_movable_object>
+        auto operator=(object_box<other_copyable, other_movable, other_allow_non_movable_object,
+            other_stack_size, tother_mem_allocator>&& other) -> object_box&
         {
-            _MoveBox(mov(other));
+            _move_box(mov(other));
             return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Destructor
+        /// # destructor
         /// ----------------------------------------------------------------------------------------
-        constexpr ~Box() {}
-
-    private:
-        using Base::_impl;
-    };
-
-    template <typename TVal, usize bufSize, typename TAlloc>
-    class CopyBox: public BoxFunctions<_BoxImpl<TVal, true, false, false, bufSize, TAlloc>>
-    {
-        using This = CopyBox<TVal, bufSize, TAlloc>;
-        using Base = BoxFunctions<_BoxImpl<TVal, true, false, false, bufSize, TAlloc>>;
-        using _TImpl = typename Base::_TImpl;
+        ~object_box()
+        {
+            _dispose_box();
+        }
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// # Default Constructor
+        /// sets the new object.
         /// ----------------------------------------------------------------------------------------
-        constexpr CopyBox():
-            Base{}
-        {}
-
-        /// ----------------------------------------------------------------------------------------
-        /// # Copy Constructor
-        /// ----------------------------------------------------------------------------------------
-        constexpr CopyBox(const This& that):
-            Base{ typename _TImpl::CopyTag(), that._impl }
-        {}
-
-        /// ----------------------------------------------------------------------------------------
-        /// # Copy Operator
-        /// ----------------------------------------------------------------------------------------
-        constexpr This& operator=(const This& that)
+        template <typename type>
+            requires robject<type>
+        auto set_object(type&& obj)
         {
-            _impl.copyBox(that._impl);
-            return *this;
+            _set_object(forward<type>(obj));
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Move Constructor
+        /// get the object.
         /// ----------------------------------------------------------------------------------------
-        constexpr CopyBox(This&& that) = delete;
-
-        /// ----------------------------------------------------------------------------------------
-        /// # Move Operator
-        /// ----------------------------------------------------------------------------------------
-        constexpr This& operator=(This&& that) = delete;
-
-        /// ----------------------------------------------------------------------------------------
-        /// # Template Copy Constructor
-        /// ----------------------------------------------------------------------------------------
-        template <typename T, bool allowNonMove, usize thatBufSize, typename TThatAlloc>
-        constexpr CopyBox(const CopyMoveBox<T, allowNonMove, thatBufSize, TThatAlloc>& that):
-            Base{ typename _TImpl::CopyTag(), that._impl }
-        {}
-
-        /// ----------------------------------------------------------------------------------------
-        /// # Template Copy Operator
-        /// ----------------------------------------------------------------------------------------
-        template <typename T, bool allowNonMove, usize thatBufSize, typename TThatAlloc>
-        constexpr This& operator=(const CopyMoveBox<T, allowNonMove, thatBufSize, TThatAlloc>& that)
+        template <typename type>
+        auto get_object() -> type&
         {
-            _impl.copyBox(that._impl);
-            return *this;
+            return _get_object<type>().get_mut();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Constructor
+        /// get the const object.
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr CopyBox(T&& obj):
-            Base{ fwd(obj) }
-        {}
-
-        /// ----------------------------------------------------------------------------------------
-        /// # Operator
-        /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr This& operator=(T&& obj)
-            requires(RCopyable<T>)
+        template <typename type>
+        auto get_object() const -> const type&
         {
-            return _GetObject<T>().getMut();
+            return _get_object<type>().get();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Destructor
+        /// # null equality operator
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        auto GetObject() const -> const T&
+        auto eq(null_type null) const -> bool
         {
-            return _GetObject<T>().get();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// # Null Equality Operator
-        /// ----------------------------------------------------------------------------------------
-        auto eq(NullType null) const -> bool
-        {
-            return _HasObject();
+            return _has_object();
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////
-        //// Box Manipulation Functions
+        //// box manipulation functions
         ////
         ////////////////////////////////////////////////////////////////////////////////////////////
 
         /// ----------------------------------------------------------------------------------------
-        /// Copies `other` `ObjectBox` into `this` `ObjectBox`.
+        /// copies `other` `object_box` into `this` `object_box`.
         /// ----------------------------------------------------------------------------------------
-        template <bool OtherMovable, bool OtherAllowNonMovableObject, usize OtherStackSize,
-            typename TOtherMemAllocator>
-            requires Copyable && ROtherBox<Copyable, OtherMovable, OtherAllowNonMovableObject>
-        auto _CopyBox(const ObjectBox<Copyable, OtherMovable, OtherAllowNonMovableObject,
-            OtherStackSize, TOtherMemAllocator>& other)
+        template <bool other_movable, bool other_allow_non_movable_object, usize other_stack_size,
+            typename tother_mem_allocator>
+            requires copyable && rother_box<copyable, other_movable, other_allow_non_movable_object>
+        auto _copy_box(const object_box<copyable, other_movable, other_allow_non_movable_object,
+            other_stack_size, tother_mem_allocator>& other)
         {
-            _CopyObject(other);
+            _copy_object(other);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Moves `other` `ObjectBox` into `this` `ObjectBox`.
+        /// moves `other` `object_box` into `this` `object_box`.
         /// ----------------------------------------------------------------------------------------
-        template <bool OtherCopyable, bool OtherMovable, bool OtherAllowNonMovableObject,
-            usize OtherStackSize, typename TOtherMemAllocator>
-            requires Movable && ROtherBox<OtherCopyable, OtherMovable, OtherAllowNonMovableObject>
-        auto _MoveBox(ObjectBox<OtherCopyable, OtherMovable, OtherAllowNonMovableObject,
-            OtherStackSize, TOtherMemAllocator>&& other)
+        template <bool other_copyable, bool other_movable, bool other_allow_non_movable_object,
+            usize other_stack_size, typename tother_mem_allocator>
+            requires movable && rother_box<other_copyable, other_movable, other_allow_non_movable_object>
+        auto _move_box(object_box<other_copyable, other_movable, other_allow_non_movable_object,
+            other_stack_size, tother_mem_allocator>&& other)
         {
-            // When allocator type is different, we cannot handle heap memory.
-            // So we only move the object.
-            if constexpr (!RSameAs<TAlloc, TOtherMemAllocator>)
+            // when allocator type is different, we cannot handle heap memory.
+            // so we only move the object.
+            if constexpr (!rsame_as<allocator_type, tother_mem_allocator>)
             {
-                _MoveObject(other);
-                other._DisposeBox();
+                _move_object(other);
+                other._dispose_box();
                 return;
             }
 
-            _DisposeObject();
+            _dispose_object();
 
-            const usize otherObjSize = other._object.size;
-            const bool otherIsUsingStackMem = other._IsUsingStackMem();
-            if (otherIsUsingStackMem && otherObjSize > StackSize && _heapMemSize >= otherObjSize
-                && other._heapMemSize < otherObjSize)
+            const usize other_obj_size = other._object.size;
+            const bool other_is_using_stack_mem = other._is_using_stack_mem();
+            if (other_is_using_stack_mem && other_obj_size > stack_size && _heap_mem_size >= other_obj_size
+                && other._heap_mem_size < other_obj_size)
             {
-                // We cannot deallocate our memory in the above scenario.
-                other._ReleaseMem();
+                // we cannot deallocate our memory in the above scenario.
+                other._release_mem();
             }
             else
             {
-                _ReleaseMem();
+                _release_mem();
 
-                _heapMem = mov(other._heapMem);
-                _heapMemSize = mov(other._heapMemSize);
+                _heap_mem = mov(other._heap_mem);
+                _heap_mem_size = mov(other._heap_mem_size);
                 _allocator = mov(other._allocator);
             }
 
-            if (otherIsUsingStackMem)
+            if (other_is_using_stack_mem)
             {
-                _MoveObject(mov(other));
+                _move_object(mov(other));
             }
             else
             {
-                _CopyObjectData(other);
+                _copy_object_data(other);
             }
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Destroy stored object and releases any allocated memory.
+        /// destroy stored object and releases any allocated memory.
         /// ----------------------------------------------------------------------------------------
-        auto _DisposeBox()
+        auto _dispose_box()
         {
-            _DisposeObject();
-            _ReleaseMem();
+            _dispose_object();
+            _release_mem();
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////
-        //// Object Manipulation Functions
+        //// object manipulation functions
         ////
         ////////////////////////////////////////////////////////////////////////////////////////////
 
         /// ----------------------------------------------------------------------------------------
-        /// Stores the object.
+        /// stores the object.
         ///
-        /// @TPARAM T Type of object to store.
+        /// @tparam type type of object to store.
         ///
-        /// @PARAM[IN] obj Object to store.
-        /// @PARAM[IN] forceHeap (default = false) Force store on heap.
+        /// @param[in] obj object to store.
+        /// @param[in] force_heap (default = false) force store on heap.
         ///
-        /// @EXPECTS Previous object is not set.
+        /// @expects previous object is not set.
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
-            requires RObject<T>
-        auto _InitObject(T&& obj, bool forceHeap = false)
+        template <typename type>
+            requires robject<type>
+        auto _init_object(type&& obj, bool force_heap = false)
         {
-            _object.size = sizeof(T);
-            _object.type = &typeid(T);
+            _object.size = sizeof(type);
+            _object.type = &typeid(type);
 
-            _object.dtor = [](MutMemPtr<void> obj) { obj.template as<T>().get().T::~T(); };
+            _object.dtor = [](mut_mem_ptr<void> obj) { obj.template as<type>().get().type::~type(); };
 
-            if constexpr (Copyable)
+            if constexpr (copyable)
             {
-                _object.copy = [](MutMemPtr<void> obj, MemPtr<void> other) {
-                    new (obj.unwrap()) T(MemPtr<T>(other).get());
+                _object.copy = [](mut_mem_ptr<void> obj, mem_ptr<void> other) {
+                    new (obj.unwrap()) type(mem_ptr<type>(other).get());
                 };
             }
 
-            if constexpr (Movable)
+            if constexpr (movable)
             {
-                if constexpr (RMoveConstructible<T>)
+                if constexpr (rmove_constructible<type>)
                 {
-                    _object.move = [](MutMemPtr<void> obj, MutMemPtr<void> other) {
-                        new (obj.unwrap()) T(mov(MutMemPtr<T>(other).getMut()));
+                    _object.move = [](mut_mem_ptr<void> obj, mut_mem_ptr<void> other) {
+                        new (obj.unwrap()) type(mov(mut_mem_ptr<type>(other).get_mut()));
                     };
                 }
                 else
@@ -908,122 +400,122 @@ namespace Atom
                 }
             }
 
-            // If the object is not movable but AllowNonMovableObject is allowed,
+            // if the object is not movable but allow_non_movable_object is allowed,
             // we allocate it on heap to avoid object's move constructor.
-            if constexpr (Movable && AllowNonMovableObject && !RMoveConstructible<T>)
+            if constexpr (movable && allow_non_movable_object && !rmove_constructible<type>)
             {
-                forceHeap = true;
+                force_heap = true;
             }
 
-            _object.obj = _AllocMem(_object.size, forceHeap);
-            new (_object.obj.unwrap()) T(forward<T>(obj));
+            _object.obj = _alloc_mem(_object.size, force_heap);
+            new (_object.obj.unwrap()) type(forward<type>(obj));
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Destroys previous object if any and stores new object.
+        /// destroys previous object if any and stores new object.
         ///
-        /// @TPARAM T Type of object to store.
+        /// @tparam type type of object to store.
         ///
-        /// @PARAM[IN] obj Object to store.
-        /// @PARAM[IN] forceHeap (default = false) Force store on heap.
+        /// @param[in] obj object to store.
+        /// @param[in] force_heap (default = false) force store on heap.
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
-            requires RObject<T>
-        auto _SetObject(T&& obj, bool forceHeap = false)
+        template <typename type>
+            requires robject<type>
+        auto _set_object(type&& obj, bool force_heap = false)
         {
-            _DisposeObject();
-            _InitObject(forward<T>(obj));
+            _dispose_object();
+            _init_object(forward<type>(obj));
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Get pointer to stored object.
+        /// get pointer to stored object.
         ///
-        /// @TPARAM T Type as which to get the object.
+        /// @tparam type type as which to get the object.
         /// ----------------------------------------------------------------------------------------
-        template <typename T = void>
-        auto _GetObject() -> MutMemPtr<T>
+        template <typename type = void>
+        auto _get_object() -> mut_mem_ptr<type>
         {
             return _object.obj;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Get {TypeInfo} or stored object.
+        /// get {type_info} or stored object.
         /// ----------------------------------------------------------------------------------------
-        auto _GetObjectType() const -> const TypeInfo&
+        auto _get_object_type() const -> const type_info&
         {
             return *_object.type;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Checks if object is not {null}.
+        /// checks if object is not {null}.
         /// ----------------------------------------------------------------------------------------
-        auto _HasObject() const -> bool
+        auto _has_object() const -> bool
         {
             return _object.obj != nullptr;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Copies the object from `other` `ObjectBox` into `this` `ObjectBox`.
+        /// copies the object from `other` `object_box` into `this` `object_box`.
         ///
-        /// @PARAM[IN] other `ObjectBox` of which to copy object.
-        /// @PARAM[IN] forceHeap (default = false) Force allocate object on heap.
+        /// @param[in] other `object_box` of which to copy object.
+        /// @param[in] force_heap (default = false) force allocate object on heap.
         /// ----------------------------------------------------------------------------------------
-        template <bool OtherMovable, bool OtherAllowNonMovableObject, usize OtherStackSize,
-            typename TOtherMemAllocator>
-            requires Copyable && ROtherBox<Copyable, OtherMovable, OtherAllowNonMovableObject>
-        auto _CopyObject(const ObjectBox<Copyable, OtherMovable, OtherAllowNonMovableObject,
-                             OtherStackSize, TOtherMemAllocator>& other,
-            bool forceHeap = false)
+        template <bool other_movable, bool other_allow_non_movable_object, usize other_stack_size,
+            typename tother_mem_allocator>
+            requires copyable && rother_box<copyable, other_movable, other_allow_non_movable_object>
+        auto _copy_object(const object_box<copyable, other_movable, other_allow_non_movable_object,
+                             other_stack_size, tother_mem_allocator>& other,
+            bool force_heap = false)
         {
-            _DisposeObject();
+            _dispose_object();
 
-            _CopyObjectData(other);
+            _copy_object_data(other);
 
-            if constexpr (Movable)
+            if constexpr (movable)
             {
-                forceHeap = forceHeap || _object.move == nullptr;
+                force_heap = force_heap || _object.move == nullptr;
             }
             else
             {
-                forceHeap = true;
+                force_heap = true;
             }
 
-            _object.obj = _AllocMem(_object.size, forceHeap);
+            _object.obj = _alloc_mem(_object.size, force_heap);
             _object.copy(_object.obj, other._object.obj);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Moves the object from `other` `ObjectBox` into `this` `ObjectBox`.
+        /// moves the object from `other` `object_box` into `this` `object_box`.
         ///
-        /// @PARAM[IN] other `ObjectBox` of which to move object.
-        /// @PARAM[IN] forceHeap (default = false) Force allocate object on heap.
+        /// @param[in] other `object_box` of which to move object.
+        /// @param[in] force_heap (default = false) force allocate object on heap.
         ///
-        /// @NOTE This doesn't moves the memory from `other` `ObjectBox`.
+        /// @note this_type doesn't moves the memory from `other` `object_box`.
         /// ----------------------------------------------------------------------------------------
-        template <bool OtherCopyable, bool OtherMovable, bool OtherAllowNoneMovableObject,
-            usize OtherStackSize, typename TOtherMemAllocator>
-            requires Movable && ROtherBox<OtherCopyable, OtherMovable, OtherAllowNoneMovableObject>
-        auto _MoveObject(ObjectBox<OtherCopyable, OtherMovable, OtherAllowNoneMovableObject,
-                             OtherStackSize, TOtherMemAllocator>&& other,
-            bool forceHeap = false)
+        template <bool other_copyable, bool other_movable, bool other_allow_none_movable_object,
+            usize other_stack_size, typename tother_mem_allocator>
+            requires movable && rother_box<other_copyable, other_movable, other_allow_none_movable_object>
+        auto _move_object(object_box<other_copyable, other_movable, other_allow_none_movable_object,
+                             other_stack_size, tother_mem_allocator>&& other,
+            bool force_heap = false)
         {
-            _DisposeObject();
+            _dispose_object();
 
-            _CopyObjectData(other);
-            forceHeap = forceHeap || _object.move == nullptr;
+            _copy_object_data(other);
+            force_heap = force_heap || _object.move == nullptr;
 
-            _object.obj = _AllocMem(_object.size, forceHeap);
+            _object.obj = _alloc_mem(_object.size, force_heap);
             _object.move(_object.obj, other._object.obj);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Disposes current object by calling its destructor.
+        /// disposes current object by calling its destructor.
         ///
-        /// @NOTE This does'n deallocates memory.
+        /// @note this_type does'n deallocates memory.
         ///
-        /// @SEE _ReleaseMem().
+        /// @see _release_mem().
         /// ----------------------------------------------------------------------------------------
-        auto _DisposeObject()
+        auto _dispose_object()
         {
             if (_object.obj != nullptr)
             {
@@ -1045,69 +537,114 @@ namespace Atom
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// # Default Constructor
+        /// copies {object_data} from {other_box}.
+        ///
+        /// @param[in] other_box `object_box` of which to copy {object_data}.
         /// ----------------------------------------------------------------------------------------
-        constexpr MoveBox():
-            Base{}
-        {}
-
-        /// ----------------------------------------------------------------------------------------
-        /// # Copy Constructor
-        /// ----------------------------------------------------------------------------------------
-        constexpr MoveBox(const This& that) = delete;
-
-        /// ----------------------------------------------------------------------------------------
-        /// # Copy Operator
-        /// ----------------------------------------------------------------------------------------
-        constexpr MoveBox& operator=(const This& that) = delete;
-
-        /// ----------------------------------------------------------------------------------------
-        /// # Template Copy Constructor
-        /// ----------------------------------------------------------------------------------------
-        template <typename T, usize thatBufSize, typename TThatAlloc>
-            requires allowNonMove
-        constexpr MoveBox(const CopyBox<T, thatBufSize, TThatAlloc>& that):
-            Base{ typename _TImpl::CopyTag(), that._impl }
-        {}
-
-        /// ----------------------------------------------------------------------------------------
-        /// # Template Copy Operator
-        /// ----------------------------------------------------------------------------------------
-        template <typename T, usize thatBufSize, typename TThatAlloc>
-            requires allowNonMove
-        constexpr MoveBox& operator=(const CopyBox<T, thatBufSize, TThatAlloc>& that)
+        template <bool other_copyable, bool other_movable, bool other_allow_non_movable_object,
+            usize other_stack_size, typename tother_mem_allocator>
+        auto _copy_object_data(const object_box<other_copyable, other_movable,
+            other_allow_non_movable_object, other_stack_size, tother_mem_allocator>& other_box)
         {
-            _impl.moveBox(that._impl);
-            return *this;
+            auto& other = other_box._object;
+
+            _object.obj = other.obj;
+            _object.size = other.size;
+            _object.type = other.type;
+            _object.dtor = other.dtor;
+
+            if constexpr (copyable)
+            {
+                if constexpr (movable)
+                {
+                    _object.copy = other.copy;
+                }
+                else
+                {
+                    _object.copy = nullptr;
+                }
+            }
+
+            if constexpr (movable)
+            {
+                if constexpr (other_movable)
+                {
+                    _object.move = other.move;
+                }
+                else
+                {
+                    _object.move = nullptr;
+                }
+            }
+        }
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////
+        //// memory manipulation functions
+        ////
+        ////////////////////////////////////////////////////////////////////////////////////////////
+
+    protected:
+        /// ----------------------------------------------------------------------------------------
+        /// allocates enough memory of size `size`. uses stack memory if it is big enough.
+        ///
+        /// @param[in] size size of memory to allocate.
+        /// @param[in] force_heap if `true`, allocates memory from `allocator_type`.
+        ///
+        /// @returns pointer to the allocated memory.
+        /// ----------------------------------------------------------------------------------------
+        auto _alloc_mem(usize size, bool force_heap = false) -> mut_mem_ptr<void>
+        {
+            if constexpr (stack_size > 0)
+            {
+                // check if stack memory is big enough.
+                if (!force_heap && size <= stack_size)
+                {
+                    return _stack_mem;
+                }
+            }
+
+            // if we have previously allocated memory.
+            if (_heap_mem != nullptr)
+            {
+                if (_heap_mem_size < size)
+                {
+                    _heap_mem = _allocator.realloc(_heap_mem, size);
+                    _heap_mem_size = size;
+                }
+            }
+            // we need to allocate heap memory.
+            else
+            {
+                _heap_mem = _allocator.alloc(size);
+                _heap_mem_size = size;
+            }
+
+            return _heap_mem;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Template Copy Constructor
+        /// deallocates any allocated memory.
         /// ----------------------------------------------------------------------------------------
-        template <typename T, usize thatBufSize, typename TThatAlloc>
-            requires allowNonMove
-        constexpr MoveBox(const CopyMoveBox<T, allowNonMove, thatBufSize, TThatAlloc>& that):
-            Base{ typename _TImpl::CopyTag(), that._impl }
-        {}
-
-        /// ----------------------------------------------------------------------------------------
-        /// # Template Copy Operator
-        /// ----------------------------------------------------------------------------------------
-        template <typename T, usize thatBufSize, typename TThatAlloc>
-            requires allowNonMove
-        constexpr MoveBox& operator=(
-            const CopyMoveBox<T, allowNonMove, thatBufSize, TThatAlloc>& that)
+        auto _release_mem()
         {
-            _impl.moveBox(that._impl);
-            return *this;
+            if (_heap_mem != nullptr)
+            {
+                _allocator.dealloc(_heap_mem);
+                _heap_mem = nullptr;
+                _heap_mem_size = 0;
+            }
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # Move Constructor
+        /// is object is stored in stack memory.
         /// ----------------------------------------------------------------------------------------
-        constexpr MoveBox(This&& that):
-            Base{ typename _TImpl::MoveTag(), that._impl }
-        {}
+        auto _is_using_stack_mem() const -> bool
+        {
+            if constexpr (stack_size > 0)
+            {
+                return _object.obj.unwrap() == _stack_mem;
+            }
 
         /// ----------------------------------------------------------------------------------------
         /// # Move Operator
@@ -1119,208 +656,31 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Stack Memory.
+        /// stack memory.
         ///
-        /// # To Do
-        /// - Replace with a type to handle storage.
+        /// # to do
+        /// - replace with a type to handle storage.
         /// ----------------------------------------------------------------------------------------
-        template <typename T, usize thatBufSize, typename TThatAlloc>
-        constexpr MoveBox(CopyMoveBox<T, allowNonMove, thatBufSize, TThatAlloc>&& that):
-            Base{ typename _TImpl::MoveTag(), that._impl }
-        {}
+        ATOM_CONDITIONAL_FIELD(stack_size > 0, byte[stack_size.unwrap()]) _stack_mem;
 
         /// ----------------------------------------------------------------------------------------
-        /// # Template Move Operator
+        /// memory allocator.
         /// ----------------------------------------------------------------------------------------
-        template <typename T, usize thatBufSize, typename TThatAlloc>
-        constexpr MoveBox& operator=(CopyMoveBox<T, allowNonMove, thatBufSize, TThatAlloc>&& that)
-        {
-            _impl.moveBox(that._impl);
-            return *this;
-        }
+        allocator_type _allocator;
 
         /// ----------------------------------------------------------------------------------------
-        /// # Constructor
+        /// heap memory allocated.
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr MoveBox(T&& obj):
-            Base{ fwd(obj) }
-        {}
+        mut_mem_ptr<void> _heap_mem;
 
         /// ----------------------------------------------------------------------------------------
-        /// # Operator
+        /// size of heap memory allocated.
         /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr MoveBox& operator=(T&& obj)
-        {
-            _impl.setVal(fwd(obj));
-            return *this;
-        }
+        usize _heap_mem_size;
 
         /// ----------------------------------------------------------------------------------------
-        /// # Destructor
+        /// object data.
         /// ----------------------------------------------------------------------------------------
-        constexpr ~MoveBox() {}
-
-    private:
-        using Base::_impl;
-    };
-
-    template <typename TVal, bool allowNonMove, usize bufSize, typename TAlloc>
-    class CopyMoveBox:
-        public BoxFunctions<_BoxImpl<TVal, true, true, allowNonMove, bufSize, TAlloc>>
-    {
-        using This = CopyMoveBox<TVal, allowNonMove, bufSize, TAlloc>;
-        using Base = BoxFunctions<_BoxImpl<TVal, true, true, allowNonMove, bufSize, TAlloc>>;
-        using _TImpl = typename Base::_TImpl;
-
-    private:
-        using Base::_impl;
-
-    public:
-        /// ----------------------------------------------------------------------------------------
-        /// # Default Constructor
-        /// ----------------------------------------------------------------------------------------
-        constexpr CopyMoveBox():
-            Base{}
-        {}
-
-        /// ----------------------------------------------------------------------------------------
-        /// # Copy Constructor
-        /// ----------------------------------------------------------------------------------------
-        constexpr CopyMoveBox(const This& that):
-            Base{ typename _TImpl::CopyTag(), that._impl }
-        {}
-
-        /// ----------------------------------------------------------------------------------------
-        /// # Copy Operator
-        /// ----------------------------------------------------------------------------------------
-        constexpr CopyMoveBox& operator=(const This& that)
-        {
-            _impl.copyBox(that._impl);
-            return *this;
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// # Template Copy Constructor
-        /// ----------------------------------------------------------------------------------------
-        template <typename T, usize thatBufSize, typename TThatAlloc>
-            requires allowNonMove
-        constexpr CopyMoveBox(const CopyBox<T, thatBufSize, TThatAlloc>& that):
-            Base{ typename _TImpl::CopyTag(), that._impl }
-        {}
-
-        /// ----------------------------------------------------------------------------------------
-        /// # Template Copy Operator
-        /// ----------------------------------------------------------------------------------------
-        template <typename T, usize thatBufSize, typename TThatAlloc>
-            requires allowNonMove
-        constexpr CopyMoveBox& operator=(const CopyBox<T, thatBufSize, TThatAlloc>& that)
-        {
-            _impl.copyBox(that._impl);
-            return *this;
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// # Template Copy Constructor
-        /// ----------------------------------------------------------------------------------------
-        template <typename T, usize thatBufSize, typename TThatAlloc>
-            requires allowNonMove
-        constexpr CopyMoveBox(const CopyMoveBox<T, allowNonMove, thatBufSize, TThatAlloc>& that):
-            Base{ typename _TImpl::CopyTag(), that._impl }
-        {}
-
-        /// ----------------------------------------------------------------------------------------
-        /// # Template Copy Operator
-        /// ----------------------------------------------------------------------------------------
-        template <typename T, usize thatBufSize, typename TThatAlloc>
-            requires allowNonMove
-        constexpr CopyMoveBox& operator=(
-            const CopyMoveBox<T, allowNonMove, thatBufSize, TThatAlloc>& that)
-        {
-            _impl.copyBox(that._impl);
-            return *this;
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// # Move Constructor
-        /// ----------------------------------------------------------------------------------------
-        constexpr CopyMoveBox(This&& that):
-            Base{ typename _TImpl::MoveTag(), that._impl }
-        {}
-
-        /// ----------------------------------------------------------------------------------------
-        /// # Move Operator
-        /// ----------------------------------------------------------------------------------------
-        constexpr CopyMoveBox& operator=(This&& that)
-        {
-            _impl.moveBox(that._impl);
-            return *this;
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// # Template Move Constructor
-        /// ----------------------------------------------------------------------------------------
-        template <typename T, bool thatAllowNonMove, usize thatBufSize, typename TThatAlloc>
-            requires allowNonMove
-        constexpr CopyMoveBox(MoveBox<T, thatAllowNonMove, thatBufSize, TThatAlloc>&& that):
-            Base{ typename _TImpl::MoveTag(), that._impl }
-        {}
-
-        /// ----------------------------------------------------------------------------------------
-        /// # Template Move Operator
-        /// ----------------------------------------------------------------------------------------
-        template <typename T, bool thatAllowNonMove, usize thatBufSize, typename TThatAlloc>
-            requires allowNonMove
-        constexpr CopyMoveBox& operator=(
-            MoveBox<T, thatAllowNonMove, thatBufSize, TThatAlloc>&& that)
-        {
-            _impl.moveBox(that._impl);
-            return *this;
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// # Template Move Constructor
-        /// ----------------------------------------------------------------------------------------
-        template <typename T, bool thatAllowNonMove, usize thatBufSize, typename TThatAlloc>
-            requires allowNonMove
-        constexpr CopyMoveBox(CopyMoveBox<T, thatAllowNonMove, thatBufSize, TThatAlloc>&& that):
-            Base{ typename _TImpl::MoveTag(), that._impl }
-        {}
-
-        /// ----------------------------------------------------------------------------------------
-        /// # Template Move Operator
-        /// ----------------------------------------------------------------------------------------
-        template <typename T, bool thatAllowNonMove, usize thatBufSize, typename TThatAlloc>
-            requires allowNonMove
-        constexpr CopyMoveBox& operator=(
-            CopyMoveBox<T, thatAllowNonMove, thatBufSize, TThatAlloc>&& that)
-        {
-            _impl.moveBox(that._impl);
-            return *this;
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// # Constructor
-        /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr CopyMoveBox(T&& obj):
-            Base{ fwd(obj) }
-        {}
-
-        /// ----------------------------------------------------------------------------------------
-        /// # Operator
-        /// ----------------------------------------------------------------------------------------
-        template <typename T>
-        constexpr CopyMoveBox& operator=(T&& obj)
-        {
-            _impl.setVal(fwd(obj));
-            return *this;
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// # Destructor
-        /// ----------------------------------------------------------------------------------------
-        constexpr ~CopyMoveBox() {}
+        object_data _object;
     };
 }

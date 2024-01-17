@@ -1,7 +1,7 @@
 #pragma once
-#include "LegacyMemAllocator.h"
+#include "legacy_mem_allocator.h"
 
-namespace Atom
+namespace atom
 {
-    using DefaultMemAllocator = LegacyMemAllocator;
+    using default_mem_allocator = legacy_mem_allocator;
 }

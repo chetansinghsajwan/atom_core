@@ -1,18 +1,18 @@
 #pragma once
-#include "Atom/Range.h"
+#include "atom/range.h"
 
-namespace Atom
+namespace atom
 {
-    template <typename TOut, typename T>
-    concept ROutput = requires(TOut out, const T& inCopy, T&& inMove, RangeReqMock<T> inRange) {
+    template <typename tout, typename type>
+    concept routput = requires(tout out, const type& in_copy, type&& in_move, range_req_mock<type> in_range) {
         {
-            out += inCopy
+            out += in_copy
         };
         {
-            out += mov(inMove)
+            out += mov(in_move)
         };
         {
-            out += inRange
+            out += in_range
         };
     };
 }

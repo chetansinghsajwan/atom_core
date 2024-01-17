@@ -1,113 +1,113 @@
 #pragma once
-#include "Atom/Containers.h"
-#include "Atom/Invokable/InvokableBox.h"
+#include "atom/containers.h"
+#include "atom/invokable/invokable_box.h"
 
-namespace Atom
+namespace atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// EventKey is used to identify events registered for this key.
+    /// event_key is used to identify events registered for this key.
     /// --------------------------------------------------------------------------------------------
-    class EventKey
+    class event_key
     {
     public:
-        EventKey(const TypeInfo& typeInfo)
-            : _typeInfo(typeInfo)
+        event_key(const type_info& type_info)
+            : _type_info(type_info)
         {}
 
     public:
-        auto GetType() const -> const TypeInfo&
+        auto get_type() const -> const type_info&
         {
-            return _typeInfo;
+            return _type_info;
         }
 
     private:
-        const TypeInfo& _typeInfo;
+        const type_info& _type_info;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// [`Event`] is just a frontend to [`EventSource`] to prevent users from dispatching events.
+    /// [`event`] is just a frontend to [`event_source`] to prevent users from dispatching events.
     /// --------------------------------------------------------------------------------------------
-    template <typename... TArgs>
-    class IEvent
+    template <typename... args_type>
+    class ievent
     {
     protected:
-        using _TSignature = void(TArgs...);
+        using _tsignature = void(args_type...);
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// Calls Subscribe(forward<TInvokable>(listener));
+        /// calls subscribe(forward<tinvokable>(listener));
         /// ----------------------------------------------------------------------------------------
-        template <typename TInvokable>
-        auto operator+=(TInvokable&& listener) -> EventKey
-            requires(RInvokable<TInvokable, _TSignature>)
+        template <typename tinvokable>
+        auto operator+=(tinvokable&& listener) -> event_key
+            requires(rinvokable<tinvokable, _tsignature>)
         {
-            return Subscribe(forward<TInvokable>(listener));
+            return subscribe(forward<tinvokable>(listener));
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Calls Unsubscribe(key);
+        /// calls unsubscribe(key);
         /// ----------------------------------------------------------------------------------------
-        auto operator-=(EventKey key) -> bool
+        auto operator-=(event_key key) -> bool
         {
-            return Unsubscribe(key);
+            return unsubscribe(key);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Calls Subscribe(forward<TInvokable>(listener)) on {Source}.
+        /// calls subscribe(forward<tinvokable>(listener)) on {source}.
         /// ----------------------------------------------------------------------------------------
-        template <typename TInvokable>
-        auto Subscribe(TInvokable&& listener) -> EventKey
-            requires(RInvokable<TInvokable, _TSignature>)
+        template <typename tinvokable>
+        auto subscribe(tinvokable&& listener) -> event_key
+            requires(rinvokable<tinvokable, _tsignature>)
         {
-            return Subscribe(InvokableBox<_TSignature>(forward<TInvokable>(listener)));
+            return subscribe(invokable_box<_tsignature>(forward<tinvokable>(listener)));
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        virtual auto Subscribe(InvokableBox<_TSignature>&& invokable) -> EventKey = 0;
+        virtual auto subscribe(invokable_box<_tsignature>&& invokable) -> event_key = 0;
 
         /// ----------------------------------------------------------------------------------------
-        /// Calls Unsubscribe(key) on {Source}.
+        /// calls unsubscribe(key) on {source}.
         /// ----------------------------------------------------------------------------------------
-        virtual auto Unsubscribe(EventKey key) -> usize = 0;
+        virtual auto unsubscribe(event_key key) -> usize = 0;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// EventSource is used to manage listeners and dispatch event.
+    /// event_source is used to manage listeners and dispatch event.
     ///
-    /// @TODO Add async dispatching.
+    /// @todo add async dispatching.
     /// --------------------------------------------------------------------------------------------
-    template <typename... TArgs>
-    class EventSource: public IEvent<TArgs...>
+    template <typename... args_type>
+    class event_source: public ievent<args_type...>
     {
     protected:
-        using _TSignature = typename IEvent<TArgs...>::_TSignature;
-        using _TListener = InvokableBox<_TSignature>;
+        using _tsignature = typename ievent<args_type...>::_tsignature;
+        using _tlistener = invokable_box<_tsignature>;
 
     public:
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        virtual auto Subscribe(InvokableBox<_TSignature>&& invokable) -> EventKey override final
+        virtual auto subscribe(invokable_box<_tsignature>&& invokable) -> event_key override final
         {
-            return _AddListener(mov(invokable));
+            return _add_listener(mov(invokable));
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        virtual auto Unsubscribe(EventKey key) -> usize override final
+        virtual auto unsubscribe(event_key key) -> usize override final
         {
-            return _RemoveListener(key);
+            return _remove_listener(key);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// Dispatches the events. Calls each event listener(invokables) with given args.
+        /// dispatches the events. calls each event listener(invokables) with given args.
         ///
-        /// @TODO Add detailed documentation on argument passing.
+        /// @todo add detailed documentation on argument passing.
         /// ----------------------------------------------------------------------------------------
-        auto Dispatch(TArgs... args)
+        auto dispatch(args_type... args)
         {
             for (auto& listener : _listeners)
             {
@@ -119,32 +119,32 @@ namespace Atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        auto _AddListener(InvokableBox<_TSignature>&& invokable) -> EventKey
+        auto _add_listener(invokable_box<_tsignature>&& invokable) -> event_key
         {
-            EventKey key = invokable.GetInvokableType();
+            event_key key = invokable.get_invokable_type();
 
-            _listeners.emplaceBack(mov(invokable));
+            _listeners.emplace_back(mov(invokable));
             return key;
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        auto _RemoveListener(EventKey key) -> usize
+        auto _remove_listener(event_key key) -> usize
         {
-            return _listeners.removeIf(
-                [&](const auto& listener) { return listener.GetInvokableType() == key.GetType(); });
+            return _listeners.remove_if(
+                [&](const auto& listener) { return listener.get_invokable_type() == key.get_type(); });
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        auto _CountListeners(EventKey key) -> usize
+        auto _count_listeners(event_key key) -> usize
         {
             usize count = 0;
             for (auto& listener : _listeners)
             {
-                if (listener.GetInvokableType() == key.GetType())
+                if (listener.get_invokable_type() == key.get_type())
                 {
                     count++;
                 }
@@ -155,8 +155,8 @@ namespace Atom
 
     protected:
         /// ----------------------------------------------------------------------------------------
-        /// List of event listeners.
+        /// list of event listeners.
         /// ----------------------------------------------------------------------------------------
-        DynamicArray<_TListener> _listeners;
+        dynamic_array<_tlistener> _listeners;
     };
 }

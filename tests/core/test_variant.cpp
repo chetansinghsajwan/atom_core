@@ -1,301 +1,301 @@
 import atom.core;
-#include "Helpers/TrackedType.h"
+#include "helpers/tracked_type.h"
 #include "catch2/catch_test_macros.hpp"
 #include "catch2/matchers/catch_matchers_floating_point.hpp"
 
-using namespace Atom;
-using namespace Atom::Tests;
+using namespace atom;
+using namespace atom::tests;
 using namespace Catch;
 
-using TrackedType0 = TrackedTypeOf<i32>;
-using TrackedType1 = TrackedTypeOf<f32>;
-using TrackedType2 = TrackedTypeOf<char>;
+using tracked_type0 = tracked_type_of<i32>;
+using tracked_type1 = tracked_type_of<f32>;
+using tracked_type2 = tracked_type_of<uchar>;
 
-TEST_CASE("Atom.Core.Variant")
+TEST_CASE("atom.core.variant")
 {
-    SECTION("Unique types")
+    SECTION("unique types")
     {
-        // Compilation error.
-        // Variant only allows unique types.
-        // using Var = Variant<TrackedType0, TrackedType0, TrackedType1>;
+        // compilation error.
+        // variant only allows unique types.
+        // using var = variant<tracked_type0, tracked_type0, tracked_type1>;
     }
 
-    SECTION("Type Indexing")
+    SECTION("type indexing")
     {
-        using Var = Variant<TrackedType0, TrackedType1, TrackedType2>;
+        using var = variant<tracked_type0, tracked_type1, tracked_type2>;
 
-        REQUIRE(Var::IndexOf<TrackedType0>() == 0);
-        REQUIRE(Var::IndexOf<TrackedType1>() == 1);
-        REQUIRE(Var::IndexOf<TrackedType2>() == 2);
+        REQUIRE(var::index_of<tracked_type0>() == 0);
+        REQUIRE(var::index_of<tracked_type1>() == 1);
+        REQUIRE(var::index_of<tracked_type2>() == 2);
 
-        REQUIRE(TTI::IsSame<Var::TAt<0>, TrackedType0>);
-        REQUIRE(TTI::IsSame<Var::TAt<1>, TrackedType1>);
-        REQUIRE(TTI::IsSame<Var::TAt<2>, TrackedType2>);
+        REQUIRE(tti::is_same<var::tat<0>, tracked_type0>);
+        REQUIRE(tti::is_same<var::tat<1>, tracked_type1>);
+        REQUIRE(tti::is_same<var::tat<2>, tracked_type2>);
     }
 
-    SECTION("Count")
+    SECTION("count")
     {
-        REQUIRE(Variant<i32, f64, f32, bool>::count() == 4);
+        REQUIRE(variant<i32, f64, f32, bool>::count() == 4);
     }
 
-    SECTION("Has")
+    SECTION("has")
     {
-        using Var = Variant<TrackedType0, TrackedType1, TrackedType2>;
+        using var = variant<tracked_type0, tracked_type1, tracked_type2>;
 
-        REQUIRE(Var::Has<TrackedType0>());
-        REQUIRE(Var::Has<TrackedType1>());
-        REQUIRE(Var::Has<TrackedType2>());
-        REQUIRE(!Var::Has<i32>());
-        REQUIRE(!Var::Has<f32>());
+        REQUIRE(var::has<tracked_type0>());
+        REQUIRE(var::has<tracked_type1>());
+        REQUIRE(var::has<tracked_type2>());
+        REQUIRE(!var::has<i32>());
+        REQUIRE(!var::has<f32>());
 
-        REQUIRE(Var::Has<0>());
-        REQUIRE(Var::Has<1>());
-        REQUIRE(Var::Has<2>());
-        REQUIRE(!Var::Has<3>());
+        REQUIRE(var::has<0>());
+        REQUIRE(var::has<1>());
+        REQUIRE(var::has<2>());
+        REQUIRE(!var::has<3>());
     }
 
-    SECTION("Trivial Default Constructor")
+    SECTION("trivial default constructor")
     {
-        // # To Do: Fix this. Check _VariantImpl default value for _index.
+        // # to do: fix this. check _variant_impl default value for _index.
         //
-        // STATIC_REQUIRE(RTriviallyDefaultConstructible<
-        //     Variant<i32, char, f32>>);
+        // STATIC_REQUIRE(rtrivially_default_constructible<
+        //     variant<i32, uchar, f32>>);
     }
 
-    SECTION("Default Constructor")
+    SECTION("default constructor")
     {
-        Variant<TrackedType0, TrackedType1, TrackedType2> v;
+        variant<tracked_type0, tracked_type1, tracked_type2> v;
 
         REQUIRE(v.index() == 0);
-        REQUIRE(v.is<TrackedType0>());
-        REQUIRE(v.as<TrackedType0>().lastOp == TrackedType::EOperation::DefaultConstructor);
+        REQUIRE(v.is<tracked_type0>());
+        REQUIRE(v.as<tracked_type0>().last_op == tracked_type::eoperation::default_constructor);
     }
 
-    SECTION("Trivial Copy Constructor")
+    SECTION("trivial copy constructor")
     {
-        STATIC_REQUIRE(RTriviallyCopyConstructible<Variant<i32, char, f32>>);
+        STATIC_REQUIRE(rtrivially_copy_constructible<variant<i32, uchar, f32>>);
     }
 
-    SECTION("Copy Constructor")
+    SECTION("copy constructor")
     {
-        Variant<TrackedType0, TrackedType1, TrackedType2> v0 = TrackedType1{};
-        Variant<TrackedType0, TrackedType1, TrackedType2> v1 = v0;
+        variant<tracked_type0, tracked_type1, tracked_type2> v0 = tracked_type1{};
+        variant<tracked_type0, tracked_type1, tracked_type2> v1 = v0;
 
         REQUIRE(v0.index() == 1);
-        REQUIRE(v0.is<TrackedType1>());
-        REQUIRE(v0.as<TrackedType1>().lastOp == TrackedType::EOperation::CopyConstructorAsThat);
+        REQUIRE(v0.is<tracked_type1>());
+        REQUIRE(v0.as<tracked_type1>().last_op == tracked_type::eoperation::copy_constructor_as_that);
 
         REQUIRE(v1.index() == 1);
-        REQUIRE(v1.is<TrackedType1>());
-        REQUIRE(v1.as<TrackedType1>().lastOp == TrackedType::EOperation::CopyConstructor);
+        REQUIRE(v1.is<tracked_type1>());
+        REQUIRE(v1.as<tracked_type1>().last_op == tracked_type::eoperation::copy_constructor);
     }
 
-    SECTION("Copy Constructor Template")
+    SECTION("copy constructor template")
     {
-        Variant<TrackedType1, TrackedType2> v0 = TrackedType1{};
-        Variant<TrackedType0, TrackedType1, TrackedType2> v1 = v0;
+        variant<tracked_type1, tracked_type2> v0 = tracked_type1{};
+        variant<tracked_type0, tracked_type1, tracked_type2> v1 = v0;
 
         REQUIRE(v0.index() == 0);
-        REQUIRE(v0.is<TrackedType1>());
-        REQUIRE(v0.as<TrackedType1>().lastOp == TrackedType::EOperation::CopyConstructorAsThat);
+        REQUIRE(v0.is<tracked_type1>());
+        REQUIRE(v0.as<tracked_type1>().last_op == tracked_type::eoperation::copy_constructor_as_that);
 
         REQUIRE(v1.index() == 1);
-        REQUIRE(v1.is<TrackedType1>());
-        REQUIRE(v1.as<TrackedType1>().lastOp == TrackedType::EOperation::CopyConstructor);
+        REQUIRE(v1.is<tracked_type1>());
+        REQUIRE(v1.as<tracked_type1>().last_op == tracked_type::eoperation::copy_constructor);
     }
 
-    SECTION("Trivial Copy Assignment Operator")
+    SECTION("trivial copy assignment operator")
     {
-        STATIC_REQUIRE(RTriviallyCopyAssignable<Variant<i32, char, f32>>);
+        STATIC_REQUIRE(rtrivially_copy_assignable<variant<i32, uchar, f32>>);
     }
 
-    SECTION("Copy Assignment Operator")
+    SECTION("copy assignment operator")
     {
-        Variant<TrackedType0, TrackedType1, TrackedType2> v0 = TrackedType1{};
+        variant<tracked_type0, tracked_type1, tracked_type2> v0 = tracked_type1{};
 
-        // v1 holds TrackedType0, so it will construct TrackedType1 when assigned
-        Variant<TrackedType0, TrackedType1, TrackedType2> v1;
+        // v1 holds tracked_type0, so it will construct tracked_type1 when assigned
+        variant<tracked_type0, tracked_type1, tracked_type2> v1;
         v1 = v0;
 
         REQUIRE(v0.index() == 1);
-        REQUIRE(v0.is<TrackedType1>());
-        REQUIRE(v0.as<TrackedType1>().lastOp == TrackedType::EOperation::CopyConstructorAsThat);
+        REQUIRE(v0.is<tracked_type1>());
+        REQUIRE(v0.as<tracked_type1>().last_op == tracked_type::eoperation::copy_constructor_as_that);
 
         REQUIRE(v1.index() == 1);
-        REQUIRE(v1.is<TrackedType1>());
-        REQUIRE(v1.as<TrackedType1>().lastOp == TrackedType::EOperation::CopyConstructor);
+        REQUIRE(v1.is<tracked_type1>());
+        REQUIRE(v1.as<tracked_type1>().last_op == tracked_type::eoperation::copy_constructor);
 
-        // v1 holds TrackedType1, so it will assign TrackedType1 when now
+        // v1 holds tracked_type1, so it will assign tracked_type1 when now
         v1 = v0;
 
         REQUIRE(v0.index() == 1);
-        REQUIRE(v0.is<TrackedType1>());
-        REQUIRE(v0.as<TrackedType1>().lastOp == TrackedType::EOperation::CopyOperatorAsThat);
+        REQUIRE(v0.is<tracked_type1>());
+        REQUIRE(v0.as<tracked_type1>().last_op == tracked_type::eoperation::copy_operator_as_that);
 
         REQUIRE(v1.index() == 1);
-        REQUIRE(v1.is<TrackedType1>());
-        REQUIRE(v1.as<TrackedType1>().lastOp == TrackedType::EOperation::CopyOperator);
+        REQUIRE(v1.is<tracked_type1>());
+        REQUIRE(v1.as<tracked_type1>().last_op == tracked_type::eoperation::copy_operator);
     }
 
-    SECTION("Copy Assignment Operator Template")
+    SECTION("copy assignment operator template")
     {
-        Variant<TrackedType1, TrackedType2> v0 = TrackedType1{};
+        variant<tracked_type1, tracked_type2> v0 = tracked_type1{};
 
-        // v1 holds TrackedType0, so it will construct TrackedType1 when assigned
-        Variant<TrackedType0, TrackedType1, TrackedType2> v1;
+        // v1 holds tracked_type0, so it will construct tracked_type1 when assigned
+        variant<tracked_type0, tracked_type1, tracked_type2> v1;
         v1 = v0;
 
         REQUIRE(v0.index() == 0);
-        REQUIRE(v0.is<TrackedType1>());
-        REQUIRE(v0.as<TrackedType1>().lastOp == TrackedType::EOperation::CopyConstructorAsThat);
+        REQUIRE(v0.is<tracked_type1>());
+        REQUIRE(v0.as<tracked_type1>().last_op == tracked_type::eoperation::copy_constructor_as_that);
 
         REQUIRE(v1.index() == 1);
-        REQUIRE(v1.is<TrackedType1>());
-        REQUIRE(v1.as<TrackedType1>().lastOp == TrackedType::EOperation::CopyConstructor);
+        REQUIRE(v1.is<tracked_type1>());
+        REQUIRE(v1.as<tracked_type1>().last_op == tracked_type::eoperation::copy_constructor);
 
-        // v1 holds TrackedType1, so it will assign TrackedType1 when now
+        // v1 holds tracked_type1, so it will assign tracked_type1 when now
         v1 = v0;
 
         REQUIRE(v0.index() == 0);
-        REQUIRE(v0.is<TrackedType1>());
-        REQUIRE(v0.as<TrackedType1>().lastOp == TrackedType::EOperation::CopyOperatorAsThat);
+        REQUIRE(v0.is<tracked_type1>());
+        REQUIRE(v0.as<tracked_type1>().last_op == tracked_type::eoperation::copy_operator_as_that);
 
         REQUIRE(v1.index() == 1);
-        REQUIRE(v1.is<TrackedType1>());
-        REQUIRE(v1.as<TrackedType1>().lastOp == TrackedType::EOperation::CopyOperator);
+        REQUIRE(v1.is<tracked_type1>());
+        REQUIRE(v1.as<tracked_type1>().last_op == tracked_type::eoperation::copy_operator);
     }
 
-    SECTION("Trivial Move Constructor")
+    SECTION("trivial move constructor")
     {
-        STATIC_REQUIRE(RTriviallyMoveConstructible<Variant<i32, char, f32>>);
+        STATIC_REQUIRE(rtrivially_move_constructible<variant<i32, uchar, f32>>);
     }
 
-    SECTION("Move Constructor")
+    SECTION("move constructor")
     {
-        Variant<TrackedType0, TrackedType1, TrackedType2> v0 = TrackedType1{};
-        Variant<TrackedType0, TrackedType1, TrackedType2> v1 = mov(v0);
+        variant<tracked_type0, tracked_type1, tracked_type2> v0 = tracked_type1{};
+        variant<tracked_type0, tracked_type1, tracked_type2> v1 = mov(v0);
 
         REQUIRE(v0.index() == 1);
-        REQUIRE(v0.is<TrackedType1>());
-        REQUIRE(v0.as<TrackedType1>().lastOp == TrackedType::EOperation::MoveConstructorAsThat);
+        REQUIRE(v0.is<tracked_type1>());
+        REQUIRE(v0.as<tracked_type1>().last_op == tracked_type::eoperation::move_constructor_as_that);
 
         REQUIRE(v1.index() == 1);
-        REQUIRE(v1.is<TrackedType1>());
-        REQUIRE(v1.as<TrackedType1>().lastOp == TrackedType::EOperation::MoveConstructor);
+        REQUIRE(v1.is<tracked_type1>());
+        REQUIRE(v1.as<tracked_type1>().last_op == tracked_type::eoperation::move_constructor);
     }
 
-    SECTION("Move Constructor Template")
+    SECTION("move constructor template")
     {
-        Variant<TrackedType1, TrackedType2> v0 = TrackedType1{};
-        Variant<TrackedType0, TrackedType1, TrackedType2> v1 = mov(v0);
+        variant<tracked_type1, tracked_type2> v0 = tracked_type1{};
+        variant<tracked_type0, tracked_type1, tracked_type2> v1 = mov(v0);
 
         REQUIRE(v0.index() == 0);
-        REQUIRE(v0.is<TrackedType1>());
-        REQUIRE(v0.as<TrackedType1>().lastOp == TrackedType::EOperation::MoveConstructorAsThat);
+        REQUIRE(v0.is<tracked_type1>());
+        REQUIRE(v0.as<tracked_type1>().last_op == tracked_type::eoperation::move_constructor_as_that);
 
         REQUIRE(v1.index() == 1);
-        REQUIRE(v1.is<TrackedType1>());
-        REQUIRE(v1.as<TrackedType1>().lastOp == TrackedType::EOperation::MoveConstructor);
+        REQUIRE(v1.is<tracked_type1>());
+        REQUIRE(v1.as<tracked_type1>().last_op == tracked_type::eoperation::move_constructor);
     }
 
-    SECTION("Trivial Move Assignment Operator")
+    SECTION("trivial move assignment operator")
     {
-        STATIC_REQUIRE(RTriviallyMoveAssignable<Variant<i32, char, f32>>);
+        STATIC_REQUIRE(rtrivially_move_assignable<variant<i32, uchar, f32>>);
     }
 
-    SECTION("Move Assignment Operator")
+    SECTION("move assignment operator")
     {
-        Variant<TrackedType0, TrackedType1, TrackedType2> v0 = TrackedType1{};
+        variant<tracked_type0, tracked_type1, tracked_type2> v0 = tracked_type1{};
 
-        // v1 holds TrackedType0, so it will construct TrackedType1 when assigned
-        Variant<TrackedType0, TrackedType1, TrackedType2> v1;
-        v1 = mov(v0);
-
-        REQUIRE(v0.index() == 1);
-        REQUIRE(v0.is<TrackedType1>());
-        REQUIRE(v0.as<TrackedType1>().lastOp == TrackedType::EOperation::MoveConstructorAsThat);
-
-        REQUIRE(v1.index() == 1);
-        REQUIRE(v1.is<TrackedType1>());
-        REQUIRE(v1.as<TrackedType1>().lastOp == TrackedType::EOperation::MoveConstructor);
-
-        // v1 holds TrackedType1, so it will assign TrackedType1 when now
+        // v1 holds tracked_type0, so it will construct tracked_type1 when assigned
+        variant<tracked_type0, tracked_type1, tracked_type2> v1;
         v1 = mov(v0);
 
         REQUIRE(v0.index() == 1);
-        REQUIRE(v0.is<TrackedType1>());
-        REQUIRE(v0.as<TrackedType1>().lastOp == TrackedType::EOperation::MoveOperatorAsThat);
+        REQUIRE(v0.is<tracked_type1>());
+        REQUIRE(v0.as<tracked_type1>().last_op == tracked_type::eoperation::move_constructor_as_that);
 
         REQUIRE(v1.index() == 1);
-        REQUIRE(v1.is<TrackedType1>());
-        REQUIRE(v1.as<TrackedType1>().lastOp == TrackedType::EOperation::MoveOperator);
+        REQUIRE(v1.is<tracked_type1>());
+        REQUIRE(v1.as<tracked_type1>().last_op == tracked_type::eoperation::move_constructor);
+
+        // v1 holds tracked_type1, so it will assign tracked_type1 when now
+        v1 = mov(v0);
+
+        REQUIRE(v0.index() == 1);
+        REQUIRE(v0.is<tracked_type1>());
+        REQUIRE(v0.as<tracked_type1>().last_op == tracked_type::eoperation::move_operator_as_that);
+
+        REQUIRE(v1.index() == 1);
+        REQUIRE(v1.is<tracked_type1>());
+        REQUIRE(v1.as<tracked_type1>().last_op == tracked_type::eoperation::move_operator);
     }
 
-    SECTION("Move Assignment Operator Template")
+    SECTION("move assignment operator template")
     {
-        Variant<TrackedType1, TrackedType2> v0 = TrackedType1{};
+        variant<tracked_type1, tracked_type2> v0 = tracked_type1{};
 
-        // v1 holds TrackedType0, so it will construct TrackedType1 when assigned
-        Variant<TrackedType0, TrackedType1, TrackedType2> v1;
+        // v1 holds tracked_type0, so it will construct tracked_type1 when assigned
+        variant<tracked_type0, tracked_type1, tracked_type2> v1;
         v1 = mov(v0);
 
         REQUIRE(v0.index() == 0);
-        REQUIRE(v0.is<TrackedType1>());
-        REQUIRE(v0.as<TrackedType1>().lastOp == TrackedType::EOperation::MoveConstructorAsThat);
+        REQUIRE(v0.is<tracked_type1>());
+        REQUIRE(v0.as<tracked_type1>().last_op == tracked_type::eoperation::move_constructor_as_that);
 
         REQUIRE(v1.index() == 1);
-        REQUIRE(v1.is<TrackedType1>());
-        REQUIRE(v1.as<TrackedType1>().lastOp == TrackedType::EOperation::MoveConstructor);
+        REQUIRE(v1.is<tracked_type1>());
+        REQUIRE(v1.as<tracked_type1>().last_op == tracked_type::eoperation::move_constructor);
 
-        // v1 holds TrackedType1, so it will assign TrackedType1 when now
+        // v1 holds tracked_type1, so it will assign tracked_type1 when now
         v1 = mov(v0);
 
         REQUIRE(v0.index() == 0);
-        REQUIRE(v0.is<TrackedType1>());
-        REQUIRE(v0.as<TrackedType1>().lastOp == TrackedType::EOperation::MoveOperatorAsThat);
+        REQUIRE(v0.is<tracked_type1>());
+        REQUIRE(v0.as<tracked_type1>().last_op == tracked_type::eoperation::move_operator_as_that);
 
         REQUIRE(v1.index() == 1);
-        REQUIRE(v1.is<TrackedType1>());
-        REQUIRE(v1.as<TrackedType1>().lastOp == TrackedType::EOperation::MoveOperator);
+        REQUIRE(v1.is<tracked_type1>());
+        REQUIRE(v1.as<tracked_type1>().last_op == tracked_type::eoperation::move_operator);
     }
 
-    SECTION("Param Constructor")
+    SECTION("param constructor")
     {
-        Variant<i32, f64, char> v = 'c';
+        variant<i32, f64, uchar> v = uchar('c');
 
         REQUIRE(v.index() == 2);
-        REQUIRE(v.is<char>());
-        REQUIRE(v.as<char>() == 'c');
+        REQUIRE(v.is<uchar>());
+        REQUIRE(v.as<uchar>() == uchar('c'));
     }
 
-    SECTION("Param Constructor: Non deducible type.")
+    SECTION("param constructor: non deducible type.")
     {
-        // Compilation error.
-        // 99 is an i32. Use type explicitly.
-        // Variant<usize> v = 99;
-        Variant<usize> v = usize{ 99 };
+        // compilation error.
+        // 99 is an i32. use type explicitly.
+        // variant<usize> v = 99;
+        variant<usize> v = usize{ 99 };
 
         REQUIRE(v.index() == 0);
         REQUIRE(v.is<usize>());
         REQUIRE(v.as<usize>() == 99);
     }
 
-    SECTION("Param Operator")
+    SECTION("param operator")
     {
-        Variant<i32, f64, char> v;
-        v = 'c';
+        variant<i32, f64, uchar> v;
+        v = uchar('c');
 
         REQUIRE(v.index() == 2);
-        REQUIRE(v.is<char>());
-        REQUIRE(v.as<char>() == 'c');
+        REQUIRE(v.is<uchar>());
+        REQUIRE(v.as<uchar>() == uchar('c'));
     }
 
-    SECTION("Param Operator: Non deducible type.")
+    SECTION("param operator: non deducible type.")
     {
-        Variant<usize> v;
+        variant<usize> v;
 
-        // Compilation error.
-        // 99 is an i32. Use type explicitly.
+        // compilation error.
+        // 99 is an i32. use type explicitly.
         // v = 99;
         v = usize{ 99 };
 
@@ -304,27 +304,27 @@ TEST_CASE("Atom.Core.Variant")
         REQUIRE(v.as<usize>() == 99);
     }
 
-    SECTION("Destructor")
+    SECTION("destructor")
     {
-        TrackedType::EOperation* lastOpPtr;
+        tracked_type::eoperation* last_op_ptr;
 
         {
-            Variant<TrackedType0, TrackedType1, TrackedType2> v0 = TrackedType1{};
-            lastOpPtr = &v0.as<TrackedType1>().lastOp;
+            variant<tracked_type0, tracked_type1, tracked_type2> v0 = tracked_type1{};
+            last_op_ptr = &v0.as<tracked_type1>().last_op;
         }
 
-        REQUIRE(*lastOpPtr == TrackedType::EOperation::Destructor);
+        REQUIRE(*last_op_ptr == tracked_type::eoperation::destructor);
     }
 
-    SECTION("Value write")
+    SECTION("value write")
     {
-        Variant<i32, f64, char> v;
+        variant<i32, f64, uchar> v;
 
-        v.emplace<char>('h');
+        v.emplace<uchar>('h');
 
         REQUIRE(v.index() == 2);
-        REQUIRE(v.is<char>());
-        REQUIRE(v.as<char>() == 'h');
+        REQUIRE(v.is<uchar>());
+        REQUIRE(v.as<uchar>() == uchar('h'));
 
         v.set(i32{ 99 });
 
@@ -333,14 +333,14 @@ TEST_CASE("Atom.Core.Variant")
         REQUIRE(v.as<i32>() == 99);
     }
 
-    SECTION("Value Read")
+    SECTION("value read")
     {
-        Variant<i32, f64, char> v = 'h';
+        variant<i32, f64, uchar> v = uchar('h');
 
-        REQUIRE(v.is<char>());
-        REQUIRE(v.as<char>() == 'h');
+        REQUIRE(v.is<uchar>());
+        REQUIRE(v.as<uchar>() == uchar('h'));
 
         REQUIRE(v.is<2>());
-        REQUIRE(v.at<2>() == 'h');
+        REQUIRE(v.at<2>() == uchar('h'));
     }
 }

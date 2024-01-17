@@ -1,35 +1,35 @@
 #pragma once
-#include "Atom/Preprocessors.h"
+#include "atom/preprocessors.h"
 
-namespace Atom
+namespace atom
 {
-    class BuildConfig
+    class build_config
     {
     public:
-        enum class Mode
+        enum class mode
         {
-            Debug,
-            Release
+            debug,
+            release
         };
 
-        enum class Platform
+        enum class platform
         {
-            Windows,
-            Posix,
-            Unknown
+            windows,
+            posix,
+            unknown
         };
 
-        enum class Compiler
+        enum class compiler
         {
-            Clang,
-            ClangGnuc,
-            ClangMsvc,
-            Gnuc,
-            Msvc,
-            Unknown
+            clang,
+            clang_gnuc,
+            clang_msvc,
+            gnuc,
+            msvc,
+            unknown
         };
 
-        class Version
+        class version
         {
         public:
             unsigned int major;
@@ -38,194 +38,194 @@ namespace Atom
         };
 
     public:
-        static consteval auto GetMode() -> Mode
+        static consteval auto get_mode() -> mode
         {
-            return _GetMode();
+            return _get_mode();
         }
 
-        static consteval auto IsModeDebug() -> bool
+        static consteval auto is_mode_debug() -> bool
         {
-            return GetMode() == Mode::Debug;
+            return get_mode() == mode::debug;
         }
 
-        static consteval auto IsModeRelease() -> bool
+        static consteval auto is_mode_release() -> bool
         {
-            return GetMode() == Mode::Debug;
+            return get_mode() == mode::debug;
         }
 
-        static consteval auto GetPlatform() -> Platform
+        static consteval auto get_platform() -> platform
         {
-            return _GetPlatform();
+            return _get_platform();
         }
 
-        static consteval auto IsPlatformWindows() -> bool
+        static consteval auto is_platform_windows() -> bool
         {
-            return GetPlatform() == Platform::Windows;
+            return get_platform() == platform::windows;
         }
 
-        static consteval auto IsPlatformPosix() -> bool
+        static consteval auto is_platform_posix() -> bool
         {
-            return GetPlatform() == Platform::Posix;
+            return get_platform() == platform::posix;
         }
 
-        static consteval auto GetCompiler() -> Compiler
+        static consteval auto get_compiler() -> compiler
         {
-            return _GetCompiler();
+            return _get_compiler();
         }
 
-        static consteval auto GetCompilerVersion() -> Version
+        static consteval auto get_compiler_version() -> version
         {
-            return _GetCompilerVersion();
+            return _get_compiler_version();
         }
 
-        static consteval auto IsCompilerClang() -> bool
+        static consteval auto is_compiler_clang() -> bool
         {
-            return GetCompiler() == Compiler::Clang or GetCompiler() == Compiler::ClangMsvc
-                   or GetCompiler() == Compiler::ClangGnuc;
+            return get_compiler() == compiler::clang or get_compiler() == compiler::clang_msvc
+                   or get_compiler() == compiler::clang_gnuc;
         }
 
-        static consteval auto IsCompilerClangGnuc() -> bool
+        static consteval auto is_compiler_clang_gnuc() -> bool
         {
-            return GetCompiler() == Compiler::ClangGnuc;
+            return get_compiler() == compiler::clang_gnuc;
         }
 
-        static consteval auto IsCompilerClangMsvc() -> bool
+        static consteval auto is_compiler_clang_msvc() -> bool
         {
-            return GetCompiler() == Compiler::ClangMsvc;
+            return get_compiler() == compiler::clang_msvc;
         }
 
-        static consteval auto IsCompilerGnuc() -> bool
+        static consteval auto is_compiler_gnuc() -> bool
         {
-            return GetCompiler() == Compiler::Gnuc;
+            return get_compiler() == compiler::gnuc;
         }
 
-        static consteval auto IsCompilerGnucEmulated() -> bool
+        static consteval auto is_compiler_gnuc_emulated() -> bool
         {
-            return GetCompiler() == Compiler::ClangGnuc;
+            return get_compiler() == compiler::clang_gnuc;
         }
 
-        static consteval auto IsCompilerGnucOrEmulated() -> bool
+        static consteval auto is_compiler_gnuc_or_emulated() -> bool
         {
-            return GetCompiler() == Compiler::Gnuc or GetCompiler() == Compiler::ClangGnuc;
+            return get_compiler() == compiler::gnuc or get_compiler() == compiler::clang_gnuc;
         }
 
-        static consteval auto GetCompilerGnucEmulatedVersion() -> Version
+        static consteval auto get_compiler_gnuc_emulated_version() -> version
         {
-            // TODO: add this assertion.
-            // assert(IsCompilerGnucEmulated(), "This compiler doesn't support gcc features.");
+            // todo: add this assertion.
+            // assert(is_compiler_gnuc_emulated(), "this_type compiler doesn't support gcc features.");
 
-            return _GetCompilerGnucVersion();
+            return _get_compiler_gnuc_version();
         }
 
-        static consteval auto IsCompilerMsvc() -> bool
+        static consteval auto is_compiler_msvc() -> bool
         {
-            return GetCompiler() == Compiler::Msvc;
+            return get_compiler() == compiler::msvc;
         }
 
-        static consteval auto IsCompilerMsvcEmulated() -> bool
+        static consteval auto is_compiler_msvc_emulated() -> bool
         {
-            return GetCompiler() == Compiler::ClangMsvc;
+            return get_compiler() == compiler::clang_msvc;
         }
 
-        static consteval auto IsCompilerMsvcOrEmulated() -> bool
+        static consteval auto is_compiler_msvc_or_emulated() -> bool
         {
-            return GetCompiler() == Compiler::Msvc || GetCompiler() == Compiler::ClangMsvc;
+            return get_compiler() == compiler::msvc || get_compiler() == compiler::clang_msvc;
         }
 
-        static consteval auto GetCompilerMsvcEmulatedVersion() -> Version
+        static consteval auto get_compiler_msvc_emulated_version() -> version
         {
-            // TODO: add this assertion.
-            // assert(IsCompilerMsvcEmulated(), "This compiler doesn't support msvc features.");
+            // todo: add this assertion.
+            // assert(is_compiler_msvc_emulated(), "this_type compiler doesn't support msvc features.");
 
-            return _GetCompilerMsvcVersion();
+            return _get_compiler_msvc_version();
         }
 
     private:
-        static consteval auto _GetMode() -> Mode
+        static consteval auto _get_mode() -> mode
         {
 #if defined(ATOM_MODE_DEBUG)
-            return Mode::Debug;
+            return mode::debug;
 #elif defined(ATOM_MODE_RELEASE)
-            return Mode::Release;
+            return mode::release;
 #endif
         }
 
-        static consteval auto _GetPlatform() -> Platform
+        static consteval auto _get_platform() -> platform
         {
 #if defined(ATOM_PLATFORM_WIN)
-            return Platform::Windows;
+            return platform::windows;
 #elif defined(ATOM_PLATFORM_POSIX)
-            return Platform::Posix;
+            return platform::posix;
 #elif defined(ATOM_PLATFORM_UNKNOWN)
-            return Platform::Unknown;
+            return platform::unknown;
 #endif
         }
 
-        static consteval auto _GetCompiler() -> Compiler
+        static consteval auto _get_compiler() -> compiler
         {
 #if defined(ATOM_COMPILER_CLANG)
 #    if defined(ATOM_COMPILER_MSVC_EMULATED)
-            return Compiler::ClangMsvc;
+            return compiler::clang_msvc;
 #    elif defined(ATOM_COMPILER_GNUC_EMULATED)
-            return Compiler::ClangGnuc;
+            return compiler::clang_gnuc;
 #    else
-            return Compiler::Clang;
+            return compiler::clang;
 #    endif
 #elif defined(ATOM_COMPILER_GNUC)
-            return Compiler::Gnuc;
+            return compiler::gnuc;
 #elif defined(ATOM_COMPILER_MSVC)
-            return Compiler::Msvc;
+            return compiler::msvc;
 #endif
         }
 
-        static consteval auto _GetCompilerClangVersion() -> Version
+        static consteval auto _get_compiler_clang_version() -> version
         {
 #if defined(ATOM_COMPILER_CLANG)
-            return Version{ .major = ATOM_COMPILER_CLANG_VER_MAJOR,
+            return version{ .major = ATOM_COMPILER_CLANG_VER_MAJOR,
                 .minor = ATOM_COMPILER_CLANG_VER_MINOR,
                 .patch = ATOM_COMPILER_CLANG_VER_PATCH };
 #else
-            return _GetCompilerUnknownVersion();
+            return _get_compiler_unknown_version();
 #endif
         }
 
-        static consteval auto _GetCompilerGnucVersion() -> Version
+        static consteval auto _get_compiler_gnuc_version() -> version
         {
 #if defined(ATOM_COMPILER_GNUC) or defined(ATOM_COMPILER_GNUC_EMULATED)
-            return Version{ .major = ATOM_COMPILER_GNUC_VER_MAJOR,
+            return version{ .major = ATOM_COMPILER_GNUC_VER_MAJOR,
                 .minor = ATOM_COMPILER_GNUC_VER_MINOR,
                 .patch = ATOM_COMPILER_GNUC_VER_PATCH };
 #else
-            return _GetCompilerUnknownVersion();
+            return _get_compiler_unknown_version();
 #endif
         }
 
-        static consteval auto _GetCompilerMsvcVersion() -> Version
+        static consteval auto _get_compiler_msvc_version() -> version
         {
 #if defined(ATOM_COMPILER_MSVC) or defined(ATOM_COMPILER_MSVC_EMULATED)
-            return Version{ .major = ATOM_COMPILER_MSVC_VER_MAJOR,
+            return version{ .major = ATOM_COMPILER_MSVC_VER_MAJOR,
                 .minor = ATOM_COMPILER_MSVC_VER_MINOR,
                 .patch = ATOM_COMPILER_MSVC_VER_PATCH };
 #else
-            return _GetCompilerUnknownVersion();
+            return _get_compiler_unknown_version();
 #endif
         }
 
-        static consteval auto _GetCompilerUnknownVersion() -> Version
+        static consteval auto _get_compiler_unknown_version() -> version
         {
-            return Version{};
+            return version{};
         }
 
-        static consteval auto _GetCompilerVersion() -> Version
+        static consteval auto _get_compiler_version() -> version
         {
 #if defined(ATOM_COMPILER_CLANG)
-            return _GetCompilerClangVersion();
+            return _get_compiler_clang_version();
 #elif defined(ATOM_COMPILER_GNUC)
-            return _GetCompilerGnucVersion();
+            return _get_compiler_gnuc_version();
 #elif defined(ATOM_COMPILER_MSVC)
-            return _GetCompilerMsvcVersion();
-#elif defined(ATOM_COMPILER_UNKNOWN)
-            return _GetCompilerUnknownVersion();
+            return _get_compiler_msvc_version();
+#elif defined(atom_compiler_unknown)
+            return _get_compiler_unknown_version();
 #endif
         }
     };

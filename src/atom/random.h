@@ -2,12 +2,12 @@
 
 // #include <random>
 
-namespace Atom
+namespace atom
 {
-    using MT19937 = ::std::mt19937;
+    using mt19937 = ::std::mt19937;
 
-    template <typename TInt>
-    using UniformIntDistribution = ::std::uniform_int_distribution<TInt>;
+    template <typename tint>
+    using uniform_int_distribution = ::std::uniform_int_distribution<tint>;
 
-    using RandomDevice = std::random_device;
+    using random_device = std::random_device;
 }

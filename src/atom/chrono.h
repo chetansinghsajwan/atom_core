@@ -1,15 +1,15 @@
 #pragma once
 // #include <chrono>
 
-#include "Atom/Core.h"
+#include "atom/core.h"
 
-namespace Atom
+namespace atom
 {
-    using TimePoint = std::chrono::system_clock::time_point;
+    using time_point = std::chrono::system_clock::time_point;
 
-    namespace Time
+    namespace time
     {
-        inline auto Now()
+        inline auto now()
         {
             return std::chrono::system_clock::now();
         }

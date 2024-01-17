@@ -1,9 +1,9 @@
 #pragma once
-#include "Atom/Containers/BufArray.h"
-#include "_StringImpl.h"
+#include "atom/containers/buf_array.h"
+#include "_string_impl.h"
 
-namespace Atom
+namespace atom
 {
-    template <typename TEncoding, usize BufSize, typename TAlloc = DefaultMemAllocator>
-    using BasicBufString = _StringImpl<TEncoding, BufArray<BasicChar<TEncoding>, BufSize, TAlloc>>;
+    template <typename tencoding, usize buf_size, typename allocator_type = default_mem_allocator>
+    using basic_buf_string = _string_impl<tencoding, buf_array<basic_char<tencoding>, buf_size, allocator_type>>;
 }

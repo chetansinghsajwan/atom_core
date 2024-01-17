@@ -1,9 +1,9 @@
 #pragma once
-#include "Atom/Text/AsciiEncoding.h"
-#include "BasicStackString.h"
+#include "atom/text/ascii_encoding.h"
+#include "basic_stack_string.h"
 
-namespace Atom
+namespace atom
 {
-    template <usize Size>
-    using AsciiStackString = BasicStackString<AsciiEncoding, Size>;
+    template <usize size>
+    using ascii_stack_string = basic_stack_string<ascii_encoding, size>;
 }

@@ -1,53 +1,53 @@
 #pragma once
-#include "Atom/Core/Primitives.h"
-#include "Atom/Core/TypeList.h"
+#include "atom/core/primitives.h"
+#include "atom/core/type_list.h"
 
-namespace Atom
+namespace atom
 {
-    template <typename... Ts>
-    class StaticStorageFor
+    template <typename... ts>
+    class static_storage_for
     {
     private:
-        using _Types = TypeList<Ts...>;
+        using _types = type_list<ts...>;
 
     public:
-        alignas(_Types::MaxAlign.unwrap()) byte storage[_Types::MaxSize];
+        alignas(_types::max_align.unwrap()) byte storage[_types::max_size];
     };
 
-    template <usize size>
-    class StaticStorage
+    template <usize in_size>
+    class static_storage
     {
     public:
-        static consteval auto Size() -> usize
+        static consteval auto size() -> usize
         {
-            return size;
+            return in_size;
         }
 
     public:
-        constexpr auto mem(usize i = 0) const -> MemPtr<void>
+        constexpr auto mem(usize i = 0) const -> mem_ptr<void>
         {
-            Contracts::DebugExpects(i < Size());
+            contracts::debug_expects(i < size());
 
-            return MemPtr(_storage + i.unwrap());
+            return mem_ptr(_storage + i.unwrap());
         }
 
-        constexpr auto mutMem(usize i = 0) -> MutMemPtr<void>
+        constexpr auto mut_mem(usize i = 0) -> mut_mem_ptr<void>
         {
-            Contracts::DebugExpects(i < Size());
+            contracts::debug_expects(i < size());
 
-            return MutMemPtr(_storage + i.unwrap());
+            return mut_mem_ptr(_storage + i.unwrap());
         }
 
         constexpr auto ref(usize i) const -> const byte&
         {
-            Contracts::DebugExpects(i < Size());
+            contracts::debug_expects(i < size());
 
             return _storage[i.unwrap()];
         }
 
-        constexpr auto mutRef(usize i) -> byte&
+        constexpr auto mut_ref(usize i) -> byte&
         {
-            Contracts::DebugExpects(i < Size());
+            contracts::debug_expects(i < size());
 
             return _storage[i.unwrap()];
         }
@@ -59,12 +59,12 @@ namespace Atom
 
         constexpr auto operator[](usize i) -> byte&
         {
-            return mutRef(i);
+            return mut_ref(i);
         }
 
-        constexpr auto eq(const StaticStorage& that) const -> bool
+        constexpr auto eq(const static_storage& that) const -> bool
         {
-            for (usize i = usize(0); i < Size(); i++)
+            for (usize i = usize(0); i < size(); i++)
             {
                 if (_storage[i.unwrap()] != that._storage[i.unwrap()])
                     return false;
@@ -73,12 +73,12 @@ namespace Atom
             return true;
         }
 
-        constexpr auto ne(const StaticStorage& that) const -> bool
+        constexpr auto ne(const static_storage& that) const -> bool
         {
             return not(*this == that);
         }
 
     public:
-        byte _storage[size.unwrap()];
+        byte _storage[in_size.unwrap()];
     };
 }

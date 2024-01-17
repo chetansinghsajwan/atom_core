@@ -1,179 +1,179 @@
 #pragma once
-#include "Atom/Range/ArrayIter.h"
-#include "Atom/Range/MutArrayRangeExtensions.h"
-#include "Atom/Range/RangeReq.h"
-#include "Atom/TTI.h"
+#include "atom/range/array_iter.h"
+#include "atom/range/mut_array_range_extensions.h"
+#include "atom/range/range_req.h"
+#include "atom/tti.h"
 
 // #include <cstring>
 
-namespace Atom
+namespace atom
 {
-    template <typename TIter_, typename TIterEnd_>
-    class _BasicRangeFromIterPair
+    template <typename titer_, typename titer_end_>
+    class _basic_range_from_iter_pair
     {
     public:
-        using TElem = typename TIter_::TElem;
-        using TIter = TIter_;
-        using TIterEnd = TIterEnd_;
+        using elem_type = typename titer_::elem_type;
+        using iter_type = titer_;
+        using iter_end_type = titer_end_;
 
     public:
-        constexpr _BasicRangeFromIterPair(TIter it, TIterEnd itEnd)
+        constexpr _basic_range_from_iter_pair(iter_type it, iter_end_type it_end)
             : _it{ mov(it) }
-            , _itEnd{ mov(itEnd) }
+            , _it_end{ mov(it_end) }
         {}
 
     public:
-        constexpr auto iter() const -> TIter
+        constexpr auto iter() const -> iter_type
         {
             return _it;
         }
 
-        constexpr auto iterEnd() const -> TIter
+        constexpr auto iter_end() const -> iter_type
         {
-            return _itEnd;
+            return _it_end;
         }
 
-        constexpr auto data() const -> MemPtr<TElem>
-            requires RArrayIterPair<TIter, TIterEnd>
+        constexpr auto data() const -> mem_ptr<elem_type>
+            requires rarray_iter_pair<iter_type, iter_end_type>
         {
             return &_it.value();
         }
 
         constexpr auto count() const -> usize
-            requires RJumpIterPair<TIter, TIterEnd>
+            requires rjump_iter_pair<iter_type, iter_end_type>
         {
-            return _itEnd.compare(_it).template to<usize>();
+            return _it_end.compare(_it).template to<usize>();
         }
 
     private:
-        TIter _it;
-        TIterEnd _itEnd;
+        iter_type _it;
+        iter_end_type _it_end;
     };
 
-    template <typename TMutIter_, typename TMutIterEnd_>
-    class _BasicMutRangeFromIterPair: public _BasicRangeFromIterPair<TMutIter_, TMutIterEnd_>
+    template <typename tmut_iter_, typename tmut_iter_end_>
+    class _basic_mut_range_from_iter_pair: public _basic_range_from_iter_pair<tmut_iter_, tmut_iter_end_>
     {
-        using Base = _BasicRangeFromIterPair<TMutIter_, TMutIterEnd_>;
+        using base_type = _basic_range_from_iter_pair<tmut_iter_, tmut_iter_end_>;
 
     public:
-        using TMutIter = TMutIter_;
-        using TMutIterEnd = TMutIterEnd_;
+        using mut_iter_type = tmut_iter_;
+        using mut_iter_end_type = tmut_iter_end_;
 
     public:
-        constexpr _BasicMutRangeFromIterPair(TMutIter it, TMutIterEnd itEnd)
-            : Base(mov(it), mov(itEnd))
+        constexpr _basic_mut_range_from_iter_pair(mut_iter_type it, mut_iter_end_type it_end)
+            : base_type(mov(it), mov(it_end))
         {}
 
     public:
-        constexpr auto mutIter() -> TMutIter
+        constexpr auto mut_iter() -> mut_iter_type
         {
             return this->iter();
         }
 
-        constexpr auto mutIterEnd() -> TMutIterEnd
+        constexpr auto mut_iter_end() -> mut_iter_end_type
         {
-            return this->iterEnd();
+            return this->iter_end();
         }
     };
 
-    template <typename TIter, typename TIterEnd>
-    class _RangeFromIterExtended
+    template <typename iter_type, typename iter_end_type>
+    class _range_from_iter_extended
     {
     private:
-        template <typename T_>
-        class _TypeContainer
+        template <typename t_>
+        class _type_container
         {
         public:
-            using T = TTI::TRemoveCVRef<T_>;
+            using type = tti::tremove_cvref<t_>;
         };
 
-        static consteval auto _Get()
+        static consteval auto _get()
         {
-            using TRange = _BasicRangeFromIterPair<TIter, TIterEnd>;
+            using range_type = _basic_range_from_iter_pair<iter_type, iter_end_type>;
 
-            if constexpr (RArrayIterPair<TIter, TIterEnd>)
-                return _TypeContainer<ArrayRangeExtensions<TRange>>();
+            if constexpr (rarray_iter_pair<iter_type, iter_end_type>)
+                return _type_container<array_range_extensions<range_type>>();
 
-            else if constexpr (RJumpIterPair<TIter, TIterEnd>)
-                return _TypeContainer<JumpRangeExtensions<TRange>>();
+            else if constexpr (rjump_iter_pair<iter_type, iter_end_type>)
+                return _type_container<jump_range_extensions<range_type>>();
 
-            else if constexpr (RBidiIterPair<TIter, TIterEnd>)
-                return _TypeContainer<BidiRangeExtensions<TRange>>();
+            else if constexpr (rbidi_iter_pair<iter_type, iter_end_type>)
+                return _type_container<bidi_range_extensions<range_type>>();
 
-            else if constexpr (RFwdIterPair<TIter, TIterEnd>)
-                return _TypeContainer<FwdRangeExtensions<TRange>>();
+            else if constexpr (rfwd_iter_pair<iter_type, iter_end_type>)
+                return _type_container<fwd_range_extensions<range_type>>();
 
-            else if constexpr (RIterPair<TIter, TIterEnd>)
-                return _TypeContainer<RangeExtensions<TRange>>();
+            else if constexpr (riter_pair<iter_type, iter_end_type>)
+                return _type_container<range_extensions<range_type>>();
         }
 
     public:
-        using T = typename decltype(_Get())::T;
+        using type = typename decltype(_get())::type;
     };
 
-    template <typename TIter, typename TIterEnd>
-    class _MutRangeFromIterExtended
+    template <typename iter_type, typename iter_end_type>
+    class _mut_range_from_iter_extended
     {
     private:
-        template <typename T_>
-        class _TypeContainer
+        template <typename t_>
+        class _type_container
         {
         public:
-            using T = TTI::TRemoveCVRef<T_>;
+            using type = tti::tremove_cvref<t_>;
         };
 
-        static consteval auto _Get()
+        static consteval auto _get()
         {
-            using TRange = _BasicMutRangeFromIterPair<TIter, TIterEnd>;
+            using range_type = _basic_mut_range_from_iter_pair<iter_type, iter_end_type>;
 
-            if constexpr (RArrayIterPair<TIter, TIterEnd>)
-                return _TypeContainer<MutArrayRangeExtensions<TRange>>();
+            if constexpr (rarray_iter_pair<iter_type, iter_end_type>)
+                return _type_container<mut_array_range_extensions<range_type>>();
 
-            else if constexpr (RJumpIterPair<TIter, TIterEnd>)
-                return _TypeContainer<MutJumpRangeExtensions<TRange>>();
+            else if constexpr (rjump_iter_pair<iter_type, iter_end_type>)
+                return _type_container<mut_jump_range_extensions<range_type>>();
 
-            else if constexpr (RBidiIterPair<TIter, TIterEnd>)
-                return _TypeContainer<MutBidiRangeExtensions<TRange>>();
+            else if constexpr (rbidi_iter_pair<iter_type, iter_end_type>)
+                return _type_container<mut_bidi_range_extensions<range_type>>();
 
-            else if constexpr (RFwdIterPair<TIter, TIterEnd>)
-                return _TypeContainer<MutFwdRangeExtensions<TRange>>();
+            else if constexpr (rfwd_iter_pair<iter_type, iter_end_type>)
+                return _type_container<mut_fwd_range_extensions<range_type>>();
 
-            else if constexpr (RIterPair<TIter, TIterEnd>)
-                return _TypeContainer<MutRangeExtensions<TRange>>();
+            else if constexpr (riter_pair<iter_type, iter_end_type>)
+                return _type_container<mut_range_extensions<range_type>>();
         }
 
     public:
-        using T = typename decltype(_Get())::T;
+        using type = typename decltype(_get())::type;
     };
 
-    template <typename TIter, typename TIterEnd>
-    class _RangeFromIterPair: public _RangeFromIterExtended<TIter, TIterEnd>::T
+    template <typename iter_type, typename iter_end_type>
+    class _range_from_iter_pair: public _range_from_iter_extended<iter_type, iter_end_type>::type
     {
-        using Base = _RangeFromIterExtended<TIter, TIterEnd>::T;
+        using base_type = _range_from_iter_extended<iter_type, iter_end_type>::type;
 
     public:
-        constexpr _RangeFromIterPair(TIter it, TIterEnd itEnd)
-            : Base(mov(it), mov(itEnd))
+        constexpr _range_from_iter_pair(iter_type it, iter_end_type it_end)
+            : base_type(mov(it), mov(it_end))
         {}
     };
 
-    template <typename TMutIter, typename TMutIterEnd>
-    class _MutRangeFromIterPair: public _MutRangeFromIterExtended<TMutIter, TMutIterEnd>::T
+    template <typename mut_iter_type, typename mut_iter_end_type>
+    class _mut_range_from_iter_pair: public _mut_range_from_iter_extended<mut_iter_type, mut_iter_end_type>::type
     {
-        using Base = _MutRangeFromIterExtended<TMutIter, TMutIterEnd>::T;
+        using base_type = _mut_range_from_iter_extended<mut_iter_type, mut_iter_end_type>::type;
 
     public:
-        constexpr _MutRangeFromIterPair(TMutIter it, TMutIterEnd itEnd)
-            : Base(mov(it), mov(itEnd))
+        constexpr _mut_range_from_iter_pair(mut_iter_type it, mut_iter_end_type it_end)
+            : base_type(mov(it), mov(it_end))
         {}
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// # To Do
+    /// # to do
     ///
-    /// - Review this implementation after implementing character encoding.
+    /// - review this implementation after implementing character encoding.
     /// --------------------------------------------------------------------------------------------
-    constexpr auto _RangeFindStrLen(MemPtr<Char> str) -> usize
+    constexpr auto _range_find_str_len(mem_ptr<uchar> str) -> usize
     {
         if (std::is_constant_evaluated())
         {
@@ -187,163 +187,161 @@ namespace Atom
             return len;
         }
 
-        return usize(std::strlen(_ToStdCharPtr(str.unwrap())));
+        return usize(std::strlen(_to_std_char_ptr(str.unwrap())));
     }
 }
 
-namespace Atom
+namespace atom
 {
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    constexpr auto MakeRange(std::initializer_list<T> list)
+    template <typename type>
+    constexpr auto make_range(std::initializer_list<type> list)
     {
-        return _RangeFromIterPair(
-            ArrayIter(MemPtr<T>(list.begin())), ArrayIter(MemPtr<T>(list.end())));
+        return _range_from_iter_pair(
+            array_iter(mem_ptr<type>(list.begin())), array_iter(mem_ptr<type>(list.end())));
     }
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    constexpr auto MakeRange(MemPtr<T> begin, MemPtr<T> end)
+    template <typename type>
+    constexpr auto make_range(mem_ptr<type> begin, mem_ptr<type> end)
     {
-        return _RangeFromIterPair(ArrayIter(begin), ArrayIter(end));
+        return _range_from_iter_pair(array_iter(begin), array_iter(end));
     }
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    constexpr auto MakeRange(MutMemPtr<T> begin, MutMemPtr<T> end)
+    template <typename type>
+    constexpr auto make_range(mut_mem_ptr<type> begin, mut_mem_ptr<type> end)
     {
-        return _MutRangeFromIterPair(MutArrayIter(begin), MutArrayIter(end));
+        return _mut_range_from_iter_pair(mut_array_iter(begin), mut_array_iter(end));
     }
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    constexpr auto MakeRange(MemPtr<T> begin, usize count)
+    template <typename type>
+    constexpr auto make_range(mem_ptr<type> begin, usize count)
     {
-        return _RangeFromIterPair(ArrayIter(begin), ArrayIter(begin + count));
+        return _range_from_iter_pair(array_iter(begin), array_iter(begin + count));
     }
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    constexpr auto MakeRange(MutMemPtr<T> begin, usize count)
+    template <typename type>
+    constexpr auto make_range(mut_mem_ptr<type> begin, usize count)
     {
-        return _MutRangeFromIterPair(MutArrayIter(begin), MutArrayIter(begin + count));
+        return _mut_range_from_iter_pair(mut_array_iter(begin), mut_array_iter(begin + count));
     }
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename T, usize count>
-    constexpr auto MakeRange(const T (&arr)[count])
+    template <typename type, usize count>
+    constexpr auto make_range(const type (&arr)[count])
     {
-        return _RangeFromIterPair(ArrayIter(MemPtr(arr)), ArrayIter(MemPtr(arr) + count));
+        return _range_from_iter_pair(array_iter(mem_ptr(arr)), array_iter(mem_ptr(arr) + count));
     }
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename T, usize count>
-    constexpr auto MakeRange(T (&arr)[count])
+    template <typename type, usize count>
+    constexpr auto make_range(type (&arr)[count])
     {
-        return _MutRangeFromIterPair(
-            MutArrayIter(MutMemPtr(arr)), MutArrayIter(MutMemPtr(arr) + count));
+        return _mut_range_from_iter_pair(
+            mut_array_iter(mut_mem_ptr(arr)), mut_array_iter(mut_mem_ptr(arr) + count));
     }
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    constexpr auto MakeRange(MemPtr<Char> str)
+    constexpr auto make_range(mem_ptr<uchar> str)
     {
-        return _RangeFromIterPair(ArrayIter(str), ArrayIter(str + _RangeFindStrLen(str)));
+        return _range_from_iter_pair(array_iter(str), array_iter(str + _range_find_str_len(str)));
     }
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    constexpr auto MakeRange(MutMemPtr<Char> str)
+    constexpr auto make_range(mut_mem_ptr<uchar> str)
     {
-        return _MutRangeFromIterPair(MutArrayIter(str), MutArrayIter(str + _RangeFindStrLen(str)));
+        return _mut_range_from_iter_pair(mut_array_iter(str), mut_array_iter(str + _range_find_str_len(str)));
     }
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename TIter, typename TIterEnd>
-    constexpr auto MakeRange(TIter it, TIterEnd itEnd)
-        requires RIterPair<TIter, TIterEnd>
+    template <typename iter_type, typename iter_end_type>
+    constexpr auto make_range(iter_type it, iter_end_type it_end)
+        requires riter_pair<iter_type, iter_end_type>
     {
-        if constexpr (RMutIter<TIter>)
+        if constexpr (rmut_iter<iter_type>)
         {
-            return _MutRangeFromIterPair(mov(it), mov(itEnd));
+            return _mut_range_from_iter_pair(mov(it), mov(it_end));
         }
         else
         {
-            return _RangeFromIterPair(mov(it), mov(itEnd));
+            return _range_from_iter_pair(mov(it), mov(it_end));
         }
     }
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    constexpr auto MakeRange(const T* begin, const T* end)
+    template <typename type>
+    constexpr auto make_range(const type* begin, const type* end)
     {
-        return MakeRange(MemPtr(begin), MemPtr(end));
+        return make_range(mem_ptr(begin), mem_ptr(end));
     }
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    constexpr auto MakeRange(T* begin, T* end)
+    template <typename type>
+    constexpr auto make_range(type* begin, type* end)
     {
-        return MakeRange(MutMemPtr(begin), MutMemPtr(end));
+        return make_range(mut_mem_ptr(begin), mut_mem_ptr(end));
     }
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    constexpr auto MakeRange(const T* begin, usize count)
+    template <typename type>
+    constexpr auto make_range(const type* begin, usize count)
     {
-        return MakeRange(MemPtr(begin), MemPtr(begin + count.unwrap()));
+        return make_range(mem_ptr(begin), mem_ptr(begin + count.unwrap()));
     }
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    constexpr auto MakeRange(const char* begin, const char* end)
+    constexpr auto make_range(const char* begin, const char* end)
     {
-        const Char* begin_ = static_cast<const Char*>(static_cast<const void*>(begin));
-        const Char* end_ = static_cast<const Char*>(static_cast<const void*>(end));
-        return MakeRange(begin_, end_);
+        const uchar* begin_ = static_cast<const uchar*>(static_cast<const void*>(begin));
+        const uchar* end_ = static_cast<const uchar*>(static_cast<const void*>(end));
+        return make_range(begin_, end_);
     }
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    constexpr auto MakeRange(const char* begin, _usize count)
+    constexpr auto make_range(const char* begin, _usize count)
     {
-        const Char* begin_ = static_cast<const Char*>(static_cast<const void*>(begin));
-        return MakeRange(begin_, begin_ + count);
+        return make_range(begin, begin + count);
     }
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
     template <usize count>
-    constexpr auto MakeRange(const char (&arr)[count])
+    constexpr auto make_range(const char (&arr)[count])
     {
-        const Char* begin_ = static_cast<const Char*>(static_cast<const void*>(arr));
-        return MakeRange(begin_, begin_ + count.unwrap());
+        return make_range(arr, arr + count.unwrap());
     }
 }

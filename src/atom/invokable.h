@@ -1,4 +1,4 @@
 #pragma once
-#include "Atom/Invokable/Event.h"
-#include "Atom/Invokable/Invokable.h"
-#include "Atom/Invokable/InvokableBox.h"
+#include "atom/invokable/event.h"
+#include "atom/invokable/invokable.h"
+#include "atom/invokable/invokable_box.h"

@@ -2,16 +2,16 @@ import atom.core;
 #include "catch2/catch_test_macros.hpp"
 #include "catch2/catch_template_test_macros.hpp"
 
-using namespace Atom;
+using namespace atom;
 
 TEMPLATE_TEST_CASE(
-    "Atom.Core.Int", "[primitives]", i8, i16, i32, i64, isize, imax, u8, u16, u32, u64, usize, umax)
+    "atom.core.int", "[primitives]", i8, i16, i32, i64, isize, imax, u8, u16, u32, u64, usize, umax)
 {
-    using TInt = TestType;
+    using int_type = TestType;
 
-    SECTION("Addition")
+    SECTION("addition")
     {
-        TInt n = 0;
+        int_type n = 0;
 
         n = n + 1;
         REQUIRE(n == 1);
@@ -19,12 +19,12 @@ TEMPLATE_TEST_CASE(
         n += 1;
         REQUIRE(n == 2);
 
-        REQUIRE_THROWS_AS(n + TInt::Max(), ContractViolation);
+        REQUIRE_THROWS_AS(n + int_type::max(), contract_violation_exception);
     }
 
-    SECTION("Subtraction")
+    SECTION("subtraction")
     {
-        TInt n = 0;
+        int_type n = 0;
 
         n = n - 1;
         REQUIRE(n == -1);
@@ -32,12 +32,12 @@ TEMPLATE_TEST_CASE(
         n -= 1;
         REQUIRE(n == -2);
 
-        REQUIRE_THROWS_AS(n - TInt::Min(), ContractViolation);
+        REQUIRE_THROWS_AS(n - int_type::min(), contract_violation_exception);
     }
 
-    SECTION("Multiplication")
+    SECTION("multiplication")
     {
-        TInt n = 1;
+        int_type n = 1;
 
         n = n * 2;
         REQUIRE(n == 2);
@@ -45,11 +45,11 @@ TEMPLATE_TEST_CASE(
         n *= 2;
         REQUIRE(n == 4);
 
-        REQUIRE_THROWS_AS(TInt::Max().div(2).add(1).mul(2), ContractViolation);
+        REQUIRE_THROWS_AS(int_type::max().div(2).add(1).mul(2), contract_violation_exception);
     }
 
-    SECTION("Division")
+    SECTION("division")
     {
-        REQUIRE_THROWS_AS(TInt::Min().div(-1), ContractViolation);
+        REQUIRE_THROWS_AS(int_type::min().div(-1), contract_violation_exception);
     }
 }

@@ -1,8 +1,8 @@
 #pragma once
-#include "Atom/Core.h"
+#include "atom/core.h"
 
-namespace Atom
+namespace atom
 {
-    template <typename TCharEncoding>
-    using BasicRune = typename TCharEncoding::TRune;
+    template <typename tchar_encoding>
+    using basic_rune = typename tchar_encoding::trune;
 }

@@ -1,13 +1,13 @@
 import atom.core;
 #include "catch2/catch_test_macros.hpp"
 
-using namespace Atom;
+using namespace atom;
 
-TEST_CASE("Atom.String.StringConverter")
+TEST_CASE("atom.string.string_converter")
 {
-    String str = MakeRange("Hello.");
-    const String& strRef = str;
+    string str = make_range("hello.");
+    const string& str_ref = str;
 
-    StringConverter<String> converter;
-    String newString = converter.Convert(strRef);
+    string_converter<string> converter;
+    string new_string = converter.convert(str_ref);
 }

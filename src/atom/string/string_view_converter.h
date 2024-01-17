@@ -1,73 +1,73 @@
 #pragma once
-#include "StringConverter.h"
-#include "StringView.h"
+#include "string_converter.h"
+#include "string_view.h"
 
-namespace Atom
+namespace atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// Converts `T` object to {StringView}.
+    /// converts `type` object to {string_view}.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    class StringViewConverter;
+    template <typename type>
+    class string_view_converter;
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures {TConverter} can convert `T` object to {StringView}.
+    /// ensures {tconverter} can convert `type` object to {string_view}.
     /// --------------------------------------------------------------------------------------------
-    template <typename TConverter, typename T>
-    concept RStringViewConverter = requires(TConverter converter, T arg) {
+    template <typename tconverter, typename type>
+    concept rstring_view_converter = requires(tconverter converter, type arg) {
         {
-            converter.Convert(arg)
-        } -> RSameAs<StringView>;
+            converter.convert(arg)
+        } -> rsame_as<string_view>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// Ensures `T` is convertible to {StringView}.
+    /// ensures `type` is convertible to {string_view}.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-    concept RStringViewConvertible = RStringViewConverter<StringViewConverter<T>, T>;
+    template <typename type>
+    concept rstring_view_convertible = rstring_view_converter<string_view_converter<type>, type>;
 
     /// --------------------------------------------------------------------------------------------
-    /// {StringViewConverter} specialization for {StringView}.
+    /// {string_view_converter} specialization for {string_view}.
     /// --------------------------------------------------------------------------------------------
     template <>
-    class StringViewConverter<StringView>
+    class string_view_converter<string_view>
     {
-        constexpr StringView Convert(StringView in)
+        constexpr string_view convert(string_view in)
         {
             return in;
         }
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// {StirngViewConverter} specialization for `T` containing {const}, {volatile} or {lvalue}
+    /// {stirng_view_converter} specialization for `type` containing {const}, {volatile} or {lvalue}
     /// and {rvalue} reference.
     ///
-    /// @TODO Needs refactoring.
+    /// @todo needs refactoring.
     /// --------------------------------------------------------------------------------------------
-    template <typename T>
-        requires(!RSameAs<T, TTI::TRemoveCVRef<T>>) && RStringViewConvertible<TTI::TRemoveCVRef<T>>
-    class StringViewConverter<T>: StringViewConverter<TTI::TRemoveCVRef<T>>
+    template <typename type>
+        requires(!rsame_as<type, tti::tremove_cvref<type>>) && rstring_view_convertible<tti::tremove_cvref<type>>
+    class string_view_converter<type>: string_view_converter<tti::tremove_cvref<type>>
     {};
 
     /// --------------------------------------------------------------------------------------------
-    /// {StringConverter} specialization for types which are {StringViewConvertible}.
+    /// {string_converter} specialization for types which are {string_view_convertible}.
     /// --------------------------------------------------------------------------------------------
-    template <RStringViewConvertible T>
-    class StringConverter<T>
+    template <rstring_view_convertible type>
+    class string_converter<type>
     {
     public:
-        constexpr auto Convert(const T& in) -> String
+        constexpr auto convert(const type& in) -> string
         {
-            return converter.Convert();
+            return converter.convert();
         }
 
-        constexpr auto Convert(const T& in, ROutput<Char> auto out) -> void
+        constexpr auto convert(const type& in, routput<uchar> auto out) -> void
         {
-            StringView strView = converter.Convert(in);
-            out.InsertBack(in);
+            string_view str_view = converter.convert(in);
+            out.insert_back(in);
         }
 
     public:
-        StringViewConverter<T> converter;
+        string_view_converter<type> converter;
     };
 }
