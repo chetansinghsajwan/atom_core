@@ -1,5 +1,5 @@
 {
-    description = "atom-engine";
+    description = "atom.core";
 
     inputs = {
         nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -9,17 +9,16 @@
     let
         system = "x86_64-linux";
         pkgs = nixpkgs.legacyPackages.${system};
+        stdenv = pkgs.llvmPackages_17.libcxxStdenv;
     in
     {
-        devShells.${system}.default = pkgs.mkShell {
-            
-            packages = with pkgs; [
+        devShells.${system}.default = stdenv.mkDerivation {
+            name = "atom.core";
+            buildInputs = with pkgs; [
+                coreutils
+                git
                 cmake
-                gnumake
                 ninja
-		        gcc13
-		        clang_17
-		        clang-tools_17
             ];
         };
     };
