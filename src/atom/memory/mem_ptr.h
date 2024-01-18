@@ -38,7 +38,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto next() const -> this_final_type
         {
-            return _make(nullptr);
+            return _make(_arithmetic(_ptr) + 1);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -46,7 +46,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto prev() const -> this_final_type
         {
-            return _make(nullptr);
+            return _make(_arithmetic(_ptr) - 1);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -54,7 +54,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto next(usize i) const -> this_final_type
         {
-            return _make(nullptr);
+            return _make(_arithmetic(_ptr) + i.unwrap());
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -62,7 +62,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto prev(usize i) const -> this_final_type
         {
-            return _make(nullptr);
+            return _make(_arithmetic(_ptr) - i.unwrap());
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -70,7 +70,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto move(isize i) const -> this_final_type
         {
-            return _make(nullptr);
+            return _make(_arithmetic(_ptr) + i.unwrap());
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -78,7 +78,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto move(usize i) const -> this_final_type
         {
-            return _make(nullptr);
+            return _make(_arithmetic(_ptr) + i.unwrap());
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -86,7 +86,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto sub(this_type that) const -> this_final_type
         {
-            return _make(_ptr - that.unwrap());
+            return _make(_arithmetic(_ptr) - that.unwrap());
         }
 
     public:

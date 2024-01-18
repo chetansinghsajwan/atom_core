@@ -117,7 +117,7 @@ namespace atom
         template <typename... arg_types>
         constexpr auto emplace_back(arg_types&&... args)
         {
-            return _emplace_at(_get_count() - 1, forward<arg_types>(args)...);
+            return _emplace_at(_get_count(), forward<arg_types>(args)...);
         }
 
         template <typename uiter, typename uiter_end>
@@ -234,7 +234,7 @@ namespace atom
         template <typename... arg_types>
         constexpr auto _emplace_at(usize i, arg_types&&... args) -> usize
         {
-            _ensure_cap_for(i);
+            _ensure_cap_for(1);
             _move_range_back(i, 1);
             _construct_at(i, forward<arg_types>(args)...);
 
