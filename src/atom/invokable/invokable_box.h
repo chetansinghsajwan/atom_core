@@ -17,42 +17,20 @@ namespace atom
     public:
         template <typename invokable_type>
         auto set()
-            requires(rinvokable<invokable_type, result_type(targs...)>)
+            requires(rinvokable<invokable_type, result_type(arg_types...)>)
         {
-            _impl = [](mut_mem_ptr<void> obj, result_type& result, targs&&... args) {
+            _impl = [](mut_mem_ptr<void> obj, result_type& result, arg_types&&... args) {
                 invokable_type& invokable = *static_cast<invokable_type*>(obj.unwrap());
-                new (&result) result_type(invokable(forward<targs>(args)...));
-            };
-        }
-
-        auto invoke(mut_mem_ptr<void> invokable, targs&&... args) -> result_type
-        {
-            result_type result;
-            _impl(invokable, result, forward<targs>(args)...);
-
-            return result;
-        }
-
-    protected:
-        void (*_impl)(mut_mem_ptr<void> invokable, result_type& result, targs&&... args);
-    };
-
-    template <typename... targs>
-    class _invoker<void, targs...>
-    {
-    public:
-        template <rinvokable<void(targs...)> invokable_type>
-        auto set()
-        {
-            _impl = [](void* obj, targs&&... args) {
-                invokable_type& invokable = *reinterpret_cast<invokable_type*>(obj);
-                invokable(forward<targs>(args)...);
+                new (&result) result_type(invokable(forward<arg_types>(args)...));
             };
         }
 
         auto invoke(mut_mem_ptr<void> invokable, arg_types&&... args) -> result_type
         {
-            _impl(invokable, forward<targs>(args)...);
+            result_type result;
+            _impl(invokable, result, forward<arg_types>(args)...);
+
+            return result;
         }
 
     protected:
@@ -63,22 +41,22 @@ namespace atom
     class _invoker<void, arg_types...>
     {
     public:
-        template <rinvokable<void(arg_types...)> tinvokable>
+        template <rinvokable<void(arg_types...)> invokable_type>
         auto set()
         {
-            _impl = [](mut_mem_ptr<void> obj, arg_types&&... args) {
-                tinvokable& invokable = *reinterpret_cast<tinvokable*>(obj.unwrap());
+            _impl = [](void* obj, arg_types&&... args) {
+                invokable_type& invokable = *reinterpret_cast<invokable_type*>(obj);
                 invokable(forward<arg_types>(args)...);
             };
         }
 
-        auto invoke(mut_mem_ptr<void> invokable, arg_types&&... args)
+        auto invoke(void* invokable, arg_types&&... args)
         {
             _impl(invokable, forward<arg_types>(args)...);
         }
 
     protected:
-        void (*_impl)(mut_mem_ptr<void> invokable, arg_types&&... args);
+        void (*_impl)(void* invokable, arg_types&&... args);
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -91,13 +69,11 @@ namespace atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename result_type, typename... arg_types>
-    class invokable_box<result_type(arg_types...)>
-        : public object_box<true, true, true, 50, default_mem_allocator>
-        , public _invokable_box_identifier
+    class invokable_box<result_type(arg_types...)>: public _invokable_box_id
     {
     private:
         using _box_type = copy_move_box<void, true, 50>;
-        using _invoker_type = _invoker<result_type, targs...>;
+        using _invoker_type = _invoker<result_type, arg_types...>;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -134,7 +110,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename invokable_type>
         invokable_box(invokable_type&& invokable)
-            requires rinvokable<invokable_type, result_type(targs...)>
+            requires rinvokable<invokable_type, result_type(arg_types...)>
                      and (not rderived_from<invokable_type, _invokable_box_id>)
             : _box(forward<invokable_type>(invokable))
         {
@@ -146,7 +122,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename invokable_type>
         invokable_box& operator=(invokable_type&& invokable)
-            requires rinvokable<invokable_type, result_type(targs...)>
+            requires rinvokable<invokable_type, result_type(arg_types...)>
                      and (not rderived_from<invokable_type, _invokable_box_id>)
         {
             _box.operator=(forward<invokable_type>(invokable));
@@ -199,7 +175,7 @@ namespace atom
         {
             contracts::expects(_box.has_val(), "invokable_target is null.");
 
-            return _invoker.invoke(object_box::_get_object(), forward<arg_types>(args)...);
+            return _invoker.invoke(_box.mut_mem(), forward<arg_types>(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -216,7 +192,7 @@ namespace atom
             if (typeid(type) != get_invokable_type())
                 return nullptr;
 
-            return object_box::_get_object<type>();
+            return _box.mut_mem_as<type>();
         }
 
         auto get_invokable_type() const -> const type_info&
@@ -230,7 +206,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename invokable_type>
         auto _set_invoker()
-            requires(rinvokable<invokable_type, result_type(targs...)>)
+            requires(rinvokable<invokable_type, result_type(arg_types...)>)
         {
             _invoker.template set<invokable_type>();
         }

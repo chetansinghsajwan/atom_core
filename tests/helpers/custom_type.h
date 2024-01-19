@@ -46,8 +46,8 @@ namespace atom::tests
     class enum_flag_utils
     {
     public:
-        template <typename tenum>
-        static constexpr auto has_flag(const tenum& e, const tenum& flag) -> bool
+        template <typename enum_type>
+        static constexpr auto has_flag(const enum_type& e, const enum_type& flag) -> bool
         {
             return (e & flag) == flag;
         }

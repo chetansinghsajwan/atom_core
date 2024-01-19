@@ -13,17 +13,17 @@ namespace atom
     class _int_id
     {};
 
-    template <typename tint>
-    concept _rint = std::is_integral_v<tint>;
+    template <typename int_type>
+    concept _rint = std::is_integral_v<int_type>;
 
-    template <typename tint>
-    concept rint = std::derived_from<tint, _int_id>;
+    template <typename int_type>
+    concept rint = std::derived_from<int_type, _int_id>;
 
-    template <typename tint>
-    constexpr auto _unwrap_int(tint n)
-        requires rint<tint> or _rint<tint>
+    template <typename int_type>
+    constexpr auto _unwrap_int(int_type n)
+        requires rint<int_type> or _rint<int_type>
     {
-        if constexpr (rint<tint>)
+        if constexpr (rint<int_type>)
         {
             return n.unwrap();
         }
@@ -48,8 +48,8 @@ namespace atom
     public:
         static constexpr auto to_string(value_type val) -> string_type;
 
-        template <typename tout>
-        static constexpr auto to_string_out(value_type val, tout&& out) -> tout
+        template <typename output_type>
+        static constexpr auto to_string_out(value_type val, output_type&& out) -> output_type
         {
             string_type str = to_string(val);
             out += str;

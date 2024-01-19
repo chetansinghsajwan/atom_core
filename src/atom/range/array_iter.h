@@ -11,7 +11,7 @@ namespace atom
     class array_iter
     {
         static_assert(tti::is_pure<type>, "array_iter supports only pure types.");
-        static_assert(not tti::is_void<type>, "array_iter doesn't support void.");
+        static_assert(not tti::is_void<type>, "array_iter does not support void.");
 
     public:
         using elem_type = type;
@@ -119,7 +119,7 @@ namespace atom
     class mut_array_iter: public array_iter<type>
     {
         static_assert(tti::is_pure<type>, "mut_array_iter supports only pure types.");
-        static_assert(not tti::is_void<type>, "mut_array_iter doesn't support void.");
+        static_assert(not tti::is_void<type>, "mut_array_iter does not support void.");
 
     private:
         using base_type = array_iter<type>;

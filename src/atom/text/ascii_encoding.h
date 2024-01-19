@@ -8,21 +8,21 @@ namespace atom
     class ascii_encoding
     {
     public:
-        using tchar = uchar;
-        using trune = uchar;
+        using char_type = uchar;
+        using rune_type = uchar;
 
     public:
-        static constexpr tchar null = '\0';
+        static constexpr char_type null = '\0';
         static constexpr bool is_multi_char_encoding = false;
     };
 
     /// --------------------------------------------------------------------------------------------
     /// {char} for {ascii_encoding}.
     /// --------------------------------------------------------------------------------------------
-    using ascii_char = typename ascii_encoding::tchar;
+    using ascii_char = typename ascii_encoding::char_type;
 
     /// --------------------------------------------------------------------------------------------
     /// {rune} for {ascii_encoding}.
     /// --------------------------------------------------------------------------------------------
-    using ascii_rune = typename ascii_encoding::trune;
+    using ascii_rune = typename ascii_encoding::rune_type;
 }

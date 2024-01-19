@@ -4,6 +4,6 @@
 
 namespace atom
 {
-    template <typename tencoding>
-    using basic_string_view = _string_impl<tencoding, array_view<basic_char<tencoding>>>;
+    template <typename encoding_type>
+    using basic_string_view = _string_impl<encoding_type, array_view<basic_char<encoding_type>>>;
 }

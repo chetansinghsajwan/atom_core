@@ -4,5 +4,5 @@
 namespace atom
 {
     template <typename tchar_encoding>
-    using basic_rune = typename tchar_encoding::trune;
+    using basic_rune = typename tchar_encoding::rune_type;
 }

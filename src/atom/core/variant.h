@@ -16,9 +16,7 @@ namespace atom
     private:
         using _impl_type = _variant_impl<ts...>;
 
-        template <typename... tothers>
-            requires(type_list<tothers...>::are_unique) and (type_list<tothers...>::count > 0)
-                    and (not type_list<tothers...>::template has<void>)
+        template <typename... other_types>
         friend class variant;
 
         using self = variant<ts...>;
@@ -100,9 +98,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # copy constructor template
         /// ----------------------------------------------------------------------------------------
-        template <typename... tothers>
-        constexpr variant(const variant<tothers...>& that)
-            requires(rcopy_constructible_all<tothers...>) and (type_list::template has<tothers...>)
+        template <typename... other_types>
+        constexpr variant(const variant<other_types...>& that)
+            requires(rcopy_constructible_all<other_types...>) and (type_list::template has<other_types...>)
         {
             _impl.construct_value_from_variant(that._impl);
         }
@@ -127,9 +125,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # copy assignment operator template
         /// ----------------------------------------------------------------------------------------
-        template <typename... tothers>
-        constexpr variant& operator=(const variant<tothers...>& that)
-            requires(rcopyable_all<tothers...>) and (type_list::template has<tothers...>)
+        template <typename... other_types>
+        constexpr variant& operator=(const variant<other_types...>& that)
+            requires(rcopyable_all<other_types...>) and (type_list::template has<other_types...>)
         {
             _impl.set_value_from_variant(that._impl);
             return *this;
@@ -152,9 +150,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # move constructor template
         /// ----------------------------------------------------------------------------------------
-        template <typename... tothers>
-        constexpr variant(variant<tothers...>&& that)
-            requires(rmove_constructible_all<tothers...>) and (type_list::template has<tothers...>)
+        template <typename... other_types>
+        constexpr variant(variant<other_types...>&& that)
+            requires(rmove_constructible_all<other_types...>) and (type_list::template has<other_types...>)
         {
             _impl.construct_value_from_variant(mov(that._impl));
         }
@@ -179,9 +177,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # move assignment operator template
         /// ----------------------------------------------------------------------------------------
-        template <typename... tothers>
-        constexpr variant& operator=(variant<tothers...>&& that)
-            requires(rmoveable_all<types...>) and (type_list::template has<tothers...>)
+        template <typename... other_types>
+        constexpr variant& operator=(variant<other_types...>&& that)
+            requires(rmoveable_all<types...>) and (type_list::template has<other_types...>)
         {
             _impl.set_value_from_variant(mov(that._impl));
             return *this;
@@ -285,11 +283,11 @@ namespace atom
         /// # see also
         /// - [`tat`]
         /// ----------------------------------------------------------------------------------------
-        template <usize i, typename... arg_types>
+        template <usize index, typename... arg_types>
         constexpr auto emplace(arg_types&&... args)
-            requires(has<i>()) and (rconstructible<tat<i>, arg_types...>)
+            requires(has<index>()) and (rconstructible<type_at<index>, arg_types...>)
         {
-            _impl.template emplace_value_by_index<i>(forward<arg_types>(args)...);
+            _impl.template emplace_value_by_index<index>(forward<arg_types>(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------

@@ -27,7 +27,7 @@ namespace atom
     class option
     {
         static_assert(tti::is_pure<type>, "option supports only pure types");
-        static_assert(not tti::is_void<type>, "option doesn't support void type.");
+        static_assert(not tti::is_void<type>, "option does not support void type.");
 
     private:
         using this_type = option<type>;
@@ -258,7 +258,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto get() const& -> const value_type&
         {
-            contracts::expects(is_value(), "doesn't contain value.");
+            contracts::expects(is_value(), "does not contain value.");
 
             return _impl.get_value();
         }
@@ -268,7 +268,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto get_mut() & -> value_type&
         {
-            contracts::expects(is_value(), "doesn't contain value.");
+            contracts::expects(is_value(), "does not contain value.");
 
             return _impl.get_mut_value();
         }
@@ -278,7 +278,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator->() const -> const value_type*
         {
-            contracts::debug_expects(is_value(), "doesn't contain value.");
+            contracts::debug_expects(is_value(), "does not contain value.");
 
             return &_impl.get_value();
         }
@@ -288,7 +288,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator->() -> value_type*
         {
-            contracts::debug_expects(is_value(), "doesn't contain value.");
+            contracts::debug_expects(is_value(), "does not contain value.");
 
             return &_impl.get_mut_value();
         }
@@ -355,9 +355,9 @@ namespace atom
         ///
         /// const ref to `this` value or or_invoke value returned by invoking `or_invoke`.
         /// ----------------------------------------------------------------------------------------
-        template <typename tinvokable>
-        constexpr auto get_or_invoke(tinvokable&& or_invoke) const -> const value_type&
-            requires rinvokable<tpure<tinvokable>, const value_type&()>
+        template <typename invokable_type>
+        constexpr auto get_or_invoke(invokable_type&& or_invoke) const -> const value_type&
+            requires rinvokable<pure_type<invokable_type>, const value_type&()>
         {
             if (_impl.is_null())
             {
@@ -381,9 +381,9 @@ namespace atom
         ///
         /// ref to `this` value or or_invoke value returned by invoking `or_invoke`.
         /// ----------------------------------------------------------------------------------------
-        template <typename tinvokable>
-        constexpr auto get_mut_or_invoke(tinvokable&& or_invoke) -> value_type&
-            requires rinvokable<tpure<tinvokable>, value_type&()>
+        template <typename invokable_type>
+        constexpr auto get_mut_or_invoke(invokable_type&& or_invoke) -> value_type&
+            requires rinvokable<pure_type<invokable_type>, value_type&()>
         {
             if (_impl.is_null())
             {

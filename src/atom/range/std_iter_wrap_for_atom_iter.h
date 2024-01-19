@@ -9,11 +9,11 @@ namespace atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename iter_type>
-    using std_iter_cat_for_atom_iter = tti::tconditional<not riter<iter_type>, void,
-        tti::tconditional<not rfwd_iter<iter_type>, std::input_iterator_tag,
-            tti::tconditional<not rbidi_iter<iter_type>, std::forward_iterator_tag,
-                tti::tconditional<not rjump_iter<iter_type>, std::bidirectional_iterator_tag,
-                    tti::tconditional<not rarray_iter<iter_type>, std::random_access_iterator_tag,
+    using std_iter_cat_for_atom_iter = tti::conditional_type<not riter<iter_type>, void,
+        tti::conditional_type<not rfwd_iter<iter_type>, std::input_iterator_tag,
+            tti::conditional_type<not rbidi_iter<iter_type>, std::forward_iterator_tag,
+                tti::conditional_type<not rjump_iter<iter_type>, std::bidirectional_iterator_tag,
+                    tti::conditional_type<not rarray_iter<iter_type>, std::random_access_iterator_tag,
                         std::contiguous_iterator_tag>>>>>;
 
     /// --------------------------------------------------------------------------------------------

@@ -4,6 +4,6 @@
 
 namespace atom
 {
-    template <typename tencoding, usize buf_size, typename allocator_type = default_mem_allocator>
-    using basic_buf_string = _string_impl<tencoding, buf_array<basic_char<tencoding>, buf_size, allocator_type>>;
+    template <typename encoding_type, usize buf_size, typename allocator_type = default_mem_allocator>
+    using basic_buf_string = _string_impl<encoding_type, buf_array<basic_char<encoding_type>, buf_size, allocator_type>>;
 }

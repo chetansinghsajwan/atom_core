@@ -38,9 +38,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename tpred>
-        constexpr auto remove_if(tpred&& pred) -> usize
-            requires(rinvokable<tpred, bool(const elem_type&)>)
+        template <typename pred_type>
+        constexpr auto remove_if(pred_type&& pred) -> usize
+            requires(rinvokable<pred_type, bool(const elem_type&)>)
         {
             usize count = 0;
             auto it_end = _impl.iter_end();

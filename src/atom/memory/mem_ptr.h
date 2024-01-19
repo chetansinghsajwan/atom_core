@@ -9,11 +9,11 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename tbase, typename this_final_type>
-    class mem_ptr_functions: public tbase
+    template <typename in_base_type, typename this_final_type>
+    class mem_ptr_functions: public in_base_type
     {
-        using this_type = mem_ptr_functions<tbase, this_final_type>;
-        using base_type = tbase;
+        using this_type = mem_ptr_functions<in_base_type, this_final_type>;
+        using base_type = in_base_type;
 
     public:
         using value_type = typename base_type::value_type;
@@ -100,16 +100,16 @@ namespace atom
             return base_type::unwrap()[n.unwrap()];
         }
 
-        template <typename tint>
-        constexpr auto operator+(tint n) const -> this_final_type
-            requires rint<tint> or _rint<tint>
+        template <typename int_type>
+        constexpr auto operator+(int_type n) const -> this_final_type
+            requires rint<int_type> or _rint<int_type>
         {
             return _make(_arithmetic(_ptr) + _unwrap_int(n));
         }
 
-        template <typename tint>
-        constexpr auto operator-(tint n) const -> this_final_type
-            requires rint<tint> or _rint<tint>
+        template <typename int_type>
+        constexpr auto operator-(int_type n) const -> this_final_type
+            requires rint<int_type> or _rint<int_type>
         {
             return _make(_arithmetic(_ptr) - _unwrap_int(n));
         }
@@ -124,17 +124,17 @@ namespace atom
             return _make(_arithmetic(_ptr) - 1);
         }
 
-        template <typename tint>
-        constexpr auto operator+=(tint n) -> this_final_type&
-            requires rint<tint> or _rint<tint>
+        template <typename int_type>
+        constexpr auto operator+=(int_type n) -> this_final_type&
+            requires rint<int_type> or _rint<int_type>
         {
             _ptr = _arithmetic(_ptr) + _unwrap_int(n);
             return _mut_this();
         }
 
-        template <typename tint>
-        constexpr auto operator-=(tint n) -> this_final_type&
-            requires rint<tint> or _rint<tint>
+        template <typename int_type>
+        constexpr auto operator-=(int_type n) -> this_final_type&
+            requires rint<int_type> or _rint<int_type>
         {
             _ptr = _arithmetic(_ptr) - _unwrap_int(n);
             return _mut_this();

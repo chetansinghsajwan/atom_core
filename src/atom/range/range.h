@@ -84,7 +84,7 @@ namespace atom
         class _type_container
         {
         public:
-            using type = tti::tremove_cvref<t_>;
+            using type = tti::remove_cvref_type<t_>;
         };
 
         static consteval auto _get()
@@ -119,7 +119,7 @@ namespace atom
         class _type_container
         {
         public:
-            using type = tti::tremove_cvref<t_>;
+            using type = tti::remove_cvref_type<t_>;
         };
 
         static consteval auto _get()

@@ -122,9 +122,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename t1>
-        constexpr auto write_elems(t1& val) const -> void
-            requires(rassignable<elem_type, t1>)
+        template <typename type1>
+        constexpr auto write_elems(type1& val) const -> void
+            requires(rassignable<elem_type, type1>)
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -132,9 +132,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ATOM_PRAGMA_OPTIMIZE_OFF
 
-        template <typename t1>
-        constexpr auto write_elems_no_optimize(t1& val) const -> void
-            requires(rassignable<elem_type, t1>)
+        template <typename type1>
+        constexpr auto write_elems_no_optimize(type1& val) const -> void
+            requires(rassignable<elem_type, type1>)
         {}
 
         ATOM_PRAGMA_OPTIMIZE_ON

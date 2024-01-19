@@ -43,8 +43,8 @@ namespace atom
     /// @todo needs refactoring.
     /// --------------------------------------------------------------------------------------------
     template <typename type>
-        requires(!rsame_as<type, tti::tremove_cvref<type>>) and rstring_convertible<tti::tremove_cvref<type>>
-    class string_converter<type>: string_converter<tti::tremove_cvref<type>>
+        requires(!rsame_as<type, tti::remove_cvref_type<type>>) and rstring_convertible<tti::remove_cvref_type<type>>
+    class string_converter<type>: string_converter<tti::remove_cvref_type<type>>
     {};
 
     /// --------------------------------------------------------------------------------------------

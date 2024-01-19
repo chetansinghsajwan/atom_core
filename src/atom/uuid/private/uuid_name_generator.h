@@ -6,7 +6,7 @@
 
 namespace atom
 {
-    template <typename thash, typename thash_generator, euuid_version uuid_version>
+    template <typename hash_type, typename hash_generator_type, euuid_version uuid_version>
     class _uuid_name_generator
     {
     public:
@@ -47,7 +47,7 @@ namespace atom
 
         auto _make_uuid() -> uuid
         {
-            thash hash = _hash_generator.generate();
+            hash_type hash = _hash_generator.generate();
 
             // variant must be euuid_variant::rfc (0b10xxxxxx).
             hash.bytes[8] &= 0xbf;
@@ -69,7 +69,7 @@ namespace atom
 
     private:
         uuid _ns_uuid;
-        thash_generator _hash_generator;
+        hash_generator_type _hash_generator;
     };
 }
 

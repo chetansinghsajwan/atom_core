@@ -85,9 +85,9 @@ namespace atom
             return ne(that);
         }
 
-        template <typename tout>
-        constexpr auto write_string(tout&& out) const
-            requires(routput<tout, uchar>)
+        template <typename output_type>
+        constexpr auto write_string(output_type&& out) const
+            requires(routput<output_type, uchar>)
         {
             out += math::hex_to_char(bytes[0]);
             out += math::hex_to_char(bytes[1]);

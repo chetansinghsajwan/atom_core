@@ -42,8 +42,8 @@ namespace atom
 
         static constexpr auto to_string(value_type val) -> string_type;
 
-        template <typename tout>
-        static constexpr auto to_string_out(value_type val, tout&& out) -> tout
+        template <typename output_type>
+        static constexpr auto to_string_out(value_type val, output_type&& out) -> output_type
         {
             string_type str = to_string();
             out += str;

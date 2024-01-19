@@ -16,9 +16,9 @@ namespace atom
             return str;
         };
 
-        template <typename tout>
-        constexpr auto write_string(const t1_hash& hash, tout&& out)
-            requires(routput<tout, char>)
+        template <typename output_type>
+        constexpr auto write_string(const t1_hash& hash, output_type&& out)
+            requires(routput<output_type, char>)
         {
             // for (byte b : hash.bytes)
             // {

@@ -22,27 +22,27 @@ namespace atom
             std::construct_at(mem.unwrap(), forward<arg_types>(args)...);
         }
 
-        template <typename type, typename targ>
-        constexpr auto assign_as(mut_ptr<type> mem, targ&& arg) const
+        template <typename type, typename arg_type>
+        constexpr auto assign_as(mut_ptr<type> mem, arg_type&& arg) const
         {
             contracts::debug_expects(mem != nullptr);
 
-            mem.get_mut() = forward<targ>(arg);
+            mem.get_mut() = forward<arg_type>(arg);
         }
 
-        template <typename type, typename targ>
-        constexpr auto assign(mut_ptr<type> mem, targ&& arg) const
+        template <typename type, typename arg_type>
+        constexpr auto assign(mut_ptr<type> mem, arg_type&& arg) const
         {
             contracts::debug_expects(mem != nullptr);
 
-            mem.get_mut() = forward<targ>(arg);
+            mem.get_mut() = forward<arg_type>(arg);
         }
 
         template <typename type>
-        constexpr auto swap(type& t1, type& t2) const
+        constexpr auto swap(type& type1, type& t2) const
         {
-            type tmp = mov(t1);
-            t1 = mov(t2);
+            type tmp = mov(type1);
+            type1 = mov(t2);
             t2 = mov(tmp);
         }
 

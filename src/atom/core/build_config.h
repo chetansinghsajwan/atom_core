@@ -112,7 +112,7 @@ namespace atom
         static consteval auto get_compiler_gnuc_emulated_version() -> version
         {
             // todo: add this assertion.
-            // assert(is_compiler_gnuc_emulated(), "this_type compiler doesn't support gcc features.");
+            // assert(is_compiler_gnuc_emulated(), "this_type compiler does not support gcc features.");
 
             return _get_compiler_gnuc_version();
         }
@@ -135,7 +135,7 @@ namespace atom
         static consteval auto get_compiler_msvc_emulated_version() -> version
         {
             // todo: add this assertion.
-            // assert(is_compiler_msvc_emulated(), "this_type compiler doesn't support msvc features.");
+            // assert(is_compiler_msvc_emulated(), "this_type compiler does not support msvc features.");
 
             return _get_compiler_msvc_version();
         }

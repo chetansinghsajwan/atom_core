@@ -11,8 +11,8 @@ namespace atom
     class _box_impl
     {
     public:
-        using tval = in_value_type;
-        using talloc = in_alloc_type;
+        using value_type = in_value_type;
+        using alloc_type = in_alloc_type;
 
         class copy_tag
         {};
@@ -28,16 +28,16 @@ namespace atom
             , _alloc()
         {}
 
-        template <typename tbox>
-        constexpr _box_impl(copy_tag, const tbox& box)
+        template <typename box_type>
+        constexpr _box_impl(copy_tag, const box_type& box)
         {}
 
-        template <typename tbox>
-        constexpr _box_impl(move_tag, tbox& box)
+        template <typename box_type>
+        constexpr _box_impl(move_tag, box_type& box)
         {}
 
-        template <typename tval>
-        constexpr _box_impl(tval&& val)
+        template <typename value_type>
+        constexpr _box_impl(value_type&& val)
         {}
 
         constexpr ~_box_impl() {}
@@ -66,8 +66,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// copies `that` [`box`] into `this` [`box`].
         /// ----------------------------------------------------------------------------------------
-        template <typename tbox>
-        constexpr auto copy_box(tbox& that)
+        template <typename box_type>
+        constexpr auto copy_box(box_type& that)
         {
             _copy_val(that);
         }
@@ -75,12 +75,13 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// moves `that` [`box`] into `this` [`box`].
         /// ----------------------------------------------------------------------------------------
-        template <typename tbox>
-        constexpr auto move_box(tbox&& that)
+        template <typename box_type>
+        constexpr auto move_box(box_type&& that)
         {
             // when allocator type is different, we cannot handle heap memory. so we only move the
             // object and not the memory.
-            if constexpr (not rsame_as<talloc, typename tti::tremove_cvref<tbox>::talloc>)
+            if constexpr (not rsame_as<alloc_type,
+                              typename tti::remove_cvref_type<box_type>::alloc_type>)
             {
                 if (that._has_val())
                 {
@@ -164,25 +165,25 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename t, typename... targs>
-        constexpr auto emplace_val(targs&&... args, bool force_heap = false)
+        template <typename type, typename... arg_types>
+        constexpr auto emplace_val(arg_types&&... args, bool force_heap = false)
         {
             destroy_val();
-            _emplace_val<t>(forward<targs>(args)..., force_heap);
+            _emplace_val<type>(forward<arg_types>(args)..., force_heap);
         }
 
         /// ----------------------------------------------------------------------------------------
         /// destroys previous object if any and stores new object.
         ///
-        /// @tparam t type of object to store.
+        /// @tparam type type of object to store.
         ///
         /// @param[in] val valect to store.
         /// @param[in] force_heap (default = false) force store on heap.
         /// ----------------------------------------------------------------------------------------
-        template <typename t>
-        constexpr auto set_val(t&& val, bool force_heap = false)
+        template <typename type>
+        constexpr auto set_val(type&& val, bool force_heap = false)
         {
-            emplace_val<tti::tremove_cvref<t>>(forward<t>(val), force_heap);
+            emplace_val<tti::remove_cvref_type<type>>(forward<type>(val), force_heap);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -190,14 +191,14 @@ namespace atom
         ///
         /// # template parameters
         ///
-        /// - `t`: type as which to get the object.
+        /// - `type`: type as which to get the object.
         /// ----------------------------------------------------------------------------------------
-        template <typename t>
-        constexpr auto get_val() -> const t&
+        template <typename type>
+        constexpr auto get_val() -> const type&
         {
-            debug_expects(get_mem_as<t>() != nullptr);
+            debug_expects(get_mem_as<type>() != nullptr);
 
-            return *get_mem_as<t>();
+            return *get_mem_as<type>();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -205,14 +206,14 @@ namespace atom
         ///
         /// # template parameters
         ///
-        /// - `t`: type as which to get the object.
+        /// - `type`: type as which to get the object.
         /// ----------------------------------------------------------------------------------------
-        template <typename t>
-        constexpr auto get_mut_val() -> t&
+        template <typename type>
+        constexpr auto get_mut_val() -> type&
         {
-            debug_expects(get_mut_mem_as<t>() != nullptr);
+            debug_expects(get_mut_mem_as<type>() != nullptr);
 
-            return *get_mut_mem_as<t>();
+            return *get_mut_mem_as<type>();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -234,23 +235,23 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// get pointer to stored object.
         ///
-        /// @tparam t type as which to get the object.
+        /// @tparam type type as which to get the object.
         /// ----------------------------------------------------------------------------------------
-        template <typename t>
-        constexpr auto get_mem_as() const -> const t*
+        template <typename type>
+        constexpr auto get_mem_as() const -> const type*
         {
-            return static_cast<t*>(_val.val);
+            return static_cast<type*>(_val.val);
         }
 
         /// ----------------------------------------------------------------------------------------
         /// get pointer to stored object.
         ///
-        /// @tparam t type as which to get the object.
+        /// @tparam type type as which to get the object.
         /// ----------------------------------------------------------------------------------------
-        template <typename t>
-        constexpr auto get_mut_mem_as() -> t*
+        template <typename type>
+        constexpr auto get_mut_mem_as() -> type*
         {
-            return static_cast<t*>(_val.val);
+            return static_cast<type*>(_val.val);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -298,12 +299,12 @@ namespace atom
 
     private:
         /// ----------------------------------------------------------------------------------------
-        /// creates new object of type `t`. doesn't handles current object.
+        /// creates new object of type `type`. does not handles current object.
         ///
         /// # template parameters
         ///
-        /// - `t`: type of the object to create.
-        /// - `targs`: type of args for object's constructor.
+        /// - `type`: type of the object to create.
+        /// - `arg_types`: type of args for object's constructor.
         ///
         /// # parameters
         ///
@@ -311,28 +312,28 @@ namespace atom
         /// - `force_heap`: if true, allocates object on heap even if buffer was sufficient, else
         ///    chooses the best fit.
         /// ----------------------------------------------------------------------------------------
-        template <typename t, typename... targs>
-        constexpr auto _emplace_val(targs&&... args, bool force_heap = false)
+        template <typename type, typename... arg_types>
+        constexpr auto _emplace_val(arg_types&&... args, bool force_heap = false)
         {
-            _val.size = sizeof(t);
-            _val.type = &typeid(t);
+            _val.size = sizeof(type);
+            _val.type = &typeid(type);
 
             // todo: check if we can do static_cast instead to preserve constexpr.
-            _val.dtor = [](void* val) { reinterpret_cast<t*>(val)->t::~t(); };
+            _val.dtor = [](void* val) { reinterpret_cast<type*>(val)->type::~type(); };
 
             if constexpr (is_copyable())
             {
                 _val.copy = [](void* val, const void* that) {
-                    new (val) t(*reinterpret_cast<const t*>(that));
+                    new (val) type(*reinterpret_cast<const type*>(that));
                 };
             }
 
             if constexpr (is_movable())
             {
-                if constexpr (rmove_constructible<t>)
+                if constexpr (rmove_constructible<type>)
                 {
                     _val.move = [](void* val, void* that) {
-                        new (val) t(mov(*reinterpret_cast<t*>(that)));
+                        new (val) type(mov(*reinterpret_cast<type*>(that)));
                     };
                 }
                 else
@@ -343,13 +344,13 @@ namespace atom
 
             // if the object is not movable but in_allow_non_move is allowed, we allocate it on heap to
             // avoid object's move constructor.
-            if constexpr (is_movable() and allow_non_movable() and not rmove_constructible<t>)
+            if constexpr (is_movable() and allow_non_movable() and not rmove_constructible<type>)
             {
                 force_heap = true;
             }
 
             _val.val = _alloc_mem(_val.size, force_heap);
-            new (_val.val) t(forward<targs>(args)...);
+            new (_val.val) type(forward<arg_types>(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -358,8 +359,8 @@ namespace atom
         /// @param[in] that [`box`] of which to copy object.
         /// @param[in] force_heap (default = false) force allocate object on heap.
         /// ----------------------------------------------------------------------------------------
-        template <typename tbox>
-        constexpr auto _copy_val(const tbox& that, bool force_heap = false)
+        template <typename box_type>
+        constexpr auto _copy_val(const box_type& that, bool force_heap = false)
         {
             _copy_val_data(that);
 
@@ -378,10 +379,10 @@ namespace atom
         /// @param[in] that [`box`] of which to move object.
         /// @param[in] force_heap (default = false) force allocate object on heap.
         ///
-        /// @note this doesn't moves the memory from `that` [`box`].
+        /// @note this does not moves the memory from `that` [`box`].
         /// ----------------------------------------------------------------------------------------
-        template <typename tbox>
-        constexpr auto _move_val(tbox&& that, bool force_heap = false)
+        template <typename box_type>
+        constexpr auto _move_val(box_type&& that, bool force_heap = false)
         {
             _move_val_data(that);
 
@@ -416,8 +417,8 @@ namespace atom
         ///
         /// @param[in] that_box [`box`] of which to copy {_val_data}.
         /// ----------------------------------------------------------------------------------------
-        template <typename tbox>
-        constexpr auto _copy_val_data(const tbox& that_box)
+        template <typename box_type>
+        constexpr auto _copy_val_data(const box_type& that_box)
         {
             const auto& that = that_box._val;
 
@@ -440,7 +441,7 @@ namespace atom
 
             if constexpr (is_movable())
             {
-                if constexpr (tbox::is_movable())
+                if constexpr (box_type::is_movable())
                 {
                     _val.move = that.move;
                 }
@@ -454,8 +455,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename tbox>
-        constexpr auto _move_val_data(tbox& that_box)
+        template <typename box_type>
+        constexpr auto _move_val_data(box_type& that_box)
         {
             auto& that = that_box._val;
 
@@ -471,7 +472,7 @@ namespace atom
 
             if constexpr (is_copyable())
             {
-                if constexpr (tbox::is_copyable())
+                if constexpr (box_type::is_copyable())
                 {
                     _val.copy = that.copy;
                     that.copy = nullptr;
@@ -484,7 +485,7 @@ namespace atom
 
             if constexpr (is_movable())
             {
-                if constexpr (tbox::is_movable())
+                if constexpr (box_type::is_movable())
                 {
                     _val.move = that.move;
                     that.move = nullptr;
@@ -519,7 +520,7 @@ namespace atom
         /// allocates enough memory of size `size`. uses stack memory if it is big enough.
         ///
         /// @param[in] size size of memory to allocate.
-        /// @param[in] force_heap if `true`, allocates memory from `talloc`.
+        /// @param[in] force_heap if `true`, allocates memory from `alloc_type`.
         ///
         /// @returns pointer to the allocated memory.
         /// ----------------------------------------------------------------------------------------
@@ -569,7 +570,7 @@ namespace atom
         ///
         /// # note
         ///
-        /// doesn't check if memory is even allocated.
+        /// does not check if memory is even allocated.
         /// ----------------------------------------------------------------------------------------
         constexpr auto _release_mem()
         {
@@ -582,7 +583,7 @@ namespace atom
         class _val_data
         {
         public:
-            tval* val;
+            value_type* val;
             usize size;
             const type_info* type;
             invokable_ptr<void(void*)> dtor;
@@ -592,7 +593,7 @@ namespace atom
         };
 
     private:
-        talloc _alloc;
+        alloc_type _alloc;
         void* _heap_mem;
         usize _heap_mem_size;
         static_storage<buf_size()> _buf;

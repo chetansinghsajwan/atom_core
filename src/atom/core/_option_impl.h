@@ -217,17 +217,17 @@ namespace atom
         /// if this contains value, assigns new value to it.
         /// else, constructs new value.
         /// ----------------------------------------------------------------------------------------
-        template <typename t1>
-        constexpr auto set_value(t1&& val)
+        template <typename type1>
+        constexpr auto set_value(type1&& val)
         {
             if (not _is_value)
             {
-                _create_value(forward<t1>(val));
+                _create_value(forward<type1>(val));
                 _is_value = true;
             }
             else
             {
-                _set_value(forward<t1>(val));
+                _set_value(forward<type1>(val));
             }
         }
 
@@ -256,7 +256,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// checks if this doesn't contains value.
+        /// checks if this does not contains value.
         /// ----------------------------------------------------------------------------------------
         constexpr auto is_null() const -> bool
         {
@@ -390,10 +390,10 @@ namespace atom
             obj_helper().construct_as<value_type>(_storage.get_data(), forward<arg_types>(args)...);
         }
 
-        template <typename targ>
-        constexpr auto _set_value(targ&& val)
+        template <typename arg_type>
+        constexpr auto _set_value(arg_type&& val)
         {
-            obj_helper().assign_as<value_type>(_storage.get_data(), forward<targ>(val));
+            obj_helper().assign_as<value_type>(_storage.get_data(), forward<arg_type>(val));
         }
 
         constexpr auto _swap_value(value_type& that)

@@ -112,7 +112,7 @@ namespace atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename type>
-    using string_fmt_arg_fmter = string_fmt_arg_fmter_impl<tti::tremove_cvref<type>>;
+    using string_fmt_arg_fmter = string_fmt_arg_fmter_impl<tti::remove_cvref_type<type>>;
 
     /// --------------------------------------------------------------------------------------------
     /// ensures {tfmter} is {string_fmt_arg_fmter} for type `type`.

@@ -14,22 +14,22 @@ namespace atom
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     /// --------------------------------------------------------------------------------------------
-    /// ensures `t0` is same as `t1`.
+    /// ensures `type0` is same as `type1`.
     /// --------------------------------------------------------------------------------------------
-    template <typename t0, typename t1>
-    concept rsame_as = std::same_as<t0, t1>;
+    template <typename type0, typename type1>
+    concept rsame_as = std::same_as<type0, type1>;
 
     /// --------------------------------------------------------------------------------------------
-    /// ensures `t0` is `void`.
+    /// ensures `type0` is `void`.
     /// --------------------------------------------------------------------------------------------
     template <typename type>
     concept ris_void = rsame_as<type, void>;
 
     /// --------------------------------------------------------------------------------------------
-    /// ensures unqualified type of `t0` is same as unqualified type of `t1`.
+    /// ensures unqualified type of `type0` is same as unqualified type of `type1`.
     /// --------------------------------------------------------------------------------------------
-    template <typename t0, typename t1>
-    concept rsame_as_unqualified = std::same_as<std::remove_cvref_t<t0>, std::remove_cvref_t<t1>>;
+    template <typename type0, typename type1>
+    concept rsame_as_unqualified = std::same_as<std::remove_cvref_t<type0>, std::remove_cvref_t<type1>>;
 
     /// --------------------------------------------------------------------------------------------
     /// enusres `type` is const-qualified.
@@ -68,11 +68,11 @@ namespace atom
     concept rconvertible_to = requires(tfrom from) { static_cast<tto>(from); };
 
     /// --------------------------------------------------------------------------------------------
-    /// ensures `tderived` is derived from `tbase`.
+    /// ensures `derived_type` is derived from `base_type`.
     /// --------------------------------------------------------------------------------------------
-    template <typename tderived, typename tbase>
+    template <typename derived_type, typename base_type>
     concept rderived_from =
-        std::derived_from<std::remove_cvref_t<tderived>, std::remove_cvref_t<tbase>>;
+        std::derived_from<std::remove_cvref_t<derived_type>, std::remove_cvref_t<base_type>>;
 
     /// --------------------------------------------------------------------------------------------
     /// ensures `tderived` not is derived from `tbase`.
@@ -83,8 +83,8 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     /// ensures `tderived` is same as or derived from `tbase`.
     /// --------------------------------------------------------------------------------------------
-    template <typename tderived, typename tbase>
-    concept rsame_or_derived_from = rsame_as<tderived, tbase> || rderived_from<tderived, tbase>;
+    template <typename derived_type, typename base_type>
+    concept rsame_or_derived_from = rsame_as<derived_type, base_type> || rderived_from<derived_type, base_type>;
 
     /// --------------------------------------------------------------------------------------------
     /// ensures `tderived` is not same as or derived from `tbase`.
@@ -200,19 +200,19 @@ namespace atom
     concept rdefault_initializable_all = (rdefault_initializable<ts> and ...);
 
     /// --------------------------------------------------------------------------------------------
-    /// ensures `t0` is `assignable` using `t1`.
+    /// ensures `type0` is `assignable` using `type1`.
     /// --------------------------------------------------------------------------------------------
-    template <typename t0, typename t1>
-    concept rassignable = requires(t0 v0, t1 v1)
+    template <typename type0, typename type1>
+    concept rassignable = requires(type0 v0, type1 v1)
     {
-        { v0 = forward<t1>(v1) } -> rsame_as<t0&>;
+        { v0 = forward<type1>(v1) } -> rsame_as<type0&>;
     };
 
     /// --------------------------------------------------------------------------------------------
     /// ensures `type` is `trivially_assignable` using `from`.
     /// --------------------------------------------------------------------------------------------
-    template <typename t0, typename t1>
-    concept rtrivially_assignable = std::is_trivially_assignable_v<t0, t1>;
+    template <typename type0, typename type1>
+    concept rtrivially_assignable = std::is_trivially_assignable_v<type0, type1>;
 
     /// --------------------------------------------------------------------------------------------
     /// ensures `type` is `copy_assignable`.
@@ -311,16 +311,16 @@ namespace atom
     concept rtrivially_moveable_all = (rtrivially_moveable<ts> and ...);
 
     /// --------------------------------------------------------------------------------------------
-    /// ensures `t0` is `swappable` with `t1`.
+    /// ensures `type0` is `swappable` with `type1`.
     /// --------------------------------------------------------------------------------------------
-    template <typename t0, typename t1>
-    concept rswappable_with = rassignable<t0, t1> && rassignable<t1, t0>;
+    template <typename type0, typename type1>
+    concept rswappable_with = rassignable<type0, type1> && rassignable<type1, type0>;
 
     /// --------------------------------------------------------------------------------------------
-    /// ensures `t0` is `trivially_swappable` with `t2`.
+    /// ensures `type0` is `trivially_swappable` with `t2`.
     /// --------------------------------------------------------------------------------------------
-    template <typename t0, typename t1>
-    concept rtrivially_swappable_with = rtrivially_assignable<t0, t1> && rtrivially_assignable<t1, t0>;
+    template <typename type0, typename type1>
+    concept rtrivially_swappable_with = rtrivially_assignable<type0, type1> && rtrivially_assignable<type1, type0>;
 
     /// --------------------------------------------------------------------------------------------
     /// ensures `type` is `swappable` with itself.
@@ -365,20 +365,20 @@ namespace atom
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     /// --------------------------------------------------------------------------------------------
-    /// ensures `t0` and `t1` are `equality_comparable`.
+    /// ensures `type0` and `type1` are `equality_comparable`.
     /// --------------------------------------------------------------------------------------------
-    template <typename t0, typename t1>
-    concept _requality_comparable_with = requires(const t0 v0, const t1 v1)
+    template <typename type0, typename type1>
+    concept _requality_comparable_with = requires(const type0 v0, const type1 v1)
     {
         { v0 == v1 } -> rsame_as<bool>;
         { v0 != v1 } -> rsame_as<bool>;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// ensures `t0` and `t1` are `equality_comparable`.
+    /// ensures `type0` and `type1` are `equality_comparable`.
     /// --------------------------------------------------------------------------------------------
-    template <typename t0, typename t1>
-    concept requality_comparable_with = requires(const t0 v0, const t1 v1)
+    template <typename type0, typename type1>
+    concept requality_comparable_with = requires(const type0 v0, const type1 v1)
     {
         { v0.eq(v1) } -> rsame_as<bool>;
         { v0.ne(v1) } -> rsame_as<bool>;
@@ -391,12 +391,12 @@ namespace atom
     concept requality_comparable = requality_comparable_with<type, type>;
 
     /// --------------------------------------------------------------------------------------------
-    /// ensures `t0` and `t1` are `comparable`.
+    /// ensures `type0` and `type1` are `comparable`.
     /// --------------------------------------------------------------------------------------------
-    template <typename t0, typename t1>
-    concept _rcomparable_with = requires(const t0 v0, const t1 v1)
+    template <typename type0, typename type1>
+    concept _rcomparable_with = requires(const type0 v0, const type1 v1)
     {
-        requires _requality_comparable_with<t0, t1>;
+        requires _requality_comparable_with<type0, type1>;
 
         { v0 < v1 } -> rsame_as<bool>;
         { v0 > v1 } -> rsame_as<bool>;
@@ -405,12 +405,12 @@ namespace atom
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// ensures `t0` and `t1` are `comparable`.
+    /// ensures `type0` and `type1` are `comparable`.
     /// --------------------------------------------------------------------------------------------
-    template <typename t0, typename t1>
-    concept rcomparable_with = requires(const t0 v0, const t1 v1)
+    template <typename type0, typename type1>
+    concept rcomparable_with = requires(const type0 v0, const type1 v1)
     {
-        requires requality_comparable_with<t0, t1>;
+        requires requality_comparable_with<type0, type1>;
 
         { v0.lt(v1) } -> rsame_as<bool>;
         { v0.gt(v1) } -> rsame_as<bool>;
@@ -457,45 +457,45 @@ namespace atom
 
 namespace atom
 {
-    template <typename t0, typename t1>
-    constexpr auto operator==(const t0& v0, const t1& v1) -> bool
-        requires requality_comparable_with<t0, t1>
+    template <typename type0, typename type1>
+    constexpr auto operator==(const type0& v0, const type1& v1) -> bool
+        requires requality_comparable_with<type0, type1>
     {
         return v0.eq(v1);
     }
 
-    template <typename t0, typename t1>
-    constexpr auto operator!=(const t0& v0, const t1& v1) -> bool
-        requires requality_comparable_with<t0, t1>
+    template <typename type0, typename type1>
+    constexpr auto operator!=(const type0& v0, const type1& v1) -> bool
+        requires requality_comparable_with<type0, type1>
     {
         return v0.ne(v1);
     }
 
-    template <typename t0, typename t1>
-    constexpr auto operator<(const t0& v0, const t1& v1) -> bool
-        requires rcomparable_with<t0, t1>
+    template <typename type0, typename type1>
+    constexpr auto operator<(const type0& v0, const type1& v1) -> bool
+        requires rcomparable_with<type0, type1>
     {
         return v0.lt(v1);
     }
 
-    template <typename t0, typename t1>
-    constexpr auto operator>(const t0& v0, const t1& v1) -> bool
-        requires rcomparable_with<t0, t1>
+    template <typename type0, typename type1>
+    constexpr auto operator>(const type0& v0, const type1& v1) -> bool
+        requires rcomparable_with<type0, type1>
     {
         return v0.gt(v1);
     }
 
-    template <typename t0, typename t1>
-    constexpr auto operator<=(const t0& v0, const t1& v1) -> bool
-        requires rcomparable_with<t0, t1>
+    template <typename type0, typename type1>
+    constexpr auto operator<=(const type0& v0, const type1& v1) -> bool
+        requires rcomparable_with<type0, type1>
     {
         return v0.le(v1);
     }
 
-    template <typename t0, typename t1>
-    constexpr auto operator>=(const t0& v0, const t1& v1) -> bool
+    template <typename type0, typename type1>
+    constexpr auto operator>=(const type0& v0, const type1& v1) -> bool
     
-        requires rcomparable_with<t0, t1>
+        requires rcomparable_with<type0, type1>
     {
         return v0.ge(v1);
     }

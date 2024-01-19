@@ -17,7 +17,7 @@ namespace atom
     class shared_ptr_default_destroyer
     {
         static_assert(tti::is_pure<type>, "shared_ptr_default_destroyer only supports pure types.");
-        static_assert(not tti::is_void<type>, "shared_ptr_default_destroyer doesn't support void.");
+        static_assert(not tti::is_void<type>, "shared_ptr_default_destroyer does not support void.");
 
     public:
         constexpr auto operator()(mut_ptr<type> val)
@@ -31,7 +31,7 @@ namespace atom
     class shared_ptr: public mut_ptr<tin_val>
     {
         static_assert(tti::is_pure<tin_val>, "shared_ptr only supports pure types.");
-        static_assert(not tti::is_void<tin_val>, "shared_ptr doesn't support void.");
+        static_assert(not tti::is_void<tin_val>, "shared_ptr does not support void.");
 
     private:
         using this_type = shared_ptr<tin_val>;

@@ -10,9 +10,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename range_type, typename tpred>
-            requires rrange<range_type> and rinvokable<tpred, bool(const typename range_type::elem_type&)>
-        constexpr auto remove_if(range_type& range, tpred&& pred) -> usize
+        template <typename range_type, typename pred_type>
+            requires rrange<range_type> and rinvokable<pred_type, bool(const typename range_type::elem_type&)>
+        constexpr auto remove_if(range_type& range, pred_type&& pred) -> usize
         {
             usize count = 0;
             auto it_end = range.iter_end();

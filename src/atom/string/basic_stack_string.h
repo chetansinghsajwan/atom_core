@@ -5,11 +5,11 @@
 namespace atom
 {
     // todo: fix this, cannot inherit to preserve aggregate initialization.
-    template <typename tencoding, usize size>
-    using basic_stack_string = static_array<basic_char<tencoding>, size>;
+    template <typename encoding_type, usize size>
+    using basic_stack_string = static_array<basic_char<encoding_type>, size>;
     // using basic_stack_string = _string_impl
     // <
-    //     tencoding,
-    //     static_array<basic_char<tencoding>, size>
+    //     encoding_type,
+    //     static_array<basic_char<encoding_type>, size>
     // >;
 }

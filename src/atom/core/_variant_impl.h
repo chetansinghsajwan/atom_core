@@ -168,7 +168,7 @@ namespace atom
         template <typename value_type>
         constexpr auto set_value(value_type&& value)
         {
-            using type = tti::tremove_quailfiers_ref<value_type>;
+            using type = tti::remove_quailfiers_ref_type<value_type>;
             usize index_to_set = get_index_for_type<type>();
 
             // the new type to set is same as current.

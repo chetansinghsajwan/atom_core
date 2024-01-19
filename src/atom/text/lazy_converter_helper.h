@@ -27,14 +27,14 @@ namespace atom::text
 {
     /// --------------------------------------------------------------------------------------------
     /// converts data from {tin_encoding} character encoding to {tout_encoding} on demand.
-    /// this_type doesn't process the whole string, only the requested part.
+    /// this_type does not process the whole string, only the requested part.
     /// --------------------------------------------------------------------------------------------
-    template <typename impl_type, typename tin_encoding, typename tout_encoding, typename tinput>
+    template <typename impl_type, typename tin_encoding, typename tout_encoding, typename input_type>
     class _char_encoding_lazy_converter_helper
     {
     public:
         using iter_type =
-            _char_encoding_lazy_converter_helper_iter<impl_type, tin_encoding, tout_encoding, tinput>;
+            _char_encoding_lazy_converter_helper_iter<impl_type, tin_encoding, tout_encoding, input_type>;
 
         using iter_end_type = _char_encoding_lazy_converter_helper_iter_end;
 
@@ -61,7 +61,7 @@ namespace atom::text
 
     protected:
         impl_type _impl;
-        tinput& _input;
+        input_type& _input;
     };
 
     class _char_encoding_lazy_converter_helper_iter_end
@@ -69,24 +69,24 @@ namespace atom::text
 
     /// --------------------------------------------------------------------------------------------
     /// converts data from {tin_encoding} character encoding to {tout_encoding} on demand.
-    /// this_type doesn't process the whole string, only the requested part.
+    /// this_type does not process the whole string, only the requested part.
     /// --------------------------------------------------------------------------------------------
-    template <typename impl_type, typename tin_encoding, typename tout_encoding, typename tinput>
+    template <typename impl_type, typename tin_encoding, typename tout_encoding, typename input_type>
     class _char_encoding_lazy_converter_helper_iter
     {
     public:
         using this_final_type = _char_encoding_lazy_converter_helper_iter;
         using iter_end_type = _char_encoding_lazy_converter_helper_iter_end;
-        using tin_char = typename tin_encoding::tchar;
-        using tout_char = typename tout_encoding::tchar;
+        using tin_char = typename tin_encoding::char_type;
+        using tout_char = typename tout_encoding::char_type;
 
     public:
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr _char_encoding_lazy_converter_helper_iter(impl_type&& impl, tinput&& in)
+        constexpr _char_encoding_lazy_converter_helper_iter(impl_type&& impl, input_type&& in)
             : _impl{ forward<impl_type>(impl) }
-            , _input{ forward<tinput>(input) }
+            , _input{ forward<input_type>(input) }
             , _out{ 0 }
             , _out_index{ -1 }
         {
@@ -165,19 +165,19 @@ namespace atom::text
     /// --------------------------------------------------------------------------------------------
     /// {_char_encoding_lazy_converter_helper} specialization for same character encodings.
     /// --------------------------------------------------------------------------------------------
-    template <typename impl_type, typename tchar_encoding, typename tinput>
-    class _char_encoding_lazy_converter_helper<impl_type, tchar_encoding, tchar_encoding, tinput>
+    template <typename impl_type, typename tchar_encoding, typename input_type>
+    class _char_encoding_lazy_converter_helper<impl_type, tchar_encoding, tchar_encoding, input_type>
     {
     private:
-        using tchar = basic_char<tchar_encoding>;
+        using char_type = basic_char<tchar_encoding>;
 
     public:
-        constexpr _char_encoding_lazy_converter_helper(tinput&& input)
+        constexpr _char_encoding_lazy_converter_helper(input_type&& input)
             : _input{ input }
         {}
 
     public:
-        constexpr auto get() -> tchar
+        constexpr auto get() -> char_type
         {
             return _input.get();
         }
@@ -193,6 +193,6 @@ namespace atom::text
         }
 
     protected:
-        tinput _input;
+        input_type _input;
     };
 };

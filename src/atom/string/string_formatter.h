@@ -63,9 +63,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename tout, rstring_fmt_arg_fmtable... arg_types>
-        auto fmt_to(tout out, fmt_string<arg_types...> fmt, arg_types&&... args)
-            requires routput<tout, uchar>
+        template <typename output_type, rstring_fmt_arg_fmtable... arg_types>
+        auto fmt_to(output_type out, fmt_string<arg_types...> fmt, arg_types&&... args)
+            requires routput<output_type, uchar>
         {
             class _out_iter_wrap
             {
@@ -87,7 +87,7 @@ namespace atom
                 }
 
             public:
-                tout* out;
+                output_type* out;
             };
 
             fmt::detail::iterator_buffer<_out_iter_wrap, char> buf{ _out_iter_wrap{ &out } };

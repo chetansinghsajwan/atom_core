@@ -10,7 +10,7 @@ namespace atom
     class unique_ptr_default_destroyer
     {
         static_assert(tti::is_pure<type>, "unique_ptr_default_destroyer only supports pure types.");
-        static_assert(not tti::is_void<type>, "unique_ptr_default_destroyer doesn't support void.");
+        static_assert(not tti::is_void<type>, "unique_ptr_default_destroyer does not support void.");
 
     public:
         constexpr auto operator()(mut_ptr<type> val)
@@ -24,7 +24,7 @@ namespace atom
     class unique_ptr: public mut_ptr<tin_val>
     {
         static_assert(tti::is_pure<tin_val>, "unique_ptr only supports pure types.");
-        static_assert(not tti::is_void<tin_val>, "unique_ptr doesn't support void.");
+        static_assert(not tti::is_void<tin_val>, "unique_ptr does not support void.");
         static_assert(tti::is_pure<tin_destroyer>);
         static_assert(not tti::is_void<tin_destroyer>);
 

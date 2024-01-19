@@ -20,16 +20,16 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
 
     /// --------------------------------------------------------------------------------------------
-    /// ensures `tinsertable` is `insertable` for type `type`.
+    /// ensures `insertable_type` is `insertable` for type `type`.
     /// --------------------------------------------------------------------------------------------
-    template <typename tinsertable, typename type>
-    concept rinsertable = requires(tinsertable insertable, type el, range_req_mock<type> range) {
+    template <typename insertable_type, typename type>
+    concept rinsertable = requires(insertable_type insertable, type el, range_req_mock<type> range) {
         insertable.insert(el);
         insertable.insert(range);
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// ensures `tinsertable` is `front_insertable` for type `type`.
+    /// ensures `insertable_type` is `front_insertable` for type `type`.
     /// --------------------------------------------------------------------------------------------
     template <typename tfront_insertable, typename type>
     concept rfront_insertable = requires(tfront_insertable insertable, type el, range_req_mock<type> range) {
@@ -38,27 +38,27 @@ namespace atom
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// ensures `tinsertable` is `back_insertable` for type `type`.
+    /// ensures `insertable_type` is `back_insertable` for type `type`.
     /// --------------------------------------------------------------------------------------------
-    template <typename tinsertable, typename type>
-    concept rback_insertable = requires(tinsertable insertable, type el, range_req_mock<type> range) {
+    template <typename insertable_type, typename type>
+    concept rback_insertable = requires(insertable_type insertable, type el, range_req_mock<type> range) {
         insertable.insert_back(el);
         insertable.insert_back(range);
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// ensures `tinsertable` is `key_insertable` for type `type`.
+    /// ensures `insertable_type` is `key_insertable` for type `type`.
     /// --------------------------------------------------------------------------------------------
-    template <typename tinsertable, typename tkey, typename type>
+    template <typename insertable_type, typename tkey, typename type>
     concept rkey_insertable =
-        requires(tinsertable insertable, tkey key, type el, range_req_mock<type> range) {
+        requires(insertable_type insertable, tkey key, type el, range_req_mock<type> range) {
             insertable.insert(key, el);
             insertable.insert(key, range);
         };
 
     /// --------------------------------------------------------------------------------------------
-    /// ensures `tinsertable` is `index_insertable` for type `type`.
+    /// ensures `insertable_type` is `index_insertable` for type `type`.
     /// --------------------------------------------------------------------------------------------
-    template <typename tinsertable, typename type>
-    concept rindex_insertable = rkey_insertable<tinsertable, usize, type>;
+    template <typename insertable_type, typename type>
+    concept rindex_insertable = rkey_insertable<insertable_type, usize, type>;
 }

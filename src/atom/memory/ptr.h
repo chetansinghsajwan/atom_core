@@ -14,7 +14,7 @@ namespace atom
     class ptr
     {
         static_assert(tti::is_pure<tval_>, "ptr only supports pure types.");
-        static_assert(not tti::is_void<tval_>, "ptr doesn't support void.");
+        static_assert(not tti::is_void<tval_>, "ptr does not support void.");
 
     private:
         using this_type = ptr<tval_>;
@@ -487,7 +487,7 @@ namespace atom
     class mut_ptr: public ptr<tval_>
     {
         static_assert(tti::is_pure<tval_>, "mut_ptr only supports pure types.");
-        static_assert(not tti::is_void<tval_>, "mut_ptr doesn't support void.");
+        static_assert(not tti::is_void<tval_>, "mut_ptr does not support void.");
 
     private:
         using this_type = mut_ptr<tval_>;

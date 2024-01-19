@@ -6,7 +6,7 @@
 namespace atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// null_lockable is a stateless object that doesn't has any locking mechanism.
+    /// null_lockable is a stateless object that does not has any locking mechanism.
     /// it's used where a lockable implementation is needed but thread-safety is not needed.
     ///
     /// @todo: should we delete its constructors and operators to match {simple_mutex}?

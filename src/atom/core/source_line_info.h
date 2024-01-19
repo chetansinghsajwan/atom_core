@@ -17,7 +17,7 @@ namespace atom
         ///
         /// # note
         /// - this_type default argument is used to capture the source line info of the calling site.
-        ///   don't pass any argument for this.
+        ///   do not pass any argument for this.
         /// --------------------------------------------------------------------------------------------
 #if defined(atom_compiler_clang) && !defined(__cpp_lib_source_location)
         static consteval auto current(const char* file_name = __builtin_file(),

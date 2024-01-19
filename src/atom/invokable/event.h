@@ -35,13 +35,13 @@ namespace atom
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// calls subscribe(forward<tinvokable>(listener));
+        /// calls subscribe(forward<invokable_type>(listener));
         /// ----------------------------------------------------------------------------------------
-        template <typename tinvokable>
-        auto operator+=(tinvokable&& listener) -> event_key
-            requires(rinvokable<tinvokable, _tsignature>)
+        template <typename invokable_type>
+        auto operator+=(invokable_type&& listener) -> event_key
+            requires(rinvokable<invokable_type, _tsignature>)
         {
-            return subscribe(forward<tinvokable>(listener));
+            return subscribe(forward<invokable_type>(listener));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -53,13 +53,13 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// calls subscribe(forward<tinvokable>(listener)) on {source}.
+        /// calls subscribe(forward<invokable_type>(listener)) on {source}.
         /// ----------------------------------------------------------------------------------------
-        template <typename tinvokable>
-        auto subscribe(tinvokable&& listener) -> event_key
-            requires(rinvokable<tinvokable, _tsignature>)
+        template <typename invokable_type>
+        auto subscribe(invokable_type&& listener) -> event_key
+            requires(rinvokable<invokable_type, _tsignature>)
         {
-            return subscribe(invokable_box<_tsignature>(forward<tinvokable>(listener)));
+            return subscribe(invokable_box<_tsignature>(forward<invokable_type>(listener)));
         }
 
         /// ----------------------------------------------------------------------------------------

@@ -62,7 +62,7 @@ namespace atom
 
         /// ----------------------------------------------------------------------------------------
         /// tries to lock the lock. if the lock is already locked by some thread then returns but
-        /// doesn't blocks the thread.
+        /// does not blocks the thread.
         ///
         /// @returns `true` if lock acquired, else `false`.
         /// ----------------------------------------------------------------------------------------

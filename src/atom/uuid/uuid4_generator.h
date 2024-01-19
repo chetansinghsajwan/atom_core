@@ -9,9 +9,9 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     /// # template parameters
     ///
-    /// - `tgenerator`: uniform random number generator.
+    /// - `generator_type`: uniform random number generator.
     /// --------------------------------------------------------------------------------------------
-    template <typename tgenerator>
+    template <typename generator_type>
     class basic_uuid_random_generator
     {
     public:
@@ -42,7 +42,7 @@ namespace atom
 
     private:
         uniform_int_distribution<_u32> _distribution;
-        tgenerator _generator;
+        generator_type _generator;
     };
 
     /// --------------------------------------------------------------------------------------------

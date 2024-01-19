@@ -15,8 +15,8 @@ namespace atom
     template <typename in_elem_type, typename in_allocator_type>
     class basic_dynamic_array
     {
-        static_assert(not tti::is_ref<in_elem_type>, "dynamic_array doesn't supports ref types.");
-        static_assert(not tti::is_void<in_elem_type>, "dynamic_array doesn't support void.");
+        static_assert(not tti::is_ref<in_elem_type>, "dynamic_array does not supports ref types.");
+        static_assert(not tti::is_void<in_elem_type>, "dynamic_array does not support void.");
 
     private:
         using _impl_type = _dynamic_array_impl<in_elem_type, in_allocator_type>;
@@ -72,10 +72,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # range constructor
         /// ----------------------------------------------------------------------------------------
-        template <typename range_type,
-            typename trange_unqualified = tti::tremove_quailfiers_ref<range_type>>
+        template <typename range_type>
         constexpr basic_dynamic_array(range_type&& range)
-            requires(rrange_of<trange_unqualified, elem_type>)
+            requires(rrange_of<pure_type<range_type>, elem_type>)
             : _impl{ range.iter(), range.iter_end() }
         {}
 
@@ -338,11 +337,11 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename targ>
-        constexpr auto operator+=(targ&& el)
-            requires(rconstructible<elem_type, targ>)
+        template <typename arg_type>
+        constexpr auto operator+=(arg_type&& el)
+            requires(rconstructible<elem_type, arg_type>)
         {
-            _impl.emplace_back(forward<targ>(el));
+            _impl.emplace_back(forward<arg_type>(el));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -376,11 +375,10 @@ namespace atom
         /// # to do:
         /// - what happens when the elem type accepts range as parameter?
         /// ----------------------------------------------------------------------------------------
-        template <typename range_type,
-            typename trange_unqualified = tti::tremove_quailfiers_ref<range_type>>
+        template <typename range_type>
         constexpr auto operator+=(range_type&& range)
-            requires(rrange_of<trange_unqualified, elem_type>)
-                    and (rconstructible<elem_type, typename trange_unqualified::elem_type>)
+            requires(rrange_of<pure_type<range_type>, elem_type>)
+                    and (rconstructible<elem_type, typename pure_type<range_type>::elem_type>)
         {
             _impl.insert_range_back(mov(range.iter()), mov(range.iter_end()));
         }
@@ -500,9 +498,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename tpred>
-        constexpr auto remove_if(tpred&& pred) -> usize
-            requires(rinvokable<tpred, bool(const elem_type&)>)
+        template <typename pred_type>
+        constexpr auto remove_if(pred_type&& pred) -> usize
+            requires(rinvokable<pred_type, bool(const elem_type&)>)
         {
             usize removed_count = 0;
             for (usize i = 0; i < _impl.count(); i++)
@@ -522,7 +520,7 @@ namespace atom
         /// removes all elements.
         ///
         /// # note
-        /// - doesn't free storage.
+        /// - does not free storage.
         /// ----------------------------------------------------------------------------------------
         constexpr auto remove_all()
         {

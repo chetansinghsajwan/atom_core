@@ -4,6 +4,6 @@
 
 namespace atom
 {
-    template <typename tencoding, typename allocator_type = default_mem_allocator>
-    using basic_dynamic_string = _string_impl<tencoding, dynamic_array<basic_char<tencoding>, allocator_type>>;
+    template <typename encoding_type, typename allocator_type = default_mem_allocator>
+    using basic_dynamic_string = _string_impl<encoding_type, dynamic_array<basic_char<encoding_type>, allocator_type>>;
 }
