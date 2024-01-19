@@ -27,7 +27,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// type_list of this variant.
         /// ----------------------------------------------------------------------------------------
-        using types = type_list<ts...>;
+        using type_list = type_list<types...>;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -102,7 +102,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename... tothers>
         constexpr variant(const variant<tothers...>& that)
-            requires(types::template has<tothers...>) and (rcopy_constructible_all<tothers...>)
+            requires(rcopy_constructible_all<tothers...>) and (type_list::template has<tothers...>)
         {
             _impl.construct_value_from_variant(that._impl);
         }
@@ -128,9 +128,8 @@ namespace atom
         /// # copy assignment operator template
         /// ----------------------------------------------------------------------------------------
         template <typename... tothers>
-        constexpr auto operator=(const variant<tothers...>& that) -> variant&
-            requires(types::template has<tothers...>) and (rcopy_constructible_all<tothers...>)
-                    and (rcopy_assignable_all<tothers...>)
+        constexpr variant& operator=(const variant<tothers...>& that)
+            requires(rcopyable_all<tothers...>) and (type_list::template has<tothers...>)
         {
             _impl.set_value_from_variant(that._impl);
             return *this;
@@ -155,7 +154,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename... tothers>
         constexpr variant(variant<tothers...>&& that)
-            requires(types::template has<tothers...>) and (rmove_constructible_all<tothers...>)
+            requires(rmove_constructible_all<tothers...>) and (type_list::template has<tothers...>)
         {
             _impl.construct_value_from_variant(mov(that._impl));
         }
@@ -181,9 +180,8 @@ namespace atom
         /// # move assignment operator template
         /// ----------------------------------------------------------------------------------------
         template <typename... tothers>
-        constexpr auto operator=(variant<tothers...>&& that) -> variant&
-            requires(types::template has<tothers...>) and (rmove_constructible_all<ts...>)
-                    and (rmove_assignable_all<ts...>)
+        constexpr variant& operator=(variant<tothers...>&& that)
+            requires(rmoveable_all<types...>) and (type_list::template has<tothers...>)
         {
             _impl.set_value_from_variant(mov(that._impl));
             return *this;

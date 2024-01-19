@@ -54,7 +54,7 @@ namespace atom
         template <usize i>
         static consteval auto has_index() -> bool
         {
-            return i < _types::count;
+            return i < _type_list::count;
         }
 
         template <typename type>
@@ -69,7 +69,11 @@ namespace atom
         }
 
         template <usize i>
-        using type_at_index = typename _types::template at<i>;
+        using type_at_index = typename _type_list::template at<i>;
+
+        using first_type = type_at_index<0>;
+
+        using last_type = type_at_index<get_type_count() - 1>;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -312,21 +316,21 @@ namespace atom
             }
         }
 
-        template <usize index, typename type, typename... ts_>
+        template <usize index, typename type, typename... other_types>
         constexpr auto _destroy_value_impl(usize i)
         {
-            using types = type_list<ts_...>;
+            using _type_list = type_list<other_types...>;
 
             if (i != index)
             {
-                if constexpr (types::count == 0)
+                if constexpr (_type_list::count == 0)
                 {
                     system::panic("there is no type for current index.");
                 }
                 else
                 {
                     // recursion to find type at index i.
-                    _destroy_value_impl<index + 1, ts_...>(i);
+                    _destroy_value_impl<index + 1, other_types...>(i);
                     return;
                 }
             }
@@ -367,17 +371,17 @@ namespace atom
         template <typename type>
         constexpr auto _get_data_as() -> mut_mem_ptr<type>
         {
-            return _my_storage.get_data();
+            return _storage.get_data();
         }
 
         template <typename type>
         constexpr auto _get_data_as() const -> mem_ptr<type>
         {
-            return _my_storage.get_data();
+            return _storage.get_data();
         }
 
     private:
-        _storage _my_storage;
+        _storage_type _storage;
         usize _index = 0;
     };
 }
