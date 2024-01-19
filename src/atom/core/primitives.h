@@ -28,4 +28,8 @@ namespace atom
     using type_info = std::type_info;
 
     using std_string_view = std::string_view;
+
+    template <typename... arg_types>
+    class type_holder
+    {};
 }
