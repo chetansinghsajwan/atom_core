@@ -24,7 +24,14 @@ FetchContent_Declare(
     GIT_SHALLOW    true
 )
 
-FetchContent_MakeAvailable(catch2 fmt wjcrypt)
+FetchContent_Declare(
+    cpptrace
+    GIT_REPOSITORY "https://github.com/jeremy-rifkin/cpptrace.git"
+    GIT_TAG        "v0.3.1"
+    GIT_SHALLOW    true
+)
+
+FetchContent_MakeAvailable(catch2 fmt wjcrypt cpptrace)
 
 # --------------------------------------------------------------------------------------------------
 # C++20 Global Config
@@ -47,6 +54,7 @@ target_sources(atom.core
 )
 target_include_directories(atom.core PRIVATE "src/")
 
+target_link_libraries(atom.core PRIVATE cpptrace::cpptrace)
 target_link_libraries(atom.core PRIVATE WjCryptLib)
 target_link_libraries(atom.core PRIVATE fmt::fmt-header-only)
 
@@ -57,10 +65,10 @@ target_link_libraries(atom.core PRIVATE fmt::fmt-header-only)
 file(GLOB_RECURSE test_sources "tests/**.cpp")
 
 add_executable(atom.core.tests ${test_sources})
-target_include_directories(atom.core.tests PUBLIC "tests/")
+target_include_directories(atom.core.tests PRIVATE "tests/")
 
-target_link_libraries(atom.core.tests PUBLIC atom.core)
-target_link_libraries(atom.core.tests PUBLIC Catch2::Catch2WithMain)
+target_link_libraries(atom.core.tests PRIVATE atom.core)
+target_link_libraries(atom.core.tests PRIVATE Catch2::Catch2WithMain)
 
 add_test(atom.core.tests atom.core.tests)
 
@@ -70,4 +78,4 @@ add_test(atom.core.tests atom.core.tests)
 
 add_executable(atom.core.sandbox "sandbox/sandbox.cpp")
 target_include_directories(atom.core.sandbox PRIVATE "sandbox/")
-target_link_libraries(atom.core.sandbox PUBLIC atom.core)
+target_link_libraries(atom.core.sandbox PRIVATE atom.core)
