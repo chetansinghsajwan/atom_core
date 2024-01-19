@@ -512,7 +512,7 @@ namespace atom
             if constexpr (buf_size() == 0)
                 return false;
 
-            return _val.val == _buf.mem();
+            return _val.val == _buf.mem().unwrap();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -530,7 +530,7 @@ namespace atom
                 // check if stack memory is big enough.
                 if (not force_heap and size <= buf_size())
                 {
-                    return _buf.mut_mem();
+                    return _buf.mut_mem().unwrap();
                 }
             }
 
@@ -539,14 +539,14 @@ namespace atom
             {
                 if (_heap_mem_size < size)
                 {
-                    _heap_mem = _alloc.realloc(_heap_mem, size);
+                    _heap_mem = _alloc.realloc(_heap_mem, size).unwrap();
                     _heap_mem_size = size;
                 }
             }
             // we need to allocate heap memory.
             else
             {
-                _heap_mem = _alloc.alloc(size);
+                _heap_mem = _alloc.alloc(size).unwrap();
                 _heap_mem_size = size;
             }
 

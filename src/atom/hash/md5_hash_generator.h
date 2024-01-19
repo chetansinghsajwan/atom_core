@@ -1,9 +1,4 @@
 #pragma once
-extern "C"
-{
-#include "WjCryptLib_Md5.h"
-}
-
 #include "md5_hash.h"
 #include "private/t1_hash_generator.h"
 
@@ -17,7 +12,7 @@ namespace atom
             Md5Initialise(&_context);
         }
 
-        auto update(mem_ptr<void> data, uint32_t data_size)
+        auto update(mem_ptr<void> data, std::uint32_t data_size)
         {
             Md5Update(&_context, data.unwrap(), data_size);
         }

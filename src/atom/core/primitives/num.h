@@ -46,9 +46,9 @@ namespace atom
             return value_type(std::numeric_limits<tlimit>::max());
         }
 
-        static consteval auto count_digits(value_type val) -> size_t
+        static consteval auto count_digits(value_type val) -> std::size_t
         {
-            size_t count = 0;
+            std::size_t count = 0;
             while (val > 0)
             {
                 val = val / 10;
@@ -58,12 +58,12 @@ namespace atom
             return count;
         }
 
-        static consteval auto min_digits_count() -> size_t
+        static consteval auto min_digits_count() -> std::size_t
         {
             return count_digits(min());
         }
 
-        static consteval auto max_digits_count() -> size_t
+        static consteval auto max_digits_count() -> std::size_t
         {
             return count_digits(max());
         }

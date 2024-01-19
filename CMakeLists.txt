@@ -38,10 +38,12 @@ enable_testing()
 # atom.core
 # --------------------------------------------------------------------------------------------------
 
+file(GLOB_RECURSE sources "src/**.cpp")
+
 add_library(atom.core STATIC)
 target_sources(atom.core
     PUBLIC FILE_SET modules TYPE CXX_MODULES FILES
-    "src/core.cpp"
+    "${sources}"
 )
 target_include_directories(atom.core PRIVATE "src/")
 

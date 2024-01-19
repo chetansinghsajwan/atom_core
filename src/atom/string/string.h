@@ -20,7 +20,7 @@ namespace std
     class hash<atom::string>
     {
     public:
-        auto operator()(const atom::string& str) const -> size_t
+        auto operator()(const atom::string& str) const -> std::size_t
         {
             using std_stirng_view = basic_string_view<char>;
 

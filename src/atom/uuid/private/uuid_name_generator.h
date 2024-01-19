@@ -31,7 +31,7 @@ namespace atom
 
         auto _process_string(string_view str)
         {
-            for (uint32_t c : str)
+            for (_u32 c : str)
             {
                 _hash_generator.process_byte(static_cast<byte>(c & 0xff));
 

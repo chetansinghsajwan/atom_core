@@ -33,7 +33,7 @@ namespace atom
         }
     }
 
-    template <size_t>
+    template <std::size_t>
     class int_string;
 
     template <typename self_type, typename value_type, typename tlimit = value_type>

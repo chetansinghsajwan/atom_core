@@ -3,7 +3,7 @@
 
 namespace atom
 {
-    template <size_t size>
+    template <std::size_t size>
     class float_string;
 
     template <typename self_type, typename value_type>
