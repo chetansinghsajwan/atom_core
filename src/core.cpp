@@ -2,6 +2,7 @@ export module atom.core;
 import :std;
 import :fmt;
 import :wjcrypt;
+export import :time;
 
 export
 {
