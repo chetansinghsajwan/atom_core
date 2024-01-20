@@ -1,5 +1,5 @@
 #pragma once
-#include "atom/range/mut_array_range_extensions.h"
+#include "atom/range.h"
 
 namespace atom
 {

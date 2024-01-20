@@ -1,7 +1,7 @@
 #pragma once
 #include "atom/contracts.h"
 #include "atom/core.h"
-// #include "atom/range/array_iter.h"
+#include "atom/range.h"
 
 // #include <algorithm>
 
