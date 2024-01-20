@@ -1,6 +1,7 @@
-#pragma once
-#include "atom/core.h"
-// #include "atom/tti.h"
+export module atom.core:array_iter;
+import :int_wrapper;
+import :mem_ptr;
+import :tti;
 
 namespace atom
 {
@@ -21,14 +22,14 @@ namespace atom
         /// # default constructor
         /// ----------------------------------------------------------------------------------------
         constexpr array_iter()
-            : _it{ nullptr }
+            : _it(nullptr)
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # value constructor
         /// ----------------------------------------------------------------------------------------
         constexpr array_iter(mem_ptr<type> it)
-            : _it{ it }
+            : _it(it)
         {}
 
     public:
