@@ -1,13 +1,13 @@
-#pragma once
-#include "atom/core.h"
-// #include "atom/tti.h"
+export module atom.core:type_list;
+import :core;
+import :tti;
 
 namespace atom
 {
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename... ts>
+    export template <typename... types>
     class type_list;
 
     /// --------------------------------------------------------------------------------------------

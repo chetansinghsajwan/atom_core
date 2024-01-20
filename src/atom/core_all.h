@@ -6,6 +6,7 @@
 #include "contracts.h"
 #include "exceptions.h"
 #include "hash.h"
+#include "invokable.h"
 #include "math.h"
 #include "memory.h"
 #include "preprocessors.h"
