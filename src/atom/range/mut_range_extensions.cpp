@@ -1,5 +1,10 @@
-#pragma once
-#include "range_extensions.h"
+module;
+#include "atom/preprocessors.h"
+
+export module atom.core:range.mut_range_extensions;
+import :range.range_extensions;
+import :int_wrapper;
+import :requirements;
 
 namespace atom
 {
@@ -195,7 +200,7 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename range_type>
+    export template <typename range_type>
     class mut_range_extensions<range_type, void>
         : public mut_range_extensions<range_type,
               range_extensions<range_type, _mut_range_extensions_impl<range_type>>>

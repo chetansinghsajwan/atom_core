@@ -1,6 +1,9 @@
-#pragma once
-#include "array_range_extensions.h"
-#include "mut_jump_range_extensions.h"
+export module atom.core:range.mut_array_range_extensions;
+import :range.array_range_extensions;
+import :range.mut_jump_range_extensions;
+import :contracts_decl;
+import :int_wrapper;
+import :mem_ptr;
 
 namespace atom
 {
@@ -230,7 +233,7 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename range_type>
+    export template <typename range_type>
     class mut_array_range_extensions<range_type, void>
         : public mut_array_range_extensions<range_type,
               array_range_extensions<range_type, _mut_array_range_extensions_impl<range_type>>>

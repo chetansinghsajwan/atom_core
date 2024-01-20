@@ -1,7 +1,10 @@
-#pragma once
-#include "range_req.h"
-// #include "atom/tti.h"
-#include "atom/contracts.h"
+export module atom.core:range.std_iter_wrap_for_atom_iter;
+import :std;
+import :tti;
+import :contracts_decl;
+import :int_wrapper;
+import :range.iter_requirements;
+import :range.range_requirements;
 
 namespace atom
 {
@@ -13,8 +16,8 @@ namespace atom
         tti::conditional_type<not rfwd_iter<iter_type>, std::input_iterator_tag,
             tti::conditional_type<not rbidi_iter<iter_type>, std::forward_iterator_tag,
                 tti::conditional_type<not rjump_iter<iter_type>, std::bidirectional_iterator_tag,
-                    tti::conditional_type<not rarray_iter<iter_type>, std::random_access_iterator_tag,
-                        std::contiguous_iterator_tag>>>>>;
+                    tti::conditional_type<not rarray_iter<iter_type>,
+                        std::random_access_iterator_tag, std::contiguous_iterator_tag>>>>>;
 
     /// --------------------------------------------------------------------------------------------
     ///
@@ -55,14 +58,16 @@ namespace atom
         }
 
         template <class iter_end_type>
-        constexpr auto operator==(const std_iter_wrap_for_atom_iter<iter_end_type>& that) const -> bool
+        constexpr auto operator==(const std_iter_wrap_for_atom_iter<iter_end_type>& that) const
+            -> bool
             requires(riter_with_end<iter_type, iter_end_type>)
         {
             return iter.eq(that.iter);
         }
 
         template <class iter_end_type>
-        constexpr auto operator!=(const std_iter_wrap_for_atom_iter<iter_end_type>& that) const -> bool
+        constexpr auto operator!=(const std_iter_wrap_for_atom_iter<iter_end_type>& that) const
+            -> bool
             requires(riter_with_end<iter_type, iter_end_type>)
         {
             return not iter.eq(that.iter);

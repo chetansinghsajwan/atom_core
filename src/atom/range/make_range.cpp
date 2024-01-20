@@ -1,20 +1,33 @@
-#pragma once
-// #include "array_iter.h"
-#include "mut_array_range_extensions.h"
-#include "range_req.h"
-// #include "atom/tti.h"
-
-// #include <cstring>
+export module atom.core:range.make_range;
+import :std;
+import :core;
+import :array_iter;
+import :range.iter_requirements;
+import :range.range_requirements;
+import :range.range_extensions;
+import :range.fwd_range_extensions;
+import :range.bidi_range_extensions;
+import :range.jump_range_extensions;
+import :range.array_range_extensions;
+import :range.mut_range_extensions;
+import :range.mut_fwd_range_extensions;
+import :range.mut_bidi_range_extensions;
+import :range.mut_jump_range_extensions;
+import :range.mut_array_range_extensions;
+import :tti;
+import :mem_ptr;
+import :int_wrapper;
+import :uchar;
 
 namespace atom
 {
-    template <typename titer_, typename titer_end_>
+    template <typename in_iter_type, typename in_iter_end_type>
     class _basic_range_from_iter_pair
     {
     public:
-        using elem_type = typename titer_::elem_type;
-        using iter_type = titer_;
-        using iter_end_type = titer_end_;
+        using elem_type = typename in_iter_type::elem_type;
+        using iter_type = in_iter_type;
+        using iter_end_type = in_iter_end_type;
 
     public:
         constexpr _basic_range_from_iter_pair(iter_type it, iter_end_type it_end)
@@ -51,7 +64,8 @@ namespace atom
     };
 
     template <typename tmut_iter_, typename tmut_iter_end_>
-    class _basic_mut_range_from_iter_pair: public _basic_range_from_iter_pair<tmut_iter_, tmut_iter_end_>
+    class _basic_mut_range_from_iter_pair
+        : public _basic_range_from_iter_pair<tmut_iter_, tmut_iter_end_>
     {
         using base_type = _basic_range_from_iter_pair<tmut_iter_, tmut_iter_end_>;
 
@@ -158,7 +172,8 @@ namespace atom
     };
 
     template <typename mut_iter_type, typename mut_iter_end_type>
-    class _mut_range_from_iter_pair: public _mut_range_from_iter_extended<mut_iter_type, mut_iter_end_type>::type
+    class _mut_range_from_iter_pair
+        : public _mut_range_from_iter_extended<mut_iter_type, mut_iter_end_type>::type
     {
         using base_type = _mut_range_from_iter_extended<mut_iter_type, mut_iter_end_type>::type;
 
@@ -191,7 +206,7 @@ namespace atom
     }
 }
 
-namespace atom
+export namespace atom
 {
     /// --------------------------------------------------------------------------------------------
     ///
@@ -271,7 +286,8 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     constexpr auto make_range(mut_mem_ptr<uchar> str)
     {
-        return _mut_range_from_iter_pair(mut_array_iter(str), mut_array_iter(str + _range_find_str_len(str)));
+        return _mut_range_from_iter_pair(
+            mut_array_iter(str), mut_array_iter(str + _range_find_str_len(str)));
     }
 
     /// --------------------------------------------------------------------------------------------

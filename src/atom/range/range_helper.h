@@ -1,8 +1,4 @@
 #pragma once
-#include "range_req.h"
-#include "std_iter_wrap_for_atom_iter.h"
-
-// #include <algorithm>
 
 namespace atom
 {

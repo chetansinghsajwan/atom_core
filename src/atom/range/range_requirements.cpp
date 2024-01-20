@@ -1,8 +1,9 @@
-#pragma once
-#include "iter_req.h"
+export module atom.core:range.range_requirements;
+import :range.iter_requirements;
+import :requirements;
 
 // clang-format off
-namespace atom
+export namespace atom
 {
     /// --------------------------------------------------------------------------------------------
     /// basic range requirements.

@@ -1,5 +1,5 @@
-#pragma once
-#include "bidi_range_extensions.h"
+export module atom.core:range.jump_range_extensions;
+import :range.bidi_range_extensions;
 
 namespace atom
 {
@@ -40,7 +40,7 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename range_type>
+    export template <typename range_type>
     class jump_range_extensions<range_type, void>
         : public jump_range_extensions<range_type, _jump_range_extensions_impl<range_type>>
     {

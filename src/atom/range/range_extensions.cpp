@@ -1,9 +1,11 @@
-#pragma once
-// #include "array_iter.h"
-#include "range_req.h"
-#include "std_iter_wrap_for_atom_iter.h"
-
-// #include <algorithm>
+export module atom.core:range.range_extensions;
+import :std;
+import :array_iter;
+import :int_wrapper;
+import :requirements;
+import :range.iter_requirements;
+import :range.range_requirements;
+import :range.std_iter_wrap_for_atom_iter;
 
 namespace atom
 {
@@ -240,7 +242,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename trange1>
         constexpr auto compare(const trange1& range) const -> i8
-            requires(rrange<trange1>) and (requality_comparable_with<elem_type, typename trange1::elem_type>)
+            requires(rrange<trange1>)
+                    and (requality_comparable_with<elem_type, typename trange1::elem_type>)
         {
             return _impl().compare(range);
         }
@@ -250,7 +253,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename trange1>
         constexpr auto eq(const trange1& range) const -> bool
-            requires(rrange<trange1>) and (requality_comparable_with<elem_type, typename trange1::elem_type>)
+            requires(rrange<trange1>)
+                    and (requality_comparable_with<elem_type, typename trange1::elem_type>)
         {
             return _impl().compare(range) == 0;
         }
@@ -260,7 +264,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename trange1>
         constexpr auto ne(const trange1& range) const -> bool
-            requires(rrange<trange1>) and (requality_comparable_with<elem_type, typename trange1::elem_type>)
+            requires(rrange<trange1>)
+                    and (requality_comparable_with<elem_type, typename trange1::elem_type>)
         {
             return not eq(range);
         }
@@ -301,7 +306,7 @@ namespace atom
         }
     };
 
-    template <typename range_type>
+    export template <typename range_type>
     class range_extensions<range_type, void>
         : public range_extensions<range_type, _range_extensions_impl<range_type>>
     {

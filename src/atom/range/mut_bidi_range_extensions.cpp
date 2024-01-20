@@ -1,6 +1,6 @@
-#pragma once
-#include "bidi_range_extensions.h"
-#include "mut_fwd_range_extensions.h"
+export module atom.core:range.mut_bidi_range_extensions;
+import :range.bidi_range_extensions;
+import :range.mut_fwd_range_extensions;
 
 namespace atom
 {
@@ -58,7 +58,7 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename range_type>
+    export template <typename range_type>
     class mut_bidi_range_extensions<range_type, void>
         : public mut_bidi_range_extensions<range_type,
               bidi_range_extensions<range_type, _mut_bidi_range_extensions_impl<range_type>>>

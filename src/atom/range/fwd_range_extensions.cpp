@@ -1,5 +1,5 @@
-#pragma once
-#include "fwd_range_extensions.h"
+export module atom.core:range.fwd_range_extensions;
+import :range.range_extensions;
 
 namespace atom
 {
@@ -7,9 +7,9 @@ namespace atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename range_type>
-    class _bidi_range_extensions_impl: public _fwd_range_extensions_impl<range_type>
+    class _fwd_range_extensions_impl: public _range_extensions_impl<range_type>
     {
-        using base_type = _fwd_range_extensions_impl<range_type>;
+        using base_type = _range_extensions_impl<range_type>;
 
     public:
         using base_type::base_type;
@@ -20,9 +20,9 @@ namespace atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename range_type, typename _trange_extensions_impl = void>
-    class bidi_range_extensions: public fwd_range_extensions<range_type, _trange_extensions_impl>
+    class fwd_range_extensions: public range_extensions<range_type, _trange_extensions_impl>
     {
-        using base_type = fwd_range_extensions<range_type, _trange_extensions_impl>;
+        using base_type = range_extensions<range_type, _trange_extensions_impl>;
 
     protected:
         using _timpl = typename base_type::_timpl;
@@ -40,11 +40,11 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename range_type>
-    class bidi_range_extensions<range_type, void>
-        : public bidi_range_extensions<range_type, _bidi_range_extensions_impl<range_type>>
+    export template <typename range_type>
+    class fwd_range_extensions<range_type, void>
+        : public fwd_range_extensions<range_type, _fwd_range_extensions_impl<range_type>>
     {
-        using base_type = bidi_range_extensions<range_type, _bidi_range_extensions_impl<range_type>>;
+        using base_type = fwd_range_extensions<range_type, _fwd_range_extensions_impl<range_type>>;
 
     public:
         using base_type::base_type;
