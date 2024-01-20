@@ -1,7 +1,8 @@
 #pragma once
 #include "atom/core.h"
 #include "atom/core/source_line_info.h"
-#include "contracts_decl.h"
+
+// #include "contracts_decl.h"
 
 // #include "fmt/format.h"
 
@@ -37,13 +38,13 @@ namespace atom
     {
         switch (type)
         {
-            case contract_type::pre_condition:       return "pre_condition";
-            case contract_type::assertion:          return "assertion";
-            case contract_type::post_condition:      return "post_condition";
+            case contract_type::pre_condition:        return "pre_condition";
+            case contract_type::assertion:            return "assertion";
+            case contract_type::post_condition:       return "post_condition";
             case contract_type::debug_pre_condition:  return "debug_pre_condition";
-            case contract_type::debug_assertion:     return "debug_assertion";
+            case contract_type::debug_assertion:      return "debug_assertion";
             case contract_type::debug_post_condition: return "debug_post_condition";
-            default:                               return "[invalid_value]";
+            default:                                  return "[invalid_value]";
         }
     }
 
@@ -61,7 +62,8 @@ namespace atom
                                 "\n\tat: {}: {}: {}"
                                 "\n\tfunc: {}",
                 _contract_type_to_string(violation.type), violation.msg, violation.src.file_name,
-                violation.src.line.unwrap(), violation.src.column.unwrap(), violation.src.func_name);
+                violation.src.line.unwrap(), violation.src.column.unwrap(),
+                violation.src.func_name);
         }
 
     public:
@@ -100,7 +102,8 @@ namespace atom
             }
             else
             {
-                std::cout << "contracts " << _contract_type_to_string(violation.type) << " violation:"
+                std::cout << "contracts " << _contract_type_to_string(violation.type)
+                          << " violation:"
                           << "\n\twith msg: " << violation.msg << "'"
                           << "\n\tat: " << violation.src.file_name << ":"
                           << violation.src.line.unwrap() << ":" << violation.src.column.unwrap()
@@ -143,12 +146,13 @@ namespace atom
 
     inline default_contract_violation_handler contract_violation_handler_manager::_default_handler =
         default_contract_violation_handler();
-    inline contract_violation_handler* contract_violation_handler_manager::_handler = &_default_handler;
+    inline contract_violation_handler* contract_violation_handler_manager::_handler =
+        &_default_handler;
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    inline auto _contract_check_impl(
+    extern "C++" auto _contract_check_impl(
         _contract_type type, std::source_location src, std::string_view msg) -> void
     {
         source_line_info src_info{ .line = src.line(),
@@ -161,7 +165,7 @@ namespace atom
         contract_violation_handler_manager::get_handler().handle(violation);
     }
 
-    inline auto _panic(std::source_location src, std::string_view msg) -> void
+    extern "C++" auto _panic(std::source_location src, std::string_view msg) -> void
     {
         std::cerr << msg << std::endl;
         std::terminate();

@@ -5,6 +5,7 @@ import :wjcrypt;
 export import :byte;
 export import :uchar;
 export import :build_config;
+export import :contracts_decl;
 export import :time;
 
 export

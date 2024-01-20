@@ -26,6 +26,8 @@ export module atom.core:std;
 
 export namespace std
 {
+    using std::move;
+    using std::forward;
     using std::cout;
     using std::cerr;
     using std::endl;
