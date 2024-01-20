@@ -7,6 +7,7 @@ import :mem_ptr;
 import :invokable;
 import :memory.default_mem_allocator;
 import :contracts_decl;
+import :array_iter;
 
 namespace atom
 {

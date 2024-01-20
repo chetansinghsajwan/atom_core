@@ -1,5 +1,8 @@
-#pragma once
-#include "atom/range.h"
+export module atom.core:containers.array_view;
+import :core;
+import :mem_ptr;
+import :array_iter;
+import :range;
 
 namespace atom
 {
@@ -157,7 +160,7 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename elem_type>
+    export template <typename elem_type>
     class array_view: public array_range_extensions<basic_array_view<elem_type>>
     {
         using base_type = array_range_extensions<basic_array_view<elem_type>>;

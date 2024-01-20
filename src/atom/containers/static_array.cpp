@@ -1,5 +1,8 @@
-#pragma once
-#include "atom/range.h"
+export module atom.core:containers.static_array;
+import :core;
+import :mem_ptr;
+import :array_iter;
+import :range;
 
 namespace atom
 {
@@ -69,7 +72,7 @@ namespace atom
         elem_type _arr[in_count.unwrap()];
     };
 
-    template <typename elem_type, usize count>
+    export template <typename elem_type, usize count>
     class static_array: public mut_array_range_extensions<basic_static_array<elem_type, count>>
     {
         using base_type = mut_array_range_extensions<basic_static_array<elem_type, count>>;
