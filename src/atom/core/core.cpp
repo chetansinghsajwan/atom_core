@@ -1,9 +1,7 @@
-#pragma once
+export module atom.core:core;
+import :std;
 
-// #include <iostream>
-// #include <type_traits>
-
-namespace atom
+export namespace atom
 {
     template <typename value_type>
     constexpr auto mov(value_type&& val) -> typename std::remove_reference_t<value_type>&&

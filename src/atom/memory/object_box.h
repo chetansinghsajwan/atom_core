@@ -1,7 +1,6 @@
 #pragma once
-#include "atom/core.h"
-#include "atom/exceptions.h"
-#include "atom/invokable/invokable_ptr.h"
+// #include "atom/core/requirements.h"
+#include "atom/memory/default_mem_allocator.h"
 #include "atom/tti.h"
 
 #include "default_mem_allocator.h"
