@@ -43,7 +43,7 @@ namespace atom
         /// @param mem: mem block to write to.
         /// @param val: value to write.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto fill(mem_blk mem, memunit val) const
+        constexpr auto fill(mem_blk mem, byte val) const
         {
             contracts::debug_expects(mem != nullptr);
 
@@ -55,7 +55,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ATOM_PRAGMA_OPTIMIZE_OFF
 
-        constexpr auto fill_explicit(mem_blk mem, memunit val) const
+        constexpr auto fill_explicit(mem_blk mem, byte val) const
         {
             fill(mem, val);
         }
@@ -269,7 +269,7 @@ namespace atom
         }
 
     private:
-        constexpr auto _fill(mut_mem_ptr<void> mem, usize count, memunit val) const -> void
+        constexpr auto _fill(mut_mem_ptr<void> mem, usize count, byte val) const -> void
         {
             std::fill(mem.unwrap_as_byte(), (mem + count).unwrap_as_byte(), val);
         }

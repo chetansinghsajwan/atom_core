@@ -14,5 +14,7 @@ auto main(int argc, char** args) -> int
 {
     print_cmd_args(argc, args);
 
+    mem_ptr<void> ptr = nullptr;
+
     return 0;
 }

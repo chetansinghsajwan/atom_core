@@ -1,8 +1,11 @@
-#pragma once
-#include "atom/core/primitives.h"
-// #include "atom/tti.h"
+export module atom.core:ptr;
+import :std;
+import :byte;
+import :tti;
+import :requirements;
+import :contracts_decl;
 
-namespace atom
+export namespace atom
 {
     template <typename type>
     class mut_ptr;

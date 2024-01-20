@@ -14,6 +14,8 @@ export import :requirements;
 export import :time;
 export import :tti;
 export import :random;
+export import :ptr;
+export import :mem_ptr;
 
 export
 {

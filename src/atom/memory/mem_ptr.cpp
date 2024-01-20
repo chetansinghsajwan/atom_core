@@ -1,11 +1,11 @@
-#pragma once
-#include "atom/contracts.h"
-#include "atom/memory/ptr.h"
+export module atom.core:mem_ptr;
+import :byte;
+import :int_wrapper;
+import :ptr;
+import :requirements;
 
 namespace atom
 {
-    using memunit = byte;
-
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
@@ -224,7 +224,7 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename type>
+    export template <typename type>
     class mem_ptr: public mem_ptr_functions<ptr<type>, mem_ptr<type>>
     {
         using this_type = mem_ptr<type>;
@@ -239,13 +239,13 @@ namespace atom
         using base_type::operator=;
     };
 
-    template <typename type>
+    export template <typename type>
     mem_ptr(const type* ptr) -> mem_ptr<type>;
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename type>
+    export template <typename type>
     class mut_mem_ptr: public mem_ptr_functions<mut_ptr<type>, mut_mem_ptr<type>>
     {
         using this_type = mut_mem_ptr<type>;
@@ -260,6 +260,6 @@ namespace atom
         using base_type::operator=;
     };
 
-    template <typename type>
+    export template <typename type>
     mut_mem_ptr(const type* ptr) -> mut_mem_ptr<type>;
 }
