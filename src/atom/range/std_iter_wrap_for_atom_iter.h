@@ -22,7 +22,7 @@ namespace atom
     template <typename iter_type>
     class std_iter_wrap_for_atom_iter
     {
-        using self = std_iter_wrap_for_atom_iter<iter_type>;
+        using this_type = std_iter_wrap_for_atom_iter<iter_type>;
 
     public:
         using value_type = typename iter_type::elem_type;
@@ -68,58 +68,58 @@ namespace atom
             return not iter.eq(that.iter);
         }
 
-        constexpr auto operator++() -> self&
+        constexpr auto operator++() -> this_type&
             requires(riter<iter_type>)
         {
             iter.next();
             return *this;
         }
 
-        constexpr auto operator++(int) -> self
+        constexpr auto operator++(int) -> this_type
             requires(riter<iter_type>)
         {
-            self tmp{ iter };
+            this_type tmp{ iter };
             tmp.iter.next();
             return tmp;
         }
 
-        constexpr auto operator--() -> self&
+        constexpr auto operator--() -> this_type&
             requires(rbidi_iter<iter_type>)
         {
             iter.prev();
             return *this;
         }
 
-        constexpr auto operator--(int) const -> self
+        constexpr auto operator--(int) const -> this_type
             requires(rbidi_iter<iter_type>)
         {
-            self tmp{ iter };
+            this_type tmp{ iter };
             tmp.iter.prev();
             return tmp;
         }
 
-        constexpr auto operator+(difference_type steps) -> self
+        constexpr auto operator+(difference_type steps) -> this_type
             requires(rjump_iter<iter_type>)
         {
             // todo: review this. should we accept steps as difference_type.
             contracts::debug_expects(steps > 0);
 
-            self tmp{ iter };
+            this_type tmp{ iter };
             tmp.iter.next(steps);
             return tmp;
         }
 
-        constexpr auto operator-(difference_type steps) -> self
+        constexpr auto operator-(difference_type steps) -> this_type
             requires(rjump_iter<iter_type>)
         {
             contracts::debug_expects(steps > 0);
 
-            self tmp{ iter };
+            this_type tmp{ iter };
             tmp.iter.prev(steps);
             return tmp;
         }
 
-        constexpr auto operator-(const self& that) const -> difference_type
+        constexpr auto operator-(const this_type& that) const -> difference_type
             requires(rjump_iter<iter_type>)
         {
             return iter.compare(that.iter);

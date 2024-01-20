@@ -36,11 +36,11 @@ namespace atom
     template <std::size_t>
     class int_string;
 
-    template <typename self_type, typename value_type, typename tlimit = value_type>
-    class _int_impl: public _num_impl<self_type, value_type, tlimit>
+    template <typename this_final_type, typename value_type, typename limit_type = value_type>
+    class _int_impl: public _num_impl<this_final_type, value_type, limit_type>
     {
-        using base_type = _num_impl<self_type, value_type, tlimit>;
-        using self = _int_impl<self_type, value_type, tlimit>;
+        using base_type = _num_impl<this_final_type, value_type, limit_type>;
+        using this_type = _int_impl<this_final_type, value_type, limit_type>;
 
     public:
         using string_type = int_string<base_type::max_digits_count() + 1>;

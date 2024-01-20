@@ -15,7 +15,7 @@ namespace atom
     template <typename t1_hash, typename impl_type>
     class _t1_hash_generator
     {
-        using self = _t1_hash_generator;
+        using this_type = _t1_hash_generator;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -41,7 +41,7 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename range_type, usize buf_size = 50>
-        constexpr auto process_bytes(range_type bytes) -> self&
+        constexpr auto process_bytes(range_type bytes) -> this_type&
             requires rrange_of<range_type, byte>
         {
             if constexpr (rarray_range_of<range_type, byte>)
@@ -77,7 +77,7 @@ namespace atom
         /// - `data`: mut_ptr to the input data.
         /// - `data_size`: size of the data.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto process_bytes(mem_ptr<void> data, usize data_size) -> self&
+        constexpr auto process_bytes(mem_ptr<void> data, usize data_size) -> this_type&
         {
             contracts::debug_expects(data != nullptr);
             contracts::debug_expects(data_size > 0);
@@ -104,7 +104,7 @@ namespace atom
         ///
         /// - `data`: data to process.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto process_byte(byte data) -> self&
+        constexpr auto process_byte(byte data) -> this_type&
         {
             _impl.update(&data, 1);
             return *this;

@@ -26,22 +26,22 @@ namespace atom
     template <typename num_type>
     concept rnum = requires(num_type num) { requires rderived_from<num_type, _num_id>; };
 
-    template <typename tself_, typename tval_, typename tlimit>
+    template <typename in_final_type, typename in_value_type, typename limit_type>
     class _num_impl
     {
     public:
-        using self_type = tself_;
-        using value_type = tval_;
+        using this_final_type = in_final_type;
+        using value_type = in_value_type;
 
     public:
         static consteval auto min() -> value_type
         {
-            return value_type(std::numeric_limits<tlimit>::min());
+            return value_type(std::numeric_limits<limit_type>::min());
         }
 
         static consteval auto max() -> value_type
         {
-            return value_type(std::numeric_limits<tlimit>::max());
+            return value_type(std::numeric_limits<limit_type>::max());
         }
 
         static consteval auto count_digits(value_type val) -> std::size_t
@@ -83,11 +83,11 @@ namespace atom
     template <typename in_impl_type>
     class num: public _num_id
     {
-        using self = num<in_impl_type>;
+        using this_type = num<in_impl_type>;
 
     public:
         using impl_type = in_impl_type;
-        using self_type = typename impl_type::self_type;
+        using this_final_type = typename impl_type::this_final_type;
         using value_type = typename impl_type::value_type;
         using string_type = typename impl_type::string_type;
 
@@ -95,7 +95,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        static consteval auto min() -> self_type
+        static consteval auto min() -> this_final_type
         {
             return _make(impl_type::min());
         }
@@ -103,7 +103,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        static consteval auto max() -> self_type
+        static consteval auto max() -> this_final_type
         {
             return _make(impl_type::max());
         }
@@ -111,7 +111,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        static consteval auto bits() -> self_type
+        static consteval auto bits() -> this_final_type
         {
             return _make(sizeof(value_type) * sizeof(byte));
         }
@@ -134,7 +134,7 @@ namespace atom
             // it's better to ask the target type if it can accept our range values.
             if constexpr (rnum<num_type>)
             {
-                return num_type::template is_assignment_safe<self_type>();
+                return num_type::template is_assignment_safe<this_final_type>();
             }
             else
             {
@@ -228,7 +228,7 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename num_type>
-        constexpr auto operator=(num_type num) -> self_type&
+        constexpr auto operator=(num_type num) -> this_final_type&
             requires(rnum<num_type>) and (is_assignment_safe<num_type>())
         {
             _val = _unwrap(num);
@@ -239,7 +239,7 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename num_type>
-        constexpr auto operator=(num_type num) -> self_type&
+        constexpr auto operator=(num_type num) -> this_final_type&
             requires(_rnum<num_type>)
         {
             contracts::debug_expects(not check_overflow_on_assignment(num));
@@ -253,7 +253,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename num_type>
         constexpr operator num_type() const
-            requires(_rnum<num_type>) and (self::is_conversion_safe<num_type>())
+            requires(_rnum<num_type>) and (this_type::is_conversion_safe<num_type>())
         {
             return to<num_type>();
         }
@@ -263,7 +263,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename num_type>
         explicit constexpr operator num_type() const
-            requires(_rnum<num_type>) and (not self::is_conversion_safe<num_type>())
+            requires(_rnum<num_type>) and (not this_type::is_conversion_safe<num_type>())
         {
             return to<num_type>();
         }
@@ -279,7 +279,7 @@ namespace atom
         /// assigns num.
         /// ----------------------------------------------------------------------------------------
         template <typename num_type>
-        constexpr auto assign(num_type num) -> self_type&
+        constexpr auto assign(num_type num) -> this_final_type&
             requires(rnum<num_type>) or (_rnum<num_type>)
         {
             contracts::debug_expects(not check_overflow_on_assignment(num));
@@ -292,7 +292,7 @@ namespace atom
         /// assigns num.
         /// ----------------------------------------------------------------------------------------
         template <typename num_type>
-        constexpr auto checked_assign(num_type num) -> self_type&
+        constexpr auto checked_assign(num_type num) -> this_final_type&
             requires(rnum<num_type>) or (_rnum<num_type>)
         {
             contracts::expects(not check_overflow_on_assignment(num));
@@ -312,7 +312,7 @@ namespace atom
         /// adds
         /// ----------------------------------------------------------------------------------------
         template <typename num_type>
-        constexpr auto add(num_type num) const -> self_type
+        constexpr auto add(num_type num) const -> this_final_type
             requires(rnum<num_type>) or (_rnum<num_type>)
         {
             return _clone().add_assign(num);
@@ -322,7 +322,7 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename num_type>
-        constexpr auto checked_add(num_type num) const -> self_type
+        constexpr auto checked_add(num_type num) const -> this_final_type
             requires(rnum<num_type>) or (_rnum<num_type>)
         {
             return _clone().add_assign(num);
@@ -332,7 +332,7 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename num_type>
-        constexpr auto operator+(num_type num) const -> self_type
+        constexpr auto operator+(num_type num) const -> this_final_type
             requires(rnum<num_type>) or (_rnum<num_type>)
         {
             return add(num);
@@ -342,7 +342,7 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename num_type>
-        constexpr auto add_assign(num_type num) -> self_type&
+        constexpr auto add_assign(num_type num) -> this_final_type&
             requires(rnum<num_type>) or (_rnum<num_type>)
         {
             contracts::debug_expects(not check_overflow_on_add(num));
@@ -355,7 +355,7 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename num_type>
-        constexpr auto checked_add_assign(num_type num) -> self_type&
+        constexpr auto checked_add_assign(num_type num) -> this_final_type&
             requires(rnum<num_type>) or (_rnum<num_type>)
         {
             contracts::expects(not check_overflow_on_add(num));
@@ -368,7 +368,7 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename num_type>
-        constexpr auto operator+=(num_type num) -> self_type&
+        constexpr auto operator+=(num_type num) -> this_final_type&
             requires(rnum<num_type>) or (_rnum<num_type>)
         {
             contracts::debug_expects(not check_overflow_on_add(num));
@@ -379,7 +379,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator++(int) -> self_type&
+        constexpr auto operator++(int) -> this_final_type&
         {
             return add_assign(1);
         }
@@ -387,7 +387,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator+() -> self_type
+        constexpr auto operator+() -> this_final_type
         {
             return _make(+_val);
         }
@@ -396,7 +396,7 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename num_type>
-        constexpr auto sub(num_type num) const -> self_type
+        constexpr auto sub(num_type num) const -> this_final_type
             requires(rnum<num_type>) or (_rnum<num_type>)
         {
             return _clone().sub_assign(num);
@@ -406,7 +406,7 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename num_type>
-        constexpr auto checked_sub(num_type num) const -> self_type
+        constexpr auto checked_sub(num_type num) const -> this_final_type
             requires(rnum<num_type>) or (_rnum<num_type>)
         {
             return _clone().sub_assign(num);
@@ -416,7 +416,7 @@ namespace atom
         /// call [`sub(num)`].
         /// ----------------------------------------------------------------------------------------
         template <typename num_type>
-        constexpr auto operator-(num_type num) const -> self_type
+        constexpr auto operator-(num_type num) const -> this_final_type
             requires(rnum<num_type>) or (_rnum<num_type>)
         {
             return sub(num);
@@ -426,7 +426,7 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename num_type>
-        constexpr auto sub_assign(num_type num) -> self_type&
+        constexpr auto sub_assign(num_type num) -> this_final_type&
             requires(rnum<num_type>) or (_rnum<num_type>)
         {
             contracts::debug_expects(not check_overflow_on_sub(num));
@@ -439,7 +439,7 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename num_type>
-        constexpr auto checked_sub_assign(num_type num) -> self_type&
+        constexpr auto checked_sub_assign(num_type num) -> this_final_type&
             requires(rnum<num_type>) or (_rnum<num_type>)
         {
             contracts::expects(not check_overflow_on_sub(num));
@@ -452,7 +452,7 @@ namespace atom
         /// calls [`sub_assign(num)`].
         /// ----------------------------------------------------------------------------------------
         template <typename num_type>
-        constexpr auto operator-=(num_type num) -> self_type&
+        constexpr auto operator-=(num_type num) -> this_final_type&
             requires(rnum<num_type>) or (_rnum<num_type>)
         {
             return sub_assign(num);
@@ -461,7 +461,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// calls [`sub_assign(1)`].
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator--(int) -> self_type&
+        constexpr auto operator--(int) -> this_final_type&
         {
             return sub_assign(1);
         }
@@ -469,7 +469,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator-() -> self_type
+        constexpr auto operator-() -> this_final_type
         {
             return _make(-_val);
         }
@@ -478,7 +478,7 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename num_type>
-        constexpr auto mul(num_type num) const -> self_type
+        constexpr auto mul(num_type num) const -> this_final_type
             requires(rnum<num_type>) or (_rnum<num_type>)
         {
             return _clone().mul_assign(num);
@@ -488,7 +488,7 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename num_type>
-        constexpr auto checked_mul(num_type num) const -> self_type
+        constexpr auto checked_mul(num_type num) const -> this_final_type
             requires(rnum<num_type>) or (_rnum<num_type>)
         {
             return _clone().mul_assign(num);
@@ -498,7 +498,7 @@ namespace atom
         /// calls [`mul(num)`].
         /// ----------------------------------------------------------------------------------------
         template <typename num_type>
-        constexpr auto operator*(num_type num) const -> self_type
+        constexpr auto operator*(num_type num) const -> this_final_type
             requires(rnum<num_type>) or (_rnum<num_type>)
         {
             return mul(num);
@@ -508,7 +508,7 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename num_type>
-        constexpr auto mul_assign(num_type num) -> self_type&
+        constexpr auto mul_assign(num_type num) -> this_final_type&
             requires(rnum<num_type>) or (_rnum<num_type>)
         {
             contracts::debug_expects(not check_overflow_on_mul(num));
@@ -521,7 +521,7 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename num_type>
-        constexpr auto checked_mul_assign(num_type num) -> self_type&
+        constexpr auto checked_mul_assign(num_type num) -> this_final_type&
             requires(rnum<num_type>) or (_rnum<num_type>)
         {
             contracts::expects(not check_overflow_on_mul(num));
@@ -534,7 +534,7 @@ namespace atom
         /// calls [`mul_assign(num)`].
         /// ----------------------------------------------------------------------------------------
         template <typename num_type>
-        constexpr auto operator*=(num_type num) -> self_type&
+        constexpr auto operator*=(num_type num) -> this_final_type&
             requires(rnum<num_type>) or (_rnum<num_type>)
         {
             return mul_assign(num);
@@ -544,7 +544,7 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename num_type>
-        constexpr auto div(num_type num) const -> self_type
+        constexpr auto div(num_type num) const -> this_final_type
             requires(rnum<num_type>) or (_rnum<num_type>)
         {
             return _clone().div_assign(num);
@@ -554,7 +554,7 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename num_type>
-        constexpr auto checked_div(num_type num) const -> self_type
+        constexpr auto checked_div(num_type num) const -> this_final_type
             requires(rnum<num_type>) or (_rnum<num_type>)
         {
             return _clone().div_assign(num);
@@ -564,7 +564,7 @@ namespace atom
         /// calls [`div(num)`].
         /// ----------------------------------------------------------------------------------------
         template <typename num_type>
-        constexpr auto operator/(num_type num) const -> self_type
+        constexpr auto operator/(num_type num) const -> this_final_type
             requires(rnum<num_type>) or (_rnum<num_type>)
         {
             return div(num);
@@ -574,7 +574,7 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename num_type>
-        constexpr auto div_assign(num_type num) -> self_type&
+        constexpr auto div_assign(num_type num) -> this_final_type&
             requires(rnum<num_type>) or (_rnum<num_type>)
         {
             contracts::debug_expects(is_div_safe(num));
@@ -587,7 +587,7 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename num_type>
-        constexpr auto checked_div_assign(num_type num) -> self_type&
+        constexpr auto checked_div_assign(num_type num) -> this_final_type&
             requires(rnum<num_type>) or (_rnum<num_type>)
         {
             contracts::expects(is_div_safe(num));
@@ -600,7 +600,7 @@ namespace atom
         /// calls [`div_assign(num)`].
         /// ----------------------------------------------------------------------------------------
         template <typename num_type>
-        constexpr auto operator/=(num_type num) -> self_type&
+        constexpr auto operator/=(num_type num) -> this_final_type&
             requires(rnum<num_type>) or (_rnum<num_type>)
         {
             return div_assign(num);
@@ -698,7 +698,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto count_digits() const -> self_type
+        constexpr auto count_digits() const -> this_final_type
         {
             return _make(impl_type::count_digits(_val));
         }
@@ -706,7 +706,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto abs() const -> self_type
+        constexpr auto abs() const -> this_final_type
         {
             return _make(impl_type::abs(_val));
         }
@@ -714,7 +714,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto pow() const -> self_type
+        constexpr auto pow() const -> this_final_type
         {
             return _make(impl_type::pow(_val));
         }
@@ -722,7 +722,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto sqrt() const -> self_type
+        constexpr auto sqrt() const -> this_final_type
         {
             return _make(impl_type::sqrt(_val));
         }
@@ -730,7 +730,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto root() const -> self_type
+        constexpr auto root() const -> this_final_type
         {
             return _make(impl_type::root(_val));
         }
@@ -738,7 +738,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto log() const -> self_type
+        constexpr auto log() const -> this_final_type
         {
             return _make(impl_type::log(_val));
         }
@@ -746,7 +746,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto log10() const -> self_type
+        constexpr auto log10() const -> this_final_type
         {
             return _make(impl_type::log10(_val));
         }
@@ -755,7 +755,7 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename num_type>
-        constexpr auto min(num_type num) const -> self_type
+        constexpr auto min(num_type num) const -> this_final_type
             requires(rnum<num_type>) or (_rnum<num_type>)
         {
             if (_val > _unwrap(num))
@@ -768,7 +768,7 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename num_type>
-        constexpr auto max(num_type num) const -> self_type
+        constexpr auto max(num_type num) const -> this_final_type
             requires(rnum<num_type>) or (_rnum<num_type>)
         {
             if (_val < _unwrap(num))
@@ -781,7 +781,7 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename tnum0, typename tnum1>
-        constexpr auto clamp(tnum0 num0, tnum1 num1) const -> self_type
+        constexpr auto clamp(tnum0 num0, tnum1 num1) const -> this_final_type
             requires(rnum<tnum0>) or (_rnum<tnum0>) and (rnum<tnum0>) or (_rnum<tnum0>)
         {
             contracts::debug_expects(num0 <= num1, "left of range is greater than the right.");
@@ -798,7 +798,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto clone() const -> self_type
+        constexpr auto clone() const -> this_final_type
         {
             return _clone();
         }
@@ -886,7 +886,7 @@ namespace atom
             // it's better to ask the target type if it can accept our range values.
             if constexpr (rnum<num_type>)
             {
-                return num_type::template check_overflow_on_assignment<self_type>(_val);
+                return num_type::template check_overflow_on_assignment<this_final_type>(_val);
             }
             else
             {
@@ -1000,24 +1000,24 @@ namespace atom
         ////////////////////////////////////////////////////////////////////////////////////////////
 
     protected:
-        constexpr auto _self() const -> const self_type&
+        constexpr auto _self() const -> const this_final_type&
         {
-            return static_cast<const self_type&>(*this);
+            return static_cast<const this_final_type&>(*this);
         }
 
-        constexpr auto _self() -> self_type&
+        constexpr auto _self() -> this_final_type&
         {
-            return static_cast<self_type&>(*this);
+            return static_cast<this_final_type&>(*this);
         }
 
-        constexpr auto _clone() const -> self_type
+        constexpr auto _clone() const -> this_final_type
         {
             return _make(_val);
         }
 
-        static constexpr auto _make(value_type val) -> self_type
+        static constexpr auto _make(value_type val) -> this_final_type
         {
-            return self_type(val);
+            return this_final_type(val);
         }
 
         template <typename num_type>

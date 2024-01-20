@@ -34,8 +34,8 @@ namespace atom
         using base_type::operator=;
     };
 
-    template <typename self_type, typename value_type, typename tlimit>
-    constexpr auto _int_impl<self_type, value_type, tlimit>::to_string(value_type val) -> string_type
+    template <typename this_final_type, typename value_type, typename limit_type>
+    constexpr auto _int_impl<this_final_type, value_type, limit_type>::to_string(value_type val) -> string_type
     {
         string_type str;
         char* begin = _to_string(val, str.mut_data() + str.count() - 1);
@@ -49,8 +49,8 @@ namespace atom
         return str;
     }
 
-    template <typename self_type, typename value_type>
-    constexpr auto _float_impl<self_type, value_type>::to_string(value_type val) -> string_type
+    template <typename this_final_type, typename value_type>
+    constexpr auto _float_impl<this_final_type, value_type>::to_string(value_type val) -> string_type
     {
         string_type str;
         char* begin = _to_string(val, str.mut_data() + str.count() - 1);
