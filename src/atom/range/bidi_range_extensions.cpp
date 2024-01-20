@@ -25,7 +25,7 @@ namespace atom
         using base_type = fwd_range_extensions<range_type, _trange_extensions_impl>;
 
     protected:
-        using _timpl = typename base_type::_timpl;
+        using _impl_type = typename base_type::_impl_type;
 
     public:
         using elem_type = typename base_type::elem_type;

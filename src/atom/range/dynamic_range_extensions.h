@@ -21,18 +21,12 @@ namespace atom
     template <typename type>
     class dynamic_range_extensions
     {
-        using _timpl = dynamic_range_extensions_impl<type>;
+        using _impl_type = dynamic_range_extensions_impl<type>;
 
     public:
-        using elem_type = typename _timpl::elem_type;
-        using mut_iter_type = typename _timpl::mut_iter_type;
-        using mut_iter_end_type = typename _timpl::mut_iter_end_type;
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        ////
-        //// removal
-        ////
-        ////////////////////////////////////////////////////////////////////////////////////////////
+        using elem_type = typename _impl_type::elem_type;
+        using mut_iter_type = typename _impl_type::mut_iter_type;
+        using mut_iter_end_type = typename _impl_type::mut_iter_end_type;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -57,6 +51,6 @@ namespace atom
         }
 
     private:
-        _timpl _impl;
+        _impl_type _impl;
     };
 }

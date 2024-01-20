@@ -17,14 +17,14 @@ namespace atom
         using base_type = _tconst_extensions_impl;
 
     protected:
-        using _timpl = typename base_type::_timpl;
+        using _impl_type = typename base_type::_impl_type;
 
     public:
         using elem_type = typename base_type::elem_type;
         using iter_type = typename base_type::iter_type;
         using iter_end_type = typename base_type::iter_end_type;
-        using mut_iter_type = typename _timpl::mut_iter_type;
-        using mut_iter_end_type = typename _timpl::mut_iter_end_type;
+        using mut_iter_type = typename _impl_type::mut_iter_type;
+        using mut_iter_end_type = typename _impl_type::mut_iter_end_type;
 
     public:
         using base_type::base_type;
@@ -62,14 +62,14 @@ namespace atom
         using base_type = _tconst_range_extensions;
 
     protected:
-        using _timpl = typename base_type::_timpl;
+        using _impl_type = typename base_type::_impl_type;
 
     public:
         using elem_type = typename base_type::elem_type;
         using iter_type = typename base_type::iter_type;
         using iter_end_type = typename base_type::iter_end_type;
-        using mut_iter_type = typename _timpl::mut_iter_type;
-        using mut_iter_end_type = typename _timpl::mut_iter_end_type;
+        using mut_iter_type = typename _impl_type::mut_iter_type;
+        using mut_iter_end_type = typename _impl_type::mut_iter_end_type;
 
     public:
         using base_type::base_type;

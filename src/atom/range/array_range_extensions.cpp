@@ -15,7 +15,7 @@ namespace atom
         using base_type = _jump_range_extensions_impl<range_type>;
 
     protected:
-        using _timpl = typename base_type::_timpl;
+        using _impl_type = typename base_type::_impl_type;
 
     public:
         using elem_type = typename base_type::elem_type;
@@ -79,7 +79,7 @@ namespace atom
         using base_type = jump_range_extensions<range_type, _trange_extensions_impl_>;
 
     protected:
-        using _timpl = typename base_type::_timpl;
+        using _impl_type = typename base_type::_impl_type;
 
     public:
         using elem_type = typename base_type::elem_type;

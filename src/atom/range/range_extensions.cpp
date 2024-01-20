@@ -13,12 +13,12 @@ namespace atom
     class _range_extensions_impl
     {
     protected:
-        using _timpl = range_type;
+        using _impl_type = range_type;
 
     public:
-        using elem_type = typename _timpl::elem_type;
-        using iter_type = typename _timpl::iter_type;
-        using iter_end_type = typename _timpl::iter_end_type;
+        using elem_type = typename _impl_type::elem_type;
+        using iter_type = typename _impl_type::iter_type;
+        using iter_end_type = typename _impl_type::iter_end_type;
 
     public:
         constexpr _range_extensions_impl(range_type& range)
@@ -119,12 +119,12 @@ namespace atom
         using base_type = range_type;
 
     protected:
-        using _timpl = _trange_extensions_impl;
+        using _impl_type = _trange_extensions_impl;
 
     public:
-        using elem_type = typename _timpl::elem_type;
-        using iter_type = typename _timpl::iter_type;
-        using iter_end_type = typename _timpl::iter_end_type;
+        using elem_type = typename _impl_type::elem_type;
+        using iter_type = typename _impl_type::iter_type;
+        using iter_end_type = typename _impl_type::iter_end_type;
 
     public:
         using base_type::base_type;
@@ -295,14 +295,14 @@ namespace atom
         }
 
     protected:
-        constexpr auto _impl() const -> const _timpl
+        constexpr auto _impl() const -> const _impl_type
         {
-            return _timpl(const_cast<this_type&>(*this));
+            return _impl_type(const_cast<this_type&>(*this));
         }
 
-        constexpr auto _impl() -> _timpl
+        constexpr auto _impl() -> _impl_type
         {
-            return _timpl(*this);
+            return _impl_type(*this);
         }
     };
 
