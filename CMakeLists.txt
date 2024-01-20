@@ -57,6 +57,8 @@ target_include_directories(atom.core PRIVATE "src/")
 target_link_libraries(atom.core PRIVATE cpptrace::cpptrace)
 target_link_libraries(atom.core PRIVATE WjCryptLib)
 target_link_libraries(atom.core PRIVATE fmt::fmt-header-only)
+target_compile_options(atom.core PUBLIC "-Wno-read-modules-implicitly")
+target_compile_options(atom.core PUBLIC "-ferror-limit=1000")
 
 # --------------------------------------------------------------------------------------------------
 # atom.core.tests
