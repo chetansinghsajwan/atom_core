@@ -1,5 +1,4 @@
 #pragma once
-#include "primitives/byte.h"
 #include "primitives/char.h"
 #include "primitives/int.h"
 #include "primitives/float.h"

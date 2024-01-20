@@ -1,5 +1,4 @@
 #pragma once
-#include "byte.h"
 
 namespace atom
 {
