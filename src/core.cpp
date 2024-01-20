@@ -18,6 +18,7 @@ export import :array_iter;
 export import :range;
 export import :memory.legacy_mem_allocator;
 export import :memory.default_mem_allocator;
+export import :containers.dynamic_array;
 
 export
 {

@@ -1,5 +1,5 @@
 #pragma once
-#include "atom/containers/dynamic_array.h"
+// #include "atom/containers/dynamic_array.h"
 #include "_string_impl.h"
 
 namespace atom

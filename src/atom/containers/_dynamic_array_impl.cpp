@@ -1,9 +1,9 @@
-#pragma once
-#include "atom/contracts.h"
-#include "atom/core.h"
-#include "atom/range.h"
-
-// #include <algorithm>
+export module atom.core:containers._dynamic_array_impl;
+import :std;
+import :core;
+import :range;
+import :contracts_decl;
+import :mem_ptr;
 
 namespace atom
 {

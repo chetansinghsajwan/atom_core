@@ -1,9 +1,12 @@
-#pragma once
-#include "atom/contracts.h"
-// #include "atom/invokable/invokable.h"
-// #include "atom/memory/default_mem_allocator.h"
-#include "atom/range.h"
-#include "_dynamic_array_impl.h"
+export module atom.core:containers.dynamic_array;
+import :containers._dynamic_array_impl;
+import :core;
+import :tti;
+import :range;
+import :mem_ptr;
+import :invokable;
+import :memory.default_mem_allocator;
+import :contracts_decl;
 
 namespace atom
 {
@@ -635,7 +638,7 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename elem_type, typename allocator_type = default_mem_allocator>
+    export template <typename elem_type, typename allocator_type = default_mem_allocator>
     class dynamic_array
         : public mut_array_range_extensions<basic_dynamic_array<elem_type, allocator_type>>
     {
