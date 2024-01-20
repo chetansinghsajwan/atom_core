@@ -24,7 +24,8 @@ namespace atom
 
         template <typename... arg_types>
         constexpr basic_static_array(arg_types&&... args)
-            requires(rconvertible_to<arg_types, elem_type> and ...) and (sizeof...(arg_types) <= in_count.unwrap())
+            requires(rconvertible_to<arg_types, elem_type> and ...)
+                    and (sizeof...(arg_types) <= in_count.unwrap())
             : _arr{ 0 }
         {}
 

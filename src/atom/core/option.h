@@ -63,7 +63,8 @@ namespace atom
         /// else constructs wih no value.
         /// ----------------------------------------------------------------------------------------
         constexpr option(const option& that)
-            requires(not rtrivially_copy_constructible<value_type>) and (rcopy_constructible<value_type>)
+            requires(not rtrivially_copy_constructible<value_type>)
+                    and (rcopy_constructible<value_type>)
             : _impl(typename impl::ctor_copy(), that._impl)
         {}
 
@@ -105,7 +106,8 @@ namespace atom
         /// else constructs wih no value.
         /// ----------------------------------------------------------------------------------------
         constexpr option(option&& that)
-            requires(not rtrivially_move_constructible<value_type>) and (rmove_constructible<value_type>)
+            requires(not rtrivially_move_constructible<value_type>)
+                    and (rmove_constructible<value_type>)
             : _impl(typename impl::ctor_move(), mov(that._impl))
         {}
 

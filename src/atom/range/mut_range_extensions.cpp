@@ -205,8 +205,8 @@ namespace atom
         : public mut_range_extensions<range_type,
               range_extensions<range_type, _mut_range_extensions_impl<range_type>>>
     {
-        using base_type =
-            mut_range_extensions<range_type, range_extensions<range_type, _mut_range_extensions_impl<range_type>>>;
+        using base_type = mut_range_extensions<range_type,
+            range_extensions<range_type, _mut_range_extensions_impl<range_type>>>;
 
     public:
         using base_type::base_type;

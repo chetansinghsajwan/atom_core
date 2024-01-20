@@ -23,28 +23,31 @@ namespace atom
     /// ensures `insertable_type` is `insertable` for type `type`.
     /// --------------------------------------------------------------------------------------------
     template <typename insertable_type, typename type>
-    concept rinsertable = requires(insertable_type insertable, type el, range_req_mock<type> range) {
-        insertable.insert(el);
-        insertable.insert(range);
-    };
+    concept rinsertable =
+        requires(insertable_type insertable, type el, range_req_mock<type> range) {
+            insertable.insert(el);
+            insertable.insert(range);
+        };
 
     /// --------------------------------------------------------------------------------------------
     /// ensures `insertable_type` is `front_insertable` for type `type`.
     /// --------------------------------------------------------------------------------------------
     template <typename tfront_insertable, typename type>
-    concept rfront_insertable = requires(tfront_insertable insertable, type el, range_req_mock<type> range) {
-        insertable.insert_front(el);
-        insertable.insert_front(range);
-    };
+    concept rfront_insertable =
+        requires(tfront_insertable insertable, type el, range_req_mock<type> range) {
+            insertable.insert_front(el);
+            insertable.insert_front(range);
+        };
 
     /// --------------------------------------------------------------------------------------------
     /// ensures `insertable_type` is `back_insertable` for type `type`.
     /// --------------------------------------------------------------------------------------------
     template <typename insertable_type, typename type>
-    concept rback_insertable = requires(insertable_type insertable, type el, range_req_mock<type> range) {
-        insertable.insert_back(el);
-        insertable.insert_back(range);
-    };
+    concept rback_insertable =
+        requires(insertable_type insertable, type el, range_req_mock<type> range) {
+            insertable.insert_back(el);
+            insertable.insert_back(range);
+        };
 
     /// --------------------------------------------------------------------------------------------
     /// ensures `insertable_type` is `key_insertable` for type `type`.

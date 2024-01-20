@@ -10,7 +10,8 @@ namespace atom
     class _is_invokable_impl<invokable_type, result_type(arg_types...)>
     {
     public:
-        static constexpr bool value = std::is_invocable_r_v<result_type, invokable_type, arg_types...>;
+        static constexpr bool value =
+            std::is_invocable_r_v<result_type, invokable_type, arg_types...>;
     };
 
     /// @todo add impl for const invocable.
@@ -18,7 +19,8 @@ namespace atom
     class _is_invokable_impl<invokable_type, result_type(arg_types...) const>
     {
     public:
-        static constexpr bool value = std::is_invocable_r_v<result_type, invokable_type, arg_types...>;
+        static constexpr bool value =
+            std::is_invocable_r_v<result_type, invokable_type, arg_types...>;
     };
 
     export template <typename invokable_type, typename... tsignature>

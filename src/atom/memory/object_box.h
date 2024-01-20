@@ -461,10 +461,12 @@ namespace atom
     class copy_move_box;
 
     template <typename value_type, usize buf_size, typename alloc_type>
-    class box: public box_functions<_box_impl<value_type, false, false, false, buf_size, alloc_type>>
+    class box
+        : public box_functions<_box_impl<value_type, false, false, false, buf_size, alloc_type>>
     {
         using this_type = box<value_type, buf_size, alloc_type>;
-        using base_type = box_functions<_box_impl<value_type, false, false, false, buf_size, alloc_type>>;
+        using base_type =
+            box_functions<_box_impl<value_type, false, false, false, buf_size, alloc_type>>;
         using _impl_type = typename base_type::_impl_type;
 
     public:
@@ -569,7 +571,8 @@ namespace atom
         /// # template move operator
         /// ----------------------------------------------------------------------------------------
         template <typename type, usize that_buf_size, typename that_alloc_type>
-        constexpr this_type& operator=(copy_move_box<type, true, that_buf_size, that_alloc_type>&& that)
+        constexpr this_type& operator=(
+            copy_move_box<type, true, that_buf_size, that_alloc_type>&& that)
             requires ris_void<value_type> or rsame_or_derived_from<type, value_type>
         {
             _impl.move_box(that._impl);
@@ -618,10 +621,12 @@ namespace atom
     };
 
     template <typename value_type, usize buf_size, typename alloc_type>
-    class copy_box: public box_functions<_box_impl<value_type, true, false, false, buf_size, alloc_type>>
+    class copy_box
+        : public box_functions<_box_impl<value_type, true, false, false, buf_size, alloc_type>>
     {
         using this_type = copy_box<value_type, buf_size, alloc_type>;
-        using base_type = box_functions<_box_impl<value_type, true, false, false, buf_size, alloc_type>>;
+        using base_type =
+            box_functions<_box_impl<value_type, true, false, false, buf_size, alloc_type>>;
         using _impl_type = typename base_type::_impl_type;
 
     public:
@@ -675,7 +680,8 @@ namespace atom
         /// # template copy constructor
         /// ----------------------------------------------------------------------------------------
         template <typename type, bool allow_non_move, usize that_buf_size, typename that_alloc_type>
-        constexpr copy_box(const copy_move_box<type, allow_non_move, that_buf_size, that_alloc_type>& that)
+        constexpr copy_box(
+            const copy_move_box<type, allow_non_move, that_buf_size, that_alloc_type>& that)
             : base_type{ typename _impl_type::copy_tag(), that._impl }
         {}
 
@@ -720,7 +726,8 @@ namespace atom
 
     template <typename value_type, bool allow_non_move, usize buf_size, typename alloc_type>
     class move_box
-        : public box_functions<_box_impl<value_type, false, true, allow_non_move, buf_size, alloc_type>>
+        : public box_functions<
+              _box_impl<value_type, false, true, allow_non_move, buf_size, alloc_type>>
     {
         using this_type = move_box<value_type, allow_non_move, buf_size, alloc_type>;
         using base_type =
@@ -770,7 +777,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename type, usize that_buf_size, typename that_alloc_type>
             requires allow_non_move
-        constexpr move_box(const copy_move_box<type, allow_non_move, that_buf_size, that_alloc_type>& that)
+        constexpr move_box(
+            const copy_move_box<type, allow_non_move, that_buf_size, that_alloc_type>& that)
             : base_type{ typename _impl_type::copy_tag(), that._impl }
         {}
 
@@ -806,7 +814,8 @@ namespace atom
         /// # move assignment
         /// ----------------------------------------------------------------------------------------
         template <typename type, usize that_buf_size, typename that_alloc_type>
-        constexpr move_box(copy_move_box<type, allow_non_move, that_buf_size, that_alloc_type>&& that)
+        constexpr move_box(
+            copy_move_box<type, allow_non_move, that_buf_size, that_alloc_type>&& that)
             : base_type{ typename _impl_type::move_tag(), that._impl }
         {}
 
@@ -850,7 +859,8 @@ namespace atom
 
     template <typename value_type, bool allow_non_move, usize buf_size, typename alloc_type>
     class copy_move_box
-        : public box_functions<_box_impl<value_type, true, true, allow_non_move, buf_size, alloc_type>>
+        : public box_functions<
+              _box_impl<value_type, true, true, allow_non_move, buf_size, alloc_type>>
     {
         using this_type = copy_move_box<value_type, allow_non_move, buf_size, alloc_type>;
         using base_type =
@@ -1301,7 +1311,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename type, usize that_buf_size, typename that_alloc_type>
             requires allow_non_move
-        constexpr copy_move_box& operator=(const copy_box<type, that_buf_size, that_alloc_type>& that)
+        constexpr copy_move_box& operator=(
+            const copy_box<type, that_buf_size, that_alloc_type>& that)
         {
             _impl.copy_box(that._impl);
             return *this;
@@ -1348,16 +1359,19 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # template move constructor
         /// ----------------------------------------------------------------------------------------
-        template <typename type, bool that_allow_non_move, usize that_buf_size, typename that_alloc_type>
+        template <typename type, bool that_allow_non_move, usize that_buf_size,
+            typename that_alloc_type>
             requires allow_non_move
-        constexpr copy_move_box(move_box<type, that_allow_non_move, that_buf_size, that_alloc_type>&& that)
+        constexpr copy_move_box(
+            move_box<type, that_allow_non_move, that_buf_size, that_alloc_type>&& that)
             : base_type{ typename _impl_type::move_tag(), that._impl }
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # template move operator
         /// ----------------------------------------------------------------------------------------
-        template <typename type, bool that_allow_non_move, usize that_buf_size, typename that_alloc_type>
+        template <typename type, bool that_allow_non_move, usize that_buf_size,
+            typename that_alloc_type>
             requires allow_non_move
         constexpr copy_move_box& operator=(
             move_box<type, that_allow_non_move, that_buf_size, that_alloc_type>&& that)
@@ -1369,7 +1383,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # template move constructor
         /// ----------------------------------------------------------------------------------------
-        template <typename type, bool that_allow_non_move, usize that_buf_size, typename that_alloc_type>
+        template <typename type, bool that_allow_non_move, usize that_buf_size,
+            typename that_alloc_type>
             requires allow_non_move
         constexpr copy_move_box(
             copy_move_box<type, that_allow_non_move, that_buf_size, that_alloc_type>&& that)
@@ -1379,7 +1394,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # template move operator
         /// ----------------------------------------------------------------------------------------
-        template <typename type, bool that_allow_non_move, usize that_buf_size, typename that_alloc_type>
+        template <typename type, bool that_allow_non_move, usize that_buf_size,
+            typename that_alloc_type>
             requires allow_non_move
         constexpr copy_move_box& operator=(
             copy_move_box<type, that_allow_non_move, that_buf_size, that_alloc_type>&& that)

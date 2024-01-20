@@ -277,7 +277,8 @@ namespace atom
         }
 
         template <class iter_type, class iter_end_type>
-        constexpr auto _bwd_rotate(iter_type iter, iter_end_type iter_end, usize steps) const -> void
+        constexpr auto _bwd_rotate(iter_type iter, iter_end_type iter_end, usize steps) const
+            -> void
         {
             if constexpr (rarray_iter_pair<iter_type, iter_end_type>)
             {
@@ -292,7 +293,8 @@ namespace atom
         }
 
         template <class iter_type, class iter_end_type>
-        constexpr auto _fwd_rotate(iter_type iter, iter_end_type iter_end, isize steps) const -> void
+        constexpr auto _fwd_rotate(iter_type iter, iter_end_type iter_end, isize steps) const
+            -> void
         {
             if constexpr (rarray_iter_pair<iter_type, iter_end_type>)
             {

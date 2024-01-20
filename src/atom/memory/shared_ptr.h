@@ -3,6 +3,7 @@
 // #include "atom/memory/ptr.h"
 #include "atom/memory/unique_ptr.h"
 #include "atom/memory/_shared_ptr_state.h"
+
 // #include "atom/tti.h"
 
 namespace atom
@@ -17,7 +18,8 @@ namespace atom
     class shared_ptr_default_destroyer
     {
         static_assert(tti::is_pure<type>, "shared_ptr_default_destroyer only supports pure types.");
-        static_assert(not tti::is_void<type>, "shared_ptr_default_destroyer does not support void.");
+        static_assert(
+            not tti::is_void<type>, "shared_ptr_default_destroyer does not support void.");
 
     public:
         constexpr auto operator()(mut_ptr<type> val)
@@ -48,7 +50,8 @@ namespace atom
         friend class shared_ptr;
 
         template <typename type, typename tallocator, typename... arg_types>
-        friend auto make_shared_with_alloc(tallocator alloc, arg_types&&... args) -> shared_ptr<type>;
+        friend auto make_shared_with_alloc(tallocator alloc, arg_types&&... args)
+            -> shared_ptr<type>;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -187,7 +190,8 @@ namespace atom
         }
 
     private:
-        constexpr shared_ptr(_shared_ptr_private_ctor, mut_ptr<_ishared_ptr_state> state, mut_ptr<value_type> ptr)
+        constexpr shared_ptr(
+            _shared_ptr_private_ctor, mut_ptr<_ishared_ptr_state> state, mut_ptr<value_type> ptr)
             : base_type(ptr)
             , _state(state)
         {}
@@ -198,8 +202,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename type, typename tdestroyer = shared_ptr_default_destroyer<value_type>,
             typename tallocator = shared_ptr_default_allocator>
-        constexpr auto set(
-            mut_ptr<type> ptr, tdestroyer destroyer = tdestroyer(), tallocator allocator = tallocator())
+        constexpr auto set(mut_ptr<type> ptr, tdestroyer destroyer = tdestroyer(),
+            tallocator allocator = tallocator())
             requires rsame_or_derived_from<type, value_type>
         {
             if (_get_ptr() != nullptr)
@@ -324,7 +328,8 @@ namespace atom
     template <typename type, typename... arg_types>
     auto make_shared(arg_types&&... args) -> shared_ptr<type>
     {
-        return make_shared_with_alloc<type>(shared_ptr_default_allocator(), forward<arg_types>(args)...);
+        return make_shared_with_alloc<type>(
+            shared_ptr_default_allocator(), forward<arg_types>(args)...);
     }
 
     /// --------------------------------------------------------------------------------------------
@@ -334,7 +339,8 @@ namespace atom
     auto make_shared_with_alloc(tallocator allocator, arg_types&&... args) -> shared_ptr<type>
 
     {
-        using state = _shared_ptr_state<type, shared_ptr_default_destroyer<type>, shared_ptr_default_allocator>;
+        using state = _shared_ptr_state<type, shared_ptr_default_destroyer<type>,
+            shared_ptr_default_allocator>;
 
         mut_mem_ptr<void> mem = allocator.alloc(sizeof(state) + sizeof(type));
         mut_ptr<state> state_ptr = mem;
@@ -352,7 +358,8 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     template <typename value_type, typename tdestroyer>
     template <typename tallocator, typename tval1>
-    constexpr auto unique_ptr<value_type, tdestroyer>::_to_shared(tallocator allocator) -> shared_ptr<tval1>
+    constexpr auto unique_ptr<value_type, tdestroyer>::_to_shared(tallocator allocator)
+        -> shared_ptr<tval1>
     {
         return make_shared_with_alloc(mov(allocator), _get_mut_ptr());
     }

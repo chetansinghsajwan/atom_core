@@ -23,9 +23,11 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     template <typename range_type>
     class _mut_bidi_range_extensions_impl<range_type, void>
-        : public _mut_bidi_range_extensions_impl<range_type, _bidi_range_extensions_impl<range_type>>
+        : public _mut_bidi_range_extensions_impl<range_type,
+              _bidi_range_extensions_impl<range_type>>
     {
-        using base_type = _mut_bidi_range_extensions_impl<range_type, _bidi_range_extensions_impl<range_type>>;
+        using base_type =
+            _mut_bidi_range_extensions_impl<range_type, _bidi_range_extensions_impl<range_type>>;
 
     public:
         using base_type::base_type;
@@ -36,7 +38,8 @@ namespace atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename range_type, typename _tconst_range_extensions = void>
-    class mut_bidi_range_extensions: public mut_fwd_range_extensions<range_type, _tconst_range_extensions>
+    class mut_bidi_range_extensions
+        : public mut_fwd_range_extensions<range_type, _tconst_range_extensions>
     {
         using base_type = mut_fwd_range_extensions<range_type, _tconst_range_extensions>;
 

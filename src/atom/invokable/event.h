@@ -132,8 +132,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         auto _remove_listener(event_key key) -> usize
         {
-            return _listeners.remove_if(
-                [&](const auto& listener) { return listener.get_invokable_type() == key.get_type(); });
+            return _listeners.remove_if([&](const auto& listener) {
+                return listener.get_invokable_type() == key.get_type();
+            });
         }
 
         /// ----------------------------------------------------------------------------------------

@@ -101,7 +101,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename... other_types>
         constexpr variant(const variant<other_types...>& that)
-            requires(rcopy_constructible_all<other_types...>) and (type_list::template has<other_types...>)
+            requires(rcopy_constructible_all<other_types...>)
+                    and (type_list::template has<other_types...>)
         {
             _impl.construct_value_from_variant(that._impl);
         }
@@ -153,7 +154,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename... other_types>
         constexpr variant(variant<other_types...>&& that)
-            requires(rmove_constructible_all<other_types...>) and (type_list::template has<other_types...>)
+            requires(rmove_constructible_all<other_types...>)
+                    and (type_list::template has<other_types...>)
         {
             _impl.construct_value_from_variant(mov(that._impl));
         }

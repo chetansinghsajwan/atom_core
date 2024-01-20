@@ -432,6 +432,7 @@ export namespace atom
     template <class type>
     concept regular = rsemi_regular<type> && requality_comparable<type>;
 }
+
 // clang-format on
 
 export namespace atom

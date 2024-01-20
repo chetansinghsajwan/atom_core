@@ -8,6 +8,5 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     /// generates version 5 uuid using a name.
     /// --------------------------------------------------------------------------------------------
-    using uuid5generator =
-        _uuid_name_generator<sha1_hash, sha1_hash_generator, euuid_version::v5>;
+    using uuid5generator = _uuid_name_generator<sha1_hash, sha1_hash_generator, euuid_version::v5>;
 }

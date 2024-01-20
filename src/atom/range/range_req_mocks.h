@@ -50,56 +50,64 @@ namespace atom
     /// `rmut_range` mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename type>
-    class mut_range_req_mock: public _mut_range_req_mock<mut_iter_req_mock<type>, iter_end_req_mock, type>
+    class mut_range_req_mock
+        : public _mut_range_req_mock<mut_iter_req_mock<type>, iter_end_req_mock, type>
     {};
 
     /// --------------------------------------------------------------------------------------------
     /// `rfwd_range` mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename type>
-    class fwd_range_req_mock: public _range_req_mock<fwd_iter_req_mock<type>, iter_end_req_mock, type>
+    class fwd_range_req_mock
+        : public _range_req_mock<fwd_iter_req_mock<type>, iter_end_req_mock, type>
     {};
 
     /// --------------------------------------------------------------------------------------------
     /// `rmut_fwd_range` mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename type>
-    class mut_fwd_range_req_mock: public _mut_range_req_mock<mut_fwd_iter_req_mock<type>, iter_end_req_mock, type>
+    class mut_fwd_range_req_mock
+        : public _mut_range_req_mock<mut_fwd_iter_req_mock<type>, iter_end_req_mock, type>
     {};
 
     /// --------------------------------------------------------------------------------------------
     /// `rbidi_range` mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename type>
-    class bidi_range_req_mock: public _range_req_mock<bidi_iter_req_mock<type>, iter_end_req_mock, type>
+    class bidi_range_req_mock
+        : public _range_req_mock<bidi_iter_req_mock<type>, iter_end_req_mock, type>
     {};
 
     /// --------------------------------------------------------------------------------------------
     /// `rmut_bidi_range` mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename type>
-    class mut_bidi_range_req_mock: public _mut_range_req_mock<mut_bidi_iter_req_mock<type>, iter_end_req_mock, type>
+    class mut_bidi_range_req_mock
+        : public _mut_range_req_mock<mut_bidi_iter_req_mock<type>, iter_end_req_mock, type>
     {};
 
     /// --------------------------------------------------------------------------------------------
     /// `rjump_range` mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename type>
-    class jump_range_req_mock: public _range_req_mock<jump_iter_req_mock<type>, iter_end_req_mock, type>
+    class jump_range_req_mock
+        : public _range_req_mock<jump_iter_req_mock<type>, iter_end_req_mock, type>
     {};
 
     /// --------------------------------------------------------------------------------------------
     /// `rmut_jump_range` mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename type>
-    class mut_jump_range_req_mock: public _mut_range_req_mock<mut_jump_iter_req_mock<type>, iter_end_req_mock, type>
+    class mut_jump_range_req_mock
+        : public _mut_range_req_mock<mut_jump_iter_req_mock<type>, iter_end_req_mock, type>
     {};
 
     /// --------------------------------------------------------------------------------------------
     /// `rarray_range` mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename type>
-    class array_range_req_mock: public _range_req_mock<array_iter_req_mock<type>, array_iter_req_mock<type>, type>
+    class array_range_req_mock
+        : public _range_req_mock<array_iter_req_mock<type>, array_iter_req_mock<type>, type>
     {};
 
     /// --------------------------------------------------------------------------------------------
@@ -107,14 +115,16 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     template <typename type>
     class mut_array_range_req_mock
-        : public _mut_range_req_mock<mut_array_iter_req_mock<type>, mut_array_iter_req_mock<type>, type>
+        : public _mut_range_req_mock<mut_array_iter_req_mock<type>, mut_array_iter_req_mock<type>,
+              type>
     {};
 
     /// --------------------------------------------------------------------------------------------
     /// `rcommon_range` mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename type>
-    class common_range_req_mock: public _range_req_mock<iter_req_mock<type>, iter_req_mock<type>, type>
+    class common_range_req_mock
+        : public _range_req_mock<iter_req_mock<type>, iter_req_mock<type>, type>
     {};
 
     /// --------------------------------------------------------------------------------------------

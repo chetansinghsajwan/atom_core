@@ -244,7 +244,8 @@ namespace atom
     class array_range_extensions<range_type, void>
         : public array_range_extensions<range_type, _array_range_extensions_impl<range_type>>
     {
-        using base_type = array_range_extensions<range_type, _array_range_extensions_impl<range_type>>;
+        using base_type =
+            array_range_extensions<range_type, _array_range_extensions_impl<range_type>>;
 
     public:
         using base_type::base_type;

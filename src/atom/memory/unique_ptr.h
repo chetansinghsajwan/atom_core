@@ -2,6 +2,7 @@
 #include "atom/core.h"
 #include "atom/memory/obj_helper.h"
 #include "atom/memory/shared_ptr_decl.h"
+
 // #include "atom/tti.h"
 
 namespace atom
@@ -10,7 +11,8 @@ namespace atom
     class unique_ptr_default_destroyer
     {
         static_assert(tti::is_pure<type>, "unique_ptr_default_destroyer only supports pure types.");
-        static_assert(not tti::is_void<type>, "unique_ptr_default_destroyer does not support void.");
+        static_assert(
+            not tti::is_void<type>, "unique_ptr_default_destroyer does not support void.");
 
     public:
         constexpr auto operator()(mut_ptr<type> val)

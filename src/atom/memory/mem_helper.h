@@ -274,12 +274,14 @@ namespace atom
             std::fill(mem.unwrap_as_byte(), (mem + count).unwrap_as_byte(), val);
         }
 
-        constexpr auto _fwd_copy(mem_ptr<void> src, usize count, mut_mem_ptr<void> dest) const -> void
+        constexpr auto _fwd_copy(mem_ptr<void> src, usize count, mut_mem_ptr<void> dest) const
+            -> void
         {
             std::copy(src.unwrap_as_byte(), (src + count).unwrap_as_byte(), dest.unwrap_as_byte());
         }
 
-        constexpr auto _bwd_copy(mem_ptr<void> src, usize count, mut_mem_ptr<void> dest) const -> void
+        constexpr auto _bwd_copy(mem_ptr<void> src, usize count, mut_mem_ptr<void> dest) const
+            -> void
         {
             std::copy_backward(
                 src.unwrap_as_byte(), (src + count).unwrap_as_byte(), dest.unwrap_as_byte());
@@ -287,24 +289,28 @@ namespace atom
 
         constexpr auto _shift_fwd(mut_mem_ptr<void> mem, usize mem_count, usize steps) const -> void
         {
-            std::shift_right(mem.unwrap_as_byte(), (mem + mem_count).unwrap_as_byte(), steps.unwrap());
+            std::shift_right(
+                mem.unwrap_as_byte(), (mem + mem_count).unwrap_as_byte(), steps.unwrap());
         }
 
         constexpr auto _shift_bwd(mut_mem_ptr<void> mem, usize mem_count, usize steps) const -> void
         {
-            std::shift_left(mem.unwrap_as_byte(), (mem + mem_count).unwrap_as_byte(), steps.unwrap());
+            std::shift_left(
+                mem.unwrap_as_byte(), (mem + mem_count).unwrap_as_byte(), steps.unwrap());
         }
 
-        constexpr auto _rotate_fwd(mut_mem_ptr<void> mem, usize mem_count, usize offset) const -> void
+        constexpr auto _rotate_fwd(mut_mem_ptr<void> mem, usize mem_count, usize offset) const
+            -> void
         {
-            std::rotate(
-                mem.unwrap_as_byte(), (mem + offset).unwrap_as_byte(), (mem + mem_count).unwrap_as_byte());
+            std::rotate(mem.unwrap_as_byte(), (mem + offset).unwrap_as_byte(),
+                (mem + mem_count).unwrap_as_byte());
         }
 
-        constexpr auto _rotate_bwd(mut_mem_ptr<void> mem, usize mem_count, usize offset) const -> void
+        constexpr auto _rotate_bwd(mut_mem_ptr<void> mem, usize mem_count, usize offset) const
+            -> void
         {
-            std::rotate(
-                mem.unwrap_as_byte(), (mem + offset).unwrap_as_byte(), (mem + mem_count).unwrap_as_byte());
+            std::rotate(mem.unwrap_as_byte(), (mem + offset).unwrap_as_byte(),
+                (mem + mem_count).unwrap_as_byte());
         }
     };
 }
