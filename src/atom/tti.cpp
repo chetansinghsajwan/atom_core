@@ -1,13 +1,14 @@
-#pragma once
-// #include <type_traits>
+export module atom.core:tti;
+import :std;
 
-// #include "atom/core/lang_extensions.h"
-
-namespace atom::tti
+namespace atom
 {
     class _empty
     {};
+}
 
+export namespace atom::tti
+{
     template <bool condition, typename ttrue, typename tfalse>
     using conditional_type = std::conditional_t<condition, ttrue, tfalse>;
 

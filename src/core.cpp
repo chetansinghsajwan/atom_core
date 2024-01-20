@@ -9,6 +9,7 @@ export import :build_config;
 export import :contracts_decl;
 export import :requirements;
 export import :time;
+export import :tti;
 
 export
 {
