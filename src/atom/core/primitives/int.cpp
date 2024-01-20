@@ -1,7 +1,7 @@
-#pragma once
-// #include "num.h"
-
-// #include <cstdint>
+export module atom.core:int_wrapper;
+import :std;
+import :num;
+import :uchar;
 
 /// ------------------------------------------------------------------------------------------------
 /// # to do
@@ -33,7 +33,7 @@ namespace atom
         }
     }
 
-    template <std::size_t>
+    export extern "C++" template <std::size_t>
     class int_string;
 
     template <typename this_final_type, typename value_type, typename limit_type = value_type>
@@ -97,7 +97,10 @@ namespace atom
         using base_type::base_type;
         using base_type::operator=;
     };
+}
 
+export namespace atom
+{
     using _i8 = std::int8_t;
     using _i16 = std::int16_t;
     using _i32 = std::int32_t;

@@ -1,9 +1,11 @@
-#pragma once
-// #include "num.h"
+export module atom.core:float_wrapper;
+import :std;
+import :num;
+import :uchar;
 
 namespace atom
 {
-    template <std::size_t size>
+    export extern "C++" template <std::size_t size>
     class float_string;
 
     template <typename this_final_type, typename value_type>
@@ -129,7 +131,10 @@ namespace atom
     public:
         using base_type::_val;
     };
+}
 
+export namespace atom
+{
     using _f16 = float;
     using _f32 = float;
     using _f64 = double;

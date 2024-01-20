@@ -14,7 +14,7 @@ namespace atom
     ////
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    template <std::size_t size>
+    extern "C++" template <std::size_t size>
     class int_string: public stack_string<size>
     {
         using base_type = stack_string<size>;
@@ -24,7 +24,7 @@ namespace atom
         using base_type::operator=;
     };
 
-    template <std::size_t size>
+    extern "C++" template <std::size_t size>
     class float_string: public stack_string<size>
     {
         using base_type = stack_string<size>;

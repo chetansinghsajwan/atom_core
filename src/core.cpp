@@ -5,6 +5,8 @@ import :wjcrypt;
 export import :core;
 export import :byte;
 export import :num;
+export import :int_wrapper;
+export import :float_wrapper;
 export import :uchar;
 export import :build_config;
 export import :contracts_decl;
