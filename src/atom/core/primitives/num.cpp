@@ -1,9 +1,8 @@
-#pragma once
-// #include "atom/contracts_decl.h"
-// #include "atom/core/requirements.h"
-
-// #include <cmath>
-// #include <numeric>
+export module atom.core:num;
+import :std;
+import :byte;
+import :contracts_decl;
+import :requirements;
 
 /// ------------------------------------------------------------------------------------------------
 /// # to do

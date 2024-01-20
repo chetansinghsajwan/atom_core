@@ -4,6 +4,7 @@ import :fmt;
 import :wjcrypt;
 export import :core;
 export import :byte;
+export import :num;
 export import :uchar;
 export import :build_config;
 export import :contracts_decl;
