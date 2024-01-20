@@ -1,7 +1,6 @@
 #pragma once
 // #include <type_traits>
 
-#include "atom/core/build_config.h"
 #include "atom/core/lang_extensions.h"
 
 namespace atom::tti

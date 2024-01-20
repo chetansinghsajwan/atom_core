@@ -2,7 +2,6 @@
 // #include <source_location>
 // #include <string_view>
 
-#include "atom/core/build_config.h"
 #include "atom/core/lang_extensions.h"
 
 namespace atom

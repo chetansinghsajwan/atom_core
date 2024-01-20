@@ -1,4 +1,5 @@
 #pragma once
+#include "atom/preprocessors.h"
 #include "atom/contracts.h"
 
 // #include <algorithm>

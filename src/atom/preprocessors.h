@@ -1,4 +1,4 @@
-#pragma once
+// #pragma once
 // #include <type_traits>
 
 /// ------------------------------------------------------------------------------------------------
@@ -136,15 +136,16 @@
 /// ------------------------------------------------------------------------------------------------
 /// ATOM_CONDITIONAL_FIELD
 /// ------------------------------------------------------------------------------------------------
-#define ATOM_CONDITIONAL_FIELD(Condition, type)                                                       \
+#define ATOM_CONDITIONAL_FIELD(Condition, type)                                                    \
     ATOM_ATTR_NO_UNIQUE_ADDRESS                                                                    \
-    _atom::conditional_field<(Condition), type>
+    std::conditional_t<Condition, type, bool>
+//     _atom::conditional_field<(Condition), type>
 
-namespace _atom
-{
-    class _empty
-    {};
+// namespace _atom
+// {
+//     class _empty
+//     {};
 
-    template <bool cond, typename type>
-    using conditional_field = std::conditional_t<cond, type, _empty>;
-}
+//     template <bool cond, typename type>
+//     using conditional_field = std::conditional_t<cond, type, _empty>;
+// }
