@@ -1,11 +1,11 @@
-#pragma once
-#include "atom/core.h"
-
-// #include <memory>
+export module atom.core:memory.legacy_mem_allocator;
+import :std;
+import :core;
+import :mem_ptr;
 
 namespace atom
 {
-    class legacy_mem_allocator
+    export class legacy_mem_allocator
     {
     public:
         auto alloc(usize size) -> mut_mem_ptr<void>

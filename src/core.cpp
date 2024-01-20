@@ -13,6 +13,8 @@ export import :ptr;
 export import :mem_ptr;
 export import :array_iter;
 export import :range;
+export import :memory.legacy_mem_allocator;
+export import :memory.default_mem_allocator;
 
 export
 {
