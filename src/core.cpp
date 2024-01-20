@@ -2,7 +2,8 @@ export module atom.core;
 import :std;
 import :fmt;
 import :wjcrypt;
-export import :primtives.byte;
+export import :byte;
+export import :uchar;
 export import :time;
 
 export

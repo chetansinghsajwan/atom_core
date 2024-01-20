@@ -1,10 +1,11 @@
-#pragma once
+export module atom.core:uchar;
+import :byte;
 
 namespace atom
 {
-    using _char = char;
+    export using _char = char;
 
-    class uchar
+    export class uchar
     {
         using this_type = uchar;
 
