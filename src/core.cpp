@@ -11,6 +11,8 @@ export import :tti;
 export import :random;
 export import :ptr;
 export import :mem_ptr;
+export import :invokable;
+export import :invokable_ptr;
 export import :array_iter;
 export import :range;
 export import :memory.legacy_mem_allocator;

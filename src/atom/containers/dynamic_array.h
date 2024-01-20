@@ -1,6 +1,6 @@
 #pragma once
 #include "atom/contracts.h"
-#include "atom/invokable/invokable.h"
+// #include "atom/invokable/invokable.h"
 // #include "atom/memory/default_mem_allocator.h"
 #include "atom/range.h"
 #include "_dynamic_array_impl.h"

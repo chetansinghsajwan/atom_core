@@ -1,4 +1,5 @@
-#include "atom/invokable/invokable.h"
+export module atom.core:invokable_ptr;
+import :invokable;
 
 namespace atom
 {
@@ -12,6 +13,6 @@ namespace atom
         using type = result_type (*)(arg_types...);
     };
 
-    template <typename... tsign>
+    export template <typename... tsign>
     using invokable_ptr = typename _invokable_ptr_impl<tsign...>::type;
 }

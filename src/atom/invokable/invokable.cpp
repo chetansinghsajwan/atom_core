@@ -1,6 +1,5 @@
-#pragma once
-#include "atom/core.h"
-// #include "atom/tti.h"
+export module atom.core:invokable;
+import :std;
 
 namespace atom
 {
@@ -22,6 +21,6 @@ namespace atom
         static constexpr bool value = std::is_invocable_r_v<result_type, invokable_type, arg_types...>;
     };
 
-    template <typename invokable_type, typename... tsignature>
+    export template <typename invokable_type, typename... tsignature>
     concept rinvokable = _is_invokable_impl<invokable_type, tsignature...>::value;
 }
