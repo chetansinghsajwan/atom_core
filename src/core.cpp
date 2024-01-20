@@ -5,6 +5,7 @@ import :wjcrypt;
 export import :core;
 export import :build_config;
 export import :contracts_decl;
+export import :static_storage;
 export import :time;
 export import :tti;
 export import :random;

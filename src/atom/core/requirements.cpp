@@ -108,16 +108,16 @@ export namespace atom
     concept rtrivially_default_constructible = rtrivially_constructible<type>;
 
     /// --------------------------------------------------------------------------------------------
-    /// ensures each type in `ts...` is `default_constructible`.
+    /// ensures each type in `types...` is `default_constructible`.
     /// --------------------------------------------------------------------------------------------
-    template <typename... ts>
-    concept rdefault_constructible_all = (rdefault_constructible<ts> and ...);
+    template <typename... types>
+    concept rdefault_constructible_all = (rdefault_constructible<types> and ...);
 
     /// --------------------------------------------------------------------------------------------
-    /// ensures each type in `ts...` is `trivially_default_constructible`.
+    /// ensures each type in `types...` is `trivially_default_constructible`.
     /// --------------------------------------------------------------------------------------------
-    template <typename... ts>
-    concept rtrivially_default_constructible_all = (rtrivially_default_constructible<ts> and ...);
+    template <typename... types>
+    concept rtrivially_default_constructible_all = (rtrivially_default_constructible<types> and ...);
 
     /// --------------------------------------------------------------------------------------------
     /// ensures `type` is `copy_constructible`.
@@ -132,16 +132,16 @@ export namespace atom
     concept rtrivially_copy_constructible = rtrivially_constructible<type, const type&>;
 
     /// --------------------------------------------------------------------------------------------
-    /// ensures each type in `ts...` is `copy_constructible`.
+    /// ensures each type in `types...` is `copy_constructible`.
     /// --------------------------------------------------------------------------------------------
-    template <typename... ts>
-    concept rcopy_constructible_all = (rcopy_constructible<ts> and ...);
+    template <typename... types>
+    concept rcopy_constructible_all = (rcopy_constructible<types> and ...);
 
     /// --------------------------------------------------------------------------------------------
-    /// ensures each type in `ts...` is `trivially_copy_constructible`.
+    /// ensures each type in `types...` is `trivially_copy_constructible`.
     /// --------------------------------------------------------------------------------------------
-    template <typename... ts>
-    concept rtrivially_copy_constructible_all = (rtrivially_copy_constructible<ts> and ...);
+    template <typename... types>
+    concept rtrivially_copy_constructible_all = (rtrivially_copy_constructible<types> and ...);
 
     /// --------------------------------------------------------------------------------------------
     /// ensures `type` is `move_constructible`.
@@ -156,16 +156,16 @@ export namespace atom
     concept rtrivially_move_constructible = rtrivially_constructible<type, type&&>;
 
     /// --------------------------------------------------------------------------------------------
-    /// ensures each type in `ts...` is `move_constructible`.
+    /// ensures each type in `types...` is `move_constructible`.
     /// --------------------------------------------------------------------------------------------
-    template <typename... ts>
-    concept rmove_constructible_all = (rmove_constructible<ts> and ...);
+    template <typename... types>
+    concept rmove_constructible_all = (rmove_constructible<types> and ...);
 
     /// --------------------------------------------------------------------------------------------
-    /// ensures each type in `ts...` is `trivially_move_constructible`.
+    /// ensures each type in `types...` is `trivially_move_constructible`.
     /// --------------------------------------------------------------------------------------------
-    template <typename... ts>
-    concept rtrivially_move_constructible_all = (rtrivially_move_constructible<ts> and ...);
+    template <typename... types>
+    concept rtrivially_move_constructible_all = (rtrivially_move_constructible<types> and ...);
 
     /// --------------------------------------------------------------------------------------------
     /// ensures `type` is `default_initializable`.
@@ -180,10 +180,10 @@ export namespace atom
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// ensures each type in `ts...` is `default_initializable`.
+    /// ensures each type in `types...` is `default_initializable`.
     /// --------------------------------------------------------------------------------------------
-    template <typename... ts>
-    concept rdefault_initializable_all = (rdefault_initializable<ts> and ...);
+    template <typename... types>
+    concept rdefault_initializable_all = (rdefault_initializable<types> and ...);
 
     /// --------------------------------------------------------------------------------------------
     /// ensures `type0` is `assignable` using `type1`.
@@ -213,16 +213,16 @@ export namespace atom
     concept rtrivially_copy_assignable = rtrivially_assignable<type&, const type&>;
 
     /// --------------------------------------------------------------------------------------------
-    /// ensures each type in `ts...` is `copy_assignable`.
+    /// ensures each type in `types...` is `copy_assignable`.
     /// --------------------------------------------------------------------------------------------
-    template <typename... ts>
-    concept rcopy_assignable_all = (rcopy_assignable<ts> and ...);
+    template <typename... types>
+    concept rcopy_assignable_all = (rcopy_assignable<types> and ...);
 
     /// --------------------------------------------------------------------------------------------
-    /// ensures each type in `ts...` is `trivially_copy_assignable`.
+    /// ensures each type in `types...` is `trivially_copy_assignable`.
     /// --------------------------------------------------------------------------------------------
-    template <typename... ts>
-    concept rtrivially_copy_assignable_all = (rtrivially_copy_assignable<ts> and ...);
+    template <typename... types>
+    concept rtrivially_copy_assignable_all = (rtrivially_copy_assignable<types> and ...);
 
     /// --------------------------------------------------------------------------------------------
     /// ensures `type` is `move_assignable`.
@@ -237,16 +237,16 @@ export namespace atom
     concept rtrivially_move_assignable = rtrivially_assignable<type&, type&&>;
 
     /// --------------------------------------------------------------------------------------------
-    /// ensures each type in `ts...` is `move_assignable`.
+    /// ensures each type in `types...` is `move_assignable`.
     /// --------------------------------------------------------------------------------------------
-    template <typename... ts>
-    concept rmove_assignable_all = (rmove_assignable<ts> and ...);
+    template <typename... types>
+    concept rmove_assignable_all = (rmove_assignable<types> and ...);
 
     /// --------------------------------------------------------------------------------------------
-    /// ensures each type in `ts...` is `trivially_move_assignable`.
+    /// ensures each type in `types...` is `trivially_move_assignable`.
     /// --------------------------------------------------------------------------------------------
-    template <typename... ts>
-    concept rtrivially_move_assignable_all = (rtrivially_move_assignable<ts> and ...);
+    template <typename... types>
+    concept rtrivially_move_assignable_all = (rtrivially_move_assignable<types> and ...);
 
     /// --------------------------------------------------------------------------------------------
     /// ensures `type` is``copy_constructible` and `copy_assignable`.
@@ -262,16 +262,16 @@ export namespace atom
         rtrivially_copy_constructible<type> && rtrivially_copy_assignable<type>;
 
     /// --------------------------------------------------------------------------------------------
-    /// ensures each type in `ts...` is `copyable`.
+    /// ensures each type in `types...` is `copyable`.
     /// --------------------------------------------------------------------------------------------
-    template <typename... ts>
-    concept rcopyable_all = (rcopyable<ts> and ...);
+    template <typename... types>
+    concept rcopyable_all = (rcopyable<types> and ...);
 
     /// --------------------------------------------------------------------------------------------
-    /// ensures each type in `ts...` is `trivially_copyable`.
+    /// ensures each type in `types...` is `trivially_copyable`.
     /// --------------------------------------------------------------------------------------------
-    template <typename... ts>
-    concept rtrivially_copyable_all = (rtrivially_copyable<ts> and ...);
+    template <typename... types>
+    concept rtrivially_copyable_all = (rtrivially_copyable<types> and ...);
 
     /// --------------------------------------------------------------------------------------------
     /// ensures `type` is `move_constructible` and `move_assignable`.
@@ -287,16 +287,16 @@ export namespace atom
         rtrivially_move_constructible<type> && rtrivially_move_assignable<type>;
 
     /// --------------------------------------------------------------------------------------------
-    /// ensures each type in `ts...` is `moveable`.
+    /// ensures each type in `types...` is `moveable`.
     /// --------------------------------------------------------------------------------------------
-    template <typename... ts>
-    concept rmoveable_all = (rmoveable<ts> and ...);
+    template <typename... types>
+    concept rmoveable_all = (rmoveable<types> and ...);
 
     /// --------------------------------------------------------------------------------------------
-    /// ensures each type in `ts...` is `trivially_moveable`.
+    /// ensures each type in `types...` is `trivially_moveable`.
     /// --------------------------------------------------------------------------------------------
-    template <typename... ts>
-    concept rtrivially_moveable_all = (rtrivially_moveable<ts> and ...);
+    template <typename... types>
+    concept rtrivially_moveable_all = (rtrivially_moveable<types> and ...);
 
     /// --------------------------------------------------------------------------------------------
     /// ensures `type0` is `swappable` with `type1`.
@@ -336,16 +336,16 @@ export namespace atom
     concept rtrivially_destructible = std::is_trivially_destructible_v<type>;
 
     /// --------------------------------------------------------------------------------------------
-    /// ensures each type in `ts...` is `destructible`.
+    /// ensures each type in `types...` is `destructible`.
     /// --------------------------------------------------------------------------------------------
-    template <typename... ts>
-    concept rdestructible_all = (rdestructible<ts> and ...);
+    template <typename... types>
+    concept rdestructible_all = (rdestructible<types> and ...);
 
     /// --------------------------------------------------------------------------------------------
-    /// ensures each type in `ts...` is `trivally_destructible`.
+    /// ensures each type in `types...` is `trivally_destructible`.
     /// --------------------------------------------------------------------------------------------
-    template <typename... ts>
-    concept rtrivially_destructible_all = (rtrivially_destructible<ts> and ...);
+    template <typename... types>
+    concept rtrivially_destructible_all = (rtrivially_destructible<types> and ...);
 
     /// --------------------------------------------------------------------------------------------
     /// ensures `type0` and `type1` are `equality_comparable`.

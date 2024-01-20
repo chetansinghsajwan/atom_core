@@ -1,5 +1,5 @@
 #pragma once
-#include "atom/core/static_storage.h"
+// #include "atom/core/static_storage.h"
 
 namespace atom
 {

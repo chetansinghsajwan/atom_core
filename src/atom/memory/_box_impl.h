@@ -1,6 +1,6 @@
 #pragma once
 #include "atom/core.h"
-#include "atom/core/static_storage.h"
+// #include "atom/core/static_storage.h"
 #include "atom/exceptions.h"
 
 // #include "atom/invokable/invokable_ptr.h"

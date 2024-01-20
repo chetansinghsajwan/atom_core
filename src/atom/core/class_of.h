@@ -5,8 +5,8 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename type, typename... ts>
-    class class_of: public class_of<ts...>
+    template <typename type, typename... types>
+    class class_of: public class_of<types...>
     {
     public:
         type value;

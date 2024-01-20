@@ -1,21 +1,22 @@
-#pragma once
-#include "atom/core/primitives.h"
-
-// #include "atom/core/type_list.h"
+export module atom.core:static_storage;
+import :core;
+import :mem_ptr;
+import :type_list;
+import :contracts_decl;
 
 namespace atom
 {
-    template <typename... ts>
+    export template <typename... types>
     class static_storage_for
     {
     private:
-        using _types = type_list<ts...>;
+        using _types = type_list<types...>;
 
     public:
         alignas(_types::max_align.unwrap()) byte storage[_types::max_size];
     };
 
-    template <usize in_size>
+    export template <usize in_size>
     class static_storage
     {
     public:
