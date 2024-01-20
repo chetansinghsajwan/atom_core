@@ -1,6 +1,6 @@
 export module atom.core:range.iter_requirements;
 import :requirements;
-import :int_wrapper;
+import :core;
 import :mem_ptr;
 
 // clang-format off

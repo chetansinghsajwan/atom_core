@@ -1,7 +1,7 @@
 export module atom.core:range.array_range_extensions;
 import :range.jump_range_extensions;
 import :contracts_decl;
-import :int_wrapper;
+import :core;
 import :mem_ptr;
 
 namespace atom

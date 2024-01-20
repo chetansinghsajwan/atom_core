@@ -1,7 +1,7 @@
 export module atom.core:range.range_extensions;
 import :std;
 import :array_iter;
-import :int_wrapper;
+import :core;
 import :requirements;
 import :range.iter_requirements;
 import :range.range_requirements;

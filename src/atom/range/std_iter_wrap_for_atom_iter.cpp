@@ -2,7 +2,7 @@ export module atom.core:range.std_iter_wrap_for_atom_iter;
 import :std;
 import :tti;
 import :contracts_decl;
-import :int_wrapper;
+import :core;
 import :range.iter_requirements;
 import :range.range_requirements;
 

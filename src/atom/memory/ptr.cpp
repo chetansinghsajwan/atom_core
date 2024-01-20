@@ -1,6 +1,6 @@
 export module atom.core:ptr;
 import :std;
-import :byte;
+import :core;
 import :tti;
 import :requirements;
 import :contracts_decl;

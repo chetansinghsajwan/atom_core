@@ -1,7 +1,4 @@
 export module atom.core:range.make_range;
-import :std;
-import :core;
-import :array_iter;
 import :range.iter_requirements;
 import :range.range_requirements;
 import :range.range_extensions;
@@ -14,10 +11,11 @@ import :range.mut_fwd_range_extensions;
 import :range.mut_bidi_range_extensions;
 import :range.mut_jump_range_extensions;
 import :range.mut_array_range_extensions;
+import :std;
+import :core;
+import :array_iter;
 import :tti;
 import :mem_ptr;
-import :int_wrapper;
-import :uchar;
 
 namespace atom
 {

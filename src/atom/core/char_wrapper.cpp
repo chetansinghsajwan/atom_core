@@ -1,5 +1,5 @@
-export module atom.core:uchar;
-import :byte;
+export module atom.core:core.char_wrapper;
+import :core.byte;
 
 namespace atom
 {

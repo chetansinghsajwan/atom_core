@@ -1,8 +1,7 @@
-export module atom.core:num;
+export module atom.core:core.num_wrapper;
+import :core.byte;
 import :std;
-import :byte;
 import :contracts_decl;
-import :requirements;
 
 /// ------------------------------------------------------------------------------------------------
 /// # to do
@@ -24,7 +23,7 @@ namespace atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename num_type>
-    concept rnum = requires(num_type num) { requires rderived_from<num_type, _num_id>; };
+    concept rnum = requires(num_type num) { requires std::derived_from<num_type, _num_id>; };
 
     template <typename in_final_type, typename in_value_type, typename limit_type>
     class _num_impl

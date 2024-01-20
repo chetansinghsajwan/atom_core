@@ -21,7 +21,8 @@ export namespace atom
     /// ensures unqualified type of `type0` is same as unqualified type of `type1`.
     /// --------------------------------------------------------------------------------------------
     template <typename type0, typename type1>
-    concept rsame_as_unqualified = std::same_as<std::remove_cvref_t<type0>, std::remove_cvref_t<type1>>;
+    concept rsame_as_unqualified =
+        std::same_as<std::remove_cvref_t<type0>, std::remove_cvref_t<type1>>;
 
     /// --------------------------------------------------------------------------------------------
     /// enusres `type` is const-qualified.
@@ -76,7 +77,8 @@ export namespace atom
     /// ensures `tderived` is same as or derived from `tbase`.
     /// --------------------------------------------------------------------------------------------
     template <typename derived_type, typename base_type>
-    concept rsame_or_derived_from = rsame_as<derived_type, base_type> || rderived_from<derived_type, base_type>;
+    concept rsame_or_derived_from =
+        rsame_as<derived_type, base_type> || rderived_from<derived_type, base_type>;
 
     /// --------------------------------------------------------------------------------------------
     /// ensures `type` is `constructible` using `args...`.
@@ -166,7 +168,8 @@ export namespace atom
     /// ensures `type` is `default_initializable`.
     /// --------------------------------------------------------------------------------------------
     template <typename type>
-    concept rdefault_initializable = requires {
+    concept rdefault_initializable = requires
+    {
         requires rdefault_constructible<type>;
 
         (void)new type;
@@ -252,7 +255,8 @@ export namespace atom
     /// ensures `type` is``copy_constructible` and `trivially_copy_assignable`.
     /// --------------------------------------------------------------------------------------------
     template <typename type>
-    concept rtrivially_copyable = rtrivially_copy_constructible<type> && rtrivially_copy_assignable<type>;
+    concept rtrivially_copyable =
+        rtrivially_copy_constructible<type> && rtrivially_copy_assignable<type>;
 
     /// --------------------------------------------------------------------------------------------
     /// ensures each type in `ts...` is `copyable`.
@@ -276,7 +280,8 @@ export namespace atom
     /// ensures `type` is `move_constructible` and `trivially_move_assignable`.
     /// --------------------------------------------------------------------------------------------
     template <typename type>
-    concept rtrivially_moveable = rtrivially_move_constructible<type> && rtrivially_move_assignable<type>;
+    concept rtrivially_moveable =
+        rtrivially_move_constructible<type> && rtrivially_move_assignable<type>;
 
     /// --------------------------------------------------------------------------------------------
     /// ensures each type in `ts...` is `moveable`.
@@ -300,7 +305,8 @@ export namespace atom
     /// ensures `type0` is `trivially_swappable` with `t2`.
     /// --------------------------------------------------------------------------------------------
     template <typename type0, typename type1>
-    concept rtrivially_swappable_with = rtrivially_assignable<type0, type1> && rtrivially_assignable<type1, type0>;
+    concept rtrivially_swappable_with =
+        rtrivially_assignable<type0, type1> && rtrivially_assignable<type1, type0>;
 
     /// --------------------------------------------------------------------------------------------
     /// ensures `type` is `swappable` with itself.
@@ -408,7 +414,8 @@ export namespace atom
     /// 
     /// --------------------------------------------------------------------------------------------
     template <typename type>
-    concept rpure = not std::is_const_v<type> and not std::is_volatile_v<type> and not std::is_reference_v<type>;
+    concept rpure = not std::is_const_v<type> and not std::is_volatile_v<type>
+        and not std::is_reference_v<type>;
 
     /// --------------------------------------------------------------------------------------------
     /// ensures `type` is {semi_regular}.

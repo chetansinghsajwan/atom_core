@@ -3,7 +3,7 @@ module;
 
 export module atom.core:range.mut_range_extensions;
 import :range.range_extensions;
-import :int_wrapper;
+import :core;
 import :requirements;
 
 namespace atom

@@ -1,6 +1,5 @@
 export module atom.core:mem_ptr;
-import :byte;
-import :int_wrapper;
+import :core;
 import :ptr;
 import :requirements;
 

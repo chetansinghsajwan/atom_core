@@ -1,7 +1,7 @@
-export module atom.core:float_wrapper;
+export module atom.core:core.float_wrapper;
+import :core.num_wrapper;
+import :core.char_wrapper;
 import :std;
-import :num;
-import :uchar;
 
 namespace atom
 {

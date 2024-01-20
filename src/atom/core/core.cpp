@@ -1,4 +1,4 @@
-export module atom.core:core;
+export module atom.core:core.core;
 import :std;
 
 export namespace atom
@@ -10,13 +10,13 @@ export namespace atom
     }
 
     template <typename value_type>
-    constexpr value_type&& forward(typename std::remove_reference_t<value_type>& val)
+    constexpr auto forward(typename std::remove_reference_t<value_type>& val) -> value_type&&
     {
         return static_cast<value_type&&>(val);
     }
 
     template <typename value_type>
-    constexpr value_type&& forward(typename std::remove_reference_t<value_type>&& val)
+    constexpr auto forward(typename std::remove_reference_t<value_type>&& val) -> value_type&&
     {
         static_assert(
             !std::is_lvalue_reference_v<value_type>, "can not forward an rvalue as an lvalue.");

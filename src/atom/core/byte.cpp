@@ -1,4 +1,4 @@
-export module atom.core:byte;
+export module atom.core:core.byte;
 
 namespace atom
 {

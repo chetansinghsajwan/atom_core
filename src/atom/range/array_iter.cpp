@@ -1,5 +1,5 @@
 export module atom.core:array_iter;
-import :int_wrapper;
+import :core;
 import :mem_ptr;
 import :tti;
 
