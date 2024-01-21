@@ -1,7 +1,6 @@
 #pragma once
 #include "containers.h"
 #include "contracts.h"
-#include "exceptions.h"
 #include "hash.h"
 #include "invokable.h"
 #include "memory.h"

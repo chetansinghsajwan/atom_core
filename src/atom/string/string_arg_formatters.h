@@ -5,7 +5,6 @@
 #include "string_converter.h"
 #include "string_view_converter.h"
 
-#include "atom/exceptions.h"
 
 // #include "atom/tti.h"
 
@@ -28,18 +27,18 @@ namespace atom
     using _fmt_fmt_ex = ::fmt::format_error;
 
     /// --------------------------------------------------------------------------------------------
-    /// err thrown during formatting error.
+    /// error thrown during formatting error.
     /// --------------------------------------------------------------------------------------------
-    class string_fmt_err: public err
+    class string_fmt_error: public error
     {
     public:
-        string_fmt_err(std::string_view msg)
-            : err{ msg }
+        string_fmt_error(std::string_view msg)
+            : error(msg)
         {}
 
     public:
-        string_fmt_err(const _fmt_fmt_ex& fmt_ex)
-            : err{ fmt_ex.what() }
+        string_fmt_error(const _fmt_fmt_ex& fmt_ex)
+            : error(fmt_ex.what())
         {}
     };
 

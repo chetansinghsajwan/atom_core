@@ -100,7 +100,7 @@ namespace atom
             }
             catch (const _fmt_fmt_ex& err)
             {
-                throw string_fmt_err(err);
+                throw string_fmt_error(err);
             }
         }
 

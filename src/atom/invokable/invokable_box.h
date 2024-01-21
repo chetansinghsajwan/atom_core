@@ -1,5 +1,4 @@
 #pragma once
-#include "atom/exceptions.h"
 #include "atom/memory/object_box.h"
 // #include "atom/string.h"
 

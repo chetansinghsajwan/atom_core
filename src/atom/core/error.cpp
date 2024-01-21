@@ -1,12 +1,12 @@
-#pragma once
-// #include "atom/core.h"
+export module atom.core:error;
+import :std;
 
-namespace atom
+export namespace atom
 {
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    class err
+    class error
     {
     public:
         std::string_view msg;
