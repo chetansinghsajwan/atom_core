@@ -4,6 +4,7 @@ import :core;
 import :mem_ptr;
 
 // clang-format off
+
 namespace atom
 {
     template <typename iter_type, typename type>
