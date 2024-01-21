@@ -1,7 +1,6 @@
 #pragma once
 #include "atom/exceptions.h"
 #include "atom/hash/private/t1_hash.h"
-#include "atom/math.h"
 
 namespace atom
 {

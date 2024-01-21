@@ -1,5 +1,4 @@
 #pragma once
-#include "atom/math.h"
 // #include "atom/range.h"
 // #include "atom/string.h"
 #include "uuid.h"
@@ -49,14 +48,14 @@ namespace atom
                     continue;
                 }
 
-                byte high = math::char_to_hex(it.value());
+                byte high = _char_to_hex(it.value());
                 if (high == byte(-1))
                     return uuid::null;
 
                 j++;
                 it.next();
 
-                byte low = math::char_to_hex(it.value());
+                byte low = _char_to_hex(it.value());
                 if (low == byte(-1))
                     return uuid::null;
 
@@ -93,7 +92,7 @@ namespace atom
                     continue;
                 }
 
-                byte high = math::char_to_hex(it.value());
+                byte high = _char_to_hex(it.value());
                 if (high == byte(-1))
                     return uuid::null;
 
@@ -102,7 +101,7 @@ namespace atom
                 if (it.is_eq(it_end))
                     return uuid::null;
 
-                byte low = math::char_to_hex(it.value());
+                byte low = _char_to_hex(it.value());
                 if (low == byte(-1))
                     return uuid::null;
 
@@ -118,6 +117,18 @@ namespace atom
             }
 
             return uuid;
+        }
+
+        static constexpr auto _char_to_hex(uchar ch) -> byte
+        {
+            if (ch >= uchar('0') && ch <= uchar('9'))
+                return byte(ch - uchar('0'));
+            if (ch >= uchar('a') && ch <= uchar('f'))
+                return byte(10 + ch - uchar('a'));
+            if (ch >= uchar('a') && ch <= uchar('f'))
+                return byte(10 + ch - uchar('a'));
+
+            return -1;
         }
     };
 }

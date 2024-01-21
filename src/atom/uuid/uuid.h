@@ -1,5 +1,4 @@
 #pragma once
-#include "atom/math.h"
 // #include "atom/core/static_storage.h"
 // #include "atom/string/string.h"
 #include "atom/containers/output_req.h"
@@ -74,26 +73,42 @@ namespace atom
         constexpr auto write_string(output_type&& out) const
             requires(routput<output_type, uchar>)
         {
-            out += math::hex_to_char(bytes[0]);
-            out += math::hex_to_char(bytes[1]);
-            out += math::hex_to_char(bytes[2]);
-            out += math::hex_to_char(bytes[3]);
+            out += _hex_low_to_char(bytes[0]);
+            out += _hex_high_to_char(bytes[0]);
+            out += _hex_low_to_char(bytes[1]);
+            out += _hex_high_to_char(bytes[1]);
+            out += _hex_low_to_char(bytes[2]);
+            out += _hex_high_to_char(bytes[2]);
+            out += _hex_low_to_char(bytes[3]);
+            out += _hex_high_to_char(bytes[3]);
             out += uchar('-');
-            out += math::hex_to_char(bytes[4]);
-            out += math::hex_to_char(bytes[5]);
+            out += _hex_low_to_char(bytes[4]);
+            out += _hex_high_to_char(bytes[4]);
+            out += _hex_low_to_char(bytes[5]);
+            out += _hex_high_to_char(bytes[5]);
             out += uchar('-');
-            out += math::hex_to_char(bytes[6]);
-            out += math::hex_to_char(bytes[7]);
+            out += _hex_low_to_char(bytes[6]);
+            out += _hex_high_to_char(bytes[6]);
+            out += _hex_low_to_char(bytes[7]);
+            out += _hex_high_to_char(bytes[7]);
             out += uchar('-');
-            out += math::hex_to_char(bytes[8]);
-            out += math::hex_to_char(bytes[9]);
+            out += _hex_low_to_char(bytes[8]);
+            out += _hex_high_to_char(bytes[8]);
+            out += _hex_low_to_char(bytes[9]);
+            out += _hex_high_to_char(bytes[9]);
             out += uchar('-');
-            out += math::hex_to_char(bytes[10]);
-            out += math::hex_to_char(bytes[11]);
-            out += math::hex_to_char(bytes[12]);
-            out += math::hex_to_char(bytes[13]);
-            out += math::hex_to_char(bytes[14]);
-            out += math::hex_to_char(bytes[15]);
+            out += _hex_low_to_char(bytes[10]);
+            out += _hex_high_to_char(bytes[10]);
+            out += _hex_low_to_char(bytes[11]);
+            out += _hex_high_to_char(bytes[11]);
+            out += _hex_low_to_char(bytes[12]);
+            out += _hex_high_to_char(bytes[12]);
+            out += _hex_low_to_char(bytes[13]);
+            out += _hex_high_to_char(bytes[13]);
+            out += _hex_low_to_char(bytes[14]);
+            out += _hex_high_to_char(bytes[14]);
+            out += _hex_low_to_char(bytes[15]);
+            out += _hex_high_to_char(bytes[15]);
         }
 
         constexpr auto to_string() const -> string
@@ -102,6 +117,20 @@ namespace atom
             write_string(out);
             return out;
         }
+
+    private:
+        static constexpr auto _hex_low_to_char(byte hex) -> uchar
+        {
+            return _chars[hex & 0b00001111];
+        }
+
+        static constexpr auto _hex_high_to_char(byte hex) -> uchar
+        {
+            return _chars[hex >> 4];
+        }
+
+    private:
+        static constexpr char _chars[] = "0123456789abcdef";
 
     public:
         static_storage<16> bytes;

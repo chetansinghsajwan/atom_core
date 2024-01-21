@@ -1,7 +1,6 @@
 #pragma once
 #include "atom/exceptions.h"
 #include "atom/hash/private/t1_hash.h"
-#include "atom/math.h"
 
 namespace atom
 {
@@ -55,7 +54,7 @@ namespace atom
                     return t1_hash::null;
                 }
 
-                byte hex1 = math::char_to_hex(it.value());
+                byte hex1 = _char_to_hex(it.value());
                 if (hex1 == byte(-1))
                 {
                     return t1_hash::null;
@@ -69,7 +68,7 @@ namespace atom
                     return t1_hash::null;
                 }
 
-                byte hex2 = math::char_to_hex(it.value());
+                byte hex2 = _char_to_hex(it.value());
                 if (hex2 == byte(-1))
                 {
                     return t1_hash::null;
@@ -98,7 +97,7 @@ namespace atom
             t1_hash hash;
             for (usize i = 0; i < 20; i++)
             {
-                byte hex1 = math::char_to_hex(it.value());
+                byte hex1 = _char_to_hex(it.value());
                 if (hex1 == byte(-1))
                 {
                     return t1_hash::null;
@@ -108,7 +107,7 @@ namespace atom
                 hex1 = hex1 << 4;
                 it.next();
 
-                byte hex2 = math::char_to_hex(it.value());
+                byte hex2 = _char_to_hex(it.value());
                 if (hex2 == byte(-1))
                 {
                     return t1_hash::null;
@@ -126,7 +125,7 @@ namespace atom
             t1_hash hash;
             for (usize i = 0; i < size * 2; i += 2)
             {
-                byte hex1 = math::char_to_hex(str[i]);
+                byte hex1 = _char_to_hex(str[i]);
                 if (hex1 == byte(-1))
                 {
                     return t1_hash::null;
@@ -135,7 +134,7 @@ namespace atom
                 // left shift 4 bits to make space for next 4 bits.
                 hex1 = hex1 << 4;
 
-                byte hex2 = math::char_to_hex(str[i + 1]);
+                byte hex2 = _char_to_hex(str[i + 1]);
                 if (hex2 == byte(-1))
                 {
                     return t1_hash::null;
@@ -145,6 +144,18 @@ namespace atom
             }
 
             return hash;
+        }
+
+        static constexpr auto _char_to_hex(uchar ch) -> byte
+        {
+            if (ch >= uchar('0') && ch <= uchar('9'))
+                return byte(ch - uchar('0'));
+            if (ch >= uchar('a') && ch <= uchar('f'))
+                return byte(10 + ch - uchar('a'));
+            if (ch >= uchar('a') && ch <= uchar('f'))
+                return byte(10 + ch - uchar('a'));
+
+            return -1;
         }
     };
 }

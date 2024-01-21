@@ -20,13 +20,27 @@ namespace atom
         constexpr auto write_string(const t1_hash& hash, output_type&& out)
             requires(routput<output_type, char>)
         {
+            // todo: fix this iteration
             // for (byte b : hash.bytes)
             // {
-            //     stack_string<2> chars = math::hex_to_char(b);
-            //     out += chars[0];
-            //     out += chars[1];
+            //     out += _hex_low_to_char(b);
+            //     out += _hex_high_to_char(b);
             // }
         }
+
+    private:
+        static constexpr auto _hex_low_to_char(byte hex) -> uchar
+        {
+            return _chars[hex & 0b00001111];
+        }
+
+        static constexpr auto _hex_high_to_char(byte hex) -> uchar
+        {
+            return _chars[hex >> 4];
+        }
+
+    private:
+        static constexpr char _chars[] = "0123456789abcdef";
     };
 
     template <typename t1_hash>
