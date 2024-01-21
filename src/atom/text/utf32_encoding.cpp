@@ -1,8 +1,8 @@
-#pragma once
+export module atom.core:text.utf32_encoding;
 
 namespace atom::text
 {
-    class utf32_encoding
+    export class utf32_encoding
     {
     public:
         using char_type = char32_t;

@@ -1,11 +1,12 @@
-#pragma once
+export module atom.core:text.utf8_encoding;
+import :core;
 
 namespace atom::text
 {
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    class utf8_encoding
+    export class utf8_encoding
     {
     public:
         using char_type = uchar;

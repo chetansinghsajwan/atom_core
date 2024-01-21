@@ -1,9 +1,12 @@
-#pragma once
-#include "buf_string.h"
+export module atom.core:string;
+import :buf_string;
+import :memory.default_mem_allocator;
+import :std;
+import :core;
 
 namespace atom
 {
-    class string: public buf_string<40, default_mem_allocator>
+    export class string: public buf_string<40, default_mem_allocator>
     {
         using base_type = buf_string<40, default_mem_allocator>;
 
@@ -21,11 +24,9 @@ namespace std
     public:
         auto operator()(const atom::string& str) const -> std::size_t
         {
-            using std_stirng_view = basic_string_view<char>;
-
             const char* begin = str.to_std_char_ptr();
             atom::_usize count = str.count().unwrap();
-            return hash<std_stirng_view>()(std_stirng_view(begin, count));
+            return hash<std::string_view>()(std::string_view(begin, count));
         }
     };
 }

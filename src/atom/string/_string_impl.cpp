@@ -1,5 +1,5 @@
-#pragma once
-#include "default_encoding.h"
+export module atom.core:_string_impl;
+import :core;
 
 namespace atom
 {

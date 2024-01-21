@@ -1,6 +1,6 @@
 #pragma once
 #include "atom/hash/private/t1_hash.h"
-#include "atom/string/string.h"
+// #include "atom/string/string.h"
 #include "atom/string/string_converter.h"
 
 namespace atom

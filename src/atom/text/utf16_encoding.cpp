@@ -1,8 +1,9 @@
-#pragma once
+export module atom.core:text.utf16_encoding;
+import :core;
 
 namespace atom::text
 {
-    class utf16_encoding
+    export class utf16_encoding
     {
     public:
         using char_type = char16_t;

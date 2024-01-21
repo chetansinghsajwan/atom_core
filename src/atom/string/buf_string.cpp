@@ -1,5 +1,7 @@
-#pragma once
-#include "_string_impl.h"
+export module atom.core:buf_string;
+import :_string_impl;
+import :containers.buf_array;
+import :core;
 
 namespace atom
 {

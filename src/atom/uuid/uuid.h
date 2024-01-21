@@ -1,7 +1,7 @@
 #pragma once
 #include "atom/math.h"
 // #include "atom/core/static_storage.h"
-#include "atom/string/string.h"
+// #include "atom/string/string.h"
 #include "atom/containers/output_req.h"
 
 namespace atom

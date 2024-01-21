@@ -1,6 +1,6 @@
 #pragma once
 #include "atom/core.h"
-#include "atom/string/stack_string.h"
+// #include "atom/string/stack_string.h"
 
 namespace atom::math
 {

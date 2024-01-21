@@ -23,6 +23,15 @@ export import :containers.static_array;
 export import :containers.dynamic_array;
 export import :containers.buf_array;
 export import :containers.unordered_map;
+export import :string_view;
+export import :stack_string;
+export import :dynamic_string;
+export import :buf_string;
+export import :string;
+export import :default_encoding;
+export import :text.utf8_encoding;
+export import :text.utf16_encoding;
+export import :text.utf32_encoding;
 
 export
 {
