@@ -8,12 +8,12 @@
 namespace atom
 {
     template <typename in_value_type, bool in_copy, bool in_move, bool in_allow_non_move,
-        usize in_buf_size, typename in_alloc_type>
+        usize in_buf_size, typename in_allocator_type>
     class _box_impl
     {
     public:
         using value_type = in_value_type;
-        using alloc_type = in_alloc_type;
+        using allocator_type = in_allocator_type;
 
         class copy_tag
         {};
@@ -81,8 +81,8 @@ namespace atom
         {
             // when allocator type is different, we cannot handle heap memory. so we only move the
             // object and not the memory.
-            if constexpr (not rsame_as<alloc_type,
-                              typename tti::remove_cvref_type<box_type>::alloc_type>)
+            if constexpr (not rsame_as<allocator_type,
+                              typename tti::remove_cvref_type<box_type>::allocator_type>)
             {
                 if (that._has_val())
                 {
@@ -521,7 +521,7 @@ namespace atom
         /// allocates enough memory of size `size`. uses stack memory if it is big enough.
         ///
         /// @param[in] size size of memory to allocate.
-        /// @param[in] force_heap if `true`, allocates memory from `alloc_type`.
+        /// @param[in] force_heap if `true`, allocates memory from `allocator_type`.
         ///
         /// @returns pointer to the allocated memory.
         /// ----------------------------------------------------------------------------------------
@@ -594,7 +594,7 @@ namespace atom
         };
 
     private:
-        alloc_type _alloc;
+        allocator_type _alloc;
         void* _heap_mem;
         usize _heap_mem_size;
         static_storage<buf_size()> _buf;

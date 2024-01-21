@@ -29,15 +29,15 @@ namespace atom
         }
     };
 
-    template <typename tin_val>
-    class shared_ptr: public mut_ptr<tin_val>
+    template <typename in_value_type>
+    class shared_ptr: public mut_ptr<in_value_type>
     {
-        static_assert(tti::is_pure<tin_val>, "shared_ptr only supports pure types.");
-        static_assert(not tti::is_void<tin_val>, "shared_ptr does not support void.");
+        static_assert(tti::is_pure<in_value_type>, "shared_ptr only supports pure types.");
+        static_assert(not tti::is_void<in_value_type>, "shared_ptr does not support void.");
 
     private:
-        using this_type = shared_ptr<tin_val>;
-        using base_type = mut_ptr<tin_val>;
+        using this_type = shared_ptr<in_value_type>;
+        using base_type = mut_ptr<in_value_type>;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -49,8 +49,8 @@ namespace atom
         template <typename type>
         friend class shared_ptr;
 
-        template <typename type, typename tallocator, typename... arg_types>
-        friend auto make_shared_with_alloc(tallocator alloc, arg_types&&... args)
+        template <typename type, typename allocator_type, typename... arg_types>
+        friend auto make_shared_with_alloc(allocator_type alloc, arg_types&&... args)
             -> shared_ptr<type>;
 
     public:
@@ -87,9 +87,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # template copy operator
         /// ----------------------------------------------------------------------------------------
-        template <typename tval1>
-        constexpr shared_ptr& operator=(const shared_ptr<tval1>& that)
-            requires rsame_or_derived_from<tval1, value_type>
+        template <typename other_value_type>
+        constexpr shared_ptr& operator=(const shared_ptr<other_value_type>& that)
+            requires rsame_or_derived_from<other_value_type, value_type>
         {
             _check_and_release();
 
@@ -161,15 +161,15 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # value constructor
         /// ----------------------------------------------------------------------------------------
-        template <typename tdestroyer = shared_ptr_default_destroyer<value_type>,
-            typename tallocator = shared_ptr_default_allocator>
-        constexpr explicit shared_ptr(mut_ptr<value_type> ptr, tdestroyer destroyer = tdestroyer(),
-            tallocator allocator = tallocator())
+        template <typename destroyer_type = shared_ptr_default_destroyer<value_type>,
+            typename allocator_type = shared_ptr_default_allocator>
+        constexpr explicit shared_ptr(mut_ptr<value_type> ptr, destroyer_type destroyer = destroyer_type(),
+            allocator_type allocator = allocator_type())
             : base_type(ptr)
         {
             if (not ptr.is_eq(nullptr))
             {
-                _state = _create_state<tdestroyer, tallocator>(mov(destroyer), mov(allocator));
+                _state = _create_state<destroyer_type, allocator_type>(mov(destroyer), mov(allocator));
             }
         }
 
@@ -200,10 +200,10 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename type, typename tdestroyer = shared_ptr_default_destroyer<value_type>,
-            typename tallocator = shared_ptr_default_allocator>
-        constexpr auto set(mut_ptr<type> ptr, tdestroyer destroyer = tdestroyer(),
-            tallocator allocator = tallocator())
+        template <typename type, typename destroyer_type = shared_ptr_default_destroyer<value_type>,
+            typename allocator_type = shared_ptr_default_allocator>
+        constexpr auto set(mut_ptr<type> ptr, destroyer_type destroyer = destroyer_type(),
+            allocator_type allocator = allocator_type())
             requires rsame_or_derived_from<type, value_type>
         {
             if (_get_ptr() != nullptr)
@@ -284,11 +284,11 @@ namespace atom
             }
         }
 
-        template <typename tdestroyer, typename tallocator>
-        constexpr auto _create_state(tdestroyer destroyer, tallocator allocator)
+        template <typename destroyer_type, typename allocator_type>
+        constexpr auto _create_state(destroyer_type destroyer, allocator_type allocator)
             -> mut_ptr<_ishared_ptr_state>
         {
-            using state = _shared_ptr_state<value_type, tdestroyer, tallocator>;
+            using state = _shared_ptr_state<value_type, destroyer_type, allocator_type>;
 
             mut_ptr<void> mem = allocator.alloc(sizeof(state));
             obj_helper().construct_as<state>(mem, mov(destroyer), mov(allocator));
@@ -335,8 +335,8 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename type, typename tallocator, typename... arg_types>
-    auto make_shared_with_alloc(tallocator allocator, arg_types&&... args) -> shared_ptr<type>
+    template <typename type, typename allocator_type, typename... arg_types>
+    auto make_shared_with_alloc(allocator_type allocator, arg_types&&... args) -> shared_ptr<type>
 
     {
         using state = _shared_ptr_state<type, shared_ptr_default_destroyer<type>,
@@ -356,10 +356,10 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename value_type, typename tdestroyer>
-    template <typename tallocator, typename tval1>
-    constexpr auto unique_ptr<value_type, tdestroyer>::_to_shared(tallocator allocator)
-        -> shared_ptr<tval1>
+    template <typename value_type, typename destroyer_type>
+    template <typename allocator_type, typename other_value_type>
+    constexpr auto unique_ptr<value_type, destroyer_type>::_to_shared(allocator_type allocator)
+        -> shared_ptr<other_value_type>
     {
         return make_shared_with_alloc(mov(allocator), _get_mut_ptr());
     }

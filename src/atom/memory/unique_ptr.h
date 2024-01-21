@@ -22,37 +22,38 @@ namespace atom
         }
     };
 
-    template <typename tin_val, typename tin_destroyer = unique_ptr_default_destroyer<tin_val>>
-    class unique_ptr: public mut_ptr<tin_val>
+    template <typename in_value_type,
+        typename in_destroyer_type = unique_ptr_default_destroyer<in_value_type>>
+    class unique_ptr: public mut_ptr<in_value_type>
     {
-        static_assert(tti::is_pure<tin_val>, "unique_ptr only supports pure types.");
-        static_assert(not tti::is_void<tin_val>, "unique_ptr does not support void.");
-        static_assert(tti::is_pure<tin_destroyer>);
-        static_assert(not tti::is_void<tin_destroyer>);
+        static_assert(tti::is_pure<in_value_type>, "unique_ptr only supports pure types.");
+        static_assert(not tti::is_void<in_value_type>, "unique_ptr does not support void.");
+        static_assert(tti::is_pure<in_destroyer_type>);
+        static_assert(not tti::is_void<in_destroyer_type>);
 
     private:
-        template <typename tval1, typename tdestroyer1>
+        template <typename other_value_type, typename other_destroyer_type>
         friend class unique_ptr;
 
     private:
-        using base_type = mut_ptr<tin_val>;
+        using base_type = mut_ptr<in_value_type>;
 
     public:
         /// ----------------------------------------------------------------------------------------
         /// type of value `this_type` holds.
         /// ----------------------------------------------------------------------------------------
-        using value_type = tin_val;
+        using value_type = in_value_type;
 
         /// ----------------------------------------------------------------------------------------
         /// type of destroyer used to destroy value and dealloc memory.
         /// ----------------------------------------------------------------------------------------
-        using tdestroyer = tin_destroyer;
+        using destroyer_type = in_destroyer_type;
 
     public:
         /// ----------------------------------------------------------------------------------------
         /// # default constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr unique_ptr(tdestroyer destroyer = tdestroyer())
+        constexpr unique_ptr(destroyer_type destroyer = destroyer_type())
             : base_type()
             , _destroyer(mov(destroyer))
         {}
@@ -89,9 +90,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # template move constructor
         /// ----------------------------------------------------------------------------------------
-        template <typename tval1>
-        constexpr unique_ptr(unique_ptr<tval1, tdestroyer>&& that)
-            requires rsame_or_derived_from<tval1, value_type>
+        template <typename other_value_type>
+        constexpr unique_ptr(unique_ptr<other_value_type, destroyer_type>&& that)
+            requires rsame_or_derived_from<other_value_type, value_type>
             : base_type(that.unwrap())
             , _destroyer(mov(that._destroyer))
         {
@@ -101,9 +102,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # template move operator
         /// ----------------------------------------------------------------------------------------
-        template <typename tval1>
-        constexpr unique_ptr& operator=(unique_ptr<tval1, tdestroyer>&& that)
-            requires rsame_or_derived_from<tval1, value_type>
+        template <typename other_value_type>
+        constexpr unique_ptr& operator=(unique_ptr<other_value_type, destroyer_type>&& that)
+            requires rsame_or_derived_from<other_value_type, value_type>
         {
             _move(mov(that));
         }
@@ -111,7 +112,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # value constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr explicit unique_ptr(mut_ptr<value_type> ptr, tdestroyer destroyer = tdestroyer())
+        constexpr explicit unique_ptr(
+            mut_ptr<value_type> ptr, destroyer_type destroyer = destroyer_type())
             : base_type(ptr)
             , _destroyer(mov(destroyer))
         {}
@@ -138,7 +140,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto set(mut_ptr<value_type> ptr, tdestroyer destroyer = tdestroyer())
+        constexpr auto set(mut_ptr<value_type> ptr, destroyer_type destroyer = destroyer_type())
         {
             _check_and_destroy_value();
 
@@ -183,16 +185,17 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename tallocator, typename type = value_type>
-        constexpr auto to_shared_with_alloc(tallocator allocator = tallocator()) -> shared_ptr<type>
+        template <typename allocator_type, typename type = value_type>
+        constexpr auto to_shared_with_alloc(allocator_type allocator = allocator_type())
+            -> shared_ptr<type>
             requires rsame_or_derived_from<type, value_type>
         {
             return _to_shared();
         }
 
     private:
-        template <typename tval1>
-        constexpr auto _move(unique_ptr<tval1, tdestroyer>&& that)
+        template <typename other_value_type>
+        constexpr auto _move(unique_ptr<other_value_type, destroyer_type>&& that)
         {
             _check_and_destroy_value();
 
@@ -237,11 +240,11 @@ namespace atom
             return base_type::set(ptr);
         }
 
-        template <typename tallocator, typename tval1>
-        constexpr auto _to_shared(tallocator allocator) -> shared_ptr<tval1>;
+        template <typename allocator_type, typename other_value_type>
+        constexpr auto _to_shared(allocator_type allocator) -> shared_ptr<other_value_type>;
 
     private:
-        tdestroyer _destroyer;
+        destroyer_type _destroyer;
     };
 
     template <typename type, typename... arg_types>
@@ -250,8 +253,8 @@ namespace atom
         return std::make_unique<type>(forward<arg_types>(args)...);
     }
 
-    template <typename type, typename tallocator, typename... arg_types>
-    auto make_unique_with_alloc(tallocator allocator, arg_types&&... args) -> unique_ptr<type>
+    template <typename type, typename allocator_type, typename... arg_types>
+    auto make_unique_with_alloc(allocator_type allocator, arg_types&&... args) -> unique_ptr<type>
     {
         return std::make_unique<type>(forward<arg_types>(args)...);
     }

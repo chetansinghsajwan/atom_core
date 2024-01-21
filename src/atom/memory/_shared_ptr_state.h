@@ -73,18 +73,18 @@ namespace atom
         usize _count;
     };
 
-    template <typename value_type, typename tdestroyer, typename tallocator>
+    template <typename value_type, typename destroyer_type, typename allocator_type>
     class _shared_ptr_state
         : public _ishared_ptr_state
-        , private ebo_helper<tdestroyer>
-        , private ebo_helper<tallocator>
+        , private ebo_helper<destroyer_type>
+        , private ebo_helper<allocator_type>
     {
     private:
-        using tdestroyer_helper = ebo_helper<tdestroyer>;
-        using tallocator_helper = ebo_helper<tallocator>;
+        using tdestroyer_helper = ebo_helper<destroyer_type>;
+        using tallocator_helper = ebo_helper<allocator_type>;
 
     public:
-        constexpr _shared_ptr_state(tdestroyer destroyer, tallocator allocator)
+        constexpr _shared_ptr_state(destroyer_type destroyer, allocator_type allocator)
             : tdestroyer_helper(mov(destroyer))
             , tallocator_helper(mov(allocator))
         {}
