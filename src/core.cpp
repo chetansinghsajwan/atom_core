@@ -6,7 +6,7 @@ export import :core;
 export import :box;
 export import :error;
 export import :build_config;
-export import :contracts_decl;
+export import :contracts;
 export import :option;
 export import :variant;
 export import :result;

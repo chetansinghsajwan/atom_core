@@ -1,14 +1,12 @@
-#pragma once
-// #include "atom/core.h"
-// #include "atom/core/source_line_info.h"
+export module atom.core:contracts;
+export import :contracts_decl;
+import :std;
+import :core;
+import :source_line_info;
+import :fmt;
+import :build_config;
 
-// #include "contracts_decl.h"
-
-// #include "fmt/format.h"
-
-// #include <iostream>
-
-namespace atom
+export namespace atom
 {
     /// --------------------------------------------------------------------------------------------
     ///
