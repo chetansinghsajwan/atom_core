@@ -1,6 +1,6 @@
 #pragma once
 #include "atom/contracts.h"
-#include "atom/core.h"
+// #include "atom/core.h"
 #include "atom/memory/obj_helper.h"
 
 namespace atom

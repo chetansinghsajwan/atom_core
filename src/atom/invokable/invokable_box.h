@@ -84,14 +84,14 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// null_constructor.
         /// ----------------------------------------------------------------------------------------
-        invokable_box(null_type null)
+        invokable_box(nullptr_type null)
             : _box()
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// null_assignment_operator.
         /// ----------------------------------------------------------------------------------------
-        auto operator=(null_type null) -> invokable_box&
+        auto operator=(nullptr_type null) -> invokable_box&
         {
             _box.destroy();
             return *this;
@@ -100,7 +100,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// null_equality_operator.
         /// ----------------------------------------------------------------------------------------
-        auto is_eq(null_type null) const -> bool
+        auto is_eq(nullptr_type null) const -> bool
         {
             return not _box.has_val();
         }
@@ -195,7 +195,7 @@ namespace atom
             return _box.mut_mem_as<type>();
         }
 
-        auto get_invokable_type() const -> const type_info&
+        auto get_invokable_type() const -> const std::type_info&
         {
             return object_box::_get_object_type();
         }

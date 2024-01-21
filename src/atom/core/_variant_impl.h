@@ -1,5 +1,5 @@
 #pragma once
-#include "atom/core.h"
+// #include "atom/core.h"
 #include "atom/memory/obj_helper.h"
 // #include "atom/tti.h"
 // #include "atom/core/static_storage.h"

@@ -1,7 +1,7 @@
 #pragma once
 // #include <mutex>
 
-#include "atom/core.h"
+// #include "atom/core.h"
 #include "atom/memory/lockable.h"
 
 namespace atom

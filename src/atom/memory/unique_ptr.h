@@ -1,5 +1,5 @@
 #pragma once
-#include "atom/core.h"
+// #include "atom/core.h"
 #include "atom/memory/obj_helper.h"
 #include "atom/memory/shared_ptr_decl.h"
 
@@ -151,7 +151,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto set(std::nullptr_t)
+        constexpr auto set(nullptr_type)
         {
             _check_and_destroy_value();
         }

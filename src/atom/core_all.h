@@ -1,5 +1,4 @@
 #pragma once
-#include "core.h"
 #include "core/result.h"
 #include "core/option.h"
 #include "containers.h"

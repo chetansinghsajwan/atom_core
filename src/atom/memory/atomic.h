@@ -1,7 +1,7 @@
 #pragma once
 // #include <atomic>
 
-#include "atom/core.h"
+// #include "atom/core.h"
 
 namespace atom
 {

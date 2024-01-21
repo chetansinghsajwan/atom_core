@@ -1,5 +1,5 @@
 #pragma once
-#include "atom/core.h"
+// #include "atom/core.h"
 #include "atom/memory/atomic.h"
 // #include "atom/memory/default_mem_allocator.h"
 // #include "atom/memory/legacy_mem_allocator.h"

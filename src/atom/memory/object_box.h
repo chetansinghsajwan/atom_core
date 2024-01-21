@@ -222,7 +222,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto val_type() const -> const type_info&
+        constexpr auto val_type() const -> const std::type_info&
         {
             return _impl.obj_type();
         }
@@ -421,7 +421,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto val_type() const -> const type_info&
+        constexpr auto val_type() const -> const std::type_info&
         {
             return _impl.get_val_type();
         }

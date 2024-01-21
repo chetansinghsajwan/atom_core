@@ -33,7 +33,7 @@ namespace atom
     class string_fmt_err: public err
     {
     public:
-        string_fmt_err(std_string_view msg)
+        string_fmt_err(std::string_view msg)
             : err{ msg }
         {}
 

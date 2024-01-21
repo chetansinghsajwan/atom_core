@@ -1,5 +1,5 @@
 #pragma once
-#include "atom/core.h"
+// #include "atom/core.h"
 
 namespace atom
 {
@@ -9,6 +9,6 @@ namespace atom
     class err
     {
     public:
-        std_string_view msg;
+        std::string_view msg;
     };
 }

@@ -26,7 +26,7 @@ namespace atom
         usize count;
     };
 
-    constexpr auto operator==(const mem_blk& lhs, nullptr_t) -> bool
+    constexpr auto operator==(const mem_blk& lhs, nullptr_type) -> bool
     {
         return lhs.mem == nullptr && lhs.count > 0;
     }

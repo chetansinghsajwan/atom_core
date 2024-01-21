@@ -1,5 +1,4 @@
 #pragma once
-#include "atom/core/primitives.h"
 #include "atom/preprocessors.h"
 
 // #include <source_location>

@@ -10,18 +10,18 @@ namespace atom
     class event_key
     {
     public:
-        event_key(const type_info& type_info)
-            : _type_info(type_info)
+        event_key(const std::type_info& info)
+            : _info(info)
         {}
 
     public:
-        auto get_type() const -> const type_info&
+        auto get_type() const -> const std::type_info&
         {
-            return _type_info;
+            return _info;
         }
 
     private:
-        const type_info& _type_info;
+        const std::type_info& _info;
     };
 
     /// --------------------------------------------------------------------------------------------

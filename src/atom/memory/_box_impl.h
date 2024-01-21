@@ -1,5 +1,5 @@
 #pragma once
-#include "atom/core.h"
+// #include "atom/core.h"
 // #include "atom/core/static_storage.h"
 #include "atom/exceptions.h"
 
@@ -256,9 +256,9 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// get `type_info` of stored object.
+        /// get `std::type_info` of stored object.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_val_type() const -> const type_info&
+        constexpr auto get_val_type() const -> const std::type_info&
         {
             return *_val.type;
         }
@@ -586,7 +586,7 @@ namespace atom
         public:
             value_type* val;
             usize size;
-            const type_info* type;
+            const std::type_info* type;
             invokable_ptr<void(void*)> dtor;
 
             ATOM_CONDITIONAL_FIELD(is_copyable(), invokable_ptr<void(void*, const void*)>) copy;
