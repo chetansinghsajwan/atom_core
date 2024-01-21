@@ -100,7 +100,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// null_equality_operator.
         /// ----------------------------------------------------------------------------------------
-        auto eq(null_type null) const -> bool
+        auto is_eq(null_type null) const -> bool
         {
             return not _box.has_val();
         }

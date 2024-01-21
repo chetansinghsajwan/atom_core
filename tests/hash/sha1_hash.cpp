@@ -13,8 +13,8 @@ TEST_CASE("atom::hash::sha1_hash")
         sha1_hash hash2 = { 0xaa, 0x39, 0xa3, 0xee, 0x5e, 0x6b, 0x4b, 0x0d, 0x32, 0x55, 0xbf, 0xef,
             0x95, 0x60, 0x18, 0x90, 0xaf, 0xd8, 0x07, 0x09 };
 
-        REQUIRE(hash1.eq(hash1));
-        REQUIRE(not hash1.eq(hash2));
+        REQUIRE(hash1.is_eq(hash1));
+        REQUIRE(not hash1.is_eq(hash2));
     }
 
     SECTION("null hash")
@@ -22,12 +22,12 @@ TEST_CASE("atom::hash::sha1_hash")
         sha1_hash hash;
         sha1_hash null_hash = sha1_hash::null;
 
-        REQUIRE(null_hash.eq(sha1_hash::null));
+        REQUIRE(null_hash.is_eq(sha1_hash::null));
 
         hash = sha1_hash::null;
 
-        REQUIRE(hash.eq(sha1_hash::null));
-        REQUIRE(hash.eq(null_hash));
+        REQUIRE(hash.is_eq(sha1_hash::null));
+        REQUIRE(hash.is_eq(null_hash));
     }
 }
 
@@ -41,7 +41,7 @@ TEST_CASE("atom::hash::sha1_hash_parser")
         sha1_hash expected = { 0xda, 0x39, 0xa3, 0xee, 0x5e, 0x6b, 0x4b, 0x0d, 0x32, 0x55, 0xbf,
             0xef, 0x95, 0x60, 0x18, 0x90, 0xaf, 0xd8, 0x07, 0x09 };
 
-        REQUIRE(hash.eq(expected));
+        REQUIRE(hash.is_eq(expected));
     }
 
     SECTION("invalid hash")
@@ -50,7 +50,7 @@ TEST_CASE("atom::hash::sha1_hash_parser")
         // sha1_hash hash = sha1_hash_parser()
         //     .parse(make_range("da3"));
         //
-        // REQUIRE(hash.eq(sha1_hash));
+        // REQUIRE(hash.is_eq(sha1_hash));
     }
 }
 
@@ -63,7 +63,7 @@ TEST_CASE("atom::hash::sha1_hash_stringifier")
 
     string_view expected = make_range("da39a3ee5e6b4b0d3255bfef95601890afd80709");
 
-    REQUIRE(str.eq(expected));
+    REQUIRE(str.is_eq(expected));
 }
 
 TEST_CASE("atom::hash::sha1_hash_generator")
@@ -78,7 +78,7 @@ TEST_CASE("atom::hash::sha1_hash_generator")
         sha1_hash expected =
             sha1_hash_parser().parse(make_range("da39a3ee5e6b4b0d3255bfef95601890afd80709"));
 
-        REQUIRE(hash.eq(expected));
+        REQUIRE(hash.is_eq(expected));
     }
 
     // tests if the sha-1 hash of a single block input string is correct.
@@ -91,7 +91,7 @@ TEST_CASE("atom::hash::sha1_hash_generator")
         sha1_hash expected =
             sha1_hash_parser().parse(make_range("2fd4e1c67a2d28fced849ee1bb76e7391b93eb12"));
 
-        REQUIRE(hash.eq(expected));
+        REQUIRE(hash.is_eq(expected));
     }
 
     // tests if the sha-1 hash of a multi-block input string is correct.
@@ -111,6 +111,6 @@ TEST_CASE("atom::hash::sha1_hash_generator")
         sha1_hash expected =
             sha1_hash_parser().parse(make_range("cd36b370758a259b34845084a6cc38473cb95e27"));
 
-        REQUIRE(hash.eq(expected));
+        REQUIRE(hash.is_eq(expected));
     }
 }

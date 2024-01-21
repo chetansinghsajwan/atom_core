@@ -48,7 +48,7 @@ namespace atom
         {
             t1_hash hash;
             usize i = 0;
-            while (not it.eq(it_end))
+            while (not it.is_eq(it_end))
             {
                 if (i > 20)
                 {
@@ -64,7 +64,7 @@ namespace atom
                 // left shift 4 bits to make space for next 4 bits.
                 hex1 = hex1 << 4;
 
-                if (it.next().eq(it_end))
+                if (it.next().is_eq(it_end))
                 {
                     return t1_hash::null;
                 }
@@ -90,7 +90,7 @@ namespace atom
         template <typename iter_type, typename iter_end_type>
         constexpr auto _parse_jump_range(iter_type it, iter_end_type it_end) const -> t1_hash
         {
-            if (it_end.compare(it).eq(size * 2) == false)
+            if (it_end.compare(it).is_eq(size * 2) == false)
             {
                 return t1_hash::null;
             }

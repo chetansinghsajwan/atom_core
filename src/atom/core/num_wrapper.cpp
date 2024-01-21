@@ -631,7 +631,7 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename num_type>
-        constexpr auto eq(num_type num) const -> bool
+        constexpr auto is_eq(num_type num) const -> bool
             requires(rnum<num_type>) or (_rnum<num_type>)
         {
             return _val == _unwrap(num);
@@ -641,7 +641,7 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename num_type>
-        constexpr auto lt(num_type num) const -> bool
+        constexpr auto is_lt(num_type num) const -> bool
             requires(rnum<num_type>) or (_rnum<num_type>)
         {
             return _val < _unwrap(num);
@@ -651,7 +651,7 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename num_type>
-        constexpr auto le(num_type num) const -> bool
+        constexpr auto is_le(num_type num) const -> bool
             requires(rnum<num_type>) or (_rnum<num_type>)
         {
             return _val <= _unwrap(num);
@@ -661,7 +661,7 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename num_type>
-        constexpr auto gt(num_type num) const -> bool
+        constexpr auto is_gt(num_type num) const -> bool
             requires(rnum<num_type>) or (_rnum<num_type>)
         {
             return _val > _unwrap(num);
@@ -671,7 +671,7 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename num_type>
-        constexpr auto ge(num_type num) const -> bool
+        constexpr auto is_ge(num_type num) const -> bool
             requires(rnum<num_type>) or (_rnum<num_type>)
         {
             return _val >= _unwrap(num);

@@ -65,7 +65,7 @@ namespace atom
             return euuid_version::none;
         }
 
-        constexpr auto eq(const uuid& that) const -> bool
+        constexpr auto is_eq(const uuid& that) const -> bool
         {
             return bytes == that.bytes;
         }

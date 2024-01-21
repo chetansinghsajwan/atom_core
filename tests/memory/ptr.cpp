@@ -97,22 +97,22 @@ TEST_CASE("atom.core.mut_ptr")
         ptr<i32> ptr0 = nullptr;
         ptr<i32> ptr1 = nullptr;
 
-        REQUIRE(ptr0.eq(nullptr));
-        REQUIRE(ptr1.eq(nullptr));
-        REQUIRE(ptr0.eq(ptr1));
+        REQUIRE(ptr0.is_eq(nullptr));
+        REQUIRE(ptr1.is_eq(nullptr));
+        REQUIRE(ptr0.is_eq(ptr1));
 
         ptr0 = &val0;
 
-        REQUIRE(not ptr0.eq(nullptr));
-        REQUIRE(not ptr0.eq(ptr1));
+        REQUIRE(not ptr0.is_eq(nullptr));
+        REQUIRE(not ptr0.is_eq(ptr1));
 
         ptr1 = &val1;
 
-        REQUIRE(not ptr1.eq(nullptr));
-        REQUIRE(not ptr0.eq(ptr1));
+        REQUIRE(not ptr1.is_eq(nullptr));
+        REQUIRE(not ptr0.is_eq(ptr1));
 
         ptr1 = &val0;
 
-        REQUIRE(ptr0.eq(ptr1));
+        REQUIRE(ptr0.is_eq(ptr1));
     }
 }

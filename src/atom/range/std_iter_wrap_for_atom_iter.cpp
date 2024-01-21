@@ -62,7 +62,7 @@ namespace atom
             -> bool
             requires(riter_with_end<iter_type, iter_end_type>)
         {
-            return iter.eq(that.iter);
+            return iter.is_eq(that.iter);
         }
 
         template <class iter_end_type>
@@ -70,7 +70,7 @@ namespace atom
             -> bool
             requires(riter_with_end<iter_type, iter_end_type>)
         {
-            return not iter.eq(that.iter);
+            return not iter.is_eq(that.iter);
         }
 
         constexpr auto operator++() -> this_type&

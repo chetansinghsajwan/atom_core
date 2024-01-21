@@ -78,7 +78,7 @@ namespace atom
 
             while (i < 16)
             {
-                if (it.eq(it_end))
+                if (it.is_eq(it_end))
                     return uuid::null;
 
                 if (j == 8 || j == 13 || j == 18 || j == 23)
@@ -99,7 +99,7 @@ namespace atom
 
                 j++;
                 it.next();
-                if (it.eq(it_end))
+                if (it.is_eq(it_end))
                     return uuid::null;
 
                 byte low = math::char_to_hex(it.value());
@@ -112,7 +112,7 @@ namespace atom
                 it.next();
             }
 
-            if (not it.eq(it_end))
+            if (not it.is_eq(it_end))
             {
                 return uuid::null;
             }

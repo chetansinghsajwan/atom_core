@@ -38,27 +38,27 @@ namespace atom
         constexpr ~uchar() = default;
 
     public:
-        constexpr auto eq(uchar ch) const -> bool
+        constexpr auto is_eq(uchar ch) const -> bool
         {
             return _val == ch._val;
         }
 
-        constexpr auto lt(uchar ch) const -> bool
+        constexpr auto is_lt(uchar ch) const -> bool
         {
             return _val < ch._val;
         }
 
-        constexpr auto gt(uchar ch) const -> bool
+        constexpr auto is_gt(uchar ch) const -> bool
         {
             return _val > ch._val;
         }
 
-        constexpr auto le(uchar ch) const -> bool
+        constexpr auto is_le(uchar ch) const -> bool
         {
             return _val <= ch._val;
         }
 
-        constexpr auto ge(uchar ch) const -> bool
+        constexpr auto is_ge(uchar ch) const -> bool
         {
             return _val >= ch._val;
         }

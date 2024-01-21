@@ -301,7 +301,7 @@ namespace atom
         {
             usize i = _get_count();
             usize count = 0;
-            while (not it.eq(it_end))
+            while (not it.is_eq(it_end))
             {
                 _ensure_cap_for(1);
                 _construct_at(i + count, it.value());
@@ -404,7 +404,7 @@ namespace atom
             }
 
             usize count = 0;
-            for (; it.eq(it_end); it.next())
+            for (; it.is_eq(it_end); it.next())
                 count++;
 
             return count;

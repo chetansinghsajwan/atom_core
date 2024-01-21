@@ -29,7 +29,7 @@ namespace atom
 
     public:
         auto value() const -> const type&;
-        auto eq(iter_end_req_mock end) const -> bool;
+        auto is_eq(iter_end_req_mock end) const -> bool;
         auto next() -> iter_req_mock&;
     };
 
@@ -54,7 +54,7 @@ namespace atom
     public:
         auto value() const -> const type&;
         auto mut_value() -> type&;
-        auto eq(iter_end_req_mock end) const -> bool;
+        auto is_eq(iter_end_req_mock end) const -> bool;
         auto next() -> mut_iter_req_mock&;
     };
 
@@ -71,7 +71,7 @@ namespace atom
         auto value() const -> const type&;
         auto mut_value() -> type&;
         auto next() -> fwd_iter_req_mock&;
-        auto eq(iter_end_req_mock end) const -> bool;
+        auto is_eq(iter_end_req_mock end) const -> bool;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -87,7 +87,7 @@ namespace atom
         auto value() const -> const type&;
         auto mut_value() -> type&;
         auto next() -> mut_fwd_iter_req_mock&;
-        auto eq(iter_end_req_mock end) const -> bool;
+        auto is_eq(iter_end_req_mock end) const -> bool;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -103,7 +103,7 @@ namespace atom
         auto value() const -> const type&;
         auto next() -> bidi_iter_req_mock&;
         auto prev() -> bidi_iter_req_mock&;
-        auto eq(iter_end_req_mock end) const -> bool;
+        auto is_eq(iter_end_req_mock end) const -> bool;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -120,7 +120,7 @@ namespace atom
         auto mut_value() -> type&;
         auto next() -> mut_bidi_iter_req_mock&;
         auto prev() -> mut_bidi_iter_req_mock&;
-        auto eq(iter_end_req_mock end) const -> bool;
+        auto is_eq(iter_end_req_mock end) const -> bool;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -136,7 +136,7 @@ namespace atom
         auto value() const -> const type&;
         auto next(usize steps = 1) -> jump_iter_req_mock&;
         auto prev(usize steps = 1) -> jump_iter_req_mock&;
-        auto eq(iter_end_req_mock end) const -> bool;
+        auto is_eq(iter_end_req_mock end) const -> bool;
         auto compare(const jump_iter_req_mock& that) const -> isize;
     };
 
@@ -154,7 +154,7 @@ namespace atom
         auto mut_value() -> type&;
         auto next(usize steps = 1) -> mut_jump_iter_req_mock&;
         auto prev(usize steps = 1) -> mut_jump_iter_req_mock&;
-        auto eq(iter_end_req_mock end) const -> bool;
+        auto is_eq(iter_end_req_mock end) const -> bool;
         auto compare(const mut_jump_iter_req_mock& that) const -> isize;
     };
 
@@ -172,7 +172,7 @@ namespace atom
         auto data() const -> mem_ptr<type>;
         auto next(usize steps = 1) -> array_iter_req_mock&;
         auto prev(usize steps = 1) -> array_iter_req_mock&;
-        auto eq(array_iter_req_mock end) const -> bool;
+        auto is_eq(array_iter_req_mock end) const -> bool;
         auto compare(const array_iter_req_mock& that) const -> isize;
     };
 
@@ -192,7 +192,7 @@ namespace atom
         auto mut_data() -> mut_mem_ptr<type>;
         auto next(usize steps = 1) -> mut_array_iter_req_mock&;
         auto prev(usize steps = 1) -> mut_array_iter_req_mock&;
-        auto eq(mut_array_iter_req_mock end) const -> bool;
+        auto is_eq(mut_array_iter_req_mock end) const -> bool;
         auto compare(const mut_array_iter_req_mock& that) const -> isize;
     };
 }

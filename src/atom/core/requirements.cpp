@@ -363,7 +363,7 @@ export namespace atom
     template <typename type0, typename type1>
     concept requality_comparable_with = requires(const type0 v0, const type1 v1)
     {
-        { v0.eq(v1) } -> rsame_as<bool>;
+        { v0.is_eq(v1) } -> rsame_as<bool>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -394,10 +394,10 @@ export namespace atom
     {
         requires requality_comparable_with<type0, type1>;
 
-        { v0.lt(v1) } -> rsame_as<bool>;
-        { v0.gt(v1) } -> rsame_as<bool>;
-        { v0.le(v1) } -> rsame_as<bool>;
-        { v0.ge(v1) } -> rsame_as<bool>;
+        { v0.is_lt(v1) } -> rsame_as<bool>;
+        { v0.is_gt(v1) } -> rsame_as<bool>;
+        { v0.is_le(v1) } -> rsame_as<bool>;
+        { v0.is_ge(v1) } -> rsame_as<bool>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -440,35 +440,35 @@ export namespace atom
     constexpr auto operator==(const type0& v0, const type1& v1) -> bool
         requires requality_comparable_with<type0, type1>
     {
-        return v0.eq(v1);
+        return v0.is_eq(v1);
     }
 
     template <typename type0, typename type1>
     constexpr auto operator!=(const type0& v0, const type1& v1) -> bool
         requires requality_comparable_with<type0, type1>
     {
-        return not v0.eq(v1);
+        return not v0.is_eq(v1);
     }
 
     template <typename type0, typename type1>
     constexpr auto operator<(const type0& v0, const type1& v1) -> bool
         requires rcomparable_with<type0, type1>
     {
-        return v0.lt(v1);
+        return v0.is_lt(v1);
     }
 
     template <typename type0, typename type1>
     constexpr auto operator>(const type0& v0, const type1& v1) -> bool
         requires rcomparable_with<type0, type1>
     {
-        return v0.gt(v1);
+        return v0.is_gt(v1);
     }
 
     template <typename type0, typename type1>
     constexpr auto operator<=(const type0& v0, const type1& v1) -> bool
         requires rcomparable_with<type0, type1>
     {
-        return v0.le(v1);
+        return v0.is_le(v1);
     }
 
     template <typename type0, typename type1>
@@ -476,6 +476,6 @@ export namespace atom
 
         requires rcomparable_with<type0, type1>
     {
-        return v0.ge(v1);
+        return v0.is_ge(v1);
     }
 }

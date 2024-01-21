@@ -252,7 +252,7 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename other_range_type>
-        constexpr auto eq(const other_range_type& range) const -> bool
+        constexpr auto is_eq(const other_range_type& range) const -> bool
             requires(rrange<other_range_type>)
                     and (requality_comparable_with<elem_type, typename other_range_type::elem_type>)
         {

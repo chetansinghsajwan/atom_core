@@ -11,5 +11,5 @@ TEST_CASE("atom::uuid::uuid_parser")
 
     constexpr class uuid expected = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
 
-    REQUIRE(uuid.eq(expected));
+    REQUIRE(uuid.is_eq(expected));
 }

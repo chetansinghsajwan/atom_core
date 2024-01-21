@@ -96,35 +96,35 @@ namespace atom::tests
         }
 
     public:
-        constexpr auto eq(const tracked_type& that) const -> bool
+        constexpr auto is_eq(const tracked_type& that) const -> bool
         {
             last_op = eoperation::equal_operator;
             that.last_op = eoperation::equal_operator;
             return true;
         }
 
-        constexpr auto lt(const tracked_type& that) const -> bool
+        constexpr auto is_lt(const tracked_type& that) const -> bool
         {
             last_op = eoperation::less_than_operator;
             that.last_op = eoperation::less_than_operator;
             return true;
         }
 
-        constexpr auto gt(const tracked_type& that) const -> bool
+        constexpr auto is_gt(const tracked_type& that) const -> bool
         {
             last_op = eoperation::greater_than_operator;
             that.last_op = eoperation::greater_than_operator;
             return true;
         }
 
-        constexpr auto le(const tracked_type& that) const -> bool
+        constexpr auto is_le(const tracked_type& that) const -> bool
         {
             last_op = eoperation::less_than_or_equal_operator;
             that.last_op = eoperation::less_than_or_equal_operator;
             return true;
         }
 
-        constexpr auto ge(const tracked_type& that) const -> bool
+        constexpr auto is_ge(const tracked_type& that) const -> bool
         {
             last_op = eoperation::greater_than_or_equal_operator;
             that.last_op = eoperation::greater_than_or_equal_operator;

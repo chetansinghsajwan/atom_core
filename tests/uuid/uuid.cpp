@@ -11,9 +11,9 @@ TEST_CASE("atom::uuid::uuid")
         uuid uuid2 = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
         uuid uuid3 = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 14 };
 
-        REQUIRE(not uuid1.eq(uuid::null));
-        REQUIRE(uuid1.eq(uuid2));
-        REQUIRE(not uuid1.eq(uuid3));
+        REQUIRE(not uuid1.is_eq(uuid::null));
+        REQUIRE(uuid1.is_eq(uuid2));
+        REQUIRE(not uuid1.is_eq(uuid3));
     }
 
     SECTION("stringification")

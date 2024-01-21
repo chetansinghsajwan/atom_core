@@ -167,7 +167,7 @@ namespace atom
             tallocator allocator = tallocator())
             : base_type(ptr)
         {
-            if (not ptr.eq(nullptr))
+            if (not ptr.is_eq(nullptr))
             {
                 _state = _create_state<tdestroyer, tallocator>(mov(destroyer), mov(allocator));
             }
@@ -261,7 +261,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto get_count() const -> usize
         {
-            return _state.eq(nullptr) ? 0 : _state.get().get_count();
+            return _state.is_eq(nullptr) ? 0 : _state.get().get_count();
         }
 
     private:

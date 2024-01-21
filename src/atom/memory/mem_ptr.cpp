@@ -147,7 +147,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto gt(this_type ptr) const -> bool
+        constexpr auto is_gt(this_type ptr) const -> bool
         {
             return _ptr > ptr._ptr;
         }
@@ -155,7 +155,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto ge(this_type ptr) const -> bool
+        constexpr auto is_ge(this_type ptr) const -> bool
         {
             return _ptr >= ptr._ptr;
         }
@@ -163,7 +163,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto lt(this_type ptr) const -> bool
+        constexpr auto is_lt(this_type ptr) const -> bool
         {
             return _ptr < ptr._ptr;
         }
@@ -171,7 +171,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto le(this_type ptr) const -> bool
+        constexpr auto is_le(this_type ptr) const -> bool
         {
             return _ptr <= ptr._ptr;
         }

@@ -187,7 +187,7 @@ namespace atom
             }
 
             usize count = 0;
-            for (; not iter.eq(iter_end); iter.next())
+            for (; not iter.is_eq(iter_end); iter.next())
                 count++;
 
             return count;

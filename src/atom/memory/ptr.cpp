@@ -201,7 +201,7 @@ export namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto eq(std::nullptr_t) const -> bool
+        constexpr auto is_eq(std::nullptr_t) const -> bool
         {
             return unwrap() == nullptr;
         }
@@ -209,7 +209,7 @@ export namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto eq(const this_type& that) const -> bool
+        constexpr auto is_eq(const this_type& that) const -> bool
         {
             return unwrap() == that.unwrap();
         }
@@ -405,7 +405,7 @@ export namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto eq(std::nullptr_t) const -> bool
+        constexpr auto is_eq(std::nullptr_t) const -> bool
         {
             return unwrap() == nullptr;
         }
@@ -414,7 +414,7 @@ export namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename type>
-        constexpr auto eq(const ptr<type>& that) const -> bool
+        constexpr auto is_eq(const ptr<type>& that) const -> bool
         {
             return unwrap() == that.unwrap();
         }

@@ -13,8 +13,8 @@ TEST_CASE("atom::hash::md5_hash")
         md5_hash hash2 = { 0xaa, 0x39, 0xa3, 0xee, 0x5e, 0x6b, 0x4b, 0x0d, 0x32, 0x55, 0xbf, 0xef,
             0x95, 0x60, 0x18, 0x90 };
 
-        REQUIRE(hash1.eq(hash1));
-        REQUIRE(not hash1.eq(hash2));
+        REQUIRE(hash1.is_eq(hash1));
+        REQUIRE(not hash1.is_eq(hash2));
     }
 
     SECTION("null hash")
@@ -22,12 +22,12 @@ TEST_CASE("atom::hash::md5_hash")
         md5_hash hash;
         md5_hash null_hash = md5_hash::null;
 
-        REQUIRE(null_hash.eq(md5_hash::null));
+        REQUIRE(null_hash.is_eq(md5_hash::null));
 
         hash = md5_hash::null;
 
-        REQUIRE(hash.eq(md5_hash::null));
-        REQUIRE(hash.eq(null_hash));
+        REQUIRE(hash.is_eq(md5_hash::null));
+        REQUIRE(hash.is_eq(null_hash));
     }
 }
 
@@ -40,7 +40,7 @@ TEST_CASE("atom::hash::md5_hash_parser")
         md5_hash expected = { 0xda, 0x39, 0xa3, 0xee, 0x5e, 0x6b, 0x4b, 0x0d, 0x32, 0x55, 0xbf, 0xef,
             0x95, 0x60, 0x18, 0x90 };
 
-        REQUIRE(hash.eq(expected));
+        REQUIRE(hash.is_eq(expected));
     }
 
     SECTION("invalid hash")
@@ -49,7 +49,7 @@ TEST_CASE("atom::hash::md5_hash_parser")
         // md5_hash hash = md5_hash_parser()
         //     .parse("da3");
         //
-        // REQUIRE(hash.eq(md5_hash));
+        // REQUIRE(hash.is_eq(md5_hash));
     }
 }
 
@@ -62,7 +62,7 @@ TEST_CASE("atom::hash::md5_hash_stringifier")
 
     string_view expected = make_range("da39a3ee5e6b4b0d3255bfef95601890");
 
-    REQUIRE(str.eq(expected));
+    REQUIRE(str.is_eq(expected));
 }
 
 TEST_CASE("atom::hash::md5_hash_generator")
@@ -76,7 +76,7 @@ TEST_CASE("atom::hash::md5_hash_generator")
 
         md5_hash expected = md5_hash_parser().parse(make_range("d41d8cd98f00b204e9800998ecf8427e"));
 
-        REQUIRE(hash.eq(expected));
+        REQUIRE(hash.is_eq(expected));
     }
 
     // tests if the sha-1 hash of a single block input string is correct.
@@ -88,7 +88,7 @@ TEST_CASE("atom::hash::md5_hash_generator")
 
         md5_hash expected = md5_hash_parser().parse(make_range("9e107d9d372bb6826bd81d3542a419d6"));
 
-        REQUIRE(hash.eq(expected));
+        REQUIRE(hash.is_eq(expected));
     }
 
     // tests if the sha-1 hash of a multi-block input string is correct.
@@ -106,6 +106,6 @@ TEST_CASE("atom::hash::md5_hash_generator")
 
         md5_hash expected = md5_hash_parser().parse(make_range("db89bb5ceab87f9c0fcc2ab36c189c2c"));
 
-        REQUIRE(hash.eq(expected));
+        REQUIRE(hash.is_eq(expected));
     }
 }

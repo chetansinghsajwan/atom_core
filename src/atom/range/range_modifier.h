@@ -17,7 +17,7 @@ namespace atom
         {
             usize count = 0;
             auto it_end = range.iter_end();
-            for (auto it = range.iter(); it.eq(it_end); it.next())
+            for (auto it = range.iter(); it.is_eq(it_end); it.next())
             {
                 if (pred(it.value()))
                 {

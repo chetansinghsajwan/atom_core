@@ -35,7 +35,7 @@ export namespace atom
         requires rmoveable<iter_end_type>;
         requires rdestructible<iter_end_type>;
 
-        { it.eq(it_end) } -> rsame_as<bool>;
+        { it.is_eq(it_end) } -> rsame_as<bool>;
     };
 
     template <typename iter_type>

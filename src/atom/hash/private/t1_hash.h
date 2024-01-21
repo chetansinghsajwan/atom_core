@@ -14,9 +14,9 @@ namespace atom
         static const _t1_hash null;
 
     public:
-        constexpr auto eq(const _t1_hash& that) const -> bool
+        constexpr auto is_eq(const _t1_hash& that) const -> bool
         {
-            return bytes.eq(that.bytes);
+            return bytes.is_eq(that.bytes);
         }
 
     public:
