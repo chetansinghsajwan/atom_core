@@ -1,7 +1,9 @@
-#pragma once
+module;
 #include "atom/preprocessors.h"
 
-// #include <source_location>
+export module atom.core:source_line_info;
+import :core;
+import :std;
 
 namespace atom
 {
@@ -18,10 +20,10 @@ namespace atom
         /// - this_type default argument is used to capture the source line info of the calling site.
         ///   do not pass any argument for this.
         /// --------------------------------------------------------------------------------------------
-#if defined(atom_compiler_clang) && !defined(__cpp_lib_source_location)
-        static consteval auto current(const char* file_name = __builtin_file(),
-            const char* func_name = __builtin_function(), u32 line = __builtin_line(),
-            u32 column = __builtin_column()) -> source_line_info
+#if defined(ATOM_COMPILER_CLANG) && !defined(__cpp_lib_source_location)
+        static consteval auto current(const char* file_name = __builtin_FILE(),
+            const char* func_name = __builtin_FUNCTION(), u32 line = __builtin_LINE(),
+            u32 column = __builtin_COLUMN()) -> source_line_info
         {
             return source_line_info{
                 .line = line, .column = column, .func_name = func_name, .file_name = file_name

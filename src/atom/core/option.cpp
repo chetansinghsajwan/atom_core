@@ -1,8 +1,11 @@
-#pragma once
-// #include "atom/invokable/invokable.h"
-#include "_option_impl.h"
+export module atom.core:option;
+import :_option_impl;
+import :core;
+import :tti;
+import :invokable;
+import :contracts_decl;
 
-namespace atom
+export namespace atom
 {
     /// --------------------------------------------------------------------------------------------
     /// type used to initialize option with no value.
@@ -31,7 +34,7 @@ namespace atom
 
     private:
         using this_type = option<type>;
-        using impl = _option_impl<type>;
+        using _impl_type = _option_impl<type>;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -46,7 +49,7 @@ namespace atom
         /// constructs with no value.
         /// ----------------------------------------------------------------------------------------
         constexpr option()
-            : _impl(typename impl::ctor_default())
+            : _impl(typename _impl_type::ctor_default())
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -65,7 +68,7 @@ namespace atom
         constexpr option(const option& that)
             requires(not rtrivially_copy_constructible<value_type>)
                     and (rcopy_constructible<value_type>)
-            : _impl(typename impl::ctor_copy(), that._impl)
+            : _impl(typename _impl_type::ctor_copy(), that._impl)
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -108,7 +111,7 @@ namespace atom
         constexpr option(option&& that)
             requires(not rtrivially_move_constructible<value_type>)
                     and (rmove_constructible<value_type>)
-            : _impl(typename impl::ctor_move(), mov(that._impl))
+            : _impl(typename _impl_type::ctor_move(), mov(that._impl))
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -141,7 +144,7 @@ namespace atom
         /// constructs with no value.
         /// ----------------------------------------------------------------------------------------
         constexpr option(null_option)
-            : _impl(typename impl::ctor_default())
+            : _impl(typename _impl_type::ctor_default())
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -406,7 +409,7 @@ namespace atom
         {
             if (_impl.is_null())
             {
-                return impl::get_default();
+                return _impl_type::get_default();
             }
 
             return _impl.get_value();
@@ -460,9 +463,9 @@ namespace atom
         /// if `this` is null and `that` is not null or vice versa, returns `false`.
         /// if `this` and `that` are not null, returns `this.get() == that.get()`.
         /// --------------------------------------------------------------------------------------------
-        template <typename tthat>
-        constexpr auto is_eq(const option<tthat>& that) const -> bool
-            requires(requality_comparable_with<value_type, tthat>)
+        template <typename that_value_type>
+        constexpr auto is_eq(const option<that_value_type>& that) const -> bool
+            requires(requality_comparable_with<value_type, that_value_type>)
         {
             if (is_value() != that.is_value())
                 // one is null and one has value.
@@ -481,9 +484,9 @@ namespace atom
         /// if `this` or `that` is null, returns false.
         /// else, returns `this.get() < that.get()`.
         /// --------------------------------------------------------------------------------------------
-        template <typename tthat>
-        constexpr auto is_lt(const option<tthat>& that) const -> bool
-            requires(rcomparable_with<value_type, tthat>)
+        template <typename that_value_type>
+        constexpr auto is_lt(const option<that_value_type>& that) const -> bool
+            requires(rcomparable_with<value_type, that_value_type>)
         {
             if (is_null() or that.is_null())
                 return false;
@@ -497,9 +500,9 @@ namespace atom
         /// if `opt0` or `that` is null, returns false.
         /// else, returns `this.get() > that.get()`.
         /// --------------------------------------------------------------------------------------------
-        template <typename tthat>
-        constexpr auto is_gt(const option<tthat>& that) const -> bool
-            requires(rcomparable_with<value_type, tthat>)
+        template <typename that_value_type>
+        constexpr auto is_gt(const option<that_value_type>& that) const -> bool
+            requires(rcomparable_with<value_type, that_value_type>)
         {
             if (is_null() or that.is_null())
                 return false;
@@ -513,9 +516,9 @@ namespace atom
         /// if `opt0` or `that` is null, returns false.
         /// else, returns `this.get() <= that.get()`.
         /// --------------------------------------------------------------------------------------------
-        template <typename tthat>
-        constexpr auto is_le(const option<tthat>& that) const -> bool
-            requires(rcomparable_with<value_type, tthat>)
+        template <typename that_value_type>
+        constexpr auto is_le(const option<that_value_type>& that) const -> bool
+            requires(rcomparable_with<value_type, that_value_type>)
         {
             if (is_null() or that.is_null())
                 return false;
@@ -529,9 +532,9 @@ namespace atom
         /// if `opt0` or `that` is null, returns false.
         /// else, returns `this.get() >= that.get()`.
         /// --------------------------------------------------------------------------------------------
-        template <typename tthat>
-        constexpr auto is_ge(const option<tthat>& that) const -> bool
-            requires(rcomparable_with<value_type, tthat>)
+        template <typename that_value_type>
+        constexpr auto is_ge(const option<that_value_type>& that) const -> bool
+            requires(rcomparable_with<value_type, that_value_type>)
         {
             if (is_null() or that.is_null())
                 return false;
@@ -540,6 +543,6 @@ namespace atom
         }
 
     private:
-        impl _impl;
+        _impl_type _impl;
     };
 }

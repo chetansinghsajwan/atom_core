@@ -1,8 +1,10 @@
-#pragma once
-// #include "atom/core/type_list.h"
-#include "_variant_impl.h"
+export module atom.core:variant;
+import :_variant_impl;
+import :core;
+import :type_list;
+import :contracts_decl;
 
-namespace atom
+export namespace atom
 {
     /// --------------------------------------------------------------------------------------------
     /// # to do

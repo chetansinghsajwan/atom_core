@@ -1,10 +1,13 @@
-#pragma once
+module;
 #include "atom/preprocessors.h"
-#include "atom/contracts.h"
 
-// #include <algorithm>
+export module atom.core:mem_helper;
+import :core;
+import :mem_ptr;
+import :contracts_decl;
+import :std;
 
-namespace atom
+export namespace atom
 {
     class mem_blk
     {

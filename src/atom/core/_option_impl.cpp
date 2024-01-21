@@ -1,7 +1,7 @@
-#pragma once
-#include "atom/contracts.h"
-// #include "atom/core.h"
-#include "atom/memory/obj_helper.h"
+export module atom.core:_option_impl;
+import :obj_helper;
+import :core;
+import :mem_ptr;
 
 namespace atom
 {
@@ -51,20 +51,20 @@ namespace atom
         _dummy _dummy;
     };
 
-    template <typename tval_>
+    template <typename in_value_type>
     class _option_impl
     {
-        using this_type = _option_impl<tval_>;
+        using this_type = _option_impl<in_value_type>;
 
         /// --------------------------------------------------------------------------------------------
         /// # to do
         ///
-        /// - create `static_aligned_storage_for<tval_>` to replace this.
+        /// - create `static_aligned_storage_for<in_value_type>` to replace this.
         /// --------------------------------------------------------------------------------------------
-        using _tstorage = _option_storage<tval_>;
+        using _storage_type = _option_storage<in_value_type>;
 
     public:
-        using value_type = tval_;
+        using value_type = in_value_type;
 
         class ctor_default
         {};
@@ -276,8 +276,8 @@ namespace atom
         }
 
     private:
-        template <bool move, typename topt>
-        constexpr auto _set_value_from_option(topt&& that)
+        template <bool move, typename option_type>
+        constexpr auto _set_value_from_option(option_type&& that)
         {
             if (that._is_value)
             {
@@ -308,8 +308,8 @@ namespace atom
             }
         }
 
-        template <typename topt>
-        constexpr auto _copy(const topt& that)
+        template <typename option_type>
+        constexpr auto _copy(const option_type& that)
         {
             if (that._is_value)
             {
@@ -333,8 +333,8 @@ namespace atom
             }
         }
 
-        template <typename topt>
-        constexpr auto _move(topt&& that)
+        template <typename option_type>
+        constexpr auto _move(option_type&& that)
         {
             if (that._is_value)
             {
@@ -418,6 +418,6 @@ namespace atom
 
     private:
         bool _is_value;
-        _tstorage _storage;
+        _storage_type _storage;
     };
 }

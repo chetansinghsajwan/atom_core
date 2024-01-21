@@ -1,6 +1,6 @@
 #pragma once
 // #include "atom/core.h"
-#include "atom/core/source_line_info.h"
+// #include "atom/core/source_line_info.h"
 
 // #include "contracts_decl.h"
 

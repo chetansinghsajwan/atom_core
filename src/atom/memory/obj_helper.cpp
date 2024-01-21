@@ -1,5 +1,10 @@
-#pragma once
-#include "mem_helper.h"
+export module atom.core:obj_helper;
+import :core;
+import :mem_helper;
+import :contracts_decl;
+import :ptr;
+import :mem_ptr;
+import :std;
 
 namespace atom
 {

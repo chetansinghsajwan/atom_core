@@ -1,10 +1,11 @@
-#pragma once
-// #include "atom/core.h"
-#include "atom/memory/obj_helper.h"
-// #include "atom/tti.h"
-// #include "atom/core/static_storage.h"
-
-// #include "atom/core/type_list.h"
+export module atom.core:_variant_impl;
+import :core;
+import :mem_ptr;
+import :type_list;
+import :obj_helper;
+import :static_storage;
+import :tti;
+import :contracts_decl;
 
 namespace atom
 {
