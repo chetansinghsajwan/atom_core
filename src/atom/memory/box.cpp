@@ -1,15 +1,18 @@
-#pragma once
-// #include "atom/core/requirements.h"
-// #include "atom/memory/default_mem_allocator.h"
-// #include "atom/tti.h"
-#include "_box_impl.h"
+export module atom.core:box;
+import :_box_impl;
+import :std;
+import :core;
+import :ptr;
+import :mem_ptr;
+import :memory.default_mem_allocator;
 
 namespace atom
 {
-    namespace internal
+    template <typename in_impl_type>
+    class box_functions
     {
     protected:
-        using _impl_type = _timpl_;
+        using _impl_type = in_impl_type;
 
     public:
         using value_type = typename _impl_type::value_type;
@@ -246,13 +249,16 @@ namespace atom
     protected:
         _impl_type _impl;
     };
+}
 
-    template <typename _timpl_>
-        requires(ris_void<typename _timpl_::value_type>)
-    class box_functions<_timpl_>
+export namespace atom
+{
+    template <typename in_impl_type>
+        requires(ris_void<typename in_impl_type::value_type>)
+    class box_functions<in_impl_type>
     {
     protected:
-        using _impl_type = _timpl_;
+        using _impl_type = in_impl_type;
 
     public:
         using value_type = void;
@@ -446,10 +452,12 @@ namespace atom
         _impl_type _impl;
     };
 
-    template <typename value_type, usize buf_size = 50, typename allocator_type = default_mem_allocator>
+    template <typename value_type, usize buf_size = 50,
+        typename allocator_type = default_mem_allocator>
     class box;
 
-    template <typename value_type, usize buf_size = 50, typename allocator_type = default_mem_allocator>
+    template <typename value_type, usize buf_size = 50,
+        typename allocator_type = default_mem_allocator>
     class copy_box;
 
     template <typename value_type, bool allow_non_move = true, usize buf_size = 50,
@@ -510,7 +518,8 @@ namespace atom
         /// # null assignment
         /// ----------------------------------------------------------------------------------------
         template <typename type, usize that_buf_size, typename that_allocator_type>
-        constexpr this_type& operator=(const copy_box<type, that_buf_size, that_allocator_type>& that)
+        constexpr this_type& operator=(
+            const copy_box<type, that_buf_size, that_allocator_type>& that)
             requires ris_void<value_type> or rsame_or_derived_from<type, value_type>
         {
             _impl.copy_box(that._impl);
@@ -551,7 +560,8 @@ namespace atom
         /// # template move operator
         /// ----------------------------------------------------------------------------------------
         template <typename type, usize that_buf_size, typename that_allocator_type>
-        constexpr this_type& operator=(move_box<type, true, that_buf_size, that_allocator_type>&& that)
+        constexpr this_type& operator=(
+            move_box<type, true, that_buf_size, that_allocator_type>&& that)
             requires(ris_void<value_type>) or rsame_or_derived_from<type, value_type>
         {
             _impl.move_box(that._impl);
@@ -679,7 +689,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # template copy constructor
         /// ----------------------------------------------------------------------------------------
-        template <typename type, bool allow_non_move, usize that_buf_size, typename that_allocator_type>
+        template <typename type, bool allow_non_move, usize that_buf_size,
+            typename that_allocator_type>
         constexpr copy_box(
             const copy_move_box<type, allow_non_move, that_buf_size, that_allocator_type>& that)
             : base_type{ typename _impl_type::copy_tag(), that._impl }
@@ -688,7 +699,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # template copy operator
         /// ----------------------------------------------------------------------------------------
-        template <typename type, bool allow_non_move, usize that_buf_size, typename that_allocator_type>
+        template <typename type, bool allow_non_move, usize that_buf_size,
+            typename that_allocator_type>
         constexpr this_type& operator=(
             const copy_move_box<type, allow_non_move, that_buf_size, that_allocator_type>& that)
         {
@@ -730,8 +742,8 @@ namespace atom
               _box_impl<value_type, false, true, allow_non_move, buf_size, allocator_type>>
     {
         using this_type = move_box<value_type, allow_non_move, buf_size, allocator_type>;
-        using base_type =
-            box_functions<_box_impl<value_type, false, true, allow_non_move, buf_size, allocator_type>>;
+        using base_type = box_functions<
+            _box_impl<value_type, false, true, allow_non_move, buf_size, allocator_type>>;
         using _impl_type = typename base_type::_impl_type;
 
     public:
@@ -766,7 +778,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename type, usize that_buf_size, typename that_allocator_type>
             requires allow_non_move
-        constexpr move_box& operator=(const copy_box<type, that_buf_size, that_allocator_type>& that)
+        constexpr move_box& operator=(
+            const copy_box<type, that_buf_size, that_allocator_type>& that)
         {
             _impl.move_box(that._impl);
             return *this;
@@ -863,8 +876,8 @@ namespace atom
               _box_impl<value_type, true, true, allow_non_move, buf_size, allocator_type>>
     {
         using this_type = copy_move_box<value_type, allow_non_move, buf_size, allocator_type>;
-        using base_type =
-            box_functions<_box_impl<value_type, true, true, allow_non_move, buf_size, allocator_type>>;
+        using base_type = box_functions<
+            _box_impl<value_type, true, true, allow_non_move, buf_size, allocator_type>>;
         using _impl_type = typename base_type::_impl_type;
 
     private:

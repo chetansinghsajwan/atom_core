@@ -7,6 +7,6 @@
 #include "atom/memory/lockable.h"
 #include "atom/memory/mutex.h"
 #include "atom/memory/null_lockable.h"
-#include "atom/memory/object_box.h"
+// #include "atom/memory/object_box.h"
 #include "atom/memory/shared_ptr.h"
 #include "atom/memory/unique_ptr.h"

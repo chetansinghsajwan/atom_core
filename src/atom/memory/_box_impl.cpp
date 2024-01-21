@@ -1,9 +1,13 @@
-#pragma once
-// #include "atom/core.h"
-// #include "atom/core/static_storage.h"
+module;
 #include "atom/preprocessors.h"
 
-// #include "atom/invokable/invokable_ptr.h"
+export module atom.core:_box_impl;
+import :std;
+import :tti;
+import :core;
+import :mem_ptr;
+import :static_storage;
+import :invokable_ptr;
 
 namespace atom
 {
