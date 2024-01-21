@@ -1,5 +1,4 @@
 #pragma once
-#include "atom/containers/output_req_mock.h"
 // #include "atom/tti.h"
 
 // #include "atom/string/string.h"
@@ -20,7 +19,7 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     template <typename tstring_converter, typename type>
     concept rstring_converter =
-        requires(tstring_converter converter, type obj, output_req_mock<uchar> out) {
+        requires(tstring_converter converter, type obj, mock::output<uchar> out) {
             {
                 converter.convert(obj)
             } -> rsame_as<string>;

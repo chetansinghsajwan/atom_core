@@ -1,75 +1,81 @@
-#pragma once
-#include "insertable_req.h"
+export module atom.core:insertable_mocks;
+import :core;
+import :tti;
+import :range;
 
-namespace atom
+export namespace atom::mock
 {
     /// --------------------------------------------------------------------------------------------
     /// `rinsertable` mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename type>
-    class insertable_req_mock
+    template <typename value_type>
+    class insertable
     {
+        static_assert(tti::is_pure<value_type>);
+
     public:
-        template <typename u>
-        auto insert(u&& el)
-            requires(rsame_as_unqualified<u, type>);
+        auto insert(const value_type& el);
+        auto insert(value_type&& el);
 
         template <typename range_type>
         auto insert(const range_type& range)
-            requires(rrange_of<range_type, type>);
+            requires(rrange_of<range_type, value_type>);
     };
 
     /// --------------------------------------------------------------------------------------------
     /// `rfront_insertable` mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename type>
-    class front_insertable_req_mock
+    template <typename value_type>
+    class front_insertable
     {
+        static_assert(tti::is_pure<value_type>);
+
     public:
-        template <typename u>
-        auto insert_front(u&& el)
-            requires(rsame_as_unqualified<u, type>);
+        auto insert_front(const value_type& el);
+        auto insert_front(value_type&& el);
 
         template <typename range_type>
         auto insert_front(const range_type& range)
-            requires(rrange_of<range_type, type>);
+            requires(rrange_of<range_type, value_type>);
     };
 
     /// --------------------------------------------------------------------------------------------
     /// `rback_insertable` mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename type>
-    class back_insertable_req_mock
+    template <typename value_type>
+    class back_insertable
     {
+        static_assert(tti::is_pure<value_type>);
+
     public:
-        template <typename u>
-        auto insert_back(u&& el)
-            requires(rsame_as_unqualified<u, type>);
+        auto insert_back(const value_type& el);
+        auto insert_back(value_type&& el);
 
         template <typename range_type>
         auto insert_back(const range_type& range)
-            requires(rrange_of<range_type, type>);
+            requires(rrange_of<range_type, value_type>);
     };
 
     /// --------------------------------------------------------------------------------------------
     /// `rkey_insertable` mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename key_type, typename type>
-    class key_insertable_req_mock
+    template <typename key_type, typename value_type>
+    class key_insertable
     {
+        static_assert(tti::is_pure<value_type>);
+
     public:
-        template <typename u>
-        auto insert(key_type key, u&& el)
-            requires(rsame_as_unqualified<u, type>);
+        auto insert(key_type key, const value_type& el);
+        auto insert(key_type key, value_type&& el);
 
         template <typename range_type>
         auto insert(key_type key, const range_type& range)
-            requires(rrange_of<range_type, type>);
+            requires(rrange_of<range_type, value_type>);
     };
 
     /// --------------------------------------------------------------------------------------------
     /// `rindex_insertable` mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename type>
-    using index_insertable_req_mock = key_insertable_req_mock<usize, type>;
+    template <typename value_type>
+    using index_insertable = key_insertable<usize, value_type>;
 }

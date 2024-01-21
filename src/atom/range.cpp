@@ -13,3 +13,5 @@ export import :range.mut_bidi_range_extensions;
 export import :range.mut_jump_range_extensions;
 export import :range.mut_array_range_extensions;
 export import :range.make_range;
+export import :range.iter_mocks;
+export import :range.range_mocks;
