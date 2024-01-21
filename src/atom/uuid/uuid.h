@@ -70,21 +70,6 @@ namespace atom
             return bytes == that.bytes;
         }
 
-        constexpr auto ne(const uuid& that) const -> bool
-        {
-            return bytes == that.bytes;
-        }
-
-        constexpr auto operator==(const uuid& that) const -> bool
-        {
-            return eq(that);
-        }
-
-        constexpr auto operator!=(const uuid& that) const -> bool
-        {
-            return ne(that);
-        }
-
         template <typename output_type>
         constexpr auto write_string(output_type&& out) const
             requires(routput<output_type, uchar>)

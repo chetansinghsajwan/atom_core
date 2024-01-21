@@ -166,15 +166,6 @@ namespace atom::tests
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # not equal to opeartor
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto ne(const custom_type& that) const -> bool
-            requires(enum_flag_utils::has_flag(flags, ecustom_type_flags::equal_to_operator))
-        {
-            return not(*this == that);
-        }
-
-        /// ----------------------------------------------------------------------------------------
         /// # less than opeartor
         /// ----------------------------------------------------------------------------------------
         constexpr auto lt(const custom_type& that) const -> bool

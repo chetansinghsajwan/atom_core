@@ -75,11 +75,6 @@ namespace atom
             return true;
         }
 
-        constexpr auto ne(const static_storage& that) const -> bool
-        {
-            return not(*this == that);
-        }
-
     public:
         byte _storage[in_size.unwrap()];
     };

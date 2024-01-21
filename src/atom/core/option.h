@@ -454,16 +454,6 @@ namespace atom
         }
 
         /// --------------------------------------------------------------------------------------------
-        /// # not equality comparision
-        ///
-        /// `false` if this contains value, else `true`.
-        /// --------------------------------------------------------------------------------------------
-        constexpr auto ne(null_option) const -> bool
-        {
-            return is_value();
-        }
-
-        /// --------------------------------------------------------------------------------------------
         /// # equality comparision
         ///
         /// if `this` and `that` are null, returns `true`.
@@ -483,18 +473,6 @@ namespace atom
                 return true;
 
             return get() == that.get();
-        }
-
-        /// --------------------------------------------------------------------------------------------
-        /// # not equality comparision
-        ///
-        /// performs negation of [equality comparision].
-        /// --------------------------------------------------------------------------------------------
-        template <typename tthat>
-        constexpr auto ne(const option<tthat>& that) const -> bool
-            requires(requality_comparable_with<value_type, tthat>)
-        {
-            return not eq(that);
         }
 
         /// --------------------------------------------------------------------------------------------

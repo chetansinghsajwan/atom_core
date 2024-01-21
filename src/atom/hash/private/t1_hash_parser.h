@@ -90,7 +90,7 @@ namespace atom
         template <typename iter_type, typename iter_end_type>
         constexpr auto _parse_jump_range(iter_type it, iter_end_type it_end) const -> t1_hash
         {
-            if (it_end.compare(it).ne(size * 2))
+            if (it_end.compare(it).eq(size * 2) == false)
             {
                 return t1_hash::null;
             }

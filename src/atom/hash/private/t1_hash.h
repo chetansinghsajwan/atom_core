@@ -19,11 +19,6 @@ namespace atom
             return bytes.eq(that.bytes);
         }
 
-        constexpr auto ne(const _t1_hash& that) const -> bool
-        {
-            return bytes.ne(that.bytes);
-        }
-
     public:
         static_storage<size> bytes;
     };

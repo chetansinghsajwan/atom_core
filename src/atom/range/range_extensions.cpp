@@ -56,8 +56,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename trange1>
-        constexpr auto find_range(const trange1& range) const -> iter_type
+        template <typename other_range_type>
+        constexpr auto find_range(const other_range_type& range) const -> iter_type
         {
             std_iter_wrap_for_atom_iter std_iter{ iter() };
             std_iter_wrap_for_atom_iter std_iter_end{ iter_end() };
@@ -69,8 +69,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename trange1>
-        auto compare(const trange1& range) const -> i8
+        template <typename other_range_type>
+        auto compare(const other_range_type& range) const -> i8
         {
             std_iter_wrap_for_atom_iter std_iter{ iter() };
             std_iter_wrap_for_atom_iter std_iter_end{ iter_end() };
@@ -188,16 +188,16 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename trange1>
-        constexpr auto find_range(const trange1& range) const -> iter_type
-            requires(rfwd_range<trange1>)
-                    and (requality_comparable_with<elem_type, typename trange1::elem_type>)
+        template <typename other_range_type>
+        constexpr auto find_range(const other_range_type& range) const -> iter_type
+            requires(rfwd_range<other_range_type>)
+                    and (requality_comparable_with<elem_type, typename other_range_type::elem_type>)
         {
             return _impl().find_range(range);
         }
 
-        template <typename trange1>
-        auto count_any(const trange1& range) const -> usize
+        template <typename other_range_type>
+        auto count_any(const other_range_type& range) const -> usize
         {
             usize count = 0;
             for (auto it = iter(); it.compare(iter_end()) != 0; it++)
@@ -223,10 +223,10 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename trange1>
-        constexpr auto contains(const trange1& range) const -> bool
-            requires(rfwd_range<trange1>)
-                    and (requality_comparable_with<elem_type, typename trange1::elem_type>)
+        template <typename other_range_type>
+        constexpr auto contains(const other_range_type& range) const -> bool
+            requires(rfwd_range<other_range_type>)
+                    and (requality_comparable_with<elem_type, typename other_range_type::elem_type>)
         {
             return _impl().find_range(range).compare(_impl().iter_end()) != 0;
         }
@@ -240,10 +240,10 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename trange1>
-        constexpr auto compare(const trange1& range) const -> i8
-            requires(rrange<trange1>)
-                    and (requality_comparable_with<elem_type, typename trange1::elem_type>)
+        template <typename other_range_type>
+        constexpr auto compare(const other_range_type& range) const -> i8
+            requires(rrange<other_range_type>)
+                    and (requality_comparable_with<elem_type, typename other_range_type::elem_type>)
         {
             return _impl().compare(range);
         }
@@ -251,23 +251,12 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename trange1>
-        constexpr auto eq(const trange1& range) const -> bool
-            requires(rrange<trange1>)
-                    and (requality_comparable_with<elem_type, typename trange1::elem_type>)
+        template <typename other_range_type>
+        constexpr auto eq(const other_range_type& range) const -> bool
+            requires(rrange<other_range_type>)
+                    and (requality_comparable_with<elem_type, typename other_range_type::elem_type>)
         {
             return _impl().compare(range) == 0;
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename trange1>
-        constexpr auto ne(const trange1& range) const -> bool
-            requires(rrange<trange1>)
-                    and (requality_comparable_with<elem_type, typename trange1::elem_type>)
-        {
-            return not eq(range);
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////

@@ -103,11 +103,6 @@ namespace atom::tests
             return true;
         }
 
-        constexpr auto ne(const tracked_type& that) const -> bool
-        {
-            return not(*this == that);
-        }
-
         constexpr auto lt(const tracked_type& that) const -> bool
         {
             last_op = eoperation::less_than_operator;

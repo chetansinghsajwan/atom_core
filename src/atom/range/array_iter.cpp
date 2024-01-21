@@ -94,14 +94,6 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// check if this iter is not same as `that`. used to compare wth end.
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto ne(const array_iter& that) const -> bool
-        {
-            return not eq(that);
-        }
-
-        /// ----------------------------------------------------------------------------------------
         /// compares `this` data with `that` data.
         /// ----------------------------------------------------------------------------------------
         constexpr auto compare(const array_iter& that) const -> isize

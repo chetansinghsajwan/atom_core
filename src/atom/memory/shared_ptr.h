@@ -167,7 +167,7 @@ namespace atom
             tallocator allocator = tallocator())
             : base_type(ptr)
         {
-            if (ptr.ne(nullptr))
+            if (not ptr.eq(nullptr))
             {
                 _state = _create_state<tdestroyer, tallocator>(mov(destroyer), mov(allocator));
             }

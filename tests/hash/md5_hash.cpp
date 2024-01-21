@@ -14,7 +14,7 @@ TEST_CASE("atom::hash::md5_hash")
             0x95, 0x60, 0x18, 0x90 };
 
         REQUIRE(hash1.eq(hash1));
-        REQUIRE(hash1.ne(hash2));
+        REQUIRE(not hash1.eq(hash2));
     }
 
     SECTION("null hash")

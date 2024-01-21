@@ -258,9 +258,6 @@ TEST_CASE("atom.core.option")
         REQUIRE(not opt0.eq(opt1));
         REQUIRE(opt0.get().last_op == tracked_type::eoperation::none);
 
-        REQUIRE(opt0.ne(opt1));
-        REQUIRE(opt0.get().last_op == tracked_type::eoperation::none);
-
         REQUIRE(not opt0.lt(opt1));
         REQUIRE(opt0.get().last_op == tracked_type::eoperation::none);
 
@@ -278,10 +275,6 @@ TEST_CASE("atom.core.option")
         opt1->last_op = tracked_type::eoperation::none;
 
         REQUIRE(opt0.eq(opt1));
-        REQUIRE(opt0.get().last_op == tracked_type::eoperation::equal_operator);
-        REQUIRE(opt1.get().last_op == tracked_type::eoperation::equal_operator);
-
-        REQUIRE(not opt0.ne(opt1));
         REQUIRE(opt0.get().last_op == tracked_type::eoperation::equal_operator);
         REQUIRE(opt1.get().last_op == tracked_type::eoperation::equal_operator);
 

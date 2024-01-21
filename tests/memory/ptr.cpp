@@ -103,13 +103,13 @@ TEST_CASE("atom.core.mut_ptr")
 
         ptr0 = &val0;
 
-        REQUIRE(ptr0.ne(nullptr));
-        REQUIRE(ptr0.ne(ptr1));
+        REQUIRE(not ptr0.eq(nullptr));
+        REQUIRE(not ptr0.eq(ptr1));
 
         ptr1 = &val1;
 
-        REQUIRE(ptr1.ne(nullptr));
-        REQUIRE(ptr0.ne(ptr1));
+        REQUIRE(not ptr1.eq(nullptr));
+        REQUIRE(not ptr0.eq(ptr1));
 
         ptr1 = &val0;
 

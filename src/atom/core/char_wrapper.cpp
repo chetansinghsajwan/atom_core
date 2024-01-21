@@ -43,11 +43,6 @@ namespace atom
             return _val == ch._val;
         }
 
-        constexpr auto ne(uchar ch) const -> bool
-        {
-            return _val != ch._val;
-        }
-
         constexpr auto lt(uchar ch) const -> bool
         {
             return _val < ch._val;

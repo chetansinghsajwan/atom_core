@@ -364,7 +364,6 @@ export namespace atom
     concept requality_comparable_with = requires(const type0 v0, const type1 v1)
     {
         { v0.eq(v1) } -> rsame_as<bool>;
-        { v0.ne(v1) } -> rsame_as<bool>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -448,7 +447,7 @@ export namespace atom
     constexpr auto operator!=(const type0& v0, const type1& v1) -> bool
         requires requality_comparable_with<type0, type1>
     {
-        return v0.ne(v1);
+        return not v0.eq(v1);
     }
 
     template <typename type0, typename type1>

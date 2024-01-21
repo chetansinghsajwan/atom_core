@@ -641,16 +641,6 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename num_type>
-        constexpr auto ne(num_type num) const -> bool
-            requires(rnum<num_type>) or (_rnum<num_type>)
-        {
-            return _val != _unwrap(num);
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename num_type>
         constexpr auto lt(num_type num) const -> bool
             requires(rnum<num_type>) or (_rnum<num_type>)
         {
