@@ -19,6 +19,8 @@ export import :ptr;
 export import :mem_ptr;
 export import :invokable;
 export import :invokable_ptr;
+export import :invokable_box;
+export import :event;
 export import :type_list;
 export import :array_iter;
 export import :insertable_requirements;

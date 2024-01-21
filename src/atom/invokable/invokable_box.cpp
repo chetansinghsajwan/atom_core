@@ -1,9 +1,10 @@
-#pragma once
-// #include "atom/memory/object_box.h"
-// #include "atom/string.h"
-
-// #include "atom/tti.h"
-// #include "atom/invokable/invokable.h"
+export module atom.core:invokable_box;
+import :std;
+import :box;
+import :core;
+import :mem_ptr;
+import :invokable;
+import :contracts_decl;
 
 namespace atom
 {
@@ -61,7 +62,7 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     /// invokable_box declaration.
     /// --------------------------------------------------------------------------------------------
-    template <typename>
+    export template <typename>
     class invokable_box;
 
     /// --------------------------------------------------------------------------------------------

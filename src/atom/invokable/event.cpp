@@ -1,8 +1,11 @@
-#pragma once
-#include "atom/containers.h"
-#include "atom/invokable/invokable_box.h"
+export module atom.core:event;
+import :std;
+import :core;
+import :invokable;
+import :invokable_box;
+import :containers.dynamic_array;
 
-namespace atom
+export namespace atom
 {
     /// --------------------------------------------------------------------------------------------
     /// event_key is used to identify events registered for this key.
