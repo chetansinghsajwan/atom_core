@@ -1,8 +1,17 @@
 #pragma once
-#include "basic_dynamic_string.h"
-#include "default_encoding.h"
+#include "_string_impl.h"
 
 namespace atom
 {
-    using dynamic_string = basic_dynamic_string<char_encoding>;
+    template <typename allocator_type>
+    class dynamic_string_container_provider
+    {
+    public:
+        template <typename value_type>
+        using type = dynamic_array<value_type, allocator_type>;
+    };
+
+    template <typename allocator_type>
+    using dynamic_string =
+        _string_impl<typename dynamic_string_container_provider<allocator_type>::type>;
 }

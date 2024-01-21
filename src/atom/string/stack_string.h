@@ -1,11 +1,18 @@
 #pragma once
-#include "basic_stack_string.h"
-#include "default_encoding.h"
+#include "_string_impl.h"
 
 namespace atom
 {
     template <usize size>
-    using stack_string = basic_stack_string<char_encoding, size>;
+    class stack_string_container_provider
+    {
+    public:
+        template <typename value_type>
+        using type = static_array<value_type, size>;
+    };
+
+    template <usize size>
+    using stack_string = _string_impl<stack_string_container_provider<size>::template type>;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     ////

@@ -1,19 +1,18 @@
 #pragma once
-#include "atom/core/core.h"
 
 namespace atom::text
 {
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    export class utf8encoding
+    class utf8_encoding
     {
     public:
-        using char_type = char8;
-        using rune_type = char32;
+        using char_type = uchar;
+        using rune_type = char32_t;
 
     public:
-        static constexpr char_type null = u8('\0');
+        static constexpr char_type null = char_type('\0');
         static constexpr bool is_multi_char_encoding = true;
 
     public:
@@ -50,7 +49,4 @@ namespace atom::text
             return parse_starting_char(ch) != 0;
         }
     };
-
-    using utf8char = typename utf8encoding::char_type;
-    using utf8rune = typename utf8encoding::rune_type;
 }

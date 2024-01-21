@@ -1,37 +1,30 @@
 #pragma once
-#include "atom/range.h"
-#include "atom/text/basic_char.h"
-#include "atom/text/basic_rune.h"
+#include "default_encoding.h"
 
 namespace atom
 {
-    template <typename in_encoding_type, typename container_type>
-    class _string_impl: public container_type
+    template <template <typename value_type> typename container_type>
+    class _string_impl: public container_type<uchar>
     {
-    public:
-        using encoding_type = in_encoding_type;
-        using char_type = basic_char<encoding_type>;
-        using iter_type = typename container_type::iter_type;
-        using iter_end_type = typename container_type::iter_end_type;
-        // using mut_iter_type             = typename container_type::mut_iter_type;
-        // using mut_iter_end_type          = typename container_type::mut_iter_end_type;
-
-        using rune_type = basic_rune<encoding_type>;
-        // using rune_iter_type            = typename container_type::rune_iter_type;
-        // using rune_iter_end_type         = typename container_type::rune_iter_end_type;
-        // using mut_rune_iter_type         = typename container_type::mut_rune_iter_type;
-        // using mut_rune_iter_end_type      = typename container_type::mut_rune_iter_end_type;
+        using this_type = _string_impl<container_type>;
+        using base_type = container_type<uchar>;
 
     public:
-        using container_type::container_type;
-        using container_type::operator=;
+        using iter_type = typename base_type::iter_type;
+        using iter_end_type = typename base_type::iter_end_type;
+        // using mut_iter_type = typename base_type::mut_iter_type;
+        // using mut_iter_end_type = typename base_type::mut_iter_end_type;
+
+    public:
+        using base_type::base_type;
+        using base_type::operator=;
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
         template <usize count>
-        constexpr _string_impl(const char_type (&arr)[count])
-            : container_type()
+        constexpr _string_impl(const uchar (&arr)[count])
+            : base_type()
         {}
 
     public:

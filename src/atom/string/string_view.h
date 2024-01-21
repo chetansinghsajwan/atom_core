@@ -1,8 +1,7 @@
 #pragma once
-#include "basic_string_view.h"
-#include "default_encoding.h"
+#include "_string_impl.h"
 
 namespace atom
 {
-    using string_view = basic_string_view<char_encoding>;
+    using string_view = _string_impl<array_view>;
 }

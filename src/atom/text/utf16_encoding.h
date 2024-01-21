@@ -1,13 +1,12 @@
 #pragma once
-#include "atom/core.h"
 
-namespace atom
+namespace atom::text
 {
-    class utf16encoding
+    class utf16_encoding
     {
     public:
-        using char_type = char16;
-        using rune_type = char32;
+        using char_type = char16_t;
+        using rune_type = char32_t;
 
     public:
         static constexpr char_type null = u'\0';
@@ -29,7 +28,4 @@ namespace atom
             return parse_starting_char(ch) != 0;
         }
     };
-
-    using utf16char = typename utf16encoding::char_type;
-    using utf16rune = typename utf16encoding::rune_type;
 }

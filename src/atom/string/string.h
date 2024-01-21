@@ -1,12 +1,11 @@
 #pragma once
-#include "basic_string.h"
-#include "default_encoding.h"
+#include "buf_string.h"
 
 namespace atom
 {
-    class string: public basic_string<char_encoding>
+    class string: public buf_string<40, default_mem_allocator>
     {
-        using base_type = basic_string<char_encoding>;
+        using base_type = buf_string<40, default_mem_allocator>;
 
     public:
         using base_type::base_type;
