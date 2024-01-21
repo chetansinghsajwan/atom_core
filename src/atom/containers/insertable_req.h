@@ -52,9 +52,9 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     /// ensures `insertable_type` is `key_insertable` for type `type`.
     /// --------------------------------------------------------------------------------------------
-    template <typename insertable_type, typename tkey, typename type>
+    template <typename insertable_type, typename key_type, typename type>
     concept rkey_insertable =
-        requires(insertable_type insertable, tkey key, type el, range_req_mock<type> range) {
+        requires(insertable_type insertable, key_type key, type el, range_req_mock<type> range) {
             insertable.insert(key, el);
             insertable.insert(key, range);
         };

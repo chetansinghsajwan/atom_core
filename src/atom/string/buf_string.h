@@ -1,6 +1,5 @@
 #pragma once
 #include "_string_impl.h"
-#include "atom/containers/buf_array.h"
 
 namespace atom
 {

@@ -10,7 +10,7 @@
 /// ------------------------------------------------------------------------------------------------
 namespace atom
 {
-    using nullptr_t = ::std::nullptr_t;
+    using nullptr_t = std::nullptr_t;
     // static constexpr nullptr_t nullptr;
 
     using null_val = nullptr_t;

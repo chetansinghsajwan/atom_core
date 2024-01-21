@@ -54,16 +54,16 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     /// `rkey_insertable` mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename tkey, typename type>
+    template <typename key_type, typename type>
     class key_insertable_req_mock
     {
     public:
         template <typename u>
-        auto insert(tkey key, u&& el)
+        auto insert(key_type key, u&& el)
             requires(rsame_as_unqualified<u, type>);
 
         template <typename range_type>
-        auto insert(tkey key, const range_type& range)
+        auto insert(key_type key, const range_type& range)
             requires(rrange_of<range_type, type>);
     };
 
