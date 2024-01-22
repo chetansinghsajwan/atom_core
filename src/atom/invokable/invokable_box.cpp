@@ -175,7 +175,7 @@ namespace atom
         {
             contracts::expects(_box.has_val(), "invokable_target is null.");
 
-            return _invoker.invoke(_box.mut_mem(), forward<arg_types>(args)...);
+            return _invoker.invoke(_box.mut_mem().unwrap(), forward<arg_types>(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------

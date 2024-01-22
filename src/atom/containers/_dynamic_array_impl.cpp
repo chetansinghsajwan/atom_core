@@ -54,8 +54,6 @@ namespace atom
 
         constexpr auto iter(usize i = 0) const -> iter_type
         {
-            contracts::debug_expects(is_index_in_range(i));
-
             return iter_type{ _get_data() + i };
         }
 
@@ -66,8 +64,6 @@ namespace atom
 
         constexpr auto mut_iter(usize i = 0) -> mut_iter_type
         {
-            contracts::debug_expects(is_index_in_range(i));
-
             return mut_iter_type{ _get_mut_data() + i };
         }
 

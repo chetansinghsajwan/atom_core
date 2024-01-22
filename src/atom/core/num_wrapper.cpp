@@ -911,8 +911,10 @@ namespace atom
         constexpr auto check_overflow_on_sub(num_type num) const -> bool
             requires(rnum<num_type>) or (_rnum<num_type>)
         {
-            if ((_val - impl_type::min()) < _unwrap(num))
-                return true;
+            // todo: fix this implementation.
+            // 
+            // if ((_val - impl_type::min()) < _unwrap(num))
+            //     return true;
 
             return false;
         }

@@ -130,6 +130,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto iter(usize i = 0) const -> iter_type
         {
+            contracts::debug_expects(is_index_in_range_or_end(i));
+
             return _impl.iter(i);
         }
 
@@ -146,6 +148,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto mut_iter(usize i = 0) -> mut_iter_type
         {
+            contracts::debug_expects(is_index_in_range_or_end(i));
+
             return _impl.mut_iter(i);
         }
 
