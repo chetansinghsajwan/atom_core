@@ -1,4 +1,4 @@
-export module atom.core:stack_string;
+export module atom.core:static_string;
 import :_string_impl;
 import :containers.static_array;
 import :core;
@@ -7,7 +7,7 @@ import :std;
 namespace atom
 {
     template <usize size>
-    class stack_string_container_provider
+    class static_string_container_provider
     {
     public:
         template <typename value_type>
@@ -15,7 +15,7 @@ namespace atom
     };
 
     export template <usize size>
-    using stack_string = _string_impl<stack_string_container_provider<size>::template type>;
+    using static_string = _string_impl<static_string_container_provider<size>::template type>;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     ////
@@ -25,9 +25,9 @@ namespace atom
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     export extern "C++" template <std::size_t size>
-    class int_string: public stack_string<size>
+    class int_string: public static_string<size>
     {
-        using base_type = stack_string<size>;
+        using base_type = static_string<size>;
 
     public:
         using base_type::base_type;
@@ -35,9 +35,9 @@ namespace atom
     };
 
     export extern "C++" template <std::size_t size>
-    class float_string: public stack_string<size>
+    class float_string: public static_string<size>
     {
-        using base_type = stack_string<size>;
+        using base_type = static_string<size>;
 
     public:
         using base_type::base_type;

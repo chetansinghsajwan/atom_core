@@ -38,7 +38,7 @@ export import :containers.dynamic_array;
 export import :containers.buf_array;
 export import :containers.unordered_map;
 export import :string_view;
-export import :stack_string;
+export import :static_string;
 export import :dynamic_string;
 export import :buf_string;
 export import :string;
