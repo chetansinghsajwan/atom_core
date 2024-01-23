@@ -37,6 +37,7 @@ export import :containers.static_array;
 export import :containers.dynamic_array;
 export import :containers.buf_array;
 export import :containers.unordered_map;
+export import :string_literal;
 export import :string_view;
 export import :static_string;
 export import :dynamic_string;

@@ -1,5 +1,6 @@
 export module atom.core:range;
 
+export import :range.range_literal;
 export import :range.iter_requirements;
 export import :range.range_requirements;
 export import :range.range_extensions;
