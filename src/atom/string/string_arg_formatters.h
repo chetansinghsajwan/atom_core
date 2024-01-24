@@ -1,11 +1,6 @@
 #pragma once
 // #include "fmt/format.h"
-
 // #include "string.h"
-#include "string_converter.h"
-#include "string_view_converter.h"
-
-
 // #include "atom/tti.h"
 
 namespace atom
@@ -181,23 +176,6 @@ namespace atom
             string_view str{ chars, n };
             string_fmt_arg_fmter<string_view>::fmt(str, ctx);
         }
-    };
-
-    /// --------------------------------------------------------------------------------------------
-    /// {string_fmt_arg_fmter} specialization for types which satisfy {rstring_view_convertible} requirement.
-    /// --------------------------------------------------------------------------------------------
-    template <typename type>
-        requires(rstring_view_convertible<type>)
-    class string_fmt_arg_fmter_impl<type>: public string_fmt_arg_fmter<string_view>
-    {
-    public:
-        auto fmt(const type& in, string_fmt_ctx& ctx)
-        {
-            string_fmt_arg_fmter<string_view>::fmt(convter.convert(in), ctx);
-        }
-
-    public:
-        string_view_converter<type> convter;
     };
 
     template <typename type>
