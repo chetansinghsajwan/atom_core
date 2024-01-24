@@ -11,6 +11,7 @@ import :range.mut_fwd_range_extensions;
 import :range.mut_bidi_range_extensions;
 import :range.mut_jump_range_extensions;
 import :range.mut_array_range_extensions;
+import :range.range_literal;
 import :std;
 import :core;
 import :array_iter;
@@ -171,7 +172,7 @@ namespace atom
 
     template <typename mut_iter_type, typename mut_iter_end_type>
     class _mut_range_from_iter_pair
-        : public _mut_range_from_iter_extended<mut_iter_type, mut_iter_end_type>::type
+        : public` _mut_range_from_iter_extended<mut_iter_type, mut_iter_end_type>::type
     {
         using base_type = _mut_range_from_iter_extended<mut_iter_type, mut_iter_end_type>::type;
 
@@ -303,6 +304,15 @@ export namespace atom
         {
             return _range_from_iter_pair(mov(it), mov(it_end));
         }
+    }
+
+    /// --------------------------------------------------------------------------------------------
+    /// 
+    /// --------------------------------------------------------------------------------------------
+    template <typename elem_type>
+    constexpr auto range_from_literal(range_literal<elem_type> lit)
+    {
+        return make_range(lit.data(), lit.count());
     }
 
     /// --------------------------------------------------------------------------------------------

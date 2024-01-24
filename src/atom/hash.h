@@ -1,9 +1,0 @@
-#pragma once
-#include "atom/hash/md5_hash.h"
-#include "atom/hash/md5_hash_generator.h"
-#include "atom/hash/md5_hash_parser.h"
-#include "atom/hash/md5_hash_stringifier.h"
-#include "atom/hash/sha1_hash.h"
-#include "atom/hash/sha1_hash_generator.h"
-#include "atom/hash/sha1_hash_parser.h"
-#include "atom/hash/sha1_hash_stringifier.h"

@@ -76,6 +76,6 @@ namespace atom
         }
 
     public:
-        byte _storage[in_size.unwrap()];
+        byte _storage[size().unwrap()];
     };
 }
