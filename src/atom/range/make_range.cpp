@@ -172,7 +172,7 @@ namespace atom
 
     template <typename mut_iter_type, typename mut_iter_end_type>
     class _mut_range_from_iter_pair
-        : public` _mut_range_from_iter_extended<mut_iter_type, mut_iter_end_type>::type
+        : public _mut_range_from_iter_extended<mut_iter_type, mut_iter_end_type>::type
     {
         using base_type = _mut_range_from_iter_extended<mut_iter_type, mut_iter_end_type>::type;
 
