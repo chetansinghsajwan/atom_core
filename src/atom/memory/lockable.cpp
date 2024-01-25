@@ -8,7 +8,7 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     /// requirements for lockable type.
     /// --------------------------------------------------------------------------------------------
-    template <typename lockable_type>
+    export template <typename lockable_type>
     concept rlockable = requires(lockable_type lock)
     {
         { lock.lock() } -> rsame_as<void>;

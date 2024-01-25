@@ -49,6 +49,7 @@ export import :string_view;
 export import :static_string;
 export import :dynamic_string;
 export import :buf_string;
+export import :string_formatting;
 export import :string;
 export import :default_encoding;
 export import :text.utf8_encoding;
