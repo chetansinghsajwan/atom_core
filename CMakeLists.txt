@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
-project(atom.core VERSION 0.1.0 LANGUAGES CXX)
+project(atom.core VERSION 0.1.0)
+enable_language(CXX)
 
 include(FetchContent)
 
@@ -49,11 +50,8 @@ file(GLOB_RECURSE sources "src/**.cpp")
 
 add_library(atom.core STATIC)
 target_sources(atom.core
-    PUBLIC FILE_SET modules TYPE CXX_MODULES FILES
-    "${sources}"
-)
-target_include_directories(atom.core PRIVATE "src/")
-
+    PUBLIC FILE_SET modules TYPE CXX_MODULES FILES "${sources}")
+target_include_directories(atom.core PRIVATE "include/")
 target_link_libraries(atom.core PRIVATE cpptrace::cpptrace)
 target_link_libraries(atom.core PRIVATE WjCryptLib)
 target_link_libraries(atom.core PRIVATE fmt::fmt-header-only)
@@ -65,9 +63,12 @@ target_compile_options(atom.core PUBLIC "-ferror-limit=1000")
 # --------------------------------------------------------------------------------------------------
 
 file(GLOB_RECURSE test_sources "tests/**.cpp")
+file(GLOB_RECURSE test_module_sources "tests/**.cxx")
 
-add_executable(atom.core.tests ${test_sources})
-target_include_directories(atom.core.tests PRIVATE "tests/")
+add_executable(atom.core.tests)
+target_sources(atom.core.tests
+    PRIVATE FILE_SET modules TYPE CXX_MODULES FILES "${test_module_sources}"
+    PRIVATE "${test_sources}")
 
 target_link_libraries(atom.core.tests PRIVATE atom.core)
 target_link_libraries(atom.core.tests PRIVATE Catch2::Catch2WithMain)
@@ -79,5 +80,4 @@ add_test(atom.core.tests atom.core.tests)
 # --------------------------------------------------------------------------------------------------
 
 add_executable(atom.core.sandbox "sandbox/sandbox.cpp")
-target_include_directories(atom.core.sandbox PRIVATE "sandbox/")
 target_link_libraries(atom.core.sandbox PRIVATE atom.core)

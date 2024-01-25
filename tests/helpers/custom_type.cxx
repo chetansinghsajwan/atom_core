@@ -1,7 +1,7 @@
-#pragma once
+export module atom.core.tests:custom_type;
 import atom.core;
 
-namespace atom::tests
+export namespace atom::tests
 {
     enum class ecustom_type_flags : _u64
     {
@@ -31,14 +31,14 @@ namespace atom::tests
         greater_than_or_equal_to_operator = 1 << 17,
     };
 
-    constexpr auto operator|(const ecustom_type_flags& flags, const ecustom_type_flags& flags_to_add)
-        -> ecustom_type_flags
+    constexpr auto operator|(const ecustom_type_flags& flags,
+        const ecustom_type_flags& flags_to_add) -> ecustom_type_flags
     {
         return (ecustom_type_flags)((_u64)flags | (_u64)flags_to_add);
     }
 
-    constexpr auto operator&(const ecustom_type_flags& flags, const ecustom_type_flags& flags_to_add)
-        -> ecustom_type_flags
+    constexpr auto operator&(const ecustom_type_flags& flags,
+        const ecustom_type_flags& flags_to_add) -> ecustom_type_flags
     {
         return (ecustom_type_flags)((_u64)flags & (_u64)flags_to_add);
     }
@@ -64,7 +64,8 @@ namespace atom::tests
         /// # trivial default constructor
         /// ----------------------------------------------------------------------------------------
         constexpr custom_type()
-            requires(enum_flag_utils::has_flag(flags, ecustom_type_flags::trivial_default_constructor))
+            requires(enum_flag_utils::has_flag(
+                        flags, ecustom_type_flags::trivial_default_constructor))
         = default;
 
         /// ----------------------------------------------------------------------------------------
@@ -152,7 +153,8 @@ namespace atom::tests
         /// ----------------------------------------------------------------------------------------
         constexpr custom_type(custom_type&& that)
             requires(enum_flag_utils::has_flag(flags, ecustom_type_flags::destructor))
-                    and (not enum_flag_utils::has_flag(flags, ecustom_type_flags::trivial_destructor))
+                    and (not enum_flag_utils::has_flag(
+                        flags, ecustom_type_flags::trivial_destructor))
         {}
 
     public:
@@ -187,7 +189,8 @@ namespace atom::tests
         /// # less than or equal to opeartor
         /// ----------------------------------------------------------------------------------------
         constexpr auto is_le(const custom_type& that) const -> bool
-            requires(enum_flag_utils::has_flag(flags, ecustom_type_flags::less_than_or_equal_to_operator))
+            requires(enum_flag_utils::has_flag(
+                flags, ecustom_type_flags::less_than_or_equal_to_operator))
         {
             return true;
         }
@@ -196,7 +199,8 @@ namespace atom::tests
         /// # greater than or equal to opeartor
         /// ----------------------------------------------------------------------------------------
         constexpr auto is_ge(const custom_type& that) const -> bool
-            requires(enum_flag_utils::has_flag(flags, ecustom_type_flags::greater_than_or_equal_to_operator))
+            requires(enum_flag_utils::has_flag(
+                flags, ecustom_type_flags::greater_than_or_equal_to_operator))
         {
             return true;
         }
@@ -221,33 +225,34 @@ namespace atom::tests
 
     using moveable_mock =
         custom_type<ecustom_type_flags::copy_constructor | ecustom_type_flags::copy_operator
-                   | ecustom_type_flags::move_constructor | ecustom_type_flags::move_operator>;
+                    | ecustom_type_flags::move_constructor | ecustom_type_flags::move_operator>;
 
     using destructible_mock = custom_type<ecustom_type_flags::destructor>;
 
-    using trivially_copy_constructible_mock = custom_type<ecustom_type_flags::trivial_copy_constructor>;
+    using trivially_copy_constructible_mock =
+        custom_type<ecustom_type_flags::trivial_copy_constructor>;
 
     using trivially_copy_assignable_mock = custom_type<ecustom_type_flags::trivial_copy_operator>;
 
     using trivially_copyable_mock = custom_type<ecustom_type_flags::trivial_copy_constructor
-                                             | ecustom_type_flags::trivial_copy_operator>;
+                                                | ecustom_type_flags::trivial_copy_operator>;
 
-    using trivially_move_constructible_mock = custom_type<ecustom_type_flags::trivial_move_constructor>;
+    using trivially_move_constructible_mock =
+        custom_type<ecustom_type_flags::trivial_move_constructor>;
 
     using trivially_move_assignable_mock = custom_type<ecustom_type_flags::trivial_move_operator>;
 
-    using trivially_moveable_mock =
-        custom_type<ecustom_type_flags::trivial_copy_constructor | ecustom_type_flags::trivial_copy_operator
-                   | ecustom_type_flags::trivial_move_constructor
-                   | ecustom_type_flags::trivial_move_operator>;
+    using trivially_moveable_mock = custom_type<
+        ecustom_type_flags::trivial_copy_constructor | ecustom_type_flags::trivial_copy_operator
+        | ecustom_type_flags::trivial_move_constructor | ecustom_type_flags::trivial_move_operator>;
 
     using trivially_destructible_mock = custom_type<ecustom_type_flags::trivial_destructor>;
 
     using equality_comparable_mock = custom_type<ecustom_type_flags::equal_to_operator>;
 
-    using comparable_mock =
-        custom_type<ecustom_type_flags::equal_to_operator | ecustom_type_flags::less_than_to_operator
-                   | ecustom_type_flags::greater_than_to_operator
-                   | ecustom_type_flags::less_than_or_equal_to_operator
-                   | ecustom_type_flags::greater_than_or_equal_to_operator>;
+    using comparable_mock = custom_type<ecustom_type_flags::equal_to_operator
+                                        | ecustom_type_flags::less_than_to_operator
+                                        | ecustom_type_flags::greater_than_to_operator
+                                        | ecustom_type_flags::less_than_or_equal_to_operator
+                                        | ecustom_type_flags::greater_than_or_equal_to_operator>;
 }

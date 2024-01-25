@@ -1,7 +1,9 @@
-#pragma once
+module;
 #include "catch2/catch_tostring.hpp"
 
-namespace atom::tests
+export module atom.core.tests:tracked_type;
+
+export namespace atom::tests
 {
     /// --------------------------------------------------------------------------------------------
     /// type used to track object state.
