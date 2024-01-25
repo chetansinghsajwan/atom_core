@@ -1,8 +1,5 @@
-#pragma once
-// #include <mutex>
-
-// #include "atom/core.h"
-#include "atom/memory/lockable.h"
+export module atom.core:mutex;
+import :std;
 
 namespace atom
 {
@@ -85,6 +82,4 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         std::mutex _impl;
     };
-
-    static_assert(rlockable<simple_mutex>);
 }

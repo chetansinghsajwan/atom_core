@@ -1,6 +1,5 @@
-#pragma once
-// #include "atom/core.h"
-#include "atom/memory/lockable.h"
+export module atom.core:lock_guard;
+import :lockable;
 
 namespace atom
 {
@@ -8,10 +7,11 @@ namespace atom
     /// locks the lock on construction and unlocks at destruction. this_type is done to guarantee
     /// exception safety.
     /// --------------------------------------------------------------------------------------------
-    template <typename tlockable>
-        requires(rlockable<tlockable>)
+    export template <typename lockable_type>
     class lock_guard
     {
+        static_assert(rlockable<lockable_type>);
+
     public:
         /// ----------------------------------------------------------------------------------------
         /// constructor. locks the lock.
@@ -20,7 +20,7 @@ namespace atom
         ///
         /// @throws unkown_exception exception thrown by {lock.lock()}.
         /// ----------------------------------------------------------------------------------------
-        lock_guard(tlockable& lock)
+        lock_guard(lockable_type& lock)
             : _lock(lock)
         {
             _lock.lock();
@@ -40,6 +40,6 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// lockable object.
         /// ----------------------------------------------------------------------------------------
-        tlockable& _lock;
+        lockable_type& _lock;
     };
 }

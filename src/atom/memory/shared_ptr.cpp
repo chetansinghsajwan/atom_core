@@ -1,20 +1,22 @@
-#pragma once
-// #include "atom/memory/obj_helper.h"
-// #include "atom/memory/ptr.h"
-#include "atom/memory/unique_ptr.h"
-#include "atom/memory/_shared_ptr_state.h"
-
-// #include "atom/tti.h"
+export module atom.core:shared_ptr;
+import :_shared_ptr_state;
+import :core;
+import :unique_ptr;
+import :obj_helper;
+import :tti;
+import :ptr;
+import :mem_ptr;
+import :memory.default_mem_allocator;
 
 namespace atom
 {
-    class shared_ptr_default_allocator: public default_mem_allocator
+    export class shared_ptr_default_allocator: public default_mem_allocator
     {};
 
     class _shared_ptr_private_ctor
     {};
 
-    template <typename type>
+    export template <typename type>
     class shared_ptr_default_destroyer
     {
         static_assert(tti::is_pure<type>, "shared_ptr_default_destroyer only supports pure types.");
@@ -29,7 +31,7 @@ namespace atom
         }
     };
 
-    template <typename in_value_type>
+    export template <typename in_value_type>
     class shared_ptr: public mut_ptr<in_value_type>
     {
         static_assert(tti::is_pure<in_value_type>, "shared_ptr only supports pure types.");
@@ -163,13 +165,15 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename destroyer_type = shared_ptr_default_destroyer<value_type>,
             typename allocator_type = shared_ptr_default_allocator>
-        constexpr explicit shared_ptr(mut_ptr<value_type> ptr, destroyer_type destroyer = destroyer_type(),
+        constexpr explicit shared_ptr(mut_ptr<value_type> ptr,
+            destroyer_type destroyer = destroyer_type(),
             allocator_type allocator = allocator_type())
             : base_type(ptr)
         {
             if (not ptr.is_eq(nullptr))
             {
-                _state = _create_state<destroyer_type, allocator_type>(mov(destroyer), mov(allocator));
+                _state =
+                    _create_state<destroyer_type, allocator_type>(mov(destroyer), mov(allocator));
             }
         }
 
@@ -325,7 +329,7 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename type, typename... arg_types>
+    export template <typename type, typename... arg_types>
     auto make_shared(arg_types&&... args) -> shared_ptr<type>
     {
         return make_shared_with_alloc<type>(
@@ -335,9 +339,8 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename type, typename allocator_type, typename... arg_types>
+    export template <typename type, typename allocator_type, typename... arg_types>
     auto make_shared_with_alloc(allocator_type allocator, arg_types&&... args) -> shared_ptr<type>
-
     {
         using state = _shared_ptr_state<type, shared_ptr_default_destroyer<type>,
             shared_ptr_default_allocator>;

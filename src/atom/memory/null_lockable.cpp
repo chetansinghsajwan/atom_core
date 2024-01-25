@@ -1,6 +1,6 @@
-#pragma once
-// #include "atom/core.h"
-#include "atom/memory/lockable.h"
+export module atom.core:null_lockable;
+import :lockable;
+import :lock_guard;
 
 namespace atom
 {
@@ -10,7 +10,7 @@ namespace atom
     ///
     /// @todo: should we delete its constructors and operators to match {simple_mutex}?
     /// --------------------------------------------------------------------------------------------
-    class null_lockable
+    export class null_lockable
     {
     public:
         /// ----------------------------------------------------------------------------------------

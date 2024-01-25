@@ -30,6 +30,13 @@ export import :output_mocks;
 export import :range;
 export import :memory.legacy_mem_allocator;
 export import :memory.default_mem_allocator;
+export import :shared_ptr;
+export import :unique_ptr;
+export import :atomic;
+export import :lock_guard;
+export import :lockable;
+export import :null_lockable;
+export import :mutex;
 export import :mem_helper;
 export import :obj_helper;
 export import :containers.array_view;
@@ -47,8 +54,3 @@ export import :default_encoding;
 export import :text.utf8_encoding;
 export import :text.utf16_encoding;
 export import :text.utf32_encoding;
-
-export
-{
-#include "atom/core_all.h"
-}

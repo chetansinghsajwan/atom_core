@@ -1,5 +1,7 @@
-#pragma once
-// #include "atom/core.h"
+export module atom.core:_shared_ptr_state;
+import :core;
+import :tti;
+import :ptr;
 
 namespace atom
 {
@@ -80,24 +82,24 @@ namespace atom
         , private ebo_helper<allocator_type>
     {
     private:
-        using tdestroyer_helper = ebo_helper<destroyer_type>;
-        using tallocator_helper = ebo_helper<allocator_type>;
+        using destroyer_helper_type = ebo_helper<destroyer_type>;
+        using allocator_helper_type = ebo_helper<allocator_type>;
 
     public:
         constexpr _shared_ptr_state(destroyer_type destroyer, allocator_type allocator)
-            : tdestroyer_helper(mov(destroyer))
-            , tallocator_helper(mov(allocator))
+            : destroyer_helper_type(mov(destroyer))
+            , allocator_helper_type(mov(allocator))
         {}
 
     public:
         virtual auto destroy(mut_ptr<void> ptr) -> void override final
         {
-            tdestroyer_helper::get_mut()(ptr.template as<value_type>());
+            destroyer_helper_type::get_mut()(ptr.template as<value_type>());
         }
 
         virtual auto dealloc_self() -> void override final
         {
-            tallocator_helper::get_mut().dealloc(this);
+            allocator_helper_type::get_mut().dealloc(this);
         }
     };
 }

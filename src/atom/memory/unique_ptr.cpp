@@ -1,13 +1,16 @@
-#pragma once
-// #include "atom/core.h"
-// #include "atom/memory/obj_helper.h"
-#include "atom/memory/shared_ptr_decl.h"
-
-// #include "atom/tti.h"
+export module atom.core:unique_ptr;
+import :core;
+import :obj_helper;
+import :tti;
+import :ptr;
+import :memory.default_mem_allocator;
 
 namespace atom
 {
-    template <typename type>
+    export template <typename type>
+    class shared_ptr;
+
+    export template <typename type>
     class unique_ptr_default_destroyer
     {
         static_assert(tti::is_pure<type>, "unique_ptr_default_destroyer only supports pure types.");
@@ -22,7 +25,7 @@ namespace atom
         }
     };
 
-    template <typename in_value_type,
+    export template <typename in_value_type,
         typename in_destroyer_type = unique_ptr_default_destroyer<in_value_type>>
     class unique_ptr: public mut_ptr<in_value_type>
     {
@@ -247,15 +250,17 @@ namespace atom
         destroyer_type _destroyer;
     };
 
-    template <typename type, typename... arg_types>
+    export template <typename type, typename... arg_types>
     auto make_unique(arg_types&&... args) -> unique_ptr<type>
     {
-        return std::make_unique<type>(forward<arg_types>(args)...);
+        // todo: implement this.
+        return unique_ptr<type>(nullptr);
     }
 
-    template <typename type, typename allocator_type, typename... arg_types>
+    export template <typename type, typename allocator_type, typename... arg_types>
     auto make_unique_with_alloc(allocator_type allocator, arg_types&&... args) -> unique_ptr<type>
     {
-        return std::make_unique<type>(forward<arg_types>(args)...);
+        // todo: implement this.
+        return unique_ptr<type>(nullptr);
     }
 }
