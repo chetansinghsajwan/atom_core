@@ -51,7 +51,8 @@ namespace atom
 
             try
             {
-                fmt::format_to(out_iter_wrap(&out), forward<arg_types>(args)...);
+                // todo: fix this.
+                // fmt::format_to(out_iter_wrap(&out), forward<arg_types>(args)...);
             }
             catch (const fmt::format_error& err)
             {
