@@ -1,5 +1,6 @@
 export module atom.core;
 
+export import :std;
 export import :core;
 export import :box;
 export import :error;
