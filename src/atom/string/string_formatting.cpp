@@ -74,19 +74,20 @@ namespace atom
     {
     public:
         constexpr string_format_context(fmt::format_context& ctx)
-            : _fmt_ctx(ctx)
+            : _fmt_ctx(&ctx)
             , _fmt_ctx_out(ctx.out())
         {}
 
         constexpr ~string_format_context()
         {
-            _fmt_ctx.advance_to(atom::move(_fmt_ctx_out));
+            if (_fmt_ctx != nullptr)
+                _fmt_ctx->advance_to(atom::move(_fmt_ctx_out));
         }
 
     public:
         auto write(char ch)
         {
-            *_fmt_ctx_out++ = ch;
+            *(*_fmt_ctx_out)++ = ch;
         }
 
         template <typename range_type>
@@ -95,17 +96,19 @@ namespace atom
         {
             for (uchar ch : range)
             {
-                *_fmt_ctx_out++ = ch.unwrap();
+                *(*_fmt_ctx_out)++ = ch.unwrap();
             }
         }
 
         constexpr auto _release_native() -> fmt::format_context&
         {
-            return _fmt_ctx;
+            auto tmp = _fmt_ctx;
+            _fmt_ctx = nullptr;
+            return *tmp;
         }
 
     public:
-        fmt::format_context& _fmt_ctx;
+        fmt::format_context* _fmt_ctx;
         typename fmt::format_context::iterator _fmt_ctx_out;
     };
 
