@@ -1,7 +1,5 @@
 export module atom.core;
-import :std;
-import :fmt;
-import :wjcrypt;
+
 export import :core;
 export import :box;
 export import :error;

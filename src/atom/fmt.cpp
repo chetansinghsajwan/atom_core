@@ -1,6 +1,7 @@
 module;
 
 #include "fmt/format.h"
+#include "fmt/ranges.h"
 
 export module atom.core:fmt;
 

@@ -26,6 +26,27 @@ export module atom.core:std;
 
 export namespace std
 {
+    using std::operator==;
+    using std::operator!=;
+    using std::operator>;
+    using std::operator>=;
+    using std::operator<;
+    using std::operator<=;
+    using std::operator+;
+    using std::operator-;
+    using std::operator&;
+    using std::operator&=;
+    using std::operator<<=;
+    using std::operator>>=;
+    using std::operator~;
+    using std::operator^;
+    using std::operator^=;
+    using std::operator|;
+    using std::operator|=;
+    using std::operator>>;
+    using std::operator<<;
+    using std::operator<=>;
+
     using std::basic_string;
     using std::basic_string_view;
     using std::cerr;
@@ -36,6 +57,7 @@ export namespace std
     using std::source_location;
     using std::string;
     using std::string_view;
+    using std::vector;
 
     using std::conditional_t;
     using std::exception;
@@ -170,24 +192,3 @@ export namespace std
         using std::chrono::system_clock;
     }
 }
-
-using std::operator==;
-using std::operator!=;
-using std::operator>;
-using std::operator>=;
-using std::operator<;
-using std::operator<=;
-using std::operator+;
-using std::operator-;
-using std::operator&;
-using std::operator&=;
-using std::operator<<=;
-using std::operator>>=;
-using std::operator~;
-using std::operator^;
-using std::operator^=;
-using std::operator|;
-using std::operator|=;
-using std::operator>>;
-using std::operator<<;
-using std::operator<=>;
