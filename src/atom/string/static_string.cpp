@@ -43,36 +43,4 @@ namespace atom
         using base_type::base_type;
         using base_type::operator=;
     };
-
-    // template <typename this_final_type, typename value_type, typename limit_type>
-    // constexpr auto _int_impl<this_final_type, value_type, limit_type>::to_string(value_type val)
-    //     -> string_type
-    // {
-    //     string_type str;
-    //     char* begin = _to_string(val, str.mut_data() + str.count() - 1);
-    //     begin--;
-    //     while (begin >= str.data())
-    //     {
-    //         *begin = ' ';
-    //         begin--;
-    //     }
-
-    //     return str;
-    // }
-
-    // export extern "C++" template <typename this_final_type, typename value_type>
-    // constexpr auto _float_impl<this_final_type, value_type>::to_string(value_type val)
-    //     -> string_type
-    // {
-    //     string_type str;
-    //     char* begin = _to_string(val, str.mut_data() + str.count() - 1);
-    //     begin--;
-    //     while (begin >= str.data())
-    //     {
-    //         *begin = ' ';
-    //         begin--;
-    //     }
-
-    //     return str;
-    // }
 }

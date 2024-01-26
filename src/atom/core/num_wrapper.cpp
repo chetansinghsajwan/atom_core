@@ -89,7 +89,6 @@ namespace atom
         using this_final_type = typename impl_type::this_final_type;
         using value_type = typename impl_type::value_type;
         using unwrapped_type = typename impl_type::value_type;
-        using string_type = typename impl_type::string_type;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -948,30 +947,6 @@ namespace atom
                 return false;
 
             return true;
-        }
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        ////
-        //// string conversion
-        ////
-        ////////////////////////////////////////////////////////////////////////////////////////////
-
-    public:
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto to_string() const -> string_type
-        {
-            return impl_type::to_string(_val);
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename output_type>
-        constexpr auto to_string_out(output_type&& out) const -> output_type&
-        {
-            return impl_type::to_string_out(_val, forward<output_type>(out));
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////

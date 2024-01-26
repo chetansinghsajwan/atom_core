@@ -14,14 +14,6 @@ namespace atom
         using base_type = _num_impl<this_final_type, value_type, value_type>;
 
     public:
-        /// ----------------------------------------------------------------------------------------
-        /// # to do
-        ///
-        /// - review this. [`float_string`] has different sting requirements.
-        /// ----------------------------------------------------------------------------------------
-        using string_type = float_string<base_type::max_digits_count() + 1>;
-
-    public:
         static consteval auto nan() -> value_type
         {
             return value_type();
@@ -41,22 +33,6 @@ namespace atom
         {
             return std::round(val);
         }
-
-        static constexpr auto to_string(value_type val) -> string_type;
-
-        template <typename output_type>
-        static constexpr auto to_string_out(value_type val, output_type&& out) -> output_type
-        {
-            string_type str = to_string();
-            out += str;
-            return out;
-        }
-
-    private:
-        static constexpr auto _to_string(value_type val, uchar* str) -> uchar*
-        {
-            return str;
-        }
     };
 
     template <typename impl_type>
@@ -68,7 +44,6 @@ namespace atom
     public:
         using this_final_type = typename base_type::this_final_type;
         using value_type = typename base_type::value_type;
-        using string_type = typename base_type::string_type;
 
     public:
         using base_type::base_type;

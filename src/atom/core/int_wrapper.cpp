@@ -42,48 +42,6 @@ namespace atom
         using base_type = _num_impl<this_final_type, value_type, limit_type>;
         using this_type = _int_impl<this_final_type, value_type, limit_type>;
 
-    public:
-        using string_type = int_string<base_type::max_digits_count() + 1>;
-
-    public:
-        static constexpr auto to_string(value_type val) -> string_type;
-
-        template <typename output_type>
-        static constexpr auto to_string_out(value_type val, output_type&& out) -> output_type
-        {
-            string_type str = to_string(val);
-            out += str;
-            return out;
-        }
-
-    private:
-        static constexpr auto _to_string(value_type val, uchar* str) -> uchar*
-        {
-            bool neg = false;
-            if constexpr (std::is_signed_v<value_type>)
-            {
-                if (val < 0)
-                {
-                    val = val * -1;
-                    neg = true;
-                }
-            }
-
-            while (val > 0)
-            {
-                str--;
-                *str = '0' + (val % 10);
-                val = val / 10;
-            }
-
-            if (neg)
-            {
-                str--;
-                *str = '-';
-            }
-
-            return str;
-        }
     };
 
     template <typename impl_type>
