@@ -23,7 +23,7 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <usize count>
-        constexpr _string_impl(const uchar (&arr)[count])
+        constexpr _string_impl(const char (&arr)[count])
             : base_type()
         {}
 
