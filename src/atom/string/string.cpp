@@ -3,8 +3,9 @@ import :std;
 import :fmt;
 import :core;
 import :buf_string;
-import :string_formatting;
 import :output_requirements;
+import :string_view;
+import :string_formatting;
 import :memory.default_mem_allocator;
 
 namespace atom
@@ -26,44 +27,7 @@ namespace atom
             output_type&& out, format_string<arg_types...> fmt, arg_types&&... args)
             requires routput<output_type, uchar>
         {
-            class out_iter_wrap
-            {
-            public:
-                using value_type = char;
-                using difference_type = std::ptrdiff_t;
-                using pointer = char*;
-                using reference = char&;
-                using iterator_category = std::output_iterator_tag;
-
-            public:
-                constexpr auto operator++(int) -> out_iter_wrap&
-                {
-                    return *this;
-                }
-
-                constexpr auto operator*() -> out_iter_wrap&
-                {
-                    return *this;
-                }
-
-                constexpr auto operator=(char ch) -> out_iter_wrap&
-                {
-                    *out += uchar(ch);
-                    return *this;
-                }
-
-            public:
-                pure_type<output_type>* out;
-            };
-
-            try
-            {
-                fmt::format_to(out_iter_wrap(&out), fmt, forward<arg_types>(args)...);
-            }
-            catch (const fmt::format_error& err)
-            {
-                throw _fmt_error_to_string_format_error(err);
-            }
+            _format_to(out, fmt, forward<arg_types>(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -78,6 +42,20 @@ namespace atom
             return out;
         }
     };
+
+    /// --------------------------------------------------------------------------------------------
+    /// `string_formatter` specialization for `string`.
+    /// --------------------------------------------------------------------------------------------
+    template <>
+    struct string_formatter<string>: public string_formatter<string_view>
+    {};
+}
+
+namespace fmt
+{
+    template <>
+    class formatter<atom::string>: public _formatter_helper<atom::string>
+    {};
 }
 
 namespace std

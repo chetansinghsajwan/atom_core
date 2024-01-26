@@ -3,9 +3,13 @@ import :std;
 import :fmt;
 import :core;
 import :error;
+import :output_requirements;
 import :array_iter;
 import :range;
 import :string_view;
+import :static_string;
+import :dynamic_string;
+import :buf_string;
 
 namespace atom
 {
@@ -121,6 +125,54 @@ namespace atom
         formatter.parse(parse_ctx);
         formatter.format(arg, ctx);
     };
+
+    /// ----------------------------------------------------------------------------------------
+    ///
+    /// ----------------------------------------------------------------------------------------
+    template <typename output_type, typename... arg_types>
+    constexpr auto _format_to(
+        output_type&& out, format_string<arg_types...> fmt, arg_types&&... args)
+        requires routput<output_type, uchar>
+    {
+        class out_iter_wrap
+        {
+        public:
+            using value_type = char;
+            using difference_type = std::ptrdiff_t;
+            using pointer = char*;
+            using reference = char&;
+            using iterator_category = std::output_iterator_tag;
+
+        public:
+            constexpr auto operator++(int) -> out_iter_wrap&
+            {
+                return *this;
+            }
+
+            constexpr auto operator*() -> out_iter_wrap&
+            {
+                return *this;
+            }
+
+            constexpr auto operator=(char ch) -> out_iter_wrap&
+            {
+                *out += uchar(ch);
+                return *this;
+            }
+
+        public:
+            pure_type<output_type>* out;
+        };
+
+        try
+        {
+            fmt::format_to(out_iter_wrap(&out), fmt, forward<arg_types>(args)...);
+        }
+        catch (const fmt::format_error& err)
+        {
+            throw _fmt_error_to_string_format_error(err);
+        }
+    }
 }
 
 namespace atom
@@ -139,7 +191,7 @@ namespace atom
             native.advance_to(begin);
         }
 
-        constexpr auto format(type val, string_format_context& context)
+        constexpr auto format(type val, string_format_context& context) const
         {
             fmt::format_context& native = context._release_native();
             fmt::format_context::iterator begin = _formatter.format(val, native);
@@ -151,173 +203,89 @@ namespace atom
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// `string_formatter` specialization for all numeric types.
+    /// `string_formatter` specialization for all num types.
     /// --------------------------------------------------------------------------------------------
     template <typename num_type>
         requires rnum<num_type>
     class string_formatter<num_type>
+        : public _string_formatter_helper<typename num_type::unwrapped_type>
     {
     public:
-        constexpr auto parse(string_format_parse_context& ctx)
+        constexpr auto format(num_type num, string_format_context& ctx) const
         {
-            _formatter.parse(ctx);
+            _string_formatter_helper<typename num_type::unwrapped_type>::format(num.unwrap(), ctx);
         }
-
-        constexpr auto format(num_type num, string_format_context& ctx)
-        {
-            _formatter.format(num.unwrap(), ctx);
-        }
-
-    private:
-        _string_formatter_helper<typename num_type::unwrapped_type> _formatter;
     };
 
     /// --------------------------------------------------------------------------------------------
     /// `string_formatter` specialization for `uchar`.
     /// --------------------------------------------------------------------------------------------
     template <>
-    class string_formatter<uchar>
+    class string_formatter<uchar>: public _string_formatter_helper<char>
     {
     public:
-        constexpr auto parse(string_format_parse_context& ctx)
+        constexpr auto format(uchar val, string_format_context& ctx) const
         {
-            _formatter.parse(ctx);
+            _string_formatter_helper<char>::format(val.unwrap(), ctx);
         }
-
-        constexpr auto format(uchar ch, string_format_context& ctx)
-        {
-            _formatter.format(ch.unwrap(), ctx);
-        }
-
-    private:
-        _string_formatter_helper<char> _formatter;
     };
 
     /// --------------------------------------------------------------------------------------------
     /// `string_formatter` specialization for `byte`.
     /// --------------------------------------------------------------------------------------------
     template <>
-    class string_formatter<byte>
+    class string_formatter<byte>: public _string_formatter_helper<byte>
     {
     public:
-        constexpr auto parse(string_format_parse_context& ctx)
+        constexpr auto format(byte val, string_format_context& ctx) const
         {
-            _formatter.parse(ctx);
+            _string_formatter_helper<byte>::format(val, ctx);
         }
-
-        constexpr auto format(byte val, string_format_context& ctx)
-        {
-            _formatter.format(val, ctx);
-        }
-
-    private:
-        _string_formatter_helper<byte> _formatter;
     };
 
     /// --------------------------------------------------------------------------------------------
     /// `string_formatter` specialization for `string_view`.
     /// --------------------------------------------------------------------------------------------
     template <>
-    class string_formatter<string_view>
+    class string_formatter<string_view>: public _string_formatter_helper<fmt::string_view>
     {
     public:
-        constexpr auto parse(string_format_parse_context& ctx)
-        {
-            _formatter.parse(ctx);
-        }
-
-        constexpr auto format(string_view str, string_format_context& ctx)
+        constexpr auto format(string_view str, string_format_context& ctx) const
         {
             fmt::string_view fmt_str(str.data().as_unsafe<char>().unwrap(), str.count().unwrap());
-            _formatter.format(fmt_str, ctx);
+            _string_formatter_helper<fmt::string_view>::format(fmt_str, ctx);
         }
-
-    private:
-        _string_formatter_helper<fmt::string_view> _formatter;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// `string_formatter` specialization for `char` arr.
+    /// `string_formatter` specialization for `static_string`.
     /// --------------------------------------------------------------------------------------------
     template <usize count>
-    class string_formatter<char[count]>: public string_formatter<string_view>
-    {
-    public:
-        auto format(const char (&chars)[count], string_format_context& ctx)
-        {
-            string_view str(range_from_literal(chars));
-            string_formatter<string_view>::format(str, ctx);
-        }
-    };
+    class string_formatter<static_string<count>>: public string_formatter<string_view>
+    {};
 
     /// --------------------------------------------------------------------------------------------
-    /// `string_formatter` specialization for `range`.
+    /// `string_formatter` specialization for `dynamic_string`.
     /// --------------------------------------------------------------------------------------------
-    template <typename range_type>
-        requires rrange<range_type> and rstring_formattable<typename range_type::elem_type>
-    class string_formatter<range_type>
-    {
-        class _range_wrapper
-        {
-        public:
-            constexpr _range_wrapper(const range_type& range)
-                : _range(range)
-            {}
+    template <typename allocator_type>
+    class string_formatter<dynamic_string<allocator_type>>: public string_formatter<string_view>
+    {};
 
-        public:
-            constexpr auto begin()
-            {
-                return std_iter_wrap_for_atom_iter(_range.iter());
-            }
-
-            constexpr auto end()
-            {
-                return std_iter_wrap_for_atom_iter(_range.iter_end());
-            }
-
-        private:
-            const range_type& _range;
-        };
-
-    public:
-        constexpr auto parse(string_format_parse_context& ctx)
-        {
-            _formatter.parse(ctx);
-        }
-
-        constexpr auto format(const range_type& range, string_format_context& ctx)
-        {
-            _formatter.format(_range_wrapper(range), ctx);
-        }
-
-    private:
-        _string_formatter_helper<_range_wrapper> _formatter;
-    };
-
-    template <typename type>
-    class _fmt_formatter_filter
-    {
-    public:
-        static constexpr bool enable = true;
-    };
-
-    template <usize count>
-    class _fmt_formatter_filter<char[count]>
-    {
-    public:
-        static constexpr bool enable = false;
-    };
+    /// --------------------------------------------------------------------------------------------
+    /// `string_formatter` specialization for `buf_string`.
+    /// --------------------------------------------------------------------------------------------
+    template <usize count, typename allocator_type>
+    class string_formatter<buf_string<count, allocator_type>>: public string_formatter<string_view>
+    {};
 }
 
 namespace fmt
 {
     /// --------------------------------------------------------------------------------------------
-    /// `fmt::formatter` specialization for all types that implement `atom::string_formatter`.
-    /// `fmt` uses this type and users specialize `atom::string_formatter`.
+    /// helper class which calls atom::string_formatter implementation for type `type`.
     /// --------------------------------------------------------------------------------------------
-    export template <typename type>
-        requires atom::rstring_formattable<type> and atom::_fmt_formatter_filter<type>::enable
-    class formatter<type>
+    template <typename type>
+    class _formatter_helper
     {
     public:
         constexpr auto parse(fmt::format_parse_context& fmt_ctx) ->
@@ -328,18 +296,54 @@ namespace fmt
             return fmt_ctx.begin();
         }
 
-        constexpr auto format(const type& in, fmt::format_context& fmt_ctx) ->
+        constexpr auto format(const type& val, fmt::format_context& fmt_ctx) const ->
             typename fmt::format_context::iterator
         {
             atom::string_format_context ctx(fmt_ctx);
-            _atom_formatter.format(in, ctx);
+            _atom_formatter.format(val, ctx);
             return fmt_ctx.out();
         }
 
     private:
-        /// ----------------------------------------------------------------------------------------
-        /// this_type contains actual implementation.
-        /// ----------------------------------------------------------------------------------------
         atom::string_formatter<type> _atom_formatter;
     };
+
+    /// --------------------------------------------------------------------------------------------
+    /// `fmt::formatter` specialization for all `rstring_formattable` types.
+    /// --------------------------------------------------------------------------------------------
+    export template <typename type>
+        requires atom::rstring_formattable<type>
+    class formatter<type>: public _formatter_helper<type>
+    {};
+
+    /// --------------------------------------------------------------------------------------------
+    /// `fmt::formatter` explicit specialization for `atom::string_view`.
+    /// --------------------------------------------------------------------------------------------
+    template <>
+    class formatter<atom::string_view>: public _formatter_helper<atom::string_view>
+    {};
+
+    /// --------------------------------------------------------------------------------------------
+    /// `fmt::formatter` explicit specialization for `atom::static_string`.
+    /// --------------------------------------------------------------------------------------------
+    template <atom::usize count>
+    class formatter<atom::static_string<count>>
+        : public _formatter_helper<atom::static_string<count>>
+    {};
+
+    /// --------------------------------------------------------------------------------------------
+    /// `fmt::formatter` explicit specialization for `atom::dynamic_string`.
+    /// --------------------------------------------------------------------------------------------
+    template <typename allocator_type>
+    class formatter<atom::dynamic_string<allocator_type>>
+        : public _formatter_helper<atom::dynamic_string<allocator_type>>
+    {};
+
+    /// --------------------------------------------------------------------------------------------
+    /// `fmt::formatter` explicit specialization for `atom::buf_string`.
+    /// --------------------------------------------------------------------------------------------
+    template <atom::usize count, typename allocator_type>
+    class formatter<atom::buf_string<count, allocator_type>>
+        : public _formatter_helper<atom::buf_string<count, allocator_type>>
+    {};
 }

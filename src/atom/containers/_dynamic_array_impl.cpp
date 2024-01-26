@@ -233,6 +233,7 @@ namespace atom
             _ensure_cap_for(1);
             _move_range_back(i, 1);
             _construct_at(i, forward<arg_types>(args)...);
+            _set_count(_get_count() + 1);
 
             return i;
         }
