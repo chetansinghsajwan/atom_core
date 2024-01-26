@@ -19,20 +19,13 @@ FetchContent_Declare(
 )
 
 FetchContent_Declare(
-    wjcrypt
-    GIT_REPOSITORY "https://github.com/WaterJuice/WjCryptLib.git"
-    GIT_TAG        "Version_2.3.0"
-    GIT_SHALLOW    true
-)
-
-FetchContent_Declare(
     cpptrace
     GIT_REPOSITORY "https://github.com/jeremy-rifkin/cpptrace.git"
     GIT_TAG        "v0.3.1"
     GIT_SHALLOW    true
 )
 
-FetchContent_MakeAvailable(catch2 fmt wjcrypt cpptrace)
+FetchContent_MakeAvailable(catch2 fmt cpptrace)
 
 # --------------------------------------------------------------------------------------------------
 # C++20 Global Config
@@ -53,7 +46,6 @@ target_sources(atom.core
     PUBLIC FILE_SET modules TYPE CXX_MODULES FILES "${sources}")
 target_include_directories(atom.core PRIVATE "include/")
 target_link_libraries(atom.core PRIVATE cpptrace::cpptrace)
-target_link_libraries(atom.core PRIVATE WjCryptLib)
 target_link_libraries(atom.core PRIVATE fmt::fmt-header-only)
 target_compile_options(atom.core PUBLIC "-Wno-read-modules-implicitly")
 target_compile_options(atom.core PUBLIC "-ferror-limit=1000")
