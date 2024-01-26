@@ -29,30 +29,36 @@ namespace atom
             class out_iter_wrap
             {
             public:
-                auto operator++(int) -> out_iter_wrap&
+                using value_type = char;
+                using difference_type = std::ptrdiff_t;
+                using pointer = char*;
+                using reference = char&;
+                using iterator_category = std::output_iterator_tag;
+
+            public:
+                constexpr auto operator++(int) -> out_iter_wrap&
                 {
                     return *this;
                 }
 
-                auto operator*() -> out_iter_wrap&
+                constexpr auto operator*() -> out_iter_wrap&
                 {
                     return *this;
                 }
 
-                auto operator=(char ch) -> out_iter_wrap&
+                constexpr auto operator=(char ch) -> out_iter_wrap&
                 {
                     *out += uchar(ch);
                     return *this;
                 }
 
             public:
-                output_type* out;
+                pure_type<output_type>* out;
             };
 
             try
             {
-                // todo: fix this.
-                // fmt::format_to(out_iter_wrap(&out), forward<arg_types>(args)...);
+                fmt::format_to(out_iter_wrap(&out), fmt, forward<arg_types>(args)...);
             }
             catch (const fmt::format_error& err)
             {

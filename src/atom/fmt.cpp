@@ -30,5 +30,6 @@ export namespace fmt
         using fmt::detail::iterator_buffer;
         using fmt::detail::locale_ref;
         using fmt::detail::vformat_to;
+        using fmt::detail::is_output_iterator;
     }
 }

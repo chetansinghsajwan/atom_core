@@ -88,6 +88,7 @@ namespace atom
         using impl_type = in_impl_type;
         using this_final_type = typename impl_type::this_final_type;
         using value_type = typename impl_type::value_type;
+        using unwrapped_type = typename impl_type::value_type;
         using string_type = typename impl_type::string_type;
 
     public:

@@ -10,6 +10,9 @@ namespace atom
         using this_type = uchar;
 
     public:
+        using unwrapped_type = char;
+
+    public:
         constexpr uchar()
             : _val(0)
         {}
@@ -76,6 +79,11 @@ namespace atom
         constexpr auto operator+(int n) const -> uchar
         {
             return uchar(_val + n);
+        }
+
+        constexpr auto unwrap() const -> char
+        {
+            return _val;
         }
 
     public:
