@@ -61,7 +61,7 @@ namespace atom
         /// # move constructor
         /// ----------------------------------------------------------------------------------------
         constexpr basic_dynamic_array(basic_dynamic_array&& that)
-            : _impl{ mov(that._impl) }
+            : _impl{ move(that._impl) }
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -69,7 +69,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator=(basic_dynamic_array&& that) -> basic_dynamic_array&
         {
-            _impl.storage().move(mov(that));
+            _impl.storage().move(move(that));
             return *this;
         }
 
@@ -388,7 +388,7 @@ namespace atom
             requires(rrange_of<pure_type<range_type>, elem_type>)
                     and (rconstructible<elem_type, typename pure_type<range_type>::elem_type>)
         {
-            _impl.insert_range_back(mov(range.iter()), mov(range.iter_end()));
+            _impl.insert_range_back(move(range.iter()), move(range.iter_end()));
         }
 
         /// ----------------------------------------------------------------------------------------

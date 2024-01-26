@@ -122,25 +122,25 @@ namespace atom
         constexpr _option_impl& operator=(const this_type& that) = default;
 
         /// ----------------------------------------------------------------------------------------
-        /// # trivial move constructor
+        /// # trivial mov constructor
         /// ----------------------------------------------------------------------------------------
         constexpr _option_impl(this_type&& that) = default;
 
         /// ----------------------------------------------------------------------------------------
-        /// # move constructor
+        /// # mov constructor
         /// ----------------------------------------------------------------------------------------
         constexpr _option_impl(ctor_move, this_type&& that)
             : this_type()
         {
             if (that._is_value)
             {
-                _create_value(mov(that._get_mut_value()));
+                _create_value(move(that._get_mut_value()));
                 _is_value = true;
             }
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # trivial move operator
+        /// # trivial mov operator
         /// ----------------------------------------------------------------------------------------
         constexpr _option_impl& operator=(this_type&& that) = default;
 
@@ -168,9 +168,9 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// moves [`option`] into this.
+        /// movees [`option`] into this.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto move(_option_impl&& that)
+        constexpr auto mov(_option_impl&& that)
         {
             _set_value_from_option<true>(that);
         }
@@ -276,22 +276,22 @@ namespace atom
         }
 
     private:
-        template <bool move, typename option_type>
+        template <bool mov, typename option_type>
         constexpr auto _set_value_from_option(option_type&& that)
         {
             if (that._is_value)
             {
                 if (_is_value)
                 {
-                    if constexpr (move)
-                        _set_value(mov(that._get_mut_value()));
+                    if constexpr (mov)
+                        _set_value(move(that._get_mut_value()));
                     else
                         _set_value(that._get_value());
                 }
                 else
                 {
-                    if constexpr (move)
-                        _create_value(mov(that._get_mut_value()));
+                    if constexpr (mov)
+                        _create_value(move(that._get_mut_value()));
                     else
                         _create_value(that._get_value());
 
@@ -334,17 +334,17 @@ namespace atom
         }
 
         template <typename option_type>
-        constexpr auto _move(option_type&& that)
+        constexpr auto _mov(option_type&& that)
         {
             if (that._is_value)
             {
                 if (_is_value)
                 {
-                    _set_value(mov(that._get_value()));
+                    _set_value(move(that._get_value()));
                 }
                 else
                 {
-                    _create_value(mov(that._get_value()));
+                    _create_value(move(that._get_value()));
                     _is_value = true;
                 }
             }
@@ -368,7 +368,7 @@ namespace atom
                 }
                 else
                 {
-                    _create_value(mov(that._get_mut_value()));
+                    _create_value(move(that._get_mut_value()));
                     _is_value = true;
                     that._is_value = false;
                 }
@@ -377,7 +377,7 @@ namespace atom
             {
                 if (_is_value)
                 {
-                    that._create_value(mov(_get_mut_value()));
+                    that._create_value(move(_get_mut_value()));
                     that._is_value = true;
                     _is_value = false;
                 }

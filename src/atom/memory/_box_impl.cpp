@@ -124,7 +124,7 @@ namespace atom
                     {
                         _check_and_release_mem();
 
-                        _alloc = mov(that._alloc);
+                        _alloc = move(that._alloc);
                         _heap_mem = that._heap_mem;
                         _heap_mem_size = that._heap_mem_size;
 
@@ -147,7 +147,7 @@ namespace atom
                 {
                     _check_and_release_mem();
 
-                    _alloc = mov(that._alloc);
+                    _alloc = move(that._alloc);
                     _heap_mem = that._heap_mem;
                     _heap_mem_size = that._heap_mem_size;
 
@@ -338,7 +338,7 @@ namespace atom
                 if constexpr (rmove_constructible<type>)
                 {
                     _val.move = [](void* val, void* that) {
-                        new (val) type(mov(*reinterpret_cast<type*>(that)));
+                        new (val) type(move(*reinterpret_cast<type*>(that)));
                     };
                 }
                 else

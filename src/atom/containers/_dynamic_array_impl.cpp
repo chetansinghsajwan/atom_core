@@ -94,7 +94,7 @@ namespace atom
             }
             else
             {
-                return _insert_range_at_uncounted(i, mov(it), mov(it_end));
+                return _insert_range_at_uncounted(i, move(it), move(it_end));
             }
         }
 
@@ -127,7 +127,7 @@ namespace atom
             }
             else
             {
-                return _insert_range_back_uncounted(mov(it), mov(it_end));
+                return _insert_range_back_uncounted(move(it), move(it_end));
             }
         }
 
@@ -261,7 +261,7 @@ namespace atom
         constexpr auto _insert_range_at_uncounted(usize i, uiter it, uiter_end it_end) -> usize
         {
             usize rotate_size = _get_count() - i;
-            _insert_range_back_uncounted(mov(it), mov(it_end));
+            _insert_range_back_uncounted(move(it), move(it_end));
             _rotate_range_back(i, rotate_size);
 
             return i;

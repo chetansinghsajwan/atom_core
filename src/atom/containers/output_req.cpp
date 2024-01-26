@@ -11,9 +11,9 @@ namespace atom
         requires(output_type out, value_type value, mock::range<value_type> range)
     {
         { out += value };
-        { out += mov(value) };
+        { out += move(value) };
         { out += range };
-        { out += mov(range) };
+        { out += move(range) };
     };
 }
 

@@ -111,7 +111,7 @@ export namespace atom
         constexpr option(option&& that)
             requires(not rtrivially_move_constructible<value_type>)
                     and (rmove_constructible<value_type>)
-            : _impl(typename _impl_type::ctor_move(), mov(that._impl))
+            : _impl(typename _impl_type::ctor_move(), move(that._impl))
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -134,7 +134,7 @@ export namespace atom
         constexpr auto operator=(option&& that) -> option&
             requires(not rtrivially_move_assignable<value_type>) and (rmoveable<value_type>)
         {
-            _impl.move(mov(that._impl));
+            _impl.mov(move(that._impl));
             return *this;
         }
 
@@ -197,7 +197,7 @@ export namespace atom
         /// - `val`: value to construct with.
         /// ----------------------------------------------------------------------------------------
         constexpr option(value_type&& val)
-            : _impl(mov(val))
+            : _impl(move(val))
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -212,7 +212,7 @@ export namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator=(value_type&& val) -> option&
         {
-            _impl.set_value(mov(val));
+            _impl.set_value(move(val));
             return *this;
         }
 

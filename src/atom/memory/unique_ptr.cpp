@@ -58,7 +58,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr unique_ptr(destroyer_type destroyer = destroyer_type())
             : base_type()
-            , _destroyer(mov(destroyer))
+            , _destroyer(move(destroyer))
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -76,7 +76,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr unique_ptr(unique_ptr&& that)
             : base_type(that.unwrap())
-            , _destroyer(mov(that._destroyer))
+            , _destroyer(move(that._destroyer))
         {
             that._set_ptr(nullptr);
         }
@@ -86,7 +86,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr unique_ptr& operator=(unique_ptr&& that)
         {
-            _move(mov(that));
+            _move(move(that));
             return *this;
         }
 
@@ -97,7 +97,7 @@ namespace atom
         constexpr unique_ptr(unique_ptr<other_value_type, destroyer_type>&& that)
             requires rsame_or_derived_from<other_value_type, value_type>
             : base_type(that.unwrap())
-            , _destroyer(mov(that._destroyer))
+            , _destroyer(move(that._destroyer))
         {
             that._set_ptr(nullptr);
         }
@@ -109,7 +109,7 @@ namespace atom
         constexpr unique_ptr& operator=(unique_ptr<other_value_type, destroyer_type>&& that)
             requires rsame_or_derived_from<other_value_type, value_type>
         {
-            _move(mov(that));
+            _move(move(that));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -118,7 +118,7 @@ namespace atom
         constexpr explicit unique_ptr(
             mut_ptr<value_type> ptr, destroyer_type destroyer = destroyer_type())
             : base_type(ptr)
-            , _destroyer(mov(destroyer))
+            , _destroyer(move(destroyer))
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -148,7 +148,7 @@ namespace atom
             _check_and_destroy_value();
 
             _set_ptr(ptr.unwrap());
-            _destroyer = mov(destroyer);
+            _destroyer = move(destroyer);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -203,7 +203,7 @@ namespace atom
             _check_and_destroy_value();
 
             _set_ptr(that._get_mut_ptr());
-            _destroyer = mov(that._destroyer);
+            _destroyer = move(that._destroyer);
             that._set_ptr(nullptr);
         }
 

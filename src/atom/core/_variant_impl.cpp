@@ -79,7 +79,7 @@ namespace atom
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// copy or move constructs value hold by variant `that`.
+        /// copy or mov constructs value hold by variant `that`.
         ///
         /// # expects
         /// - current value is null.
@@ -238,7 +238,7 @@ namespace atom
         }
 
     private:
-        template <bool move, usize index, typename tother, typename... tothers>
+        template <bool mov, usize index, typename other_type, typename... other_types>
         constexpr auto _construct_value_from_variant_impl(auto& that, usize that_index)
         {
             using that_types = type_list<tothers...>;
@@ -251,14 +251,15 @@ namespace atom
                 }
                 else
                 {
-                    _construct_value_from_variant_impl<move, index + 1, tothers...>(that, that_index);
+                    _construct_value_from_variant_impl<mov, index + 1, other_types...>(
+                        that, that_index);
                     return;
                 }
             }
 
-            if constexpr (move)
+            if constexpr (mov)
             {
-                _construct_value_as<tother>(mov(that.template _get_value_as<tother>()));
+                _construct_value_as<other_type>(move(that.template _get_value_as<other_type>()));
             }
             else
             {
@@ -268,7 +269,7 @@ namespace atom
             _index = get_index_for_type<tother>();
         }
 
-        template <bool move, usize index, typename tother, typename... tothers>
+        template <bool mov, usize index, typename other_type, typename... other_types>
         constexpr auto _set_value_from_variant_impl(auto&& that, usize that_index)
         {
             using that_types = type_list<tothers...>;
@@ -281,7 +282,7 @@ namespace atom
                 }
                 else
                 {
-                    _set_value_from_variant_impl<move, index + 1, tothers...>(that, that_index);
+                    _set_value_from_variant_impl<mov, index + 1, other_types...>(that, that_index);
                     return;
                 }
             }
@@ -292,9 +293,9 @@ namespace atom
             // we already have this type, so we don't construct it but assign it.
             if (_index == index_for_this)
             {
-                if constexpr (move)
+                if constexpr (mov)
                 {
-                    _assign_value_as<tother>(mov(that.template _get_value_as<tother>()));
+                    _assign_value_as<other_type>(move(that.template _get_value_as<other_type>()));
                 }
                 else
                 {
@@ -305,9 +306,9 @@ namespace atom
             {
                 destroy_value();
 
-                if constexpr (move)
+                if constexpr (mov)
                 {
-                    _construct_value_as<tother>(mov(that.template _get_value_as<tother>()));
+                    _construct_value_as<other_type>(move(that.template _get_value_as<other_type>()));
                 }
                 else
                 {

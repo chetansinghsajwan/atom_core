@@ -38,7 +38,7 @@ TEST_CASE("atom.core.unique_ptr")
     {
         tracked_type val;
         unique_ptr<tracked_type> ptr1(&val);
-        unique_ptr<tracked_type> ptr2(mov(ptr1));
+        unique_ptr<tracked_type> ptr2(move(ptr1));
 
         REQUIRE(ptr1.is_eq(nullptr));
         REQUIRE(ptr2.is_eq(&val));
@@ -67,7 +67,7 @@ TEST_CASE("atom.core.unique_ptr")
         unique_ptr<tracked_type> ptr1(&val1);
         unique_ptr<tracked_type> ptr2(&val2);
 
-        ptr2 = mov(ptr1);
+        ptr2 = move(ptr1);
 
         REQUIRE(ptr1.is_eq(nullptr));
         REQUIRE(ptr2.is_eq(&val1));

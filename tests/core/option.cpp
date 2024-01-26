@@ -60,7 +60,7 @@ TEST_CASE("atom.core.option")
     SECTION("value move constructor")
     {
         tracked_type obj = tracked_type();
-        option<tracked_type> opt = mov(obj);
+        option<tracked_type> opt = move(obj);
 
         REQUIRE(opt.is_value());
         REQUIRE(opt.get().last_op == tracked_type::eoperation::move_constructor);
@@ -70,12 +70,12 @@ TEST_CASE("atom.core.option")
     {
         tracked_type obj = tracked_type();
         option<tracked_type> opt;
-        opt = mov(obj);
+        opt = move(obj);
 
         REQUIRE(opt.is_value());
         REQUIRE(opt.get().last_op == tracked_type::eoperation::move_constructor);
 
-        opt = mov(obj);
+        opt = move(obj);
 
         REQUIRE(opt.is_value());
         REQUIRE(opt.get().last_op == tracked_type::eoperation::move_operator);
@@ -123,7 +123,7 @@ TEST_CASE("atom.core.option")
         STATIC_REQUIRE(rmove_constructible<option<move_constructible_mock>>);
 
         option<tracked_type> opt0 = tracked_type();
-        option<tracked_type> opt1 = mov(opt0);
+        option<tracked_type> opt1 = move(opt0);
 
         REQUIRE(opt0.is_value());
         REQUIRE(opt0.get().last_op == tracked_type::eoperation::move_constructor_as_that);
@@ -139,7 +139,7 @@ TEST_CASE("atom.core.option")
 
         option<tracked_type> opt0 = tracked_type();
         option<tracked_type> opt1 = tracked_type();
-        opt1 = mov(opt0);
+        opt1 = move(opt0);
 
         REQUIRE(opt0.is_value());
         REQUIRE(opt0.get().last_op == tracked_type::eoperation::move_operator_as_that);
@@ -148,7 +148,7 @@ TEST_CASE("atom.core.option")
         REQUIRE(opt1.get().last_op == tracked_type::eoperation::move_operator);
 
         option<tracked_type> opt2;
-        opt1 = mov(opt2);
+        opt1 = move(opt2);
 
         REQUIRE(opt1.is_null());
     }

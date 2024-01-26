@@ -44,7 +44,7 @@ TEST_CASE("atom.core.shared_ptr")
     {
         tracked_type val;
         shared_ptr<tracked_type> ptr0(&val);
-        shared_ptr<tracked_type> ptr1(mov(ptr0));
+        shared_ptr<tracked_type> ptr1(move(ptr0));
 
         REQUIRE(ptr0.is_eq(nullptr));
         REQUIRE(ptr0.get_count() == 0);
@@ -108,7 +108,7 @@ TEST_CASE("atom.core.shared_ptr")
         shared_ptr<tracked_type> ptr0(&val0);
         shared_ptr<tracked_type> ptr1(&val1);
 
-        ptr1 = mov(ptr0);
+        ptr1 = move(ptr0);
 
         REQUIRE(val1.last_op == tracked_type::eoperation::destructor);
         REQUIRE(ptr0.is_eq(nullptr));

@@ -46,9 +46,9 @@ namespace atom
         template <typename type>
         constexpr auto swap(type& type1, type& t2) const
         {
-            type tmp = mov(type1);
-            type1 = mov(t2);
-            t2 = mov(tmp);
+            type tmp = move(type1);
+            type1 = move(t2);
+            t2 = move(tmp);
         }
 
         template <typename type>

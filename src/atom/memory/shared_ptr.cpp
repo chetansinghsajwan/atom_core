@@ -173,7 +173,7 @@ namespace atom
             if (not ptr.is_eq(nullptr))
             {
                 _state =
-                    _create_state<destroyer_type, allocator_type>(mov(destroyer), mov(allocator));
+                    _create_state<destroyer_type, allocator_type>(move(destroyer), move(allocator));
             }
         }
 
@@ -217,7 +217,7 @@ namespace atom
                 if (ptr != nullptr)
                 {
                     _set_ptr(ptr);
-                    _create_state(mov(destroyer), mov(allocator));
+                    _create_state(move(destroyer), move(allocator));
                 }
                 else
                 {
@@ -230,7 +230,7 @@ namespace atom
                 if (ptr != nullptr)
                 {
                     _set_ptr(ptr);
-                    _create_state(mov(destroyer), mov(allocator));
+                    _create_state(move(destroyer), move(allocator));
                 }
             }
         }
@@ -295,7 +295,7 @@ namespace atom
             using state = _shared_ptr_state<value_type, destroyer_type, allocator_type>;
 
             mut_ptr<void> mem = allocator.alloc(sizeof(state));
-            obj_helper().construct_as<state>(mem, mov(destroyer), mov(allocator));
+            obj_helper().construct_as<state>(mem, move(destroyer), move(allocator));
             return mem.as<state>();
         }
 
@@ -364,6 +364,6 @@ namespace atom
     constexpr auto unique_ptr<value_type, destroyer_type>::_to_shared(allocator_type allocator)
         -> shared_ptr<other_value_type>
     {
-        return make_shared_with_alloc(mov(allocator), _get_mut_ptr());
+        return make_shared_with_alloc(move(allocator), _get_mut_ptr());
     }
 }

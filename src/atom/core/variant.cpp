@@ -148,7 +148,7 @@ export namespace atom
         constexpr variant(variant&& that)
             requires(rmove_constructible_all<ts...>) and (not rtrivially_move_constructible_all<ts...>)
         {
-            _impl.construct_value_from_variant(mov(that._impl));
+            _impl.construct_value_from_variant(move(that._impl));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -159,7 +159,7 @@ export namespace atom
             requires(rmove_constructible_all<other_types...>)
                     and (type_list::template has<other_types...>)
         {
-            _impl.construct_value_from_variant(mov(that._impl));
+            _impl.construct_value_from_variant(move(that._impl));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -175,7 +175,7 @@ export namespace atom
                     and (not rtrivially_move_constructible_all<ts...>)
                     and (not rtrivially_move_assignable_all<ts...>)
         {
-            _impl.set_value_from_variant(mov(that._impl));
+            _impl.set_value_from_variant(move(that._impl));
             return *this;
         }
 
@@ -186,7 +186,7 @@ export namespace atom
         constexpr variant& operator=(variant<other_types...>&& that)
             requires(rmoveable_all<types...>) and (type_list::template has<other_types...>)
         {
-            _impl.set_value_from_variant(mov(that._impl));
+            _impl.set_value_from_variant(move(that._impl));
             return *this;
         }
 
@@ -217,7 +217,7 @@ export namespace atom
         constexpr variant(type&& value)
             requires(has<type>())
         {
-            _impl.template construct_value_by_type<type>(mov(value));
+            _impl.template construct_value_by_type<type>(move(value));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -248,7 +248,7 @@ export namespace atom
         constexpr auto operator=(type&& value) -> variant&
             requires(has<type>())
         {
-            _impl.set_value(mov(value));
+            _impl.set_value(move(value));
             return *this;
         }
 
@@ -305,7 +305,20 @@ export namespace atom
         constexpr auto set(tfwd&& value)
             requires(has<type>()) and (rconstructible<type, tfwd>)
         {
-            _impl.set_value(forward<tfwd>(value));
+            _impl.set_value(value);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// sets the value to `value`.
+        ///
+        /// # parameters
+        /// - `value`: value to set.
+        /// ----------------------------------------------------------------------------------------
+        template <typename type>
+        constexpr auto set(type&& value)
+            requires(has<type>()) and (rmove_constructible<type>)
+        {
+            _impl.set_value(move(value));
         }
 
         /// ----------------------------------------------------------------------------------------

@@ -30,8 +30,8 @@ namespace atom
 
     public:
         constexpr _basic_range_from_iter_pair(iter_type it, iter_end_type it_end)
-            : _it{ mov(it) }
-            , _it_end{ mov(it_end) }
+            : _it{ move(it) }
+            , _it_end{ move(it_end) }
         {}
 
     public:
@@ -74,7 +74,7 @@ namespace atom
 
     public:
         constexpr _basic_mut_range_from_iter_pair(mut_iter_type it, mut_iter_end_type it_end)
-            : base_type(mov(it), mov(it_end))
+            : base_type(move(it), move(it_end))
         {}
 
     public:
@@ -166,7 +166,7 @@ namespace atom
 
     public:
         constexpr _range_from_iter_pair(iter_type it, iter_end_type it_end)
-            : base_type(mov(it), mov(it_end))
+            : base_type(move(it), move(it_end))
         {}
     };
 
@@ -178,7 +178,7 @@ namespace atom
 
     public:
         constexpr _mut_range_from_iter_pair(mut_iter_type it, mut_iter_end_type it_end)
-            : base_type(mov(it), mov(it_end))
+            : base_type(move(it), move(it_end))
         {}
     };
 
@@ -298,11 +298,11 @@ export namespace atom
     {
         if constexpr (rmut_iter<iter_type>)
         {
-            return _mut_range_from_iter_pair(mov(it), mov(it_end));
+            return _mut_range_from_iter_pair(move(it), move(it_end));
         }
         else
         {
-            return _range_from_iter_pair(mov(it), mov(it_end));
+            return _range_from_iter_pair(move(it), move(it_end));
         }
     }
 

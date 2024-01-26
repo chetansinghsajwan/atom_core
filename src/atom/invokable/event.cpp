@@ -94,7 +94,7 @@ export namespace atom
         /// ----------------------------------------------------------------------------------------
         virtual auto subscribe(invokable_box<_tsignature>&& invokable) -> event_key override final
         {
-            return _add_listener(mov(invokable));
+            return _add_listener(move(invokable));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -126,7 +126,7 @@ export namespace atom
         {
             event_key key = invokable.get_invokable_type();
 
-            _listeners.emplace_back(mov(invokable));
+            _listeners.emplace_back(move(invokable));
             return key;
         }
 

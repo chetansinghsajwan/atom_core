@@ -67,7 +67,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto move(isize i) const -> this_final_type
+        constexpr auto mov(isize i) const -> this_final_type
         {
             return _make(_arithmetic(_ptr) + i.unwrap());
         }
@@ -75,7 +75,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto move(usize i) const -> this_final_type
+        constexpr auto mov(usize i) const -> this_final_type
         {
             return _make(_arithmetic(_ptr) + i.unwrap());
         }

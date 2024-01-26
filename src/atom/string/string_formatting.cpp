@@ -80,7 +80,7 @@ namespace atom
 
         constexpr ~string_format_context()
         {
-            _fmt_ctx.advance_to(mov(_fmt_ctx_out));
+            _fmt_ctx.advance_to(atom::move(_fmt_ctx_out));
         }
 
     public:

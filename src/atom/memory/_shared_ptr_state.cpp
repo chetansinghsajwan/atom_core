@@ -10,7 +10,7 @@ namespace atom
     {
     public:
         constexpr ebo_helper(type val)
-            : _val(mov(val))
+            : _val(move(val))
         {}
 
     public:
@@ -34,7 +34,7 @@ namespace atom
     {
     public:
         constexpr ebo_helper(type val)
-            : type(mov(val))
+            : type(move(val))
         {}
 
     public:
@@ -87,8 +87,8 @@ namespace atom
 
     public:
         constexpr _shared_ptr_state(destroyer_type destroyer, allocator_type allocator)
-            : destroyer_helper_type(mov(destroyer))
-            , allocator_helper_type(mov(allocator))
+            : destroyer_helper_type(move(destroyer))
+            , allocator_helper_type(move(allocator))
         {}
 
     public:

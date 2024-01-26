@@ -41,7 +41,7 @@ namespace atom
         {}
 
         constexpr std_iter_wrap_for_atom_iter(iter_type&& iter)
-            : iter{ mov(iter) }
+            : iter{ move(iter) }
         {}
 
     public:

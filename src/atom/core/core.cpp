@@ -4,7 +4,7 @@ import :std;
 export namespace atom
 {
     template <typename value_type>
-    constexpr auto mov(value_type&& val) -> typename std::remove_reference_t<value_type>&&
+    constexpr auto move(value_type&& val) -> typename std::remove_reference_t<value_type>&&
     {
         return static_cast<typename std::remove_reference_t<value_type>&&>(val);
     }
