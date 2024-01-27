@@ -8,10 +8,10 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename in_base_type, typename this_final_type>
+    template <typename in_base_type, typename final_type>
     class mem_ptr_functions: public in_base_type
     {
-        using this_type = mem_ptr_functions<in_base_type, this_final_type>;
+        using this_type = mem_ptr_functions<in_base_type, final_type>;
         using base_type = in_base_type;
 
     public:
@@ -35,7 +35,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto next() const -> this_final_type
+        constexpr auto next() const -> final_type
         {
             return _make(_arithmetic(_ptr) + 1);
         }
@@ -43,7 +43,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto prev() const -> this_final_type
+        constexpr auto prev() const -> final_type
         {
             return _make(_arithmetic(_ptr) - 1);
         }
@@ -51,7 +51,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto next(usize i) const -> this_final_type
+        constexpr auto next(usize i) const -> final_type
         {
             return _make(_arithmetic(_ptr) + i.unwrap());
         }
@@ -59,7 +59,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto prev(usize i) const -> this_final_type
+        constexpr auto prev(usize i) const -> final_type
         {
             return _make(_arithmetic(_ptr) - i.unwrap());
         }
@@ -67,7 +67,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto mov(isize i) const -> this_final_type
+        constexpr auto mov(isize i) const -> final_type
         {
             return _make(_arithmetic(_ptr) + i.unwrap());
         }
@@ -75,7 +75,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto mov(usize i) const -> this_final_type
+        constexpr auto mov(usize i) const -> final_type
         {
             return _make(_arithmetic(_ptr) + i.unwrap());
         }
@@ -83,7 +83,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto sub(this_type that) const -> this_final_type
+        constexpr auto sub(this_type that) const -> final_type
         {
             return _make(_arithmetic(_ptr) - that.unwrap());
         }
@@ -100,31 +100,31 @@ namespace atom
         }
 
         template <typename int_type>
-        constexpr auto operator+(int_type n) const -> this_final_type
+        constexpr auto operator+(int_type n) const -> final_type
             requires rint<int_type> or _rint<int_type>
         {
             return _make(_arithmetic(_ptr) + _unwrap_int(n));
         }
 
         template <typename int_type>
-        constexpr auto operator-(int_type n) const -> this_final_type
+        constexpr auto operator-(int_type n) const -> final_type
             requires rint<int_type> or _rint<int_type>
         {
             return _make(_arithmetic(_ptr) - _unwrap_int(n));
         }
 
-        constexpr auto operator++(int) -> this_final_type
+        constexpr auto operator++(int) -> final_type
         {
             return _make(_arithmetic(_ptr) + 1);
         }
 
-        constexpr auto operator--(int) -> this_final_type
+        constexpr auto operator--(int) -> final_type
         {
             return _make(_arithmetic(_ptr) - 1);
         }
 
         template <typename int_type>
-        constexpr auto operator+=(int_type n) -> this_final_type&
+        constexpr auto operator+=(int_type n) -> final_type&
             requires rint<int_type> or _rint<int_type>
         {
             _ptr = _arithmetic(_ptr) + _unwrap_int(n);
@@ -132,7 +132,7 @@ namespace atom
         }
 
         template <typename int_type>
-        constexpr auto operator-=(int_type n) -> this_final_type&
+        constexpr auto operator-=(int_type n) -> final_type&
             requires rint<int_type> or _rint<int_type>
         {
             _ptr = _arithmetic(_ptr) - _unwrap_int(n);
@@ -201,19 +201,19 @@ namespace atom
             }
         }
 
-        static constexpr auto _make(const value_type* ptr) -> this_final_type
+        static constexpr auto _make(const value_type* ptr) -> final_type
         {
-            return this_final_type(const_cast<value_type*>(ptr));
+            return final_type(const_cast<value_type*>(ptr));
         }
 
-        constexpr auto _this() const -> const this_final_type&
+        constexpr auto _this() const -> const final_type&
         {
-            return static_cast<const this_final_type&>(*this);
+            return static_cast<const final_type&>(*this);
         }
 
-        constexpr auto _mut_this() -> this_final_type&
+        constexpr auto _mut_this() -> final_type&
         {
-            return static_cast<this_final_type&>(*this);
+            return static_cast<final_type&>(*this);
         }
 
     protected:
