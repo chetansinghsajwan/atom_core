@@ -19,7 +19,7 @@ export namespace atom
 
         constexpr mem_blk(mut_mem_ptr<void> begin, mut_mem_ptr<void> end)
             : mem(begin)
-            , count(end - begin)
+            , count(usize(end - begin))
         {
             contracts::debug_expects(end >= begin);
         }

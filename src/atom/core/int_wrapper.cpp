@@ -38,10 +38,10 @@ namespace atom
 
     template <typename final_type, typename unwrapped_type, typename limit_type = unwrapped_type>
     class int_wrapper
-        : public num<_num_impl<final_type, unwrapped_type, limit_type>>
+        : public num_wrapper<_num_impl<final_type, unwrapped_type, limit_type>>
         , public _int_id
     {
-        using base_type = num<_num_impl<final_type, unwrapped_type, limit_type>>;
+        using base_type = num_wrapper<_num_impl<final_type, unwrapped_type, limit_type>>;
 
     public:
         using base_type::base_type;

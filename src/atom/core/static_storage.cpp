@@ -13,7 +13,7 @@ namespace atom
         using _types = type_list<types...>;
 
     public:
-        alignas(_types::max_align.unwrap()) byte storage[_types::max_size];
+        alignas(_types::max_align.unwrap()) byte storage[_types::max_size.unwrap()];
     };
 
     export template <usize in_size>

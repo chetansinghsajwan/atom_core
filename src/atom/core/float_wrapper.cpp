@@ -8,10 +8,10 @@ import :std;
 
 namespace atom
 {
-    template <typename this_final_type, typename value_type>
-    class _float_impl: public _num_impl<this_final_type, value_type, value_type>
+    template <typename final_type, typename value_type>
+    class _float_impl: public _num_impl<final_type, value_type, value_type>
     {
-        using base_type = _num_impl<this_final_type, value_type, value_type>;
+        using base_type = _num_impl<final_type, value_type, value_type>;
 
     public:
         static consteval auto nan() -> value_type
@@ -36,13 +36,13 @@ namespace atom
     };
 
     template <typename impl_type>
-    class float_wrapper: public num<impl_type>
+    class float_wrapper: public num_wrapper<impl_type>
     {
-        using base_type = num<impl_type>;
+        using base_type = num_wrapper<impl_type>;
         using this_type = float_wrapper<impl_type>;
 
     public:
-        using this_final_type = typename base_type::this_final_type;
+        using final_type = typename base_type::final_type;
         using value_type = typename base_type::value_type;
 
     public:
