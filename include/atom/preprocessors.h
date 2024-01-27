@@ -1,5 +1,17 @@
 // #pragma once
-// #include <type_traits>
+
+/// ------------------------------------------------------------------------------------------------
+///
+/// ------------------------------------------------------------------------------------------------
+#define ATOM_ALIAS(THIS_TYPE, ...)                                                                 \
+    class THIS_TYPE: public __VA_ARGS__                                                            \
+    {                                                                                              \
+        using base_type = __VA_ARGS__;                                                             \
+                                                                                                   \
+    public:                                                                                        \
+        using base_type::base_type;                                                                \
+        using base_type::operator=;                                                                \
+    };
 
 /// ------------------------------------------------------------------------------------------------
 /// General utility macro
@@ -136,7 +148,7 @@
 /// ------------------------------------------------------------------------------------------------
 /// ATOM_CONDITIONAL_FIELD
 /// ------------------------------------------------------------------------------------------------
-#define ATOM_CONDITIONAL_FIELD(...)                                                    \
+#define ATOM_CONDITIONAL_FIELD(...)                                                                \
     ATOM_ATTR_NO_UNIQUE_ADDRESS                                                                    \
     std::conditional_t<__VA_ARGS__, bool>
 //     _atom::conditional_field<(Condition), type>

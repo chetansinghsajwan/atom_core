@@ -1,3 +1,6 @@
+module;
+#include "atom/preprocessors.h"
+
 export module atom.core:core.int_wrapper;
 import :core.char_wrapper;
 import :core.num_wrapper;
@@ -33,23 +36,12 @@ namespace atom
         }
     }
 
-    export extern "C++" template <std::size_t>
-    class int_string;
-
-    template <typename this_final_type, typename value_type, typename limit_type = value_type>
-    class _int_impl: public _num_impl<this_final_type, value_type, limit_type>
-    {
-        using base_type = _num_impl<this_final_type, value_type, limit_type>;
-        using this_type = _int_impl<this_final_type, value_type, limit_type>;
-
-    };
-
-    template <typename impl_type>
-    class _int
-        : public num<impl_type>
+    template <typename final_type, typename unwrapped_type, typename limit_type = unwrapped_type>
+    class int_wrapper
+        : public num<_num_impl<final_type, unwrapped_type, limit_type>>
         , public _int_id
     {
-        using base_type = num<impl_type>;
+        using base_type = num<_num_impl<final_type, unwrapped_type, limit_type>>;
 
     public:
         using base_type::base_type;
@@ -63,287 +55,57 @@ export namespace atom
     using _i16 = std::int16_t;
     using _i32 = std::int32_t;
     using _i64 = std::int64_t;
-
     using _u8 = std::uint8_t;
     using _u16 = std::uint16_t;
     using _u32 = std::uint32_t;
     using _u64 = std::uint64_t;
-
     using _ileast8 = std::int_least8_t;
     using _ileast16 = std::int_least16_t;
     using _ileast32 = std::int_least32_t;
     using _ileast64 = std::int_least64_t;
-
     using _uleast8 = std::uint_least8_t;
     using _uleast16 = std::uint_least16_t;
     using _uleast32 = std::uint_least32_t;
     using _uleast64 = std::uint_least64_t;
-
     using _ifast8 = std::int_fast8_t;
     using _ifast16 = std::int_fast16_t;
     using _ifast32 = std::int_fast32_t;
     using _ifast64 = std::int_fast64_t;
-
     using _ufast8 = std::uint_fast8_t;
     using _ufast16 = std::uint_fast16_t;
     using _ufast32 = std::uint_fast32_t;
     using _ufast64 = std::uint_fast64_t;
-
     using _imax = std::intmax_t;
     using _umax = std::uintmax_t;
-
     using _isize = std::ptrdiff_t;
     using _usize = std::size_t;
 
-    class i8: public _int<_int_impl<i8, _i8>>
-    {
-        using base_type = _int<_int_impl<i8, _i8>>;
-
-    public:
-        using base_type::base_type;
-        using base_type::operator=;
-    };
-
-    class i16: public _int<_int_impl<i16, _i16>>
-    {
-        using base_type = _int<_int_impl<i16, _i16>>;
-
-    public:
-        using base_type::base_type;
-        using base_type::operator=;
-    };
-
-    class i32: public _int<_int_impl<i32, _i32>>
-    {
-        using base_type = _int<_int_impl<i32, _i32>>;
-
-    public:
-        using base_type::base_type;
-        using base_type::operator=;
-    };
-
-    class i64: public _int<_int_impl<i64, _i64>>
-    {
-        using base_type = _int<_int_impl<i64, _i64>>;
-
-    public:
-        using base_type::base_type;
-        using base_type::operator=;
-    };
-
-    class u8: public _int<_int_impl<u8, _u8>>
-    {
-        using base_type = _int<_int_impl<u8, _u8>>;
-
-    public:
-        using base_type::base_type;
-        using base_type::operator=;
-    };
-
-    class u16: public _int<_int_impl<u16, _u16>>
-    {
-        using base_type = _int<_int_impl<u16, _u16>>;
-
-    public:
-        using base_type::base_type;
-        using base_type::operator=;
-    };
-
-    class u32: public _int<_int_impl<u32, _u32>>
-    {
-        using base_type = _int<_int_impl<u32, _u32>>;
-
-    public:
-        using base_type::base_type;
-        using base_type::operator=;
-    };
-
-    class u64: public _int<_int_impl<u64, _u64>>
-    {
-        using base_type = _int<_int_impl<u64, _u64>>;
-
-    public:
-        using base_type::base_type;
-        using base_type::operator=;
-    };
-
-    class ileast8: public _int<_int_impl<ileast8, _ileast8, _i8>>
-    {
-        using base_type = _int<_int_impl<ileast8, _ileast8, _i8>>;
-
-    public:
-        using base_type::base_type;
-        using base_type::operator=;
-    };
-
-    class ileast16: public _int<_int_impl<ileast16, _ileast16, _i16>>
-    {
-        using base_type = _int<_int_impl<ileast16, _ileast16, _i16>>;
-
-    public:
-        using base_type::base_type;
-        using base_type::operator=;
-    };
-
-    class ileast32: public _int<_int_impl<ileast32, _ileast32, _i32>>
-    {
-        using base_type = _int<_int_impl<ileast32, _ileast32, _i32>>;
-
-    public:
-        using base_type::base_type;
-        using base_type::operator=;
-    };
-
-    class ileast64: public _int<_int_impl<ileast64, _ileast64, _i64>>
-    {
-        using base_type = _int<_int_impl<ileast64, _ileast64, _i64>>;
-
-    public:
-        using base_type::base_type;
-        using base_type::operator=;
-    };
-
-    class uleast8: public _int<_int_impl<uleast8, _uleast8, _u8>>
-    {
-        using base_type = _int<_int_impl<uleast8, _uleast8, _u8>>;
-
-    public:
-        using base_type::base_type;
-        using base_type::operator=;
-    };
-
-    class uleast16: public _int<_int_impl<uleast16, _uleast16, _u16>>
-    {
-        using base_type = _int<_int_impl<uleast16, _uleast16, _u16>>;
-
-    public:
-        using base_type::base_type;
-        using base_type::operator=;
-    };
-
-    class uleast32: public _int<_int_impl<uleast32, _uleast32, _u32>>
-    {
-        using base_type = _int<_int_impl<uleast32, _uleast32, _u32>>;
-
-    public:
-        using base_type::base_type;
-        using base_type::operator=;
-    };
-
-    class uleast64: public _int<_int_impl<uleast64, _uleast64, _u64>>
-    {
-        using base_type = _int<_int_impl<uleast64, _uleast64, _u64>>;
-
-    public:
-        using base_type::base_type;
-        using base_type::operator=;
-    };
-
-    class ifast8: public _int<_int_impl<ifast8, _ifast8, _i8>>
-    {
-        using base_type = _int<_int_impl<ifast8, _ifast8, _i8>>;
-
-    public:
-        using base_type::base_type;
-        using base_type::operator=;
-    };
-
-    class ifast16: public _int<_int_impl<ifast16, _ifast16, _i16>>
-    {
-        using base_type = _int<_int_impl<ifast16, _ifast16, _i16>>;
-
-    public:
-        using base_type::base_type;
-        using base_type::operator=;
-    };
-
-    class ifast32: public _int<_int_impl<ifast32, _ifast32, _i32>>
-    {
-        using base_type = _int<_int_impl<ifast32, _ifast32, _i32>>;
-
-    public:
-        using base_type::base_type;
-        using base_type::operator=;
-    };
-
-    class ifast64: public _int<_int_impl<ifast64, _ifast64, _i64>>
-    {
-        using base_type = _int<_int_impl<ifast64, _ifast64, _i64>>;
-
-    public:
-        using base_type::base_type;
-        using base_type::operator=;
-    };
-
-    class ufast8: public _int<_int_impl<ufast8, _ufast8, _u8>>
-    {
-        using base_type = _int<_int_impl<ufast8, _ufast8, _u8>>;
-
-    public:
-        using base_type::base_type;
-        using base_type::operator=;
-    };
-
-    class ufast16: public _int<_int_impl<ufast16, _ufast16, _u16>>
-    {
-        using base_type = _int<_int_impl<ufast16, _ufast16, _u16>>;
-
-    public:
-        using base_type::base_type;
-        using base_type::operator=;
-    };
-
-    class ufast32: public _int<_int_impl<ufast32, _ufast32, _u32>>
-    {
-        using base_type = _int<_int_impl<ufast32, _ufast32, _u32>>;
-
-    public:
-        using base_type::base_type;
-        using base_type::operator=;
-    };
-
-    class ufast64: public _int<_int_impl<ufast64, _ufast64, _u64>>
-    {
-        using base_type = _int<_int_impl<ufast64, _ufast64, _u64>>;
-
-    public:
-        using base_type::base_type;
-        using base_type::operator=;
-    };
-
-    class imax: public _int<_int_impl<imax, _imax>>
-    {
-        using base_type = _int<_int_impl<imax, _imax>>;
-
-    public:
-        using base_type::base_type;
-        using base_type::operator=;
-    };
-
-    class umax: public _int<_int_impl<umax, _umax>>
-    {
-        using base_type = _int<_int_impl<umax, _umax>>;
-
-    public:
-        using base_type::base_type;
-        using base_type::operator=;
-    };
-
-    class isize: public _int<_int_impl<isize, _isize>>
-    {
-        using base_type = _int<_int_impl<isize, _isize>>;
-
-    public:
-        using base_type::base_type;
-        using base_type::operator=;
-    };
-
-    class usize: public _int<_int_impl<usize, _usize>>
-    {
-        using base_type = _int<_int_impl<usize, _usize>>;
-
-    public:
-        using base_type::base_type;
-        using base_type::operator=;
-    };
-};
+    ATOM_ALIAS(i8, int_wrapper<i8, _i8>);
+    ATOM_ALIAS(i16, int_wrapper<i16, _i16>);
+    ATOM_ALIAS(i32, int_wrapper<i32, _i32>);
+    ATOM_ALIAS(i64, int_wrapper<i64, _i64>);
+    ATOM_ALIAS(u8, int_wrapper<u8, _u8>);
+    ATOM_ALIAS(u16, int_wrapper<u16, _u16>);
+    ATOM_ALIAS(u32, int_wrapper<u32, _u32>);
+    ATOM_ALIAS(u64, int_wrapper<u64, _u64>);
+    ATOM_ALIAS(ileast8, int_wrapper<ileast8, _ileast8, _i8>);
+    ATOM_ALIAS(ileast16, int_wrapper<ileast16, _ileast16, _i16>);
+    ATOM_ALIAS(ileast32, int_wrapper<ileast32, _ileast32, _i32>);
+    ATOM_ALIAS(ileast64, int_wrapper<ileast64, _ileast64, _i64>);
+    ATOM_ALIAS(uleast8, int_wrapper<uleast8, _uleast8, _u8>);
+    ATOM_ALIAS(uleast16, int_wrapper<uleast16, _uleast16, _u16>);
+    ATOM_ALIAS(uleast32, int_wrapper<uleast32, _uleast32, _u32>);
+    ATOM_ALIAS(uleast64, int_wrapper<uleast64, _uleast64, _u64>);
+    ATOM_ALIAS(ifast8, int_wrapper<ifast8, _ifast8, _i8>);
+    ATOM_ALIAS(ifast16, int_wrapper<ifast16, _ifast16, _i16>);
+    ATOM_ALIAS(ifast32, int_wrapper<ifast32, _ifast32, _i32>);
+    ATOM_ALIAS(ifast64, int_wrapper<ifast64, _ifast64, _i64>);
+    ATOM_ALIAS(ufast8, int_wrapper<ufast8, _ufast8, _u8>);
+    ATOM_ALIAS(ufast16, int_wrapper<ufast16, _ufast16, _u16>);
+    ATOM_ALIAS(ufast32, int_wrapper<ufast32, _ufast32, _u32>);
+    ATOM_ALIAS(ufast64, int_wrapper<ufast64, _ufast64, _u64>);
+    ATOM_ALIAS(imax, int_wrapper<imax, _imax>);
+    ATOM_ALIAS(umax, int_wrapper<umax, _umax>);
+    ATOM_ALIAS(isize, int_wrapper<isize, _isize>);
+    ATOM_ALIAS(usize, int_wrapper<usize, _usize>);
+}

@@ -15,29 +15,9 @@ namespace atom
     };
 
     export template <usize size>
-    using static_string = _string_impl<static_string_container_provider<size>::template type>;
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    ////
-    //// primitives implementations
-    //// these implementations could not be defined before due to circular depenedencies.
-    ////
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    export extern "C++" template <std::size_t size>
-    class int_string: public static_string<size>
+    class static_string: public _string_impl<static_string_container_provider<size>::template type>
     {
-        using base_type = static_string<size>;
-
-    public:
-        using base_type::base_type;
-        using base_type::operator=;
-    };
-
-    export extern "C++" template <std::size_t size>
-    class float_string: public static_string<size>
-    {
-        using base_type = static_string<size>;
+        using base_type = _string_impl<static_string_container_provider<size>::template type>;
 
     public:
         using base_type::base_type;

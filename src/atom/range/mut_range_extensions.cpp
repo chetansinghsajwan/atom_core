@@ -103,7 +103,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto begin()
         {
-            return std_iter_wrap_for_atom_iter{ _impl().mut_iter() };
+            return std_iter_wrap_for_atom_iter(_impl().mut_iter());
         }
 
         using base_type::begin;
@@ -113,7 +113,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto end()
         {
-            return std_iter_wrap_for_atom_iter{ _impl().mut_iter_end() };
+            return std_iter_wrap_for_atom_iter(_impl().mut_iter_end());
         }
 
         using base_type::end;

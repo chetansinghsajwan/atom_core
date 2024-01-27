@@ -37,11 +37,11 @@ namespace atom
 
     public:
         constexpr std_iter_wrap_for_atom_iter(iter_type& iter)
-            : iter{ iter }
+            : iter(iter)
         {}
 
         constexpr std_iter_wrap_for_atom_iter(iter_type&& iter)
-            : iter{ move(iter) }
+            : iter(move(iter))
         {}
 
     public:
@@ -83,7 +83,7 @@ namespace atom
         constexpr auto operator++(int) -> this_type
             requires(riter<iter_type>)
         {
-            this_type tmp{ iter };
+            this_type tmp(iter);
             tmp.iter.next();
             return tmp;
         }
@@ -98,7 +98,7 @@ namespace atom
         constexpr auto operator--(int) const -> this_type
             requires(rbidi_iter<iter_type>)
         {
-            this_type tmp{ iter };
+            this_type tmp(iter);
             tmp.iter.prev();
             return tmp;
         }
@@ -109,7 +109,7 @@ namespace atom
             // todo: review this. should we accept steps as difference_type.
             contracts::debug_expects(steps > 0);
 
-            this_type tmp{ iter };
+            this_type tmp(iter);
             tmp.iter.next(steps);
             return tmp;
         }
@@ -119,7 +119,7 @@ namespace atom
         {
             contracts::debug_expects(steps > 0);
 
-            this_type tmp{ iter };
+            this_type tmp(iter);
             tmp.iter.prev(steps);
             return tmp;
         }

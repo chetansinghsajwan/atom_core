@@ -125,14 +125,14 @@ namespace atom
         /// # default constructor
         /// ----------------------------------------------------------------------------------------
         constexpr mut_array_iter()
-            : base_type{}
+            : base_type()
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # value constructor
         /// ----------------------------------------------------------------------------------------
         constexpr mut_array_iter(mut_mem_ptr<type> it)
-            : base_type{ it }
+            : base_type(it)
         {}
 
     public:

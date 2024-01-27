@@ -38,14 +38,14 @@ namespace atom
         /// # default constructor
         /// ----------------------------------------------------------------------------------------
         constexpr basic_dynamic_array()
-            : _impl{}
+            : _impl()
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # copy constructor
         /// ----------------------------------------------------------------------------------------
         constexpr basic_dynamic_array(const basic_dynamic_array& that)
-            : _impl{ that.iter(), that.iter_end() }
+            : _impl(that.iter(), that.iter_end())
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -61,7 +61,7 @@ namespace atom
         /// # move constructor
         /// ----------------------------------------------------------------------------------------
         constexpr basic_dynamic_array(basic_dynamic_array&& that)
-            : _impl{ move(that._impl) }
+            : _impl(move(that._impl))
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -79,7 +79,7 @@ namespace atom
         template <typename range_type>
         constexpr basic_dynamic_array(range_type&& range)
             requires(rrange_of<pure_type<range_type>, elem_type>)
-            : _impl{ range.iter(), range.iter_end() }
+            : _impl(range.iter(), range.iter_end())
         {}
 
         /// ----------------------------------------------------------------------------------------

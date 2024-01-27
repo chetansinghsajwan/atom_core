@@ -53,7 +53,7 @@ export namespace atom
     {
     public:
         contract_violation_exception(contract_violation violation)
-            : violation{ violation }
+            : violation(violation)
         {
             _what = fmt::format("contracts {} violation:"
                                 "\n\twith msg: {}"
@@ -96,7 +96,7 @@ export namespace atom
         {
             if constexpr (build_config::is_mode_debug())
             {
-                throw contract_violation_exception{ violation };
+                throw contract_violation_exception(violation);
             }
             else
             {

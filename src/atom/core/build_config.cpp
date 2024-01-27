@@ -215,7 +215,7 @@ namespace atom
 
         static consteval auto _get_compiler_unknown_version() -> version
         {
-            return version{};
+            return version();
         }
 
         static consteval auto _get_compiler_version() -> version

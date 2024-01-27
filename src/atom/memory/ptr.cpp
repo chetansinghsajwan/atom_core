@@ -289,7 +289,7 @@ export namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename type>
         constexpr ptr(const ptr<type>& ptr)
-            : _ptr{ static_cast<const void*>(ptr.unwrap()) }
+            : _ptr(static_cast<const void*>(ptr.unwrap()))
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -308,7 +308,7 @@ export namespace atom
         template <typename type>
         constexpr ptr(const type* ptr)
             requires rpure<type>
-            : _ptr{ static_cast<const void*>(ptr) }
+            : _ptr(static_cast<const void*>(ptr))
         {}
 
         /// ----------------------------------------------------------------------------------------

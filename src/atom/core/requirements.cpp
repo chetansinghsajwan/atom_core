@@ -170,7 +170,7 @@ export namespace atom
         requires rdefault_constructible<type>;
 
         (void)new type;
-        type{};
+        type();
     };
 
     /// --------------------------------------------------------------------------------------------

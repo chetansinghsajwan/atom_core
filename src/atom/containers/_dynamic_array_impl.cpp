@@ -20,17 +20,17 @@ namespace atom
 
     public:
         constexpr _dynamic_array_impl()
-            : _arr{ nullptr }
-            , _count{ 0 }
-            , _capacity{ 0 }
-            , _alloc{}
+            : _arr(nullptr)
+            , _count(0)
+            , _capacity(0)
+            , _alloc()
         {}
 
         constexpr _dynamic_array_impl(_dynamic_array_impl&& that) {}
 
         template <typename uiter, typename uiter_end>
         constexpr _dynamic_array_impl(uiter it, uiter_end it_end)
-            : _dynamic_array_impl{}
+            : _dynamic_array_impl()
         {
             insert_range_back(it, it_end);
         }
@@ -54,22 +54,22 @@ namespace atom
 
         constexpr auto iter(usize i = 0) const -> iter_type
         {
-            return iter_type{ _get_data() + i };
+            return iter_type(_get_data() + i);
         }
 
         constexpr auto iter_end() const -> iter_end_type
         {
-            return iter_end_type{ _get_data() + _get_count() };
+            return iter_end_type(_get_data() + _get_count());
         }
 
         constexpr auto mut_iter(usize i = 0) -> mut_iter_type
         {
-            return mut_iter_type{ _get_mut_data() + i };
+            return mut_iter_type(_get_mut_data() + i);
         }
 
         constexpr auto mut_iter_end() -> mut_iter_end_type
         {
-            return mut_iter_end_type{ _get_mut_data() + _get_count() };
+            return mut_iter_end_type(_get_mut_data() + _get_count());
         }
 
         template <typename uiter, typename uiter_end>

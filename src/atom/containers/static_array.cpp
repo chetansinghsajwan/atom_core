@@ -22,14 +22,14 @@ namespace atom
         template <usize other_count>
         constexpr basic_static_array(const elem_type (&arr)[other_count])
             requires(other_count <= in_count)
-            : _arr{ arr }
+            : _arr(arr)
         {}
 
         template <typename... arg_types>
         constexpr basic_static_array(arg_types&&... args)
             requires(rconvertible_to<arg_types, elem_type> and ...)
                     and (sizeof...(arg_types) <= in_count.unwrap())
-            : _arr{ 0 }
+            : _arr(0)
         {}
 
     public:
@@ -50,22 +50,22 @@ namespace atom
 
         constexpr auto iter() const -> iter_type
         {
-            return iter_type{ _arr };
+            return iter_type(_arr);
         }
 
         constexpr auto iter_end() const -> iter_end_type
         {
-            return iter_end_type{ _arr + in_count.unwrap() };
+            return iter_end_type(_arr + in_count.unwrap());
         }
 
         constexpr auto mut_iter() -> mut_iter_type
         {
-            return mut_iter_type{ _arr };
+            return mut_iter_type(_arr);
         }
 
         constexpr auto mut_iter_end() -> mut_iter_end_type
         {
-            return mut_iter_end_type{ _arr + in_count };
+            return mut_iter_end_type(_arr + in_count);
         }
 
     private:

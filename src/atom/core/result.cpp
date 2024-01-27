@@ -29,6 +29,7 @@ export namespace atom
     template <typename... error_types>
     constexpr auto success() -> result<void, error_types...>
     {
-        return { _result_void{} };
+        using result_type = result<void, error_types...>;
+        return result_type(_result_void());
     }
 }

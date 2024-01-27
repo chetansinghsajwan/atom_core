@@ -30,8 +30,8 @@ namespace atom
 
     public:
         constexpr _basic_range_from_iter_pair(iter_type it, iter_end_type it_end)
-            : _it{ move(it) }
-            , _it_end{ move(it_end) }
+            : _it(move(it))
+            , _it_end(move(it_end))
         {}
 
     public:

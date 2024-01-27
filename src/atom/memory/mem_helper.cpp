@@ -13,13 +13,13 @@ export namespace atom
     {
     public:
         constexpr mem_blk(mut_mem_ptr<void> mem, usize count)
-            : mem{ mem }
-            , count{ count }
+            : mem(mem)
+            , count(count)
         {}
 
         constexpr mem_blk(mut_mem_ptr<void> begin, mut_mem_ptr<void> end)
-            : mem{ begin }
-            , count{ end - begin }
+            : mem(begin)
+            , count(end - begin)
         {
             contracts::debug_expects(end >= begin);
         }

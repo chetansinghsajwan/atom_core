@@ -20,7 +20,7 @@ namespace atom
     public:
         template <typename... arg_types>
         constexpr box_functions(arg_types&&... args)
-            : _impl{ forward<arg_types>(args)... }
+            : _impl(forward<arg_types>(args)...)
         {}
 
     public:
@@ -266,7 +266,7 @@ export namespace atom
     public:
         template <typename... arg_types>
         constexpr box_functions(arg_types&&... args)
-            : _impl{ forward<arg_types>(args)... }
+            : _impl(forward<arg_types>(args)...)
         {}
 
     public:
@@ -482,7 +482,7 @@ export namespace atom
         /// # default constructor
         /// ----------------------------------------------------------------------------------------
         constexpr box()
-            : base_type{}
+            : base_type()
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -511,7 +511,7 @@ export namespace atom
         template <typename type, usize that_buf_size, typename that_allocator_type>
         constexpr box(const copy_box<type, that_buf_size, that_allocator_type>& that)
             requires ris_void<value_type> or rsame_or_derived_from<type, value_type>
-            : base_type{ typename _impl_type::copy_tag(), that._impl }
+            : base_type(typename _impl_type::copy_tag(), that._impl)
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -532,7 +532,7 @@ export namespace atom
         template <typename type, usize that_buf_size, typename that_allocator_type>
         constexpr box(const copy_move_box<type, true, that_buf_size, that_allocator_type>& that)
             requires ris_void<value_type> or rsame_or_derived_from<type, value_type>
-            : base_type{ typename _impl_type::copy_tag(), that._impl }
+            : base_type(typename _impl_type::copy_tag(), that._impl)
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -553,7 +553,7 @@ export namespace atom
         template <typename type, usize that_buf_size, typename that_allocator_type>
         constexpr box(move_box<type, true, that_buf_size, that_allocator_type>&& that)
             requires ris_void<value_type> or rsame_or_derived_from<type, value_type>
-            : base_type{ typename _impl_type::move_tag(), that._impl }
+            : base_type(typename _impl_type::move_tag(), that._impl)
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -574,7 +574,7 @@ export namespace atom
         template <typename type, usize that_buf_size, typename that_allocator_type>
         constexpr box(copy_move_box<type, true, that_buf_size, that_allocator_type>&& that)
             requires ris_void<value_type> or rsame_or_derived_from<type, value_type>
-            : base_type{ typename _impl_type::move_tag(), that._impl }
+            : base_type(typename _impl_type::move_tag(), that._impl)
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -598,7 +598,7 @@ export namespace atom
         constexpr box(type_holder<type> arg_type, arg_types&&... args)
             requires(ris_void<value_type> or rsame_or_derived_from<type, value_type>)
                     and rconstructible<type, arg_types...>
-            : base_type{ arg_type, forward<arg_types>(args)... }
+            : base_type(arg_type, forward<arg_types>(args)...)
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -607,7 +607,7 @@ export namespace atom
         template <typename type>
         constexpr box(type&& obj)
             requires ris_void<value_type> or rsame_or_derived_from<pure_type<type>, value_type>
-            : base_type{ forward<type>(obj) }
+            : base_type(forward<type>(obj))
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -644,14 +644,14 @@ export namespace atom
         /// # default constructor
         /// ----------------------------------------------------------------------------------------
         constexpr copy_box()
-            : base_type{}
+            : base_type()
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # copy constructor
         /// ----------------------------------------------------------------------------------------
         constexpr copy_box(const this_type& that)
-            : base_type{ typename _impl_type::copy_tag(), that._impl }
+            : base_type(typename _impl_type::copy_tag(), that._impl)
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -693,7 +693,7 @@ export namespace atom
             typename that_allocator_type>
         constexpr copy_box(
             const copy_move_box<type, allow_non_move, that_buf_size, that_allocator_type>& that)
-            : base_type{ typename _impl_type::copy_tag(), that._impl }
+            : base_type(typename _impl_type::copy_tag(), that._impl)
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -713,7 +713,7 @@ export namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename type>
         constexpr copy_box(type&& obj)
-            : base_type{ forward<type>(obj) }
+            : base_type(forward<type>(obj))
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -751,7 +751,7 @@ export namespace atom
         /// # default constructor
         /// ----------------------------------------------------------------------------------------
         constexpr move_box()
-            : base_type{}
+            : base_type()
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -770,7 +770,7 @@ export namespace atom
         template <typename type, usize that_buf_size, typename that_allocator_type>
             requires allow_non_move
         constexpr move_box(const copy_box<type, that_buf_size, that_allocator_type>& that)
-            : base_type{ typename _impl_type::copy_tag(), that._impl }
+            : base_type(typename _impl_type::copy_tag(), that._impl)
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -792,7 +792,7 @@ export namespace atom
             requires allow_non_move
         constexpr move_box(
             const copy_move_box<type, allow_non_move, that_buf_size, that_allocator_type>& that)
-            : base_type{ typename _impl_type::copy_tag(), that._impl }
+            : base_type(typename _impl_type::copy_tag(), that._impl)
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -811,7 +811,7 @@ export namespace atom
         /// # move constructor
         /// ----------------------------------------------------------------------------------------
         constexpr move_box(this_type&& that)
-            : base_type{ typename _impl_type::move_tag(), that._impl }
+            : base_type(typename _impl_type::move_tag(), that._impl)
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -829,7 +829,7 @@ export namespace atom
         template <typename type, usize that_buf_size, typename that_allocator_type>
         constexpr move_box(
             copy_move_box<type, allow_non_move, that_buf_size, that_allocator_type>&& that)
-            : base_type{ typename _impl_type::move_tag(), that._impl }
+            : base_type(typename _impl_type::move_tag(), that._impl)
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -848,7 +848,7 @@ export namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename type>
         constexpr move_box(type&& obj)
-            : base_type{ forward<type>(obj) }
+            : base_type(forward<type>(obj))
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -888,14 +888,14 @@ export namespace atom
         /// sets the new object.
         /// ----------------------------------------------------------------------------------------
         constexpr copy_move_box()
-            : base_type{}
+            : base_type()
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # copy constructor
         /// ----------------------------------------------------------------------------------------
         constexpr copy_move_box(const this_type& that)
-            : base_type{ typename _impl_type::copy_tag(), that._impl }
+            : base_type(typename _impl_type::copy_tag(), that._impl)
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -1316,7 +1316,7 @@ export namespace atom
         template <typename type, usize that_buf_size, typename that_allocator_type>
             requires allow_non_move
         constexpr copy_move_box(const copy_box<type, that_buf_size, that_allocator_type>& that)
-            : base_type{ typename _impl_type::copy_tag(), that._impl }
+            : base_type(typename _impl_type::copy_tag(), that._impl)
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -1338,7 +1338,7 @@ export namespace atom
             requires allow_non_move
         constexpr copy_move_box(
             const copy_move_box<type, allow_non_move, that_buf_size, that_allocator_type>& that)
-            : base_type{ typename _impl_type::copy_tag(), that._impl }
+            : base_type(typename _impl_type::copy_tag(), that._impl)
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -1357,7 +1357,7 @@ export namespace atom
         /// object data.
         /// ----------------------------------------------------------------------------------------
         constexpr copy_move_box(this_type&& that)
-            : base_type{ typename _impl_type::move_tag(), that._impl }
+            : base_type(typename _impl_type::move_tag(), that._impl)
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -1377,7 +1377,7 @@ export namespace atom
             requires allow_non_move
         constexpr copy_move_box(
             move_box<type, that_allow_non_move, that_buf_size, that_allocator_type>&& that)
-            : base_type{ typename _impl_type::move_tag(), that._impl }
+            : base_type(typename _impl_type::move_tag(), that._impl)
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -1401,7 +1401,7 @@ export namespace atom
             requires allow_non_move
         constexpr copy_move_box(
             copy_move_box<type, that_allow_non_move, that_buf_size, that_allocator_type>&& that)
-            : base_type{ typename _impl_type::move_tag(), that._impl }
+            : base_type(typename _impl_type::move_tag(), that._impl)
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -1422,7 +1422,7 @@ export namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename type>
         constexpr copy_move_box(type&& obj)
-            : base_type{ forward<type>(obj) }
+            : base_type(forward<type>(obj))
         {}
 
         /// ----------------------------------------------------------------------------------------

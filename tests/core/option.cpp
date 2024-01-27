@@ -174,9 +174,9 @@ TEST_CASE("atom.core.option")
         {
         public:
             type(i32 a, uchar b, f32 c)
-                : a{ a }
-                , b{ b }
-                , c{ c }
+                : a(a)
+                , b(b)
+                , c(c)
             {}
 
         public:

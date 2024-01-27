@@ -273,7 +273,7 @@ TEST_CASE("atom.core.variant")
         // compilation error.
         // 99 is an i32. use type explicitly.
         // variant<usize> v = 99;
-        variant<usize> v = usize{ 99 };
+        variant<usize> v = usize(99);
 
         REQUIRE(v.index() == 0);
         REQUIRE(v.is<usize>());
@@ -297,7 +297,7 @@ TEST_CASE("atom.core.variant")
         // compilation error.
         // 99 is an i32. use type explicitly.
         // v = 99;
-        v = usize{ 99 };
+        v = usize(99);
 
         REQUIRE(v.index() == 0);
         REQUIRE(v.is<usize>());

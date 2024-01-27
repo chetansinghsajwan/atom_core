@@ -48,8 +48,8 @@ namespace atom
         template <typename telem1>
         constexpr auto find_elem(const telem1& el) const -> iter_type
         {
-            std_iter_wrap_for_atom_iter std_iter{ iter() };
-            std_iter_wrap_for_atom_iter std_iter_end{ iter_end() };
+            std_iter_wrap_for_atom_iter std_iter(iter());
+            std_iter_wrap_for_atom_iter std_iter_end(iter_end());
             return std::find(std_iter, std_iter_end, el).iter;
         }
 
@@ -59,10 +59,10 @@ namespace atom
         template <typename other_range_type>
         constexpr auto find_range(const other_range_type& range) const -> iter_type
         {
-            std_iter_wrap_for_atom_iter std_iter{ iter() };
-            std_iter_wrap_for_atom_iter std_iter_end{ iter_end() };
-            std_iter_wrap_for_atom_iter std_iter1{ range.iter() };
-            std_iter_wrap_for_atom_iter std_iter_end1{ range.iter_end() };
+            std_iter_wrap_for_atom_iter std_iter(iter());
+            std_iter_wrap_for_atom_iter std_iter_end(iter_end());
+            std_iter_wrap_for_atom_iter std_iter1(range.iter());
+            std_iter_wrap_for_atom_iter std_iter_end1(range.iter_end());
             return std::find(std_iter, std_iter_end, std_iter1, std_iter_end1);
         }
 
@@ -72,10 +72,10 @@ namespace atom
         template <typename other_range_type>
         auto compare(const other_range_type& range) const -> i8
         {
-            std_iter_wrap_for_atom_iter std_iter{ iter() };
-            std_iter_wrap_for_atom_iter std_iter_end{ iter_end() };
-            std_iter_wrap_for_atom_iter std_iter1{ range.iter() };
-            std_iter_wrap_for_atom_iter std_iter_end1{ range.iter_end() };
+            std_iter_wrap_for_atom_iter std_iter(iter());
+            std_iter_wrap_for_atom_iter std_iter_end(iter_end());
+            std_iter_wrap_for_atom_iter std_iter1(range.iter());
+            std_iter_wrap_for_atom_iter std_iter_end1(range.iter_end());
 
             return std::equal(std_iter, std_iter_end, std_iter1, std_iter_end1);
         }
@@ -158,7 +158,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto begin() const
         {
-            return std_iter_wrap_for_atom_iter{ _impl().iter() };
+            return std_iter_wrap_for_atom_iter(_impl().iter());
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -166,7 +166,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto end() const
         {
-            return std_iter_wrap_for_atom_iter{ _impl().iter_end() };
+            return std_iter_wrap_for_atom_iter(_impl().iter_end());
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////
