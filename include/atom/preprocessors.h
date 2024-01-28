@@ -11,7 +11,7 @@
     public:                                                                                        \
         using base_type::base_type;                                                                \
         using base_type::operator=;                                                                \
-    };
+    }
 
 /// ------------------------------------------------------------------------------------------------
 /// General utility macro
