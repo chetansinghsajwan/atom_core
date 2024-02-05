@@ -404,7 +404,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns `this` value converted to unwrapped `num_type`.
+        /// returns `this` converted to unwrapped `num_type`.
         /// ----------------------------------------------------------------------------------------
         template <typename num_type>
         constexpr auto to_unwrapped() const -> num_type
@@ -416,7 +416,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns `this` value converted to unwrapped `num_type`.
+        /// returns `this` converted to unwrapped `num_type`.
         /// ----------------------------------------------------------------------------------------
         template <typename num_type>
         constexpr auto to_unwrapped_checked() const -> num_type
@@ -428,7 +428,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns `this` value converted to unwrapped `num_type`.
+        /// returns `this` converted to unwrapped `num_type`.
         /// ----------------------------------------------------------------------------------------
         template <typename num_type>
         constexpr auto to_unwrapped_unchecked() const -> num_type
@@ -912,7 +912,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// return `this` value clamped between `num0` and `num1`.
+        /// return `this` clamped between `num0` and `num1`.
         /// ----------------------------------------------------------------------------------------
         constexpr auto clamp(final_type num0, final_type num1) const -> final_type
         {

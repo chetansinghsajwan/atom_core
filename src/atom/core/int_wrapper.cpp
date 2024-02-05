@@ -23,20 +23,6 @@ namespace atom
     template <typename int_type>
     concept rint = std::derived_from<int_type, _int_id>;
 
-    template <typename int_type>
-    constexpr auto _unwrap_int(int_type n)
-        requires rint<int_type> or _rint<int_type>
-    {
-        if constexpr (rint<int_type>)
-        {
-            return n.unwrap();
-        }
-        else
-        {
-            return n;
-        }
-    }
-
     /// --------------------------------------------------------------------------------------------
     /// 
     /// --------------------------------------------------------------------------------------------

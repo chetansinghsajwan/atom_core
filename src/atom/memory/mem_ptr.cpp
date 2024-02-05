@@ -99,18 +99,24 @@ namespace atom
             return base_type::unwrap()[n.unwrap()];
         }
 
-        template <typename int_type>
-        constexpr auto operator+(int_type n) const -> final_type
-            requires rint<int_type> or _rint<int_type>
+        constexpr auto operator+(isize n) const -> final_type
         {
-            return _make(_arithmetic(_ptr) + _unwrap_int(n));
+            return _make(_arithmetic(_ptr) + n.to_unwrapped());
         }
 
-        template <typename int_type>
-        constexpr auto operator-(int_type n) const -> final_type
-            requires rint<int_type> or _rint<int_type>
+        constexpr auto operator+(usize n) const -> final_type
         {
-            return _make(_arithmetic(_ptr) - _unwrap_int(n));
+            return _make(_arithmetic(_ptr) + n.to_unwrapped());
+        }
+
+        constexpr auto operator-(isize n) const -> final_type
+        {
+            return _make(_arithmetic(_ptr) - n.to_unwrapped());
+        }
+
+        constexpr auto operator-(usize n) const -> final_type
+        {
+            return _make(_arithmetic(_ptr) - n.to_unwrapped());
         }
 
         constexpr auto operator++(int) -> final_type
@@ -123,19 +129,27 @@ namespace atom
             return _make(_arithmetic(_ptr) - 1);
         }
 
-        template <typename int_type>
-        constexpr auto operator+=(int_type n) -> final_type&
-            requires rint<int_type> or _rint<int_type>
+        constexpr auto operator+=(isize n) -> final_type&
         {
-            _ptr = _arithmetic(_ptr) + _unwrap_int(n);
+            _ptr = _arithmetic(_ptr) + n.to_unwrapped();
             return _mut_this();
         }
 
-        template <typename int_type>
-        constexpr auto operator-=(int_type n) -> final_type&
-            requires rint<int_type> or _rint<int_type>
+        constexpr auto operator+=(usize n) -> final_type&
         {
-            _ptr = _arithmetic(_ptr) - _unwrap_int(n);
+            _ptr = _arithmetic(_ptr) + n.to_unwrapped();
+            return _mut_this();
+        }
+
+        constexpr auto operator-=(isize n) -> final_type&
+        {
+            _ptr = _arithmetic(_ptr) - n.to_unwrapped();
+            return _mut_this();
+        }
+
+        constexpr auto operator-=(usize n) -> final_type&
+        {
+            _ptr = _arithmetic(_ptr) - n.to_unwrapped();
             return _mut_this();
         }
 
