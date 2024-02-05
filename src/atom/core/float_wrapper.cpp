@@ -9,7 +9,7 @@ import :std;
 namespace atom
 {
     template <typename final_type, typename unwrapped_type>
-    class _float_impl: public _num_wrapper_impl<final_type, unwrapped_type, unwrapped_type>
+    class _float_wrapper_impl: public _num_wrapper_impl<final_type, unwrapped_type, unwrapped_type>
     {
         using base_type = _num_wrapper_impl<final_type, unwrapped_type, unwrapped_type>;
 
@@ -115,8 +115,8 @@ export namespace atom
     using _f64 = double;
     using _f128 = long double;
 
-    ATOM_ALIAS(f16, float_wrapper<_float_impl<f16, _f16>>);
-    ATOM_ALIAS(f32, float_wrapper<_float_impl<f32, _f32>>);
-    ATOM_ALIAS(f64, float_wrapper<_float_impl<f64, _f64>>);
-    ATOM_ALIAS(f128, float_wrapper<_float_impl<f128, _f128>>);
+    ATOM_ALIAS(f16, float_wrapper<_float_wrapper_impl<f16, _f16>>);
+    ATOM_ALIAS(f32, float_wrapper<_float_wrapper_impl<f32, _f32>>);
+    ATOM_ALIAS(f64, float_wrapper<_float_wrapper_impl<f64, _f64>>);
+    ATOM_ALIAS(f128, float_wrapper<_float_wrapper_impl<f128, _f128>>);
 }
