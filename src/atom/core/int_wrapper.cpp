@@ -14,29 +14,30 @@ import :std;
 /// ------------------------------------------------------------------------------------------------
 namespace atom
 {
-    class _int_id
-    {};
-
-    template <typename int_type>
-    concept _rint = std::is_integral_v<int_type>;
-
-    template <typename int_type>
-    concept rint = std::derived_from<int_type, _int_id>;
-
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
-    template <typename final_type, typename in_unsigned_type, typename unwrapped_type,
-        typename limit_type = unwrapped_type>
-    class int_wrapper
-        : public num_wrapper<_num_wrapper_impl<final_type, unwrapped_type, limit_type>>
-        , public _int_id
+    template <typename final_type, typename in_signed_type, typename in_unsigned_type,
+        typename unwrapped_type, typename limit_type>
+    class _int_wrapper_impl: public _num_wrapper_impl<final_type, unwrapped_type, limit_type>
     {
-        using base_type = num_wrapper<_num_wrapper_impl<final_type, unwrapped_type, limit_type>>;
+        using base_type = _num_wrapper_impl<final_type, unwrapped_type, limit_type>;
 
     public:
-        using impl_type = typename base_type::impl_type;
+        using signed_type = in_signed_type;
         using unsigned_type = in_unsigned_type;
+    };
+
+    /// --------------------------------------------------------------------------------------------
+    /// wrapper for integer types.
+    /// --------------------------------------------------------------------------------------------
+    template <typename impl_type>
+    class int_wrapper: public num_wrapper<impl_type>
+    {
+        using base_type = num_wrapper<impl_type>;
+        using final_type = typename impl_type::final_type;
+        using signed_type = typename impl_type::signed_type;
+        using unsigned_type = typename impl_type::unsigned_type;
 
     public:
         using base_type::base_type;
@@ -56,9 +57,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto pow(unsigned_type exp) const -> final_type
         {
-            contracts::debug_expects(check_pow());
+            contracts::debug_expects(is_pow_safe());
 
-            return _wrap_final(impl_type::pow(_value, exp.unwrap()));
+            return _wrap_final(impl_type::pow(_value, exp.to_unwrapped()));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -66,9 +67,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto pow_checked(unsigned_type exp) const -> final_type
         {
-            contracts::expects(check_pow());
+            contracts::expects(is_pow_safe());
 
-            return _wrap_final(impl_type::pow(_value, exp.unwrap()));
+            return _wrap_final(impl_type::pow(_value, exp.to_unwrapped()));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -76,31 +77,27 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto pow_unchecked(unsigned_type exp) const -> final_type
         {
-            return _wrap_final(impl_type::pow(_value, exp.unwrap()));
+            return _wrap_final(impl_type::pow(_value, exp.to_unwrapped()));
         }
 
         /// ----------------------------------------------------------------------------------------
         /// returns `true` is performing `pow` operations results in overflow or underflow.
-        ///
-        /// # todo:
-        ///
-        /// - implement this.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto check_pow(unsigned_type exp) const -> final_type
+        constexpr auto is_pow_safe(unsigned_type exp) const -> final_type
         {
-            return false;
+            return impl_type::is_pow_safe(exp._value);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns `num`th root of `this`. If this is an integer, rounded down.
+        /// returns `n`th root of `this`, rounded down.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto root(unsigned_type num) const -> final_type
+        constexpr auto root(unsigned_type n) const -> final_type
         {
-            return _wrap_final(impl_type::root(_value, num.unwrap()));
+            return _wrap_final(impl_type::root(_value, n.to_unwrapped()));
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns square root of `this`. If this is an integer, rounded down.
+        /// returns square root of `this`, rounded down.
         /// ----------------------------------------------------------------------------------------
         constexpr auto root2() const -> final_type
         {
@@ -108,7 +105,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns cube root of `this`. If this is an integer, rounded down.
+        /// returns cube root of `this`, rounded down.
         /// ----------------------------------------------------------------------------------------
         constexpr auto root3() const -> final_type
         {
@@ -116,11 +113,12 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns the logarithm of the number with respect to an arbitrary base `num`, rounded down.
+        /// returns the logarithm of the number with respect to an arbitrary base `num`,
+        /// rounded down.
         /// ----------------------------------------------------------------------------------------
         constexpr auto log(unsigned_type num) const -> final_type
         {
-            return _wrap_final(impl_type::log(_value, num.unwrap()));
+            return _wrap_final(impl_type::log(_value, num.to_unwrapped()));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -140,65 +138,133 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// shifts bits left by `num` and returns result.
+        /// retuns result after shifting bits left by `num`.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto shift_left(unsigned_type num) -> final_type
+        constexpr auto shift_left(unsigned_type num) const -> final_type
+        {
+            contracts::debug_expects(is_shift_left_safe(num));
+
+            return _wrap_final(impl_type::shift_left(_value));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// retuns result after shifting bits left by `num`.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto shift_left_checked(unsigned_type num) const -> final_type
+        {
+            contracts::expects(is_shift_left_safe(num));
+
+            return _wrap_final(impl_type::shift_left(_value));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// retuns result after shifting bits left by `num`.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto shift_left_unchecked(unsigned_type num) const -> final_type
         {
             return _wrap_final(impl_type::shift_left(_value));
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// returns `true` if there is no data loss in left shift operation.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto shift_left_checked(unsigned_type num) -> final_type
+        constexpr auto is_shift_left_safe(unsigned_type num) const -> bool
         {
-            return _wrap_final(impl_type::shift_left(_value));
+            return impl_type::is_shift_left_safe(num);
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// retuns result after shifting bits right by `num`.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto shift_left_unchecked(unsigned_type num) -> final_type
+        constexpr auto shift_right(unsigned_type num) const -> final_type
         {
-            return _wrap_final(impl_type::shift_left(_value));
+            contracts::debug_expects(is_shift_right_safe(num));
+
+            return _wrap_final(impl_type::shift_right(_value));
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// shifts bits right by `num` and returns result.
+        /// retuns result after shifting bits right by `num`.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto shift_right(unsigned_type num) -> final_type
+        constexpr auto shift_right_checked(unsigned_type num) const -> final_type
+        {
+            contracts::expects(is_shift_right_safe(num));
+
+            return _wrap_final(impl_type::shift_right(_value));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// retuns result after shifting bits right by `num`.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto shift_right_unchecked(unsigned_type num) const -> final_type
         {
             return _wrap_final(impl_type::shift_right(_value));
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// shifts bits by `num` and returns result.
+        /// returns `true` if there is no data loss in right shift operation.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto shift_by(final_type num) -> final_type
+        constexpr auto is_shift_right_safe(unsigned_type num) const -> bool
+        {
+            return impl_type::is_shift_right_safe(_value);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// retuns result after shifting bits by `num`.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto shift_by(signed_type num) const -> final_type
+        {
+            contracts::debug_expects(is_shift_by_safe(num));
+
+            return _wrap_final(impl_type::shift_by(_value));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// retuns result after shifting bits by `num`.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto shift_by_checked(signed_type num) const -> final_type
+        {
+            contracts::expects(is_shift_by_safe(num));
+
+            return _wrap_final(impl_type::shift_by(_value));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// retuns result after shifting bits by `num`.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto shift_by_unchecked(signed_type num) const -> final_type
         {
             return _wrap_final(impl_type::shift_by(_value));
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// rotate bits left by `num` and returns result.
+        /// returns `true` if there is no data loss in left or right shift operation.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto roatate_left(unsigned_type num) -> final_type
+        constexpr auto is_shift_by_safe(signed_type num) const -> bool
+        {
+            return impl_type::is_shift_by_safe(_value, num._value);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns result after rotating bits left by `num`.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto roatate_left(unsigned_type num) const -> final_type
         {
             return _wrap_final(impl_type::roatate_left(_value));
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// rotate bits right by `num` and returns result.
+        /// returns result after rotating bits right by `num`.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto rotate_right(unsigned_type num) -> final_type
+        constexpr auto rotate_right(unsigned_type num) const -> final_type
         {
             return _wrap_final(impl_type::rotate_right(_value));
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// rotate bits by `num`.
+        /// returns result after rotating bits by `num`.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto rotate_by(final_type num) -> final_type
+        constexpr auto rotate_by(signed_type num) const -> final_type
         {
             return _wrap_final(impl_type::rotate_by(_value));
         }
@@ -215,12 +281,38 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename final_type, typename in_unsigned_type, typename unwrapped_type,
+    template <typename final_type, typename signed_type, typename unsigned_type,
+        typename unwrapped_type, typename limit_type>
+    class _signed_int_wrapper_impl
+        : public _int_wrapper_impl<final_type, final_type, unsigned_type, unwrapped_type,
+              limit_type>
+    {
+        using base_type =
+            _int_wrapper_impl<final_type, final_type, unsigned_type, unwrapped_type, limit_type>;
+
+    public:
+        static constexpr auto is_abs_safe(unwrapped_type num) -> bool
+        {
+            return num != base_type::min();
+        }
+
+        static constexpr auto is_neg_safe(unwrapped_type num) -> bool
+        {
+            return num != base_type::min();
+        }
+    };
+
+    /// --------------------------------------------------------------------------------------------
+    /// wrapper for signed integer types.
+    /// --------------------------------------------------------------------------------------------
+    template <typename final_type, typename unsigned_type, typename unwrapped_type,
         typename limit_type = unwrapped_type>
     class signed_int_wrapper
-        : public int_wrapper<final_type, in_unsigned_type, unwrapped_type, limit_type>
+        : public int_wrapper<_signed_int_wrapper_impl<final_type, final_type, unsigned_type,
+              unwrapped_type, limit_type>>
     {
-        using base_type = int_wrapper<final_type, in_unsigned_type, unwrapped_type, limit_type>;
+        using base_type = int_wrapper<_signed_int_wrapper_impl<final_type, final_type,
+            unsigned_type, unwrapped_type, limit_type>>;
 
     protected:
         using impl_type = typename base_type::impl_type;
@@ -269,11 +361,11 @@ namespace atom
         using base_type::operator+;
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        /// returns `true` if there is no overflow or underflow when performing abs operation.
         /// ----------------------------------------------------------------------------------------
         constexpr auto is_abs_safe() const -> bool
         {
-            return true;
+            return impl_type::is_abs_safe(_value);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -287,7 +379,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns result after reversing sign of `this`. alway sperforms checks.
+        /// returns result after reversing sign of `this`.
         /// ----------------------------------------------------------------------------------------
         constexpr auto neg_checked() const -> final_type
         {
@@ -315,7 +407,7 @@ namespace atom
         using base_type::operator-;
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        /// returns `true` if there is no overflow or underflow when performing neg operation.
         /// ----------------------------------------------------------------------------------------
         constexpr auto is_neg_safe() const -> bool
         {
@@ -331,19 +423,21 @@ namespace atom
         }
 
     public:
-        using base_type::_wrap_final;
         using base_type::_value;
+        using base_type::_wrap_final;
     };
 
     /// --------------------------------------------------------------------------------------------
-    ///
+    /// wrapper for unsigned integer types.
     /// --------------------------------------------------------------------------------------------
-    template <typename final_type, typename in_signed_type, typename unwrapped_type,
+    template <typename final_type, typename signed_type, typename unwrapped_type,
         typename limit_type = unwrapped_type>
     class unsigned_int_wrapper
-        : public int_wrapper<final_type, final_type, unwrapped_type, limit_type>
+        : public int_wrapper<
+              _int_wrapper_impl<final_type, signed_type, final_type, unwrapped_type, limit_type>>
     {
-        using base_type = int_wrapper<final_type, final_type, unwrapped_type, limit_type>;
+        using base_type = int_wrapper<
+            _int_wrapper_impl<final_type, signed_type, final_type, unwrapped_type, limit_type>>;
 
     public:
         using base_type::base_type;
