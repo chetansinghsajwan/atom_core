@@ -178,19 +178,20 @@ namespace atom
         ////
         ////////////////////////////////////////////////////////////////////////////////////////////
 
-        template <typename tto_get, usize index, typename... ts>
+        template <typename to_get_type, usize index, typename... types>
         class index_of;
 
-        template <typename tto_get, usize index, typename in_type, typename... ts>
-        class index_of<tto_get, index, in_type, ts...>
+        template <typename to_get_type, usize index, typename in_type, typename... types>
+        class index_of<to_get_type, index, in_type, types...>
         {
         public:
-            static constexpr usize value =
-                rsame_as<tto_get, in_type> ? index : index_of<tto_get, index + 1, ts...>::value;
+            static constexpr usize value = rsame_as<to_get_type, in_type>
+                                               ? index
+                                               : index_of<to_get_type, index + 1, types...>::value;
         };
 
-        template <typename tto_get, usize index>
-        class index_of<tto_get, index>
+        template <typename to_get_type, usize index>
+        class index_of<to_get_type, index>
         {
         public:
             static constexpr usize value = -1;

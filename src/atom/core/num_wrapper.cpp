@@ -10,7 +10,7 @@ import :contracts_decl;
 /// ------------------------------------------------------------------------------------------------
 namespace atom
 {
-    class _num_id
+    class _num_wrapper_id
     {};
 
     /// --------------------------------------------------------------------------------------------
@@ -23,27 +23,30 @@ namespace atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename num_type>
-    concept rnum = requires(num_type num) { requires std::derived_from<num_type, _num_id>; };
+    concept rnum = std::derived_from<num_type, _num_wrapper_id>;
 
-    template <typename in_this_final_type, typename in_value_type, typename limit_type>
-    class _num_impl
+    /// --------------------------------------------------------------------------------------------
+    ///
+    /// --------------------------------------------------------------------------------------------
+    template <typename in_final_type, typename in_unwrapped_type, typename limit_type>
+    class _num_wrapper_impl
     {
     public:
-        using final_type = in_this_final_type;
-        using value_type = in_value_type;
+        using final_type = in_final_type;
+        using unwrapped_type = in_unwrapped_type;
 
     public:
-        static consteval auto min() -> value_type
+        static consteval auto min() -> unwrapped_type
         {
-            return value_type(std::numeric_limits<limit_type>::min());
+            return unwrapped_type(std::numeric_limits<limit_type>::min());
         }
 
-        static consteval auto max() -> value_type
+        static consteval auto max() -> unwrapped_type
         {
-            return value_type(std::numeric_limits<limit_type>::max());
+            return unwrapped_type(std::numeric_limits<limit_type>::max());
         }
 
-        static consteval auto count_digits(value_type val) -> std::size_t
+        static consteval auto count_digits(unwrapped_type val) -> std::size_t
         {
             std::size_t count = 0;
             while (val > 0)
@@ -65,9 +68,9 @@ namespace atom
             return count_digits(max());
         }
 
-        static constexpr auto abs(value_type val) -> value_type
+        static constexpr auto abs(unwrapped_type val) -> unwrapped_type
         {
-            if constexpr (std::is_unsigned_v<value_type>)
+            if constexpr (std::is_unsigned_v<unwrapped_type>)
                 return val;
 
             return std::abs(val);
@@ -75,229 +78,406 @@ namespace atom
 
         static consteval auto is_signed() -> bool
         {
-            return std::is_signed_v<value_type>;
-        }
-    };
-
-    template <typename in_impl_type>
-    class num_wrapper: public _num_id
-    {
-        using this_type = num_wrapper<in_impl_type>;
-
-    public:
-        using impl_type = in_impl_type;
-        using final_type = typename impl_type::final_type;
-        using value_type = typename impl_type::value_type;
-        using unwrapped_type = typename impl_type::value_type;
-
-    public:
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        static consteval auto min() -> final_type
-        {
-            return _make(impl_type::min());
+            return std::is_signed_v<unwrapped_type>;
         }
 
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        static consteval auto max() -> final_type
+        static constexpr auto neg(unwrapped_type num)
         {
-            return _make(impl_type::max());
+            return -num;
         }
 
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        static consteval auto bits() -> final_type
+        static constexpr auto is_add_safe(unwrapped_type value0, unwrapped_type value1) -> bool
         {
-            return _make(sizeof(value_type) * sizeof(byte));
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        static consteval auto is_signed() -> bool
-        {
-            return impl_type::is_signed();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename num_type>
-        static consteval auto is_conversion_safe() -> bool
-            requires rnum<num_type> or _rnum<num_type>
-        {
-            // it's better to ask the target type if it can accept our range values.
-            if constexpr (rnum<num_type>)
-            {
-                return num_type::template is_assignment_safe<final_type>();
-            }
-            else
-            {
-                if constexpr (is_signed() != std::is_signed_v<num_type>)
-                    return false;
-
-                if constexpr (impl_type::min() < std::numeric_limits<num_type>::min())
-                    return false;
-
-                if constexpr (impl_type::max() > std::numeric_limits<num_type>::max())
-                    return false;
-
-                return true;
-            }
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename num_type>
-        static consteval auto is_assignment_safe() -> bool
-            requires rnum<num_type> or _rnum<num_type>
-        {
-            if constexpr (rnum<num_type>)
-            {
-                if constexpr (is_signed() != num_type::is_signed())
-                    return false;
-
-                if constexpr (num_type::impl_type::min() < impl_type::min())
-                    return false;
-
-                if constexpr (num_type::impl_type::max() > impl_type::max())
-                    return false;
-            }
-            else
-            {
-                if constexpr (is_signed() != std::is_signed_v<num_type>)
-                    return false;
-
-                if constexpr (std::numeric_limits<num_type>::min() < impl_type::min())
-                    return false;
-
-                if constexpr (std::numeric_limits<num_type>::max() > impl_type::max())
-                    return false;
-            }
+            if ((max() - value0) < value1)
+                return false;
 
             return true;
         }
 
+        static constexpr auto is_sub_safe(unwrapped_type value0, unwrapped_type value1) -> bool
+        {
+            return true;
+        }
+
+        static constexpr auto is_mul_safe(unwrapped_type value0, unwrapped_type value1) -> bool
+        {
+            auto limit = max() - value0;
+            auto div = limit / value0;
+            if (div < value1)
+                return false;
+
+            return true;
+        }
+
+        static constexpr auto is_div_safe(unwrapped_type value0, unwrapped_type value1) -> bool
+        {
+            if (value1 == -1 and value0 == min())
+                return false;
+
+            return true;
+        }
+
+        template <typename num_type>
+        static constexpr auto is_conversion_safe_from(num_type num) -> bool
+            requires rnum<num_type>
+        {
+            // if constexpr (rnum<num_type>)
+            // {
+            //     if constexpr (is_signed() != num_type::is_signed())
+            //         return false;
+
+            //     if constexpr (num_type::min() < min())
+            //         if (_unwrap(num) < min())
+            //             return true;
+
+            //     if constexpr (num_type::max() > max())
+            //         if (_unwrap(num) > max())
+            //             return true;
+            // }
+            // else
+            // {
+            //     if constexpr (is_signed() != std::is_signed_v<num_type>)
+            //         return false;
+
+            //     if constexpr (std::numeric_limits<num_type>::min() < min())
+            //         if (num < min())
+            //             return true;
+
+            //     if constexpr (std::numeric_limits<num_type>::max() > max())
+            //         if (num > max())
+            //             return true;
+            // }
+
+            return true;
+        }
+
+        template <typename num_type>
+        static constexpr auto is_conversion_safe_from_unwrapped(num_type num) -> bool
+            requires _rnum<num_type>
+        {
+            return true;
+        }
+
+        template <typename num_type>
+        static constexpr auto is_conversion_safe_to_unwrapped(unwrapped_type value) -> bool
+            requires _rnum<num_type>
+        {
+            return true;
+        }
+
+    private:
+        template <typename num_type>
+        static constexpr auto _unwrap(num_type num)
+        {
+            if constexpr (rnum<num_type>)
+                return num._value;
+            else
+                return num;
+        }
+    };
+
+    /// --------------------------------------------------------------------------------------------
+    /// wraps any numeric type to provide safe operations like overflow and underflow checks.
+    /// --------------------------------------------------------------------------------------------
+    template <typename in_impl_type>
+    class num_wrapper: public _num_wrapper_id
+    {
+        using this_type = num_wrapper<in_impl_type>;
+
+    protected:
+        using impl_type = in_impl_type;
+        using final_type = typename impl_type::final_type;
+
     public:
         /// ----------------------------------------------------------------------------------------
-        /// # to do
-        ///
-        /// - no default constructor should be provided. value should be initialized explicitly.
+        /// type that `this_type` wraps.
+        /// ----------------------------------------------------------------------------------------
+        using unwrapped_type = typename impl_type::unwrapped_type;
+
+    public:
+        /// ----------------------------------------------------------------------------------------
+        /// # default constructor
         /// ----------------------------------------------------------------------------------------
         constexpr num_wrapper() = default;
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// # copy contructor
         /// ----------------------------------------------------------------------------------------
-        // template <typename num_type>
-        // constexpr num_wrapper(num_type num)
-        //     requires rnum<num_type> and (is_assignment_safe<num_type>())
-        // {
-        //     _val = _unwrap(num);
-        // }
+        constexpr num_wrapper(const this_type&) = default;
 
         /// ----------------------------------------------------------------------------------------
+        /// # copy operator
+        /// ----------------------------------------------------------------------------------------
+        constexpr num_wrapper& operator=(const this_type&) = default;
+
+        /// ----------------------------------------------------------------------------------------
+        /// # move contructor
+        /// ----------------------------------------------------------------------------------------
+        constexpr num_wrapper(this_type&&) = default;
+
+        /// ----------------------------------------------------------------------------------------
+        /// # move operator
+        /// ----------------------------------------------------------------------------------------
+        constexpr num_wrapper& operator=(this_type&&) = default;
+
+        /// ----------------------------------------------------------------------------------------
+        /// # value constructor
         ///
+        /// converts `num_type` to `this_type`.
         /// ----------------------------------------------------------------------------------------
         template <typename num_type>
         explicit constexpr num_wrapper(num_type num)
             requires rnum<num_type>
-        //  and (not is_assignment_safe<num_type>())
+            : _value(num._value)
         {
-            // _val = _unwrap(num);
-            _val = num._val;
+            contracts::debug_expects(is_conversion_safe_from(num));
         }
 
         /// ----------------------------------------------------------------------------------------
+        /// # value constructor
         ///
+        /// converts `num_type` to `this_type`. this is supposed to accept literals only.
         /// ----------------------------------------------------------------------------------------
         template <typename num_type>
         constexpr num_wrapper(num_type num)
             requires _rnum<num_type>
+            : _value(num)
         {
-            // contracts::debug_expects(not check_overflow_on_assignment(num));
-
-            _val = num;
+            contracts::debug_expects(is_conversion_safe_from_unwrapped(num));
         }
 
         /// ----------------------------------------------------------------------------------------
+        /// # value operator
         ///
-        /// ----------------------------------------------------------------------------------------
-        // template <typename num_type>
-        // constexpr auto operator=(num_type num) -> final_type&
-        //     requires rnum<num_type> and (is_assignment_safe<num_type>())
-        // {
-        //     _val = _unwrap(num);
-        //     return _this_final();
-        // }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
+        /// converts `num_type` to `this_type`. this is supposed to accept literals only.
         /// ----------------------------------------------------------------------------------------
         template <typename num_type>
         constexpr auto operator=(num_type num) -> final_type&
             requires _rnum<num_type>
         {
-            // contracts::debug_expects(not check_overflow_on_assignment(num));
+            contracts::debug_expects(is_conversion_safe_from_unwrapped(num));
 
-            _val = num;
+            _value = num;
             return _this_final();
         }
+
+        /// ----------------------------------------------------------------------------------------
+        /// # destructor
+        /// ----------------------------------------------------------------------------------------
+        constexpr ~num_wrapper() = default;
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// assigns num.
+        /// creates `this_type` from `num_type`.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto set(final_type num) -> final_type&
+        template <typename num_type>
+        static constexpr auto from(num_type num) -> final_type
+            requires rnum<num_type>
         {
-            contracts::debug_expects(not check_overflow_on_assignment(num));
+            contracts::debug_expects(is_conversion_safe_from(num));
 
-            _val = _unwrap(num);
-            return _this_final();
+            return _wrap_final(num._value);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// assigns num.
+        /// creates `this_type` from `num_type`.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto set_checked(final_type num) -> final_type&
+        template <typename num_type>
+        static constexpr auto from_checked(num_type num) -> final_type
+            requires rnum<num_type>
         {
-            contracts::expects(not check_overflow_on_assignment(num));
+            contracts::expects(is_conversion_safe_from(num));
 
-            _val = _unwrap(num);
-            return _this_final();
+            return _wrap_final(num._value);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// adds
+        /// creates `this_type` from `num_type`.
+        /// ----------------------------------------------------------------------------------------
+        template <typename num_type>
+        static constexpr auto from_unchecked(num_type num) -> final_type
+            requires rnum<num_type>
+        {
+            return _wrap_final(num._value);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` if there is no overflow or underflow when converting `num_type` to
+        /// `this_type`.
+        /// ----------------------------------------------------------------------------------------
+        template <typename num_type>
+        static constexpr auto is_conversion_safe_from(num_type num) -> bool
+            requires rnum<num_type>
+        {
+            return impl_type::is_conversion_safe_from(num);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// creates `this_type` from unwrapped `num_type`.
+        /// ----------------------------------------------------------------------------------------
+        template <typename num_type>
+        static constexpr auto from_unwrapped(num_type num) -> final_type
+            requires _rnum<num_type>
+        {
+            contracts::debug_expects(is_conversion_safe_from_unwrapped(num));
+
+            return _wrap_final(num);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// creates `this_type` from unwrapped `num_type`.
+        /// ----------------------------------------------------------------------------------------
+        template <typename num_type>
+        static constexpr auto from_unwrapped_checked(num_type num) -> final_type
+            requires _rnum<num_type>
+        {
+            contracts::expects(is_conversion_safe_from_unwrapped(num));
+
+            return _wrap_final(num);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// creates `this_type` from unwrapped `num_type`.
+        /// ----------------------------------------------------------------------------------------
+        template <typename num_type>
+        static constexpr auto from_unwrapped_unchecked(num_type num) -> final_type
+            requires _rnum<num_type>
+        {
+            return _wrap_final(num);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` if there is no overflow or underflow when creating `this_type` from
+        /// `num_type`.
+        /// ----------------------------------------------------------------------------------------
+        template <typename num_type>
+        static constexpr auto is_conversion_safe_from_unwrapped(num_type num) -> bool
+            requires _rnum<num_type>
+        {
+            return impl_type::is_conversion_safe_from_unwrapped(num);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `num_type::from(*this)`.
+        /// ----------------------------------------------------------------------------------------
+        template <typename num_type>
+        constexpr auto to() const -> num_type
+            requires rnum<num_type>
+        {
+            return num_type::from(_this_final());
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `num_type::from_checked(*this)`.
+        /// ----------------------------------------------------------------------------------------
+        template <typename num_type>
+        constexpr auto to_checked() const -> num_type
+            requires rnum<num_type>
+        {
+            return num_type::from_checked(_this_final());
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `num_type::from_unchecked(*this)`.
+        /// ----------------------------------------------------------------------------------------
+        template <typename num_type>
+        constexpr auto to_unchecked() const -> num_type
+            requires rnum<num_type>
+        {
+            return num_type::from_unchecked(_this_final());
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `unwrapped_type` value.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto unwrap() const -> unwrapped_type
+        {
+            return _value;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `unwrapped_type` value.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto to_unwrapped() const -> unwrapped_type
+        {
+            return _value;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `this` value converted to unwrapped `num_type`.
+        /// ----------------------------------------------------------------------------------------
+        template <typename num_type>
+        constexpr auto to_unwrapped() const -> num_type
+            requires _rnum<num_type>
+        {
+            contracts::debug_expects(is_conversion_safe_to_unwrapped<num_type>());
+
+            return num_type(_value);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `this` value converted to unwrapped `num_type`.
+        /// ----------------------------------------------------------------------------------------
+        template <typename num_type>
+        constexpr auto to_unwrapped_checked() const -> num_type
+            requires _rnum<num_type>
+        {
+            contracts::expects(is_conversion_safe_to_unwrapped<num_type>());
+
+            return num_type(_value);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `this` value converted to unwrapped `num_type`.
+        /// ----------------------------------------------------------------------------------------
+        template <typename num_type>
+        constexpr auto to_unwrapped_unchecked() const -> num_type
+            requires _rnum<num_type>
+        {
+            return num_type(_value);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` if there is no overflow or underflow when converting `this_type` to
+        /// unwrapped `num_type`.
+        /// ----------------------------------------------------------------------------------------
+        template <typename num_type>
+        constexpr auto is_conversion_safe_to_unwrapped() const -> bool
+            requires _rnum<num_type>
+        {
+            return impl_type::template is_conversion_safe_to_unwrapped<num_type>();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns result after adding `this` with `num`.
         /// ----------------------------------------------------------------------------------------
         constexpr auto add(final_type num) const -> final_type
         {
-            return _clone().add_assign(num);
+            contracts::debug_expects(is_add_safe(num));
+
+            return _wrap_final(_value + num._value);
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// returns result after adding `this` with `num`.
         /// ----------------------------------------------------------------------------------------
         constexpr auto add_checked(final_type num) const -> final_type
         {
-            return _clone().add_assign(num);
+            contracts::expects(is_add_safe(num));
+
+            return _wrap_final(_value + num._value);
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// returns result after adding `this` with `num`.
         /// ----------------------------------------------------------------------------------------
         constexpr auto add_unchecked(final_type num) const -> final_type
         {
-            return _clone().add_assign_unchecked(num);
+            return _wrap_final(_value + num._value);
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// returns [`add(num)`].
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator+(final_type num) const -> final_type
         {
@@ -305,48 +485,48 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// stores result after adding `this` with `num`.
         /// ----------------------------------------------------------------------------------------
         constexpr auto add_assign(final_type num) -> final_type&
         {
-            contracts::debug_expects(not check_overflow_on_add(num));
+            contracts::debug_expects(is_add_safe(num));
 
-            _val += _unwrap(num);
+            _value += num._value;
             return _this_final();
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// stores result after adding `this` with `num`.
         /// ----------------------------------------------------------------------------------------
         constexpr auto add_assign_checked(final_type num) -> final_type&
         {
-            contracts::expects(not check_overflow_on_add(num));
+            contracts::expects(is_add_safe(num));
 
-            _val += _unwrap(num);
+            _value += num._value;
             return _this_final();
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// stores result after adding `this` with `num`.
         /// ----------------------------------------------------------------------------------------
         constexpr auto add_assign_unchecked(final_type num) -> final_type&
         {
-            _val += _unwrap(num);
+            _value += num._value;
             return _this_final();
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// returns [`add_assign(num)`].
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator+=(final_type num) -> final_type&
         {
-            contracts::debug_expects(not check_overflow_on_add(num));
+            contracts::debug_expects(is_add_safe(num));
 
             return add_assign(num);
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// returns [`add_assign(1)`].
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator++(int) -> final_type&
         {
@@ -354,39 +534,43 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// returns `true` is no overflow or underflow occurs during addition.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator+() -> final_type
+        constexpr auto is_add_safe(final_type num) const -> bool
         {
-            return _make(+_val);
+            return impl_type::is_add_safe(_value, num._value);
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// returns result after subtracting `num` from `this`.
         /// ----------------------------------------------------------------------------------------
         constexpr auto sub(final_type num) const -> final_type
         {
-            return _clone().sub_assign(num);
+            contracts::debug_expects(is_sub_safe(num));
+
+            return _wrap_final(_value - num._value);
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// returns result after subtracting `num` from `this`.
         /// ----------------------------------------------------------------------------------------
         constexpr auto sub_checked(final_type num) const -> final_type
         {
-            return _clone().sub_assign(num);
+            contracts::expects(is_sub_safe(num));
+
+            return _wrap_final(_value - num._value);
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// returns result after subtracting `num` from `this`.
         /// ----------------------------------------------------------------------------------------
         constexpr auto sub_unchecked(final_type num) const -> final_type
         {
-            return _clone().sub_assign_unchecked(num);
+            return _wrap_final(_value - num._value);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// call [`sub(num)`].
+        /// returns [`sub(num)`].
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator-(final_type num) const -> final_type
         {
@@ -394,38 +578,38 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// stores result after subtracting `num` from `this`.
         /// ----------------------------------------------------------------------------------------
         constexpr auto sub_assign(final_type num) -> final_type&
         {
-            contracts::debug_expects(not check_overflow_on_sub(num));
+            contracts::debug_expects(is_sub_safe(num));
 
-            _val -= _unwrap(num);
+            _value -= num._value;
             return _this_final();
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// stores result after subtracting `num` from `this`.
         /// ----------------------------------------------------------------------------------------
         constexpr auto sub_assign_checked(final_type num) -> final_type&
         {
-            contracts::expects(not check_overflow_on_sub(num));
+            contracts::expects(is_sub_safe(num));
 
-            _val -= _unwrap(num);
+            _value -= num._value;
             return _this_final();
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// stores result after subtracting `num` from `this`.
         /// ----------------------------------------------------------------------------------------
         constexpr auto sub_assign_unchecked(final_type num) -> final_type&
         {
-            _val -= _unwrap(num);
+            _value -= num._value;
             return _this_final();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// calls [`sub_assign(num)`].
+        /// returns [`sub_assign(num)`].
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator-=(final_type num) -> final_type&
         {
@@ -433,7 +617,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// calls [`sub_assign(1)`].
+        /// returns [`sub_assign(1)`].
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator--(int) -> final_type&
         {
@@ -441,39 +625,43 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// returns `true` is no overflow or underflow occurs during subtraction.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator-() -> final_type
+        constexpr auto is_sub_safe(final_type num) const -> bool
         {
-            return _make(-_val);
+            return impl_type::is_sub_safe(_value, num._value);
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// returns result after multiplying `this` with `num`.
         /// ----------------------------------------------------------------------------------------
         constexpr auto mul(final_type num) const -> final_type
         {
-            return _clone().mul_assign(num);
+            contracts::debug_expects(is_mul_safe(num));
+
+            return _wrap_final(_value * num._value);
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// returns result after multiplying `this` with `num`.
         /// ----------------------------------------------------------------------------------------
         constexpr auto mul_checked(final_type num) const -> final_type
         {
-            return _clone().mul_assign(num);
+            contracts::expects(is_mul_safe(num));
+
+            return _wrap_final(_value * num._value);
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// returns result after multiplying `this` with `num`.
         /// ----------------------------------------------------------------------------------------
         constexpr auto mul_unchecked(final_type num) const -> final_type
         {
-            return _clone().mul_assign_unchecked(num);
+            return _wrap_final(_value * num._value);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// calls [`mul(num)`].
+        /// returns [`mul(num)`].
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator*(final_type num) const -> final_type
         {
@@ -481,38 +669,38 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// stores result after multiplying `this` with `num`.
         /// ----------------------------------------------------------------------------------------
         constexpr auto mul_assign(final_type num) -> final_type&
         {
-            contracts::debug_expects(not check_overflow_on_mul(num));
+            contracts::debug_expects(is_mul_safe(num));
 
-            _val *= _unwrap(num);
+            _value *= num._value;
             return _this_final();
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto mul_assign_unchecked(final_type num) -> final_type&
-        {
-            _val *= _unwrap(num);
-            return _this_final();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
+        /// stores result after multiplying `this` with `num`.
         /// ----------------------------------------------------------------------------------------
         constexpr auto mul_assign_checked(final_type num) -> final_type&
         {
-            contracts::expects(not check_overflow_on_mul(num));
+            contracts::expects(is_mul_safe(num));
 
-            _val *= _unwrap(num);
+            _value *= num._value;
             return _this_final();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// calls [`mul_assign(num)`].
+        /// stores result after multiplying `this` with `num`.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto mul_assign_unchecked(final_type num) -> final_type&
+        {
+            _value *= num._value;
+            return _this_final();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns [`mul_assign(num)`].
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator*=(final_type num) -> final_type&
         {
@@ -520,31 +708,43 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// returns `true` is no overflow or underflow occurs during multiplication.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto is_mul_safe(final_type num) const -> bool
+        {
+            return impl_type::is_sub_safe(_value, num._value);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns quotient after dividing `this` by `num`.
         /// ----------------------------------------------------------------------------------------
         constexpr auto div(final_type num) const -> final_type
         {
-            return _clone().div_assign(num);
+            contracts::debug_expects(is_div_safe(num));
+
+            return _wrap_final(_value / num._value);
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// returns quotient after dividing `this` by `num`.
         /// ----------------------------------------------------------------------------------------
         constexpr auto div_checked(final_type num) const -> final_type
         {
-            return _clone().div_assign(num);
+            contracts::expects(is_div_safe(num));
+
+            return _wrap_final(_value / num._value);
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// returns quotient after dividing `this` by `num`.
         /// ----------------------------------------------------------------------------------------
         constexpr auto div_unchecked(final_type num) const -> final_type
         {
-            return _clone().div_assign_unchecked(num);
+            return _wrap_final(_value / num._value);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// calls [`div(num)`].
+        /// returns [`div(num)`].
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator/(final_type num) const -> final_type
         {
@@ -552,387 +752,218 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// stores quotient after dividing `this` by `num`.
         /// ----------------------------------------------------------------------------------------
         constexpr auto div_assign(final_type num) -> final_type&
         {
             contracts::debug_expects(is_div_safe(num));
 
-            _val /= _unwrap(num);
+            _value /= num._value;
             return _this_final();
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// stores quotient after dividing `this` by `num`.
         /// ----------------------------------------------------------------------------------------
         constexpr auto div_assign_checked(final_type num) -> final_type&
         {
             contracts::expects(is_div_safe(num));
 
-            _val /= _unwrap(num);
+            _value /= num._value;
             return _this_final();
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// stores quotient after dividing `this` by `num`.
         /// ----------------------------------------------------------------------------------------
         constexpr auto div_assign_unchecked(final_type num) -> final_type&
         {
-            _val /= _unwrap(num);
+            _value /= num._value;
             return _this_final();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// calls [`div_assign(num)`].
+        /// returns [`div_assign(num)`].
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator/=(final_type num) -> final_type&
         {
             return div_assign(num);
         }
 
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        ////
-        //// bit operations
-        ////
-        ////////////////////////////////////////////////////////////////////////////////////////////
-
-    public:
-        constexpr auto left_shift() {}
-
-        constexpr auto right_shift() {}
-
-        constexpr auto left_rotate() {}
-
-        constexpr auto right_rotate() {}
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        ////
-        //// compairision
-        ////
-        ////////////////////////////////////////////////////////////////////////////////////////////
-
-    public:
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// returns remainder after dividing `this` by `num`.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto is_eq(final_type num) const -> bool
+        constexpr auto rem(final_type num) const -> final_type
         {
-            return _val == _unwrap(num);
+            contracts::debug_expects(is_div_safe(num));
+
+            return _wrap_final(_value % num._value);
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// returns remainder after dividing `this` by `num`.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto is_lt(final_type num) const -> bool
+        constexpr auto rem_checked(final_type num) const -> final_type
         {
-            return _val < _unwrap(num);
+            contracts::expects(is_div_safe(num));
+
+            return _wrap_final(_value % num._value);
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// returns remainder after dividing `this` by `num`.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto is_le(final_type num) const -> bool
+        constexpr auto rem_unchecked(final_type num) const -> final_type
         {
-            return _val <= _unwrap(num);
+            return _wrap_final(_value % num._value);
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// returns [`rem(num)`].
         /// ----------------------------------------------------------------------------------------
-        constexpr auto is_gt(final_type num) const -> bool
+        constexpr auto operator%(final_type num) const -> final_type
         {
-            return _val > _unwrap(num);
+            return rem(num);
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// stores remainder after dividing `this` by `num`.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto is_ge(final_type num) const -> bool
+        constexpr auto rem_assign(final_type num) -> final_type&
         {
-            return _val >= _unwrap(num);
-        }
+            contracts::debug_expects(is_div_safe(num));
 
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        ////
-        //// utils
-        ////
-        ////////////////////////////////////////////////////////////////////////////////////////////
-
-    public:
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto count_digits() const -> final_type
-        {
-            return _make(impl_type::count_digits(_val));
+            _value %= num._value;
+            return _this_final();
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// stores remainder after dividing `this` by `num`.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto abs() const -> final_type
+        constexpr auto rem_assign_checked(final_type num) -> final_type&
         {
-            return _make(impl_type::abs(_val));
+            contracts::expects(is_div_safe(num));
+
+            _value %= num._value;
+            return _this_final();
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// stores remainder after dividing `this` by `num`.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto pow() const -> final_type
+        constexpr auto rem_assign_unchecked(final_type num) -> final_type&
         {
-            return _make(impl_type::pow(_val));
+            _value %= num._value;
+            return _this_final();
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// returns [`rem_assign(num)`].
         /// ----------------------------------------------------------------------------------------
-        constexpr auto sqrt() const -> final_type
+        constexpr auto operator%=(final_type num) -> final_type&
         {
-            return _make(impl_type::sqrt(_val));
+            return rem_assign(num);
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto root() const -> final_type
-        {
-            return _make(impl_type::root(_val));
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto log() const -> final_type
-        {
-            return _make(impl_type::log(_val));
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto log10() const -> final_type
-        {
-            return _make(impl_type::log10(_val));
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto min(final_type num) const -> final_type
-        {
-            if (_val > _unwrap(num))
-                return _make(_unwrap(num));
-
-            return _clone();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto max(final_type num) const -> final_type
-        {
-            if (_val < _unwrap(num))
-                return _make(_unwrap(num));
-
-            return _clone();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename tnum0, typename tnum1>
-        constexpr auto clamp(tnum0 num0, tnum1 num1) const -> final_type
-            requires rnum<tnum0> or _rnum<tnum0> and rnum<tnum0> or _rnum<tnum0>
-        {
-            contracts::debug_expects(num0 <= num1, "left of range is greater than the right.");
-
-            if (_val < _unwrap(num0))
-                return _make(_unwrap(num0));
-
-            if (_val > _unwrap(num1))
-                return _make(_unwrap(num1));
-
-            return _clone();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto clone() const -> final_type
-        {
-            return _clone();
-        }
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        ////
-        //// conversion
-        ////
-        ////////////////////////////////////////////////////////////////////////////////////////////
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename num_type>
-        constexpr auto to() const -> num_type
-        {
-            contracts::debug_expects(not check_overflow_on_conversion<num_type>());
-
-            return num_type(_val);
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename num_type>
-        constexpr auto to_checked() const -> num_type
-        {
-            contracts::expects(not check_overflow_on_conversion<num_type>());
-
-            return num_type(_val);
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename num_type>
-        constexpr auto to_unchecked() const -> num_type
-        {
-            return num_type(_val);
-        }
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        ////
-        //// checks
-        ////
-        ////////////////////////////////////////////////////////////////////////////////////////////
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename num_type>
-        static constexpr auto check_overflow_on_assignment(final_type num) -> bool
-        {
-            if constexpr (rnum<num_type>)
-            {
-                if constexpr (is_signed() != num_type::is_signed())
-                    return false;
-
-                if constexpr (num_type::impl_type::min() < impl_type::min())
-                    if (_unwrap(num) < impl_type::min())
-                        return true;
-
-                if constexpr (num_type::impl_type::max() > impl_type::max())
-                    if (_unwrap(num) > impl_type::max())
-                        return true;
-            }
-            else
-            {
-                if constexpr (is_signed() != std::is_signed_v<num_type>)
-                    return false;
-
-                if constexpr (std::numeric_limits<num_type>::min() < impl_type::min())
-                    if (num < impl_type::min())
-                        return true;
-
-                if constexpr (std::numeric_limits<num_type>::max() > impl_type::max())
-                    if (num > impl_type::max())
-                        return true;
-            }
-
-            return false;
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename num_type>
-        constexpr auto check_overflow_on_conversion() const -> bool
-        {
-            // it's better to ask the target type if it can accept our range values.
-            if constexpr (rnum<num_type>)
-            {
-                return num_type::template check_overflow_on_assignment<final_type>(_val);
-            }
-            else
-            {
-                if constexpr (impl_type::min() < std::numeric_limits<num_type>::min())
-                    if (_val < std::numeric_limits<num_type>::min())
-                        return true;
-
-                if constexpr (impl_type::min() > std::numeric_limits<num_type>::max())
-                    if (_val > std::numeric_limits<num_type>::max())
-                        return true;
-
-                return false;
-            }
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto check_overflow_on_add(final_type num) const -> bool
-        {
-            if ((impl_type::max() - _val) < _unwrap(num))
-                return true;
-
-            return false;
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto check_overflow_on_sub(final_type num) const -> bool
-        {
-            // todo: fix this implementation.
-            //
-            // if ((_val - impl_type::min()) < _unwrap(num))
-            //     return true;
-
-            return false;
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto check_overflow_on_mul(final_type num) const -> bool
-        {
-            auto limit = impl_type::max() - _val;
-            auto div = limit / _val;
-            if (div < _unwrap(num))
-                return true;
-
-            return false;
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// # to do
-        ///
-        /// - complete implementation.
+        /// returns `true` is no overflow or underflow occurs during division.
         /// ----------------------------------------------------------------------------------------
         constexpr auto is_div_safe(final_type num) const -> bool
         {
-            if (_unwrap(num) == -1 and _val == impl_type::min())
-                return false;
-
-            return true;
+            return impl_type::is_div_safe(_value, num._value);
         }
 
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        ////
-        //// misc
-        ////
-        ////////////////////////////////////////////////////////////////////////////////////////////
-
-        constexpr auto unwrap() const -> value_type
+        /// ----------------------------------------------------------------------------------------
+        /// minimum value of `this_type`.
+        /// ----------------------------------------------------------------------------------------
+        static consteval auto min() -> final_type
         {
-            return _val;
+            return _wrap_final(impl_type::min());
         }
 
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        ////
-        //// implementaions
-        ////
-        ////////////////////////////////////////////////////////////////////////////////////////////
+        /// ----------------------------------------------------------------------------------------
+        /// maximum value of `this_type`.
+        /// ----------------------------------------------------------------------------------------
+        static consteval auto max() -> final_type
+        {
+            return _wrap_final(impl_type::max());
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns the minimum of `this` and `num`.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto min_of(final_type num) const -> final_type
+        {
+            if (_value > num._value)
+                return _wrap_final(num._value);
+
+            return _clone_final();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns the maximum of `this` and `num`.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto max_of(final_type num) const -> final_type
+        {
+            if (_value < num._value)
+                return _wrap_final(num._value);
+
+            return _clone_final();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// return `this` value clamped between `num0` and `num1`.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto clamp(final_type num0, final_type num1) const -> final_type
+        {
+            if (_value < num0._value)
+                return _wrap_final(num0._value);
+
+            if (_value > num1._value)
+                return _wrap_final(num1._value);
+
+            return _clone_final();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` if `this` is equal to `num`.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto is_eq(final_type num) const -> bool
+        {
+            return _value == num._value;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` if `this` is less than `num`.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto is_lt(final_type num) const -> bool
+        {
+            return _value < num._value;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` if `this` is equal to or less than `num`.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto is_le(final_type num) const -> bool
+        {
+            return _value <= num._value;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` if `this` is greater than `num`.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto is_gt(final_type num) const -> bool
+        {
+            return _value > num._value;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` if `this` is equal to or greater than `num`.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto is_ge(final_type num) const -> bool
+        {
+            return _value >= num._value;
+        }
 
     protected:
         constexpr auto _this_final() const -> const final_type&
@@ -945,25 +976,17 @@ namespace atom
             return static_cast<final_type&>(*this);
         }
 
-        constexpr auto _clone() const -> final_type
+        constexpr auto _clone_final() const -> final_type
         {
-            return _make(_val);
+            return _wrap_final(_value);
         }
 
-        static constexpr auto _make(value_type val) -> final_type
+        static constexpr auto _wrap_final(unwrapped_type val) -> final_type
         {
             return final_type(val);
         }
 
-        static constexpr auto _unwrap(final_type num)
-        {
-            // if constexpr (rnum<num_type>)
-            return num._val;
-            // else
-            //     return num;
-        }
-
     public:
-        value_type _val;
+        unwrapped_type _value;
     };
 };

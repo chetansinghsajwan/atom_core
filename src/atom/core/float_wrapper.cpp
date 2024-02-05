@@ -8,28 +8,28 @@ import :std;
 
 namespace atom
 {
-    template <typename final_type, typename value_type>
-    class _float_impl: public _num_impl<final_type, value_type, value_type>
+    template <typename final_type, typename unwrapped_type>
+    class _float_impl: public _num_wrapper_impl<final_type, unwrapped_type, unwrapped_type>
     {
-        using base_type = _num_impl<final_type, value_type, value_type>;
+        using base_type = _num_wrapper_impl<final_type, unwrapped_type, unwrapped_type>;
 
     public:
-        static consteval auto nan() -> value_type
+        static consteval auto nan() -> unwrapped_type
         {
-            return value_type();
+            return unwrapped_type();
         }
 
-        static constexpr auto floor(value_type val) -> value_type
+        static constexpr auto floor(unwrapped_type val) -> unwrapped_type
         {
             return std::floor(val);
         }
 
-        static constexpr auto ceil(value_type val) -> value_type
+        static constexpr auto ceil(unwrapped_type val) -> unwrapped_type
         {
             return std::ceil(val);
         }
 
-        static constexpr auto round(value_type val) -> value_type
+        static constexpr auto round(unwrapped_type val) -> unwrapped_type
         {
             return std::round(val);
         }
@@ -43,7 +43,7 @@ namespace atom
 
     public:
         using final_type = typename base_type::final_type;
-        using value_type = typename base_type::value_type;
+        using unwrapped_type = typename base_type::unwrapped_type;
 
     public:
         using base_type::base_type;
@@ -58,7 +58,7 @@ namespace atom
 
         constexpr auto eq_zero_approx() const -> bool
         {
-            return _val == 0;
+            return _value == 0;
             ;
         }
 
@@ -73,7 +73,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         static consteval auto nan() -> this_type
         {
-            return _make(impl_type::nan());
+            return _wrap_final(impl_type::nan());
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -81,7 +81,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto floor() const -> this_type
         {
-            return _make(impl_type::floor(_val));
+            return _wrap_final(impl_type::floor(_value));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -89,7 +89,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto ceil() const -> this_type
         {
-            return _make(impl_type::ceil(_val));
+            return _wrap_final(impl_type::ceil(_value));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -97,14 +97,14 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto round() const -> this_type
         {
-            return _make(impl_type::round(_val));
+            return _wrap_final(impl_type::round(_value));
         }
 
     protected:
-        using base_type::_make;
+        using base_type::_wrap_final;
 
     public:
-        using base_type::_val;
+        using base_type::_value;
     };
 }
 
