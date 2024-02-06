@@ -26,6 +26,12 @@ namespace atom
     public:
         using signed_type = in_signed_type;
         using unsigned_type = in_unsigned_type;
+
+    public:
+        static consteval auto is_signed() -> bool
+        {
+            return std::is_signed_v<unwrapped_type>;
+        }
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -44,6 +50,14 @@ namespace atom
         using base_type::operator=;
 
     public:
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` if this is a signed integer type.
+        /// ----------------------------------------------------------------------------------------
+        static consteval auto is_signed() -> bool
+        {
+            return impl_type::is_signed();
+        }
+    
         /// ----------------------------------------------------------------------------------------
         /// counts number of digits needed to represent `this`.
         /// ----------------------------------------------------------------------------------------
