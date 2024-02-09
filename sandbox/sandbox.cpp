@@ -15,6 +15,6 @@ auto println(string_view str)
 }
 
 auto main(int argc, char** args) -> int
-{
+{    
     return 0;
 }

@@ -445,7 +445,7 @@ namespace atom
         constexpr auto is_conversion_safe_to_unwrapped() const -> bool
             requires _rnum<num_type>
         {
-            return impl_type::template is_conversion_safe_to_unwrapped<num_type>();
+            return impl_type::template is_conversion_safe_to_unwrapped<num_type>(_value);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -712,7 +712,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto is_mul_safe(final_type num) const -> bool
         {
-            return impl_type::is_sub_safe(_value, num._value);
+            return impl_type::is_mul_safe(_value, num._value);
         }
 
         /// ----------------------------------------------------------------------------------------
