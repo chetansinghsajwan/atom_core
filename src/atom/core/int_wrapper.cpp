@@ -33,126 +33,72 @@ namespace atom
             return std::is_signed_v<unwrapped_type>;
         }
 
-        static constexpr auto count_digits(unwrapped_type num)
+        static constexpr auto count_digits(unwrapped_type num) -> unwrapped_type
         {
-            return 0;
+            if (num == 0)
+                return 1;
+
+            if constexpr (is_signed())
+                return log10(std::abs(num)) + 1;
+            else
+                return log10(num) + 1;
         }
 
         template <typename unsigned_unwrapped_type>
         static constexpr auto pow(unwrapped_type base, unsigned_unwrapped_type exp)
             -> unwrapped_type
         {
-            return 0;
+            return std::pow(base, exp);
         }
 
         static constexpr auto pow2(unwrapped_type base) -> unwrapped_type
         {
-            return 0;
+            return std::pow(base, 2);
         }
 
         static constexpr auto pow3(unwrapped_type base) -> unwrapped_type
         {
-            return 0;
+            return std::pow(base, 3);
         }
 
         template <typename unsigned_unwrapped_type>
         static constexpr auto is_pow_safe(unwrapped_type base, unsigned_unwrapped_type exp) -> bool
         {
-            return true;
+            return std::pow(base, exp) <= base_type::max();
         }
 
         template <typename unsigned_unwrapped_type>
         static constexpr auto root(unwrapped_type num, unsigned_unwrapped_type base)
             -> unwrapped_type
         {
-            return 0;
+            return std::pow(num, 1.0 / base);
         }
 
         static constexpr auto root2(unwrapped_type num) -> unwrapped_type
         {
-            return 0;
+            return std::pow(num, 1.0 / 2.0);
         }
 
         static constexpr auto root3(unwrapped_type num) -> unwrapped_type
         {
-            return 0;
+            return std::pow(num, 1.0 / 3.0);
         }
 
         template <typename unsigned_unwrapped_type>
         static constexpr auto log(unwrapped_type num, unsigned_unwrapped_type base)
             -> unwrapped_type
         {
-            return 0;
+            return std::log(num) / std::log(base);
         }
 
         static constexpr auto log2(unwrapped_type num) -> unwrapped_type
         {
-            return 0;
+            return std::log2(num);
         }
 
         static constexpr auto log10(unwrapped_type num) -> unwrapped_type
         {
-            return 0;
-        }
-
-        template <typename unsigned_unwrapped_type>
-        static constexpr auto shift_left(unwrapped_type num, unsigned_unwrapped_type shifts) -> bool
-        {
-            return num << shifts;
-        }
-
-        template <typename unsigned_unwrapped_type>
-        static constexpr auto shift_right(unwrapped_type num, unsigned_unwrapped_type shifts)
-            -> bool
-        {
-            return num << shifts;
-        }
-
-        template <typename signed_unwrapped_type>
-        static constexpr auto shift_by(unwrapped_type num, signed_unwrapped_type shifts) -> bool
-        {
-            return true;
-        }
-
-        template <typename unsigned_unwrapped_type>
-        static constexpr auto rotate_left(unwrapped_type num, unsigned_unwrapped_type shifts)
-            -> bool
-        {
-            return true;
-        }
-
-        template <typename unsigned_unwrapped_type>
-        static constexpr auto rotate_right(unwrapped_type num, unsigned_unwrapped_type shifts)
-            -> bool
-        {
-            return true;
-        }
-
-        template <typename signed_unwrapped_type>
-        static constexpr auto rotate_by(unwrapped_type num, signed_unwrapped_type shifts) -> bool
-        {
-            return true;
-        }
-
-        template <typename unsigned_unwrapped_type>
-        static constexpr auto is_shift_left_safe(unwrapped_type num, unsigned_unwrapped_type shifts)
-            -> bool
-        {
-            return true;
-        }
-
-        template <typename unsigned_unwrapped_type>
-        static constexpr auto is_shift_right_safe(
-            unwrapped_type num, unsigned_unwrapped_type shifts) -> bool
-        {
-            return true;
-        }
-
-        template <typename signed_unwrapped_type>
-        static constexpr auto is_shift_by_safe(unwrapped_type num, signed_unwrapped_type shifts)
-            -> bool
-        {
-            return true;
+            return std::log10(num);
         }
 
         template <typename num_type>
@@ -302,141 +248,14 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// retuns result after shifting bits left by `num`.
+        ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto shift_left(unsigned_type num) const -> final_type
-        {
-            contracts::debug_expects(is_shift_left_safe(num));
-
-            return _wrap_final(impl_type::shift_left(_value, num.to_unwrapped()));
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// retuns result after shifting bits left by `num`.
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto shift_left_checked(unsigned_type num) const -> final_type
-        {
-            contracts::expects(is_shift_left_safe(num));
-
-            return _wrap_final(impl_type::shift_left(_value, num.to_unwrapped()));
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// retuns result after shifting bits left by `num`.
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto shift_left_unchecked(unsigned_type num) const -> final_type
-        {
-            return _wrap_final(impl_type::shift_left(_value, num.to_unwrapped()));
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// returns `true` if there is no data loss in left shift operation.
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto is_shift_left_safe(unsigned_type num) const -> bool
-        {
-            return impl_type::is_shift_left_safe(_value, num.to_unwrapped());
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// retuns result after shifting bits right by `num`.
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto shift_right(unsigned_type num) const -> final_type
-        {
-            contracts::debug_expects(is_shift_right_safe(num));
-
-            return _wrap_final(impl_type::shift_right(_value, num.to_unwrapped()));
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// retuns result after shifting bits right by `num`.
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto shift_right_checked(unsigned_type num) const -> final_type
-        {
-            contracts::expects(is_shift_right_safe(num));
-
-            return _wrap_final(impl_type::shift_right(_value, num.to_unwrapped()));
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// retuns result after shifting bits right by `num`.
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto shift_right_unchecked(unsigned_type num) const -> final_type
-        {
-            return _wrap_final(impl_type::shift_right(_value, num.to_unwrapped()));
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// returns `true` if there is no data loss in right shift operation.
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto is_shift_right_safe(unsigned_type num) const -> bool
-        {
-            return impl_type::is_shift_right_safe(_value, num.to_unwrapped());
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// retuns result after shifting bits by `num`.
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto shift_by(signed_type num) const -> final_type
-        {
-            contracts::debug_expects(is_shift_by_safe(num));
-
-            return _wrap_final(impl_type::shift_by(_value, num.to_unwrapped()));
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// retuns result after shifting bits by `num`.
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto shift_by_checked(signed_type num) const -> final_type
-        {
-            contracts::expects(is_shift_by_safe(num));
-
-            return _wrap_final(impl_type::shift_by(_value, num.to_unwrapped()));
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// retuns result after shifting bits by `num`.
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto shift_by_unchecked(signed_type num) const -> final_type
-        {
-            return _wrap_final(impl_type::shift_by(_value, num.to_unwrapped()));
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// returns `true` if there is no data loss in left or right shift operation.
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto is_shift_by_safe(signed_type num) const -> bool
-        {
-            return impl_type::is_shift_by_safe(_value, num.to_unwrapped());
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// returns result after rotating bits left by `num`.
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto rotate_left(unsigned_type num) const -> final_type
-        {
-            return _wrap_final(impl_type::rotate_left(_value, num.to_unwrapped()));
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// returns result after rotating bits right by `num`.
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto rotate_right(unsigned_type num) const -> final_type
-        {
-            return _wrap_final(impl_type::rotate_right(_value, num.to_unwrapped()));
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// returns result after rotating bits by `num`.
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto rotate_by(signed_type num) const -> final_type
-        {
-            return _wrap_final(impl_type::rotate_by(_value, num.to_unwrapped()));
-        }
+        // constexpr auto to_float() -> float_type {}
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        // constexpr auto to_float() -> float_type {}
+        // constexpr auto to_bitset() -> bitset_type {}
 
     public:
         using base_type::_value;
@@ -456,6 +275,11 @@ namespace atom
             _int_wrapper_impl<final_type, final_type, unsigned_type, unwrapped_type, limit_type>;
 
     public:
+        static constexpr auto abs(unwrapped_type num) -> unwrapped_type
+        {
+            return std::abs(num);
+        }
+
         static constexpr auto is_add_safe(unwrapped_type lhs, unwrapped_type rhs) -> bool
         {
             if (rhs > 0 && lhs > base_type::max() - rhs)
@@ -562,6 +386,22 @@ namespace atom
         using base_type::operator=;
 
     public:
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` if `this` is positive.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto is_pos() const -> bool
+        {
+            return _value >= 0;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` if `this` is negative.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto is_neg() const -> bool
+        {
+            return not is_pos();
+        }
+
         /// ----------------------------------------------------------------------------------------
         /// returns absolute value of `this`.
         /// ----------------------------------------------------------------------------------------

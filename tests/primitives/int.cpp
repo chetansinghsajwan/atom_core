@@ -10,8 +10,6 @@ TEST_CASE("atom.core.unsigned_integer")
     constexpr auto U32_MAX = 4'294'967'295;
     constexpr auto U16_MIN = 0;
     constexpr auto U16_MAX = 65'535;
-    constexpr auto BITS_32_LEFT = 0b10000000000000000000000000000000;
-    constexpr auto BITS_32_RIGHT = 0b00000000000000000000000000000001;
 
     REQUIRE(u32::min() == U32_MIN);
     REQUIRE(u32::max() == U32_MAX);
@@ -78,41 +76,6 @@ TEST_CASE("atom.core.unsigned_integer")
         REQUIRE(u32(5).log(5) == 1);
         REQUIRE(u32(2).log2() == 1);
         REQUIRE(u32(10).log10() == 1);
-
-        REQUIRE(u32(BITS_32_RIGHT).is_shift_left_safe(31));
-        REQUIRE_FALSE(u32(BITS_32_RIGHT).is_shift_left_safe(32));
-
-        REQUIRE(u32(BITS_32_RIGHT).shift_left_checked(31) == BITS_32_LEFT);
-        REQUIRE_THROWS_AS(
-            u32(BITS_32_RIGHT).shift_left_checked(32), contract_violation_exception);
-        REQUIRE(u32(BITS_32_RIGHT).shift_left_unchecked(32) == 0);
-
-        REQUIRE(u32(BITS_32_LEFT).is_shift_right_safe(31));
-        REQUIRE_FALSE(u32(BITS_32_LEFT).is_shift_right_safe(32));
-
-        REQUIRE(u32(BITS_32_LEFT).shift_right_checked(31) == BITS_32_RIGHT);
-        REQUIRE_THROWS_AS(
-            u32(BITS_32_LEFT).shift_right_checked(32), contract_violation_exception);
-        REQUIRE(u32(BITS_32_LEFT).shift_right_unchecked(32) == 0);
-
-        REQUIRE(u32(BITS_32_RIGHT).is_shift_by_safe(-31));
-        REQUIRE_FALSE(u32(BITS_32_RIGHT).is_shift_by_safe(-32));
-
-        REQUIRE(u32(BITS_32_RIGHT).shift_by_checked(-31) == BITS_32_LEFT);
-        REQUIRE_THROWS_AS(u32(BITS_32_RIGHT).shift_by_checked(-32), contract_violation_exception);
-        REQUIRE(u32(BITS_32_RIGHT).shift_by_unchecked(-32) == 0);
-
-        REQUIRE(u32(BITS_32_LEFT).is_shift_by_safe(31));
-        REQUIRE_FALSE(u32(BITS_32_LEFT).is_shift_by_safe(32));
-
-        REQUIRE(u32(BITS_32_LEFT).shift_by_checked(31) == BITS_32_RIGHT);
-        REQUIRE_THROWS_AS(u32(BITS_32_LEFT).shift_by_checked(32), contract_violation_exception);
-        REQUIRE(u32(BITS_32_LEFT).shift_by_unchecked(32) == 0);
-
-        REQUIRE(u32(BITS_32_LEFT).rotate_left(1) == BITS_32_RIGHT);
-        REQUIRE(u32(BITS_32_RIGHT).rotate_right(1) == BITS_32_LEFT);
-        REQUIRE(u32(BITS_32_LEFT).rotate_by(-1) == BITS_32_RIGHT);
-        REQUIRE(u32(BITS_32_RIGHT).rotate_by(1) == BITS_32_LEFT);
     }
 }
 

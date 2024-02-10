@@ -124,6 +124,10 @@ export namespace std
     using std::ceil;
     using std::floor;
     using std::round;
+    using std::pow;
+    using std::log;
+    using std::log2;
+    using std::log10;
 
     using std::int16_t;
     using std::int32_t;
