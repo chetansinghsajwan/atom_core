@@ -6,6 +6,9 @@ import :core.num_wrapper;
 import :core.char_wrapper;
 import :std;
 
+/// ------------------------------------------------------------------------------------------------
+/// implementations
+/// ------------------------------------------------------------------------------------------------
 namespace atom
 {
     template <typename final_type, typename unwrapped_type>
@@ -34,15 +37,21 @@ namespace atom
             return std::round(val);
         }
     };
+}
 
+/// ------------------------------------------------------------------------------------------------
+/// apis
+/// ------------------------------------------------------------------------------------------------
+namespace atom
+{
     template <typename impl_type>
     class float_wrapper: public num_wrapper<impl_type>
     {
-        using base_type = num_wrapper<impl_type>;
         using this_type = float_wrapper<impl_type>;
+        using base_type = num_wrapper<impl_type>;
+        using final_type = typename base_type::final_type;
 
     public:
-        using final_type = typename base_type::final_type;
         using unwrapped_type = typename base_type::unwrapped_type;
 
     public:
@@ -50,24 +59,6 @@ namespace atom
         using base_type::operator=;
 
     public:
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        ////
-        //// comparision
-        ////
-        ////////////////////////////////////////////////////////////////////////////////////////////
-
-        constexpr auto eq_zero_approx() const -> bool
-        {
-            return _value == 0;
-            ;
-        }
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        ////
-        //// utils
-        ////
-        ////////////////////////////////////////////////////////////////////////////////////////////
-
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
@@ -108,6 +99,9 @@ namespace atom
     };
 }
 
+/// ------------------------------------------------------------------------------------------------
+/// final types
+/// ------------------------------------------------------------------------------------------------
 export namespace atom
 {
     using _f16 = float;

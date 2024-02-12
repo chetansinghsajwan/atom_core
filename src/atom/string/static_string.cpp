@@ -1,5 +1,5 @@
 export module atom.core:static_string;
-import :_string_impl;
+import :string_functions;
 import :containers.static_array;
 import :core;
 import :std;
@@ -15,9 +15,9 @@ namespace atom
     };
 
     export template <usize size>
-    class static_string: public _string_impl<static_string_container_provider<size>::template type>
+    class static_string: public string_functions<static_string_container_provider<size>::template type>
     {
-        using base_type = _string_impl<static_string_container_provider<size>::template type>;
+        using base_type = string_functions<static_string_container_provider<size>::template type>;
 
     public:
         using base_type::base_type;

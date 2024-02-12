@@ -1,12 +1,12 @@
-export module atom.core:_string_impl;
+export module atom.core:string_functions;
 import :core;
 
 namespace atom
 {
     template <template <typename value_type> typename container_type>
-    class _string_impl: public container_type<uchar>
+    class string_functions: public container_type<uchar>
     {
-        using this_type = _string_impl<container_type>;
+        using this_type = string_functions<container_type>;
         using base_type = container_type<uchar>;
 
     public:
@@ -23,7 +23,7 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <usize count>
-        constexpr _string_impl(const char (&arr)[count])
+        constexpr string_functions(const char (&arr)[count])
             : base_type()
         {}
 

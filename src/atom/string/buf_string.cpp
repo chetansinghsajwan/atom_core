@@ -1,5 +1,5 @@
 export module atom.core:buf_string;
-import :_string_impl;
+import :string_functions;
 import :containers.buf_array;
 import :core;
 
@@ -15,5 +15,5 @@ namespace atom
 
     template <usize buf_size, typename allocator_type>
     using buf_string =
-        _string_impl<buf_string_container_provider<buf_size, allocator_type>::template type>;
+        string_functions<buf_string_container_provider<buf_size, allocator_type>::template type>;
 }

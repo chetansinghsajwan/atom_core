@@ -1,5 +1,5 @@
 export module atom.core:dynamic_string;
-import :_string_impl;
+import :string_functions;
 import :containers.dynamic_array;
 
 namespace atom
@@ -14,5 +14,5 @@ namespace atom
 
     export template <typename allocator_type>
     using dynamic_string =
-        _string_impl<dynamic_string_container_provider<allocator_type>::template type>;
+        string_functions<dynamic_string_container_provider<allocator_type>::template type>;
 }
