@@ -15,7 +15,8 @@ namespace atom
     };
 
     export template <usize size>
-    class static_string: public string_functions<static_string_container_provider<size>::template type>
+    class static_string
+        : public string_functions<static_string_container_provider<size>::template type>
     {
         using base_type = string_functions<static_string_container_provider<size>::template type>;
 

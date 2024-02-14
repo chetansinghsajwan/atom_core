@@ -8,7 +8,7 @@ export namespace atom::mock
     class output
     {
         static_assert(tti::is_pure<value_type>);
-        
+
     public:
         auto operator+=(const value_type& el);
 

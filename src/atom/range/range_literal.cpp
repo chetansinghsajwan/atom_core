@@ -40,11 +40,11 @@ namespace atom
     class range_literal<uchar>: public range_literal<char>
     {
         using base_type = range_literal<char>;
-    
+
     public:
         using base_type::base_type;
         using base_type::operator=;
-    
+
     public:
         constexpr auto data() const -> mem_ptr<uchar>
         {

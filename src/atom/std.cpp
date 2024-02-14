@@ -123,11 +123,11 @@ export namespace std
     using std::abs;
     using std::ceil;
     using std::floor;
-    using std::round;
-    using std::pow;
     using std::log;
-    using std::log2;
     using std::log10;
+    using std::log2;
+    using std::pow;
+    using std::round;
 
     using std::int16_t;
     using std::int32_t;
