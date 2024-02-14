@@ -15,17 +15,32 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     /// common implementation for signed and unsigned integers.
     /// --------------------------------------------------------------------------------------------
-    template <typename final_type, typename in_signed_type, typename in_unsigned_type,
-        typename unwrapped_type, typename limit_type>
-    class _int_wrapper_impl: public _num_wrapper_impl<final_type, unwrapped_type, limit_type>
+    template <typename in_final_type, typename in_signed_type, typename in_unsigned_type,
+        typename in_unwrapped_type, typename limit_type>
+    class _int_wrapper_impl
     {
-        using base_type = _num_wrapper_impl<final_type, unwrapped_type, limit_type>;
-
     public:
+        using final_type = in_final_type;
+        using unwrapped_type = in_unwrapped_type;
         using signed_type = in_signed_type;
         using unsigned_type = in_unsigned_type;
 
     public:
+        static consteval auto min() -> unwrapped_type
+        {
+            return unwrapped_type(std::numeric_limits<limit_type>::min());
+        }
+
+        static consteval auto max() -> unwrapped_type
+        {
+            return unwrapped_type(std::numeric_limits<limit_type>::max());
+        }
+
+        static consteval auto bits() -> unwrapped_type
+        {
+            return unwrapped_type(sizeof(limit_type) * 8);
+        }
+
         static consteval auto is_signed() -> bool
         {
             return std::is_signed_v<unwrapped_type>;
@@ -62,17 +77,17 @@ namespace atom
         template <typename unsigned_unwrapped_type>
         static constexpr auto is_pow_safe(unwrapped_type base, unsigned_unwrapped_type exp) -> bool
         {
-            return std::pow(base, exp) <= base_type::max();
+            return std::pow(base, exp) <= max();
         }
 
         static constexpr auto is_pow2_safe(unwrapped_type base) -> bool
         {
-            return std::pow(base, 2) <= base_type::max();
+            return std::pow(base, 2) <= max();
         }
 
         static constexpr auto is_pow3_safe(unwrapped_type base) -> bool
         {
-            return std::pow(base, 3) <= base_type::max();
+            return std::pow(base, 3) <= max();
         }
 
         template <typename unsigned_unwrapped_type>
@@ -498,7 +513,35 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto root(unsigned_type n) const -> final_type
         {
+            contracts::debug_expects(is_root_safe(n));
+
             return _wrap_final(impl_type::root(_value, n.to_unwrapped()));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `n`th root of `this`, rounded down.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto root_checked(unsigned_type n) const -> final_type
+        {
+            contracts::expects(is_root_safe(n));
+
+            return _wrap_final(impl_type::root(_value, n.to_unwrapped()));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `n`th root of `this`, rounded down.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto root_unchecked(unsigned_type n) const -> final_type
+        {
+            return _wrap_final(impl_type::root(_value, n.to_unwrapped()));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` if root of `this` is not undefined behaviour.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto is_root_safe(unsigned_type n) const -> bool
+        {
+            return impl_type::is_root_safe(_value, n.to_unwrapped());
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -506,7 +549,35 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto root2() const -> final_type
         {
+            contracts::debug_expects(is_root2_safe());
+
             return _wrap_final(impl_type::root2(_value));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns square root of `this`, rounded down.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto root2_checked() const -> final_type
+        {
+            contracts::expects(is_root2_safe());
+
+            return _wrap_final(impl_type::root2(_value));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns square root of `this`, rounded down.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto root2_unchecked() const -> final_type
+        {
+            return _wrap_final(impl_type::root2(_value));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` if square root of `this` is not undefined behaviour.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto is_root2_safe() const -> bool
+        {
+            return impl_type::is_root2_safe(_value);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -514,7 +585,35 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto root3() const -> final_type
         {
+            contracts::debug_expects(is_root3_safe());
+
             return _wrap_final(impl_type::root3(_value));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns cube root of `this`, rounded down.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto root3_checked() const -> final_type
+        {
+            contracts::expects(is_root3_safe());
+
+            return _wrap_final(impl_type::root3(_value));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns cube root of `this`, rounded down.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto root3_unchecked() const -> final_type
+        {
+            return _wrap_final(impl_type::root3(_value));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` if cube root of `this` is not undefined behaviour.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto is_root3_safe() const -> bool
+        {
+            return impl_type::is_root3_safe(_value);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -523,7 +622,37 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto log(unsigned_type num) const -> final_type
         {
+            contracts::debug_expects(is_log_safe(num));
+
             return _wrap_final(impl_type::log(_value, num.to_unwrapped()));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns the logarithm of the number with respect to an arbitrary base `num`,
+        /// rounded down.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto log_checked(unsigned_type num) const -> final_type
+        {
+            contracts::expects(is_log_safe(num));
+
+            return _wrap_final(impl_type::log(_value, num.to_unwrapped()));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns the logarithm of the number with respect to an arbitrary base `num`,
+        /// rounded down.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto log_unchecked(unsigned_type num) const -> final_type
+        {
+            return _wrap_final(impl_type::log(_value, num.to_unwrapped()));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` is `log` operations are defined behaviour.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto is_log_safe(unsigned_type num) const -> bool
+        {
+            return impl_type::is_log_safe(_value, num.to_unwrapped());
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -531,7 +660,35 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto log2() const -> final_type
         {
+            contracts::debug_expects(is_log2_safe());
+
             return _wrap_final(impl_type::log2(_value));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns the base 2 logarithm of the number, rounded down.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto log2_checked() const -> final_type
+        {
+            contracts::expects(is_log2_safe());
+
+            return _wrap_final(impl_type::log2(_value));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns the base 2 logarithm of the number, rounded down.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto log2_unchecked() const -> final_type
+        {
+            return _wrap_final(impl_type::log2(_value));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` is `log2` operations are defined behaviour.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto is_log2_safe() const -> bool
+        {
+            return impl_type::is_log2_safe(_value);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -539,7 +696,35 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto log10() const -> final_type
         {
+            contracts::debug_expects(is_log10_safe());
+
             return _wrap_final(impl_type::log10(_value));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns the base 2 logarithm of the number, rounded down.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto log10_checked() const -> final_type
+        {
+            contracts::expects(is_log10_safe());
+
+            return _wrap_final(impl_type::log10(_value));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns the base 2 logarithm of the number, rounded down.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto log10_unchecked() const -> final_type
+        {
+            return _wrap_final(impl_type::log10(_value));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` is `log10` operations are defined behaviour.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto is_log10_safe() const -> bool
+        {
+            return impl_type::is_log10_safe(_value);
         }
 
         /// ----------------------------------------------------------------------------------------

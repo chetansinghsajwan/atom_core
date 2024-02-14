@@ -11,12 +11,29 @@ import :std;
 /// ------------------------------------------------------------------------------------------------
 namespace atom
 {
-    template <typename final_type, typename unwrapped_type>
-    class _float_wrapper_impl: public _num_wrapper_impl<final_type, unwrapped_type, unwrapped_type>
+    template <typename in_final_type, typename in_unwrapped_type>
+    class _float_wrapper_impl
     {
-        using base_type = _num_wrapper_impl<final_type, unwrapped_type, unwrapped_type>;
+    public:
+        using final_type = in_final_type;
+        using unwrapped_type = in_unwrapped_type;
 
     public:
+        static consteval auto min() -> unwrapped_type
+        {
+            return unwrapped_type(std::numeric_limits<unwrapped_type>::min());
+        }
+
+        static consteval auto max() -> unwrapped_type
+        {
+            return unwrapped_type(std::numeric_limits<unwrapped_type>::max());
+        }
+
+        static consteval auto bits() -> unwrapped_type
+        {
+            return unwrapped_type(sizeof(unwrapped_type) * 8);
+        }
+
         static consteval auto nan() -> unwrapped_type
         {
             return unwrapped_type();

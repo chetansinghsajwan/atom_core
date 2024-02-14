@@ -15,6 +15,9 @@ auto println(string_view str)
 }
 
 auto main(int argc, char** args) -> int
-{    
+{
+    i32 v;
+    v.abs();
+
     return 0;
 }

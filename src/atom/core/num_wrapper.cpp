@@ -3,9 +3,6 @@ import :core.byte;
 import :std;
 import :contracts_decl;
 
-/// ------------------------------------------------------------------------------------------------
-/// implementations
-/// ------------------------------------------------------------------------------------------------
 namespace atom
 {
     class _num_wrapper_id
@@ -23,44 +20,6 @@ namespace atom
     template <typename num_type>
     concept rnum = std::derived_from<num_type, _num_wrapper_id>;
 
-    /// --------------------------------------------------------------------------------------------
-    ///
-    /// --------------------------------------------------------------------------------------------
-    template <typename in_final_type, typename in_unwrapped_type, typename limit_type>
-    class _num_wrapper_impl
-    {
-    public:
-        using final_type = in_final_type;
-        using unwrapped_type = in_unwrapped_type;
-
-    public:
-        static consteval auto min() -> unwrapped_type
-        {
-            return unwrapped_type(std::numeric_limits<limit_type>::min());
-        }
-
-        static consteval auto max() -> unwrapped_type
-        {
-            return unwrapped_type(std::numeric_limits<limit_type>::max());
-        }
-
-        static consteval auto bits() -> unwrapped_type
-        {
-            return unwrapped_type(sizeof(limit_type) * 8);
-        }
-
-        static consteval auto is_signed() -> bool
-        {
-            return std::is_signed_v<unwrapped_type>;
-        }
-    };
-}
-
-/// ------------------------------------------------------------------------------------------------
-/// apis
-/// ------------------------------------------------------------------------------------------------
-namespace atom
-{
     /// --------------------------------------------------------------------------------------------
     /// wraps any numeric type to provide safe operations like overflow and underflow checks.
     /// --------------------------------------------------------------------------------------------
