@@ -44,133 +44,14 @@ namespace atom
             return unwrapped_type(std::numeric_limits<limit_type>::max());
         }
 
-        static consteval auto count_digits(unwrapped_type val) -> std::size_t
+        static consteval auto bits() -> unwrapped_type
         {
-            std::size_t count = 0;
-            while (val > 0)
-            {
-                val = val / 10;
-                count++;
-            }
-
-            return count;
-        }
-
-        static consteval auto min_digits_count() -> std::size_t
-        {
-            return count_digits(min());
-        }
-
-        static consteval auto max_digits_count() -> std::size_t
-        {
-            return count_digits(max());
-        }
-
-        static constexpr auto abs(unwrapped_type val) -> unwrapped_type
-        {
-            if constexpr (std::is_unsigned_v<unwrapped_type>)
-                return val;
-
-            return std::abs(val);
+            return unwrapped_type(sizeof(limit_type) * 8);
         }
 
         static consteval auto is_signed() -> bool
         {
             return std::is_signed_v<unwrapped_type>;
-        }
-
-        static constexpr auto neg(unwrapped_type num)
-        {
-            return -num;
-        }
-
-        static constexpr auto is_add_safe(unwrapped_type value0, unwrapped_type value1) -> bool
-        {
-            if ((max() - value0) < value1)
-                return false;
-
-            return true;
-        }
-
-        static constexpr auto is_sub_safe(unwrapped_type value0, unwrapped_type value1) -> bool
-        {
-            return true;
-        }
-
-        static constexpr auto is_mul_safe(unwrapped_type value0, unwrapped_type value1) -> bool
-        {
-            auto limit = max() - value0;
-            auto div = limit / value0;
-            if (div < value1)
-                return false;
-
-            return true;
-        }
-
-        static constexpr auto is_div_safe(unwrapped_type value0, unwrapped_type value1) -> bool
-        {
-            if (value1 == -1 and value0 == min())
-                return false;
-
-            return true;
-        }
-
-        template <typename num_type>
-        static constexpr auto is_conversion_safe_from(num_type num) -> bool
-            requires rnum<num_type>
-        {
-            // if constexpr (rnum<num_type>)
-            // {
-            //     if constexpr (is_signed() != num_type::is_signed())
-            //         return false;
-
-            //     if constexpr (num_type::min() < min())
-            //         if (_unwrap(num) < min())
-            //             return true;
-
-            //     if constexpr (num_type::max() > max())
-            //         if (_unwrap(num) > max())
-            //             return true;
-            // }
-            // else
-            // {
-            //     if constexpr (is_signed() != std::is_signed_v<num_type>)
-            //         return false;
-
-            //     if constexpr (std::numeric_limits<num_type>::min() < min())
-            //         if (num < min())
-            //             return true;
-
-            //     if constexpr (std::numeric_limits<num_type>::max() > max())
-            //         if (num > max())
-            //             return true;
-            // }
-
-            return true;
-        }
-
-        template <typename num_type>
-        static constexpr auto is_conversion_safe_from_unwrapped(num_type num) -> bool
-            requires _rnum<num_type>
-        {
-            return true;
-        }
-
-        template <typename num_type>
-        static constexpr auto is_conversion_safe_to_unwrapped(unwrapped_type value) -> bool
-            requires _rnum<num_type>
-        {
-            return true;
-        }
-
-    private:
-        template <typename num_type>
-        static constexpr auto _unwrap(num_type num)
-        {
-            if constexpr (rnum<num_type>)
-                return num._value;
-            else
-                return num;
         }
     };
 }
@@ -389,6 +270,17 @@ namespace atom
             requires rnum<num_type>
         {
             return num_type::from_unchecked(_this_final());
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` if there is no overflow or underflow when creating `this_type` from
+        /// `num_type`.
+        /// ----------------------------------------------------------------------------------------
+        template <typename num_type>
+        constexpr auto is_conversion_safe_to() -> bool
+            requires rnum<num_type>
+        {
+            return num_type::template is_conversion_safe_from<this_type>(_this_final());
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -878,7 +770,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// minimum value of `this_type`.
+        /// returns minimum value of `this_type`.
         /// ----------------------------------------------------------------------------------------
         static consteval auto min() -> final_type
         {
@@ -886,11 +778,19 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// maximum value of `this_type`.
+        /// returns maximum value of `this_type`.
         /// ----------------------------------------------------------------------------------------
         static consteval auto max() -> final_type
         {
             return _wrap_final(impl_type::max());
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns number of bits this type takes.
+        /// ----------------------------------------------------------------------------------------
+        static consteval auto bits() -> final_type
+        {
+            return _wrap_final(impl_type::bits());
         }
 
         /// ----------------------------------------------------------------------------------------

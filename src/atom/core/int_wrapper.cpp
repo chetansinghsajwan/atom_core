@@ -13,7 +13,7 @@ import :std;
 namespace atom
 {
     /// --------------------------------------------------------------------------------------------
-    ///
+    /// common implementation for signed and unsigned integers.
     /// --------------------------------------------------------------------------------------------
     template <typename final_type, typename in_signed_type, typename in_unsigned_type,
         typename unwrapped_type, typename limit_type>
@@ -65,6 +65,16 @@ namespace atom
             return std::pow(base, exp) <= base_type::max();
         }
 
+        static constexpr auto is_pow2_safe(unwrapped_type base) -> bool
+        {
+            return std::pow(base, 2) <= base_type::max();
+        }
+
+        static constexpr auto is_pow3_safe(unwrapped_type base) -> bool
+        {
+            return std::pow(base, 3) <= base_type::max();
+        }
+
         template <typename unsigned_unwrapped_type>
         static constexpr auto root(unwrapped_type num, unsigned_unwrapped_type base)
             -> unwrapped_type
@@ -80,6 +90,26 @@ namespace atom
         static constexpr auto root3(unwrapped_type num) -> unwrapped_type
         {
             return std::pow(num, 1.0 / 3.0);
+        }
+
+        template <typename unsigned_unwrapped_type>
+        static constexpr auto is_root_safe(unwrapped_type num, unsigned_unwrapped_type base)
+            -> unwrapped_type
+        {
+            if ((base < 0 || base % 2 == 0) && num < 0)
+                return false;
+
+            return base != 0;
+        }
+
+        static constexpr auto is_root2_safe(unwrapped_type num) -> unwrapped_type
+        {
+            return num >= 0;
+        }
+
+        static constexpr auto is_root3_safe(unwrapped_type num) -> unwrapped_type
+        {
+            return true;
         }
 
         template <typename unsigned_unwrapped_type>
@@ -99,37 +129,26 @@ namespace atom
             return std::log10(num);
         }
 
-        template <typename num_type>
-        static constexpr auto is_conversion_safe_from_unwrapped(num_type num) -> bool
+        template <typename unsigned_unwrapped_type>
+        static constexpr auto is_log_safe(unwrapped_type num, unsigned_unwrapped_type base)
+            -> unwrapped_type
         {
-            if constexpr (std::numeric_limits<num_type>::min() < base_type::min())
-                if (num < base_type::min())
-                    return false;
-
-            if constexpr (std::numeric_limits<num_type>::max() > base_type::max())
-                if (num > base_type::max())
-                    return false;
-
-            return true;
+            return num > 0 && base >= 2;
         }
 
-        template <typename num_type>
-        static constexpr auto is_conversion_safe_to_unwrapped(num_type num) -> bool
+        static constexpr auto is_log2_safe(unwrapped_type num) -> unwrapped_type
         {
-            if constexpr (base_type::min() < std::numeric_limits<num_type>::min())
-                if (num < std::numeric_limits<num_type>::min())
-                    return false;
+            return num > 0;
+        }
 
-            if constexpr (base_type::max() < std::numeric_limits<num_type>::max())
-                if (num > std::numeric_limits<num_type>::max())
-                    return false;
-
-            return true;
+        static constexpr auto is_log10_safe(unwrapped_type num) -> unwrapped_type
+        {
+            return num > 0;
         }
     };
 
     /// --------------------------------------------------------------------------------------------
-    ///
+    /// implementation for unsigned integers.
     /// --------------------------------------------------------------------------------------------
     template <typename final_type, typename signed_type, typename unwrapped_type,
         typename limit_type>
@@ -174,6 +193,13 @@ namespace atom
         }
 
         template <typename num_type>
+        static constexpr auto is_conversion_safe_from(num_type num) -> bool
+        {
+            return is_conversion_safe_from_unwrapped<typename num_type::unwrapped_type>(
+                num.to_unwrapped());
+        }
+
+        template <typename num_type>
         static constexpr auto is_conversion_safe_from_unwrapped(num_type num) -> bool
         {
             if constexpr (std::is_signed_v<num_type>)
@@ -201,7 +227,7 @@ namespace atom
     };
 
     /// --------------------------------------------------------------------------------------------
-    ///
+    /// implementation for signed integers.
     /// --------------------------------------------------------------------------------------------
     template <typename final_type, typename unsigned_type, typename unwrapped_type,
         typename limit_type>
@@ -216,6 +242,16 @@ namespace atom
         static constexpr auto abs(unwrapped_type num) -> unwrapped_type
         {
             return std::abs(num);
+        }
+
+        static constexpr auto neg(unwrapped_type num) -> unwrapped_type
+        {
+            return -num;
+        }
+
+        static constexpr auto sign(unwrapped_type num) -> unwrapped_type
+        {
+            return num < 0 ? -1 : 1;
         }
 
         static constexpr auto is_add_safe(unwrapped_type lhs, unwrapped_type rhs) -> bool
@@ -267,6 +303,13 @@ namespace atom
         }
 
         template <typename num_type>
+        static constexpr auto is_conversion_safe_from(num_type num) -> bool
+        {
+            return is_conversion_safe_from_unwrapped<typename num_type::unwrapped_type>(
+                num.to_unwrapped());
+        }
+
+        template <typename num_type>
         static constexpr auto is_conversion_safe_from_unwrapped(num_type num) -> bool
         {
             if constexpr (std::is_signed_v<num_type>
@@ -290,13 +333,13 @@ namespace atom
         }
 
         template <typename num_type>
-        static constexpr auto is_conversion_safe_to_unwrapped(num_type num) -> bool
+        static constexpr auto is_conversion_safe_to_unwrapped(unwrapped_type num) -> bool
         {
             if constexpr (base_type::min() < std::numeric_limits<num_type>::min())
                 if (num < std::numeric_limits<num_type>::min())
                     return false;
 
-            if constexpr (base_type::max() < std::numeric_limits<num_type>::max())
+            if constexpr (base_type::max() > std::numeric_limits<num_type>::max())
                 if (num > std::numeric_limits<num_type>::max())
                     return false;
 
@@ -376,6 +419,78 @@ namespace atom
         constexpr auto is_pow_safe(unsigned_type exp) const -> bool
         {
             return impl_type::is_pow_safe(_value, exp.to_unwrapped());
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `this` raised to the power `2`.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto pow2() const -> final_type
+        {
+            contracts::debug_expects(is_pow2_safe());
+
+            return _wrap_final(impl_type::pow2(_value));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `this` raised to the power `2`.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto pow2_checked() const -> final_type
+        {
+            contracts::expects(is_pow2_safe());
+
+            return _wrap_final(impl_type::pow2(_value));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `this` raised to the power `2`.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto pow2_unchecked() const -> final_type
+        {
+            return _wrap_final(impl_type::pow2(_value));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` is performing `pow2` operations doesn't result in overflow or underflow.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto is_pow2_safe() const -> bool
+        {
+            return impl_type::is_pow2_safe(_value);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `this` raised to the power `3`.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto pow3() const -> final_type
+        {
+            contracts::debug_expects(is_pow3_safe());
+
+            return _wrap_final(impl_type::pow3(_value));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `this` raised to the power `3`.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto pow3_checked() const -> final_type
+        {
+            contracts::expects(is_pow3_safe());
+
+            return _wrap_final(impl_type::pow3(_value));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `this` raised to the power `3`.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto pow3_unchecked() const -> final_type
+        {
+            return _wrap_final(impl_type::pow3(_value));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` is performing `pow3` operations doesn't result in overflow or underflow.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto is_pow3_safe() const -> bool
+        {
+            return impl_type::is_pow3_safe(_value);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -533,7 +648,7 @@ namespace atom
 
         using base_type::operator+;
 
-        /// ----------------------------------------------------------------------------------------
+        /// ------------------------>----------------------------------------------------------------
         /// returns `true` if there is no overflow or underflow when performing abs operation.
         /// ----------------------------------------------------------------------------------------
         constexpr auto is_abs_safe() const -> bool
@@ -584,7 +699,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto is_neg_safe() const -> bool
         {
-            return true;
+            return impl_type::is_neg_safe(_value);
         }
 
         /// ----------------------------------------------------------------------------------------

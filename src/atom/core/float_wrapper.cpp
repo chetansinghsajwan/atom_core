@@ -36,6 +36,19 @@ namespace atom
         {
             return std::round(val);
         }
+
+        template <typename num_type>
+        static constexpr auto is_conversion_safe_from(num_type num) -> bool
+        {
+            return is_conversion_safe_from_unwrapped<typename num_type::unwrapped_type>(
+                num.to_unwrapped());
+        }
+
+        template <typename num_type>
+        static constexpr auto is_conversion_safe_from_unwrapped(num_type num) -> bool
+        {
+            return true;
+        }
     };
 }
 
