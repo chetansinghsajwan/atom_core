@@ -4,6 +4,7 @@ module;
 export module atom.core:core.int_wrapper;
 import :core.char_wrapper;
 import :core.num_wrapper;
+import :core.byte;
 import :contracts_decl;
 import :std;
 
@@ -38,7 +39,7 @@ namespace atom
 
         static consteval auto bits() -> unwrapped_type
         {
-            return unwrapped_type(sizeof(limit_type) * 8);
+            return unwrapped_type(sizeof(limit_type) * byte_get_bit_count());
         }
 
         static consteval auto is_signed() -> bool
