@@ -911,10 +911,6 @@ export namespace atom
     using _i16 = std::int16_t;
     using _i32 = std::int32_t;
     using _i64 = std::int64_t;
-    using _ileast8 = std::int_least8_t;
-    using _ileast16 = std::int_least16_t;
-    using _ileast32 = std::int_least32_t;
-    using _ileast64 = std::int_least64_t;
     using _ifast8 = std::int_fast8_t;
     using _ifast16 = std::int_fast16_t;
     using _ifast32 = std::int_fast32_t;
@@ -926,10 +922,6 @@ export namespace atom
     using _u16 = std::uint16_t;
     using _u32 = std::uint32_t;
     using _u64 = std::uint64_t;
-    using _uleast8 = std::uint_least8_t;
-    using _uleast16 = std::uint_least16_t;
-    using _uleast32 = std::uint_least32_t;
-    using _uleast64 = std::uint_least64_t;
     using _ufast8 = std::uint_fast8_t;
     using _ufast16 = std::uint_fast16_t;
     using _ufast32 = std::uint_fast32_t;
@@ -941,10 +933,6 @@ export namespace atom
     class i16;
     class i32;
     class i64;
-    class ileast8;
-    class ileast16;
-    class ileast32;
-    class ileast64;
     class ifast8;
     class ifast16;
     class ifast32;
@@ -956,10 +944,6 @@ export namespace atom
     class u16;
     class u32;
     class u64;
-    class uleast8;
-    class uleast16;
-    class uleast32;
-    class uleast64;
     class ufast8;
     class ufast16;
     class ufast32;
@@ -971,10 +955,6 @@ export namespace atom
     ATOM_ALIAS(i16, signed_int_wrapper<i16, u16, _i16>);
     ATOM_ALIAS(i32, signed_int_wrapper<i32, u32, _i32>);
     ATOM_ALIAS(i64, signed_int_wrapper<i64, u64, _i64>);
-    ATOM_ALIAS(ileast8, signed_int_wrapper<ileast8, uleast8, _ileast8, _i8>);
-    ATOM_ALIAS(ileast16, signed_int_wrapper<ileast16, uleast16, _ileast16, _i16>);
-    ATOM_ALIAS(ileast32, signed_int_wrapper<ileast32, uleast32, _ileast32, _i32>);
-    ATOM_ALIAS(ileast64, signed_int_wrapper<ileast64, uleast64, _ileast64, _i64>);
     ATOM_ALIAS(ifast8, signed_int_wrapper<ifast8, ufast8, _ifast8, _i8>);
     ATOM_ALIAS(ifast16, signed_int_wrapper<ifast16, ufast16, _ifast16, _i16>);
     ATOM_ALIAS(ifast32, signed_int_wrapper<ifast32, ufast32, _ifast32, _i32>);
@@ -986,10 +966,6 @@ export namespace atom
     ATOM_ALIAS(u16, unsigned_int_wrapper<u16, i16, _u16>);
     ATOM_ALIAS(u32, unsigned_int_wrapper<u32, i32, _u32>);
     ATOM_ALIAS(u64, unsigned_int_wrapper<u64, i64, _u64>);
-    ATOM_ALIAS(uleast8, unsigned_int_wrapper<uleast8, ileast8, _uleast8, _u8>);
-    ATOM_ALIAS(uleast16, unsigned_int_wrapper<uleast16, ileast16, _uleast16, _u16>);
-    ATOM_ALIAS(uleast32, unsigned_int_wrapper<uleast32, ileast32, _uleast32, _u32>);
-    ATOM_ALIAS(uleast64, unsigned_int_wrapper<uleast64, ileast64, _uleast64, _u64>);
     ATOM_ALIAS(ufast8, unsigned_int_wrapper<ufast8, ifast8, _ufast8, _u8>);
     ATOM_ALIAS(ufast16, unsigned_int_wrapper<ufast16, ifast16, _ufast16, _u16>);
     ATOM_ALIAS(ufast32, unsigned_int_wrapper<ufast32, ifast32, _ufast32, _u32>);
