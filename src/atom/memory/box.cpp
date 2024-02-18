@@ -176,10 +176,20 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename type, typename... arg_types>
-        constexpr auto emplace_val(arg_types&&... args, bool force_heap = false)
+        constexpr auto emplace_val(arg_types&&... args)
         {
             destroy_val();
-            _emplace_val<type>(forward<arg_types>(args)..., force_heap);
+            _emplace_val<type, false>(forward<arg_types>(args)...);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename type, typename... arg_types>
+        constexpr auto emplace_val_on_heap(arg_types&&... args)
+        {
+            destroy_val();
+            _emplace_val<type, true>(forward<arg_types>(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -322,8 +332,8 @@ namespace atom
         /// - `force_heap`: if true, allocates object on heap even if buffer was sufficient, else
         ///    chooses the best fit.
         /// ----------------------------------------------------------------------------------------
-        template <typename type, typename... arg_types>
-        constexpr auto _emplace_val(arg_types&&... args, bool force_heap = false)
+        template <typename type, bool force_heap, typename... arg_types>
+        constexpr auto _emplace_val(arg_types&&... args)
         {
             _val.size = sizeof(type);
             _val.type = &typeid(type);
@@ -352,14 +362,16 @@ namespace atom
                 }
             }
 
+            bool on_heap = force_heap;
+
             // if the object is not movable but in_allow_non_move is allowed, we allocate it on heap to
             // avoid object's move constructor.
             if constexpr (is_movable() and allow_non_movable() and not rmove_constructible<type>)
             {
-                force_heap = true;
+                on_heap = true;
             }
 
-            _val.val = _alloc_mem(_val.size, force_heap);
+            _val.val = _alloc_mem(_val.size, on_heap);
             new (_val.val) type(forward<arg_types>(args)...);
         }
 

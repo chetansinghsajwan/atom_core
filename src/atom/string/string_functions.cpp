@@ -24,7 +24,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <usize::unwrapped_type count>
         constexpr string_functions(const char (&arr)[count])
-            : base_type()
+            : base_type(make_range(arr))
         {}
 
     public:
