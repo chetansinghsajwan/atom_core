@@ -127,7 +127,7 @@ namespace atom
         constexpr auto operator-(const this_type& that) const -> difference_type
             requires(rjump_iter<iter_type>)
         {
-            return iter.compare(that.iter);
+            return iter.compare(that.iter).to_unwrapped();
         }
 
     public:

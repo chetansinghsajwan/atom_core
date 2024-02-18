@@ -22,7 +22,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <usize count>
+        template <usize::unwrapped_type count>
         constexpr string_functions(const char (&arr)[count])
             : base_type()
         {}
