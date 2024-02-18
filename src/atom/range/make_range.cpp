@@ -366,6 +366,6 @@ export namespace atom
     template <usize::unwrapped_type count>
     constexpr auto make_range(const char (&arr)[count])
     {
-        return make_range(arr, arr + usize(count));
+        return make_range(arr, arr + count);
     }
 }
