@@ -48,6 +48,14 @@ namespace atom
             return count;
         }
 
+        auto dispatch(event_arg_types... args) -> void
+        {
+            for (auto& listener: _listeners)
+            {
+                listener.invoke(args...);
+            }
+        }
+
     private:
         dynamic_array<invokable_box<signature_type>> _listeners;
     };
