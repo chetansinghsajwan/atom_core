@@ -22,7 +22,7 @@ namespace atom
         auto add_listener(invokable_type&& invokable) -> key_type
         {
             invokable_box<signature_type> box(forward<invokable_type>(invokable));
-            key_type key = box.get_invokable_type();
+            key_type key = box.get_type();
 
             _listeners.emplace_back(move(box));
             return key;
@@ -31,7 +31,7 @@ namespace atom
         auto remove_listener(key_type key) -> usize
         {
             return _listeners.remove_if(
-                [&](const auto& listener) { return listener.get_invokable_type() == key; });
+                [&](const auto& listener) { return listener.get_type() == key; });
         }
 
         auto count_listeners(key_type key) -> usize
@@ -39,7 +39,7 @@ namespace atom
             usize count = 0;
             for (auto& listener : _listeners)
             {
-                if (listener.get_invokable_type() == key)
+                if (listener.get_type() == key)
                 {
                     count++;
                 }
