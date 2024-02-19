@@ -50,11 +50,12 @@ namespace atom
     class _invokable_box_impl
     {
         using this_type = _invokable_box_impl<result_type, arg_types...>;
-        using _interface_type = _invokable_box_interface<result_type, arg_types...>;
-        using _box_type = copy_move_box<_interface_type, true, 50>;
+        using _box_type = std::function<result_type(arg_types...)>;
+        // using _interface_type = _invokable_box_interface<result_type, arg_types...>;
+        // using _box_type = copy_move_box<_interface_type, true, 50>;
 
-        template <typename invokable_type>
-        using _wrapper_type = _invokable_box_wrapper<invokable_type, result_type, arg_types...>;
+        // template <typename invokable_type>
+        // using _wrapper_type = _invokable_box_wrapper<invokable_type, result_type, arg_types...>;
 
     public:
         class copy_tag
@@ -81,12 +82,12 @@ namespace atom
         }
 
         _invokable_box_impl(move_tag, this_type& that)
-            : _box(move(that._box))
+            : _box(atom::move(that._box))
         {}
 
         auto move_that(this_type& that)
         {
-            _box = move(that._box);
+            _box = atom::move(that._box);
         }
 
         template <typename invokable_type>
@@ -103,7 +104,8 @@ namespace atom
         template <typename invokable_type>
         auto set_invokable(invokable_type&& invokable)
         {
-            _box.set_val(_wrapper_type<invokable_type>(forward<invokable_type>(invokable)));
+            // _box.set_val(_wrapper_type<invokable_type>(forward<invokable_type>(invokable)));
+            _box = forward<invokable_type>(invokable);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -112,10 +114,11 @@ namespace atom
         template <typename invokable_type>
         auto get_invokable_as() -> mut_ptr<invokable_type>
         {
-            if (typeid(invokable_type) != get_invokable_type())
-                return nullptr;
+            // if (typeid(invokable_type) != get_invokable_type())
+            //     return nullptr;
 
-            return _box.template mut_mem_as<invokable_type>();
+            // return _box.template mut_mem_as<invokable_type>();
+            return _box.template get_type<invokable_type>();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -123,7 +126,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         auto get_invokable_type() const -> const std::type_info&
         {
-            return _box.val_type();
+            // return _box.val_type();
+            return _box.target_type();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -131,7 +135,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         auto has_invokable() const -> bool
         {
-            return _box.has_val();
+            // return _box.has_val();
+            return (bool)_box;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -139,7 +144,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         auto invoke_invokable(arg_types&&... args) -> result_type
         {
-            return _box.get_mut().invoke(forward<arg_types>(args)...);
+            // return _box.get_mut().invoke(forward<arg_types>(args)...);
+            return _box(forward<arg_types>(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -147,7 +153,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         auto destroy_invokable()
         {
-            _box.destroy();
+            // _box.destroy();
+            _box = nullptr;
         }
 
     private:
