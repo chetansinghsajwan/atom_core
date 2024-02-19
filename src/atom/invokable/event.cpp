@@ -5,150 +5,41 @@ import :invokable;
 import :invokable_box;
 import :containers.dynamic_array;
 
-export namespace atom
+/// ------------------------------------------------------------------------------------------------
+/// implementations
+/// ------------------------------------------------------------------------------------------------
+namespace atom
 {
-    /// --------------------------------------------------------------------------------------------
-    /// event_key is used to identify events registered for this key.
-    /// --------------------------------------------------------------------------------------------
-    class event_key
+    template <typename... event_arg_types>
+    class _event_source_impl
     {
     public:
-        event_key(const std::type_info& info)
-            : _info(info)
-        {}
+        using signature_type = void(event_arg_types...);
+        using key_type = const std::type_info&;
 
     public:
-        auto get_type() const -> const std::type_info&
-        {
-            return _info;
-        }
-
-    private:
-        const std::type_info& _info;
-    };
-
-    /// --------------------------------------------------------------------------------------------
-    /// [`event`] is just a frontend to [`event_source`] to prevent users from dispatching events.
-    /// --------------------------------------------------------------------------------------------
-    template <typename... arg_types>
-    class ievent
-    {
-    protected:
-        using _tsignature = void(arg_types...);
-
-    public:
-        /// ----------------------------------------------------------------------------------------
-        /// calls subscribe(forward<invokable_type>(listener));
-        /// ----------------------------------------------------------------------------------------
         template <typename invokable_type>
-        auto operator+=(invokable_type&& listener) -> event_key
-            requires(rinvokable<invokable_type, _tsignature>)
+        auto add_listener(invokable_type&& invokable) -> key_type
         {
-            return subscribe(forward<invokable_type>(listener));
-        }
+            invokable_box<signature_type> box(forward<invokable_type>(invokable));
+            key_type key = box.get_invokable_type();
 
-        /// ----------------------------------------------------------------------------------------
-        /// calls unsubscribe(key);
-        /// ----------------------------------------------------------------------------------------
-        auto operator-=(event_key key) -> bool
-        {
-            return unsubscribe(key);
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// calls subscribe(forward<invokable_type>(listener)) on {source}.
-        /// ----------------------------------------------------------------------------------------
-        template <typename invokable_type>
-        auto subscribe(invokable_type&& listener) -> event_key
-            requires(rinvokable<invokable_type, _tsignature>)
-        {
-            return subscribe(invokable_box<_tsignature>(forward<invokable_type>(listener)));
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        virtual auto subscribe(invokable_box<_tsignature>&& invokable) -> event_key = 0;
-
-        /// ----------------------------------------------------------------------------------------
-        /// calls unsubscribe(key) on {source}.
-        /// ----------------------------------------------------------------------------------------
-        virtual auto unsubscribe(event_key key) -> usize = 0;
-    };
-
-    /// --------------------------------------------------------------------------------------------
-    /// event_source is used to manage listeners and dispatch event.
-    ///
-    /// @todo add async dispatching.
-    /// --------------------------------------------------------------------------------------------
-    template <typename... arg_types>
-    class event_source: public ievent<arg_types...>
-    {
-    protected:
-        using _tsignature = typename ievent<arg_types...>::_tsignature;
-        using _tlistener = invokable_box<_tsignature>;
-
-    public:
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        virtual auto subscribe(invokable_box<_tsignature>&& invokable) -> event_key override final
-        {
-            return _add_listener(move(invokable));
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        virtual auto unsubscribe(event_key key) -> usize override final
-        {
-            return _remove_listener(key);
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// dispatches the events. calls each event listener(invokables) with given args.
-        ///
-        /// @todo add detailed documentation on argument passing.
-        /// ----------------------------------------------------------------------------------------
-        auto dispatch(arg_types... args)
-        {
-            for (auto& listener : _listeners)
-            {
-                listener(args...);
-            }
-        }
-
-    protected:
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        auto _add_listener(invokable_box<_tsignature>&& invokable) -> event_key
-        {
-            event_key key = invokable.get_invokable_type();
-
-            _listeners.emplace_back(move(invokable));
+            _listeners.emplace_back(move(box));
             return key;
         }
 
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        auto _remove_listener(event_key key) -> usize
+        auto remove_listener(key_type key) -> usize
         {
-            return _listeners.remove_if([&](const auto& listener) {
-                return listener.get_invokable_type() == key.get_type();
-            });
+            return _listeners.remove_if(
+                [&](const auto& listener) { return listener.get_invokable_type() == key; });
         }
 
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        auto _count_listeners(event_key key) -> usize
+        auto count_listeners(key_type key) -> usize
         {
             usize count = 0;
             for (auto& listener : _listeners)
             {
-                if (listener.get_invokable_type() == key.get_type())
+                if (listener.get_invokable_type() == key)
                 {
                     count++;
                 }
@@ -157,10 +48,144 @@ export namespace atom
             return count;
         }
 
-    protected:
+    private:
+        dynamic_array<invokable_box<signature_type>> _listeners;
+    };
+}
+
+/// ------------------------------------------------------------------------------------------------
+/// apis
+/// ------------------------------------------------------------------------------------------------
+export namespace atom
+{
+    /// --------------------------------------------------------------------------------------------
+    /// event_key is used to identify events registered for this key.
+    /// --------------------------------------------------------------------------------------------
+    class event_key
+    {        
+    public:
+        event_key(const std::type_info& info)
+            : _info(info)
+        {}
+
+    public:
+        const std::type_info& _info;
+    };
+
+    /// --------------------------------------------------------------------------------------------
+    /// event_source is used to manage listeners and dispatch event.
+    /// --------------------------------------------------------------------------------------------
+    template <typename... event_arg_types>
+    class event_source
+    {
+        using _impl_type = _event_source_impl<event_arg_types...>;
+
+    public:
+        using signature_type = void(event_arg_types...);
+        using key_type = event_key;
+
+    public:
         /// ----------------------------------------------------------------------------------------
-        /// list of event listeners.
+        /// calls `subscribe(listener)` on the source.
         /// ----------------------------------------------------------------------------------------
-        dynamic_array<_tlistener> _listeners;
+        template <typename invokable_type>
+        auto subscribe(invokable_type&& listener) -> event_key
+            requires(rinvokable<invokable_type, signature_type>)
+        {
+            return event_key(_impl.add_listener(forward<invokable_type>(listener)));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// calls `subscribe(listener)`.
+        /// ----------------------------------------------------------------------------------------
+        template <typename invokable_type>
+        auto operator+=(invokable_type&& listener) -> event_key
+            requires(rinvokable<invokable_type, signature_type>)
+        {
+            return subscribe(forward<invokable_type>(listener));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// calls unsubscribe(key) on {source}.
+        /// ----------------------------------------------------------------------------------------
+        virtual auto unsubscribe(event_key key) -> usize
+        {
+            return _impl.remove_listener(key._info);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// calls `unsubscribe(key)`.
+        /// ----------------------------------------------------------------------------------------
+        auto operator-=(event_key key) -> bool
+        {
+            return unsubscribe(key);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// dispatches the events. calls each event listener(invokables) with given args.
+        /// ----------------------------------------------------------------------------------------
+        auto dispatch(event_arg_types... args)
+        {
+            _impl.dispatch(forward<event_arg_types>(args)...);
+        }
+
+    private:
+        _impl_type _impl;
+    };
+
+    /// --------------------------------------------------------------------------------------------
+    /// this type is just a frontend to [`event_source`] to prevent users from dispatching events.
+    /// --------------------------------------------------------------------------------------------
+    template <typename... event_arg_types>
+    class event_source_view
+    {
+    public:
+        using source_type = event_source<event_arg_types...>;
+        using signature_type = typename source_type::signature_type;
+
+    public:
+        event_source_view(source_type& source)
+            : _source(source)
+        {}
+
+    public:
+        /// ----------------------------------------------------------------------------------------
+        /// calls `subscribe(listener)` on the source.
+        /// ----------------------------------------------------------------------------------------
+        template <typename invokable_type>
+        auto subscribe(invokable_type&& listener) -> event_key
+            requires(rinvokable<invokable_type, signature_type>)
+        {
+            return _source.subscribe(forward<invokable_type>(listener));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// calls `subscribe(listener)`.
+        /// ----------------------------------------------------------------------------------------
+        template <typename invokable_type>
+        auto operator+=(invokable_type&& listener) -> event_key
+            requires(rinvokable<invokable_type, signature_type>)
+        {
+            return subscribe(forward<invokable_type>(listener));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// calls unsubscribe(key) on {source}.
+        /// ----------------------------------------------------------------------------------------
+        virtual auto unsubscribe(event_key key) -> usize
+        {
+            return _source.unsubscribe(key);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// calls `unsubscribe(key)`.
+        /// ----------------------------------------------------------------------------------------
+        auto operator-=(event_key key) -> bool
+        {
+            return unsubscribe(key);
+        }
+
+    private:
+        source_type& _source;
     };
 }

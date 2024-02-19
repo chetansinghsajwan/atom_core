@@ -6,7 +6,6 @@ using namespace atom;
 TEST_CASE("invokable/event")
 {
     event_source<i32> event_source;
-    ievent<i32>& event = event_source;
-
+    event_source_view<i32> event = event_source;
     event_key key = event += [](i32 id) {};
 }
