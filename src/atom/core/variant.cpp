@@ -70,7 +70,7 @@ namespace atom
 
         static consteval auto get_null_type_index() -> usize
         {
-            return -1;
+            return usize::max();
         }
 
         template <usize i>

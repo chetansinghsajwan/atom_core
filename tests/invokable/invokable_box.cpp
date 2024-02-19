@@ -5,7 +5,7 @@ import atom.core;
 
 using namespace atom;
 
-TEST_CASE("atom/invokable/invokable_box")
+TEST_CASE("atom.core.invokable_box")
 {
     SECTION("not_move_assignable result")
     {
@@ -71,7 +71,7 @@ TEST_CASE("atom/invokable/invokable_box")
     }
 }
 
-TEST_CASE("atom/invokable/invokable_box", "[benchmarks]")
+TEST_CASE("atom.core.invokable_box", "[benchmarks]")
 {
     //// |-----------------------------------------------------------------------------------------|
     //// | benchmark name                                 samples       iterations    estimated    |
