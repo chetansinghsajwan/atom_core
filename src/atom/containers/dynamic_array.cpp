@@ -972,6 +972,23 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
+        constexpr auto remove_find(const elem_type& elem) -> usize
+        {
+            for (usize i = 0; i < _impl.count(); i++)
+            {
+                if (_impl.data()[i] == elem)
+                {
+                    _impl.remove_at(i);
+                    return i;
+                }
+            }
+
+            return usize::max();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
         template <typename pred_type>
         constexpr auto remove_if(pred_type&& pred) -> usize
             requires(rinvokable<pred_type, bool(const elem_type&)>)

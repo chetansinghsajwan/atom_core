@@ -1,5 +1,6 @@
 export module atom.core:string_functions;
 import :core;
+import :range;
 
 namespace atom
 {

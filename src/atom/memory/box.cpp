@@ -41,17 +41,26 @@ namespace atom
 
         template <typename box_type>
         constexpr _box_impl(copy_tag, const box_type& box)
-        {}
+        {
+            copy_box(box);
+        }
 
         template <typename box_type>
         constexpr _box_impl(move_tag, box_type& box)
-        {}
+        {
+            move_box(box);
+        }
 
         template <typename value_type>
         constexpr _box_impl(value_type&& val)
-        {}
+        {
+            emplace_val<value_type>(forward<value_type>(val));
+        }
 
-        constexpr ~_box_impl() {}
+        constexpr ~_box_impl()
+        {
+            destroy_val();
+        }
 
     public:
         static consteval auto is_copyable() -> bool
