@@ -250,17 +250,24 @@ namespace atom
         destroyer_type _destroyer;
     };
 
+    /// --------------------------------------------------------------------------------------------
+    ///
+    /// --------------------------------------------------------------------------------------------
     export template <typename type, typename... arg_types>
     auto make_unique(arg_types&&... args) -> unique_ptr<type>
     {
-        // todo: implement this.
-        return unique_ptr<type>(nullptr);
+        return make_unique_with_alloc<type, default_mem_allocator>(
+            default_mem_allocator(), forward<arg_types>(args)...);
     }
 
+    /// --------------------------------------------------------------------------------------------
+    /// # todo: fix this implementation, maybe store allocator in destroyer.
+    /// --------------------------------------------------------------------------------------------
     export template <typename type, typename allocator_type, typename... arg_types>
     auto make_unique_with_alloc(allocator_type allocator, arg_types&&... args) -> unique_ptr<type>
     {
-        // todo: implement this.
-        return unique_ptr<type>(nullptr);
+        mut_ptr<type> mem = allocator.alloc(sizeof(type));
+        obj_helper().construct_as<type>(mem, forward<arg_types>(args)...);
+        return unique_ptr<type>(mem);
     }
 }
