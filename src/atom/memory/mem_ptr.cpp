@@ -121,12 +121,16 @@ namespace atom
 
         constexpr auto operator++(int) -> final_type
         {
-            return _make(_arithmetic(_ptr) + 1);
+            auto tmp = _make(_ptr);
+            _ptr = _arithmetic(_ptr) + 1;
+            return tmp;
         }
 
         constexpr auto operator--(int) -> final_type
         {
-            return _make(_arithmetic(_ptr) - 1);
+            auto tmp = _make(_ptr);
+            _ptr = _arithmetic(_ptr) - 1;
+            return tmp;
         }
 
         constexpr auto operator+=(isize n) -> final_type&
