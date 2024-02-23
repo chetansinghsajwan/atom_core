@@ -54,7 +54,12 @@ namespace atom
             , _count(that._count)
             , _capacity(that._capacity)
             , _allocator(that._allocator)
-        {}
+        {
+            that._arr = nullptr;
+            that._count = 0;
+            that._capacity = 0;
+            that._allocator = allocator_type();
+        }
 
         template <typename uiter, typename uiter_end>
         constexpr _dynamic_array_impl(range_tag, uiter it, uiter_end it_end)
