@@ -293,13 +293,13 @@ export namespace atom
         constexpr auto _shift_fwd(mut_mem_ptr<void> mem, usize mem_count, usize steps) const -> void
         {
             std::shift_right(
-                mem.unwrap_as_byte(), (mem + mem_count).unwrap_as_byte(), steps.unwrap());
+                mem.unwrap_as_byte(), (mem + mem_count).unwrap_as_byte(), steps.to_unwrapped());
         }
 
         constexpr auto _shift_bwd(mut_mem_ptr<void> mem, usize mem_count, usize steps) const -> void
         {
             std::shift_left(
-                mem.unwrap_as_byte(), (mem + mem_count).unwrap_as_byte(), steps.unwrap());
+                mem.unwrap_as_byte(), (mem + mem_count).unwrap_as_byte(), steps.to_unwrapped());
         }
 
         constexpr auto _rotate_fwd(mut_mem_ptr<void> mem, usize mem_count, usize offset) const

@@ -4,7 +4,7 @@ using namespace atom;
 
 auto print(string_view str)
 {
-    std::string_view std_str(str.data().as_unsafe<char>().unwrap(), str.count().unwrap());
+    std::string_view std_str(str.data().as_unsafe<char>().to_unwrapped(), str.count().to_unwrapped());
     std::cout << std_str;
 }
 

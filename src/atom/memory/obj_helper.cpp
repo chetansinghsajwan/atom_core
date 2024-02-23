@@ -16,7 +16,7 @@ namespace atom
         {
             contracts::debug_expects(mem != nullptr);
 
-            std::construct_at(mem.as<type>().unwrap(), forward<arg_types>(args)...);
+            std::construct_at(mem.as<type>().to_unwrapped(), forward<arg_types>(args)...);
         }
 
         template <typename type, typename... arg_types>
@@ -24,7 +24,7 @@ namespace atom
         {
             contracts::debug_expects(mem != nullptr);
 
-            std::construct_at(mem.unwrap(), forward<arg_types>(args)...);
+            std::construct_at(mem.to_unwrapped(), forward<arg_types>(args)...);
         }
 
         template <typename type, typename arg_type>
@@ -56,7 +56,7 @@ namespace atom
         {
             contracts::debug_expects(mem != nullptr);
 
-            std::destroy_at(mem.unwrap());
+            std::destroy_at(mem.to_unwrapped());
         }
 
         template <typename type>
@@ -64,7 +64,7 @@ namespace atom
         {
             contracts::debug_expects(mem != nullptr);
 
-            std::destroy_at(mem.unwrap());
+            std::destroy_at(mem.to_unwrapped());
         }
     };
 }

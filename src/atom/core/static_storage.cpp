@@ -13,7 +13,7 @@ namespace atom
         using _types = type_list<types...>;
 
     public:
-        alignas(_types::max_align.unwrap()) byte storage[_types::max_size.unwrap()];
+        alignas(_types::max_align.to_unwrapped()) byte storage[_types::max_size.to_unwrapped()];
     };
 
     export template <usize in_size>
@@ -30,28 +30,28 @@ namespace atom
         {
             contracts::debug_expects(i < size());
 
-            return mem_ptr(_storage + i.unwrap());
+            return mem_ptr(_storage + i.to_unwrapped());
         }
 
         constexpr auto mut_mem(usize i = 0) -> mut_mem_ptr<void>
         {
             contracts::debug_expects(i < size());
 
-            return mut_mem_ptr(_storage + i.unwrap());
+            return mut_mem_ptr(_storage + i.to_unwrapped());
         }
 
         constexpr auto ref(usize i) const -> const byte&
         {
             contracts::debug_expects(i < size());
 
-            return _storage[i.unwrap()];
+            return _storage[i.to_unwrapped()];
         }
 
         constexpr auto mut_ref(usize i) -> byte&
         {
             contracts::debug_expects(i < size());
 
-            return _storage[i.unwrap()];
+            return _storage[i.to_unwrapped()];
         }
 
         constexpr auto operator[](usize i) const -> const byte&
@@ -68,7 +68,7 @@ namespace atom
         {
             for (usize i = usize(0); i < size(); i++)
             {
-                if (_storage[i.unwrap()] != that._storage[i.unwrap()])
+                if (_storage[i.to_unwrapped()] != that._storage[i.to_unwrapped()])
                     return false;
             }
 
@@ -76,6 +76,6 @@ namespace atom
         }
 
     public:
-        byte _storage[size().unwrap()];
+        byte _storage[size().to_unwrapped()];
     };
 }

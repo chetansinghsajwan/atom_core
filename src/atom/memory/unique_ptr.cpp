@@ -75,7 +75,7 @@ namespace atom
         /// # move constructor
         /// ----------------------------------------------------------------------------------------
         constexpr unique_ptr(unique_ptr&& that)
-            : base_type(that.unwrap())
+            : base_type(that.to_unwrapped())
             , _destroyer(move(that._destroyer))
         {
             that._set_ptr(nullptr);
@@ -96,7 +96,7 @@ namespace atom
         template <typename other_value_type>
         constexpr unique_ptr(unique_ptr<other_value_type, destroyer_type>&& that)
             requires rsame_or_derived_from<other_value_type, value_type>
-            : base_type(that.unwrap())
+            : base_type(that.to_unwrapped())
             , _destroyer(move(that._destroyer))
         {
             that._set_ptr(nullptr);
@@ -137,7 +137,7 @@ namespace atom
         {
             _check_and_destroy_value();
 
-            _set_ptr(ptr.unwrap());
+            _set_ptr(ptr.to_unwrapped());
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -147,7 +147,7 @@ namespace atom
         {
             _check_and_destroy_value();
 
-            _set_ptr(ptr.unwrap());
+            _set_ptr(ptr.to_unwrapped());
             _destroyer = move(destroyer);
         }
 
@@ -230,12 +230,12 @@ namespace atom
 
         constexpr auto _get_ptr() const -> const value_type*
         {
-            return base_type::unwrap();
+            return base_type::to_unwrapped();
         }
 
         constexpr auto _get_mut_ptr() -> value_type*
         {
-            return base_type::unwrap();
+            return base_type::to_unwrapped();
         }
 
         constexpr auto _set_ptr(value_type* ptr)

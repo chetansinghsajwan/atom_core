@@ -81,7 +81,7 @@ namespace atom
             return uchar(_val + n);
         }
 
-        constexpr auto unwrap() const -> char
+        constexpr auto to_unwrapped() const -> char
         {
             return _val;
         }

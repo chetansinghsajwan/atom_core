@@ -181,7 +181,7 @@ namespace atom
         template <typename tthat>
         constexpr shared_ptr(const shared_ptr<tthat>& that)
             requires rsame_or_derived_from<tthat, value_type>
-            : base_type(that.unwrap())
+            : base_type(that.to_unwrapped())
             , _state(that._state)
         {
             _check_and_increase_shared_count();
@@ -225,7 +225,7 @@ namespace atom
         template <typename tthat>
         constexpr shared_ptr(shared_ptr<tthat>&& that)
             requires rsame_or_derived_from<tthat, value_type>
-            : base_type(that.unwrap())
+            : base_type(that.to_unwrapped())
             , _state(that._state)
         {
             that._set_ptr(nullptr);
@@ -421,12 +421,12 @@ namespace atom
 
         constexpr auto _get_ptr() const -> const value_type*
         {
-            return base_type::unwrap();
+            return base_type::to_unwrapped();
         }
 
         constexpr auto _get_mut_ptr() -> value_type*
         {
-            return base_type::unwrap();
+            return base_type::to_unwrapped();
         }
 
     private:

@@ -346,20 +346,20 @@ namespace atom
         constexpr auto _construct_at(usize i, arg_types&&... args) -> void
         {
             mut_mem_ptr<elem_type> src = _get_mut_data() + i;
-            std::construct_at(src.unwrap(), forward<arg_types>(args)...);
+            std::construct_at(src.to_unwrapped(), forward<arg_types>(args)...);
         }
 
         constexpr auto _destruct_at(usize i) -> void
         {
             mut_mem_ptr<elem_type> src = _get_mut_data() + i;
-            std::destroy_at(src.unwrap());
+            std::destroy_at(src.to_unwrapped());
         }
 
         constexpr auto _destruct_range(usize i, usize count) -> void
         {
             mut_mem_ptr<elem_type> begin = _get_mut_data() + i;
             mut_mem_ptr<elem_type> end = begin + count;
-            std::destroy(begin.unwrap(), end.unwrap());
+            std::destroy(begin.to_unwrapped(), end.to_unwrapped());
         }
 
         constexpr auto _move_range_front(usize i, usize count) -> void
@@ -367,7 +367,7 @@ namespace atom
             mut_mem_ptr<elem_type> begin = _get_mut_data() + i;
             mut_mem_ptr<elem_type> end = _get_mut_data() + _get_count().sub(1);
             mut_mem_ptr<elem_type> dest = begin - count;
-            std::move(begin.unwrap(), end.unwrap(), dest.unwrap());
+            std::move(begin.to_unwrapped(), end.to_unwrapped(), dest.to_unwrapped());
         }
 
         constexpr auto _move_range_back(usize i, usize count) -> void
@@ -375,14 +375,14 @@ namespace atom
             mut_mem_ptr<elem_type> begin = _get_mut_data() + i;
             mut_mem_ptr<elem_type> end = _get_mut_data() + _get_count().sub(1);
             mut_mem_ptr<elem_type> dest = begin + count;
-            std::move_backward(begin.unwrap(), end.unwrap(), dest.unwrap());
+            std::move_backward(begin.to_unwrapped(), end.to_unwrapped(), dest.to_unwrapped());
         }
 
         constexpr auto _move_range_to(usize i, mut_mem_ptr<elem_type> dest) -> void
         {
             mut_mem_ptr<elem_type> begin = _get_mut_data() + i;
             mut_mem_ptr<elem_type> end = _get_mut_data() + _get_count().sub(1);
-            std::move_backward(begin.unwrap(), end.unwrap(), dest.unwrap());
+            std::move_backward(begin.to_unwrapped(), end.to_unwrapped(), dest.to_unwrapped());
         }
 
         constexpr auto _rotate_range_back(usize i, usize count) -> void
@@ -390,7 +390,7 @@ namespace atom
             mut_mem_ptr<elem_type> begin = _get_mut_data();
             mut_mem_ptr<elem_type> mid = begin + i;
             mut_mem_ptr<elem_type> end = begin + _get_count().sub(1);
-            std::rotate(begin.unwrap(), mid.unwrap(), end.unwrap());
+            std::rotate(begin.to_unwrapped(), mid.to_unwrapped(), end.to_unwrapped());
         }
 
         template <typename uiter, typename uiter_end>

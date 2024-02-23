@@ -53,7 +53,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto next(usize i) const -> final_type
         {
-            return _make(_arithmetic(_ptr) + i.unwrap());
+            return _make(_arithmetic(_ptr) + i.to_unwrapped());
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -61,7 +61,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto prev(usize i) const -> final_type
         {
-            return _make(_arithmetic(_ptr) - i.unwrap());
+            return _make(_arithmetic(_ptr) - i.to_unwrapped());
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -69,7 +69,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto mov(isize i) const -> final_type
         {
-            return _make(_arithmetic(_ptr) + i.unwrap());
+            return _make(_arithmetic(_ptr) + i.to_unwrapped());
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -77,7 +77,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto mov(usize i) const -> final_type
         {
-            return _make(_arithmetic(_ptr) + i.unwrap());
+            return _make(_arithmetic(_ptr) + i.to_unwrapped());
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -85,18 +85,18 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto sub(this_type that) const -> final_type
         {
-            return _make(_arithmetic(_ptr) - that.unwrap());
+            return _make(_arithmetic(_ptr) - that.to_unwrapped());
         }
 
     public:
         constexpr auto operator[](isize n) const
         {
-            return base_type::unwrap()[n.unwrap()];
+            return base_type::to_unwrapped()[n.to_unwrapped()];
         }
 
         constexpr auto operator[](usize n) const
         {
-            return base_type::unwrap()[n.unwrap()];
+            return base_type::to_unwrapped()[n.to_unwrapped()];
         }
 
         constexpr auto operator+(isize n) const -> final_type

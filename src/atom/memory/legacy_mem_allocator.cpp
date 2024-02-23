@@ -10,17 +10,17 @@ namespace atom
     public:
         auto alloc(usize size) -> mut_mem_ptr<void>
         {
-            return std::malloc(size.unwrap());
+            return std::malloc(size.to_unwrapped());
         }
 
         auto realloc(mut_mem_ptr<void> mem, usize size) -> mut_mem_ptr<void>
         {
-            return std::realloc(mem.unwrap(), size.unwrap());
+            return std::realloc(mem.to_unwrapped(), size.to_unwrapped());
         }
 
         auto dealloc(mut_mem_ptr<void> mem)
         {
-            std::free(mem.unwrap());
+            std::free(mem.to_unwrapped());
         }
     };
 }

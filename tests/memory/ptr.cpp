@@ -26,7 +26,7 @@ TEST_CASE("atom.core.mut_ptr")
     {
         ptr<i32> ptr = &val0;
 
-        REQUIRE(ptr.unwrap() == &val0);
+        REQUIRE(ptr.to_unwrapped() == &val0);
         REQUIRE(ptr.get() == val0);
     }
 
@@ -37,7 +37,7 @@ TEST_CASE("atom.core.mut_ptr")
         ptr<i32> ptr0 = &val0;
         ptr<i32> ptr1 = ptr0;
 
-        REQUIRE(ptr1.unwrap() == ptr0.unwrap());
+        REQUIRE(ptr1.to_unwrapped() == ptr0.to_unwrapped());
         REQUIRE(ptr1.get() == ptr0.get());
     }
 
@@ -63,7 +63,7 @@ TEST_CASE("atom.core.mut_ptr")
         ptr<i32> ptr1 = nullptr;
         ptr1 = &val0;
 
-        REQUIRE(ptr1.unwrap() == ptr0.unwrap());
+        REQUIRE(ptr1.to_unwrapped() == ptr0.to_unwrapped());
         REQUIRE(ptr1.get() == ptr0.get());
     }
 
@@ -73,7 +73,7 @@ TEST_CASE("atom.core.mut_ptr")
         ptr = &val0;
 
         REQUIRE(ptr.get() == val0);
-        REQUIRE(ptr.unwrap() == &val0);
+        REQUIRE(ptr.to_unwrapped() == &val0);
     }
 
     SECTION("value access")

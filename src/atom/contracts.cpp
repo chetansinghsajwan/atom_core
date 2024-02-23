@@ -60,7 +60,7 @@ export namespace atom
                                 "\n\tat: {}: {}: {}"
                                 "\n\tfunc: {}",
                 _contract_type_to_string(violation.type), violation.msg, violation.src.file_name,
-                violation.src.line.unwrap(), violation.src.column.unwrap(),
+                violation.src.line.to_unwrapped(), violation.src.column.to_unwrapped(),
                 violation.src.func_name);
         }
 
@@ -104,7 +104,7 @@ export namespace atom
                           << " violation:"
                           << "\n\twith msg: " << violation.msg << "'"
                           << "\n\tat: " << violation.src.file_name << ":"
-                          << violation.src.line.unwrap() << ":" << violation.src.column.unwrap()
+                          << violation.src.line.to_unwrapped() << ":" << violation.src.column.to_unwrapped()
                           << ": " << violation.src.func_name << std::endl;
 
                 std::terminate();

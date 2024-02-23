@@ -78,7 +78,7 @@ export namespace atom
         template <typename type>
         constexpr ptr(const ptr<type>& ptr)
             requires rconvertible_to<type*, value_type*>
-            : _ptr(static_cast<const value_type*>(ptr.unwrap()))
+            : _ptr(static_cast<const value_type*>(ptr.to_unwrapped()))
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -88,7 +88,7 @@ export namespace atom
         constexpr ptr& operator=(ptr<type> ptr)
             requires rconvertible_to<type*, value_type*>
         {
-            _ptr = static_cast<const value_type*>(ptr.unwrap());
+            _ptr = static_cast<const value_type*>(ptr.to_unwrapped());
             return *this;
         }
 
@@ -119,7 +119,7 @@ export namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto set(ptr<value_type> ptr)
         {
-            _ptr = ptr.unwrap();
+            _ptr = ptr.to_unwrapped();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -195,7 +195,7 @@ export namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto is_null() const -> bool
         {
-            return unwrap() == nullptr;
+            return to_unwrapped() == nullptr;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -203,7 +203,7 @@ export namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto is_eq(nullptr_type) const -> bool
         {
-            return unwrap() == nullptr;
+            return to_unwrapped() == nullptr;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -211,13 +211,13 @@ export namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto is_eq(const this_type& that) const -> bool
         {
-            return unwrap() == that.unwrap();
+            return to_unwrapped() == that.to_unwrapped();
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto unwrap() const -> const value_type*
+        constexpr auto to_unwrapped() const -> const value_type*
         {
             return _ptr;
         }
@@ -289,7 +289,7 @@ export namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename type>
         constexpr ptr(const ptr<type>& ptr)
-            : _ptr(static_cast<const void*>(ptr.unwrap()))
+            : _ptr(static_cast<const void*>(ptr.to_unwrapped()))
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -298,7 +298,7 @@ export namespace atom
         template <typename type>
         constexpr ptr& operator=(const ptr<type>& ptr)
         {
-            _ptr = static_cast<const void*>(ptr.unwrap());
+            _ptr = static_cast<const void*>(ptr.to_unwrapped());
             return *this;
         }
 
@@ -333,7 +333,7 @@ export namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto set(ptr<void> ptr)
         {
-            _ptr = ptr.unwrap();
+            _ptr = ptr.to_unwrapped();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -399,7 +399,7 @@ export namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto is_null() const -> bool
         {
-            return unwrap() == nullptr;
+            return to_unwrapped() == nullptr;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -407,7 +407,7 @@ export namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto is_eq(nullptr_type) const -> bool
         {
-            return unwrap() == nullptr;
+            return to_unwrapped() == nullptr;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -416,14 +416,14 @@ export namespace atom
         template <typename type>
         constexpr auto is_eq(const ptr<type>& that) const -> bool
         {
-            return unwrap() == that.unwrap();
+            return to_unwrapped() == that.to_unwrapped();
         }
 
         /// -------------
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto unwrap() const -> const void*
+        constexpr auto to_unwrapped() const -> const void*
         {
             return _ptr;
         }
@@ -515,7 +515,7 @@ export namespace atom
         template <typename type>
         constexpr mut_ptr(const mut_ptr<type>& ptr)
             requires rconvertible_to<type*, value_type*>
-            : base_type(static_cast<value_type*>(ptr.unwrap()))
+            : base_type(static_cast<value_type*>(ptr.to_unwrapped()))
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -525,7 +525,7 @@ export namespace atom
         constexpr mut_ptr& operator=(const mut_ptr<type>& ptr)
             requires rconvertible_to<type*, value_type*>
         {
-            _ptr = static_cast<value_type*>(ptr.unwrap());
+            _ptr = static_cast<value_type*>(ptr.to_unwrapped());
             return *this;
         }
 
@@ -556,7 +556,7 @@ export namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto set(mut_ptr<value_type> ptr)
         {
-            _ptr = ptr.unwrap();
+            _ptr = ptr.to_unwrapped();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -630,7 +630,7 @@ export namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto unwrap() const -> value_type*
+        constexpr auto to_unwrapped() const -> value_type*
         {
             return _mut_ptr();
         }
@@ -706,7 +706,7 @@ export namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename type>
         constexpr mut_ptr(const mut_ptr<type>& ptr)
-            : base_type(static_cast<void*>(ptr.unwrap()))
+            : base_type(static_cast<void*>(ptr.to_unwrapped()))
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -715,7 +715,7 @@ export namespace atom
         template <typename type>
         constexpr mut_ptr& operator=(const mut_ptr<type>& ptr)
         {
-            _ptr = static_cast<void*>(ptr.unwrap());
+            _ptr = static_cast<void*>(ptr.to_unwrapped());
             return *this;
         }
 
@@ -750,7 +750,7 @@ export namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto set(mut_ptr<void> ptr)
         {
-            _ptr = ptr.unwrap();
+            _ptr = ptr.to_unwrapped();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -817,7 +817,7 @@ export namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto unwrap() const -> void*
+        constexpr auto to_unwrapped() const -> void*
         {
             return _mut_ptr();
         }

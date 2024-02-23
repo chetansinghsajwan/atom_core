@@ -201,7 +201,7 @@ namespace atom
             return len;
         }
 
-        return usize(std::strlen(_to_std_char_ptr(str.unwrap())));
+        return usize(std::strlen(_to_std_char_ptr(str.to_unwrapped())));
     }
 }
 
@@ -339,7 +339,7 @@ export namespace atom
     template <typename type>
     constexpr auto make_range(const type* begin, usize count)
     {
-        return make_range(mem_ptr(begin), mem_ptr(begin + count.unwrap()));
+        return make_range(mem_ptr(begin), mem_ptr(begin + count.to_unwrapped()));
     }
 
     /// --------------------------------------------------------------------------------------------

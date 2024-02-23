@@ -14,6 +14,6 @@ TEST_CASE("atom::memory::mem_helper")
     // todo: write tests.
     helper.fwd_copy_to({ src, 5 }, { dest, 10 });
 
-    std::free(src.unwrap());
-    std::free(dest.unwrap());
+    std::free(src.to_unwrapped());
+    std::free(dest.to_unwrapped());
 }

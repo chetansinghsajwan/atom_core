@@ -28,7 +28,7 @@ namespace atom
         template <typename... arg_types>
         constexpr basic_static_array(arg_types&&... args)
             requires(rconvertible_to<arg_types, elem_type> and ...)
-                    and (sizeof...(arg_types) <= in_count.unwrap())
+                    and (sizeof...(arg_types) <= in_count.to_unwrapped())
             : _arr(0)
         {}
 
@@ -55,7 +55,7 @@ namespace atom
 
         constexpr auto iter_end() const -> iter_end_type
         {
-            return iter_end_type(_arr + in_count.unwrap());
+            return iter_end_type(_arr + in_count.to_unwrapped());
         }
 
         constexpr auto mut_iter() -> mut_iter_type
@@ -69,7 +69,7 @@ namespace atom
         }
 
     private:
-        elem_type _arr[in_count.unwrap()];
+        elem_type _arr[in_count.to_unwrapped()];
     };
 
     export template <typename elem_type, usize count>
