@@ -17,6 +17,8 @@ namespace atom
     template <typename in_elem_type, typename in_allocator_type>
     class _dynamic_array_impl
     {
+        using this_type = _dynamic_array_impl;
+
     public:
         using elem_type = in_elem_type;
         using allocator_type = in_allocator_type;
@@ -26,6 +28,16 @@ namespace atom
         using mut_iter_end_type = mut_iter_type;
 
     public:
+        class copy_tag
+        {};
+
+        class move_tag
+        {};
+
+        class range_tag
+        {};
+
+    public:
         constexpr _dynamic_array_impl()
             : _arr(nullptr)
             , _count(0)
@@ -33,22 +45,31 @@ namespace atom
             , _allocator()
         {}
 
-        constexpr _dynamic_array_impl(_dynamic_array_impl&& that) {}
+        constexpr _dynamic_array_impl(copy_tag, const _dynamic_array_impl& that)
+            : this_type(range_tag(), that.iter(), that.iter_end())
+        {}
+
+        constexpr _dynamic_array_impl(move_tag, _dynamic_array_impl& that)
+            : _arr(that._arr)
+            , _count(that._count)
+            , _capacity(that._capacity)
+            , _allocator(that._allocator)
+        {}
 
         template <typename uiter, typename uiter_end>
-        constexpr _dynamic_array_impl(uiter it, uiter_end it_end)
+        constexpr _dynamic_array_impl(range_tag, uiter it, uiter_end it_end)
             : _dynamic_array_impl()
         {
             insert_range_back(it, it_end);
         }
 
-    public:
-        constexpr auto on_destruct()
+        constexpr ~_dynamic_array_impl()
         {
             _destruct_all();
             _release_all_mem();
         }
 
+    public:
         constexpr auto at(usize i) const -> const elem_type&
         {
             return _get_data()[i];
@@ -533,7 +554,7 @@ namespace atom
         /// # copy constructor
         /// ----------------------------------------------------------------------------------------
         constexpr basic_dynamic_array(const basic_dynamic_array& that)
-            : _impl(that.iter(), that.iter_end())
+            : _impl(typename _impl_type::copy_tag(), that._impl)
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -549,7 +570,7 @@ namespace atom
         /// # move constructor
         /// ----------------------------------------------------------------------------------------
         constexpr basic_dynamic_array(basic_dynamic_array&& that)
-            : _impl(move(that._impl))
+            : _impl(typename _impl_type::move_tag(), that._impl)
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -567,7 +588,7 @@ namespace atom
         template <typename range_type>
         constexpr basic_dynamic_array(range_type&& range)
             requires(rrange_of<pure_type<range_type>, elem_type>)
-            : _impl(range.iter(), range.iter_end())
+            : _impl(typename _impl_type::range_tag(), range.iter(), range.iter_end())
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -583,10 +604,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # destructor
         /// ----------------------------------------------------------------------------------------
-        constexpr ~basic_dynamic_array()
-        {
-            _impl.on_destruct();
-        }
+        constexpr ~basic_dynamic_array() {}
 
     public:
         /// ----------------------------------------------------------------------------------------
