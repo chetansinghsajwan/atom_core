@@ -30,7 +30,7 @@ namespace atom
             : _arr(nullptr)
             , _count(0)
             , _capacity(0)
-            , _alloc()
+            , _allocator()
         {}
 
         constexpr _dynamic_array_impl(_dynamic_array_impl&& that) {}
@@ -45,8 +45,8 @@ namespace atom
     public:
         constexpr auto on_destruct()
         {
-            remove_all();
-            release_unused_mem();
+            _destruct_all();
+            _release_all_mem();
         }
 
         constexpr auto at(usize i) const -> const elem_type&
@@ -193,7 +193,7 @@ namespace atom
 
         constexpr auto alloc() const -> const allocator_type&
         {
-            return _alloc;
+            return _allocator;
         }
 
         constexpr auto is_index_in_range(usize i) const -> bool
@@ -234,6 +234,11 @@ namespace atom
         ////////////////////////////////////////////////////////////////////////////////////////////
 
     private:
+        constexpr auto _release_all_mem()
+        {
+            _allocator.dealloc(_arr);
+        }
+
         template <typename... arg_types>
         constexpr auto _emplace_at(usize i, arg_types&&... args) -> usize
         {
@@ -362,6 +367,13 @@ namespace atom
             std::destroy(begin.to_unwrapped(), end.to_unwrapped());
         }
 
+        constexpr auto _destruct_all() -> void
+        {
+            mut_mem_ptr<elem_type> begin = _get_mut_ptr_begin();
+            mut_mem_ptr<elem_type> end = _get_mut_ptr_end();
+            std::destroy(begin.to_unwrapped(), end.to_unwrapped());
+        }
+
         constexpr auto _move_range_front(usize i, usize count) -> void
         {
             mut_mem_ptr<elem_type> begin = _get_mut_data() + i;
@@ -424,6 +436,16 @@ namespace atom
             return _arr;
         }
 
+        constexpr auto _get_mut_ptr_begin() -> mut_mem_ptr<elem_type>
+        {
+            return _arr;
+        }
+
+        constexpr auto _get_mut_ptr_end() -> mut_mem_ptr<elem_type>
+        {
+            return _arr + _count;
+        }
+
         constexpr auto _set_data(mut_mem_ptr<elem_type> data)
         {
             _arr = data;
@@ -451,24 +473,24 @@ namespace atom
 
         constexpr auto _alloc_mem(usize required) -> mut_mem_ptr<elem_type>
         {
-            return _alloc.alloc(required);
+            return _allocator.alloc(required);
         }
 
         constexpr auto _alloc_mem_at_least(usize required, usize hint) -> mut_mem_ptr<elem_type>
         {
-            return _alloc.alloc(required);
+            return _allocator.alloc(required);
         }
 
         constexpr auto _dealloc_mem(mut_mem_ptr<elem_type> mem)
         {
-            _alloc.dealloc(mem);
+            _allocator.dealloc(mem);
         }
 
     private:
         mut_mem_ptr<elem_type> _arr;
         usize _count;
         usize _capacity;
-        allocator_type _alloc;
+        allocator_type _allocator;
     };
 }
 
