@@ -211,7 +211,7 @@ export namespace atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename type>
-    constexpr auto make_range(std::initializer_list<type> list)
+    constexpr auto make_range(initializer_list<type> list)
     {
         return _range_from_iter_pair(
             array_iter(mem_ptr<type>(list.begin())), array_iter(mem_ptr<type>(list.end())));

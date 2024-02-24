@@ -17,4 +17,7 @@ export namespace atom
     template <typename... arg_types>
     class type_holder
     {};
+
+    template <typename type>
+    using initializer_list = std::initializer_list<type>;
 }

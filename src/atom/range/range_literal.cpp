@@ -1,7 +1,6 @@
 export module atom.core:range.range_literal;
 import :core;
 import :mem_ptr;
-import :std;
 
 namespace atom
 {
@@ -15,7 +14,7 @@ namespace atom
             , _count(count)
         {}
 
-        constexpr range_literal(std::initializer_list<elem_type> list)
+        constexpr range_literal(initializer_list<elem_type> list)
             : _arr(list.begin())
             , _count(list.size())
         {}
