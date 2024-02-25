@@ -1,6 +1,7 @@
 export module atom.core:string_functions;
 import :core;
 import :range;
+import :std;
 
 namespace atom
 {
@@ -24,8 +25,8 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <usize::unwrapped_type count>
-        constexpr string_functions(const char (&arr)[count])
-            : base_type(make_range(arr))
+        constexpr string_functions(const char (&str)[count])
+            : base_type(make_range(str))
         {}
 
     public:
@@ -34,7 +35,7 @@ namespace atom
             return _to_std_char_ptr(this->data().to_unwrapped());
         }
 
-        constexpr auto to_std_char_ptr() -> char*
+        constexpr auto to_mut_std_char_ptr() -> char*
         {
             return _to_std_char_ptr(this->mut_data().to_unwrapped());
         }

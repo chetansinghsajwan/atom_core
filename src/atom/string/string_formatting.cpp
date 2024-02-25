@@ -25,7 +25,7 @@ namespace atom
     export class string_format_error: public error
     {
     public:
-        constexpr string_format_error(std::string_view msg)
+        constexpr string_format_error(string_view msg)
             : error(msg)
         {}
     };
