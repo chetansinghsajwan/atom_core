@@ -112,6 +112,38 @@ namespace atom
 
     public:
         /// ----------------------------------------------------------------------------------------
+        /// returns `true` if this is an integer type.
+        /// ----------------------------------------------------------------------------------------
+        static consteval auto is_integer() -> bool
+        {
+            return impl_type::is_integer();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` if this is an integer type.
+        /// ----------------------------------------------------------------------------------------
+        static consteval auto is_float() -> bool
+        {
+            return impl_type::is_float();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// counts number of digits needed to represent `this`.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto count_digits() const -> final_type
+        {
+            return _wrap_final(impl_type::count_digits(_value));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` if this is a signed type.
+        /// ----------------------------------------------------------------------------------------
+        static consteval auto is_signed() -> bool
+        {
+            return impl_type::is_signed();
+        }
+
+        /// ----------------------------------------------------------------------------------------
         /// creates `this_type` from `num_type`.
         /// ----------------------------------------------------------------------------------------
         template <typename num_type>
@@ -778,6 +810,131 @@ namespace atom
                 return _wrap_final(num1._value);
 
             return _clone_final();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns absolute value of `this`.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto abs() const -> final_type
+            requires(is_signed())
+        {
+            contracts::debug_expects(is_abs_safe());
+
+            return _wrap_final(impl_type::abs(_value));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns absolute value of `this`.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto abs_checked() const -> final_type
+            requires(is_signed())
+        {
+            contracts::expects(is_abs_safe());
+
+            return _wrap_final(impl_type::abs(_value));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns absolute value of `this`.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto abs_unchecked() const -> final_type
+            requires(is_signed())
+        {
+            return _wrap_final(impl_type::abs(_value));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns [`abs()`].
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto operator+() const -> final_type
+            requires(is_signed())
+        {
+            return abs();
+        }
+
+        /// ------------------------>----------------------------------------------------------------
+        /// returns `true` if there is no overflow or underflow when performing abs operation.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto is_abs_safe() const -> bool
+            requires(is_signed())
+        {
+            return impl_type::is_abs_safe(_value);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns result after reversing sign of `this`.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto neg() const -> final_type
+            requires(is_signed())
+        {
+            contracts::debug_expects(is_neg_safe());
+
+            return _wrap_final(impl_type::neg(_value));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns result after reversing sign of `this`.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto neg_checked() const -> final_type
+            requires(is_signed())
+        {
+            contracts::expects(is_neg_safe());
+
+            return _wrap_final(impl_type::neg(_value));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns result after reversing sign of `this`.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto neg_unchecked() const -> final_type
+            requires(is_signed())
+        {
+            return _wrap_final(impl_type::neg(_value));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns [`neg()`].
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto operator-() const -> final_type
+            requires(is_signed())
+        {
+            return neg();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` if there is no overflow or underflow when performing neg operation.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto is_neg_safe() const -> bool
+            requires(is_signed())
+        {
+            return impl_type::is_neg_safe(_value);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `1` if `this >= 0` else `-1`.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto sign() const -> final_type
+            requires(is_signed())
+        {
+            return _wrap_final(impl_type::sign(_value));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` if `this` is positive.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto is_pos() const -> bool
+            requires(is_signed())
+        {
+            return _value >= 0;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` if `this` is negative.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto is_neg() const -> bool
+            requires(is_signed())
+        {
+            return not is_pos();
         }
 
         /// ----------------------------------------------------------------------------------------

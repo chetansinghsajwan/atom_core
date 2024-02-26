@@ -1,3 +1,4 @@
+#include <type_traits>
 module;
 #include "atom/preprocessors.h"
 
@@ -67,156 +68,21 @@ namespace atom
             else
                 return std::log10(num) + 1;
         }
+    };
 
-        static constexpr auto is_add_safe(unwrapped_type lhs, unwrapped_type rhs) -> bool
-        {
-            if constexpr (not is_signed())
-            {
-                return rhs <= max() - lhs;
-            }
-            else
-            {
-                if (rhs > 0 && lhs > max() - rhs)
-                    return false;
+    /// --------------------------------------------------------------------------------------------
+    /// implementation for signed integers.
+    /// --------------------------------------------------------------------------------------------
+    template <typename final_type, typename unsigned_type, typename unwrapped_type,
+        typename limit_type>
+    class _signed_int_wrapper_impl
+        : public _int_wrapper_impl<final_type, final_type, unsigned_type, unwrapped_type,
+              limit_type>
+    {
+        using base_type =
+            _int_wrapper_impl<final_type, final_type, unsigned_type, unwrapped_type, limit_type>;
 
-                if (rhs < 0 && lhs < min() - rhs)
-                    return false;
-
-                return true;
-            }
-        }
-
-        static constexpr auto is_sub_safe(unwrapped_type lhs, unwrapped_type rhs) -> bool
-        {
-            if constexpr (not is_signed())
-            {
-                return rhs <= lhs - min();
-            }
-            else
-            {
-                return is_add_safe(lhs, -rhs);
-            }
-        }
-
-        static constexpr auto is_mul_safe(unwrapped_type lhs, unwrapped_type rhs) -> bool
-        {
-            if constexpr (not is_signed())
-            {
-                if (rhs > 0 && lhs > max() / rhs)
-                    return false;
-
-                return true;
-            }
-            else
-            {
-                if (rhs > 0 && lhs > max() / rhs)
-                    return false;
-
-                if (rhs < 0 && lhs < min() / rhs)
-                    return false;
-
-                return true;
-            }
-        }
-
-        static constexpr auto is_div_safe(unwrapped_type num, unwrapped_type den) -> bool
-        {
-            if constexpr (is_signed())
-            {
-                if (den == 0)
-                    return false;
-
-                if (num == min() && den == -1)
-                    return false;
-            }
-
-            return true;
-        }
-
-        static constexpr auto is_abs_safe(unwrapped_type num) -> bool
-        {
-            if constexpr (is_signed())
-                return num != min();
-
-            return true;
-        }
-
-        static constexpr auto is_neg_safe(unwrapped_type num) -> bool
-        {
-            if constexpr (is_signed())
-                return num != min();
-
-            return true;
-        }
-
-        template <typename num_type>
-        static constexpr auto is_conversion_safe_from(num_type num) -> bool
-        {
-            return is_conversion_safe_from_unwrapped<typename num_type::unwrapped_type>(
-                num.to_unwrapped());
-        }
-
-        template <typename num_type>
-        static constexpr auto is_conversion_safe_from_unwrapped(num_type num) -> bool
-        {
-            if constexpr (is_signed())
-            {
-                if constexpr (std::is_signed_v<num_type>
-                              and std::numeric_limits<num_type>::min() < min())
-                {
-                    if (num < min())
-                    {
-                        return false;
-                    }
-                }
-
-                if constexpr (std::numeric_limits<num_type>::max() > max())
-                {
-                    if (num > max())
-                    {
-                        return false;
-                    }
-                }
-            }
-            else
-            {
-                if constexpr (std::is_signed_v<num_type>)
-                    if (num < 0)
-                        return false;
-
-                if constexpr (std::numeric_limits<num_type>::max() > max())
-                    if (num > max())
-                        return false;
-            }
-
-            return true;
-        }
-
-        template <typename num_type>
-        static constexpr auto is_conversion_safe_to_unwrapped(unwrapped_type num) -> bool
-        {
-            if constexpr (is_signed())
-            {
-                if constexpr (min() < std::numeric_limits<num_type>::min())
-                    if (num < std::numeric_limits<num_type>::min())
-                        return false;
-
-                if constexpr (max() > std::numeric_limits<num_type>::max())
-                    if (num > std::numeric_limits<num_type>::max())
-                        return false;
-            }
-            else
-            {
-                if constexpr (max() > std::numeric_limits<num_type>::max())
-                {
-                    if (num > std::numeric_limits<num_type>::max())
-                        return false;
-                }
-            }
-
-            return true;
-        }
-
+    public:
         static constexpr auto abs(unwrapped_type num) -> unwrapped_type
         {
             return std::abs(num);
@@ -230,6 +96,98 @@ namespace atom
         static constexpr auto sign(unwrapped_type num) -> unwrapped_type
         {
             return num < 0 ? -1 : 1;
+        }
+
+        static constexpr auto is_add_safe(unwrapped_type lhs, unwrapped_type rhs) -> bool
+        {
+            if (rhs > 0 && lhs > base_type::max() - rhs)
+                return false;
+
+            if (rhs < 0 && lhs < base_type::min() - rhs)
+                return false;
+
+            return true;
+        }
+
+        static constexpr auto is_sub_safe(unwrapped_type lhs, unwrapped_type rhs) -> bool
+        {
+            return is_add_safe(lhs, -rhs);
+        }
+
+        static constexpr auto is_mul_safe(unwrapped_type lhs, unwrapped_type rhs) -> bool
+        {
+            if (rhs > 0 && lhs > base_type::max() / rhs)
+                return false;
+
+            if (rhs < 0 && lhs < base_type::min() / rhs)
+                return false;
+
+            return true;
+        }
+
+        static constexpr auto is_div_safe(unwrapped_type num, unwrapped_type den) -> bool
+        {
+            if (den == 0)
+                return false;
+
+            if (num == base_type::min() && den == -1)
+                return false;
+
+            return true;
+        }
+
+        static constexpr auto is_abs_safe(unwrapped_type num) -> bool
+        {
+            return num != base_type::min();
+        }
+
+        static constexpr auto is_neg_safe(unwrapped_type num) -> bool
+        {
+            return num != base_type::min();
+        }
+
+        template <typename num_type>
+        static constexpr auto is_conversion_safe_from(num_type num) -> bool
+        {
+            return is_conversion_safe_from_unwrapped<typename num_type::unwrapped_type>(
+                num.to_unwrapped());
+        }
+
+        template <typename num_type>
+        static constexpr auto is_conversion_safe_from_unwrapped(num_type num) -> bool
+        {
+            if constexpr (std::is_signed_v<num_type>
+                          and std::numeric_limits<num_type>::min() < base_type::min())
+            {
+                if (num < base_type::min())
+                {
+                    return false;
+                }
+            }
+
+            if constexpr (std::numeric_limits<num_type>::max() > base_type::max())
+            {
+                if (num > base_type::max())
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        template <typename num_type>
+        static constexpr auto is_conversion_safe_to_unwrapped(unwrapped_type num) -> bool
+        {
+            if constexpr (base_type::min() < std::numeric_limits<num_type>::min())
+                if (num < std::numeric_limits<num_type>::min())
+                    return false;
+
+            if constexpr (base_type::max() > std::numeric_limits<num_type>::max())
+                if (num > std::numeric_limits<num_type>::max())
+                    return false;
+
+            return true;
         }
     };
 }
