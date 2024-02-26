@@ -804,7 +804,7 @@ namespace atom
                     and (rconstructible<elem_type, typename range_type::elem_type>)
         {
             usize count = _impl.insert_range_back(range.get_iter(), range.get_iter_end());
-            return _impl.get_mut_iter(_impl.get_count() - count);
+            return _impl.get_mut_iter_at(_impl.get_count() - count);
         }
 
         /// ----------------------------------------------------------------------------------------
