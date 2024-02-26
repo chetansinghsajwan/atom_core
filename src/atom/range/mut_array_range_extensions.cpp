@@ -42,21 +42,21 @@ namespace atom
             return _range().get_count();
         }
 
-        constexpr auto mut_at(usize i) -> elem_type&
+        constexpr auto get_mut_at(usize i) -> elem_type&
         {
             return (get_mut_data() + i).get_mut();
         }
 
         constexpr auto mut_front() -> elem_type&
         {
-            return mut_at(0);
+            return get_mut_at(0);
         }
 
         constexpr auto mut_back() -> elem_type&
         {
             contracts::debug_expects(get_count() > 0);
 
-            return mut_at(get_count() - 1);
+            return get_mut_at(get_count() - 1);
         }
 
         constexpr auto get_mut_iter_at(usize i) -> mut_iter_type
@@ -131,11 +131,11 @@ namespace atom
         /// # time complexity
         /// constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto mut_at(usize i) -> elem_type&
+        constexpr auto get_mut_at(usize i) -> elem_type&
         {
             contracts::expects(is_index_in_range(i), "index is out of range.");
 
-            return _impl().mut_at(i);
+            return _impl().get_mut_at(i);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -151,7 +151,7 @@ namespace atom
         {
             contracts::debug_expects(is_index_in_range(i), "index is out of range.");
 
-            return _impl().mut_at(i);
+            return _impl().get_mut_at(i);
         }
 
         using base_type::operator[];
@@ -199,7 +199,7 @@ namespace atom
         {
             contracts::expects(is_index_in_range(i), "index is out of range.");
 
-            return _impl().get_mut_iter(i);
+            return _impl().get_mut_iter_at(i);
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////

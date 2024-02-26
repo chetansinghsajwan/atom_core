@@ -195,7 +195,7 @@ namespace atom
         {
             contracts::expects(is_index_in_range(i), "index is out of range.");
 
-            return _impl().get_iter(i);
+            return _impl().get_iter_at(i);
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////
