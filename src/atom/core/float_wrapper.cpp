@@ -70,66 +70,6 @@ namespace atom
 }
 
 /// ------------------------------------------------------------------------------------------------
-/// apis
-/// ------------------------------------------------------------------------------------------------
-namespace atom
-{
-    template <typename impl_type>
-    class float_wrapper: public num_wrapper<impl_type>
-    {
-        using this_type = float_wrapper<impl_type>;
-        using base_type = num_wrapper<impl_type>;
-        using final_type = typename base_type::final_type;
-
-    public:
-        using unwrapped_type = typename base_type::unwrapped_type;
-
-    public:
-        using base_type::base_type;
-        using base_type::operator=;
-
-    public:
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        static consteval auto nan() -> this_type
-        {
-            return _wrap_final(impl_type::nan());
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto floor() const -> this_type
-        {
-            return _wrap_final(impl_type::floor(_value));
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto ceil() const -> this_type
-        {
-            return _wrap_final(impl_type::ceil(_value));
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto round() const -> this_type
-        {
-            return _wrap_final(impl_type::round(_value));
-        }
-
-    protected:
-        using base_type::_wrap_final;
-
-    public:
-        using base_type::_value;
-    };
-}
-
-/// ------------------------------------------------------------------------------------------------
 /// final types
 /// ------------------------------------------------------------------------------------------------
 export namespace atom
@@ -139,8 +79,8 @@ export namespace atom
     using _f64 = double;
     using _f128 = long double;
 
-    ATOM_ALIAS(f16, float_wrapper<_float_wrapper_impl<f16, _f16>>);
-    ATOM_ALIAS(f32, float_wrapper<_float_wrapper_impl<f32, _f32>>);
-    ATOM_ALIAS(f64, float_wrapper<_float_wrapper_impl<f64, _f64>>);
-    ATOM_ALIAS(f128, float_wrapper<_float_wrapper_impl<f128, _f128>>);
+    ATOM_ALIAS(f16, num_wrapper<_float_wrapper_impl<f16, _f16>>);
+    ATOM_ALIAS(f32, num_wrapper<_float_wrapper_impl<f32, _f32>>);
+    ATOM_ALIAS(f64, num_wrapper<_float_wrapper_impl<f64, _f64>>);
+    ATOM_ALIAS(f128, num_wrapper<_float_wrapper_impl<f128, _f128>>);
 }
