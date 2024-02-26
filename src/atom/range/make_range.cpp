@@ -35,23 +35,23 @@ namespace atom
         {}
 
     public:
-        constexpr auto iter() const -> iter_type
+        constexpr auto get_iter() const -> iter_type
         {
             return _it;
         }
 
-        constexpr auto iter_end() const -> iter_type
+        constexpr auto get_iter_end() const -> iter_type
         {
             return _it_end;
         }
 
-        constexpr auto data() const -> mem_ptr<elem_type>
+        constexpr auto get_data() const -> mem_ptr<elem_type>
             requires rarray_iter_pair<iter_type, iter_end_type>
         {
             return &_it.value();
         }
 
-        constexpr auto count() const -> usize
+        constexpr auto get_count() const -> usize
             requires rjump_iter_pair<iter_type, iter_end_type>
         {
             return _it_end.compare(_it).template to<usize>();
@@ -78,14 +78,14 @@ namespace atom
         {}
 
     public:
-        constexpr auto mut_iter() -> mut_iter_type
+        constexpr auto get_mut_iter() -> mut_iter_type
         {
-            return this->iter();
+            return this->get_iter();
         }
 
-        constexpr auto mut_iter_end() -> mut_iter_end_type
+        constexpr auto get_mut_iter_end() -> mut_iter_end_type
         {
-            return this->iter_end();
+            return this->get_iter_end();
         }
     };
 
@@ -312,7 +312,7 @@ export namespace atom
     template <typename elem_type>
     constexpr auto range_from_literal(range_literal<elem_type> lit)
     {
-        return make_range(lit.data(), lit.count());
+        return make_range(lit.get_data(), lit.get_count());
     }
 
     /// --------------------------------------------------------------------------------------------

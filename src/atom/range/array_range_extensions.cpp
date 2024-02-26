@@ -27,44 +27,42 @@ namespace atom
         using base_type::operator=;
 
     public:
-        constexpr auto data() const -> mem_ptr<elem_type>
+        constexpr auto get_data() const -> mem_ptr<elem_type>
         {
-            return _range().data();
+            return _range().get_data();
         }
 
-        constexpr auto count() const -> usize
+        constexpr auto get_count() const -> usize
         {
-            return _range().count();
+            return _range().get_count();
         }
 
-        constexpr auto at(usize i) const -> const elem_type&
+        constexpr auto get_at(usize i) const -> const elem_type&
         {
             contracts::debug_expects(is_index_in_range(i));
 
-            return data()[i];
+            return get_data()[i];
         }
 
-        constexpr auto front() const -> const elem_type&
+        constexpr auto get_front() const -> const elem_type&
         {
-            return at(0);
+            return get_at(0);
         }
 
-        constexpr auto back() const -> const elem_type&
+        constexpr auto get_back() const -> const elem_type&
         {
-            return back(count() - 1);
+            return get_back(get_count() - 1);
         }
 
         constexpr auto is_index_in_range(usize i) const -> bool
         {
-            return i < count();
+            return i < get_count();
         }
 
-        constexpr auto iter(usize i) const -> iter_type
+        constexpr auto get_iter_at(usize i) const -> iter_type
         {
-            return base_type::iter().next(i);
+            return base_type::get_iter().next(i);
         }
-
-        using base_type::iter;
 
     protected:
         using base_type::_range;
@@ -85,6 +83,7 @@ namespace atom
         using elem_type = typename base_type::elem_type;
         using iter_type = typename base_type::iter_type;
         using iter_end_type = typename base_type::iter_end_type;
+        using view_type = int;
 
     public:
         using base_type::base_type;
@@ -100,9 +99,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// get underlying ptr to arr.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto data() const -> mem_ptr<elem_type>
+        constexpr auto get_data() const -> mem_ptr<elem_type>
         {
-            return _impl().data();
+            return _impl().get_data();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -114,11 +113,11 @@ namespace atom
         /// # time complexity
         /// constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto at(usize i) const -> const elem_type&
+        constexpr auto get_at(usize i) const -> const elem_type&
         {
             contracts::expects(is_index_in_range(i), "index is out of range.");
 
-            return _impl().at(i);
+            return _impl().get_at(i);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -134,7 +133,7 @@ namespace atom
         {
             contracts::debug_expects(is_index_in_range(i), "index is out of range.");
 
-            return _impl().at(i);
+            return _impl().get_at(i);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -143,11 +142,11 @@ namespace atom
         /// # time complexity
         /// constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto front() const -> const elem_type&
+        constexpr auto get_front() const -> const elem_type&
         {
             contracts::debug_expects(not is_empty(), "range is empty.");
 
-            return _impl().front();
+            return _impl().get_front();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -156,19 +155,19 @@ namespace atom
         /// # time complexity
         /// constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto back() const -> const elem_type&
+        constexpr auto get_back() const -> const elem_type&
         {
             contracts::debug_expects(not is_empty(), "range is empty.");
 
-            return _impl().back();
+            return _impl().get_back();
         }
 
         /// ----------------------------------------------------------------------------------------
         /// get count of elements.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto count() const -> usize
+        constexpr auto get_count() const -> usize
         {
-            return _impl().count();
+            return _impl().get_count();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -176,7 +175,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto is_empty() const -> bool
         {
-            return _impl().count() == 0;
+            return _impl().get_count() == 0;
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////
@@ -192,14 +191,12 @@ namespace atom
         ///
         /// - `i`: index of the element to get iter at.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto iter(usize i) const -> iter_type
+        constexpr auto get_iter_at(usize i) const -> iter_type
         {
             contracts::expects(is_index_in_range(i), "index is out of range.");
 
-            return _impl().iter(i);
+            return _impl().get_iter(i);
         }
-
-        using base_type::iter;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////
@@ -208,19 +205,28 @@ namespace atom
         ////////////////////////////////////////////////////////////////////////////////////////////
 
         /// ----------------------------------------------------------------------------------------
-        /// # to do: review this.
+        ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto range(usize from, usize to) const {}
+        constexpr auto get_view(usize from, usize to) const -> view_type
+        {
+            return view_type();
+        }
 
         /// ----------------------------------------------------------------------------------------
-        /// # to do: review this.
+        ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto range_from(usize from) const {}
+        constexpr auto get_view_from(usize from) const -> view_type
+        {
+            return view_type();
+        }
 
         /// ----------------------------------------------------------------------------------------
-        /// # to do: review this.
+        ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto range_to(usize to) const {}
+        constexpr auto get_view_to(usize to) const -> view_type
+        {
+            return view_type();
+        }
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////

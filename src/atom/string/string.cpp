@@ -67,7 +67,7 @@ namespace std
         constexpr auto operator()(const atom::string& str) const -> std::size_t
         {
             const char* begin = str.to_std_char_ptr();
-            atom::_usize count = str.count().to_unwrapped();
+            atom::_usize count = str.get_count().to_unwrapped();
             return hash<std::string_view>()(std::string_view(begin, count));
         }
     };

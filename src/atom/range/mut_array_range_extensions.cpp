@@ -32,19 +32,19 @@ namespace atom
         using base_type::operator=;
 
     public:
-        constexpr auto mut_data() -> mut_mem_ptr<elem_type>
+        constexpr auto get_mut_data() -> mut_mem_ptr<elem_type>
         {
-            return _range().mut_data();
+            return _range().get_mut_data();
         }
 
-        constexpr auto count() const -> usize
+        constexpr auto get_count() const -> usize
         {
-            return _range().count();
+            return _range().get_count();
         }
 
         constexpr auto mut_at(usize i) -> elem_type&
         {
-            return (mut_data() + i).get_mut();
+            return (get_mut_data() + i).get_mut();
         }
 
         constexpr auto mut_front() -> elem_type&
@@ -54,17 +54,15 @@ namespace atom
 
         constexpr auto mut_back() -> elem_type&
         {
-            contracts::debug_expects(count() > 0);
+            contracts::debug_expects(get_count() > 0);
 
-            return mut_at(count() - 1);
+            return mut_at(get_count() - 1);
         }
 
-        constexpr auto mut_iter(usize i) -> mut_iter_type
+        constexpr auto get_mut_iter_at(usize i) -> mut_iter_type
         {
-            return base_type::mut_iter().next(i);
+            return base_type::get_mut_iter().next(i);
         }
-
-        using base_type::mut_iter;
 
     protected:
         using base_type::_range;
@@ -119,9 +117,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// get underlying ptr to arr.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto mut_data() -> mut_mem_ptr<elem_type>
+        constexpr auto get_mut_data() -> mut_mem_ptr<elem_type>
         {
-            return _impl().mut_data();
+            return _impl().get_mut_data();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -197,14 +195,12 @@ namespace atom
         ///
         /// - `i`: index of the element to get iter at.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto mut_iter(usize i) const -> mut_iter_type
+        constexpr auto get_mut_iter_at(usize i) const -> mut_iter_type
         {
             contracts::expects(is_index_in_range(i), "index is out of range.");
 
-            return _impl().mut_iter(i);
+            return _impl().get_mut_iter(i);
         }
-
-        using base_type::mut_iter;
 
         ////////////////////////////////////////////////////////////////////////////////////////////////
         ////

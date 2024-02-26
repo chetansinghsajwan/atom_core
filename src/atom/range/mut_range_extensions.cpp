@@ -31,14 +31,14 @@ namespace atom
         using base_type::operator=;
 
     public:
-        constexpr auto mut_iter() -> mut_iter_type
+        constexpr auto get_mut_iter() -> mut_iter_type
         {
-            return _range().mut_iter();
+            return _range().get_mut_iter();
         }
 
-        constexpr auto mut_iter_end() -> mut_iter_end_type
+        constexpr auto get_mut_iter_end() -> mut_iter_end_type
         {
-            return _range().mut_iter_end();
+            return _range().get_mut_iter_end();
         }
 
     protected:
@@ -85,17 +85,17 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto mut_iter() -> mut_iter_type
+        constexpr auto get_mut_iter() -> mut_iter_type
         {
-            return _impl().mut_iter();
+            return _impl().get_mut_iter();
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto mut_iter_end() -> mut_iter_end_type
+        constexpr auto get_mut_iter_end() -> mut_iter_end_type
         {
-            return _impl().mut_iter_end();
+            return _impl().get_mut_iter_end();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -103,7 +103,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto begin()
         {
-            return std_iter_wrap_for_atom_iter(_impl().mut_iter());
+            return std_iter_wrap_for_atom_iter(_impl().get_mut_iter());
         }
 
         using base_type::begin;
@@ -113,7 +113,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto end()
         {
-            return std_iter_wrap_for_atom_iter(_impl().mut_iter_end());
+            return std_iter_wrap_for_atom_iter(_impl().get_mut_iter_end());
         }
 
         using base_type::end;

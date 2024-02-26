@@ -75,8 +75,8 @@ namespace atom
         template <typename range_type>
         constexpr basic_array_view(const range_type& range)
             requires(rarray_range_of<range_type, elem_type>)
-            : _data(range.data())
-            , _count(range.count())
+            : _data(range.get_data())
+            , _count(range.get_count())
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -86,8 +86,8 @@ namespace atom
         constexpr basic_array_view& operator=(const range_type& range)
             requires(rarray_range_of<range_type, elem_type>)
         {
-            _data = range.data();
-            _count = range.count();
+            _data = range.get_data();
+            _count = range.get_count();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -99,7 +99,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto data() const -> mem_ptr<elem_type>
+        constexpr auto get_data() const -> mem_ptr<elem_type>
         {
             return _data;
         }
@@ -107,7 +107,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto count() const -> usize
+        constexpr auto get_count() const -> usize
         {
             return _count;
         }
@@ -115,7 +115,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto iter() const -> iter_type
+        constexpr auto get_iter() const -> iter_type
         {
             return iter_type(_data);
         }
@@ -123,7 +123,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto iter_end() const -> iter_end_type
+        constexpr auto get_iter_end() const -> iter_end_type
         {
             return iter_end_type(_data + _count);
         }

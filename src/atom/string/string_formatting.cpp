@@ -55,7 +55,7 @@ namespace atom
 
         constexpr auto advance_to(array_iter<uchar> it)
         {
-            _fmt_ctx.advance_to(it.data().as_unsafe<char>().to_unwrapped());
+            _fmt_ctx.advance_to(it.get_data().as_unsafe<char>().to_unwrapped());
         }
 
         constexpr auto _release_native() -> fmt::format_parse_context&
@@ -216,7 +216,8 @@ namespace atom
     public:
         constexpr auto format(num_type num, string_format_context& ctx) const
         {
-            _string_formatter_helper<typename num_type::unwrapped_type>::format(num.to_unwrapped(), ctx);
+            _string_formatter_helper<typename num_type::unwrapped_type>::format(
+                num.to_unwrapped(), ctx);
         }
     };
 
@@ -255,7 +256,8 @@ namespace atom
     public:
         constexpr auto format(string_view str, string_format_context& ctx) const
         {
-            fmt::string_view fmt_str(str.data().as_unsafe<char>().to_unwrapped(), str.count().to_unwrapped());
+            fmt::string_view fmt_str(
+                str.get_data().as_unsafe<char>().to_unwrapped(), str.get_count().to_unwrapped());
             _string_formatter_helper<fmt::string_view>::format(fmt_str, ctx);
         }
     };

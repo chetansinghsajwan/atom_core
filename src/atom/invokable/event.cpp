@@ -30,7 +30,7 @@ namespace atom
 
         auto remove_listener(key_type key) -> usize
         {
-            return _listeners.remove_if(
+            return _listeners.remove_one_if(
                 [&](const auto& listener) { return listener.get_type() == key; });
         }
 
@@ -50,7 +50,7 @@ namespace atom
 
         auto dispatch(event_arg_types... args) -> void
         {
-            for (auto& listener: _listeners)
+            for (auto& listener : _listeners)
             {
                 listener.invoke(args...);
             }

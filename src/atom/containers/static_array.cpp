@@ -33,37 +33,37 @@ namespace atom
         {}
 
     public:
-        constexpr auto data() const -> mem_ptr<elem_type>
+        constexpr auto get_data() const -> mem_ptr<elem_type>
         {
             return _arr;
         }
 
-        constexpr auto mut_data() -> mut_mem_ptr<elem_type>
+        constexpr auto get_mut_data() -> mut_mem_ptr<elem_type>
         {
             return _arr;
         }
 
-        constexpr auto count() const -> usize
+        constexpr auto get_count() const -> usize
         {
             return in_count;
         }
 
-        constexpr auto iter() const -> iter_type
+        constexpr auto get_iter() const -> iter_type
         {
             return iter_type(_arr);
         }
 
-        constexpr auto iter_end() const -> iter_end_type
+        constexpr auto get_iter_end() const -> iter_end_type
         {
             return iter_end_type(_arr + in_count.to_unwrapped());
         }
 
-        constexpr auto mut_iter() -> mut_iter_type
+        constexpr auto get_mut_iter() -> mut_iter_type
         {
             return mut_iter_type(_arr);
         }
 
-        constexpr auto mut_iter_end() -> mut_iter_end_type
+        constexpr auto get_mut_iter_end() -> mut_iter_end_type
         {
             return mut_iter_end_type(_arr + in_count);
         }

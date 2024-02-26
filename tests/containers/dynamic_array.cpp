@@ -7,8 +7,8 @@ TEST_CASE("atom.containers.dynamic_array")
 {
     dynamic_array<i32> arr;
 
-    REQUIRE(arr.count() == 0);
-    REQUIRE(arr.data() == nullptr);
+    REQUIRE(arr.get_count() == 0);
+    REQUIRE(arr.get_data() == nullptr);
 
     //     REQUIRE(arr.begin()         == arr.end());
     //     REQUIRE(arr.const_begin()    == arr.const_end());

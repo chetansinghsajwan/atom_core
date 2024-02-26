@@ -15,8 +15,8 @@ namespace atom::mock
         using iter_end_type = in_iter_end_type;
 
     public:
-        auto iter() const -> iter_type;
-        auto iter_end() const -> iter_end_type;
+        auto get_iter() const -> iter_type;
+        auto get_iter_end() const -> iter_end_type;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -33,10 +33,10 @@ namespace atom::mock
         using mut_iter_end_type = in_iter_end_type;
 
     public:
-        auto iter() const -> iter_type;
-        auto iter_end() const -> iter_end_type;
-        auto mut_iter() -> mut_iter_type;
-        auto mut_iter_end() -> mut_iter_end_type;
+        auto get_iter() const -> iter_type;
+        auto get_iter_end() const -> iter_end_type;
+        auto get_mut_iter() -> mut_iter_type;
+        auto get_mut_iter_end() -> mut_iter_end_type;
     };
 }
 

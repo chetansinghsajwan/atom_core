@@ -104,8 +104,9 @@ export namespace atom
                           << " violation:"
                           << "\n\twith msg: " << violation.msg << "'"
                           << "\n\tat: " << violation.src.file_name << ":"
-                          << violation.src.line.to_unwrapped() << ":" << violation.src.column.to_unwrapped()
-                          << ": " << violation.src.func_name << std::endl;
+                          << violation.src.line.to_unwrapped() << ":"
+                          << violation.src.column.to_unwrapped() << ": " << violation.src.func_name
+                          << std::endl;
 
                 std::terminate();
             }

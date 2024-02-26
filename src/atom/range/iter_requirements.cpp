@@ -277,7 +277,7 @@ export namespace atom
     {
         requires rjump_iter<iter_type>;
 
-        { cit.data() } -> rconvertible_to<mem_ptr<typename iter_type::elem_type>>;
+        { cit.get_data() } -> rconvertible_to<mem_ptr<typename iter_type::elem_type>>;
     };
 
     template <typename iter_type>
@@ -286,7 +286,7 @@ export namespace atom
         requires rarray_iter<iter_type>;
         requires _rmut_iter<iter_type>;
 
-        { it.mut_data() } -> rconvertible_to<mut_mem_ptr<typename iter_type::elem_type>>;
+        { it.get_mut_data() } -> rconvertible_to<mut_mem_ptr<typename iter_type::elem_type>>;
     };
 
     template <typename iter_type, typename type>

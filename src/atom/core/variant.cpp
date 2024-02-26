@@ -464,7 +464,7 @@ export namespace atom
         /// ----------------------------------------------------------------------------------------
         /// count of types this variant supports.
         /// ----------------------------------------------------------------------------------------
-        static consteval auto count() -> usize
+        static consteval auto get_count() -> usize
         {
             return _impl_type::get_type_count();
         }
@@ -755,9 +755,9 @@ export namespace atom
         /// # see also
         /// - [`tat`]
         /// ----------------------------------------------------------------------------------------
-        template <usize i>
-        constexpr auto at() const -> const tat<i>&
-            requires(has<i>())
+        template <usize index>
+        constexpr auto get_at() const -> const type_at<index>&
+            requires(has<index>()) and (not ris_void<type_at<index>>)
         {
             contracts::expects(is<i>(), "access to invalid type by index.");
 
@@ -773,9 +773,9 @@ export namespace atom
         /// # see also
         /// - [`tat`]
         /// ----------------------------------------------------------------------------------------
-        template <usize i>
-        constexpr auto at() -> tat<i>&
-            requires(has<i>())
+        template <usize index>
+        constexpr auto get_at() -> type_at<index>&
+            requires(has<index>()) and (not ris_void<type_at<index>>)
         {
             contracts::expects(is<i>(), "access to invalid type by index.");
 

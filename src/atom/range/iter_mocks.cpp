@@ -170,7 +170,7 @@ export namespace atom::mock
 
     public:
         auto value() const -> const elem_type&;
-        auto data() const -> mem_ptr<in_value_type>;
+        auto get_data() const -> mem_ptr<in_value_type>;
         auto next(usize steps = 1) -> array_iter&;
         auto prev(usize steps = 1) -> array_iter&;
         auto is_eq(array_iter end) const -> bool;
@@ -189,8 +189,8 @@ export namespace atom::mock
     public:
         auto value() const -> const elem_type&;
         auto mut_value() -> elem_type&;
-        auto data() const -> mem_ptr<in_value_type>;
-        auto mut_data() -> mut_mem_ptr<in_value_type>;
+        auto get_data() const -> mem_ptr<in_value_type>;
+        auto get_mut_data() -> mut_mem_ptr<in_value_type>;
         auto next(usize steps = 1) -> mut_array_iter&;
         auto prev(usize steps = 1) -> mut_array_iter&;
         auto is_eq(mut_array_iter end) const -> bool;

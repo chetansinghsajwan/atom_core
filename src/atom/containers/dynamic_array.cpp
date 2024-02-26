@@ -46,7 +46,7 @@ namespace atom
         {}
 
         constexpr _dynamic_array_impl(copy_tag, const _dynamic_array_impl& that)
-            : this_type(range_tag(), that.iter(), that.iter_end())
+            : this_type(range_tag(), that.get_iter(), that.get_iter_end())
         {}
 
         constexpr _dynamic_array_impl(move_tag, _dynamic_array_impl& that)
@@ -75,7 +75,7 @@ namespace atom
         }
 
     public:
-        constexpr auto at(usize i) const -> const elem_type&
+        constexpr auto get_at(usize i) const -> const elem_type&
         {
             return _get_data()[i];
         }
@@ -85,22 +85,22 @@ namespace atom
             return _get_mut_data()[i];
         }
 
-        constexpr auto iter(usize i = 0) const -> iter_type
+        constexpr auto get_iter(usize i = 0) const -> iter_type
         {
             return iter_type(_get_data() + i);
         }
 
-        constexpr auto iter_end() const -> iter_end_type
+        constexpr auto get_iter_end() const -> iter_end_type
         {
             return iter_end_type(_get_data() + _get_count());
         }
 
-        constexpr auto mut_iter(usize i = 0) -> mut_iter_type
+        constexpr auto get_mut_iter(usize i = 0) -> mut_iter_type
         {
             return mut_iter_type(_get_mut_data() + i);
         }
 
-        constexpr auto mut_iter_end() -> mut_iter_end_type
+        constexpr auto get_mut_iter_end() -> mut_iter_end_type
         {
             return mut_iter_end_type(_get_mut_data() + _get_count());
         }
@@ -197,27 +197,27 @@ namespace atom
 
         constexpr auto release_unused_mem() {}
 
-        constexpr auto capacity() const -> usize
+        constexpr auto get_capacity() const -> usize
         {
             return _get_capacity();
         }
 
-        constexpr auto count() const -> usize
+        constexpr auto get_count() const -> usize
         {
             return _get_count();
         }
 
-        constexpr auto data() const -> mem_ptr<elem_type>
+        constexpr auto get_data() const -> mem_ptr<elem_type>
         {
             return _get_data();
         }
 
-        constexpr auto mut_data() -> mut_mem_ptr<elem_type>
+        constexpr auto get_mut_data() -> mut_mem_ptr<elem_type>
         {
             return _get_mut_data();
         }
 
-        constexpr auto alloc() const -> const allocator_type&
+        constexpr auto get_allocator() const -> const allocator_type&
         {
             return _allocator;
         }
@@ -237,27 +237,21 @@ namespace atom
             return true;
         }
 
-        constexpr auto index_for_iter(iter_type it) const -> usize
+        constexpr auto get_index_for_iter(iter_type it) const -> usize
         {
-            isize i = it.data() - _get_data();
+            isize i = it.get_data() - _get_data();
             return i < 0 ? usize::max() : usize(i);
         }
 
         constexpr auto is_iter_in_range(iter_type it) const -> bool
         {
-            return index_for_iter(it) < _get_count();
+            return get_index_for_iter(it) < _get_count();
         }
 
         constexpr auto is_iter_in_range_or_end(iter_type it) const -> bool
         {
-            return index_for_iter(it) <= _get_count();
+            return get_index_for_iter(it) <= _get_count();
         }
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        ////
-        //// implementations
-        ////
-        ////////////////////////////////////////////////////////////////////////////////////////////
 
     private:
         constexpr auto _release_all_mem()
@@ -472,9 +466,9 @@ namespace atom
             return _arr + _count;
         }
 
-        constexpr auto _set_data(mut_mem_ptr<elem_type> data)
+        constexpr auto _set_data(mut_mem_ptr<elem_type> get_data)
         {
-            _arr = data;
+            _arr = get_data;
         }
 
         constexpr auto _get_count() const -> usize
@@ -567,7 +561,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator=(const basic_dynamic_array& that) -> basic_dynamic_array&
         {
-            _impl.assign_range(that.iter(), that.iter_end());
+            _impl.assign_range(that.get_iter(), that.get_iter_end());
             return *this;
         }
 
@@ -593,7 +587,7 @@ namespace atom
         template <typename range_type>
         constexpr basic_dynamic_array(range_type&& range)
             requires(rrange_of<pure_type<range_type>, elem_type>)
-            : _impl(typename _impl_type::range_tag(), range.iter(), range.iter_end())
+            : _impl(typename _impl_type::range_tag(), range.get_iter(), range.get_iter_end())
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -603,7 +597,7 @@ namespace atom
         constexpr basic_dynamic_array& operator=(range_type&& range)
             requires(rrange_of<range_type, elem_type>)
         {
-            _impl.assign_range(range.iter(), range.iter_end());
+            _impl.assign_range(range.get_iter(), range.get_iter_end());
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -612,66 +606,6 @@ namespace atom
         constexpr ~basic_dynamic_array() {}
 
     public:
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto data() const -> mem_ptr<elem_type>
-        {
-            return _impl.data();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto mut_data() -> mut_mem_ptr<elem_type>
-        {
-            return _impl.mut_data();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto count() const -> usize
-        {
-            return _impl.count();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto iter(usize i = 0) const -> iter_type
-        {
-            contracts::debug_expects(is_index_in_range_or_end(i));
-
-            return _impl.iter(i);
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto iter_end() const -> iter_end_type
-        {
-            return _impl.iter_end();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto mut_iter(usize i = 0) -> mut_iter_type
-        {
-            contracts::debug_expects(is_index_in_range_or_end(i));
-
-            return _impl.mut_iter(i);
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto mut_iter_end() -> mut_iter_end_type
-        {
-            return _impl.mut_iter_end();
-        }
-
         /// ----------------------------------------------------------------------------------------
         /// constructs element at index `i` with `args`.
         ///
@@ -720,13 +654,13 @@ namespace atom
             contracts::debug_expects(is_iter_valid(it), "invalid iter.");
             contracts::debug_expects(is_iter_in_range_or_end(it), "iter is out of range.");
 
-            usize i = index_for_iter(it);
+            usize i = get_index_for_iter(it);
             _impl.emplace_at(i, forward<arg_types>(args)...);
-            return _impl.mut_iter(i);
+            return _impl.get_mut_iter(i);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// inserts elements at index `i`. forwards each value returned by `range.iter()` to
+        /// inserts elements at index `i`. forwards each value returned by `range.get_iter()` to
         /// constructor of element in the arr.
         ///
         /// # parameters
@@ -751,11 +685,11 @@ namespace atom
         {
             contracts::debug_expects(is_index_in_range_or_end(i), "index is out of range.");
 
-            return _impl.insert_range_at(i, range.iter(), range.iter_end());
+            return _impl.insert_range_at(i, range.get_iter(), range.get_iter_end());
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// inserts elements at pos `it`. forwards each value returned by `range.iter()` to
+        /// inserts elements at pos `it`. forwards each value returned by `range.get_iter()` to
         /// constructor of element in the arr.
         ///
         /// # parameters
@@ -781,9 +715,9 @@ namespace atom
             contracts::debug_expects(is_iter_valid(it), "invalid iter.");
             contracts::debug_expects(is_iter_in_range_or_end(it), "iter is out of range.");
 
-            usize i = index_for_iter(it);
-            usize count = _impl.insert_range_at(i, range.iter(), range.iter_end());
-            return make_range(_impl.mut_iter(i), _impl.mut_iter(i + count));
+            usize i = get_index_for_iter(it);
+            usize count = _impl.insert_range_at(i, range.get_iter(), range.get_iter_end());
+            return make_range(_impl.get_mut_iter(i), _impl.get_mut_iter(i + count));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -807,7 +741,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// inserts elements at front. forwards each value returned by `range.iter()` to
+        /// inserts elements at front. forwards each value returned by `range.get_iter()` to
         /// constructor of element in the arr.
         ///
         /// # parameters
@@ -830,7 +764,7 @@ namespace atom
                     and (rconstructible<elem_type, typename range_type::elem_type>)
         {
             usize count = _impl.insert_range_front(forward<range_type&&>(range));
-            return _impl.mut_iter(count);
+            return _impl.get_mut_iter(count);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -864,7 +798,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// inserts elements at back. forwards each value returned by `range.iter()` to
+        /// inserts elements at back. forwards each value returned by `range.get_iter()` to
         /// constructor of element in the arr.
         ///
         /// # parameters
@@ -886,8 +820,8 @@ namespace atom
             requires(rrange_of<range_type, elem_type>)
                     and (rconstructible<elem_type, typename range_type::elem_type>)
         {
-            usize count = _impl.insert_range_back(range.iter(), range.iter_end());
-            return _impl.mut_iter(_impl.count() - count);
+            usize count = _impl.insert_range_back(range.get_iter(), range.get_iter_end());
+            return _impl.get_mut_iter(_impl.get_count() - count);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -899,7 +833,7 @@ namespace atom
             requires(rrange_of<pure_type<range_type>, elem_type>)
                     and (rconstructible<elem_type, typename pure_type<range_type>::elem_type>)
         {
-            _impl.insert_range_back(move(range.iter()), move(range.iter_end()));
+            _impl.insert_range_back(move(range.get_iter()), move(range.get_iter_end()));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -926,16 +860,16 @@ namespace atom
         /// # returns
         ///
         /// [mut_iter_type] to next element. if `it` was pointing to the last element, returns
-        /// [`iter_end()`].
+        /// [`get_iter_end()`].
         /// ----------------------------------------------------------------------------------------
         constexpr auto remove_at(iter_type it) -> mut_iter_type
         {
             contracts::debug_expects(is_iter_valid(it), "invalid iter.");
             contracts::debug_expects(is_iter_in_range(it), "iter is out of range.");
 
-            usize i = index_for_iter(it);
+            usize i = get_index_for_iter(it);
             _impl.remove_at(i);
-            return _impl.mut_iter(i);
+            return _impl.get_mut_iter(i);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -954,14 +888,14 @@ namespace atom
         ///
         /// after removing `to - from` elements, next elements will be shifted back to index `from`.
         /// so the next element will be available at index `from`. if the last element of the arr
-        /// was also removed, `from` will be equal to [`count()`].
+        /// was also removed, `from` will be equal to [`get_count()`].
         /// ----------------------------------------------------------------------------------------
         constexpr auto remove_range(usize from, usize to) -> usize
         {
             contracts::debug_expects(from <= to, "invalid range.");
             contracts::debug_expects(is_index_in_range(to), "index was out of range.");
             // todo: what should we do about fnret?
-            // contracts::debug_ensures(fnret <= count(), "invalid return value.");
+            // contracts::debug_ensures(fnret <= get_count(), "invalid return value.");
 
             _impl.remove_range(from, to);
             return from;
@@ -978,7 +912,7 @@ namespace atom
         /// # returns
         ///
         /// [`mut_iter_type`] to next element of the last removed element. if the last removed element
-        /// was also the last element of the arr, returns [`iter_end()`].
+        /// was also the last element of the arr, returns [`get_iter_end()`].
         /// ----------------------------------------------------------------------------------------
         constexpr auto remove_range(iter_type it, iter_type it_end) -> mut_iter_type
         {
@@ -988,10 +922,10 @@ namespace atom
             contracts::debug_expects(is_iter_in_range(it_end), "iter is out range.");
             contracts::debug_expects(it.compare(it_end) <= 0, "invalid range.");
 
-            usize from = index_for_iter(it);
-            usize to = index_for_iter(it_end);
+            usize from = get_index_for_iter(it);
+            usize to = get_index_for_iter(it_end);
             _impl.remove_range(from, to);
-            return _impl.mut_iter(from);
+            return _impl.get_mut_iter(from);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -999,7 +933,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto remove_front(usize count_ = 1)
         {
-            contracts::debug_expects(count_ <= count());
+            contracts::debug_expects(count_ <= get_count());
 
             _impl.remove_front(count_);
         }
@@ -1009,7 +943,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto remove_back(usize count_ = 1)
         {
-            contracts::debug_expects(count_ <= count());
+            contracts::debug_expects(count_ <= get_count());
 
             _impl.remove_back(count_);
         }
@@ -1017,31 +951,69 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto remove_find(const elem_type& elem) -> usize
+        constexpr auto remove_one_find(const elem_type& elem) -> bool
         {
-            for (usize i = 0; i < _impl.count(); i++)
+            for (usize i = 0; i < _impl.get_count(); i++)
             {
-                if (_impl.data()[i] == elem)
+                if (_impl.get_data()[i] == elem)
                 {
                     _impl.remove_at(i);
-                    return i;
+                    return true;
                 }
             }
 
-            return usize::max();
+            return false;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto remove_all_find(const elem_type& elem) -> usize
+        {
+            usize removed_count = 0;
+            for (usize i = 0; i < _impl.get_count(); i++)
+            {
+                if (_impl.get_data()[i] == elem)
+                {
+                    _impl.remove_at(i);
+                    i--;
+                    removed_count++;
+                }
+            }
+
+            return removed_count;
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename pred_type>
-        constexpr auto remove_if(pred_type&& pred) -> usize
+        constexpr auto remove_one_if(pred_type&& pred) -> bool
+            requires(rinvokable<pred_type, bool(const elem_type&)>)
+        {
+            for (usize i = 0; i < _impl.get_count(); i++)
+            {
+                if (pred(_impl.get_data()[i]))
+                {
+                    _impl.remove_at(i);
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename pred_type>
+        constexpr auto remove_all_if(pred_type&& pred) -> usize
             requires(rinvokable<pred_type, bool(const elem_type&)>)
         {
             usize removed_count = 0;
-            for (usize i = 0; i < _impl.count(); i++)
+            for (usize i = 0; i < _impl.get_count(); i++)
             {
-                if (pred(_impl.data()[i]))
+                if (pred(_impl.get_data()[i]))
                 {
                     _impl.remove_at(i);
                     i--;
@@ -1061,6 +1033,66 @@ namespace atom
         constexpr auto remove_all()
         {
             _impl.remove_all();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto get_data() const -> mem_ptr<elem_type>
+        {
+            return _impl.get_data();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto get_mut_data() -> mut_mem_ptr<elem_type>
+        {
+            return _impl.get_mut_data();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto get_count() const -> usize
+        {
+            return _impl.get_count();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto get_iter(usize i = 0) const -> iter_type
+        {
+            contracts::debug_expects(is_index_in_range_or_end(i));
+
+            return _impl.get_iter(i);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto get_iter_end() const -> iter_end_type
+        {
+            return _impl.get_iter_end();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto get_mut_iter(usize i = 0) -> mut_iter_type
+        {
+            contracts::debug_expects(is_index_in_range_or_end(i));
+
+            return _impl.get_mut_iter(i);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto get_mut_iter_end() -> mut_iter_end_type
+        {
+            return _impl.get_mut_iter_end();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -1091,9 +1123,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// total count of places, with elements and reserved.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto capacity() const -> usize
+        constexpr auto get_capacity() const -> usize
         {
-            return _impl.capacity();
+            return _impl.get_capacity();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -1101,19 +1133,19 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto reserved_count() const -> usize
         {
-            return _impl.capacity() - _impl.count();
+            return _impl.get_capacity() - _impl.get_count();
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto alloc() const -> const allocator_type&
+        constexpr auto get_allocator() const -> const allocator_type&
         {
-            return _impl.alloc();
+            return _impl.get_allocator();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// checks if index `i` is in range [`0`, [`count()`]).
+        /// checks if index `i` is in range [`0`, [`get_count()`]).
         /// ----------------------------------------------------------------------------------------
         constexpr bool is_index_in_range(usize i) const
         {
@@ -1121,7 +1153,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// checks if index `i` is in range [`0`, [`count()`]].
+        /// checks if index `i` is in range [`0`, [`get_count()`]].
         /// ----------------------------------------------------------------------------------------
         constexpr bool is_index_in_range_or_end(usize i) const
         {
@@ -1131,9 +1163,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// get index for iter `it`.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto index_for_iter(iter_type it) const -> usize
+        constexpr auto get_index_for_iter(iter_type it) const -> usize
         {
-            return _impl.index_for_iter(it);
+            return _impl.get_index_for_iter(it);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -1149,7 +1181,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// checks if iter `pos` is in range [[`iter()`], [`iter_end()`]).
+        /// checks if iter `pos` is in range [[`get_iter()`], [`get_iter_end()`]).
         /// ----------------------------------------------------------------------------------------
         constexpr bool is_iter_in_range(iter_type it) const
         {
@@ -1157,7 +1189,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// checks if iter `pos` is in range [[`iter()`], [`iter_end()`]].
+        /// checks if iter `pos` is in range [[`get_iter()`], [`get_iter_end()`]].
         /// ----------------------------------------------------------------------------------------
         constexpr bool is_iter_in_range_or_end(iter_type it) const
         {

@@ -20,12 +20,12 @@ namespace atom
         {}
 
     public:
-        constexpr auto data() const -> mem_ptr<elem_type>
+        constexpr auto get_data() const -> mem_ptr<elem_type>
         {
             return _arr;
         }
 
-        constexpr auto count() const -> usize
+        constexpr auto get_count() const -> usize
         {
             return _count;
         }
@@ -45,9 +45,9 @@ namespace atom
         using base_type::operator=;
 
     public:
-        constexpr auto data() const -> mem_ptr<uchar>
+        constexpr auto get_data() const -> mem_ptr<uchar>
         {
-            return base_type::data().as_unsafe<uchar>();
+            return base_type::get_data().as_unsafe<uchar>();
         }
     };
 }

@@ -36,7 +36,7 @@ namespace atom
         using reference = value_type&;
 
     public:
-        constexpr std_iter_wrap_for_atom_iter(iter_type& iter)
+        constexpr std_iter_wrap_for_atom_iter(const iter_type& iter)
             : iter(iter)
         {}
 

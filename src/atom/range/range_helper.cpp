@@ -30,7 +30,7 @@ export namespace atom
         constexpr auto get_count(const range_type& range) const -> usize
             requires rfwd_range<range_type>
         {
-            return _get_count(range.iter(), range.iter_end());
+            return _get_count(range.get_iter(), range.get_iter_end());
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -41,7 +41,7 @@ export namespace atom
             requires rmut_range<range_type>
                      and rassignable<typename range_type::elem_type, elem_type>
         {
-            _fill(range.iter(), range.iter_end(), forward<elem_type>(val));
+            _fill(range.get_iter(), range.get_iter_end(), forward<elem_type>(val));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -54,7 +54,7 @@ export namespace atom
             requires rmut_range<range_type>
                      and rassignable<typename range_type::elem_type, elem_type>
         {
-            _fill(range.iter(), range.iter_end(), forward<elem_type>(val));
+            _fill(range.get_iter(), range.get_iter_end(), forward<elem_type>(val));
         }
 
         ATOM_PRAGMA_OPTIMIZE_ON
@@ -68,7 +68,8 @@ export namespace atom
                      and rassignable<typename range_type_1::elem_type,
                          typename range_type_0::elem_type>
         {
-            _fwd_copy(range0.iter(), range0.iter_end(), range1.iter(), range1.iter_end());
+            _fwd_copy(range0.get_iter(), range0.get_iter_end(), range1.get_iter(),
+                range1.get_iter_end());
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -80,7 +81,8 @@ export namespace atom
                      and rassignable<typename range_type_1::elem_type,
                          typename range_type_0::elem_type>
         {
-            _bwd_copy(range0.iter(), range0.iter_end(), range1.iter(), range1.iter_end());
+            _bwd_copy(range0.get_iter(), range0.get_iter_end(), range1.get_iter(),
+                range1.get_iter_end());
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -92,7 +94,8 @@ export namespace atom
                      and rassignable<typename range_type_1::elem_type,
                          typename range_type_0::elem_type>
         {
-            _fwd_move(range0.iter(), range0.iter_end(), range1.iter(), range1.iter_end());
+            _fwd_move(range0.get_iter(), range0.get_iter_end(), range1.get_iter(),
+                range1.get_iter_end());
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -104,7 +107,8 @@ export namespace atom
                      and rassignable<typename range_type_1::elem_type,
                          typename range_type_0::elem_type>
         {
-            _bwd_move(range0.iter(), range0.iter_end(), range1.iter(), range1.iter_end());
+            _bwd_move(range0.get_iter(), range0.get_iter_end(), range1.get_iter(),
+                range1.get_iter_end());
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -114,7 +118,7 @@ export namespace atom
         constexpr auto shift_fwd(range_type&& range, usize steps) const -> void
             requires rmut_fwd_range<range_type> and rmove_assignable<typename range_type::elem_type>
         {
-            _fwd_shift(range.iter(), range.iter_end(), steps);
+            _fwd_shift(range.get_iter(), range.get_iter_end(), steps);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -124,7 +128,7 @@ export namespace atom
         constexpr auto shift_bwd(range_type&& range, usize steps) const -> void
             requires rmut_fwd_range<range_type> and rmove_assignable<typename range_type::elem_type>
         {
-            _bwd_shift(range.iter(), range.iter_end(), steps);
+            _bwd_shift(range.get_iter(), range.get_iter_end(), steps);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -136,11 +140,11 @@ export namespace atom
         {
             if (steps > 0)
             {
-                _bwd_shift(range.iter(), range.iter_end(), steps);
+                _bwd_shift(range.get_iter(), range.get_iter_end(), steps);
             }
             else
             {
-                _fwd_shift(range.iter(), range.iter_end(), -steps);
+                _fwd_shift(range.get_iter(), range.get_iter_end(), -steps);
             }
         }
 
@@ -151,7 +155,7 @@ export namespace atom
         constexpr auto rotate_fwd(range_type&& range, usize steps) const -> void
             requires rmut_range<range_type> and rswappable<typename range_type::elem_type>
         {
-            _fwd_rotate(range.iter(), range.iter_end(), steps);
+            _fwd_rotate(range.get_iter(), range.get_iter_end(), steps);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -161,7 +165,7 @@ export namespace atom
         constexpr auto rotate_bwd(range_type&& range, usize steps) const -> void
             requires rmut_range<range_type> and rswappable<typename range_type::elem_type>
         {
-            _bwd_rotate(range.iter(), range.iter_end(), steps);
+            _bwd_rotate(range.get_iter(), range.get_iter_end(), steps);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -173,11 +177,11 @@ export namespace atom
         {
             if (steps > 0)
             {
-                _bwd_rotate(range.iter(), range.iter_end(), steps);
+                _bwd_rotate(range.get_iter(), range.get_iter_end(), steps);
             }
             else
             {
-                _fwd_rotate(range.iter(), range.iter_end(), -steps);
+                _fwd_rotate(range.get_iter(), range.get_iter_end(), -steps);
             }
         }
 
@@ -188,7 +192,7 @@ export namespace atom
         constexpr auto destruct(range_type&& range) const -> void
             requires rmut_range<range_type> and rdestructible<typename range_type::elem_type>
         {
-            _destruct(range.iter(), range.iter_end());
+            _destruct(range.get_iter(), range.get_iter_end());
         }
 
     private:
@@ -269,7 +273,7 @@ export namespace atom
         {
             if constexpr (rarray_iter_pair<iter_type, iter_end_type>)
             {
-                std::shift_right(iter.data(), iter_end.data(), steps);
+                std::shift_right(iter.get_data(), iter_end.get_data(), steps);
                 return;
             }
 
@@ -284,7 +288,7 @@ export namespace atom
         {
             if constexpr (rarray_iter_pair<iter_type, iter_end_type>)
             {
-                std::shift_left(iter.data(), iter_end.data(), steps);
+                std::shift_left(iter.get_data(), iter_end.get_data(), steps);
                 return;
             }
 
@@ -300,7 +304,7 @@ export namespace atom
         {
             if constexpr (rarray_iter_pair<iter_type, iter_end_type>)
             {
-                std::rotate(iter.data(), iter.data() + steps, iter_end.data());
+                std::rotate(iter.get_data(), iter.get_data() + steps, iter_end.get_data());
                 return;
             }
 
@@ -316,7 +320,7 @@ export namespace atom
         {
             if constexpr (rarray_iter_pair<iter_type, iter_end_type>)
             {
-                std::rotate(iter.data(), iter_end.data() - steps, iter_end.data());
+                std::rotate(iter.get_data(), iter_end.get_data() - steps, iter_end.get_data());
                 return;
             }
 
@@ -331,7 +335,7 @@ export namespace atom
         {
             if constexpr (rarray_iter_pair<iter_type, iter_end_type>)
             {
-                std::destroy(iter.data(), iter_end.data());
+                std::destroy(iter.get_data(), iter_end.get_data());
                 return;
             }
 

@@ -35,7 +35,7 @@ TEST_CASE("atom.core.variant")
 
     SECTION("count")
     {
-        REQUIRE(variant<i32, f64, f32, bool>::count() == 4);
+        REQUIRE(variant<i32, f64, f32, bool>::get_count() == 4);
     }
 
     SECTION("has")
@@ -341,6 +341,6 @@ TEST_CASE("atom.core.variant")
         REQUIRE(v.as<uchar>() == uchar('h'));
 
         REQUIRE(v.is<2>());
-        REQUIRE(v.at<2>() == uchar('h'));
+        REQUIRE(v.get_at<2>() == uchar('h'));
     }
 }

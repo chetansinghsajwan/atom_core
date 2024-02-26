@@ -17,8 +17,8 @@ export namespace atom
 
         requires rsame_as<typename range_type::elem_type, typename range_type::iter_type::elem_type>;
 
-        { range.iter() } -> rsame_as<typename range_type::iter_type>;
-        { range.iter_end() } -> rsame_as<typename range_type::iter_end_type>;
+        { range.get_iter() } -> rsame_as<typename range_type::iter_type>;
+        { range.get_iter_end() } -> rsame_as<typename range_type::iter_end_type>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -42,8 +42,8 @@ export namespace atom
         typename range_type::mut_iter_type;
         typename range_type::mut_iter_end_type;
 
-        { range.mut_iter() } -> rsame_as<typename range_type::mut_iter_type>;
-        { range.mut_iter_end() } -> rsame_as<typename range_type::mut_iter_end_type>;
+        { range.get_mut_iter() } -> rsame_as<typename range_type::mut_iter_type>;
+        { range.get_mut_iter_end() } -> rsame_as<typename range_type::mut_iter_end_type>;
     };
 
     /// --------------------------------------------------------------------------------------------

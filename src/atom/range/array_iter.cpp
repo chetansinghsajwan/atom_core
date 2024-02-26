@@ -44,7 +44,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// access value by ptr.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto data() const -> mem_ptr<type>
+        constexpr auto get_data() const -> mem_ptr<type>
         {
             return this->_it;
         }
@@ -147,9 +147,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// access value by mut ptr.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto mut_data() -> mut_mem_ptr<type>
+        constexpr auto get_mut_data() -> mut_mem_ptr<type>
         {
-            return const_cast<mut_mem_ptr<type>>(base_type::data());
+            return const_cast<mut_mem_ptr<type>>(base_type::get_data());
         }
 
         /// ----------------------------------------------------------------------------------------
