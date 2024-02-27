@@ -27,6 +27,10 @@ export namespace atom::tests
             move_constructor_as_that,
             move_operator,
             move_operator_as_that,
+            value_copy_constructor,
+            value_move_constructor,
+            value_copy_operator,
+            value_move_operator,
             destructor,
 
             equal_operator,
@@ -50,6 +54,10 @@ export namespace atom::tests
                 case eoperation::move_constructor_as_that:    return "move_constructor_as_that";
                 case eoperation::move_operator:               return "move_operator";
                 case eoperation::move_operator_as_that:       return "move_operator_as_that";
+                case eoperation::value_copy_constructor:      return "value_copy_constructor";
+                case eoperation::value_move_constructor:      return "value_move_constructor";
+                case eoperation::value_copy_operator:         return "value_copy_operator";
+                case eoperation::value_move_operator:         return "value_move_operator";
                 case eoperation::destructor:                  return "destructor";
                 case eoperation::equal_operator:              return "equal_operator";
                 case eoperation::less_than_operator:          return "less_than_operator";
@@ -92,6 +100,10 @@ export namespace atom::tests
             that.last_op = eoperation::move_operator_as_that;
             return *this;
         }
+
+        constexpr tracked_type(eoperation op)
+            : last_op(op)
+        {}
 
         constexpr ~tracked_type()
         {
@@ -151,12 +163,28 @@ export namespace atom::tests
         using base_type::operator=;
 
         constexpr tracked_type_of(const value_type& value)
-            : value(value)
+            : base_type(eoperation::value_copy_constructor)
+            , value(value)
         {}
 
         constexpr tracked_type_of(value_type&& value)
-            : value(move(value))
+            : base_type(eoperation::value_move_constructor)
+            , value(move(value))
         {}
+
+        constexpr auto operator=(const value_type& value) -> tracked_type&
+        {
+            last_op = eoperation::value_copy_operator;
+            this->value = value;
+            return *this;
+        }
+
+        constexpr auto operator=(value_type&& value) -> tracked_type&
+        {
+            last_op = eoperation::value_move_operator;
+            this->value = move(value);
+            return *this;
+        }
 
     public:
         value_type value;
