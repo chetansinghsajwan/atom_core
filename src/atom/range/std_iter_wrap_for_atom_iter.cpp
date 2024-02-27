@@ -25,7 +25,7 @@ namespace atom
     template <typename iter_type>
     class std_iter_wrap_for_atom_iter
     {
-        using this_type = std_iter_wrap_for_atom_iter<iter_type>;
+        using this_type = std_iter_wrap_for_atom_iter;
 
     public:
         using value_type = typename iter_type::elem_type;
@@ -37,6 +37,7 @@ namespace atom
 
     public:
         constexpr std_iter_wrap_for_atom_iter(const iter_type& iter)
+            requires rfwd_iter<iter_type>
             : iter(iter)
         {}
 
@@ -147,6 +148,29 @@ namespace atom
         {
             return iter.compare(that.iter).to_unwrapped();
         }
+
+    public:
+        iter_type iter;
+    };
+
+    /// --------------------------------------------------------------------------------------------
+    ///
+    /// --------------------------------------------------------------------------------------------
+    template <typename iter_type>
+        requires(not riter<iter_type>)
+    class std_iter_wrap_for_atom_iter<iter_type>
+    {
+        using this_type = std_iter_wrap_for_atom_iter;
+
+    public:
+        constexpr std_iter_wrap_for_atom_iter(const iter_type& iter)
+            requires rfwd_iter<iter_type>
+            : iter(iter)
+        {}
+
+        constexpr std_iter_wrap_for_atom_iter(iter_type&& iter)
+            : iter(move(iter))
+        {}
 
     public:
         iter_type iter;

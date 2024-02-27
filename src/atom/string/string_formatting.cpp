@@ -135,7 +135,7 @@ namespace atom
     template <typename output_type, typename... arg_types>
     constexpr auto _format_to(
         output_type&& out, format_string<arg_types...> fmt, arg_types&&... args)
-        requires routput<output_type, uchar>
+        // requires routput<output_type, uchar>
     {
         class out_iter_wrap
         {
