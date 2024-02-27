@@ -171,11 +171,27 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
+        /// returns the underlying ptr.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto to_unwrapped() const -> const value_type*
+        {
+            return _ptr;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns the underlying ptr.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto to_unwrapped() -> value_type*
+        {
+            return _ptr;
+        }
+
+        /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename type = value_type>
-        constexpr auto to_shared() -> shared_ptr<type>
-            requires rsame_or_derived_from<type, value_type>
+        template <typename new_value_type = value_type>
+        constexpr auto to_shared() -> shared_ptr<new_value_type>
+            requires rsame_or_derived_from<new_value_type, value_type>
         {
             return _to_shared();
         }
@@ -183,10 +199,10 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename allocator_type, typename type = value_type>
+        template <typename allocator_type, typename new_value_type = value_type>
         constexpr auto to_shared_with_alloc(allocator_type allocator = allocator_type())
-            -> shared_ptr<type>
-            requires rsame_or_derived_from<type, value_type>
+            -> shared_ptr<new_value_type>
+            requires rsame_or_derived_from<new_value_type, value_type>
         {
             return _to_shared();
         }
@@ -249,21 +265,22 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    export template <typename type, typename... arg_types>
-    auto make_unique(arg_types&&... args) -> unique_ptr<type>
+    export template <typename value_type, typename... arg_types>
+    auto make_unique(arg_types&&... args) -> unique_ptr<value_type>
     {
-        return make_unique_with_alloc<type, default_mem_allocator>(
+        return make_unique_with_alloc<value_type, default_mem_allocator>(
             default_mem_allocator(), forward<arg_types>(args)...);
     }
 
     /// --------------------------------------------------------------------------------------------
     /// # todo: fix this implementation, maybe store allocator in destroyer.
     /// --------------------------------------------------------------------------------------------
-    export template <typename type, typename allocator_type, typename... arg_types>
-    auto make_unique_with_alloc(allocator_type allocator, arg_types&&... args) -> unique_ptr<type>
+    export template <typename value_type, typename allocator_type, typename... arg_types>
+    auto make_unique_with_alloc(allocator_type allocator, arg_types&&... args)
+        -> unique_ptr<value_type>
     {
-        type* mem = allocator.alloc(sizeof(type));
-        obj_helper().construct_as<type>(mem, forward<arg_types>(args)...);
-        return unique_ptr<type>(mem);
+        value_type* mem = (value_type*)allocator.alloc(sizeof(value_type));
+        obj_helper().construct_as<value_type>(mem, forward<arg_types>(args)...);
+        return unique_ptr<value_type>(mem);
     }
 }

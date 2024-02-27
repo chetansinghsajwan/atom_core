@@ -374,6 +374,22 @@ namespace atom
             return _state == nullptr ? 0 : _state->get_count();
         }
 
+        /// ----------------------------------------------------------------------------------------
+        /// returns the underlying ptr.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto to_unwrapped() const -> const value_type*
+        {
+            return _ptr;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns the underlying ptr.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto to_unwrapped() -> value_type*
+        {
+            return _ptr;
+        }
+
     private:
         constexpr auto _release()
         {
