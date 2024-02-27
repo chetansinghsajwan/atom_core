@@ -52,7 +52,7 @@ TEST_CASE("atom.core.unique_ptr")
             unique_ptr<tracked_type> ptr(&val);
         }
 
-        REQUIRE(val.last_op == tracked_type::eoperation::destructor);
+        REQUIRE(val.last_op == tracked_type::operation::destructor);
     }
 
     SECTION("copy operator")
@@ -71,8 +71,8 @@ TEST_CASE("atom.core.unique_ptr")
 
         REQUIRE(ptr1.is_eq(nullptr));
         REQUIRE(ptr2.is_eq(&val1));
-        REQUIRE(val1.last_op == tracked_type::eoperation::default_constructor);
-        REQUIRE(val2.last_op == tracked_type::eoperation::destructor);
+        REQUIRE(val1.last_op == tracked_type::operation::default_constructor);
+        REQUIRE(val2.last_op == tracked_type::operation::destructor);
     }
 
     SECTION("null operator")
@@ -82,7 +82,7 @@ TEST_CASE("atom.core.unique_ptr")
 
         // ptr = nullptr;
 
-        REQUIRE(val.last_op == tracked_type::eoperation::destructor);
+        REQUIRE(val.last_op == tracked_type::operation::destructor);
     }
 
     SECTION("release()")
@@ -93,7 +93,7 @@ TEST_CASE("atom.core.unique_ptr")
         ptr.release();
 
         REQUIRE(ptr.is_eq(nullptr));
-        REQUIRE(val.last_op == tracked_type::eoperation::default_constructor);
+        REQUIRE(val.last_op == tracked_type::operation::default_constructor);
     }
 
     SECTION("destroy()")
@@ -104,6 +104,6 @@ TEST_CASE("atom.core.unique_ptr")
         ptr.destroy();
 
         REQUIRE(ptr.is_eq(nullptr));
-        REQUIRE(val.last_op == tracked_type::eoperation::destructor);
+        REQUIRE(val.last_op == tracked_type::operation::destructor);
     }
 }

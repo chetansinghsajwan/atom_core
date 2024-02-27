@@ -67,8 +67,8 @@ TEST_CASE("atom.core.variant")
         variant<tracked_type0, tracked_type1, tracked_type2> v;
 
         REQUIRE(v.index() == 0);
-        REQUIRE(v.is<tracked_type0>());
-        REQUIRE(v.as<tracked_type0>().last_op == tracked_type::eoperation::default_constructor);
+        REQUIRE(v.is<tracked_i32>());
+        REQUIRE(v.as<tracked_i32>().last_op == tracked_type::operation::default_constructor);
     }
 
     SECTION("trivial copy constructor")
@@ -82,12 +82,12 @@ TEST_CASE("atom.core.variant")
         variant<tracked_type0, tracked_type1, tracked_type2> v1 = v0;
 
         REQUIRE(v0.index() == 1);
-        REQUIRE(v0.is<tracked_type1>());
-        REQUIRE(v0.as<tracked_type1>().last_op == tracked_type::eoperation::copy_constructor_as_that);
+        REQUIRE(v0.is<tracked_f32>());
+        REQUIRE(v0.as<tracked_f32>().last_op == tracked_type::operation::copy_constructor_as_that);
 
         REQUIRE(v1.index() == 1);
-        REQUIRE(v1.is<tracked_type1>());
-        REQUIRE(v1.as<tracked_type1>().last_op == tracked_type::eoperation::copy_constructor);
+        REQUIRE(v1.is<tracked_f32>());
+        REQUIRE(v1.as<tracked_f32>().last_op == tracked_type::operation::copy_constructor);
     }
 
     SECTION("copy constructor template")
@@ -96,12 +96,12 @@ TEST_CASE("atom.core.variant")
         variant<tracked_type0, tracked_type1, tracked_type2> v1 = v0;
 
         REQUIRE(v0.index() == 0);
-        REQUIRE(v0.is<tracked_type1>());
-        REQUIRE(v0.as<tracked_type1>().last_op == tracked_type::eoperation::copy_constructor_as_that);
+        REQUIRE(v0.is<tracked_f32>());
+        REQUIRE(v0.as<tracked_f32>().last_op == tracked_type::operation::copy_constructor_as_that);
 
         REQUIRE(v1.index() == 1);
-        REQUIRE(v1.is<tracked_type1>());
-        REQUIRE(v1.as<tracked_type1>().last_op == tracked_type::eoperation::copy_constructor);
+        REQUIRE(v1.is<tracked_f32>());
+        REQUIRE(v1.as<tracked_f32>().last_op == tracked_type::operation::copy_constructor);
     }
 
     SECTION("trivial copy assignment operator")
@@ -118,23 +118,23 @@ TEST_CASE("atom.core.variant")
         v1 = v0;
 
         REQUIRE(v0.index() == 1);
-        REQUIRE(v0.is<tracked_type1>());
-        REQUIRE(v0.as<tracked_type1>().last_op == tracked_type::eoperation::copy_constructor_as_that);
+        REQUIRE(v0.is<tracked_f32>());
+        REQUIRE(v0.as<tracked_f32>().last_op == tracked_type::operation::copy_constructor_as_that);
 
         REQUIRE(v1.index() == 1);
-        REQUIRE(v1.is<tracked_type1>());
-        REQUIRE(v1.as<tracked_type1>().last_op == tracked_type::eoperation::copy_constructor);
+        REQUIRE(v1.is<tracked_f32>());
+        REQUIRE(v1.as<tracked_f32>().last_op == tracked_type::operation::copy_constructor);
 
         // v1 holds tracked_type1, so it will assign tracked_type1 when now
         v1 = v0;
 
         REQUIRE(v0.index() == 1);
-        REQUIRE(v0.is<tracked_type1>());
-        REQUIRE(v0.as<tracked_type1>().last_op == tracked_type::eoperation::copy_operator_as_that);
+        REQUIRE(v0.is<tracked_f32>());
+        REQUIRE(v0.as<tracked_f32>().last_op == tracked_type::operation::copy_operator_as_that);
 
         REQUIRE(v1.index() == 1);
-        REQUIRE(v1.is<tracked_type1>());
-        REQUIRE(v1.as<tracked_type1>().last_op == tracked_type::eoperation::copy_operator);
+        REQUIRE(v1.is<tracked_f32>());
+        REQUIRE(v1.as<tracked_f32>().last_op == tracked_type::operation::copy_operator);
     }
 
     SECTION("copy assignment operator template")
@@ -146,23 +146,23 @@ TEST_CASE("atom.core.variant")
         v1 = v0;
 
         REQUIRE(v0.index() == 0);
-        REQUIRE(v0.is<tracked_type1>());
-        REQUIRE(v0.as<tracked_type1>().last_op == tracked_type::eoperation::copy_constructor_as_that);
+        REQUIRE(v0.is<tracked_f32>());
+        REQUIRE(v0.as<tracked_f32>().last_op == tracked_type::operation::copy_constructor_as_that);
 
         REQUIRE(v1.index() == 1);
-        REQUIRE(v1.is<tracked_type1>());
-        REQUIRE(v1.as<tracked_type1>().last_op == tracked_type::eoperation::copy_constructor);
+        REQUIRE(v1.is<tracked_f32>());
+        REQUIRE(v1.as<tracked_f32>().last_op == tracked_type::operation::copy_constructor);
 
         // v1 holds tracked_type1, so it will assign tracked_type1 when now
         v1 = v0;
 
         REQUIRE(v0.index() == 0);
-        REQUIRE(v0.is<tracked_type1>());
-        REQUIRE(v0.as<tracked_type1>().last_op == tracked_type::eoperation::copy_operator_as_that);
+        REQUIRE(v0.is<tracked_f32>());
+        REQUIRE(v0.as<tracked_f32>().last_op == tracked_type::operation::copy_operator_as_that);
 
         REQUIRE(v1.index() == 1);
-        REQUIRE(v1.is<tracked_type1>());
-        REQUIRE(v1.as<tracked_type1>().last_op == tracked_type::eoperation::copy_operator);
+        REQUIRE(v1.is<tracked_f32>());
+        REQUIRE(v1.as<tracked_f32>().last_op == tracked_type::operation::copy_operator);
     }
 
     SECTION("trivial move constructor")
@@ -176,12 +176,12 @@ TEST_CASE("atom.core.variant")
         variant<tracked_i32, tracked_f32, tracked_uchar> v1 = move(v0);
 
         REQUIRE(v0.index() == 1);
-        REQUIRE(v0.is<tracked_type1>());
-        REQUIRE(v0.as<tracked_type1>().last_op == tracked_type::eoperation::move_constructor_as_that);
+        REQUIRE(v0.is<tracked_f32>());
+        REQUIRE(v0.as<tracked_f32>().last_op == tracked_type::operation::move_constructor_as_that);
 
         REQUIRE(v1.index() == 1);
-        REQUIRE(v1.is<tracked_type1>());
-        REQUIRE(v1.as<tracked_type1>().last_op == tracked_type::eoperation::move_constructor);
+        REQUIRE(v1.is<tracked_f32>());
+        REQUIRE(v1.as<tracked_f32>().last_op == tracked_type::operation::move_constructor);
     }
 
     SECTION("move constructor template")
@@ -190,12 +190,12 @@ TEST_CASE("atom.core.variant")
         variant<tracked_i32, tracked_f32, tracked_uchar> v1 = move(v0);
 
         REQUIRE(v0.index() == 0);
-        REQUIRE(v0.is<tracked_type1>());
-        REQUIRE(v0.as<tracked_type1>().last_op == tracked_type::eoperation::move_constructor_as_that);
+        REQUIRE(v0.is<tracked_f32>());
+        REQUIRE(v0.as<tracked_f32>().last_op == tracked_type::operation::move_constructor_as_that);
 
         REQUIRE(v1.index() == 1);
-        REQUIRE(v1.is<tracked_type1>());
-        REQUIRE(v1.as<tracked_type1>().last_op == tracked_type::eoperation::move_constructor);
+        REQUIRE(v1.is<tracked_f32>());
+        REQUIRE(v1.as<tracked_f32>().last_op == tracked_type::operation::move_constructor);
     }
 
     SECTION("trivial move assignment operator")
@@ -212,23 +212,23 @@ TEST_CASE("atom.core.variant")
         v1 = move(v0);
 
         REQUIRE(v0.index() == 1);
-        REQUIRE(v0.is<tracked_type1>());
-        REQUIRE(v0.as<tracked_type1>().last_op == tracked_type::eoperation::move_constructor_as_that);
+        REQUIRE(v0.is<tracked_f32>());
+        REQUIRE(v0.as<tracked_f32>().last_op == tracked_type::operation::move_constructor_as_that);
 
         REQUIRE(v1.index() == 1);
-        REQUIRE(v1.is<tracked_type1>());
-        REQUIRE(v1.as<tracked_type1>().last_op == tracked_type::eoperation::move_constructor);
+        REQUIRE(v1.is<tracked_f32>());
+        REQUIRE(v1.as<tracked_f32>().last_op == tracked_type::operation::move_constructor);
 
         // v1 holds tracked_f32, so it will assign tracked_f32 when now
         v1 = move(v0);
 
         REQUIRE(v0.index() == 1);
-        REQUIRE(v0.is<tracked_type1>());
-        REQUIRE(v0.as<tracked_type1>().last_op == tracked_type::eoperation::move_operator_as_that);
+        REQUIRE(v0.is<tracked_f32>());
+        REQUIRE(v0.as<tracked_f32>().last_op == tracked_type::operation::move_operator_as_that);
 
         REQUIRE(v1.index() == 1);
-        REQUIRE(v1.is<tracked_type1>());
-        REQUIRE(v1.as<tracked_type1>().last_op == tracked_type::eoperation::move_operator);
+        REQUIRE(v1.is<tracked_f32>());
+        REQUIRE(v1.as<tracked_f32>().last_op == tracked_type::operation::move_operator);
     }
 
     SECTION("move assignment operator template")
@@ -240,23 +240,23 @@ TEST_CASE("atom.core.variant")
         v1 = move(v0);
 
         REQUIRE(v0.index() == 0);
-        REQUIRE(v0.is<tracked_type1>());
-        REQUIRE(v0.as<tracked_type1>().last_op == tracked_type::eoperation::move_constructor_as_that);
+        REQUIRE(v0.is<tracked_f32>());
+        REQUIRE(v0.as<tracked_f32>().last_op == tracked_type::operation::move_constructor_as_that);
 
         REQUIRE(v1.index() == 1);
-        REQUIRE(v1.is<tracked_type1>());
-        REQUIRE(v1.as<tracked_type1>().last_op == tracked_type::eoperation::move_constructor);
+        REQUIRE(v1.is<tracked_f32>());
+        REQUIRE(v1.as<tracked_f32>().last_op == tracked_type::operation::move_constructor);
 
         // v1 holds tracked_f32, so it will assign tracked_f32 when now
         v1 = move(v0);
 
         REQUIRE(v0.index() == 0);
-        REQUIRE(v0.is<tracked_type1>());
-        REQUIRE(v0.as<tracked_type1>().last_op == tracked_type::eoperation::move_operator_as_that);
+        REQUIRE(v0.is<tracked_f32>());
+        REQUIRE(v0.as<tracked_f32>().last_op == tracked_type::operation::move_operator_as_that);
 
         REQUIRE(v1.index() == 1);
-        REQUIRE(v1.is<tracked_type1>());
-        REQUIRE(v1.as<tracked_type1>().last_op == tracked_type::eoperation::move_operator);
+        REQUIRE(v1.is<tracked_f32>());
+        REQUIRE(v1.as<tracked_f32>().last_op == tracked_type::operation::move_operator);
     }
 
     SECTION("param constructor")
@@ -306,14 +306,14 @@ TEST_CASE("atom.core.variant")
 
     SECTION("destructor")
     {
-        tracked_type::eoperation* last_op_ptr;
+        tracked_type::operation* last_op_ptr;
 
         {
             variant<tracked_type0, tracked_type1, tracked_type2> v0 = tracked_type1{};
             last_op_ptr = &v0.as<tracked_type1>().last_op;
         }
 
-        REQUIRE(*last_op_ptr == tracked_type::eoperation::destructor);
+        REQUIRE(*last_op_ptr == tracked_type::operation::destructor);
     }
 
     SECTION("value write")
