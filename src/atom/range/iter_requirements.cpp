@@ -1,7 +1,7 @@
 export module atom.core:range.iter_requirements;
 import :requirements;
 import :core;
-import :mem_ptr;
+import :ptr;
 
 // clang-format off
 
@@ -277,7 +277,7 @@ export namespace atom
     {
         requires rjump_iter<iter_type>;
 
-        { cit.get_data() } -> rconvertible_to<mem_ptr<typename iter_type::elem_type>>;
+        { cit.get_data() } -> rconvertible_to<const typename iter_type::elem_type*>;
     };
 
     template <typename iter_type>
@@ -286,7 +286,7 @@ export namespace atom
         requires rarray_iter<iter_type>;
         requires _rmut_iter<iter_type>;
 
-        { it.get_mut_data() } -> rconvertible_to<mut_mem_ptr<typename iter_type::elem_type>>;
+        { it.get_mut_data() } -> rconvertible_to<typename iter_type::elem_type*>;
     };
 
     template <typename iter_type, typename type>

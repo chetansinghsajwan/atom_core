@@ -3,7 +3,7 @@ import :range.array_range_extensions;
 import :range.mut_jump_range_extensions;
 import :contracts_decl;
 import :core;
-import :mem_ptr;
+import :ptr;
 
 namespace atom
 {
@@ -32,7 +32,7 @@ namespace atom
         using base_type::operator=;
 
     public:
-        constexpr auto get_mut_data() -> mut_mem_ptr<elem_type>
+        constexpr auto get_mut_data() -> elem_type*
         {
             return _range().get_mut_data();
         }
@@ -117,7 +117,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// get underlying ptr to arr.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_mut_data() -> mut_mem_ptr<elem_type>
+        constexpr auto get_mut_data() -> elem_type*
         {
             return _impl().get_mut_data();
         }

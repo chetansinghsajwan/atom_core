@@ -1,6 +1,6 @@
 export module atom.core:range.range_literal;
 import :core;
-import :mem_ptr;
+import :ptr;
 
 namespace atom
 {
@@ -20,7 +20,7 @@ namespace atom
         {}
 
     public:
-        constexpr auto get_data() const -> mem_ptr<elem_type>
+        constexpr auto get_data() const -> const elem_type*
         {
             return _arr;
         }
@@ -31,7 +31,7 @@ namespace atom
         }
 
     private:
-        mem_ptr<elem_type> _arr;
+        const elem_type* _arr;
         usize _count;
     };
 
@@ -45,9 +45,9 @@ namespace atom
         using base_type::operator=;
 
     public:
-        constexpr auto get_data() const -> mem_ptr<uchar>
+        auto get_data() const -> const uchar*
         {
-            return base_type::get_data().as_unsafe<uchar>();
+            return reinterpret_cast<const uchar*>(base_type::get_data());
         }
     };
 }

@@ -2,7 +2,7 @@ export module atom.core:variant;
 import :core;
 import :type_list;
 import :contracts_decl;
-import :mem_ptr;
+import :ptr;
 import :obj_helper;
 import :static_storage;
 import :tti;
@@ -16,12 +16,12 @@ namespace atom
     class _variant_storage
     {
     public:
-        constexpr auto get_data() -> mut_mem_ptr<void>
+        constexpr auto get_data() -> void*
         {
             return &_storage.storage;
         }
 
-        constexpr auto get_data() const -> mem_ptr<void>
+        constexpr auto get_data() const -> const void*
         {
             return &_storage.storage;
         }
@@ -369,25 +369,25 @@ namespace atom
         template <typename type>
         constexpr auto _get_value_as() -> type&
         {
-            return _get_data_as<type>().get_mut();
+            return *_get_data_as<type>();
         }
 
         template <typename type>
         constexpr auto _get_value_as() const -> const type&
         {
-            return _get_data_as<type>().get();
+            return *_get_data_as<type>();
         }
 
         template <typename type>
-        constexpr auto _get_data_as() -> mut_mem_ptr<type>
+        constexpr auto _get_data_as() -> type*
         {
-            return _storage.get_data();
+            return (type*)_storage.get_data();
         }
 
         template <typename type>
-        constexpr auto _get_data_as() const -> mem_ptr<type>
+        constexpr auto _get_data_as() const -> const type*
         {
-            return _storage.get_data();
+            return (const type*)_storage.get_data();
         }
 
     private:

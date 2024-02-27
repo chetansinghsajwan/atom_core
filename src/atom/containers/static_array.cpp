@@ -1,6 +1,6 @@
 export module atom.core:containers.static_array;
 import :core;
-import :mem_ptr;
+import :ptr;
 import :array_iter;
 import :range;
 
@@ -33,12 +33,12 @@ namespace atom
         {}
 
     public:
-        constexpr auto get_data() const -> mem_ptr<elem_type>
+        constexpr auto get_data() const -> const elem_type*
         {
             return _arr;
         }
 
-        constexpr auto get_mut_data() -> mut_mem_ptr<elem_type>
+        constexpr auto get_mut_data() -> elem_type*
         {
             return _arr;
         }

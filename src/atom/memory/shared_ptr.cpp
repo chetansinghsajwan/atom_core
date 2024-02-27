@@ -4,7 +4,7 @@ import :unique_ptr;
 import :obj_helper;
 import :tti;
 import :ptr;
-import :mem_ptr;
+import :ptr;
 import :memory.default_mem_allocator;
 
 /// ------------------------------------------------------------------------------------------------
@@ -12,54 +12,54 @@ import :memory.default_mem_allocator;
 /// ------------------------------------------------------------------------------------------------
 namespace atom
 {
-    template <typename type>
+    template <typename value_type>
     class ebo_helper
     {
     public:
-        constexpr ebo_helper(type val)
+        constexpr ebo_helper(value_type val)
             : _val(move(val))
         {}
 
     public:
-        constexpr auto get() const -> const type&
+        constexpr auto get() const -> const value_type&
         {
             return _val;
         }
 
-        constexpr auto get_mut() -> type&
+        constexpr auto get_mut() -> value_type&
         {
             return _val;
         }
 
     private:
-        type _val;
+        value_type _val;
     };
 
-    template <typename type>
-        requires tti::is_empty<type>
-    class ebo_helper<type>: private type
+    template <typename value_type>
+        requires tti::is_empty<value_type>
+    class ebo_helper<value_type>: private value_type
     {
     public:
-        constexpr ebo_helper(type val)
-            : type(move(val))
+        constexpr ebo_helper(value_type val)
+            : value_type(move(val))
         {}
 
     public:
-        constexpr auto get() const -> const type&
+        constexpr auto get() const -> const value_type&
         {
-            return static_cast<const type&>(*this);
+            return static_cast<const value_type&>(*this);
         }
 
-        constexpr auto get_mut() -> type&
+        constexpr auto get_mut() -> value_type&
         {
-            return static_cast<type&>(*this);
+            return static_cast<value_type&>(*this);
         }
     };
 
-    class _ishared_ptr_state
+    class _shared_ptr_state
     {
     public:
-        virtual auto destroy(mut_ptr<void> ptr) -> void = 0;
+        virtual auto destroy(void* ptr) -> void = 0;
 
         virtual auto dealloc_self() -> void = 0;
 
@@ -83,8 +83,8 @@ namespace atom
     };
 
     template <typename value_type, typename destroyer_type, typename allocator_type>
-    class _shared_ptr_state
-        : public _ishared_ptr_state
+    class _default_shared_ptr_state
+        : public _shared_ptr_state
         , private ebo_helper<destroyer_type>
         , private ebo_helper<allocator_type>
     {
@@ -93,15 +93,15 @@ namespace atom
         using allocator_helper_type = ebo_helper<allocator_type>;
 
     public:
-        constexpr _shared_ptr_state(destroyer_type destroyer, allocator_type allocator)
+        constexpr _default_shared_ptr_state(destroyer_type destroyer, allocator_type allocator)
             : destroyer_helper_type(move(destroyer))
             , allocator_helper_type(move(allocator))
         {}
 
     public:
-        virtual auto destroy(mut_ptr<void> ptr) -> void override final
+        virtual auto destroy(void* ptr) -> void override final
         {
-            destroyer_helper_type::get_mut()(ptr.template as<value_type>());
+            destroyer_helper_type::get_mut()(static_cast<value_type*>(ptr));
         }
 
         virtual auto dealloc_self() -> void override final
@@ -122,51 +122,51 @@ namespace atom
     class _shared_ptr_private_ctor
     {};
 
-    export template <typename type>
+    export template <typename value_type>
     class shared_ptr_default_destroyer
     {
-        static_assert(tti::is_pure<type>, "shared_ptr_default_destroyer only supports pure types.");
         static_assert(
-            not tti::is_void<type>, "shared_ptr_default_destroyer does not support void.");
+            tti::is_pure<value_type>, "shared_ptr_default_destroyer only supports pure types.");
+        static_assert(
+            not tti::is_void<value_type>, "shared_ptr_default_destroyer does not support void.");
 
     public:
-        constexpr auto operator()(mut_ptr<type> val)
+        constexpr auto operator()(value_type* val)
         {
-            obj_helper().destruct_as<type>(val);
+            obj_helper().destruct_as<value_type>(val);
             default_mem_allocator().dealloc(val);
         }
     };
 
     export template <typename in_value_type>
-    class shared_ptr: public mut_ptr<in_value_type>
+    class shared_ptr
     {
         static_assert(tti::is_pure<in_value_type>, "shared_ptr only supports pure types.");
         static_assert(not tti::is_void<in_value_type>, "shared_ptr does not support void.");
 
     private:
-        using this_type = shared_ptr<in_value_type>;
-        using base_type = mut_ptr<in_value_type>;
+        using this_type = shared_ptr;
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// type of value `this_type` holds.
+        /// value_type of value `this_type` holds.
         /// ----------------------------------------------------------------------------------------
-        using value_type = typename base_type::value_type;
+        using value_type = in_value_type;
 
     private:
-        template <typename type>
+        template <typename value_type>
         friend class shared_ptr;
 
-        template <typename type, typename allocator_type, typename... arg_types>
+        template <typename value_type, typename allocator_type, typename... arg_types>
         friend auto make_shared_with_alloc(allocator_type alloc, arg_types&&... args)
-            -> shared_ptr<type>;
+            -> shared_ptr<value_type>;
 
     public:
         /// ----------------------------------------------------------------------------------------
         /// # default constructor
         /// ----------------------------------------------------------------------------------------
         constexpr shared_ptr()
-            : base_type()
+            : _ptr(nullptr)
             , _state(nullptr)
         {}
 
@@ -178,10 +178,10 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # template copy constructor
         /// ----------------------------------------------------------------------------------------
-        template <typename tthat>
-        constexpr shared_ptr(const shared_ptr<tthat>& that)
-            requires rsame_or_derived_from<tthat, value_type>
-            : base_type(that.to_unwrapped())
+        template <typename that_type>
+        constexpr shared_ptr(const shared_ptr<that_type>& that)
+            requires rsame_or_derived_from<that_type, value_type>
+            : _ptr(that._ptr)
             , _state(that._state)
         {
             _check_and_increase_shared_count();
@@ -201,7 +201,7 @@ namespace atom
         {
             _check_and_release();
 
-            _set_ptr(that._get_mut_ptr());
+            _ptr = that._ptr;
             _state = that._state;
 
             _check_and_increase_shared_count();
@@ -222,29 +222,29 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # template move constructor
         /// ----------------------------------------------------------------------------------------
-        template <typename tthat>
-        constexpr shared_ptr(shared_ptr<tthat>&& that)
-            requires rsame_or_derived_from<tthat, value_type>
-            : base_type(that.to_unwrapped())
+        template <typename that_type>
+        constexpr shared_ptr(shared_ptr<that_type>&& that)
+            requires rsame_or_derived_from<that_type, value_type>
+            : _ptr(that._ptr)
             , _state(that._state)
         {
-            that._set_ptr(nullptr);
+            that._ptr = nullptr;
             that._state = nullptr;
         }
 
         /// ----------------------------------------------------------------------------------------
         /// # template move operator
         /// ----------------------------------------------------------------------------------------
-        template <typename tthat>
-        constexpr shared_ptr& operator=(shared_ptr<tthat>&& that)
-            requires rsame_or_derived_from<tthat, value_type>
+        template <typename that_type>
+        constexpr shared_ptr& operator=(shared_ptr<that_type>&& that)
+            requires rsame_or_derived_from<that_type, value_type>
         {
             _check_and_release();
 
-            _set_ptr(that._get_mut_ptr());
+            _ptr = that._ptr;
             _state = that._state;
 
-            that._set_ptr(nullptr);
+            that._ptr = nullptr;
             that._state = nullptr;
         }
 
@@ -262,7 +262,7 @@ namespace atom
         {
             _check_and_release();
 
-            _set_ptr(nullptr);
+            _ptr = nullptr;
             _state = nullptr;
             return *this;
         }
@@ -272,12 +272,11 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename destroyer_type = shared_ptr_default_destroyer<value_type>,
             typename allocator_type = shared_ptr_default_allocator>
-        constexpr explicit shared_ptr(mut_ptr<value_type> ptr,
-            destroyer_type destroyer = destroyer_type(),
+        constexpr explicit shared_ptr(value_type* ptr, destroyer_type destroyer = destroyer_type(),
             allocator_type allocator = allocator_type())
-            : base_type(ptr)
+            : _ptr(ptr)
         {
-            if (not ptr.is_eq(nullptr))
+            if (ptr != nullptr)
             {
                 _state =
                     _create_state<destroyer_type, allocator_type>(move(destroyer), move(allocator));
@@ -287,7 +286,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # value operator
         /// ----------------------------------------------------------------------------------------
-        constexpr shared_ptr& operator=(mut_ptr<value_type> ptr)
+        constexpr shared_ptr& operator=(value_type* ptr)
         {
             set(ptr);
         }
@@ -301,9 +300,8 @@ namespace atom
         }
 
     private:
-        constexpr shared_ptr(
-            _shared_ptr_private_ctor, mut_ptr<_ishared_ptr_state> state, mut_ptr<value_type> ptr)
-            : base_type(ptr)
+        constexpr shared_ptr(_shared_ptr_private_ctor, _shared_ptr_state* state, value_type* ptr)
+            : _ptr(ptr)
             , _state(state)
         {}
 
@@ -311,24 +309,25 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename type, typename destroyer_type = shared_ptr_default_destroyer<value_type>,
+        template <typename value_type,
+            typename destroyer_type = shared_ptr_default_destroyer<value_type>,
             typename allocator_type = shared_ptr_default_allocator>
-        constexpr auto set(mut_ptr<type> ptr, destroyer_type destroyer = destroyer_type(),
+        constexpr auto set(value_type* ptr, destroyer_type destroyer = destroyer_type(),
             allocator_type allocator = allocator_type())
-            requires rsame_or_derived_from<type, value_type>
+            requires rsame_or_derived_from<value_type, value_type>
         {
-            if (_get_ptr() != nullptr)
+            if (_ptr != nullptr)
             {
                 _release();
 
                 if (ptr != nullptr)
                 {
-                    _set_ptr(ptr);
+                    _ptr = ptr;
                     _create_state(move(destroyer), move(allocator));
                 }
                 else
                 {
-                    _set_ptr(nullptr);
+                    _ptr = nullptr;
                     _state = nullptr;
                 }
             }
@@ -336,7 +335,7 @@ namespace atom
             {
                 if (ptr != nullptr)
                 {
-                    _set_ptr(ptr);
+                    _ptr = ptr;
                     _create_state(move(destroyer), move(allocator));
                 }
             }
@@ -349,19 +348,19 @@ namespace atom
         {
             _check_and_release();
 
-            _set_ptr(nullptr);
+            _ptr = nullptr;
             _state = nullptr;
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto release() -> mut_ptr<value_type>
+        constexpr auto release() -> value_type*
         {
             _check_and_release();
 
-            mut_ptr<value_type> ptr = _get_mut_ptr();
-            _set_ptr(nullptr);
+            value_type* ptr = _ptr;
+            _ptr = nullptr;
             _state = nullptr;
 
             return ptr;
@@ -372,24 +371,24 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto get_count() const -> usize
         {
-            return _state.is_eq(nullptr) ? 0 : _state.get().get_count();
+            return _state == nullptr ? 0 : _state->get_count();
         }
 
     private:
         constexpr auto _release()
         {
-            _state.get_mut().decrease_count();
+            _state->decrease_count();
 
-            if (_state.get_mut().get_count() == 0)
+            if (_state->get_count() == 0)
             {
-                _state.get_mut().destroy(_get_mut_ptr());
-                _state.get_mut().dealloc_self();
+                _state->destroy(_ptr);
+                _state->dealloc_self();
             }
         }
 
         constexpr auto _check_and_release()
         {
-            if (_get_ptr() != nullptr)
+            if (_ptr != nullptr)
             {
                 _release();
             }
@@ -397,67 +396,55 @@ namespace atom
 
         template <typename destroyer_type, typename allocator_type>
         constexpr auto _create_state(destroyer_type destroyer, allocator_type allocator)
-            -> mut_ptr<_ishared_ptr_state>
+            -> _shared_ptr_state*
         {
-            using state = _shared_ptr_state<value_type, destroyer_type, allocator_type>;
+            using state_type =
+                _default_shared_ptr_state<value_type, destroyer_type, allocator_type>;
 
-            mut_ptr<void> mem = allocator.alloc(sizeof(state));
-            obj_helper().construct_as<state>(mem, move(destroyer), move(allocator));
-            return mem.as<state>();
+            state_type* state = static_cast<state_type*>(allocator.alloc(sizeof(state_type)));
+            obj_helper().construct_as<state_type>(state, move(destroyer), move(allocator));
+            return state;
         }
 
         constexpr auto _check_and_increase_shared_count()
         {
             if (_state != nullptr)
             {
-                _state.get_mut().increase_count();
+                _state->increase_count();
             }
         }
 
-        constexpr auto _set_ptr(mut_ptr<value_type> ptr)
-        {
-            base_type::set(ptr);
-        }
-
-        constexpr auto _get_ptr() const -> const value_type*
-        {
-            return base_type::to_unwrapped();
-        }
-
-        constexpr auto _get_mut_ptr() -> value_type*
-        {
-            return base_type::to_unwrapped();
-        }
-
     private:
-        mut_ptr<_ishared_ptr_state> _state;
+        value_type* _ptr;
+        _shared_ptr_state* _state;
     };
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    export template <typename type, typename... arg_types>
-    auto make_shared(arg_types&&... args) -> shared_ptr<type>
+    export template <typename value_type, typename... arg_types>
+    auto make_shared(arg_types&&... args) -> shared_ptr<value_type>
     {
-        return make_shared_with_alloc<type>(
+        return make_shared_with_alloc<value_type>(
             shared_ptr_default_allocator(), forward<arg_types>(args)...);
     }
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    export template <typename type, typename allocator_type, typename... arg_types>
-    auto make_shared_with_alloc(allocator_type allocator, arg_types&&... args) -> shared_ptr<type>
+    export template <typename value_type, typename allocator_type, typename... arg_types>
+    auto make_shared_with_alloc(allocator_type allocator, arg_types&&... args)
+        -> shared_ptr<value_type>
     {
-        using state = _shared_ptr_state<type, shared_ptr_default_destroyer<type>,
-            shared_ptr_default_allocator>;
+        using state_type = _default_shared_ptr_state<value_type,
+            shared_ptr_default_destroyer<value_type>, shared_ptr_default_allocator>;
 
-        mut_mem_ptr<void> mem = allocator.alloc(sizeof(state) + sizeof(type));
-        mut_ptr<state> state_ptr = mem;
-        mut_ptr<type> value_ptr = mem.next(sizeof(state)).as<type>();
+        void* mem = allocator.alloc(sizeof(state_type) + sizeof(value_type));
+        state_type* state = mem;
+        value_type* value_ptr = static_cast<value_type*>(state + 1);
 
         obj_helper().construct(value_ptr, forward<arg_types>(args)...);
-        return shared_ptr<type>(_shared_ptr_private_ctor(), state_ptr, value_ptr);
+        return shared_ptr<value_type>(_shared_ptr_private_ctor(), state, value_ptr);
     }
 }
 
@@ -471,6 +458,6 @@ namespace atom
     constexpr auto unique_ptr<value_type, destroyer_type>::_to_shared(allocator_type allocator)
         -> shared_ptr<other_value_type>
     {
-        return make_shared_with_alloc(move(allocator), _get_mut_ptr());
+        return make_shared_with_alloc(move(allocator), _ptr);
     }
 }

@@ -1,6 +1,6 @@
 export module atom.core:containers.array_view;
 import :core;
-import :mem_ptr;
+import :ptr;
 import :array_iter;
 import :range;
 
@@ -99,7 +99,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_data() const -> mem_ptr<elem_type>
+        constexpr auto get_data() const -> const elem_type*
         {
             return _data;
         }
@@ -129,7 +129,7 @@ namespace atom
         }
 
     private:
-        mem_ptr<elem_type> _data;
+        const elem_type* _data;
         usize _count;
     };
 

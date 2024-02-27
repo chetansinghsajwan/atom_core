@@ -1,6 +1,6 @@
 export module atom.core:array_iter;
 import :core;
-import :mem_ptr;
+import :ptr;
 import :tti;
 
 namespace atom
@@ -28,7 +28,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # value constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr array_iter(mem_ptr<type> it)
+        constexpr array_iter(const type* it)
             : _it(it)
         {}
 
@@ -38,13 +38,13 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto value() const -> const type&
         {
-            return _it.get();
+            return *_it;
         }
 
         /// ----------------------------------------------------------------------------------------
         /// access value by ptr.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_data() const -> mem_ptr<type>
+        constexpr auto get_data() const -> const type*
         {
             return this->_it;
         }
@@ -102,7 +102,7 @@ namespace atom
         }
 
     protected:
-        mem_ptr<type> _it;
+        const type* _it;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -131,7 +131,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # value constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr mut_array_iter(mut_mem_ptr<type> it)
+        constexpr mut_array_iter(type* it)
             : base_type(it)
         {}
 
@@ -147,9 +147,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// access value by mut ptr.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_mut_data() -> mut_mem_ptr<type>
+        constexpr auto get_mut_data() -> type*
         {
-            return const_cast<mut_mem_ptr<type>>(base_type::get_data());
+            return const_cast<type*>(base_type::get_data());
         }
 
         /// ----------------------------------------------------------------------------------------

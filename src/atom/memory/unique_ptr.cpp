@@ -18,7 +18,7 @@ namespace atom
             not tti::is_void<type>, "unique_ptr_default_destroyer does not support void.");
 
     public:
-        constexpr auto operator()(mut_ptr<type> val)
+        constexpr auto operator()(type* val)
         {
             obj_helper().destruct_as<type>(val);
             default_mem_allocator().dealloc(val);
@@ -27,7 +27,7 @@ namespace atom
 
     export template <typename in_value_type,
         typename in_destroyer_type = unique_ptr_default_destroyer<in_value_type>>
-    class unique_ptr: public mut_ptr<in_value_type>
+    class unique_ptr
     {
         static_assert(tti::is_pure<in_value_type>, "unique_ptr only supports pure types.");
         static_assert(not tti::is_void<in_value_type>, "unique_ptr does not support void.");
@@ -37,9 +37,6 @@ namespace atom
     private:
         template <typename other_value_type, typename other_destroyer_type>
         friend class unique_ptr;
-
-    private:
-        using base_type = mut_ptr<in_value_type>;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -57,7 +54,7 @@ namespace atom
         /// # default constructor
         /// ----------------------------------------------------------------------------------------
         constexpr unique_ptr(destroyer_type destroyer = destroyer_type())
-            : base_type()
+            : _ptr(nullptr)
             , _destroyer(move(destroyer))
         {}
 
@@ -75,7 +72,7 @@ namespace atom
         /// # move constructor
         /// ----------------------------------------------------------------------------------------
         constexpr unique_ptr(unique_ptr&& that)
-            : base_type(that.to_unwrapped())
+            : _ptr(that._ptr)
             , _destroyer(move(that._destroyer))
         {
             that._set_ptr(nullptr);
@@ -96,7 +93,7 @@ namespace atom
         template <typename other_value_type>
         constexpr unique_ptr(unique_ptr<other_value_type, destroyer_type>&& that)
             requires rsame_or_derived_from<other_value_type, value_type>
-            : base_type(that.to_unwrapped())
+            : _ptr(that._ptr)
             , _destroyer(move(that._destroyer))
         {
             that._set_ptr(nullptr);
@@ -115,9 +112,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # value constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr explicit unique_ptr(
-            mut_ptr<value_type> ptr, destroyer_type destroyer = destroyer_type())
-            : base_type(ptr)
+        constexpr explicit unique_ptr(value_type* ptr, destroyer_type destroyer = destroyer_type())
+            : _ptr(ptr)
             , _destroyer(move(destroyer))
         {}
 
@@ -133,21 +129,20 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto set(mut_ptr<value_type> ptr)
+        constexpr auto set(value_type* ptr)
         {
             _check_and_destroy_value();
-
-            _set_ptr(ptr.to_unwrapped());
+            _set_ptr(ptr);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto set(mut_ptr<value_type> ptr, destroyer_type destroyer = destroyer_type())
+        constexpr auto set(value_type* ptr, destroyer_type destroyer = destroyer_type())
         {
             _check_and_destroy_value();
 
-            _set_ptr(ptr.to_unwrapped());
+            _set_ptr(ptr);
             _destroyer = move(destroyer);
         }
 
@@ -162,7 +157,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto release() -> mut_ptr<value_type>
+        constexpr auto release() -> value_type*
         {
             return _release_value();
         }
@@ -230,17 +225,17 @@ namespace atom
 
         constexpr auto _get_ptr() const -> const value_type*
         {
-            return base_type::to_unwrapped();
+            return _ptr;
         }
 
         constexpr auto _get_mut_ptr() -> value_type*
         {
-            return base_type::to_unwrapped();
+            return _ptr;
         }
 
         constexpr auto _set_ptr(value_type* ptr)
         {
-            return base_type::set(ptr);
+            return _ptr = ptr;
         }
 
         template <typename allocator_type, typename other_value_type>
@@ -248,6 +243,7 @@ namespace atom
 
     private:
         destroyer_type _destroyer;
+        value_type* _ptr;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -266,7 +262,7 @@ namespace atom
     export template <typename type, typename allocator_type, typename... arg_types>
     auto make_unique_with_alloc(allocator_type allocator, arg_types&&... args) -> unique_ptr<type>
     {
-        mut_ptr<type> mem = allocator.alloc(sizeof(type));
+        type* mem = allocator.alloc(sizeof(type));
         obj_helper().construct_as<type>(mem, forward<arg_types>(args)...);
         return unique_ptr<type>(mem);
     }

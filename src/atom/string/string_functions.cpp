@@ -32,12 +32,12 @@ namespace atom
     public:
         constexpr auto to_std_char_ptr() const -> const char*
         {
-            return _to_std_char_ptr(this->get_data().to_unwrapped());
+            return _to_std_char_ptr(this->get_data());
         }
 
         constexpr auto to_mut_std_char_ptr() -> char*
         {
-            return _to_std_char_ptr(this->get_mut_data().to_unwrapped());
+            return _to_std_char_ptr(this->get_mut_data());
         }
     };
 }

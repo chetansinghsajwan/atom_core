@@ -1,6 +1,6 @@
 export module atom.core:static_storage;
 import :core;
-import :mem_ptr;
+import :ptr;
 import :type_list;
 import :contracts_decl;
 
@@ -26,18 +26,18 @@ namespace atom
         }
 
     public:
-        constexpr auto mem(usize i = 0) const -> mem_ptr<void>
+        constexpr auto mem(usize i = 0) const -> const void*
         {
             contracts::debug_expects(i < size());
 
-            return mem_ptr(_storage + i.to_unwrapped());
+            return ptr(_storage + i.to_unwrapped());
         }
 
-        constexpr auto mut_mem(usize i = 0) -> mut_mem_ptr<void>
+        constexpr auto mut_mem(usize i = 0) -> void*
         {
             contracts::debug_expects(i < size());
 
-            return mut_mem_ptr(_storage + i.to_unwrapped());
+            return mut_ptr(_storage + i.to_unwrapped());
         }
 
         constexpr auto ref(usize i) const -> const byte&

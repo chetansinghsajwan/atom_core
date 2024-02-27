@@ -3,7 +3,7 @@ import :std;
 import :core;
 import :tti;
 import :range;
-import :mem_ptr;
+import :ptr;
 import :invokable;
 import :memory.default_mem_allocator;
 import :contracts_decl;
@@ -219,12 +219,12 @@ namespace atom
             return _count;
         }
 
-        constexpr auto get_data() const -> mem_ptr<elem_type>
+        constexpr auto get_data() const -> const elem_type*
         {
             return _data;
         }
 
-        constexpr auto get_mut_data() -> mut_mem_ptr<elem_type>
+        constexpr auto get_mut_data() -> elem_type*
         {
             return _data;
         }
@@ -384,7 +384,7 @@ namespace atom
             _update_iter_debug_id();
 
             usize new_cap = _calc_cap_growth(count);
-            mut_mem_ptr<elem_type> new_data = _allocator.alloc(new_cap);
+            elem_type* new_data = (elem_type*)_allocator.alloc(new_cap);
 
             if (_count != 0)
             {
@@ -403,59 +403,59 @@ namespace atom
         template <typename... arg_types>
         constexpr auto _construct_at(usize index, arg_types&&... args) -> void
         {
-            mut_mem_ptr<elem_type> src = _data + index;
-            std::construct_at(src.to_unwrapped(), forward<arg_types>(args)...);
+            elem_type* src = _data + index;
+            std::construct_at(src, forward<arg_types>(args)...);
         }
 
         constexpr auto _destruct_at(usize index) -> void
         {
-            mut_mem_ptr<elem_type> src = _data + index;
-            std::destroy_at(src.to_unwrapped());
+            elem_type* src = _data + index;
+            std::destroy_at(src);
         }
 
         constexpr auto _destruct_range(usize index, usize count) -> void
         {
-            mut_mem_ptr<elem_type> begin = _data + index;
-            mut_mem_ptr<elem_type> end = begin + count;
-            std::destroy(begin.to_unwrapped(), end.to_unwrapped());
+            elem_type* begin = _data + index;
+            elem_type* end = begin + count;
+            std::destroy(begin, end);
         }
 
         constexpr auto _destruct_all() -> void
         {
-            mut_mem_ptr<elem_type> begin = _data;
-            mut_mem_ptr<elem_type> end = _data + _count;
-            std::destroy(begin.to_unwrapped(), end.to_unwrapped());
+            elem_type* begin = _data;
+            elem_type* end = _data + _count;
+            std::destroy(begin, end);
         }
 
         constexpr auto _shift_range_front(usize index, usize steps) -> void
         {
-            mut_mem_ptr<elem_type> begin = _data + index;
-            mut_mem_ptr<elem_type> end = _data + _count;
-            mut_mem_ptr<elem_type> dest = begin - steps;
-            std::move(begin.to_unwrapped(), end.to_unwrapped(), dest.to_unwrapped());
+            elem_type* begin = _data + index;
+            elem_type* end = _data + _count;
+            elem_type* dest = begin - steps;
+            std::move(begin, end, dest);
         }
 
         constexpr auto _shift_range_back(usize index, usize steps) -> void
         {
-            mut_mem_ptr<elem_type> begin = _data + index;
-            mut_mem_ptr<elem_type> end = _data + _count;
-            mut_mem_ptr<elem_type> dest = begin + steps;
-            std::move_backward(begin.to_unwrapped(), end.to_unwrapped(), dest.to_unwrapped());
+            elem_type* begin = _data + index;
+            elem_type* end = _data + _count;
+            elem_type* dest = begin + steps;
+            std::move_backward(begin, end, dest);
         }
 
         constexpr auto _rotate_range_back(usize index, usize count) -> void
         {
-            mut_mem_ptr<elem_type> begin = _data;
-            mut_mem_ptr<elem_type> mid = begin + index;
-            mut_mem_ptr<elem_type> end = begin + _count;
-            std::rotate(begin.to_unwrapped(), mid.to_unwrapped(), end.to_unwrapped());
+            elem_type* begin = _data;
+            elem_type* mid = begin + index;
+            elem_type* end = begin + _count;
+            std::rotate(begin, mid, end);
         }
 
-        constexpr auto _move_range_to(usize index, mut_mem_ptr<elem_type> dest) -> void
+        constexpr auto _move_range_to(usize index, elem_type* dest) -> void
         {
-            mut_mem_ptr<elem_type> begin = _data + index;
-            mut_mem_ptr<elem_type> end = _data + _count;
-            std::move(begin.to_unwrapped(), end.to_unwrapped(), dest.to_unwrapped());
+            elem_type* begin = _data + index;
+            elem_type* end = _data + _count;
+            std::move(begin, end, dest);
         }
 
         template <typename other_iter_type, typename other_iter_end_type>
@@ -481,7 +481,7 @@ namespace atom
         }
 
     private:
-        mut_mem_ptr<elem_type> _data;
+        elem_type* _data;
         usize _count;
         usize _capacity;
         allocator_type _allocator;
@@ -967,7 +967,7 @@ namespace atom
         {
             for (usize i = 0; i < _impl.get_count(); i++)
             {
-                if (pred(_impl.get_data()[i]))
+                if (pred(_impl.get_data()[i.to_unwrapped()]))
                 {
                     _impl.remove_at(i);
                     return true;
@@ -1012,7 +1012,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_data() const -> mem_ptr<elem_type>
+        constexpr auto get_data() const -> const elem_type*
         {
             return _impl.get_data();
         }
@@ -1020,7 +1020,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_mut_data() -> mut_mem_ptr<elem_type>
+        constexpr auto get_mut_data() -> elem_type*
         {
             return _impl.get_mut_data();
         }

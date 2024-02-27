@@ -5,7 +5,7 @@ export module atom.core:box;
 import :std;
 import :core;
 import :ptr;
-import :mem_ptr;
+import :ptr;
 import :tti;
 import :static_storage;
 import :invokable_ptr;
@@ -775,7 +775,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto mem() const -> const ptr<value_type>
+        constexpr auto mem() const -> const const value_type*
         {
             return _impl.mem();
         }
@@ -783,7 +783,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto mut_mem() -> ptr<value_type>
+        constexpr auto mut_mem() -> const value_type*
         {
             return _impl.mut_mem();
         }
@@ -791,7 +791,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto check_mem() const -> const ptr<value_type>
+        constexpr auto check_mem() const -> const const value_type*
         {
             expects(has_val(), "value is null.");
 
@@ -801,7 +801,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto check_mut_mem() -> ptr<value_type>
+        constexpr auto check_mut_mem() -> const value_type*
         {
             expects(has_val(), "value is null.");
 
@@ -812,7 +812,7 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename type>
-        constexpr auto mem_as() const -> const ptr<type>
+        constexpr auto mem_as() const -> const type*
             requires rsame_or_derived_from<pure_type<type>, value_type>
         {
             return _impl.template mem_as<type>();
@@ -822,7 +822,7 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename type>
-        constexpr auto mut_mem_as() -> ptr<type>
+        constexpr auto mut_mem_as() -> const type*
             requires rsame_or_derived_from<pure_type<type>, value_type>
         {
             return _impl.template mut_mem_as<type>();
@@ -832,7 +832,7 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename type>
-        constexpr auto check_mem_as() const -> const ptr<type>
+        constexpr auto check_mem_as() const -> const const type*
             requires rsame_or_derived_from<pure_type<type>, value_type>
         {
             expects(has_val(), "value is null.");
@@ -844,7 +844,7 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename type>
-        constexpr auto check_mut_mem_as() -> ptr<type>
+        constexpr auto check_mut_mem_as() -> const type*
             requires rsame_or_derived_from<pure_type<type>, value_type>
         {
             expects(has_val(), "value is null.");
@@ -974,7 +974,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto mem() const -> mem_ptr<void>
+        constexpr auto mem() const -> const void*
         {
             return _impl.get_mem();
         }
@@ -982,7 +982,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto mut_mem() -> mut_mem_ptr<void>
+        constexpr auto mut_mem() -> void*
         {
             return _impl.get_mut_mem();
         }
@@ -990,7 +990,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto check_mem() const -> mem_ptr<void>
+        constexpr auto check_mem() const -> const void*
         {
             expects(has_val(), "value is null.");
 
@@ -1000,7 +1000,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto check_mut_mem() -> mut_mem_ptr<void>
+        constexpr auto check_mut_mem() -> void*
         {
             expects(has_val(), "value is null.");
 
@@ -1011,7 +1011,7 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename type>
-        constexpr auto mem_as() const -> const ptr<type>
+        constexpr auto mem_as() const -> const const type*
             requires(not ris_void<type>)
         {
             return _impl.template mem_as<type>();
@@ -1021,7 +1021,7 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename type>
-        constexpr auto mut_mem_as() -> ptr<type>
+        constexpr auto mut_mem_as() -> const type*
             requires(not ris_void<type>)
         {
             return _impl.template mut_mem_as<type>();
@@ -1031,7 +1031,7 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename type>
-        constexpr auto check_mem_as() const -> mem_ptr<void>
+        constexpr auto check_mem_as() const -> const void*
             requires(not ris_void<type>)
         {
             expects(has_val(), "value is null.");
@@ -1043,7 +1043,7 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename type>
-        constexpr auto check_mut_mem_as() -> mut_mem_ptr<void>
+        constexpr auto check_mut_mem_as() -> void*
             requires(not ris_void<type>)
         {
             expects(has_val(), "value is null.");

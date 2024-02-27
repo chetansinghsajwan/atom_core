@@ -16,7 +16,7 @@ import :std;
 import :core;
 import :array_iter;
 import :tti;
-import :mem_ptr;
+import :ptr;
 
 namespace atom
 {
@@ -45,7 +45,7 @@ namespace atom
             return _it_end;
         }
 
-        constexpr auto get_data() const -> mem_ptr<elem_type>
+        constexpr auto get_data() const -> const elem_type*
             requires rarray_iter_pair<iter_type, iter_end_type>
         {
             return &_it.value();
@@ -97,7 +97,7 @@ namespace atom
         class _type_container
         {
         public:
-            using type = tti::remove_cvref_type<t_>;
+            using elem_type = tti::remove_cvref_type<t_>;
         };
 
         static consteval auto _get()
@@ -121,7 +121,7 @@ namespace atom
         }
 
     public:
-        using type = typename decltype(_get())::type;
+        using elem_type = typename decltype(_get())::elem_type;
     };
 
     template <typename iter_type, typename iter_end_type>
@@ -132,7 +132,7 @@ namespace atom
         class _type_container
         {
         public:
-            using type = tti::remove_cvref_type<t_>;
+            using elem_type = tti::remove_cvref_type<t_>;
         };
 
         static consteval auto _get()
@@ -156,13 +156,14 @@ namespace atom
         }
 
     public:
-        using type = typename decltype(_get())::type;
+        using elem_type = typename decltype(_get())::elem_type;
     };
 
     template <typename iter_type, typename iter_end_type>
-    class _range_from_iter_pair: public _range_from_iter_extended<iter_type, iter_end_type>::type
+    class _range_from_iter_pair
+        : public _range_from_iter_extended<iter_type, iter_end_type>::elem_type
     {
-        using base_type = _range_from_iter_extended<iter_type, iter_end_type>::type;
+        using base_type = _range_from_iter_extended<iter_type, iter_end_type>::elem_type;
 
     public:
         constexpr _range_from_iter_pair(iter_type it, iter_end_type it_end)
@@ -172,9 +173,10 @@ namespace atom
 
     template <typename mut_iter_type, typename mut_iter_end_type>
     class _mut_range_from_iter_pair
-        : public _mut_range_from_iter_extended<mut_iter_type, mut_iter_end_type>::type
+        : public _mut_range_from_iter_extended<mut_iter_type, mut_iter_end_type>::elem_type
     {
-        using base_type = _mut_range_from_iter_extended<mut_iter_type, mut_iter_end_type>::type;
+        using base_type =
+            _mut_range_from_iter_extended<mut_iter_type, mut_iter_end_type>::elem_type;
 
     public:
         constexpr _mut_range_from_iter_pair(mut_iter_type it, mut_iter_end_type it_end)
@@ -187,12 +189,12 @@ namespace atom
     ///
     /// - review this implementation after implementing character encoding.
     /// --------------------------------------------------------------------------------------------
-    constexpr auto _range_find_str_len(mem_ptr<uchar> str) -> usize
+    constexpr auto _range_find_str_len(const uchar* str) -> usize
     {
         if (std::is_constant_evaluated())
         {
             usize len = 0;
-            while (str.get() != '\0')
+            while (*str != '\0')
             {
                 str++;
                 len++;
@@ -201,7 +203,7 @@ namespace atom
             return len;
         }
 
-        return usize(std::strlen(_to_std_char_ptr(str.to_unwrapped())));
+        return usize(std::strlen(_to_std_char_ptr(str)));
     }
 }
 
@@ -210,18 +212,17 @@ export namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename type>
-    constexpr auto make_range(std::initializer_list<type> list)
+    template <typename elem_type>
+    constexpr auto make_range(std::initializer_list<elem_type> list)
     {
-        return _range_from_iter_pair(
-            array_iter(mem_ptr<type>(list.begin())), array_iter(mem_ptr<type>(list.end())));
+        return _range_from_iter_pair(array_iter(list.begin()), array_iter(list.end()));
     }
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename type>
-    constexpr auto make_range(mem_ptr<type> begin, mem_ptr<type> end)
+    template <typename elem_type>
+    constexpr auto make_range(const elem_type* begin, const elem_type* end)
     {
         return _range_from_iter_pair(array_iter(begin), array_iter(end));
     }
@@ -229,8 +230,8 @@ export namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename type>
-    constexpr auto make_range(mut_mem_ptr<type> begin, mut_mem_ptr<type> end)
+    template <typename elem_type>
+    constexpr auto make_range(elem_type* begin, elem_type* end)
     {
         return _mut_range_from_iter_pair(mut_array_iter(begin), mut_array_iter(end));
     }
@@ -238,8 +239,8 @@ export namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename type>
-    constexpr auto make_range(mem_ptr<type> begin, usize count)
+    template <typename elem_type>
+    constexpr auto make_range(const elem_type* begin, usize count)
     {
         return _range_from_iter_pair(array_iter(begin), array_iter(begin + count));
     }
@@ -247,8 +248,8 @@ export namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename type>
-    constexpr auto make_range(mut_mem_ptr<type> begin, usize count)
+    template <typename elem_type>
+    constexpr auto make_range(elem_type* begin, usize count)
     {
         return _mut_range_from_iter_pair(mut_array_iter(begin), mut_array_iter(begin + count));
     }
@@ -256,37 +257,38 @@ export namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename type, usize count>
-    constexpr auto make_range(const type (&arr)[count])
+    template <typename elem_type, usize count>
+    constexpr auto make_range(const elem_type (&arr)[count])
     {
-        return _range_from_iter_pair(array_iter(mem_ptr(arr)), array_iter(mem_ptr(arr) + count));
+        return _range_from_iter_pair(array_iter(ptr(arr)), array_iter(ptr(arr) + count));
     }
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename type, usize count>
-    constexpr auto make_range(type (&arr)[count])
+    template <typename elem_type, usize count>
+    constexpr auto make_range(elem_type (&arr)[count])
     {
         return _mut_range_from_iter_pair(
-            mut_array_iter(mut_mem_ptr(arr)), mut_array_iter(mut_mem_ptr(arr) + count));
+            mut_array_iter(mut_ptr(arr)), mut_array_iter(mut_ptr(arr) + count));
     }
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    constexpr auto make_range(mem_ptr<uchar> str)
+    constexpr auto make_range(const uchar* str)
     {
-        return _range_from_iter_pair(array_iter(str), array_iter(str + _range_find_str_len(str)));
+        return _range_from_iter_pair(
+            array_iter(str), array_iter(str + _range_find_str_len(str).to_unwrapped()));
     }
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    constexpr auto make_range(mut_mem_ptr<uchar> str)
+    constexpr auto make_range(uchar* str)
     {
         return _mut_range_from_iter_pair(
-            mut_array_iter(str), mut_array_iter(str + _range_find_str_len(str)));
+            mut_array_iter(str), mut_array_iter(str + _range_find_str_len(str).to_unwrapped()));
     }
 
     /// --------------------------------------------------------------------------------------------
@@ -313,33 +315,6 @@ export namespace atom
     constexpr auto range_from_literal(range_literal<elem_type> lit)
     {
         return make_range(lit.get_data(), lit.get_count());
-    }
-
-    /// --------------------------------------------------------------------------------------------
-    ///
-    /// --------------------------------------------------------------------------------------------
-    template <typename type>
-    constexpr auto make_range(const type* begin, const type* end)
-    {
-        return make_range(mem_ptr(begin), mem_ptr(end));
-    }
-
-    /// --------------------------------------------------------------------------------------------
-    ///
-    /// --------------------------------------------------------------------------------------------
-    template <typename type>
-    constexpr auto make_range(type* begin, type* end)
-    {
-        return make_range(mut_mem_ptr(begin), mut_mem_ptr(end));
-    }
-
-    /// --------------------------------------------------------------------------------------------
-    ///
-    /// --------------------------------------------------------------------------------------------
-    template <typename type>
-    constexpr auto make_range(const type* begin, usize count)
-    {
-        return make_range(mem_ptr(begin), mem_ptr(begin + count.to_unwrapped()));
     }
 
     /// --------------------------------------------------------------------------------------------

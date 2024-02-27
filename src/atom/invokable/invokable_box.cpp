@@ -115,7 +115,7 @@ namespace atom
         /// get invokable.
         /// ----------------------------------------------------------------------------------------
         template <typename invokable_type>
-        auto get_invokable_as() -> mut_ptr<invokable_type>
+        auto get_invokable_as() -> invokable_type*
         {
             // if (typeid(invokable_type) != get_invokable_type())
             //     return nullptr;
@@ -281,7 +281,7 @@ export namespace atom
         /// returns stored invokable as a `mut_ptr` to `type`.
         /// ----------------------------------------------------------------------------------------
         template <typename type>
-        auto get_as() -> mut_ptr<type>
+        auto get_as() -> type*
         {
             return _impl.template get_invokable_as<type>();
         }
@@ -307,7 +307,7 @@ export namespace atom
         /// ----------------------------------------------------------------------------------------
         /// invokes the stored invokable if any.
         /// ----------------------------------------------------------------------------------------
-        auto invoke_try(mut_ptr<result_type> out, arg_types&&... args) -> result_type
+        auto invoke_try(result_type* out, arg_types&&... args) -> result_type
         {
             if (not _impl.has_invokable())
                 return;

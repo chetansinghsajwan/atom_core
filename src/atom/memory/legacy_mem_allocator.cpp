@@ -1,26 +1,26 @@
 export module atom.core:memory.legacy_mem_allocator;
 import :std;
 import :core;
-import :mem_ptr;
+import :ptr;
 
 namespace atom
 {
     export class legacy_mem_allocator
     {
     public:
-        auto alloc(usize size) -> mut_mem_ptr<void>
+        auto alloc(usize size) -> void*
         {
             return std::malloc(size.to_unwrapped());
         }
 
-        auto realloc(mut_mem_ptr<void> mem, usize size) -> mut_mem_ptr<void>
+        auto realloc(void* mem, usize size) -> void*
         {
-            return std::realloc(mem.to_unwrapped(), size.to_unwrapped());
+            return std::realloc(mem, size.to_unwrapped());
         }
 
-        auto dealloc(mut_mem_ptr<void> mem)
+        auto dealloc(void* mem)
         {
-            std::free(mem.to_unwrapped());
+            std::free(mem);
         }
     };
 }

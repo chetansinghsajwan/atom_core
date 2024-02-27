@@ -4,7 +4,7 @@ import :tti;
 import :invokable;
 import :contracts_decl;
 import :obj_helper;
-import :mem_ptr;
+import :ptr;
 
 /// ------------------------------------------------------------------------------------------------
 /// implementations
@@ -42,12 +42,12 @@ namespace atom
         {}
 
     public:
-        constexpr auto get_data() -> mut_mem_ptr<value_type>
+        constexpr auto get_data() -> value_type*
         {
             return &_value;
         }
 
-        constexpr auto get_data() const -> mem_ptr<value_type>
+        constexpr auto get_data() const -> const value_type*
         {
             return &_value;
         }
@@ -409,12 +409,12 @@ namespace atom
 
         constexpr auto _get_value() const -> const value_type&
         {
-            return _storage.get_data().get();
+            return *_storage.get_data();
         }
 
         constexpr auto _get_mut_value() -> value_type&
         {
-            return _storage.get_data().get_mut();
+            return *_storage.get_data();
         }
 
         constexpr auto _destroy_value()
