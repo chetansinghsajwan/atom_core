@@ -504,6 +504,236 @@ namespace atom
         usize _capacity;
         allocator_type _allocator;
     };
+
+    template <typename in_elem_type, typename in_allocator_type>
+    class _dynamic_array_impl_using_std_vector
+    {
+        using this_type = _dynamic_array_impl_using_std_vector;
+
+    public:
+        using elem_type = in_elem_type;
+        using allocator_type = in_allocator_type;
+        using iter_type = array_iter<elem_type>;
+        using iter_end_type = iter_type;
+        using mut_iter_type = mut_array_iter<elem_type>;
+        using mut_iter_end_type = mut_iter_type;
+
+    public:
+        class copy_tag
+        {};
+
+        class move_tag
+        {};
+
+        class range_tag
+        {};
+
+    public:
+        constexpr _dynamic_array_impl_using_std_vector()
+            : _vector()
+        {}
+
+        constexpr _dynamic_array_impl_using_std_vector(
+            copy_tag, const _dynamic_array_impl_using_std_vector& that)
+            : _vector(that._vector)
+        {}
+
+        constexpr _dynamic_array_impl_using_std_vector(
+            move_tag, _dynamic_array_impl_using_std_vector& that)
+            : _vector(std::move(that._vector))
+        {}
+
+        template <typename other_iter_type, typename other_iter_end_type>
+        constexpr _dynamic_array_impl_using_std_vector(
+            range_tag, other_iter_type it, other_iter_end_type it_end)
+            : _vector(std_iter_wrap_for_atom_iter(it), std_iter_wrap_for_atom_iter(it_end))
+        {}
+
+        constexpr ~_dynamic_array_impl_using_std_vector() {}
+
+    public:
+        constexpr auto move_this(this_type& that) -> void
+        {
+            _vector = std::move(that._vector);
+        }
+
+        constexpr auto get_at(usize index) const -> const elem_type&
+        {
+            return _vector[index.to_unwrapped()];
+        }
+
+        constexpr auto get_mut_at(usize index) -> elem_type&
+        {
+            return _vector[index.to_unwrapped()];
+        }
+
+        constexpr auto get_iter() const -> iter_type
+        {
+            return iter_type(_vector.data());
+        }
+
+        constexpr auto get_iter_at(usize index) const -> iter_type
+        {
+            return iter_type(_vector.data() + index);
+        }
+
+        constexpr auto get_iter_end() const -> iter_end_type
+        {
+            return iter_end_type(_vector.data() + _vector.size());
+        }
+
+        constexpr auto get_mut_iter() -> mut_iter_type
+        {
+            return mut_iter_type(_vector.data());
+        }
+
+        constexpr auto get_mut_iter_at(usize index) -> mut_iter_type
+        {
+            return mut_iter_type(_vector.data() + index);
+        }
+
+        constexpr auto get_mut_iter_end() -> mut_iter_end_type
+        {
+            return mut_iter_end_type(_vector.data() + _vector.size());
+        }
+
+        template <typename other_iter_type, typename other_iter_end_type>
+        constexpr auto assign_range(other_iter_type it, other_iter_end_type it_end)
+        {
+            _vector = make_range(it, it_end);
+        }
+
+        template <typename... arg_types>
+        constexpr auto emplace_at(usize index, arg_types&&... args)
+        {
+            _vector.emplace_at(_vector.begin() + index.to_unwrapped(), forward<arg_types>(args)...);
+        }
+
+        template <typename other_iter_type, typename other_iter_end_type>
+        constexpr auto insert_range_at(usize index, other_iter_type it, other_iter_end_type it_end)
+            -> usize
+        {
+            usize::unwrapped_type old_size = _vector.size();
+            _vector.insert(_vector.begin() + index.to_unwrapped(), std_iter_wrap_for_atom_iter(it),
+                std_iter_wrap_for_atom_iter(it_end));
+
+            return _vector.size() - old_size;
+        }
+
+        template <typename... arg_types>
+        constexpr auto emplace_front(arg_types&&... args)
+        {
+            emplace_at(0);
+        }
+
+        template <typename other_iter_type, typename other_iter_end_type>
+        constexpr auto insert_range_front(other_iter_type it, other_iter_end_type it_end) -> usize
+        {
+            return insert_range_at(0, it, it_end);
+        }
+
+        template <typename... arg_types>
+        constexpr auto emplace_back(arg_types&&... args)
+        {
+            _vector.emplace_back(forward<arg_types>(args)...);
+        }
+
+        template <typename other_iter_type, typename other_iter_end_type>
+        constexpr auto insert_range_back(other_iter_type it, other_iter_end_type it_end) -> usize
+        {
+            usize::unwrapped_type old_count = _vector.size();
+            _vector.append_range(make_range(it, it_end));
+            return _vector.size() - old_count;
+        }
+
+        constexpr auto remove_at(usize index)
+        {
+            _vector.erase(_vector.begin() + index.to_unwrapped());
+        }
+
+        constexpr auto remove_range(usize begin, usize count)
+        {
+            auto vector_begin = _vector.begin() + begin.to_unwrapped();
+            _vector.erase(vector_begin, vector_begin + count.to_unwrapped());
+        }
+
+        constexpr auto remove_all()
+        {
+            _vector.clear();
+        }
+
+        constexpr auto reserve(usize count)
+        {
+            _vector.reserve(count.to_unwrapped());
+        }
+
+        constexpr auto reserve_more(usize count)
+        {
+            _vector.reserve(usize(_vector.size()).add(count).to_unwrapped());
+        }
+
+        // todo: implement this.
+        constexpr auto release_unused_mem() {}
+
+        constexpr auto get_capacity() const -> usize
+        {
+            return _vector.capacity();
+        }
+
+        constexpr auto get_count() const -> usize
+        {
+            return _vector.size();
+        }
+
+        constexpr auto get_data() const -> const elem_type*
+        {
+            return _vector.data();
+        }
+
+        constexpr auto get_mut_data() -> elem_type*
+        {
+            return _vector.data();
+        }
+
+        constexpr auto get_allocator() const -> const allocator_type&
+        {
+            return _vector.alloc();
+        }
+
+        constexpr auto is_index_in_range(usize index) const -> bool
+        {
+            return index < _vector.size();
+        }
+
+        constexpr auto is_index_in_range_or_end(usize index) const -> bool
+        {
+            return index <= _vector.size();
+        }
+
+        constexpr auto is_iter_valid(iter_type it) const -> bool
+        {
+            return true;
+        }
+
+        constexpr auto get_index_for_iter(iter_type it) const -> usize
+        {
+            isize index = it.get_data() - _vector.data();
+            return index < 0 ? usize::max() : usize(index);
+        }
+
+        constexpr auto is_iter_in_range(iter_type it) const -> bool
+        {
+            return get_index_for_iter(it) < _vector.size();
+        }
+
+        constexpr auto is_iter_in_range_or_end(iter_type it) const -> bool
+        {
+            return get_index_for_iter(it) <= _vector.size();
+        }
+
+    private:
+        std::vector<elem_type> _vector;
+    };
 }
 
 /// ------------------------------------------------------------------------------------------------
@@ -523,7 +753,7 @@ namespace atom
         static_assert(not tti::is_void<in_elem_type>, "dynamic_array does not support void.");
 
     private:
-        using _impl_type = _dynamic_array_impl<in_elem_type, in_allocator_type>;
+        using _impl_type = _dynamic_array_impl_using_std_vector<in_elem_type, in_allocator_type>;
 
     public:
         using elem_type = in_elem_type;
