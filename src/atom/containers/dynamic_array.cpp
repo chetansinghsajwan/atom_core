@@ -546,7 +546,7 @@ namespace atom
         template <typename other_iter_type, typename other_iter_end_type>
         constexpr _dynamic_array_impl_using_std_vector(
             range_tag, other_iter_type it, other_iter_end_type it_end)
-            : _vector(std_iter_wrap_for_atom_iter(it), std_iter_wrap_for_atom_iter(it_end))
+            : _vector(it.get_data(), it_end.get_data())
         {}
 
         constexpr ~_dynamic_array_impl_using_std_vector() {}
@@ -606,7 +606,7 @@ namespace atom
         template <typename... arg_types>
         constexpr auto emplace_at(usize index, arg_types&&... args)
         {
-            _vector.emplace_at(_vector.begin() + index.to_unwrapped(), forward<arg_types>(args)...);
+            _vector.emplace(_vector.begin() + index.to_unwrapped(), forward<arg_types>(args)...);
         }
 
         template <typename other_iter_type, typename other_iter_end_type>
@@ -614,8 +614,8 @@ namespace atom
             -> usize
         {
             usize::unwrapped_type old_size = _vector.size();
-            _vector.insert(_vector.begin() + index.to_unwrapped(), std_iter_wrap_for_atom_iter(it),
-                std_iter_wrap_for_atom_iter(it_end));
+            _vector.insert(
+                _vector.begin() + index.to_unwrapped(), it.get_data(), it_end.get_data());
 
             return _vector.size() - old_size;
         }
@@ -641,9 +641,7 @@ namespace atom
         template <typename other_iter_type, typename other_iter_end_type>
         constexpr auto insert_range_back(other_iter_type it, other_iter_end_type it_end) -> usize
         {
-            usize::unwrapped_type old_count = _vector.size();
-            _vector.append_range(make_range(it, it_end));
-            return _vector.size() - old_count;
+            return insert_range_at(get_count(), it, it_end);
         }
 
         constexpr auto remove_at(usize index)
