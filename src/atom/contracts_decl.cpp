@@ -23,10 +23,13 @@ namespace atom
     constexpr auto _contract_check(std::source_location src, bool assert, arg_types&&... args)
         -> void
     {
-        if constexpr (build_config::is_mode_debug() and type == _contract_type::debug_pre_condition
-                      or type == _contract_type::debug_assertion
-                      or type == _contract_type::debug_post_condition)
-            return;
+        if constexpr (build_config::is_mode_release())
+        {
+            if constexpr (type == _contract_type::debug_pre_condition
+                          or type == _contract_type::debug_assertion
+                          or type == _contract_type::debug_post_condition)
+                return;
+        }
 
         if (assert)
             return;
