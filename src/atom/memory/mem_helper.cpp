@@ -9,31 +9,6 @@ import :std;
 
 export namespace atom
 {
-    class mem_blk
-    {
-    public:
-        constexpr mem_blk(void* mem, usize count)
-            : mem(mem)
-            , count(count)
-        {}
-
-        constexpr mem_blk(void* begin, void* end)
-            : mem(begin)
-            , count(usize((char*)end - (char*)begin))
-        {
-            contracts::debug_expects(end >= begin);
-        }
-
-    public:
-        void* mem;
-        usize count;
-    };
-
-    constexpr auto operator==(const mem_blk& lhs, nullptr_type) -> bool
-    {
-        return lhs.mem == nullptr && lhs.count > 0;
-    }
-
     /// --------------------------------------------------------------------------------------------
     /// contains basic memory utility functions.
     /// --------------------------------------------------------------------------------------------
@@ -41,16 +16,17 @@ export namespace atom
     {
     public:
         /// ----------------------------------------------------------------------------------------
-        /// sets each mem unit of mem block {mem} with value {val}.
+        /// sets each byte of mem block `mem` with value `val`.
         ///
         /// @param mem: mem block to write to.
+        /// @param mem_size: size of the mem block pointed by `mem`.
         /// @param val: value to write.
         /// ----------------------------------------------------------------------------------------
-        static constexpr auto fill(mem_blk mem, byte val) const
+        static constexpr auto fill(void* mem, usize mem_size, byte val) -> void
         {
             contracts::debug_expects(mem != nullptr);
 
-            _fill(mem.mem, mem.count, val);
+            _fill(mem, mem_size, val);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -58,253 +34,272 @@ export namespace atom
         /// ----------------------------------------------------------------------------------------
         ATOM_PRAGMA_OPTIMIZE_OFF
 
-        static constexpr auto fill_explicit(mem_blk mem, byte val) const
+        static constexpr auto fill_explicit(void* mem, usize mem_size, byte val) -> void
         {
-            fill(mem, val);
+            contracts::debug_expects(mem != nullptr);
+
+            _fill(mem, mem_size, val);
         }
 
         ATOM_PRAGMA_OPTIMIZE_ON
 
         /// ----------------------------------------------------------------------------------------
-        /// copies each mem unit from mem block {src} to mem block {dest} using fwd iteration.
+        /// copies each byte from mem block `src` to mem block `dest` using fwd iteration.
         ///
         /// @param src: mem block to copy from.
+        /// @param src_size: size of the mem block pointed by `src`.
         /// @param dest: mem block to copy to.
+        /// @param dest_size: size of the mem block pointed by `dest`.
         /// ----------------------------------------------------------------------------------------
-        static constexpr auto fwd_copy_to(const mem_blk src, mem_blk dest) const
+        static constexpr auto fwd_copy_to(
+            const void* src, usize src_size, void* dest, usize dest_size = usize::max()) -> void
         {
             contracts::debug_expects(src != nullptr);
             contracts::debug_expects(dest != nullptr);
-
+            contracts::debug_expects(dest_size >= src_size);
             contracts::debug_expects(
-                dest.mem < src.mem, "src mem block overlaps with dest mem block.");
+                dest >= src and dest < (src + src_size), "dest mem block overlaps src mem block.");
 
-            _fwd_copy(src.mem, src.count, dest.mem);
+            _fwd_copy(src, src_size, dest);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// copies each mem unit from mem block {src} to mem block {dest} using bwd iteration.
+        /// copies each byte from mem block `src` to mem block `dest` using bwd iteration.
         ///
         /// @param src: mem block to copy from.
+        /// @param src_size: size of the mem block pointed by `src`.
         /// @param dest: mem block to copy to.
+        /// @param dest_size: size of the mem block pointed by `dest`.
         /// ----------------------------------------------------------------------------------------
-        static constexpr auto bwd_copy_to(const mem_blk src, mem_blk dest) const
+        static constexpr auto bwd_copy_to(
+            const void* src, usize src_size, void* dest, usize dest_size = usize::max()) -> void
         {
             contracts::debug_expects(src != nullptr);
             contracts::debug_expects(dest != nullptr);
-
             contracts::debug_expects(
-                dest.mem > (src.mem + src.count), "src mem block overlaps with dest mem block.");
+                (dest + src_size) <= src and (dest + src_size) > (src + src_size),
+                "dest mem block overlaps src mem block.");
 
-            _bwd_copy(src.mem, src.count, dest.mem);
+            _bwd_copy(src, src_size, dest);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// copies each mem unit from mem block {src} to mem block {dest} using appropriate
-        /// iteration. this_type method is safe even if {src} and {dest} overlaps.
+        /// copies each byte from mem block `src` to mem block `dest` using appropriate
+        /// iteration. this_type method is safe even if `src` and `dest` overlaps.
         ///
         /// @param src: mem block to copy from.
+        /// @param src_size: size of the mem block pointed by `src`.
         /// @param dest: mem block to copy to.
+        /// @param dest_size: size of the mem block pointed by `dest`.
         /// ----------------------------------------------------------------------------------------
-        static constexpr auto copy_to(const mem_blk src, mem_blk dest) const
+        static constexpr auto copy_to(
+            const void* src, usize src_size, void* dest, usize dest_size = usize::max()) -> void
         {
             contracts::debug_expects(src != nullptr);
             contracts::debug_expects(dest != nullptr);
+            contracts::debug_expects(dest_size >= src_size);
 
-            contracts::debug_expects(dest.count >= src.count);
-
-            if (dest.mem > src.mem)
+            if (dest > src)
             {
-                _bwd_copy(src.mem, src.count, dest.mem);
+                _bwd_copy(src, src_size, dest);
             }
-            else if (dest.mem < src.mem)
+            else if (dest < src)
             {
-                _fwd_copy(src.mem, src.count, dest.mem);
+                _fwd_copy(src, src_size, dest);
             }
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// copies each mem unit from mem block {mem} to mem block outset by {outset}.
+        /// copies each byte from mem block `mem` to mem block outset by `outset`.
         ///
         /// @param mem: mem block to copy from.
-        /// @param outset: count of mem units outset from {mem}.
+        /// @param mem_size: size of the mem block pointed by `mem`.
+        /// @param outset: count of bytes outset from `mem`.
         /// ----------------------------------------------------------------------------------------
-        static constexpr auto copy_fwd(const mem_blk mem, usize outset) const
+        static constexpr auto copy_fwd(void* mem, usize mem_size, usize outset) -> void
         {
             contracts::debug_expects(mem != nullptr);
             contracts::debug_expects(outset > 0);
 
-            _bwd_copy(mem.mem, mem.count, mem.mem + outset);
+            _bwd_copy(mem, mem_size, (byte*)mem + outset);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// copies each mem unit from mem block {mem} to mem block inset by {inset}.
+        /// copies each byte from mem block `mem` to mem block inset by `inset`.
         ///
         /// @param mem: mem block to copy from.
-        /// @param inset: count of mem units inset from {mem}.
+        /// @param mem_size: size of the mem block pointed by `mem`.
+        /// @param inset: count of bytes inset from `mem`.
         /// ----------------------------------------------------------------------------------------
-        static constexpr auto copy_bwd(const mem_blk mem, usize inset) const
+        static constexpr auto copy_bwd(void* mem, usize mem_size, usize inset) -> void
         {
             contracts::debug_expects(mem != nullptr);
             contracts::debug_expects(inset > 0);
 
-            _fwd_copy(mem.mem, mem.count, mem.mem - inset);
+            _fwd_copy(mem, mem_size, (byte*)mem - inset);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// copies each mem unit from mem block {mem} to mem block offset by {offset}.
+        /// copies each byte from mem block `mem` to mem block offset by `offset`.
         /// this_type method is safe even if src and dest overlaps.
         ///
         /// @param mem: mem block to copy from.
-        /// @param offset: count of mem units offset from {mem}.
+        /// @param mem_size: size of the mem block pointed by `mem`.
+        /// @param offset: count of bytes offset from `mem`.
         /// ----------------------------------------------------------------------------------------
-        static constexpr auto copy_by(const mem_blk mem, isize offset) const
+        static constexpr auto copy_by(const void* mem, usize mem_size, isize offset) -> void
         {
             contracts::debug_expects(mem != nullptr);
             contracts::debug_expects(offset != 0);
 
             if (offset > 0)
             {
-                _bwd_copy(mem.mem, mem.count, mem.mem + offset);
+                _bwd_copy(mem, mem_size, (void*)mem + offset);
             }
             else
             {
-                _fwd_copy(mem.mem, mem.count, mem.mem + offset);
+                _fwd_copy(mem, mem_size, (void*)mem + offset);
             }
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// shifts each mem unit fwd in mem block {mem} by {steps} steps.
+        /// shifts each byte fwd in mem block `mem` by `steps` steps.
         ///
-        /// @param mem: mem block to shift mem units of.
-        /// @param steps: count of mem units to shift by.
+        /// @param mem: mem block to shift bytes of.
+        /// @param mem_size: size of the mem block pointed by `mem`.
+        /// @param steps: count of bytes to shift by.
         /// ----------------------------------------------------------------------------------------
-        static constexpr auto shift_fwd(mem_blk mem, usize steps) const
+        static constexpr auto shift_fwd(void* mem, usize mem_size, usize steps) -> void
         {
             contracts::debug_expects(mem != nullptr);
             contracts::debug_expects(steps > 0);
 
-            _shift_fwd(mem.mem, mem.count, steps);
+            _shift_fwd(mem, mem_size, steps);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// shifts each mem unit bwd in mem block {mem} by {steps} steps.
+        /// shifts each byte bwd in mem block `mem` by `steps` steps.
         ///
-        /// @param mem: mem block to shift mem units of.
-        /// @param steps: count of mem units to shift by.
+        /// @param mem: mem block to shift bytes of.
+        /// @param mem_size: size of the mem block pointed by `mem`.
+        /// @param steps: count of bytes to shift by.
         /// ----------------------------------------------------------------------------------------
-        static constexpr auto shift_bwd(mem_blk mem, usize steps) const
+        static constexpr auto shift_bwd(void* mem, usize mem_size, usize steps) -> void
         {
             contracts::debug_expects(mem != nullptr);
             contracts::debug_expects(steps > 0);
 
-            _shift_bwd(mem.mem, mem.count, steps);
+            _shift_bwd(mem, mem_size, steps);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// shifts each mem unit in mem block {mem} by {steps} steps.
+        /// shifts each byte in mem block `mem` by `steps` steps.
         ///
-        /// @param mem: mem block to shift mem units of.
-        /// @param steps: count of mem units to shift by.
+        /// @param mem: mem block to shift bytes of.
+        /// @param mem_size: size of the mem block pointed by `mem`.
+        /// @param steps: count of bytes to shift by.
         /// ----------------------------------------------------------------------------------------
-        static constexpr auto shift_by(mem_blk mem, isize steps) const
+        static constexpr auto shift_by(void* mem, usize mem_size, isize steps) -> void
         {
             contracts::debug_expects(mem != nullptr);
             contracts::debug_expects(steps != 0);
 
             if (steps > 0)
             {
-                _shift_fwd(mem.mem, mem.count, steps.to<usize>());
+                _shift_fwd(mem, mem_size, steps.to<usize>());
             }
             else
             {
-                _shift_bwd(mem.mem, mem.count, steps.abs().to<usize>());
+                _shift_bwd(mem, mem_size, steps.abs().to<usize>());
             }
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// rotates mem block {mem} fwd by {steps} steps.
+        /// rotates mem block `mem` fwd by `steps` steps.
         ///
         /// @param mem: mem block to rotate.
-        /// @param steps: count of mem units to rotate by.
+        /// @param mem_size: size of the mem block pointed by `mem`.
+        /// @param steps: count of bytes to rotate by.
         /// ----------------------------------------------------------------------------------------
-        static constexpr auto rotate_fwd(mem_blk mem, usize steps) const
+        static constexpr auto rotate_fwd(void* mem, usize mem_size, usize steps) -> void
         {
             contracts::debug_expects(mem != nullptr);
             contracts::debug_expects(steps > 0);
 
-            _rotate_fwd(mem.mem, mem.count, steps);
+            _rotate_fwd(mem, mem_size, steps);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// rotates mem block {mem} bwd by {steps} steps.
+        /// rotates mem block `mem` bwd by `steps` steps.
         ///
         /// @param mem: mem block to rotate.
-        /// @param steps: count of mem units to rotate by.
+        /// @param mem_size: size of the mem block pointed by `mem`.
+        /// @param steps: count of bytes to rotate by.
         /// ----------------------------------------------------------------------------------------
-        static constexpr auto rotate_bwd(mem_blk mem, usize steps) const
+        static constexpr auto rotate_bwd(void* mem, usize mem_size, usize steps) -> void
         {
             contracts::debug_expects(mem != nullptr);
             contracts::debug_expects(steps > 0);
 
-            _rotate_bwd(mem.mem, mem.count, steps);
+            _rotate_bwd(mem, mem_size, steps);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// rotates mem block {mem} by {steps} steps.
+        /// rotates mem block `mem` by `steps` steps.
         ///
         /// @param mem: mem block to rotate.
-        /// @param steps: count of mem units to rotate by.
+        /// @param mem_size: size of the mem block pointed by `mem`.
+        /// @param steps: count of bytes to rotate by.
         /// ----------------------------------------------------------------------------------------
-        static constexpr auto rotate_by(mem_blk mem, isize steps) const
+        static constexpr auto rotate_by(void* mem, usize mem_size, isize steps) -> void
         {
             contracts::debug_expects(mem != nullptr);
             contracts::debug_expects(steps != 0);
 
             if (steps > 0)
             {
-                _shift_fwd(mem.mem, mem.count, steps.to<usize>());
+                _shift_fwd(mem, mem_size, steps.to<usize>());
             }
             else
             {
-                _shift_bwd(mem.mem, mem.count, steps.abs().to<usize>());
+                _shift_bwd(mem, mem_size, steps.abs().to<usize>());
             }
         }
 
     private:
-        static constexpr auto _fill(void* mem, usize count, byte val) const -> void
+        static constexpr auto _fill(void* mem, usize count, byte val) -> void
         {
             std::fill((byte*)mem, (byte*)mem + count, val);
         }
 
-        static constexpr auto _fwd_copy(const void* src, usize count, void* dest) const -> void
+        static constexpr auto _fwd_copy(const void* src, usize count, void* dest) -> void
         {
             std::copy((byte*)src, (byte*)src + count, (byte*)dest);
         }
 
-        static constexpr auto _bwd_copy(const void* src, usize count, void* dest) const -> void
+        static constexpr auto _bwd_copy(const void* src, usize count, void* dest) -> void
         {
             std::copy_backward((byte*)src, (byte*)src + count, (byte*)dest);
         }
 
-        static constexpr auto _shift_fwd(void* mem, usize mem_count, usize steps) const -> void
+        static constexpr auto _shift_fwd(void* mem, usize mem_size, usize steps) -> void
         {
-            std::shift_right((byte*)mem, (byte*)mem + mem_count, steps.to_unwrapped());
+            std::shift_right((byte*)mem, (byte*)mem + mem_size, steps.to_unwrapped());
         }
 
-        static constexpr auto _shift_bwd(void* mem, usize mem_count, usize steps) const -> void
+        static constexpr auto _shift_bwd(void* mem, usize mem_size, usize steps) -> void
         {
-            std::shift_left((byte*)mem, (byte*)mem + mem_count, steps.to_unwrapped());
+            std::shift_left((byte*)mem, (byte*)mem + mem_size, steps.to_unwrapped());
         }
 
-        static constexpr auto _rotate_fwd(void* mem, usize mem_count, usize offset) const -> void
+        static constexpr auto _rotate_fwd(void* mem, usize mem_size, usize offset) -> void
         {
-            std::rotate((byte*)mem, (byte*)mem + offset, (byte*)mem + mem_count);
+            std::rotate((byte*)mem, (byte*)mem + offset, (byte*)mem + mem_size);
         }
 
-        static constexpr auto _rotate_bwd(void* mem, usize mem_count, usize offset) const -> void
+        static constexpr auto _rotate_bwd(void* mem, usize mem_size, usize offset) -> void
         {
-            std::rotate((byte*)mem, (byte*)mem + offset, (byte*)mem + mem_count);
+            std::rotate((byte*)mem, (byte*)mem + offset, (byte*)mem + mem_size);
         }
     };
 }
