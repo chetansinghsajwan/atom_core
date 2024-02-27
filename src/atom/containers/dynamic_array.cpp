@@ -967,7 +967,7 @@ namespace atom
         {
             for (usize i = 0; i < _impl.get_count(); i++)
             {
-                if (_impl.get_data()[i] == elem)
+                if (_impl.get_data()[i.to_unwrapped()] == elem)
                 {
                     _impl.remove_at(i);
                     return true;
