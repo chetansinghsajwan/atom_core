@@ -75,49 +75,41 @@ namespace atom
         }
 
     public:
-        // checked
-        constexpr auto get_at(usize i) const -> const elem_type&
+        constexpr auto get_at(usize index) const -> const elem_type&
         {
-            return _data[i];
+            return _data[index];
         }
 
-        // checked
-        constexpr auto get_mut_at(usize i) -> elem_type&
+        constexpr auto get_mut_at(usize index) -> elem_type&
         {
-            return _data[i];
+            return _data[index];
         }
 
-        // checked
         constexpr auto get_iter() const -> iter_type
         {
             return iter_type(_data);
         }
 
-        // checked
-        constexpr auto get_iter_at(usize i) const -> iter_type
+        constexpr auto get_iter_at(usize index) const -> iter_type
         {
-            return iter_type(_data + i);
+            return iter_type(_data + index);
         }
 
-        // checked
         constexpr auto get_iter_end() const -> iter_end_type
         {
             return iter_end_type(_data + _count);
         }
 
-        // checked
         constexpr auto get_mut_iter() -> mut_iter_type
         {
             return mut_iter_type(_data);
         }
 
-        // checked
-        constexpr auto get_mut_iter_at(usize i) -> mut_iter_type
+        constexpr auto get_mut_iter_at(usize index) -> mut_iter_type
         {
-            return mut_iter_type(_data + i);
+            return mut_iter_type(_data + index);
         }
 
-        // checked
         constexpr auto get_mut_iter_end() -> mut_iter_end_type
         {
             return mut_iter_end_type(_data + _count);
@@ -131,22 +123,22 @@ namespace atom
         }
 
         template <typename... arg_types>
-        constexpr auto emplace_at(usize i, arg_types&&... args)
+        constexpr auto emplace_at(usize index, arg_types&&... args)
         {
-            return _emplace_at(i, forward<arg_types>(args)...);
+            return _emplace_at(index, forward<arg_types>(args)...);
         }
 
         template <typename other_iter_type, typename other_iter_end_type>
-        constexpr auto insert_range_at(usize i, other_iter_type it, other_iter_end_type it_end)
+        constexpr auto insert_range_at(usize index, other_iter_type it, other_iter_end_type it_end)
             -> usize
         {
             if constexpr (_can_get_range_size<other_iter_type, other_iter_end_type>())
             {
-                return _insert_range_at_counted(i, it, _get_range_size(it, it_end));
+                return _insert_range_at_counted(index, it, _get_range_size(it, it_end));
             }
             else
             {
-                return _insert_range_at_uncounted(i, move(it), move(it_end));
+                return _insert_range_at_uncounted(index, move(it), move(it_end));
             }
         }
 
@@ -183,19 +175,18 @@ namespace atom
             }
         }
 
-        constexpr auto remove_at(usize i)
+        constexpr auto remove_at(usize index)
         {
-            _destruct_at(i);
-            _move_range_front(i, 1);
+            _destruct_at(index);
+            _shift_range_front(index, 1);
         }
 
         constexpr auto remove_range(usize begin, usize count)
         {
             _destruct_range(begin, count);
-            _move_range_front(begin + count, count);
+            _shift_range_front(begin + count, count);
         }
 
-        // checked
         constexpr auto remove_all()
         {
             if (_count != 0)
@@ -205,7 +196,6 @@ namespace atom
             }
         }
 
-        // checked
         constexpr auto reserve(usize count)
         {
             _ensure_cap_for(count);
@@ -216,48 +206,42 @@ namespace atom
             _ensure_cap_for(_count + count);
         }
 
+        // todo: implement this.
         constexpr auto release_unused_mem() {}
 
-        // checked
         constexpr auto get_capacity() const -> usize
         {
             return _capacity;
         }
 
-        // checked
         constexpr auto get_count() const -> usize
         {
             return _count;
         }
 
-        // checked
         constexpr auto get_data() const -> mem_ptr<elem_type>
         {
             return _data;
         }
 
-        // checked
         constexpr auto get_mut_data() -> mut_mem_ptr<elem_type>
         {
             return _data;
         }
 
-        // checked
         constexpr auto get_allocator() const -> const allocator_type&
         {
             return _allocator;
         }
 
-        // checked
-        constexpr auto is_index_in_range(usize i) const -> bool
+        constexpr auto is_index_in_range(usize index) const -> bool
         {
-            return i < _count;
+            return index < _count;
         }
 
-        // checked
-        constexpr auto is_index_in_range_or_end(usize i) const -> bool
+        constexpr auto is_index_in_range_or_end(usize index) const -> bool
         {
-            return i <= _count;
+            return index <= _count;
         }
 
         constexpr auto is_iter_valid(iter_type it) const -> bool
@@ -265,20 +249,17 @@ namespace atom
             return true;
         }
 
-        // checked
         constexpr auto get_index_for_iter(iter_type it) const -> usize
         {
-            isize i = it.get_data() - _data;
-            return i < 0 ? usize::max() : usize(i);
+            isize index = it.get_data() - _data;
+            return index < 0 ? usize::max() : usize(index);
         }
 
-        // checked
         constexpr auto is_iter_in_range(iter_type it) const -> bool
         {
             return get_index_for_iter(it) < _count;
         }
 
-        // checked
         constexpr auto is_iter_in_range_or_end(iter_type it) const -> bool
         {
             return get_index_for_iter(it) <= _count;
@@ -291,55 +272,65 @@ namespace atom
         }
 
         template <typename... arg_types>
-        constexpr auto _emplace_at(usize i, arg_types&&... args) -> usize
+        constexpr auto _emplace_at(usize index, arg_types&&... args) -> usize
         {
-            _ensure_cap_for(1);
-
-            if (_count != 0)
-                _move_range_back(i, 1);
-
-            _construct_at(i, forward<arg_types>(args)...);
+            _ensure_space_at(index, 1);
+            _construct_at(index, forward<arg_types>(args)...);
             _count += 1;
 
-            return i;
+            return index;
         }
 
         template <typename other_iter_type>
-        constexpr auto _insert_range_at_counted(usize i, other_iter_type it, usize count) -> usize
+        constexpr auto _insert_range_at_counted(usize index, other_iter_type it, usize count)
+            -> usize
         {
             if (count == 0)
-                return i;
+                return index;
 
-            _ensure_cap_for(count);
-            _move_range_back(i, count);
+            _ensure_space_at(count);
 
-            // insert new elements
             for (usize i = 0; i < count; i++)
             {
-                _construct_at(i + i, forward<decltype(it.value())>(it.value()));
+                _construct_at(index + i, it.value());
                 it.next();
             }
 
-            return i;
+            _count += count;
+            return index;
         }
 
+        // todo: improve performance.
+        constexpr auto _ensure_space_front(usize count) -> void
+        {
+            _ensure_space_at(0, count);
+        }
+
+        // todo: improve performance.
+        constexpr auto _ensure_space_at(usize index, usize count) -> void
+        {
+            _ensure_cap_for(count);
+
+            if (_count != 0)
+                _shift_range_back(index, count);
+        }
+
+        // todo: improve performance.
+        constexpr auto _ensure_space_back(usize count) -> void
+        {
+            _ensure_cap_for(count);
+        }
+
+        // unchecked
         template <typename other_iter_type, typename other_iter_end_type>
         constexpr auto _insert_range_at_uncounted(
-            usize i, other_iter_type it, other_iter_end_type it_end) -> usize
+            usize index, other_iter_type it, other_iter_end_type it_end) -> usize
         {
-            usize rotate_size = _count - i;
+            usize rotate_size = _count - index;
             _insert_range_back_uncounted(move(it), move(it_end));
-            _rotate_range_back(i, rotate_size);
+            _rotate_range_back(index, rotate_size);
 
-            return i;
-        }
-
-        template <typename u>
-        constexpr auto _insert_back(u&& el)
-        {
-            _ensure_cap_for(1);
-            _construct_at(_count, forward<u>(el));
-            _count += 1;
+            return index;
         }
 
         template <typename other_iter_type>
@@ -348,15 +339,14 @@ namespace atom
             if (count == 0)
                 return;
 
-            _ensure_cap_for(count);
+            _ensure_space_back(count);
 
-            for (usize j = 0; j < count; j++)
+            while (count != 0)
             {
-                _construct_at(_count + j, forward<decltype(it.value())>(it.value()));
+                _construct_at(_count, it.value());
+                _count++;
                 it.next();
             }
-
-            _count = count + 1;
         }
 
         template <typename other_iter_type, typename other_iter_end_type>
@@ -366,7 +356,7 @@ namespace atom
             usize count = 0;
             while (not it.is_eq(it_end))
             {
-                _ensure_cap_for(1);
+                _ensure_space_back(1);
                 _construct_at(_count + count, it.value());
 
                 it.next();
@@ -377,6 +367,7 @@ namespace atom
             return count;
         }
 
+        // todo: implement this.
         constexpr auto _update_iter_debug_id() {}
 
         constexpr auto _calc_cap_growth(usize required) const -> usize
@@ -410,21 +401,21 @@ namespace atom
         }
 
         template <typename... arg_types>
-        constexpr auto _construct_at(usize i, arg_types&&... args) -> void
+        constexpr auto _construct_at(usize index, arg_types&&... args) -> void
         {
-            mut_mem_ptr<elem_type> src = _data + i;
+            mut_mem_ptr<elem_type> src = _data + index;
             std::construct_at(src.to_unwrapped(), forward<arg_types>(args)...);
         }
 
-        constexpr auto _destruct_at(usize i) -> void
+        constexpr auto _destruct_at(usize index) -> void
         {
-            mut_mem_ptr<elem_type> src = _data + i;
+            mut_mem_ptr<elem_type> src = _data + index;
             std::destroy_at(src.to_unwrapped());
         }
 
-        constexpr auto _destruct_range(usize i, usize count) -> void
+        constexpr auto _destruct_range(usize index, usize count) -> void
         {
-            mut_mem_ptr<elem_type> begin = _data + i;
+            mut_mem_ptr<elem_type> begin = _data + index;
             mut_mem_ptr<elem_type> end = begin + count;
             std::destroy(begin.to_unwrapped(), end.to_unwrapped());
         }
@@ -436,35 +427,35 @@ namespace atom
             std::destroy(begin.to_unwrapped(), end.to_unwrapped());
         }
 
-        constexpr auto _move_range_front(usize i, usize steps) -> void
+        constexpr auto _shift_range_front(usize index, usize steps) -> void
         {
-            mut_mem_ptr<elem_type> begin = _data + i;
+            mut_mem_ptr<elem_type> begin = _data + index;
             mut_mem_ptr<elem_type> end = _data + _count;
             mut_mem_ptr<elem_type> dest = begin - steps;
             std::move(begin.to_unwrapped(), end.to_unwrapped(), dest.to_unwrapped());
         }
 
-        constexpr auto _move_range_back(usize i, usize steps) -> void
+        constexpr auto _shift_range_back(usize index, usize steps) -> void
         {
-            mut_mem_ptr<elem_type> begin = _data + i;
+            mut_mem_ptr<elem_type> begin = _data + index;
             mut_mem_ptr<elem_type> end = _data + _count;
             mut_mem_ptr<elem_type> dest = begin + steps;
             std::move_backward(begin.to_unwrapped(), end.to_unwrapped(), dest.to_unwrapped());
         }
 
-        constexpr auto _move_range_to(usize i, mut_mem_ptr<elem_type> dest) -> void
-        {
-            mut_mem_ptr<elem_type> begin = _data + i;
-            mut_mem_ptr<elem_type> end = _data + _count;
-            std::move(begin.to_unwrapped(), end.to_unwrapped(), dest.to_unwrapped());
-        }
-
-        constexpr auto _rotate_range_back(usize i, usize count) -> void
+        constexpr auto _rotate_range_back(usize index, usize count) -> void
         {
             mut_mem_ptr<elem_type> begin = _data;
-            mut_mem_ptr<elem_type> mid = begin + i;
+            mut_mem_ptr<elem_type> mid = begin + index;
             mut_mem_ptr<elem_type> end = begin + _count;
             std::rotate(begin.to_unwrapped(), mid.to_unwrapped(), end.to_unwrapped());
+        }
+
+        constexpr auto _move_range_to(usize index, mut_mem_ptr<elem_type> dest) -> void
+        {
+            mut_mem_ptr<elem_type> begin = _data + index;
+            mut_mem_ptr<elem_type> end = _data + _count;
+            std::move(begin.to_unwrapped(), end.to_unwrapped(), dest.to_unwrapped());
         }
 
         template <typename other_iter_type, typename other_iter_end_type>
@@ -584,17 +575,17 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # destructor
+        /// # destroyor
         /// ----------------------------------------------------------------------------------------
         constexpr ~basic_dynamic_array() {}
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// constructs element at index `i` with `args`.
+        /// constructs element at index `index` with `args`.
         ///
         /// # parameters
         ///
-        /// - `i`: index to insert element at.
+        /// - `index`: index to insert element at.
         /// - `args...`: args to construct element with.
         ///
         /// # time complexity
@@ -604,12 +595,12 @@ namespace atom
         /// all iters are invalidated.
         /// ----------------------------------------------------------------------------------------
         template <typename... arg_types>
-        constexpr auto emplace_at(usize i, arg_types&&... args)
+        constexpr auto emplace_at(usize index, arg_types&&... args)
             requires(rconstructible<elem_type, arg_types...>)
         {
-            contracts::debug_expects(is_index_in_range_or_end(i), "index is out of range.");
+            contracts::debug_expects(is_index_in_range_or_end(index), "index is out of range.");
 
-            _impl.emplace_at(i, forward<arg_types>(args)...);
+            _impl.emplace_at(index, forward<arg_types>(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -637,18 +628,18 @@ namespace atom
             contracts::debug_expects(is_iter_valid(it), "invalid iter.");
             contracts::debug_expects(is_iter_in_range_or_end(it), "iter is out of range.");
 
-            usize i = get_index_for_iter(it);
-            _impl.emplace_at(i, forward<arg_types>(args)...);
-            return _impl.get_mut_iter_at(i);
+            usize index = get_index_for_iter(it);
+            _impl.emplace_at(index, forward<arg_types>(args)...);
+            return _impl.get_mut_iter_at(index);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// inserts elements at index `i`. forwards each value returned by `range.get_iter()` to
+        /// inserts elements at index `index`. forwards each value returned by `range.get_iter()` to
         /// constructor of element in the arr.
         ///
         /// # parameters
         ///
-        /// - `i`: index to insert elements at.
+        /// - `index`: index to insert elements at.
         /// - `range`: range of elements to insert.
         ///
         /// # returns
@@ -662,13 +653,13 @@ namespace atom
         /// all iters are invalidated.
         /// ----------------------------------------------------------------------------------------
         template <typename range_type>
-        constexpr auto insert_range_at(usize i, range_type&& range) -> usize
+        constexpr auto insert_range_at(usize index, range_type&& range) -> usize
             requires(rrange_of<range_type, elem_type>)
                     and (rconstructible<elem_type, typename range_type::elem_type>)
         {
-            contracts::debug_expects(is_index_in_range_or_end(i), "index is out of range.");
+            contracts::debug_expects(is_index_in_range_or_end(index), "index is out of range.");
 
-            return _impl.insert_range_at(i, range.get_iter(), range.get_iter_end());
+            return _impl.insert_range_at(index, range.get_iter(), range.get_iter_end());
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -698,9 +689,9 @@ namespace atom
             contracts::debug_expects(is_iter_valid(it), "invalid iter.");
             contracts::debug_expects(is_iter_in_range_or_end(it), "iter is out of range.");
 
-            usize i = get_index_for_iter(it);
-            usize count = _impl.insert_range_at(i, range.get_iter(), range.get_iter_end());
-            return make_range(_impl.get_mut_iter_at(i), _impl.get_mut_iter_at(i + count));
+            usize index = get_index_for_iter(it);
+            usize count = _impl.insert_range_at(index, range.get_iter(), range.get_iter_end());
+            return make_range(_impl.get_mut_iter_at(index), _impl.get_mut_iter_at(index + count));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -820,17 +811,17 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// removes element at index `i`.
+        /// removes element at index `index`.
         ///
         /// # parameters
         ///
-        /// - `i`: index to remove element at.
+        /// - `index`: index to remove element at.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto remove_at(usize i)
+        constexpr auto remove_at(usize index)
         {
-            contracts::debug_expects(is_index_in_range(i), "index is out of range.");
+            contracts::debug_expects(is_index_in_range(index), "index is out of range.");
 
-            _impl.remove_at(i);
+            _impl.remove_at(index);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -850,9 +841,9 @@ namespace atom
             contracts::debug_expects(is_iter_valid(it), "invalid iter.");
             contracts::debug_expects(is_iter_in_range(it), "iter is out of range.");
 
-            usize i = get_index_for_iter(it);
-            _impl.remove_at(i);
-            return _impl.get_mut_iter_at(i);
+            usize index = get_index_for_iter(it);
+            _impl.remove_at(index);
+            return _impl.get_mut_iter_at(index);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -1045,11 +1036,11 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_iter(usize i = 0) const -> iter_type
+        constexpr auto get_iter(usize index = 0) const -> iter_type
         {
-            contracts::debug_expects(is_index_in_range_or_end(i));
+            contracts::debug_expects(is_index_in_range_or_end(index));
 
-            return _impl.get_iter_at(i);
+            return _impl.get_iter_at(index);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -1063,11 +1054,11 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_mut_iter(usize i = 0) -> mut_iter_type
+        constexpr auto get_mut_iter(usize index = 0) -> mut_iter_type
         {
-            contracts::debug_expects(is_index_in_range_or_end(i));
+            contracts::debug_expects(is_index_in_range_or_end(index));
 
-            return _impl.get_mut_iter_at(i);
+            return _impl.get_mut_iter_at(index);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -1128,19 +1119,19 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// checks if index `i` is in range [`0`, [`get_count()`]).
+        /// checks if index `index` is in range [`0`, [`get_count()`]).
         /// ----------------------------------------------------------------------------------------
-        constexpr bool is_index_in_range(usize i) const
+        constexpr bool is_index_in_range(usize index) const
         {
-            return _impl.is_index_in_range(i);
+            return _impl.is_index_in_range(index);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// checks if index `i` is in range [`0`, [`get_count()`]].
+        /// checks if index `index` is in range [`0`, [`get_count()`]].
         /// ----------------------------------------------------------------------------------------
-        constexpr bool is_index_in_range_or_end(usize i) const
+        constexpr bool is_index_in_range_or_end(usize index) const
         {
-            return _impl.is_index_in_range_or_end(i);
+            return _impl.is_index_in_range_or_end(index);
         }
 
         /// ----------------------------------------------------------------------------------------
