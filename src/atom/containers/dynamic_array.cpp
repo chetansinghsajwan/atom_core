@@ -70,19 +70,36 @@ namespace atom
 
         constexpr ~_dynamic_array_impl()
         {
-            _destruct_all();
-            _release_all_mem();
+            if (_count != 0)
+            {
+                _destruct_all();
+                _release_all_mem();
+            }
         }
 
     public:
+        constexpr auto move_this(this_type& that) -> void
+        {
+            if (_count != 0)
+            {
+                _destruct_all();
+                _release_all_mem();
+            }
+
+            _data = that._data;
+            _count = that._count;
+            _capacity = that._capacity;
+            _allocator = that._allocator;
+        }
+
         constexpr auto get_at(usize index) const -> const elem_type&
         {
-            return _data[index];
+            return _data[index.to_unwrapped()];
         }
 
         constexpr auto get_mut_at(usize index) -> elem_type&
         {
-            return _data[index];
+            return _data[index.to_unwrapped()];
         }
 
         constexpr auto get_iter() const -> iter_type
@@ -341,12 +358,13 @@ namespace atom
 
             _ensure_space_back(count);
 
-            while (count != 0)
+            for (usize i = 0; i < count; i++)
             {
-                _construct_at(_count, it.value());
-                _count++;
+                _construct_at(_count + i, it.value());
                 it.next();
             }
+
+            _count += count;
         }
 
         template <typename other_iter_type, typename other_iter_end_type>
@@ -498,7 +516,7 @@ namespace atom
     /// - write time complexities after writing implementation.
     /// - add note for case, where element or elements to be inserted are from this array.
     /// --------------------------------------------------------------------------------------------
-    template <typename in_elem_type, typename in_allocator_type>
+    export template <typename in_elem_type, typename in_allocator_type>
     class basic_dynamic_array
     {
         static_assert(not tti::is_ref<in_elem_type>, "dynamic_array does not supports ref types.");
@@ -551,7 +569,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator=(basic_dynamic_array&& that) -> basic_dynamic_array&
         {
-            _impl.storage().move(move(that));
+            _impl.move_this(that._impl);
             return *this;
         }
 
@@ -580,6 +598,26 @@ namespace atom
         constexpr ~basic_dynamic_array() {}
 
     public:
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto get_at(usize index) const -> const elem_type&
+        {
+            contracts::debug_expects(is_index_in_range(index));
+
+            return _impl.get_at(index);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto get_mut_at(usize index) -> elem_type&
+        {
+            contracts::debug_expects(is_index_in_range(index));
+
+            return _impl.get_mut_at(index);
+        }
+
         /// ----------------------------------------------------------------------------------------
         /// constructs element at index `index` with `args`.
         ///
@@ -1036,11 +1074,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_iter(usize index = 0) const -> iter_type
+        constexpr auto get_iter() const -> iter_type
         {
-            contracts::debug_expects(is_index_in_range_or_end(index));
-
-            return _impl.get_iter_at(index);
+            return _impl.get_iter();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -1054,11 +1090,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_mut_iter(usize index = 0) -> mut_iter_type
+        constexpr auto get_mut_iter() -> mut_iter_type
         {
-            contracts::debug_expects(is_index_in_range_or_end(index));
-
-            return _impl.get_mut_iter_at(index);
+            return _impl.get_mut_iter();
         }
 
         /// ----------------------------------------------------------------------------------------
