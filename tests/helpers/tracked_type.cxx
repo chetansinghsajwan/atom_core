@@ -40,23 +40,24 @@ export namespace atom::tests
         {
             switch (op)
             {
-                case eoperation::none:                       return "none";
+                case eoperation::none:                        return "none";
                 case eoperation::default_constructor:         return "default_constructor";
                 case eoperation::copy_constructor:            return "copy_constructor";
-                case eoperation::copy_constructor_as_that:      return "copy_constructor_as_that";
+                case eoperation::copy_constructor_as_that:    return "copy_constructor_as_that";
                 case eoperation::copy_operator:               return "copy_operator";
-                case eoperation::copy_operator_as_that:         return "copy_operator_as_that";
+                case eoperation::copy_operator_as_that:       return "copy_operator_as_that";
                 case eoperation::move_constructor:            return "move_constructor";
-                case eoperation::move_constructor_as_that:      return "move_constructor_as_that";
+                case eoperation::move_constructor_as_that:    return "move_constructor_as_that";
                 case eoperation::move_operator:               return "move_operator";
-                case eoperation::move_operator_as_that:         return "move_operator_as_that";
-                case eoperation::destructor:                 return "destructor";
+                case eoperation::move_operator_as_that:       return "move_operator_as_that";
+                case eoperation::destructor:                  return "destructor";
                 case eoperation::equal_operator:              return "equal_operator";
-                case eoperation::less_than_operator:           return "less_than_operator";
-                case eoperation::greater_than_operator:        return "greater_than_operator";
-                case eoperation::less_than_or_equal_operator:    return "less_than_or_equal_operator";
-                case eoperation::greater_than_or_equal_operator: return "greater_than_or_equal_operator";
-                default:                                     return "unknown";
+                case eoperation::less_than_operator:          return "less_than_operator";
+                case eoperation::greater_than_operator:       return "greater_than_operator";
+                case eoperation::less_than_or_equal_operator: return "less_than_or_equal_operator";
+                case eoperation::greater_than_or_equal_operator:
+                    return "greater_than_or_equal_operator";
+                default: return "unknown";
             }
         }
 
@@ -140,7 +141,7 @@ export namespace atom::tests
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename type>
+    template <typename value_type>
     class tracked_type_of: public tracked_type
     {
         using base_type = tracked_type;
@@ -149,8 +150,16 @@ export namespace atom::tests
         using base_type::base_type;
         using base_type::operator=;
 
+        constexpr tracked_type_of(const value_type& value)
+            : value(value)
+        {}
+
+        constexpr tracked_type_of(value_type&& value)
+            : value(move(value))
+        {}
+
     public:
-        type value;
+        value_type value;
     };
 }
 

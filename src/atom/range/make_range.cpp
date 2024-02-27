@@ -211,7 +211,7 @@ export namespace atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename type>
-    constexpr auto make_range(initializer_list<type> list)
+    constexpr auto make_range(std::initializer_list<type> list)
     {
         return _range_from_iter_pair(
             array_iter(mem_ptr<type>(list.begin())), array_iter(mem_ptr<type>(list.end())));
@@ -363,9 +363,9 @@ export namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <usize::unwrapped_type count>
-    constexpr auto make_range(const char (&str)[count])
-    {
-        return make_range(str, count);
-    }
+    // template <usize::unwrapped_type count>
+    // constexpr auto make_range(const char (&str)[count])
+    // {
+    //     return make_range(str, count);
+    // }
 }
