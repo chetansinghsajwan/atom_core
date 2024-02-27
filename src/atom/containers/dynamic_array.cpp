@@ -546,7 +546,7 @@ namespace atom
         template <typename other_iter_type, typename other_iter_end_type>
         constexpr _dynamic_array_impl_using_std_vector(
             range_tag, other_iter_type it, other_iter_end_type it_end)
-            : _vector(it.get_data(), it_end.get_data())
+            : _vector(std_iter_wrap_for_atom_iter(it), std_iter_wrap_for_atom_iter(it_end))
         {}
 
         constexpr ~_dynamic_array_impl_using_std_vector() {}
@@ -614,8 +614,8 @@ namespace atom
             -> usize
         {
             usize::unwrapped_type old_size = _vector.size();
-            _vector.insert(
-                _vector.begin() + index.to_unwrapped(), it.get_data(), it_end.get_data());
+            _vector.insert(_vector.begin() + index.to_unwrapped(), std_iter_wrap_for_atom_iter(it),
+                std_iter_wrap_for_atom_iter(it_end));
 
             return _vector.size() - old_size;
         }

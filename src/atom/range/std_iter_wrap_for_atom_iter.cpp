@@ -114,6 +114,15 @@ namespace atom
             return tmp;
         }
 
+        constexpr auto operator+=(difference_type steps) -> this_type
+            requires(rjump_iter<iter_type>)
+        {
+            contracts::debug_expects(steps > 0);
+
+            iter.next(steps);
+            return *this;
+        }
+
         constexpr auto operator-(difference_type steps) -> this_type
             requires(rjump_iter<iter_type>)
         {
@@ -122,6 +131,15 @@ namespace atom
             this_type tmp(iter);
             tmp.iter.prev(steps);
             return tmp;
+        }
+
+        constexpr auto operator-=(difference_type steps) -> this_type
+            requires(rjump_iter<iter_type>)
+        {
+            contracts::debug_expects(steps > 0);
+
+            iter.prev(steps);
+            return *this;
         }
 
         constexpr auto operator-(const this_type& that) const -> difference_type
