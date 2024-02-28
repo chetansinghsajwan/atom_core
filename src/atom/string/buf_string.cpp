@@ -5,15 +5,16 @@ import :core;
 
 namespace atom
 {
-    template <usize buf_size, typename allocator_type>
-    class buf_string_container_provider
+    export template <usize buf_size, typename allocator_type>
+    class buf_string
+        : public string_functions<buf_string<buf_size, allocator_type>,
+              buf_array<char, buf_size, allocator_type>>
     {
-    public:
-        template <typename value_type>
-        using type = buf_array<value_type, buf_size, allocator_type>;
-    };
+        using base_type = string_functions<buf_string<buf_size, allocator_type>,
+            buf_array<char, buf_size, allocator_type>>;
 
-    template <usize buf_size, typename allocator_type>
-    using buf_string =
-        string_functions<buf_string_container_provider<buf_size, allocator_type>::template type>;
+    public:
+        using base_type::base_type;
+        using base_type::operator=;
+    };
 }

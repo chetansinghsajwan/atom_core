@@ -256,7 +256,7 @@ namespace atom
     public:
         constexpr auto format(string_view str, string_format_context& ctx) const
         {
-            fmt::string_view fmt_str(str.to_std_char_ptr(), str.get_count().to_unwrapped());
+            fmt::string_view fmt_str(str.get_data(), str.get_count().to_unwrapped());
             _string_formatter_helper<fmt::string_view>::format(fmt_str, ctx);
         }
     };

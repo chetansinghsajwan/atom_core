@@ -316,4 +316,12 @@ export namespace atom
     {
         return range_from(lit.get_data(), lit.get_count());
     }
+
+    /// --------------------------------------------------------------------------------------------
+    ///
+    /// --------------------------------------------------------------------------------------------
+    constexpr auto range_from(std::string_view str)
+    {
+        return range_from(str.data(), str.size());
+    }
 }

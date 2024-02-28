@@ -5,11 +5,14 @@ import :std;
 
 namespace atom
 {
-    template <template <typename value_type> typename container_type>
-    class string_functions: public container_type<char>
+    template <typename final_type, typename container_type>
+    class string_functions: public container_type
     {
-        using this_type = string_functions<container_type>;
-        using base_type = container_type<char>;
+        static_assert(rsame_as<typename container_type::elem_type, char>);
+
+    private:
+        using this_type = string_functions;
+        using base_type = container_type;
 
     public:
         using iter_type = typename base_type::iter_type;
@@ -30,14 +33,14 @@ namespace atom
         {}
 
     public:
-        constexpr auto to_std_char_ptr() const -> const char*
+        static constexpr auto from_std(std::string_view str)
         {
-            return this->get_data();
+            return final_type(range_from(str));
         }
 
-        constexpr auto to_mut_std_char_ptr() -> char*
+        constexpr auto to_std() const -> std::string_view
         {
-            return this->get_mut_data();
+            return std::string_view(base_type::get_data(), base_type::get_count().to_unwrapped());
         }
     };
 }

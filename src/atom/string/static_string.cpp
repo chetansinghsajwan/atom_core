@@ -6,19 +6,10 @@ import :std;
 
 namespace atom
 {
-    template <usize size>
-    class static_string_container_provider
-    {
-    public:
-        template <typename value_type>
-        using type = static_array<value_type, size>;
-    };
-
     export template <usize size>
-    class static_string
-        : public string_functions<static_string_container_provider<size>::template type>
+    class static_string: public string_functions<static_string<size>, static_array<char, size>>
     {
-        using base_type = string_functions<static_string_container_provider<size>::template type>;
+        using base_type = string_functions<static_string<size>, static_array<char, size>>;
 
     public:
         using base_type::base_type;

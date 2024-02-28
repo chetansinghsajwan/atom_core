@@ -4,15 +4,16 @@ import :containers.dynamic_array;
 
 namespace atom
 {
-    template <typename allocator_type>
-    class dynamic_string_container_provider
-    {
-    public:
-        template <typename value_type>
-        using type = dynamic_array<value_type, allocator_type>;
-    };
-
     export template <typename allocator_type>
-    using dynamic_string =
-        string_functions<dynamic_string_container_provider<allocator_type>::template type>;
+    class dynamic_string
+        : public string_functions<dynamic_string<allocator_type>,
+              dynamic_array<char, allocator_type>>
+    {
+        using base_type =
+            string_functions<dynamic_string<allocator_type>, dynamic_array<char, allocator_type>>;
+
+    public:
+        using base_type::base_type;
+        using base_type::operator=;
+    };
 }
