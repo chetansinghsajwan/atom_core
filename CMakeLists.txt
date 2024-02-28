@@ -25,7 +25,14 @@ FetchContent_Declare(
     GIT_SHALLOW    true
 )
 
-FetchContent_MakeAvailable(catch2 fmt cpptrace)
+FetchContent_Declare(
+    magic_enum
+    GIT_REPOSITORY "https://github.com/Neargye/magic_enum.git"
+    GIT_TAG        "v0.9.5"
+    GIT_SHALLOW    true
+)
+
+FetchContent_MakeAvailable(catch2 fmt cpptrace magic_enum)
 
 # --------------------------------------------------------------------------------------------------
 # C++20 Global Config
@@ -47,6 +54,7 @@ target_sources(atom.core
 target_include_directories(atom.core PRIVATE "include/")
 target_link_libraries(atom.core PRIVATE cpptrace::cpptrace)
 target_link_libraries(atom.core PRIVATE fmt::fmt-header-only)
+target_link_libraries(atom.core PRIVATE magic_enum::magic_enum)
 target_compile_options(atom.core PUBLIC "-Wno-read-modules-implicitly")
 target_compile_options(atom.core PUBLIC "-ferror-limit=1000")
 
