@@ -7,9 +7,9 @@ using namespace atom;
 using namespace atom::tests;
 using namespace Catch;
 
-using tracked_type0 = tracked_type_of<i32>;
-using tracked_type1 = tracked_type_of<f32>;
-using tracked_type2 = tracked_type_of<uchar>;
+using tracked_i32 = tracked_type_of<i32>;
+using tracked_f32 = tracked_type_of<f32>;
+using tracked_uchar = tracked_type_of<char>;
 
 TEST_CASE("atom.core.variant")
 {
@@ -59,7 +59,7 @@ TEST_CASE("atom.core.variant")
         // # to do: fix this. check _variant_impl default value for _index.
         //
         // STATIC_REQUIRE(rtrivially_default_constructible<
-        //     variant<i32, uchar, f32>>);
+        //     variant<i32, char, f32>>);
     }
 
     SECTION("default constructor")
@@ -73,7 +73,7 @@ TEST_CASE("atom.core.variant")
 
     SECTION("trivial copy constructor")
     {
-        STATIC_REQUIRE(rtrivially_copy_constructible<variant<i32, uchar, f32>>);
+        STATIC_REQUIRE(rtrivially_copy_constructible<variant<i32, char, f32>>);
     }
 
     SECTION("copy constructor")
@@ -106,7 +106,7 @@ TEST_CASE("atom.core.variant")
 
     SECTION("trivial copy assignment operator")
     {
-        STATIC_REQUIRE(rtrivially_copy_assignable<variant<i32, uchar, f32>>);
+        STATIC_REQUIRE(rtrivially_copy_assignable<variant<i32, char, f32>>);
     }
 
     SECTION("copy assignment operator")
@@ -167,7 +167,7 @@ TEST_CASE("atom.core.variant")
 
     SECTION("trivial move constructor")
     {
-        STATIC_REQUIRE(rtrivially_move_constructible<variant<i32, uchar, f32>>);
+        STATIC_REQUIRE(rtrivially_move_constructible<variant<i32, char, f32>>);
     }
 
     SECTION("move constructor")
@@ -200,7 +200,7 @@ TEST_CASE("atom.core.variant")
 
     SECTION("trivial move assignment operator")
     {
-        STATIC_REQUIRE(rtrivially_move_assignable<variant<i32, uchar, f32>>);
+        STATIC_REQUIRE(rtrivially_move_assignable<variant<i32, char, f32>>);
     }
 
     SECTION("move assignment operator")
@@ -261,11 +261,11 @@ TEST_CASE("atom.core.variant")
 
     SECTION("param constructor")
     {
-        variant<i32, f64, uchar> v = uchar('c');
+        variant<i32, f64, char> v = char('c');
 
         REQUIRE(v.index() == 2);
-        REQUIRE(v.is<uchar>());
-        REQUIRE(v.as<uchar>() == uchar('c'));
+        REQUIRE(v.is<char>());
+        REQUIRE(v.as<char>() == char('c'));
     }
 
     SECTION("param constructor: non deducible type.")
@@ -282,12 +282,12 @@ TEST_CASE("atom.core.variant")
 
     SECTION("param operator")
     {
-        variant<i32, f64, uchar> v;
-        v = uchar('c');
+        variant<i32, f64, char> v;
+        v = char('c');
 
         REQUIRE(v.index() == 2);
-        REQUIRE(v.is<uchar>());
-        REQUIRE(v.as<uchar>() == uchar('c'));
+        REQUIRE(v.is<char>());
+        REQUIRE(v.as<char>() == char('c'));
     }
 
     SECTION("param operator: non deducible type.")
@@ -318,13 +318,13 @@ TEST_CASE("atom.core.variant")
 
     SECTION("value write")
     {
-        variant<i32, f64, uchar> v;
+        variant<i32, f64, char> v;
 
-        v.emplace<uchar>('h');
+        v.emplace<char>('h');
 
         REQUIRE(v.index() == 2);
-        REQUIRE(v.is<uchar>());
-        REQUIRE(v.as<uchar>() == uchar('h'));
+        REQUIRE(v.is<char>());
+        REQUIRE(v.as<char>() == char('h'));
 
         v.set(i32{ 99 });
 
@@ -335,12 +335,12 @@ TEST_CASE("atom.core.variant")
 
     SECTION("value read")
     {
-        variant<i32, f64, uchar> v = uchar('h');
+        variant<i32, f64, char> v = char('h');
 
-        REQUIRE(v.is<uchar>());
-        REQUIRE(v.as<uchar>() == uchar('h'));
+        REQUIRE(v.is<char>());
+        REQUIRE(v.as<char>() == char('h'));
 
         REQUIRE(v.is<2>());
-        REQUIRE(v.get_at<2>() == uchar('h'));
+        REQUIRE(v.get_at<2>() == char('h'));
     }
 }

@@ -189,7 +189,7 @@ namespace atom
     ///
     /// - review this implementation after implementing character encoding.
     /// --------------------------------------------------------------------------------------------
-    constexpr auto _range_find_str_len(const uchar* str) -> usize
+    constexpr auto _range_find_str_len(const char* str) -> usize
     {
         if (std::is_constant_evaluated())
         {
@@ -203,7 +203,7 @@ namespace atom
             return len;
         }
 
-        return usize(std::strlen(_to_std_char_ptr(str)));
+        return usize(std::strlen(str));
     }
 }
 
@@ -276,7 +276,7 @@ export namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    constexpr auto range_from(const uchar* str)
+    constexpr auto range_from(const char* str)
     {
         return _range_from_iter_pair(
             array_iter(str), array_iter(str + _range_find_str_len(str).to_unwrapped()));
@@ -285,7 +285,7 @@ export namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    constexpr auto range_from(uchar* str)
+    constexpr auto range_from(char* str)
     {
         return _mut_range_from_iter_pair(
             mut_array_iter(str), mut_array_iter(str + _range_find_str_len(str).to_unwrapped()));
@@ -316,31 +316,4 @@ export namespace atom
     {
         return range_from(lit.get_data(), lit.get_count());
     }
-
-    /// --------------------------------------------------------------------------------------------
-    ///
-    /// --------------------------------------------------------------------------------------------
-    constexpr auto range_from(const char* begin, const char* end)
-    {
-        const uchar* begin_ = static_cast<const uchar*>(static_cast<const void*>(begin));
-        const uchar* end_ = static_cast<const uchar*>(static_cast<const void*>(end));
-        return range_from(begin_, end_);
-    }
-
-    /// --------------------------------------------------------------------------------------------
-    ///
-    /// --------------------------------------------------------------------------------------------
-    constexpr auto range_from(const char* begin, _usize count)
-    {
-        return range_from(begin, begin + count);
-    }
-
-    /// --------------------------------------------------------------------------------------------
-    ///
-    /// --------------------------------------------------------------------------------------------
-    // template <usize::unwrapped_type count>
-    // constexpr auto range_from(const char (&str)[count])
-    // {
-    //     return range_from(str, count);
-    // }
 }

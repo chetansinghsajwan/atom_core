@@ -173,7 +173,7 @@ TEST_CASE("atom.core.option")
         class type
         {
         public:
-            type(i32 a, uchar b, f32 c)
+            type(i32 a, char b, f32 c)
                 : a(a)
                 , b(b)
                 , c(c)
@@ -181,7 +181,7 @@ TEST_CASE("atom.core.option")
 
         public:
             i32 a;
-            uchar b;
+            char b;
             f32 c;
         };
 

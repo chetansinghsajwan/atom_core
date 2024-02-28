@@ -9,7 +9,7 @@ namespace atom::text
     export class utf8_encoding
     {
     public:
-        using char_type = uchar;
+        using char_type = char;
         using rune_type = char32_t;
 
     public:

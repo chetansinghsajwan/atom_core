@@ -53,9 +53,9 @@ namespace atom
             return string_view(range_from(_fmt_ctx.begin(), _fmt_ctx.end()));
         }
 
-        constexpr auto advance_to(array_iter<uchar> it)
+        constexpr auto advance_to(array_iter<char> it)
         {
-            _fmt_ctx.advance_to(_to_std_char_ptr(it.get_data()));
+            _fmt_ctx.advance_to(it.get_data());
         }
 
         constexpr auto _release_native() -> fmt::format_parse_context&
@@ -92,11 +92,11 @@ namespace atom
 
         template <typename range_type>
         auto write(const range_type& range)
-            requires(rrange_of<range_type, uchar>)
+            requires(rrange_of<range_type, char>)
         {
-            for (uchar ch : range)
+            for (char ch : range)
             {
-                *(*_fmt_ctx_out)++ = ch.to_unwrapped();
+                *(*_fmt_ctx_out)++ = ch;
             }
         }
 
@@ -135,12 +135,12 @@ namespace atom
     template <typename output_type, typename... arg_types>
     constexpr auto _format_to(
         output_type&& out, format_string<arg_types...> fmt, arg_types&&... args)
-        // requires routput<output_type, uchar>
+        // requires routput<output_type, char>
     {
         class out_iter_wrap
         {
         public:
-            using value_type = char;
+            using valueue_type = char;
             using difference_type = std::ptrdiff_t;
             using pointer = char*;
             using reference = char&;
@@ -159,7 +159,7 @@ namespace atom
 
             constexpr auto operator=(char ch) -> out_iter_wrap&
             {
-                *out += uchar(ch);
+                *out += char(ch);
                 return *this;
             }
 
@@ -194,10 +194,10 @@ namespace atom
             native.advance_to(begin);
         }
 
-        constexpr auto format(type val, string_format_context& context) const
+        constexpr auto format(type value, string_format_context& context) const
         {
             fmt::format_context& native = context._release_native();
-            fmt::format_context::iterator begin = _formatter.format(val, native);
+            fmt::format_context::iterator begin = _formatter.format(value, native);
             native.advance_to(begin);
         }
 
@@ -222,15 +222,15 @@ namespace atom
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// `string_formatter` specialization for `uchar`.
+    /// `string_formatter` specialization for `char`.
     /// --------------------------------------------------------------------------------------------
     template <>
-    class string_formatter<uchar>: public _string_formatter_helper<char>
+    class string_formatter<char>: public _string_formatter_helper<char>
     {
     public:
-        constexpr auto format(uchar val, string_format_context& ctx) const
+        constexpr auto format(char ch, string_format_context& ctx) const
         {
-            _string_formatter_helper<char>::format(val.to_unwrapped(), ctx);
+            _string_formatter_helper<char>::format(ch, ctx);
         }
     };
 
@@ -241,9 +241,9 @@ namespace atom
     class string_formatter<byte>: public _string_formatter_helper<byte>
     {
     public:
-        constexpr auto format(byte val, string_format_context& ctx) const
+        constexpr auto format(byte value, string_format_context& ctx) const
         {
-            _string_formatter_helper<byte>::format(val, ctx);
+            _string_formatter_helper<byte>::format(value, ctx);
         }
     };
 
@@ -300,11 +300,11 @@ namespace fmt
             return fmt_ctx.begin();
         }
 
-        constexpr auto format(const type& val, fmt::format_context& fmt_ctx) const ->
+        constexpr auto format(const type& value, fmt::format_context& fmt_ctx) const ->
             typename fmt::format_context::iterator
         {
             atom::string_format_context ctx(fmt_ctx);
-            _atom_formatter.format(val, ctx);
+            _atom_formatter.format(value, ctx);
             return fmt_ctx.out();
         }
 

@@ -6,10 +6,10 @@ import :std;
 namespace atom
 {
     template <template <typename value_type> typename container_type>
-    class string_functions: public container_type<uchar>
+    class string_functions: public container_type<char>
     {
         using this_type = string_functions<container_type>;
-        using base_type = container_type<uchar>;
+        using base_type = container_type<char>;
 
     public:
         using iter_type = typename base_type::iter_type;
@@ -32,12 +32,12 @@ namespace atom
     public:
         constexpr auto to_std_char_ptr() const -> const char*
         {
-            return _to_std_char_ptr(this->get_data());
+            return this->get_data();
         }
 
         constexpr auto to_mut_std_char_ptr() -> char*
         {
-            return _to_std_char_ptr(this->get_mut_data());
+            return this->get_mut_data();
         }
     };
 }

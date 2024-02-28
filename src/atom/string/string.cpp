@@ -25,7 +25,7 @@ namespace atom
         template <typename output_type, typename... arg_types>
         static constexpr auto format_to(
             output_type&& out, format_string<arg_types...> fmt, arg_types&&... args)
-            // requires routput<output_type, uchar>
+            // requires routput<output_type, char>
         {
             _format_to(out, fmt, forward<arg_types>(args)...);
         }

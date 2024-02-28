@@ -34,20 +34,4 @@ namespace atom
         const elem_type* _arr;
         usize _count;
     };
-
-    export template <>
-    class range_literal<uchar>: public range_literal<char>
-    {
-        using base_type = range_literal<char>;
-
-    public:
-        using base_type::base_type;
-        using base_type::operator=;
-
-    public:
-        auto get_data() const -> const uchar*
-        {
-            return reinterpret_cast<const uchar*>(base_type::get_data());
-        }
-    };
 }

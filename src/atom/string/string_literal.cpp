@@ -4,5 +4,5 @@ import :range.range_literal;
 
 namespace atom
 {
-    export using string_literal = range_literal<uchar>;
+    export using string_literal = range_literal<char>;
 }
