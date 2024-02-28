@@ -1,4 +1,4 @@
-export module atom.core:range.make_range;
+export module atom.core:range.range_from;
 import :range.iter_requirements;
 import :range.range_requirements;
 import :range.range_extensions;
@@ -213,7 +213,7 @@ export namespace atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename elem_type>
-    constexpr auto make_range(std::initializer_list<elem_type> list)
+    constexpr auto range_from(std::initializer_list<elem_type> list)
     {
         return _range_from_iter_pair(array_iter(list.begin()), array_iter(list.end()));
     }
@@ -222,7 +222,7 @@ export namespace atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename elem_type>
-    constexpr auto make_range(const elem_type* begin, const elem_type* end)
+    constexpr auto range_from(const elem_type* begin, const elem_type* end)
     {
         return _range_from_iter_pair(array_iter(begin), array_iter(end));
     }
@@ -231,7 +231,7 @@ export namespace atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename elem_type>
-    constexpr auto make_range(elem_type* begin, elem_type* end)
+    constexpr auto range_from(elem_type* begin, elem_type* end)
     {
         return _mut_range_from_iter_pair(mut_array_iter(begin), mut_array_iter(end));
     }
@@ -240,7 +240,7 @@ export namespace atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename elem_type>
-    constexpr auto make_range(const elem_type* begin, usize count)
+    constexpr auto range_from(const elem_type* begin, usize count)
     {
         return _range_from_iter_pair(array_iter(begin), array_iter(begin + count));
     }
@@ -249,7 +249,7 @@ export namespace atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename elem_type>
-    constexpr auto make_range(elem_type* begin, usize count)
+    constexpr auto range_from(elem_type* begin, usize count)
     {
         return _mut_range_from_iter_pair(mut_array_iter(begin), mut_array_iter(begin + count));
     }
@@ -258,7 +258,7 @@ export namespace atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename elem_type, usize count>
-    constexpr auto make_range(const elem_type (&arr)[count])
+    constexpr auto range_from(const elem_type (&arr)[count])
     {
         return _range_from_iter_pair(array_iter(ptr(arr)), array_iter(ptr(arr) + count));
     }
@@ -267,7 +267,7 @@ export namespace atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename elem_type, usize count>
-    constexpr auto make_range(elem_type (&arr)[count])
+    constexpr auto range_from(elem_type (&arr)[count])
     {
         return _mut_range_from_iter_pair(
             mut_array_iter(mut_ptr(arr)), mut_array_iter(mut_ptr(arr) + count));
@@ -276,7 +276,7 @@ export namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    constexpr auto make_range(const uchar* str)
+    constexpr auto range_from(const uchar* str)
     {
         return _range_from_iter_pair(
             array_iter(str), array_iter(str + _range_find_str_len(str).to_unwrapped()));
@@ -285,7 +285,7 @@ export namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    constexpr auto make_range(uchar* str)
+    constexpr auto range_from(uchar* str)
     {
         return _mut_range_from_iter_pair(
             mut_array_iter(str), mut_array_iter(str + _range_find_str_len(str).to_unwrapped()));
@@ -295,7 +295,7 @@ export namespace atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename iter_type, typename iter_end_type>
-    constexpr auto make_range(iter_type it, iter_end_type it_end)
+    constexpr auto range_from(iter_type it, iter_end_type it_end)
         requires riter_pair<iter_type, iter_end_type>
     {
         if constexpr (rmut_iter<iter_type>)
@@ -314,33 +314,33 @@ export namespace atom
     template <typename elem_type>
     constexpr auto range_from_literal(range_literal<elem_type> lit)
     {
-        return make_range(lit.get_data(), lit.get_count());
+        return range_from(lit.get_data(), lit.get_count());
     }
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    constexpr auto make_range(const char* begin, const char* end)
+    constexpr auto range_from(const char* begin, const char* end)
     {
         const uchar* begin_ = static_cast<const uchar*>(static_cast<const void*>(begin));
         const uchar* end_ = static_cast<const uchar*>(static_cast<const void*>(end));
-        return make_range(begin_, end_);
+        return range_from(begin_, end_);
     }
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    constexpr auto make_range(const char* begin, _usize count)
+    constexpr auto range_from(const char* begin, _usize count)
     {
-        return make_range(begin, begin + count);
+        return range_from(begin, begin + count);
     }
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
     // template <usize::unwrapped_type count>
-    // constexpr auto make_range(const char (&str)[count])
+    // constexpr auto range_from(const char (&str)[count])
     // {
-    //     return make_range(str, count);
+    //     return range_from(str, count);
     // }
 }

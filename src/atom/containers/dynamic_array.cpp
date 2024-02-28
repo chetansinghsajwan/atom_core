@@ -601,7 +601,7 @@ namespace atom
         template <typename other_iter_type, typename other_iter_end_type>
         constexpr auto assign_range(other_iter_type it, other_iter_end_type it_end)
         {
-            _vector = make_range(move(it), move(it_end));
+            _vector = range_from(move(it), move(it_end));
         }
 
         template <typename... arg_types>
@@ -958,7 +958,7 @@ namespace atom
 
             usize index = get_index_for_iter(it);
             usize count = _impl.insert_range_at(index, range.get_iter(), range.get_iter_end());
-            return make_range(_impl.get_mut_iter_at(index), _impl.get_mut_iter_at(index + count));
+            return range_from(_impl.get_mut_iter_at(index), _impl.get_mut_iter_at(index + count));
         }
 
         /// ----------------------------------------------------------------------------------------

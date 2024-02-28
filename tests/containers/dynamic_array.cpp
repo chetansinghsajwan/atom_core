@@ -20,7 +20,7 @@ TEST_CASE("atom.core.dynamic_array")
 
     SECTION("copy constructor")
     {
-        auto input = make_range({ tracked_i32(0), tracked_i32(1), tracked_i32(2) });
+        auto input = range_from({ tracked_i32(0), tracked_i32(1), tracked_i32(2) });
         dynamic_array_tracked_i32 arr1 = input;
         dynamic_array_tracked_i32 arr2(arr1);
 
@@ -36,7 +36,7 @@ TEST_CASE("atom.core.dynamic_array")
 
     SECTION("move constructor")
     {
-        auto input = make_range({ tracked_i32(0), tracked_i32(1), tracked_i32(2) });
+        auto input = range_from({ tracked_i32(0), tracked_i32(1), tracked_i32(2) });
         dynamic_array_tracked_i32 arr1 = input;
 
         const tracked_i32* old_data = arr1.get_data();
@@ -64,7 +64,7 @@ TEST_CASE("atom.core.dynamic_array")
     {
         SECTION("copy range")
         {
-            auto input = make_range({ tracked_i32(0), tracked_i32(1), tracked_i32(2) });
+            auto input = range_from({ tracked_i32(0), tracked_i32(1), tracked_i32(2) });
             dynamic_array_tracked_i32 arr = input;
 
             REQUIRE(arr.get_count() == 3);
@@ -78,7 +78,7 @@ TEST_CASE("atom.core.dynamic_array")
 
         SECTION("move range")
         {
-            auto input = make_range({ tracked_i32(0), tracked_i32(1), tracked_i32(2) });
+            auto input = range_from({ tracked_i32(0), tracked_i32(1), tracked_i32(2) });
             dynamic_array_tracked_i32 arr = move(input);
 
             REQUIRE(arr.get_count() == 3);
