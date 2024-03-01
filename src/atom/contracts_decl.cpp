@@ -1,3 +1,4 @@
+#include <exception>
 export module atom.core:contracts_decl;
 import :std;
 import :build_config;
@@ -99,15 +100,15 @@ namespace atom::contracts
     }
 }
 
-namespace atom::system
+namespace atom
 {
     /// ------------------------------------------------------------------------------------------------
     ///
     /// ------------------------------------------------------------------------------------------------
     export template <typename... arg_types>
     constexpr auto panic(
-        std::string_view msg = "", std::source_location _src = std::source_location::current())
+        std::string_view msg = "", arg_types&&... args)
     {
-        _panic(_src, msg);
+        std::terminate();
     }
 }
