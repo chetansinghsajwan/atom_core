@@ -252,7 +252,7 @@ namespace atom
             {
                 if constexpr (that_types::count == 0)
                 {
-                    system::panic("there is no type for current index.");
+                    panic("there is no type for current index.");
                 }
                 else
                 {
@@ -283,7 +283,7 @@ namespace atom
             {
                 if constexpr (that_types::count == 0)
                 {
-                    system::panic("there is no type for current index.");
+                    panic("there is no type for current index.");
                 }
                 else
                 {
@@ -334,7 +334,7 @@ namespace atom
             {
                 if constexpr (_type_list::count == 0)
                 {
-                    system::panic("there is no type for current index.");
+                    panic("there is no type for current index.");
                 }
                 else
                 {
