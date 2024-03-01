@@ -135,7 +135,7 @@ namespace atom
     template <typename output_type, typename... arg_types>
     constexpr auto _format_to(
         output_type&& out, format_string<arg_types...> fmt, arg_types&&... args)
-        // requires routput<output_type, char>
+    // requires routput<output_type, char>
     {
         class out_iter_wrap
         {
@@ -147,6 +147,11 @@ namespace atom
             using iterator_category = std::output_iterator_tag;
 
         public:
+            constexpr auto operator++() -> out_iter_wrap&
+            {
+                return *this;
+            }
+
             constexpr auto operator++(int) -> out_iter_wrap&
             {
                 return *this;
