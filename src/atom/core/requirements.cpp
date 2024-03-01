@@ -347,8 +347,7 @@ export namespace atom
     template <typename type0, typename type1>
     concept _requality_comparable_with = requires(const type0 v0, const type1 v1)
     {
-        { v0 == v1 } -> rsame_as<bool>;
-        { v0 != v1 } -> rsame_as<bool>;
+        { v0.is_eq(v1) } -> rsame_as<bool>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -357,7 +356,8 @@ export namespace atom
     template <typename type0, typename type1>
     concept requality_comparable_with = requires(const type0 v0, const type1 v1)
     {
-        { v0.is_eq(v1) } -> rsame_as<bool>;
+        { v0 == v1 } -> rsame_as<bool>;
+        { v0 != v1 } -> rsame_as<bool>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -372,7 +372,7 @@ export namespace atom
     template <typename type0, typename type1>
     concept _rcomparable_with = requires(const type0 v0, const type1 v1)
     {
-        requires _requality_comparable_with<type0, type1>;
+        requires requality_comparable_with<type0, type1>;
 
         { v0 < v1 } -> rsame_as<bool>;
         { v0 > v1 } -> rsame_as<bool>;
@@ -432,14 +432,14 @@ export namespace atom
 {
     template <typename type0, typename type1>
     constexpr auto operator==(const type0& v0, const type1& v1) -> bool
-        requires requality_comparable_with<type0, type1>
+        requires _requality_comparable_with<type0, type1>
     {
         return v0.is_eq(v1);
     }
 
     template <typename type0, typename type1>
     constexpr auto operator!=(const type0& v0, const type1& v1) -> bool
-        requires requality_comparable_with<type0, type1>
+        requires _requality_comparable_with<type0, type1>
     {
         return not v0.is_eq(v1);
     }
