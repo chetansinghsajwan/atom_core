@@ -1,4 +1,3 @@
-#include <exception>
 export module atom.core:contracts_decl;
 import :std;
 import :build_config;
