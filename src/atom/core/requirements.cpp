@@ -354,7 +354,8 @@ export namespace atom
     /// ensures `type0` and `type1` are `equality_comparable`.
     /// --------------------------------------------------------------------------------------------
     template <typename type0, typename type1>
-    concept requality_comparable_with = requires(const type0 v0, const type1 v1)
+    concept requality_comparable_with = _requality_comparable_with<type0, type1> or
+        requires(const type0 v0, const type1 v1)
     {
         { v0 == v1 } -> rsame_as<bool>;
         { v0 != v1 } -> rsame_as<bool>;
@@ -372,26 +373,27 @@ export namespace atom
     template <typename type0, typename type1>
     concept _rcomparable_with = requires(const type0 v0, const type1 v1)
     {
-        requires requality_comparable_with<type0, type1>;
+        requires _requality_comparable_with<type0, type1>;
 
-        { v0 < v1 } -> rsame_as<bool>;
-        { v0 > v1 } -> rsame_as<bool>;
-        { v0 <= v1 } -> rsame_as<bool>;
-        { v0 >= v1 } -> rsame_as<bool>;
+        { v0.is_lt(v1) } -> rsame_as<bool>;
+        { v0.is_gt(v1) } -> rsame_as<bool>;
+        { v0.is_le(v1) } -> rsame_as<bool>;
+        { v0.is_ge(v1) } -> rsame_as<bool>;
     };
 
     /// --------------------------------------------------------------------------------------------
     /// ensures `type0` and `type1` are `comparable`.
     /// --------------------------------------------------------------------------------------------
     template <typename type0, typename type1>
-    concept rcomparable_with = requires(const type0 v0, const type1 v1)
+    concept rcomparable_with = _rcomparable_with<type0, type1> or
+        requires(const type0 v0, const type1 v1)
     {
         requires requality_comparable_with<type0, type1>;
 
-        { v0.is_lt(v1) } -> rsame_as<bool>;
-        { v0.is_gt(v1) } -> rsame_as<bool>;
-        { v0.is_le(v1) } -> rsame_as<bool>;
-        { v0.is_ge(v1) } -> rsame_as<bool>;
+        { v0 < v1 } -> rsame_as<bool>;
+        { v0 > v1 } -> rsame_as<bool>;
+        { v0 <= v1 } -> rsame_as<bool>;
+        { v0 >= v1 } -> rsame_as<bool>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -446,21 +448,21 @@ export namespace atom
 
     template <typename type0, typename type1>
     constexpr auto operator<(const type0& v0, const type1& v1) -> bool
-        requires rcomparable_with<type0, type1>
+        requires _rcomparable_with<type0, type1>
     {
         return v0.is_lt(v1);
     }
 
     template <typename type0, typename type1>
     constexpr auto operator>(const type0& v0, const type1& v1) -> bool
-        requires rcomparable_with<type0, type1>
+        requires _rcomparable_with<type0, type1>
     {
         return v0.is_gt(v1);
     }
 
     template <typename type0, typename type1>
     constexpr auto operator<=(const type0& v0, const type1& v1) -> bool
-        requires rcomparable_with<type0, type1>
+        requires _rcomparable_with<type0, type1>
     {
         return v0.is_le(v1);
     }
@@ -468,7 +470,7 @@ export namespace atom
     template <typename type0, typename type1>
     constexpr auto operator>=(const type0& v0, const type1& v1) -> bool
 
-        requires rcomparable_with<type0, type1>
+        requires _rcomparable_with<type0, type1>
     {
         return v0.is_ge(v1);
     }
