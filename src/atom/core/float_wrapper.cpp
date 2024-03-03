@@ -54,6 +54,26 @@ namespace atom
             return std::round(val);
         }
 
+        static constexpr auto is_add_safe(unwrapped_type lhs, unwrapped_type rhs) -> bool
+        {
+            return true;
+        }
+
+        static constexpr auto is_sub_safe(unwrapped_type lhs, unwrapped_type rhs) -> bool
+        {
+            return true;
+        }
+
+        static constexpr auto is_mul_safe(unwrapped_type lhs, unwrapped_type rhs) -> bool
+        {
+            return true;
+        }
+
+        static constexpr auto is_div_safe(unwrapped_type lhs, unwrapped_type rhs) -> bool
+        {
+            return true;
+        }
+
         template <typename num_type>
         static constexpr auto is_conversion_safe_from(num_type num) -> bool
         {
@@ -63,6 +83,18 @@ namespace atom
 
         template <typename num_type>
         static constexpr auto is_conversion_safe_from_unwrapped(num_type num) -> bool
+        {
+            return true;
+        }
+
+        template <typename num_type>
+        static constexpr auto is_conversion_safe_to(num_type num) -> bool
+        {
+            return true;
+        }
+
+        template <typename num_type>
+        static constexpr auto is_conversion_safe_to_unwrapped(num_type num) -> bool
         {
             return true;
         }
