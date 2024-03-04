@@ -1,4 +1,4 @@
-// import atom.core;
+// #include "atom.core.h"
 // #include "catch2/catch_test_macros.hpp"
 
 // using namespace atom;
@@ -10,14 +10,14 @@
 
 //     SECTION("default constructor")
 //     {
-//         const const i32* ptr;
+//         const i32* ptr;
 
 //         REQUIRE(ptr.is_null());
 //     }
 
 //     SECTION("null constructor")
 //     {
-//         const const i32* ptr = nullptr;
+//         const i32* ptr = nullptr;
 
 //         REQUIRE(ptr.is_null());
 //     }

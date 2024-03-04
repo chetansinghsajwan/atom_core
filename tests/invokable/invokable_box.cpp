@@ -1,4 +1,4 @@
-import atom.core;
+#include "atom.core.h"
 #include "catch2/catch_test_macros.hpp"
 #include "catch2/benchmark/catch_benchmark.hpp"
 #include <functional>

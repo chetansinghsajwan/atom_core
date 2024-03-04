@@ -1,4 +1,4 @@
-import atom.core;
+#include "atom.core.h"
 #include "catch2/catch_test_macros.hpp"
 #include "catch2/catch_template_test_macros.hpp"
 
@@ -10,11 +10,11 @@ struct i32_test_data
     using small_int_type = i16;
     using big_int_type = i64;
 
-    static constexpr _i64 INT_BITS = 32;
-    static constexpr _i64 INT_MIN = -2'147'483'648;
-    static constexpr _i64 INT_MAX = 2'147'483'647;
-    static constexpr _i64 INT_SMALL_MIN = -32'768;
-    static constexpr _i64 INT_SMALL_MAX = 32'767;
+    static constexpr _i64 int_bits = 32;
+    static constexpr _i64 int_min = -2'147'483'648;
+    static constexpr _i64 int_max = 2'147'483'647;
+    static constexpr _i64 small_int_min = -32'768;
+    static constexpr _i64 small_int_max = 32'767;
 };
 
 struct u32_test_data
@@ -23,11 +23,11 @@ struct u32_test_data
     using small_int_type = u16;
     using big_int_type = u64;
 
-    static constexpr _u64 INT_BITS = 32;
-    static constexpr _u64 INT_MIN = 0;
-    static constexpr _u64 INT_MAX = 4'294'967'295;
-    static constexpr _u64 INT_SMALL_MIN = 0;
-    static constexpr _u64 INT_SMALL_MAX = 65'535;
+    static constexpr _u64 int_bits = 32;
+    static constexpr _u64 int_min = 0;
+    static constexpr _u64 int_max = 4'294'967'295;
+    static constexpr _u64 small_int_min = 0;
+    static constexpr _u64 small_int_max = 65'535;
 };
 
 TEMPLATE_TEST_CASE("atom.core.integers", "", i32_test_data, u32_test_data)
@@ -36,72 +36,72 @@ TEMPLATE_TEST_CASE("atom.core.integers", "", i32_test_data, u32_test_data)
     using small_int_type = TestType::small_int_type;
     using unwrapped_small_int_type = small_int_type::unwrapped_type;
     using big_int_type = TestType::big_int_type;
-    constexpr auto INT_BITS = TestType::INT_BITS;
-    constexpr auto INT_MIN = TestType::INT_MIN;
-    constexpr auto INT_MAX = TestType::INT_MAX;
-    constexpr auto INT_SMALL_MIN = TestType::INT_SMALL_MIN;
-    constexpr auto INT_SMALL_MAX = TestType::INT_SMALL_MAX;
+    constexpr auto int_bits = TestType::int_bits;
+    constexpr auto int_min = TestType::int_min;
+    constexpr auto int_max = TestType::int_max;
+    constexpr auto small_int_min = TestType::small_int_min;
+    constexpr auto small_int_max = TestType::small_int_max;
 
     SECTION("from conversions")
     {
-        REQUIRE(int_type::is_conversion_safe_from(big_int_type(INT_MIN)));
-        REQUIRE(int_type::is_conversion_safe_from(big_int_type(INT_MAX)));
+        REQUIRE(int_type::is_conversion_safe_from(big_int_type(int_min)));
+        REQUIRE(int_type::is_conversion_safe_from(big_int_type(int_max)));
 
-        REQUIRE_FALSE(int_type::is_conversion_safe_from(big_int_type(INT_MIN - 1)));
-        REQUIRE_FALSE(int_type::is_conversion_safe_from(big_int_type(INT_MAX + 1)));
+        REQUIRE_FALSE(int_type::is_conversion_safe_from(big_int_type(int_min - 1)));
+        REQUIRE_FALSE(int_type::is_conversion_safe_from(big_int_type(int_max + 1)));
 
         REQUIRE_THROWS_AS(
-            int_type::from_checked(big_int_type(INT_MAX + 1)), contract_violation_exception);
-        REQUIRE(int_type::from_unchecked(big_int_type(INT_MAX + 1)).to_unwrapped() ==
-                typename int_type::unwrapped_type(INT_MAX + 1));
+            int_type::from_checked(big_int_type(int_max + 1)), contract_violation_exception);
+        REQUIRE(int_type::from_unchecked(big_int_type(int_max + 1)).to_unwrapped() ==
+                typename int_type::unwrapped_type(int_max + 1));
     }
 
     SECTION("to conversions")
     {
-        REQUIRE(int_type(INT_SMALL_MAX).template is_conversion_safe_to<small_int_type>());
+        REQUIRE(int_type(small_int_max).template is_conversion_safe_to<small_int_type>());
 
-        REQUIRE_FALSE(int_type(INT_SMALL_MAX + 1).template is_conversion_safe_to<small_int_type>());
+        REQUIRE_FALSE(int_type(small_int_max + 1).template is_conversion_safe_to<small_int_type>());
 
-        REQUIRE(int_type(INT_SMALL_MAX).template to_checked<small_int_type>() == INT_SMALL_MAX);
+        REQUIRE(int_type(small_int_max).template to_checked<small_int_type>() == small_int_max);
 
-        REQUIRE_THROWS_AS(int_type(INT_SMALL_MAX + 1).template to_checked<small_int_type>(),
+        REQUIRE_THROWS_AS(int_type(small_int_max + 1).template to_checked<small_int_type>(),
             contract_violation_exception);
 
-        REQUIRE(int_type(INT_SMALL_MAX + 1).template to_unchecked<small_int_type>()
-                == small_int_type(INT_SMALL_MAX + 1));
+        REQUIRE(int_type(small_int_max + 1).template to_unchecked<small_int_type>()
+                == small_int_type(small_int_max + 1));
     }
 
     SECTION("from_unwrapped conversions")
     {
-        REQUIRE(int_type::is_conversion_safe_from_unwrapped(INT_MIN));
-        REQUIRE(int_type::is_conversion_safe_from_unwrapped(INT_MAX));
-        REQUIRE_FALSE(int_type::is_conversion_safe_from_unwrapped(INT_MIN - 1));
-        REQUIRE_FALSE(int_type::is_conversion_safe_from_unwrapped(INT_MAX + 1));
+        REQUIRE(int_type::is_conversion_safe_from_unwrapped(int_min));
+        REQUIRE(int_type::is_conversion_safe_from_unwrapped(int_max));
+        REQUIRE_FALSE(int_type::is_conversion_safe_from_unwrapped(int_min - 1));
+        REQUIRE_FALSE(int_type::is_conversion_safe_from_unwrapped(int_max + 1));
 
         REQUIRE_THROWS_AS(
-            int_type::from_unwrapped_checked(INT_MAX + 1), contract_violation_exception);
-        REQUIRE(int_type::from_unwrapped_unchecked(INT_MAX + 1).to_unwrapped() ==
-                typename int_type::unwrapped_type(INT_MAX + 1));
+            int_type::from_unwrapped_checked(int_max + 1), contract_violation_exception);
+        REQUIRE(int_type::from_unwrapped_unchecked(int_max + 1).to_unwrapped() ==
+                typename int_type::unwrapped_type(int_max + 1));
     }
 
     SECTION("to_unwrapped conversions")
     {
-        REQUIRE(int_type(INT_SMALL_MAX)
+        REQUIRE(int_type(small_int_max)
                     .template is_conversion_safe_to_unwrapped<unwrapped_small_int_type>());
 
-        REQUIRE_FALSE(int_type(INT_SMALL_MAX + 1)
+        REQUIRE_FALSE(int_type(small_int_max + 1)
                           .template is_conversion_safe_to_unwrapped<unwrapped_small_int_type>());
 
-        REQUIRE(int_type(INT_SMALL_MAX).template to_unwrapped_checked<unwrapped_small_int_type>()
-                == INT_SMALL_MAX);
+        REQUIRE(int_type(small_int_max).template to_unwrapped_checked<unwrapped_small_int_type>()
+                == small_int_max);
 
         REQUIRE_THROWS_AS(
-            int_type(INT_SMALL_MAX + 1).template to_unwrapped_checked<unwrapped_small_int_type>(),
+            int_type(small_int_max + 1).template to_unwrapped_checked<unwrapped_small_int_type>(),
             contract_violation_exception);
 
         REQUIRE(
-            int_type(INT_SMALL_MAX + 1).template to_unwrapped_unchecked<unwrapped_small_int_type>()
-            == unwrapped_small_int_type(INT_SMALL_MAX + 1));
+            int_type(small_int_max + 1).template to_unwrapped_unchecked<unwrapped_small_int_type>()
+            == unwrapped_small_int_type(small_int_max + 1));
     }
 
     SECTION("addition")
@@ -195,9 +195,9 @@ TEMPLATE_TEST_CASE("atom.core.integers", "", i32_test_data, u32_test_data)
 
     SECTION("utils")
     {
-        REQUIRE(int_type::min() == INT_MIN);
-        REQUIRE(int_type::max() == INT_MAX);
-        REQUIRE(int_type::bits() == INT_BITS);
+        REQUIRE(int_type::min() == int_min);
+        REQUIRE(int_type::max() == int_max);
+        REQUIRE(int_type::bits() == int_bits);
 
         REQUIRE(int_type(10).min_of(20) == 10);
         REQUIRE(int_type(10).max_of(20) == 20);
@@ -243,8 +243,8 @@ TEMPLATE_TEST_CASE("atom.core.integers", "", i32_test_data, u32_test_data)
             REQUIRE_THROWS_AS(int_type::min().neg_checked(), contract_violation_exception);
             REQUIRE_NOTHROW(int_type::min().neg_unchecked());
 
-            REQUIRE(int_type(INT_MIN).sign() == -1);
-            REQUIRE(int_type(INT_MAX).sign() == 1);
+            REQUIRE(int_type(int_min).sign() == -1);
+            REQUIRE(int_type(int_max).sign() == 1);
         }
     }
 }

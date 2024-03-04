@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.5)
 project(atom.core VERSION 0.1.0)
 enable_language(CXX)
 
+cmake_policy(SET "CMP0076" NEW)
+
 include(FetchContent)
 
 FetchContent_Declare(
@@ -37,7 +39,6 @@ FetchContent_MakeAvailable(catch2 fmt cpptrace magic_enum)
 # --------------------------------------------------------------------------------------------------
 # C++20 Global Config
 # --------------------------------------------------------------------------------------------------
-include("cmake/enable_modules.cmake")
 set(CMAKE_CXX_STANDARD "23")
 set(CMAKE_CXX_STANDARD_REQUIRED "ON")
 enable_testing()
@@ -46,30 +47,23 @@ enable_testing()
 # atom.core
 # --------------------------------------------------------------------------------------------------
 
-file(GLOB_RECURSE sources "src/**.cpp")
-
 add_library(atom.core STATIC)
-target_sources(atom.core
-    PUBLIC FILE_SET modules TYPE CXX_MODULES FILES "${sources}")
-target_include_directories(atom.core PRIVATE "include/")
-target_link_libraries(atom.core PRIVATE cpptrace::cpptrace)
-target_link_libraries(atom.core PRIVATE fmt::fmt-header-only)
-target_link_libraries(atom.core PRIVATE magic_enum::magic_enum)
-target_compile_options(atom.core PUBLIC "-Wno-read-modules-implicitly")
+target_sources(atom.core PUBLIC "source/atom.core.cpp")
+target_include_directories(atom.core PUBLIC "include/")
+target_link_libraries(atom.core PUBLIC cpptrace::cpptrace)
+target_link_libraries(atom.core PUBLIC fmt::fmt-header-only)
+target_link_libraries(atom.core PUBLIC magic_enum::magic_enum)
 target_compile_options(atom.core PUBLIC "-ferror-limit=1000")
 
 # --------------------------------------------------------------------------------------------------
 # atom.core.tests
 # --------------------------------------------------------------------------------------------------
 
-file(GLOB_RECURSE test_sources "tests/**.cpp")
-file(GLOB_RECURSE test_module_sources "tests/**.cxx")
-
 add_executable(atom.core.tests)
-target_sources(atom.core.tests
-    PRIVATE FILE_SET modules TYPE CXX_MODULES FILES "${test_module_sources}"
-    PRIVATE "${test_sources}")
 
+file(GLOB_RECURSE test_sources "tests/**.cpp")
+target_sources(atom.core.tests PRIVATE "${test_sources}")
+target_include_directories(atom.core.tests PRIVATE "tests/")
 target_link_libraries(atom.core.tests PRIVATE atom.core)
 target_link_libraries(atom.core.tests PRIVATE Catch2::Catch2WithMain)
 

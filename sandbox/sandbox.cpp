@@ -1,4 +1,4 @@
-import atom.core;
+#include "atom.core.h"
 
 using namespace atom;
 
