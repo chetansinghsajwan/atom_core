@@ -37,6 +37,95 @@ namespace atom
             unsigned int patch;
         };
 
+    private:
+        static consteval auto _get_mode() -> mode
+        {
+#if defined(ATOM_MODE_DEBUG)
+            return mode::debug;
+#elif defined(ATOM_MODE_RELEASE)
+            return mode::release;
+#endif
+        }
+
+        static consteval auto _get_platform() -> platform
+        {
+#if defined(ATOM_PLATFORM_WIN)
+            return platform::windows;
+#elif defined(ATOM_PLATFORM_POSIX)
+            return platform::posix;
+#elif defined(ATOM_PLATFORM_UNKNOWN)
+            return platform::unknown;
+#endif
+        }
+
+        static consteval auto _get_compiler() -> compiler
+        {
+#if defined(ATOM_COMPILER_CLANG)
+#    if defined(ATOM_COMPILER_MSVC_EMULATED)
+            return compiler::clang_msvc;
+#    elif defined(ATOM_COMPILER_GNUC_EMULATED)
+            return compiler::clang_gnuc;
+#    else
+            return compiler::clang;
+#    endif
+#elif defined(ATOM_COMPILER_GNUC)
+            return compiler::gnuc;
+#elif defined(ATOM_COMPILER_MSVC)
+            return compiler::msvc;
+#endif
+        }
+
+        static consteval auto _get_compiler_clang_version() -> version
+        {
+#if defined(ATOM_COMPILER_CLANG)
+            return version{ .major = ATOM_COMPILER_CLANG_VERSION_MAJOR,
+                .minor = ATOM_COMPILER_CLANG_VERSION_MINOR,
+                .patch = ATOM_COMPILER_CLANG_VERSION_PATCH };
+#else
+            return _get_compiler_unknown_version();
+#endif
+        }
+
+        static consteval auto _get_compiler_gnuc_version() -> version
+        {
+#if defined(ATOM_COMPILER_GNUC) or defined(ATOM_COMPILER_GNUC_EMULATED)
+            return version{ .major = ATOM_COMPILER_GNUC_VERSION_MAJOR,
+                .minor = ATOM_COMPILER_GNUC_VERSION_MINOR,
+                .patch = ATOM_COMPILER_GNUC_VERSION_PATCH };
+#else
+            return _get_compiler_unknown_version();
+#endif
+        }
+
+        static consteval auto _get_compiler_msvc_version() -> version
+        {
+#if defined(ATOM_COMPILER_MSVC) or defined(ATOM_COMPILER_MSVC_EMULATED)
+            return version{ .major = ATOM_COMPILER_MSVC_VERSION_MAJOR,
+                .minor = ATOM_COMPILER_MSVC_VERSION_MINOR,
+                .patch = ATOM_COMPILER_MSVC_VERSION_PATCH };
+#else
+            return _get_compiler_unknown_version();
+#endif
+        }
+
+        static consteval auto _get_compiler_unknown_version() -> version
+        {
+            return version();
+        }
+
+        static consteval auto _get_compiler_version() -> version
+        {
+#if defined(ATOM_COMPILER_CLANG)
+            return _get_compiler_clang_version();
+#elif defined(ATOM_COMPILER_GNUC)
+            return _get_compiler_gnuc_version();
+#elif defined(ATOM_COMPILER_MSVC)
+            return _get_compiler_msvc_version();
+#elif defined(atom_compiler_unknown)
+            return _get_compiler_unknown_version();
+#endif
+        }
+
     public:
         static consteval auto get_mode() -> mode
         {
@@ -109,10 +198,11 @@ namespace atom
             return get_compiler() == compiler::gnuc or get_compiler() == compiler::clang_gnuc;
         }
 
+        template <typename = void>
         static consteval auto get_compiler_gnuc_emulated_version() -> version
         {
-            // todo: add this assertion.
-            // assert(is_compiler_gnuc_emulated(), "this compiler does not support gcc features.");
+            static_assert(
+                is_compiler_gnuc_emulated(), "this compiler does not support gcc features.");
 
             return _get_compiler_gnuc_version();
         }
@@ -132,101 +222,13 @@ namespace atom
             return get_compiler() == compiler::msvc || get_compiler() == compiler::clang_msvc;
         }
 
+        template <typename = void>
         static consteval auto get_compiler_msvc_emulated_version() -> version
         {
-            // todo: add this assertion.
-            // assert(is_compiler_msvc_emulated(), "this compiler does not support msvc features.");
+            static_assert(
+                is_compiler_msvc_emulated(), "this compiler does not support msvc features.");
 
             return _get_compiler_msvc_version();
-        }
-
-    private:
-        static consteval auto _get_mode() -> mode
-        {
-#if defined(ATOM_MODE_DEBUG)
-            return mode::debug;
-#elif defined(ATOM_MODE_RELEASE)
-            return mode::release;
-#endif
-        }
-
-        static consteval auto _get_platform() -> platform
-        {
-#if defined(ATOM_PLATFORM_WIN)
-            return platform::windows;
-#elif defined(ATOM_PLATFORM_POSIX)
-            return platform::posix;
-#elif defined(ATOM_PLATFORM_UNKNOWN)
-            return platform::unknown;
-#endif
-        }
-
-        static consteval auto _get_compiler() -> compiler
-        {
-#if defined(ATOM_COMPILER_CLANG)
-#    if defined(ATOM_COMPILER_MSVC_EMULATED)
-            return compiler::clang_msvc;
-#    elif defined(ATOM_COMPILER_GNUC_EMULATED)
-            return compiler::clang_gnuc;
-#    else
-            return compiler::clang;
-#    endif
-#elif defined(ATOM_COMPILER_GNUC)
-            return compiler::gnuc;
-#elif defined(ATOM_COMPILER_MSVC)
-            return compiler::msvc;
-#endif
-        }
-
-        static consteval auto _get_compiler_clang_version() -> version
-        {
-#if defined(ATOM_COMPILER_CLANG)
-            return version{ .major = ATOM_COMPILER_CLANG_VER_MAJOR,
-                .minor = ATOM_COMPILER_CLANG_VER_MINOR,
-                .patch = ATOM_COMPILER_CLANG_VER_PATCH };
-#else
-            return _get_compiler_unknown_version();
-#endif
-        }
-
-        static consteval auto _get_compiler_gnuc_version() -> version
-        {
-#if defined(ATOM_COMPILER_GNUC) or defined(ATOM_COMPILER_GNUC_EMULATED)
-            return version{ .major = ATOM_COMPILER_GNUC_VER_MAJOR,
-                .minor = ATOM_COMPILER_GNUC_VER_MINOR,
-                .patch = ATOM_COMPILER_GNUC_VER_PATCH };
-#else
-            return _get_compiler_unknown_version();
-#endif
-        }
-
-        static consteval auto _get_compiler_msvc_version() -> version
-        {
-#if defined(ATOM_COMPILER_MSVC) or defined(ATOM_COMPILER_MSVC_EMULATED)
-            return version{ .major = ATOM_COMPILER_MSVC_VER_MAJOR,
-                .minor = ATOM_COMPILER_MSVC_VER_MINOR,
-                .patch = ATOM_COMPILER_MSVC_VER_PATCH };
-#else
-            return _get_compiler_unknown_version();
-#endif
-        }
-
-        static consteval auto _get_compiler_unknown_version() -> version
-        {
-            return version();
-        }
-
-        static consteval auto _get_compiler_version() -> version
-        {
-#if defined(ATOM_COMPILER_CLANG)
-            return _get_compiler_clang_version();
-#elif defined(ATOM_COMPILER_GNUC)
-            return _get_compiler_gnuc_version();
-#elif defined(ATOM_COMPILER_MSVC)
-            return _get_compiler_msvc_version();
-#elif defined(atom_compiler_unknown)
-            return _get_compiler_unknown_version();
-#endif
         }
     };
 }

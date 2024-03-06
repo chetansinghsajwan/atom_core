@@ -79,9 +79,9 @@
 /// ------------------------------------------------------------------------------------------------
 #if defined(__clang__)
 #    define ATOM_COMPILER_CLANG
-#    define ATOM_COMPILER_CLANG_VER_MAJOR __clang_major__
-#    define ATOM_COMPILER_CLANG_VER_MINOR __clang_minor__
-#    define ATOM_COMPILER_CLANG_VER_PATCH __clang_patchlevel__
+#    define ATOM_COMPILER_CLANG_VERSION_MAJOR __clang_major__
+#    define ATOM_COMPILER_CLANG_VERSION_MINOR __clang_minor__
+#    define ATOM_COMPILER_CLANG_VERSION_PATCH __clang_patchlevel__
 #    define ATOM_COMPILER_CLANG_VER __clang_version__
 
 #elif defined(__GNUC__)
@@ -90,9 +90,9 @@
 #    else
 #        define ATOM_COMPILER_GNUC
 #    endif
-#    define ATOM_COMPILER_GNUC_VER_MAJOR __GNUC__
-#    define ATOM_COMPILER_GNUC_VER_MINOR __GNUC_MINOR__
-#    define ATOM_COMPILER_GNUC_VER_PATCH __GNUC_PATCHLEVEL__
+#    define ATOM_COMPILER_GNUC_VERSION_MAJOR __GNUC__
+#    define ATOM_COMPILER_GNUC_VERSION_MINOR __GNUC_MINOR__
+#    define ATOM_COMPILER_GNUC_VERSION_PATCH __GNUC_PATCHLEVEL__
 #    define ATOM_COMPILER_GNUC_VER (__GNUC__ * 100) + __GNUC_MINOR__
 
 #elif defined(_MSC_VER)
@@ -101,9 +101,9 @@
 #    else
 #        define ATOM_COMPILER_MSVC
 #    endif
-#    define ATOM_COMPILER_MSVC_VER_MAJOR (_MSC_VER / 100)
-#    define ATOM_COMPILER_MSVC_VER_MINOR (_MSC_VER % 100)
-#    define ATOM_COMPILER_MSVC_VER_PATCH (_MSC_VER)
+#    define ATOM_COMPILER_MSVC_VERSION_MAJOR (_MSC_VER / 100)
+#    define ATOM_COMPILER_MSVC_VERSION_MINOR (_MSC_VER % 100)
+#    define ATOM_COMPILER_MSVC_VERSION_PATCH (_MSC_VER)
 #    define ATOM_COMPILER_MSVC_VER _MSC_VER
 
 #else
