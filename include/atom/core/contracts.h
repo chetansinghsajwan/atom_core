@@ -29,7 +29,7 @@ namespace atom
     public:
         contract_type type;
         std::string_view msg;
-        source_line_info src;
+        source_location src;
     };
 
     constexpr auto _contract_type_to_string(contract_type type) -> std::string_view
@@ -60,8 +60,7 @@ namespace atom
                                 "\n\tat: {}: {}: {}"
                                 "\n\tfunc: {}",
                 _contract_type_to_string(violation.type), violation.msg, violation.src.file_name,
-                violation.src.line.to_unwrapped(), violation.src.column.to_unwrapped(),
-                violation.src.func_name);
+                violation.src.line, violation.src.column, violation.src.func_name);
         }
 
     public:
@@ -103,9 +102,8 @@ namespace atom
                 std::cout << "contracts " << _contract_type_to_string(violation.type)
                           << " violation:"
                           << "\n\twith msg: " << violation.msg << "'"
-                          << "\n\tat: " << violation.src.file_name << ":"
-                          << violation.src.line.to_unwrapped() << ":"
-                          << violation.src.column.to_unwrapped() << ": " << violation.src.func_name
+                          << "\n\tat: " << violation.src.file_name << ":" << violation.src.line
+                          << ":" << violation.src.column << ": " << violation.src.func_name
                           << std::endl;
 
                 std::terminate();
@@ -152,19 +150,15 @@ namespace atom
     ///
     /// --------------------------------------------------------------------------------------------
     inline auto _contract_check_impl(
-        _contract_type type, std::source_location src, std::string_view msg) -> void
+        _contract_type type, source_location src, std::string_view msg) -> void
     {
-        source_line_info src_info{ .line = src.line(),
-            .column = src.column(),
-            .func_name = src.function_name(),
-            .file_name = src.file_name() };
-
-        contract_violation violation{ .type = contract_type(type), .msg = msg, .src = src_info };
+        source_location source(src.file_name, src.line, src.column, src.func_name);
+        contract_violation violation{ .type = contract_type(type), .msg = msg, .src = source };
 
         contract_violation_handler_manager::get_handler().handle(violation);
     }
 
-    inline auto _panic(std::source_location src, std::string_view msg) -> void
+    inline auto _panic(source_location src, std::string_view msg) -> void
     {
         std::cerr << msg << std::endl;
         std::terminate();

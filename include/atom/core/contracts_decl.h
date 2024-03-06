@@ -1,6 +1,6 @@
 #pragma once
-#include "atom/core/_std.h"
 #include "atom/core/core/build_config.h"
+#include "atom/core/core/source_location.h"
 
 namespace atom
 {
@@ -15,12 +15,12 @@ namespace atom
     };
 
     inline auto _contract_check_impl(
-        _contract_type type, std::source_location src, std::string_view msg) -> void;
+        _contract_type type, source_location src, std::string_view msg) -> void;
 
-    inline auto _panic(std::source_location src, std::string_view msg) -> void;
+    inline auto _panic(source_location src, std::string_view msg) -> void;
 
     template <_contract_type type, typename... arg_types>
-    constexpr auto _contract_check(std::source_location src, bool assert, arg_types&&... args)
+    constexpr auto _contract_check(source_location src, bool assert, arg_types&&... args)
         -> void
     {
         if constexpr (build_config::is_mode_release())
@@ -48,7 +48,7 @@ namespace atom::contracts
     /// represents pre condition.
     /// ------------------------------------------------------------------------------------------------
     constexpr auto expects(bool assert, std::string_view msg = "",
-        std::source_location _src = std::source_location::current())
+        source_location _src = source_location::current())
     {
         _contract_check<_contract_type::pre_condition>(_src, assert, msg);
     }
@@ -57,7 +57,7 @@ namespace atom::contracts
     /// represents debug pre condition.
     /// ------------------------------------------------------------------------------------------------
     constexpr auto debug_expects(bool assert, std::string_view msg = "",
-        std::source_location _src = std::source_location::current())
+        source_location _src = source_location::current())
     {
         _contract_check<_contract_type::debug_pre_condition>(_src, assert, msg);
     }
@@ -66,7 +66,7 @@ namespace atom::contracts
     /// represents assertion.
     /// ------------------------------------------------------------------------------------------------
     constexpr auto asserts(bool assert, std::string_view msg = "",
-        std::source_location _src = std::source_location::current())
+        source_location _src = source_location::current())
     {
         _contract_check<_contract_type::assertion>(_src, assert, msg);
     }
@@ -75,7 +75,7 @@ namespace atom::contracts
     /// represents debug assertion.
     /// ------------------------------------------------------------------------------------------------
     constexpr auto debug_asserts(bool assert, std::string_view msg = "",
-        std::source_location _src = std::source_location::current())
+        source_location _src = source_location::current())
     {
         _contract_check<_contract_type::debug_assertion>(_src, assert, msg);
     }
@@ -84,7 +84,7 @@ namespace atom::contracts
     /// represents post condition.
     /// ------------------------------------------------------------------------------------------------
     constexpr auto ensures(bool assert, std::string_view msg = "",
-        std::source_location _src = std::source_location::current())
+        source_location _src = source_location::current())
     {
         _contract_check<_contract_type::post_condition>(_src, assert, msg);
     }
@@ -93,7 +93,7 @@ namespace atom::contracts
     /// represents debug post condition.
     /// ------------------------------------------------------------------------------------------------
     constexpr auto debug_ensures(bool assert, std::string_view msg = "",
-        std::source_location _src = std::source_location::current())
+        source_location _src = source_location::current())
     {
         _contract_check<_contract_type::debug_post_condition>(_src, assert, msg);
     }
@@ -105,8 +105,7 @@ namespace atom
     ///
     /// ------------------------------------------------------------------------------------------------
     template <typename... arg_types>
-    constexpr auto panic(
-        std::string_view msg = "", arg_types&&... args)
+    constexpr auto panic(std::string_view msg = "", arg_types&&... args)
     {
         std::terminate();
     }
