@@ -38,7 +38,7 @@ namespace atom
 
         constexpr auto get_at(usize i) const -> const elem_type&
         {
-            contracts::debug_expects(is_index_in_range(i));
+            ATOM_DEBUG_EXPECTS(is_index_in_range(i));
 
             return get_data()[i];
         }
@@ -114,7 +114,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto get_at(usize i) const -> const elem_type&
         {
-            contracts::expects(is_index_in_range(i), "index is out of range.");
+            ATOM_EXPECTS(is_index_in_range(i), "index is out of range.");
 
             return _impl().get_at(i);
         }
@@ -130,7 +130,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator[](usize i) const -> const elem_type&
         {
-            contracts::debug_expects(is_index_in_range(i), "index is out of range.");
+            ATOM_DEBUG_EXPECTS(is_index_in_range(i), "index is out of range.");
 
             return _impl().get_at(i);
         }
@@ -143,7 +143,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto get_front() const -> const elem_type&
         {
-            contracts::debug_expects(not is_empty(), "range is empty.");
+            ATOM_DEBUG_EXPECTS(not is_empty(), "range is empty.");
 
             return _impl().get_front();
         }
@@ -156,7 +156,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto get_back() const -> const elem_type&
         {
-            contracts::debug_expects(not is_empty(), "range is empty.");
+            ATOM_DEBUG_EXPECTS(not is_empty(), "range is empty.");
 
             return _impl().get_back();
         }
@@ -192,7 +192,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto get_iter_at(usize i) const -> iter_type
         {
-            contracts::expects(is_index_in_range(i), "index is out of range.");
+            ATOM_EXPECTS(is_index_in_range(i), "index is out of range.");
 
             return _impl().get_iter_at(i);
         }

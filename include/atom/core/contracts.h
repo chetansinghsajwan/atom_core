@@ -11,38 +11,32 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    enum class contract_type
-    {
-        pre_condition,
-        assertion,
-        post_condition,
-        debug_pre_condition,
-        debug_assertion,
-        debug_post_condition
-    };
-
-    /// --------------------------------------------------------------------------------------------
-    ///
-    /// --------------------------------------------------------------------------------------------
     class contract_violation
     {
     public:
+        contract_violation(contract_type type, std::string_view msg, source_location source)
+            : type(type)
+            , msg(msg)
+            , source(source)
+        {}
+
+    public:
         contract_type type;
         std::string_view msg;
-        source_location src;
+        source_location source;
     };
 
     constexpr auto _contract_type_to_string(contract_type type) -> std::string_view
     {
         switch (type)
         {
-            case contract_type::pre_condition:        return "pre_condition";
-            case contract_type::assertion:            return "assertion";
-            case contract_type::post_condition:       return "post_condition";
-            case contract_type::debug_pre_condition:  return "debug_pre_condition";
-            case contract_type::debug_assertion:      return "debug_assertion";
-            case contract_type::debug_post_condition: return "debug_post_condition";
-            default:                                  return "[invalid_value]";
+            case contract_type::expects:       return "expects";
+            case contract_type::asserts:       return "asserts";
+            case contract_type::ensures:       return "ensures";
+            case contract_type::debug_expects: return "debug_expects";
+            case contract_type::debug_asserts: return "debug_asserts";
+            case contract_type::debug_ensures: return "debug_ensures";
+            default:                           return "[invalid_value]";
         }
     }
 
@@ -59,8 +53,8 @@ namespace atom
                                 "\n\twith msg: {}"
                                 "\n\tat: {}: {}: {}"
                                 "\n\tfunc: {}",
-                _contract_type_to_string(violation.type), violation.msg, violation.src.file_name,
-                violation.src.line, violation.src.column, violation.src.func_name);
+                _contract_type_to_string(violation.type), violation.msg, violation.source.file_name,
+                violation.source.line, violation.source.column, violation.source.func_name);
         }
 
     public:
@@ -102,9 +96,9 @@ namespace atom
                 std::cout << "contracts " << _contract_type_to_string(violation.type)
                           << " violation:"
                           << "\n\twith msg: " << violation.msg << "'"
-                          << "\n\tat: " << violation.src.file_name << ":" << violation.src.line
-                          << ":" << violation.src.column << ": " << violation.src.func_name
-                          << std::endl;
+                          << "\n\tat: " << violation.source.file_name << ":"
+                          << violation.source.line << ":" << violation.source.column << ": "
+                          << violation.source.func_name << std::endl;
 
                 std::terminate();
             }
@@ -149,16 +143,14 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    inline auto _contract_check_impl(
-        _contract_type type, source_location src, std::string_view msg) -> void
+    inline auto _handle_contract_violation_impl(contract_type type, std::string_view expr,
+        source_location source, std::string_view msg) -> void
     {
-        source_location source(src.file_name, src.line, src.column, src.func_name);
-        contract_violation violation{ .type = contract_type(type), .msg = msg, .src = source };
-
+        contract_violation violation(type, msg, source);
         contract_violation_handler_manager::get_handler().handle(violation);
     }
 
-    inline auto _panic(source_location src, std::string_view msg) -> void
+    inline auto _panic(source_location source, std::string_view msg) -> void
     {
         std::cerr << msg << std::endl;
         std::terminate();

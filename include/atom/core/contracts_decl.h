@@ -4,109 +4,51 @@
 
 namespace atom
 {
-    enum class _contract_type
+    enum class contract_type
     {
-        pre_condition,
-        assertion,
-        post_condition,
-        debug_pre_condition,
-        debug_assertion,
-        debug_post_condition
+        expects,
+        asserts,
+        ensures,
+        debug_expects,
+        debug_asserts,
+        debug_ensures
     };
 
-    inline auto _contract_check_impl(
-        _contract_type type, source_location src, std::string_view msg) -> void;
+    inline auto _handle_contract_violation_impl(contract_type type, std::string_view expr,
+        source_location source, std::string_view msg) -> void;
 
-    inline auto _panic(source_location src, std::string_view msg) -> void;
+    inline auto _panic(source_location source, std::string_view msg) -> void;
 
-    template <_contract_type type, typename... arg_types>
-    constexpr auto _contract_check(source_location src, bool assert, arg_types&&... args)
-        -> void
+    template <typename... arg_types>
+    constexpr auto _handle_contract_violation(contract_type type, std::string_view expr,
+        source_location source, arg_types&&... args) -> void
     {
-        if constexpr (build_config::is_mode_release())
-        {
-            if constexpr (type == _contract_type::debug_pre_condition
-                          or type == _contract_type::debug_assertion
-                          or type == _contract_type::debug_post_condition)
-                return;
-        }
-
-        if (assert)
-            return;
-
         if (std::is_constant_evaluated())
             throw 0;
 
         std::string_view msg(std::forward<arg_types>(args)...);
-        _contract_check_impl(type, src, msg);
+        _handle_contract_violation_impl(type, expr, source, msg);
     }
 }
 
-namespace atom::contracts
-{
-    /// ------------------------------------------------------------------------------------------------
-    /// represents pre condition.
-    /// ------------------------------------------------------------------------------------------------
-    constexpr auto expects(bool assert, std::string_view msg = "",
-        source_location _src = source_location::current())
-    {
-        _contract_check<_contract_type::pre_condition>(_src, assert, msg);
-    }
+#define VA_ARGS(...) , ##__VA_ARGS__
 
-    /// ------------------------------------------------------------------------------------------------
-    /// represents debug pre condition.
-    /// ------------------------------------------------------------------------------------------------
-    constexpr auto debug_expects(bool assert, std::string_view msg = "",
-        source_location _src = source_location::current())
-    {
-        _contract_check<_contract_type::debug_pre_condition>(_src, assert, msg);
-    }
+#define _ATOM_CONTRACT_CHECK(CONTRACT_TYPE, ASSERTION, ...)                                        \
+    if (not(ASSERTION))                                                                            \
+    atom::_handle_contract_violation(atom::contract_type::CONTRACT_TYPE, #ASSERTION,               \
+        atom::source_location::current() VA_ARGS(__VA_ARGS__))
 
-    /// ------------------------------------------------------------------------------------------------
-    /// represents assertion.
-    /// ------------------------------------------------------------------------------------------------
-    constexpr auto asserts(bool assert, std::string_view msg = "",
-        source_location _src = source_location::current())
-    {
-        _contract_check<_contract_type::assertion>(_src, assert, msg);
-    }
+#if defined(ATOM_MODE_DEBUG)
+#    define _ATOM_CONTRACT_CHECK_DEBUG(...) _ATOM_CONTRACT_CHECK(__VA_ARGS__)
+#else
+#    define _ATOM_CONTRACT_CHECK_DEBUG(...)
+#endif
 
-    /// ------------------------------------------------------------------------------------------------
-    /// represents debug assertion.
-    /// ------------------------------------------------------------------------------------------------
-    constexpr auto debug_asserts(bool assert, std::string_view msg = "",
-        source_location _src = source_location::current())
-    {
-        _contract_check<_contract_type::debug_assertion>(_src, assert, msg);
-    }
-
-    /// ------------------------------------------------------------------------------------------------
-    /// represents post condition.
-    /// ------------------------------------------------------------------------------------------------
-    constexpr auto ensures(bool assert, std::string_view msg = "",
-        source_location _src = source_location::current())
-    {
-        _contract_check<_contract_type::post_condition>(_src, assert, msg);
-    }
-
-    /// ------------------------------------------------------------------------------------------------
-    /// represents debug post condition.
-    /// ------------------------------------------------------------------------------------------------
-    constexpr auto debug_ensures(bool assert, std::string_view msg = "",
-        source_location _src = source_location::current())
-    {
-        _contract_check<_contract_type::debug_post_condition>(_src, assert, msg);
-    }
-}
-
-namespace atom
-{
-    /// ------------------------------------------------------------------------------------------------
-    ///
-    /// ------------------------------------------------------------------------------------------------
-    template <typename... arg_types>
-    constexpr auto panic(std::string_view msg = "", arg_types&&... args)
-    {
-        std::terminate();
-    }
-}
+#define ATOM_EXPECTS(...) _ATOM_CONTRACT_CHECK(expects, __VA_ARGS__)
+#define ATOM_ASSERTS(...) _ATOM_CONTRACT_CHECK(asserts, __VA_ARGS__)
+#define ATOM_ENSURES(...) _ATOM_CONTRACT_CHECK(ensures, __VA_ARGS__)
+#define ATOM_DEBUG_EXPECTS(...) _ATOM_CONTRACT_CHECK_DEBUG(debug_expects, __VA_ARGS__)
+#define ATOM_DEBUG_ASSERTS(...) _ATOM_CONTRACT_CHECK_DEBUG(debug_asserts, __VA_ARGS__)
+#define ATOM_DEBUG_ENSURES(...) _ATOM_CONTRACT_CHECK_DEBUG(debug_ensures, __VA_ARGS__)
+#define ATOM_STATIC_ASSERTS(...) static_assert(__VA_ARGS__)
+#define ATOM_PANIC(...) atom::_panic(atom::source_location::current() VA_ARGS(__VA_ARGS__))

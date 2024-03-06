@@ -222,7 +222,7 @@ namespace atom
         template <typename type>
         constexpr auto get_val() -> const type&
         {
-            contracts::debug_expects(get_mem_as<type>() != nullptr);
+            ATOM_DEBUG_EXPECTS(get_mem_as<type>() != nullptr);
 
             return *get_mem_as<type>();
         }
@@ -237,7 +237,7 @@ namespace atom
         template <typename type>
         constexpr auto get_mut_val() -> type&
         {
-            contracts::debug_expects(get_mut_mem_as<type>() != nullptr);
+            ATOM_DEBUG_EXPECTS(get_mut_mem_as<type>() != nullptr);
 
             return *get_mut_mem_as<type>();
         }
@@ -685,7 +685,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto get() const -> const value_type&
         {
-            contracts::debug_expects(has_val(), "value is null.");
+            ATOM_DEBUG_EXPECTS(has_val(), "value is null.");
 
             return _impl.get_val();
         }
@@ -695,7 +695,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto get_mut() -> value_type&
         {
-            contracts::debug_expects(has_val(), "value is null.");
+            ATOM_DEBUG_EXPECTS(has_val(), "value is null.");
 
             return _impl.template get_mut_val<value_type>();
         }
@@ -727,7 +727,7 @@ namespace atom
         constexpr auto get_as() const -> const type&
             requires rsame_or_derived_from<pure_type<type>, value_type>
         {
-            contracts::debug_expects(has_val(), "value is null.");
+            ATOM_DEBUG_EXPECTS(has_val(), "value is null.");
 
             return _impl.template get_val_as<type>();
         }
@@ -739,7 +739,7 @@ namespace atom
         constexpr auto get_mut_as() -> type&
             requires rsame_or_derived_from<pure_type<type>, value_type>
         {
-            contracts::debug_expects(has_val(), "value is null.");
+            ATOM_DEBUG_EXPECTS(has_val(), "value is null.");
 
             return _impl.template get_mut_val_as<type>();
         }
@@ -929,7 +929,7 @@ namespace atom
         template <typename type>
         constexpr auto get_as() const -> const type&
         {
-            contracts::debug_expects(has_val(), "value is null.");
+            ATOM_DEBUG_EXPECTS(has_val(), "value is null.");
 
             return _impl.template get_val_as<type>();
         }
@@ -940,7 +940,7 @@ namespace atom
         template <typename type>
         constexpr auto get_mut_as() -> type&
         {
-            contracts::debug_expects(has_val(), "value is null.");
+            ATOM_DEBUG_EXPECTS(has_val(), "value is null.");
 
             return _impl.template get_mut_val_as<type>();
         }

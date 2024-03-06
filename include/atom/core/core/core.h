@@ -19,7 +19,7 @@ namespace atom
     template <typename value_type>
     constexpr auto forward(typename std::remove_reference_t<value_type>&& val) -> value_type&&
     {
-        static_assert(
+        ATOM_STATIC_ASSERTS(
             !std::is_lvalue_reference_v<value_type>, "can not forward an rvalue as an lvalue.");
 
         return static_cast<value_type&&>(val);

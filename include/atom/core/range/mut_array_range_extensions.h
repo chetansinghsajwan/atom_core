@@ -53,7 +53,7 @@ namespace atom
 
         constexpr auto mut_back() -> elem_type&
         {
-            contracts::debug_expects(get_count() > 0);
+            ATOM_DEBUG_EXPECTS(get_count() > 0);
 
             return get_mut_at(get_count() - 1);
         }
@@ -132,7 +132,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto get_mut_at(usize i) -> elem_type&
         {
-            contracts::expects(is_index_in_range(i), "index is out of range.");
+            ATOM_EXPECTS(is_index_in_range(i), "index is out of range.");
 
             return _impl().get_mut_at(i);
         }
@@ -148,7 +148,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator[](usize i) -> elem_type&
         {
-            contracts::debug_expects(is_index_in_range(i), "index is out of range.");
+            ATOM_DEBUG_EXPECTS(is_index_in_range(i), "index is out of range.");
 
             return _impl().get_mut_at(i);
         }
@@ -163,7 +163,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto mut_front() -> elem_type&
         {
-            contracts::debug_expects(not is_empty(), "range is empty.");
+            ATOM_DEBUG_EXPECTS(not is_empty(), "range is empty.");
 
             return _impl().mut_front();
         }
@@ -176,7 +176,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto mut_back() -> elem_type&
         {
-            contracts::debug_expects(not is_empty(), "range is empty.");
+            ATOM_DEBUG_EXPECTS(not is_empty(), "range is empty.");
 
             return _impl().mut_back();
         }
@@ -196,7 +196,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto get_mut_iter_at(usize i) const -> mut_iter_type
         {
-            contracts::expects(is_index_in_range(i), "index is out of range.");
+            ATOM_EXPECTS(is_index_in_range(i), "index is out of range.");
 
             return _impl().get_mut_iter_at(i);
         }

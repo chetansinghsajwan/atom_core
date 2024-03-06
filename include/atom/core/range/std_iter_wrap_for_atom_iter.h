@@ -108,7 +108,7 @@ namespace atom
             requires(rjump_iter<iter_type>)
         {
             // todo: review this. should we accept steps as difference_type.
-            contracts::debug_expects(steps > 0);
+            ATOM_DEBUG_EXPECTS(steps > 0);
 
             this_type tmp(iter);
             tmp.iter.next(steps);
@@ -118,7 +118,7 @@ namespace atom
         constexpr auto operator+=(difference_type steps) -> this_type
             requires(rjump_iter<iter_type>)
         {
-            contracts::debug_expects(steps > 0);
+            ATOM_DEBUG_EXPECTS(steps > 0);
 
             iter.next(steps);
             return *this;
@@ -127,7 +127,7 @@ namespace atom
         constexpr auto operator-(difference_type steps) -> this_type
             requires(rjump_iter<iter_type>)
         {
-            contracts::debug_expects(steps > 0);
+            ATOM_DEBUG_EXPECTS(steps > 0);
 
             this_type tmp(iter);
             tmp.iter.prev(steps);
@@ -137,7 +137,7 @@ namespace atom
         constexpr auto operator-=(difference_type steps) -> this_type
             requires(rjump_iter<iter_type>)
         {
-            contracts::debug_expects(steps > 0);
+            ATOM_DEBUG_EXPECTS(steps > 0);
 
             iter.prev(steps);
             return *this;

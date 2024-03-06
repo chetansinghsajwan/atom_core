@@ -298,7 +298,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         auto invoke(arg_types&&... args) -> result_type
         {
-            contracts::expects(has(), "no invokable is present.");
+            ATOM_EXPECTS(has(), "no invokable is present.");
 
             return _impl.invoke_invokable(forward<arg_types>(args)...);
         }

@@ -8,7 +8,7 @@ namespace atom
     template <typename final_type, typename container_type>
     class string_functions: public container_type
     {
-        static_assert(rsame_as<typename container_type::elem_type, char>);
+        ATOM_STATIC_ASSERTS(rsame_as<typename container_type::elem_type, char>);
 
     private:
         using this_type = string_functions;

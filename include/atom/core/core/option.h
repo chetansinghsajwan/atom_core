@@ -454,8 +454,8 @@ namespace atom
     template <typename type>
     class option
     {
-        static_assert(tti::is_pure<type>, "option supports only pure types");
-        static_assert(not tti::is_void<type>, "option does not support void type.");
+        ATOM_STATIC_ASSERTS(tti::is_pure<type>, "option supports only pure types");
+        ATOM_STATIC_ASSERTS(not tti::is_void<type>, "option does not support void type.");
 
     private:
         using this_type = option<type>;
@@ -688,7 +688,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto get() const& -> const value_type&
         {
-            contracts::expects(is_value(), "does not contain value.");
+            ATOM_EXPECTS(is_value(), "does not contain value.");
 
             return _impl.get_value();
         }
@@ -698,7 +698,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto get_mut() & -> value_type&
         {
-            contracts::expects(is_value(), "does not contain value.");
+            ATOM_EXPECTS(is_value(), "does not contain value.");
 
             return _impl.get_mut_value();
         }
@@ -708,7 +708,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator->() const -> const value_type*
         {
-            contracts::debug_expects(is_value(), "does not contain value.");
+            ATOM_DEBUG_EXPECTS(is_value(), "does not contain value.");
 
             return &_impl.get_value();
         }
@@ -718,7 +718,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator->() -> value_type*
         {
-            contracts::debug_expects(is_value(), "does not contain value.");
+            ATOM_DEBUG_EXPECTS(is_value(), "does not contain value.");
 
             return &_impl.get_mut_value();
         }

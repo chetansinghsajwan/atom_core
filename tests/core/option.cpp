@@ -8,7 +8,7 @@ using namespace atom::tests;
 
 TEST_CASE("atom.core.option")
 {
-    static_assert(requality_comparable<tracked_type>);
+    ATOM_STATIC_ASSERTS(requality_comparable<tracked_type>);
     tracked_type t0;
     tracked_type t1;
     t0 == t1;

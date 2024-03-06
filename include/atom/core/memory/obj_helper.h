@@ -12,7 +12,7 @@ namespace atom
         template <typename value_type, typename... arg_types>
         constexpr auto construct_as(void* mem, arg_types&&... args) const
         {
-            contracts::debug_expects(mem != nullptr);
+            ATOM_DEBUG_EXPECTS(mem != nullptr);
 
             std::construct_at((value_type*)mem, forward<arg_types>(args)...);
         }
@@ -20,7 +20,7 @@ namespace atom
         template <typename value_type, typename... arg_types>
         constexpr auto construct(value_type* mem, arg_types&&... args) const
         {
-            contracts::debug_expects(mem != nullptr);
+            ATOM_DEBUG_EXPECTS(mem != nullptr);
 
             std::construct_at(mem, forward<arg_types>(args)...);
         }
@@ -28,7 +28,7 @@ namespace atom
         template <typename value_type, typename arg_type>
         constexpr auto assign_as(value_type* mem, arg_type&& arg) const
         {
-            contracts::debug_expects(mem != nullptr);
+            ATOM_DEBUG_EXPECTS(mem != nullptr);
 
             *mem = forward<arg_type>(arg);
         }
@@ -36,7 +36,7 @@ namespace atom
         template <typename value_type, typename arg_type>
         constexpr auto assign(value_type* mem, arg_type&& arg) const
         {
-            contracts::debug_expects(mem != nullptr);
+            ATOM_DEBUG_EXPECTS(mem != nullptr);
 
             *mem = forward<arg_type>(arg);
         }
@@ -52,7 +52,7 @@ namespace atom
         template <typename value_type>
         constexpr auto destruct_as(value_type* mem) const
         {
-            contracts::debug_expects(mem != nullptr);
+            ATOM_DEBUG_EXPECTS(mem != nullptr);
 
             std::destroy_at(mem);
         }
@@ -60,7 +60,7 @@ namespace atom
         template <typename value_type>
         constexpr auto destruct(value_type* mem) const
         {
-            contracts::debug_expects(mem != nullptr);
+            ATOM_DEBUG_EXPECTS(mem != nullptr);
 
             std::destroy_at(mem);
         }
