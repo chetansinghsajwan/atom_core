@@ -7,12 +7,7 @@ using namespace atom;
 using namespace atom::tests;
 
 TEST_CASE("atom.core.option")
-{
-    ATOM_STATIC_ASSERTS(requality_comparable<tracked_type>);
-    tracked_type t0;
-    tracked_type t1;
-    t0 == t1;
-    
+{    
     SECTION("default constructor")
     {
         // default constructor doesn't constructs the object, so it's not affected by the object's

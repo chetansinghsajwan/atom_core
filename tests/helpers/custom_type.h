@@ -3,10 +3,10 @@
 
 namespace atom::tests
 {
-    enum class ecustom_type_flags : _u64
+    enum class ecustom_type_flags : u64
     {
         none = 0,
-        all = _u64(-1),
+        all = u64(-1),
 
         default_constructor = 1 << 0,
         copy_constructor = 1 << 1,
@@ -34,13 +34,13 @@ namespace atom::tests
     constexpr auto operator|(const ecustom_type_flags& flags,
         const ecustom_type_flags& flags_to_add) -> ecustom_type_flags
     {
-        return (ecustom_type_flags)((_u64)flags | (_u64)flags_to_add);
+        return (ecustom_type_flags)((u64)flags | (u64)flags_to_add);
     }
 
     constexpr auto operator&(const ecustom_type_flags& flags,
         const ecustom_type_flags& flags_to_add) -> ecustom_type_flags
     {
-        return (ecustom_type_flags)((_u64)flags & (_u64)flags_to_add);
+        return (ecustom_type_flags)((u64)flags & (u64)flags_to_add);
     }
 
     class enum_flag_utils

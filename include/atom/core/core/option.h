@@ -786,8 +786,8 @@ namespace atom
         /// const ref to `this` value or or_invoke value returned by invoking `or_invoke`.
         /// ----------------------------------------------------------------------------------------
         template <typename invokable_type>
-        constexpr auto get_or_invoke(invokable_type&& or_invoke) const -> const value_type&
-            requires rinvokable<pure_type<invokable_type>, const value_type&()>
+        constexpr auto get_or_invoke(invokable_type&& or_invoke) const -> value_type
+            requires rinvokable<pure_type<invokable_type>, value_type()>
         {
             if (_impl.is_null())
             {
@@ -829,7 +829,7 @@ namespace atom
         /// if `this` contains value, get `this` value.
         /// else, get default constructed value.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_or_default() const& -> const value_type&
+        constexpr auto get_or_default() const& -> value_type
             requires(rdefault_constructible<value_type>)
         {
             if (_impl.is_null())
