@@ -189,9 +189,11 @@ namespace atom
         contract_violation_handler::get()->handle(violation);
     }
 
-    inline auto _panic(source_location source, std::string_view msg) -> void
+    template <typename... arg_types>
+    inline auto _panic(source_location source, std::string_view fmt = "", arg_types&&... args)
+        -> void
     {
-        std::cerr << msg << std::endl;
+        std::cerr << fmt << std::endl;
         std::terminate();
     }
 }
