@@ -39,7 +39,7 @@ FetchContent_MakeAvailable(catch2 fmt cpptrace magic_enum)
 # --------------------------------------------------------------------------------------------------
 # C++20 Global Config
 # --------------------------------------------------------------------------------------------------
-set(CMAKE_CXX_STANDARD "23")
+set(CMAKE_CXX_STANDARD "20")
 set(CMAKE_CXX_STANDARD_REQUIRED "ON")
 enable_testing()
 
@@ -53,7 +53,6 @@ target_include_directories(atom.core PUBLIC "include/")
 target_link_libraries(atom.core PUBLIC cpptrace::cpptrace)
 target_link_libraries(atom.core PUBLIC fmt::fmt-header-only)
 target_link_libraries(atom.core PUBLIC magic_enum::magic_enum)
-target_compile_options(atom.core PUBLIC "-ferror-limit=1000")
 
 # --------------------------------------------------------------------------------------------------
 # atom.core.tests

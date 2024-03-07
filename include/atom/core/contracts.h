@@ -36,7 +36,7 @@ namespace atom
     class contract_violation
     {
     public:
-        contract_violation(
+        constexpr contract_violation(
             contract_type type, std::string_view expr, std::string_view msg, source_location source)
             : type(type)
             , expr(expr)
@@ -155,17 +155,14 @@ namespace atom
             {
                 throw contract_violation_exception(violation);
             }
-            else
-            {
-                std::cout << "contracts " << _contract_type_to_string(violation.type)
-                          << " violation:"
-                          << "\n\twith msg: " << violation.msg << "'"
-                          << "\n\tat: " << violation.source.file_name << ":"
-                          << violation.source.line << ":" << violation.source.column << ": "
-                          << violation.source.func_name << std::endl;
 
-                std::terminate();
-            }
+            std::cout << "contracts " << _contract_type_to_string(violation.type) << " violation:"
+                      << "\n\twith msg: " << violation.msg << "'"
+                      << "\n\tat: " << violation.source.file_name << ":" << violation.source.line
+                      << ":" << violation.source.column << ": " << violation.source.func_name
+                      << std::endl;
+
+            std::terminate();
         }
     };
 
@@ -183,10 +180,14 @@ namespace atom
         source_location source, std::string_view fmt = "", arg_types&&... args) -> void
     {
         if (std::is_constant_evaluated())
+        {
             throw 0;
-
-        contract_violation violation(type, expr, fmt, source);
-        contract_violation_handler::get()->handle(violation);
+        }
+        else
+        {
+            contract_violation violation(type, expr, fmt, source);
+            contract_violation_handler::get()->handle(violation);
+        }
     }
 
     template <typename... arg_types>

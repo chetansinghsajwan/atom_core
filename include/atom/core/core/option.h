@@ -435,10 +435,8 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     /// type used to initialize option with no value.
     /// --------------------------------------------------------------------------------------------
-    class null_option
+    class nullopt
     {};
-
-    constexpr null_option nullopt = null_option();
 
     /// --------------------------------------------------------------------------------------------
     /// the option class is used to wrap the object of type `value_type`. this_type class contain either the
@@ -568,7 +566,7 @@ namespace atom
         ///
         /// constructs with no value.
         /// ----------------------------------------------------------------------------------------
-        constexpr option(null_option)
+        constexpr option(nullopt)
             : _impl(typename _impl_type::ctor_default())
         {}
 
@@ -577,7 +575,7 @@ namespace atom
         ///
         /// destroys current value if any.
         /// ----------------------------------------------------------------------------------------
-        constexpr option& operator=(null_option)
+        constexpr option& operator=(nullopt)
         {
             _impl.destroy_value();
             return *this;
@@ -876,7 +874,7 @@ namespace atom
         ///
         /// `true` if this contains value, else `false`.
         /// --------------------------------------------------------------------------------------------
-        constexpr auto is_eq(null_option) const -> bool
+        constexpr auto is_eq(nullopt) const -> bool
         {
             return is_null();
         }

@@ -21,7 +21,7 @@ TEST_CASE("atom.core.option")
 
     SECTION("null constructor")
     {
-        option<i32> opt = nullopt;
+        option<i32> opt = nullopt();
 
         REQUIRE(opt.is_null());
     }
@@ -30,7 +30,7 @@ TEST_CASE("atom.core.option")
     {
         option<i32> opt = i32(0);
 
-        opt = nullopt;
+        opt = nullopt();
         REQUIRE(opt.is_null());
     }
 
