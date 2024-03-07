@@ -34,7 +34,13 @@ FetchContent_Declare(
     GIT_SHALLOW    true
 )
 
-FetchContent_MakeAvailable(catch2 fmt cpptrace magic_enum)
+FetchContent_Declare(
+  libassert
+  GIT_REPOSITORY "https://github.com/jeremy-rifkin/libassert.git"
+  GIT_TAG        "v2.0.0-alpha"
+)
+
+FetchContent_MakeAvailable(catch2 fmt cpptrace magic_enum libassert)
 
 # --------------------------------------------------------------------------------------------------
 # C++20 Global Config
@@ -53,6 +59,7 @@ target_include_directories(atom.core PUBLIC "include/")
 target_link_libraries(atom.core PUBLIC cpptrace::cpptrace)
 target_link_libraries(atom.core PUBLIC fmt::fmt-header-only)
 target_link_libraries(atom.core PUBLIC magic_enum::magic_enum)
+target_link_libraries(atom.core PUBLIC libassert::assert)
 
 # --------------------------------------------------------------------------------------------------
 # atom.core.tests
