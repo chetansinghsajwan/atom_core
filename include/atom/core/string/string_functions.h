@@ -27,7 +27,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <usize::unwrapped_type count>
+        template <usize count>
         constexpr string_functions(const char (&str)[count])
             : base_type(range_from(str, count))
         {}
@@ -40,7 +40,7 @@ namespace atom
 
         constexpr auto to_std() const -> std::string_view
         {
-            return std::string_view(base_type::get_data(), base_type::get_count().to_unwrapped());
+            return std::string_view(base_type::get_data(), base_type::get_count());
         }
     };
 }

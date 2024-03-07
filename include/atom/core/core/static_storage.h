@@ -12,7 +12,7 @@ namespace atom
         using _types = type_list<types...>;
 
     public:
-        alignas(_types::max_align.to_unwrapped()) byte storage[_types::max_size.to_unwrapped()];
+        alignas(_types::max_align) byte storage[_types::max_size];
     };
 
     template <usize in_size>
@@ -29,28 +29,28 @@ namespace atom
         {
             ATOM_DEBUG_EXPECTS(i < size());
 
-            return ptr(_storage + i.to_unwrapped());
+            return ptr(_storage + i);
         }
 
         constexpr auto mut_mem(usize i = 0) -> void*
         {
             ATOM_DEBUG_EXPECTS(i < size());
 
-            return mut_ptr(_storage + i.to_unwrapped());
+            return mut_ptr(_storage + i);
         }
 
         constexpr auto ref(usize i) const -> const byte&
         {
             ATOM_DEBUG_EXPECTS(i < size());
 
-            return _storage[i.to_unwrapped()];
+            return _storage[i];
         }
 
         constexpr auto mut_ref(usize i) -> byte&
         {
             ATOM_DEBUG_EXPECTS(i < size());
 
-            return _storage[i.to_unwrapped()];
+            return _storage[i];
         }
 
         constexpr auto operator[](usize i) const -> const byte&
@@ -65,9 +65,9 @@ namespace atom
 
         constexpr auto is_eq(const static_storage& that) const -> bool
         {
-            for (usize i = usize(0); i < size(); i++)
+            for (usize i = 0; i < size(); i++)
             {
-                if (_storage[i.to_unwrapped()] != that._storage[i.to_unwrapped()])
+                if (_storage[i] != that._storage[i])
                     return false;
             }
 
@@ -75,6 +75,6 @@ namespace atom
         }
 
     public:
-        byte _storage[size().to_unwrapped()];
+        byte _storage[size()];
     };
 }

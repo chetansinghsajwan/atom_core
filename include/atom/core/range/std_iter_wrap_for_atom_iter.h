@@ -29,8 +29,8 @@ namespace atom
 
     public:
         using value_type = typename iter_type::elem_type;
-        using size_type = _usize;
-        using difference_type = _isize;
+        using size_type = usize;
+        using difference_type = isize;
         using iterator_category = std_iter_cat_for_atom_iter<iter_type>;
         using pointer = value_type*;
         using reference = value_type&;
@@ -146,7 +146,7 @@ namespace atom
         constexpr auto operator-(const this_type& that) const -> difference_type
             requires(rjump_iter<iter_type>)
         {
-            return iter.compare(that.iter).to_unwrapped();
+            return iter.compare(that.iter);
         }
 
     public:

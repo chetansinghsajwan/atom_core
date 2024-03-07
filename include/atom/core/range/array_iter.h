@@ -62,7 +62,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto next(usize steps) -> array_iter&
         {
-            _it += steps.to_unwrapped();
+            _it += steps;
             return *this;
         }
 
@@ -80,7 +80,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto prev(usize steps) -> array_iter&
         {
-            _it -= steps.to_unwrapped();
+            _it -= steps;
             return *this;
         }
 

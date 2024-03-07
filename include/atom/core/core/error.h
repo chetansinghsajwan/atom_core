@@ -11,7 +11,7 @@ namespace atom
     public:
         template <typename string_view_type>
         constexpr error(string_view_type msg)
-            : msg(msg.get_data(), msg.get_count().to_unwrapped())
+            : msg(msg.get_data(), msg.get_count())
         {}
 
     public:

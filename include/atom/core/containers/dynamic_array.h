@@ -1,12 +1,14 @@
 #pragma once
 #include "atom/core/_std.h"
 #include "atom/core/core.h"
+#include "atom/core/core/int_wrapper.h"
 #include "atom/core/tti.h"
 #include "atom/core/range.h"
 #include "atom/core/invokable/invokable.h"
 #include "atom/core/memory/default_mem_allocator.h"
 #include "atom/core/contracts.h"
 #include "atom/core/range/array_iter.h"
+#include <limits>
 
 /// ------------------------------------------------------------------------------------------------
 /// implementations
@@ -93,12 +95,12 @@ namespace atom
 
         constexpr auto get_at(usize index) const -> const elem_type&
         {
-            return _data[index.to_unwrapped()];
+            return _data[index];
         }
 
         constexpr auto get_mut_at(usize index) -> elem_type&
         {
-            return _data[index.to_unwrapped()];
+            return _data[index];
         }
 
         constexpr auto get_iter() const -> iter_type
@@ -268,7 +270,7 @@ namespace atom
         constexpr auto get_index_for_iter(iter_type it) const -> usize
         {
             isize index = it.get_data() - _data;
-            return index < 0 ? usize::max() : usize(index);
+            return index < 0 ? std::numeric_limits<usize>::max() : index;
         }
 
         constexpr auto is_iter_in_range(iter_type it) const -> bool
@@ -389,7 +391,10 @@ namespace atom
 
         constexpr auto _calc_cap_growth(usize required) const -> usize
         {
-            return _count.mul(2).max_of(_count + required);
+            const usize max = _count < std::numeric_limits<usize>::max() / 2
+                                  ? _count
+                                  : std::numeric_limits<usize>::max();
+            return std::max(max, required);
         }
 
         constexpr auto _ensure_cap_for(usize count)
@@ -559,12 +564,12 @@ namespace atom
 
         constexpr auto get_at(usize index) const -> const elem_type&
         {
-            return _vector[index.to_unwrapped()];
+            return _vector[index];
         }
 
         constexpr auto get_mut_at(usize index) -> elem_type&
         {
-            return _vector[index.to_unwrapped()];
+            return _vector[index];
         }
 
         constexpr auto get_iter() const -> iter_type
@@ -606,16 +611,16 @@ namespace atom
         template <typename... arg_types>
         constexpr auto emplace_at(usize index, arg_types&&... args)
         {
-            _vector.emplace(_vector.begin() + index.to_unwrapped(), forward<arg_types>(args)...);
+            _vector.emplace(_vector.begin() + index, forward<arg_types>(args)...);
         }
 
         template <typename other_iter_type, typename other_iter_end_type>
         constexpr auto insert_range_at(usize index, other_iter_type it, other_iter_end_type it_end)
             -> usize
         {
-            usize::unwrapped_type old_size = _vector.size();
-            _vector.insert(_vector.begin() + index.to_unwrapped(),
-                std_iter_wrap_for_atom_iter(move(it)), std_iter_wrap_for_atom_iter(move(it_end)));
+            usize old_size = _vector.size();
+            _vector.insert(_vector.begin() + index, std_iter_wrap_for_atom_iter(move(it)),
+                std_iter_wrap_for_atom_iter(move(it_end)));
 
             return _vector.size() - old_size;
         }
@@ -646,13 +651,13 @@ namespace atom
 
         constexpr auto remove_at(usize index)
         {
-            _vector.erase(_vector.begin() + index.to_unwrapped());
+            _vector.erase(_vector.begin() + index);
         }
 
         constexpr auto remove_range(usize begin, usize count)
         {
-            auto vector_begin = _vector.begin() + begin.to_unwrapped();
-            _vector.erase(vector_begin, vector_begin + count.to_unwrapped());
+            auto vector_begin = _vector.begin() + begin;
+            _vector.erase(vector_begin, vector_begin + count);
         }
 
         constexpr auto remove_all()
@@ -662,12 +667,12 @@ namespace atom
 
         constexpr auto reserve(usize count)
         {
-            _vector.reserve(count.to_unwrapped());
+            _vector.reserve(count);
         }
 
         constexpr auto reserve_more(usize count)
         {
-            _vector.reserve(usize(_vector.size()).add(count).to_unwrapped());
+            _vector.reserve(_vector.size() + count);
         }
 
         // todo: implement this.
@@ -716,7 +721,7 @@ namespace atom
         constexpr auto get_index_for_iter(iter_type it) const -> usize
         {
             isize index = it.get_data() - _vector.data();
-            return index < 0 ? usize::max() : usize(index);
+            return index < 0 ? std::numeric_limits<usize>::max() : index;
         }
 
         constexpr auto is_iter_in_range(iter_type it) const -> bool
@@ -747,7 +752,8 @@ namespace atom
     template <typename in_elem_type, typename in_allocator_type>
     class basic_dynamic_array
     {
-        ATOM_STATIC_ASSERTS(not tti::is_ref<in_elem_type>, "dynamic_array does not supports ref types.");
+        ATOM_STATIC_ASSERTS(
+            not tti::is_ref<in_elem_type>, "dynamic_array does not supports ref types.");
         ATOM_STATIC_ASSERTS(not tti::is_void<in_elem_type>, "dynamic_array does not support void.");
 
     private:
@@ -1193,7 +1199,7 @@ namespace atom
         {
             for (usize i = 0; i < _impl.get_count(); i++)
             {
-                if (_impl.get_data()[i.to_unwrapped()] == elem)
+                if (_impl.get_data()[i] == elem)
                 {
                     _impl.remove_at(i);
                     return true;
@@ -1231,7 +1237,7 @@ namespace atom
         {
             for (usize i = 0; i < _impl.get_count(); i++)
             {
-                if (pred(_impl.get_data()[i.to_unwrapped()]))
+                if (pred(_impl.get_data()[i]))
                 {
                     _impl.remove_at(i);
                     return true;

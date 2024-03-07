@@ -194,7 +194,7 @@ namespace atom
         class index_of<to_get_type, index>
         {
         public:
-            static constexpr usize value = usize::max();
+            static constexpr usize value = std::numeric_limits<usize>::max();
         };
 
         ////////////////////////////////////////////////////////////////////////////////////////////
@@ -207,7 +207,7 @@ namespace atom
         class has
         {
         public:
-            static constexpr bool value = index_of<in_type, 0, types...>::value != usize::max();
+            static constexpr bool value = index_of<in_type, 0, types...>::value != std::numeric_limits<usize>::max();
         };
 
         ////////////////////////////////////////////////////////////////////////////////////////////

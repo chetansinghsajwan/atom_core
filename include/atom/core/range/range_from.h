@@ -53,7 +53,7 @@ namespace atom
         constexpr auto get_count() const -> usize
             requires rjump_iter_pair<iter_type, iter_end_type>
         {
-            return _it_end.compare(_it).template to<usize>();
+            return _it_end.compare(_it);
         }
 
     private:
@@ -202,7 +202,7 @@ namespace atom
             return len;
         }
 
-        return usize(std::strlen(str));
+        return std::strlen(str);
     }
 }
 
@@ -278,7 +278,7 @@ namespace atom
     constexpr auto range_from(const char* str)
     {
         return _range_from_iter_pair(
-            array_iter(str), array_iter(str + _range_find_str_len(str).to_unwrapped()));
+            array_iter(str), array_iter(str + _range_find_str_len(str)));
     }
 
     /// --------------------------------------------------------------------------------------------
@@ -287,7 +287,7 @@ namespace atom
     constexpr auto range_from(char* str)
     {
         return _mut_range_from_iter_pair(
-            mut_array_iter(str), mut_array_iter(str + _range_find_str_len(str).to_unwrapped()));
+            mut_array_iter(str), mut_array_iter(str + _range_find_str_len(str)));
     }
 
     /// --------------------------------------------------------------------------------------------

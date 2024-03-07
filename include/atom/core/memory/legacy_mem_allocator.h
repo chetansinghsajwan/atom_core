@@ -9,12 +9,12 @@ namespace atom
     public:
         auto alloc(usize size) -> void*
         {
-            return std::malloc(size.to_unwrapped());
+            return std::malloc(size);
         }
 
         auto realloc(void* mem, usize size) -> void*
         {
-            return std::realloc(mem, size.to_unwrapped());
+            return std::realloc(mem, size);
         }
 
         auto dealloc(void* mem)

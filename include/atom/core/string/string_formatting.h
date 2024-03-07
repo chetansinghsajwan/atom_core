@@ -222,7 +222,7 @@ namespace atom
         constexpr auto format(num_type num, string_format_context& ctx) const
         {
             _string_formatter_helper<typename num_type::unwrapped_type>::format(
-                num.to_unwrapped(), ctx);
+                num, ctx);
         }
     };
 
@@ -261,7 +261,7 @@ namespace atom
     public:
         constexpr auto format(string_view str, string_format_context& ctx) const
         {
-            fmt::string_view fmt_str(str.get_data(), str.get_count().to_unwrapped());
+            fmt::string_view fmt_str(str.get_data(), str.get_count());
             _string_formatter_helper<fmt::string_view>::format(fmt_str, ctx);
         }
     };

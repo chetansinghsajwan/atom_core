@@ -48,14 +48,14 @@ namespace atom
         /// @param dest: mem block to copy to.
         /// @param dest_size: size of the mem block pointed by `dest`.
         /// ----------------------------------------------------------------------------------------
-        static constexpr auto fwd_copy_to(
-            const void* src, usize src_size, void* dest, usize dest_size = usize::max()) -> void
+        static constexpr auto fwd_copy_to(const void* src, usize src_size, void* dest,
+            usize dest_size = std::numeric_limits<usize>::max()) -> void
         {
             ATOM_DEBUG_EXPECTS(src != nullptr);
             ATOM_DEBUG_EXPECTS(dest != nullptr);
             ATOM_DEBUG_EXPECTS(dest_size >= src_size);
-            ATOM_DEBUG_EXPECTS(
-                dest >= src and dest < (src + src_size), "dest mem block overlaps src mem block.");
+            ATOM_DEBUG_EXPECTS(dest >= src and dest < ((byte*)src + src_size),
+                "dest mem block overlaps src mem block.");
 
             _fwd_copy(src, src_size, dest);
         }
@@ -68,13 +68,13 @@ namespace atom
         /// @param dest: mem block to copy to.
         /// @param dest_size: size of the mem block pointed by `dest`.
         /// ----------------------------------------------------------------------------------------
-        static constexpr auto bwd_copy_to(
-            const void* src, usize src_size, void* dest, usize dest_size = usize::max()) -> void
+        static constexpr auto bwd_copy_to(const void* src, usize src_size, void* dest,
+            usize dest_size = std::numeric_limits<usize>::max()) -> void
         {
             ATOM_DEBUG_EXPECTS(src != nullptr);
             ATOM_DEBUG_EXPECTS(dest != nullptr);
-            ATOM_DEBUG_EXPECTS(
-                (dest + src_size) <= src and (dest + src_size) > (src + src_size),
+            ATOM_DEBUG_EXPECTS(((byte*)dest + src_size) <= src
+                                   and ((byte*)dest + src_size) > ((byte*)src + src_size),
                 "dest mem block overlaps src mem block.");
 
             _bwd_copy(src, src_size, dest);
@@ -89,8 +89,8 @@ namespace atom
         /// @param dest: mem block to copy to.
         /// @param dest_size: size of the mem block pointed by `dest`.
         /// ----------------------------------------------------------------------------------------
-        static constexpr auto copy_to(
-            const void* src, usize src_size, void* dest, usize dest_size = usize::max()) -> void
+        static constexpr auto copy_to(const void* src, usize src_size, void* dest,
+            usize dest_size = std::numeric_limits<usize>::max()) -> void
         {
             ATOM_DEBUG_EXPECTS(src != nullptr);
             ATOM_DEBUG_EXPECTS(dest != nullptr);
@@ -151,11 +151,11 @@ namespace atom
 
             if (offset > 0)
             {
-                _bwd_copy(mem, mem_size, (void*)mem + offset);
+                _bwd_copy(mem, mem_size, (byte*)mem + offset);
             }
             else
             {
-                _fwd_copy(mem, mem_size, (void*)mem + offset);
+                _fwd_copy(mem, mem_size, (byte*)mem + offset);
             }
         }
 
@@ -203,11 +203,11 @@ namespace atom
 
             if (steps > 0)
             {
-                _shift_fwd(mem, mem_size, steps.to<usize>());
+                _shift_fwd(mem, mem_size, steps);
             }
             else
             {
-                _shift_bwd(mem, mem_size, steps.abs().to<usize>());
+                _shift_bwd(mem, mem_size, std::abs(steps));
             }
         }
 
@@ -255,11 +255,11 @@ namespace atom
 
             if (steps > 0)
             {
-                _shift_fwd(mem, mem_size, steps.to<usize>());
+                _shift_fwd(mem, mem_size, steps);
             }
             else
             {
-                _shift_bwd(mem, mem_size, steps.abs().to<usize>());
+                _shift_bwd(mem, mem_size, std::abs(steps));
             }
         }
 
@@ -281,12 +281,12 @@ namespace atom
 
         static constexpr auto _shift_fwd(void* mem, usize mem_size, usize steps) -> void
         {
-            std::shift_right((byte*)mem, (byte*)mem + mem_size, steps.to_unwrapped());
+            std::shift_right((byte*)mem, (byte*)mem + mem_size, steps);
         }
 
         static constexpr auto _shift_bwd(void* mem, usize mem_size, usize steps) -> void
         {
-            std::shift_left((byte*)mem, (byte*)mem + mem_size, steps.to_unwrapped());
+            std::shift_left((byte*)mem, (byte*)mem + mem_size, steps);
         }
 
         static constexpr auto _rotate_fwd(void* mem, usize mem_size, usize offset) -> void

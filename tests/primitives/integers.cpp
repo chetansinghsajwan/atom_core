@@ -52,7 +52,7 @@ TEMPLATE_TEST_CASE("atom.core.integers", "", i32_test_data, u32_test_data)
 
         REQUIRE_THROWS_AS(
             int_type::from_checked(big_int_type(int_max + 1)), contract_violation_exception);
-        REQUIRE(int_type::from_unchecked(big_int_type(int_max + 1)).to_unwrapped() ==
+        REQUIRE(int_type::from_unchecked(big_int_type(int_max + 1)) ==
                 typename int_type::unwrapped_type(int_max + 1));
     }
 
@@ -80,7 +80,7 @@ TEMPLATE_TEST_CASE("atom.core.integers", "", i32_test_data, u32_test_data)
 
         REQUIRE_THROWS_AS(
             int_type::from_unwrapped_checked(int_max + 1), contract_violation_exception);
-        REQUIRE(int_type::from_unwrapped_unchecked(int_max + 1).to_unwrapped() ==
+        REQUIRE(int_type::from_unwrapped_unchecked(int_max + 1) ==
                 typename int_type::unwrapped_type(int_max + 1));
     }
 
@@ -116,8 +116,8 @@ TEMPLATE_TEST_CASE("atom.core.integers", "", i32_test_data, u32_test_data)
 
         REQUIRE_THROWS_AS(int_type::max().add_checked(1), contract_violation_exception);
 
-        REQUIRE(int_type::max().add_unchecked(1).to_unwrapped() ==
-                typename int_type::unwrapped_type(int_type::max().to_unwrapped() + 1));
+        REQUIRE(int_type::max().add_unchecked(1) ==
+                typename int_type::unwrapped_type(int_type::max() + 1));
 
         REQUIRE(int_type::max().is_add_safe(0));
         REQUIRE(int_type(0).is_add_safe(int_type::max()));
@@ -135,8 +135,8 @@ TEMPLATE_TEST_CASE("atom.core.integers", "", i32_test_data, u32_test_data)
         REQUIRE(n == 0);
 
         REQUIRE_THROWS_AS(int_type::min().sub_checked(1), contract_violation_exception);
-        REQUIRE(int_type::min().sub_unchecked(1).to_unwrapped() ==
-                typename int_type::unwrapped_type(int_type::min().to_unwrapped() - 1));
+        REQUIRE(int_type::min().sub_unchecked(1) ==
+                typename int_type::unwrapped_type(int_type::min() - 1));
 
         REQUIRE(int_type::min().is_sub_safe(0));
         REQUIRE(int_type(0).is_sub_safe(int_type::min()));
@@ -154,8 +154,8 @@ TEMPLATE_TEST_CASE("atom.core.integers", "", i32_test_data, u32_test_data)
         REQUIRE(n == 2);
 
         REQUIRE_THROWS_AS(int_type::max().mul_checked(2), contract_violation_exception);
-        REQUIRE(int_type::max().mul_unchecked(2).to_unwrapped() ==
-                typename int_type::unwrapped_type(int_type::max().to_unwrapped() * 2));
+        REQUIRE(int_type::max().mul_unchecked(2) ==
+                typename int_type::unwrapped_type(int_type::max() * 2));
 
         REQUIRE(int_type::max().is_mul_safe(1));
         REQUIRE(int_type(1).is_mul_safe(int_type::max()));

@@ -6,7 +6,7 @@ namespace atom
 {
     inline auto print(string_view str)
     {
-        std::string_view std_str(str.get_data(), str.get_count().to_unwrapped());
+        std::string_view std_str(str.get_data(), str.get_count());
         std::cout << std_str;
     }
 
