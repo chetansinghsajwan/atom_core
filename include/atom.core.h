@@ -2,6 +2,7 @@
 
 #include "atom/core/core.h"
 #include "atom/core/print.h"
+#include "atom/core/math.h"
 #include "atom/core/memory/box.h"
 #include "atom/core/core/error.h"
 #include "atom/core/core/build_config.h"

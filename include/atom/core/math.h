@@ -7,6 +7,12 @@
 namespace atom::math
 {
     template <typename num_type>
+    constexpr auto min() -> num_type
+    {
+        return std::numeric_limits<num_type>::min();
+    }
+
+    template <typename num_type>
     constexpr auto max() -> num_type
     {
         return std::numeric_limits<num_type>::max();
