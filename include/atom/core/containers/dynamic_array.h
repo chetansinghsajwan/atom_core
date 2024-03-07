@@ -5,7 +5,7 @@
 #include "atom/core/range.h"
 #include "atom/core/invokable/invokable.h"
 #include "atom/core/memory/default_mem_allocator.h"
-#include "atom/core/contracts_decl.h"
+#include "atom/core/contracts.h"
 #include "atom/core/range/array_iter.h"
 
 /// ------------------------------------------------------------------------------------------------

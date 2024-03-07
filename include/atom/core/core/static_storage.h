@@ -1,7 +1,7 @@
 #pragma once
 #include "atom/core/core.h"
 #include "atom/core/core/type_list.h"
-#include "atom/core/contracts_decl.h"
+#include "atom/core/contracts.h"
 
 namespace atom
 {

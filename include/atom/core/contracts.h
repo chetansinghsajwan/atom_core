@@ -1,21 +1,45 @@
 #pragma once
-#include "atom/core/_std.h"
-#include "atom/core/_fmt.h"
-#include "atom/core/contracts_decl.h"
-#include "atom/core/core.h"
-#include "atom/core/core/source_location.h"
 #include "atom/core/core/build_config.h"
+#include "atom/core/core/source_location.h"
+
+#include "fmt/format.h"
 
 namespace atom
 {
     /// --------------------------------------------------------------------------------------------
-    ///
+    /// type of contract.
+    /// --------------------------------------------------------------------------------------------
+    enum class contract_type
+    {
+        /// pre checks performed at function start.
+        expects,
+
+        /// assertion between pre checks and post checks.
+        asserts,
+
+        /// post checks performed before function ends.
+        ensures,
+
+        /// same as `expects` but only checked in debug mode.
+        debug_expects,
+
+        /// same as `asserts` but only checked in debug mode.
+        debug_asserts,
+
+        /// same as `ensures` but only checked in debug mode.
+        debug_ensures
+    };
+
+    /// --------------------------------------------------------------------------------------------
+    /// type containing information about the contract violation.
     /// --------------------------------------------------------------------------------------------
     class contract_violation
     {
     public:
-        contract_violation(contract_type type, std::string_view msg, source_location source)
+        contract_violation(
+            contract_type type, std::string_view expr, std::string_view msg, source_location source)
             : type(type)
+            , expr(expr)
             , msg(msg)
             , source(source)
         {}
@@ -23,6 +47,7 @@ namespace atom
     public:
         contract_type type;
         std::string_view msg;
+        std::string_view expr;
         source_location source;
     };
 
@@ -41,7 +66,7 @@ namespace atom
     }
 
     /// --------------------------------------------------------------------------------------------
-    ///
+    /// exception type used to represent a contract violation.
     /// --------------------------------------------------------------------------------------------
     class contract_violation_exception: public std::exception
     {
@@ -71,20 +96,59 @@ namespace atom
     };
 
     /// --------------------------------------------------------------------------------------------
-    ///
+    /// interface for handling contract violations.
     /// --------------------------------------------------------------------------------------------
     class contract_violation_handler
     {
     public:
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        static auto get() -> contract_violation_handler*
+        {
+            return _handler;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        static auto set(contract_violation_handler* handler) -> void
+        {
+            _handler = handler;
+            if (_handler == nullptr)
+            {
+                _handler = _default_handler;
+            }
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        static auto set_default() -> void
+        {
+            _handler = _default_handler;
+        }
+
+    public:
+        /// ----------------------------------------------------------------------------------------
+        /// function invoked to handle contract violation.
+        /// ----------------------------------------------------------------------------------------
         virtual auto handle(const contract_violation& violation) -> void = 0;
+
+    private:
+        static contract_violation_handler* _default_handler;
+        static contract_violation_handler* _handler;
     };
 
     /// --------------------------------------------------------------------------------------------
-    ///
+    /// this type is used by default to handle contract violations.
     /// --------------------------------------------------------------------------------------------
     class default_contract_violation_handler final: public contract_violation_handler
     {
     public:
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
         virtual auto handle(const contract_violation& violation) -> void override
         {
             if constexpr (build_config::is_mode_debug())
@@ -105,49 +169,24 @@ namespace atom
         }
     };
 
-    /// --------------------------------------------------------------------------------------------
-    ///
-    /// --------------------------------------------------------------------------------------------
-    class contract_violation_handler_manager
-    {
-    public:
-        static auto get_handler() -> contract_violation_handler&
-        {
-            return *_handler;
-        }
-
-        static auto set_handler(contract_violation_handler* handler)
-        {
-            _handler = handler;
-            if (_handler == nullptr)
-            {
-                _handler = &_default_handler;
-            }
-        }
-
-        static auto set_handler_to_default()
-        {
-            _handler = &_default_handler;
-        }
-
-    private:
-        static default_contract_violation_handler _default_handler;
-        static contract_violation_handler* _handler;
-    };
-
-    inline default_contract_violation_handler contract_violation_handler_manager::_default_handler =
-        default_contract_violation_handler();
-    inline contract_violation_handler* contract_violation_handler_manager::_handler =
-        &_default_handler;
+    static inline default_contract_violation_handler _default_handler_instance;
+    inline contract_violation_handler* contract_violation_handler::_default_handler =
+        &_default_handler_instance;
+    inline contract_violation_handler* contract_violation_handler::_handler =
+        &_default_handler_instance;
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    inline auto _handle_contract_violation_impl(contract_type type, std::string_view expr,
-        source_location source, std::string_view msg) -> void
+    template <typename... arg_types>
+    constexpr inline auto _handle_contract_violation(contract_type type, std::string_view expr,
+        source_location source, std::string_view fmt = "", arg_types&&... args) -> void
     {
-        contract_violation violation(type, msg, source);
-        contract_violation_handler_manager::get_handler().handle(violation);
+        if (std::is_constant_evaluated())
+            throw 0;
+
+        contract_violation violation(type, expr, fmt, source);
+        contract_violation_handler::get()->handle(violation);
     }
 
     inline auto _panic(source_location source, std::string_view msg) -> void
@@ -156,3 +195,25 @@ namespace atom
         std::terminate();
     }
 }
+
+#define VA_ARGS(...) , ##__VA_ARGS__
+
+#define _ATOM_CONTRACT_CHECK(CONTRACT_TYPE, ASSERTION, ...)                                        \
+    if (not(ASSERTION))                                                                            \
+    atom::_handle_contract_violation(atom::contract_type::CONTRACT_TYPE, #ASSERTION,               \
+        atom::source_location::current() VA_ARGS(__VA_ARGS__))
+
+#if defined(ATOM_MODE_DEBUG)
+#    define _ATOM_CONTRACT_CHECK_DEBUG(...) _ATOM_CONTRACT_CHECK(__VA_ARGS__)
+#else
+#    define _ATOM_CONTRACT_CHECK_DEBUG(...)
+#endif
+
+#define ATOM_EXPECTS(...) _ATOM_CONTRACT_CHECK(expects, __VA_ARGS__)
+#define ATOM_ASSERTS(...) _ATOM_CONTRACT_CHECK(asserts, __VA_ARGS__)
+#define ATOM_ENSURES(...) _ATOM_CONTRACT_CHECK(ensures, __VA_ARGS__)
+#define ATOM_DEBUG_EXPECTS(...) _ATOM_CONTRACT_CHECK_DEBUG(debug_expects, __VA_ARGS__)
+#define ATOM_DEBUG_ASSERTS(...) _ATOM_CONTRACT_CHECK_DEBUG(debug_asserts, __VA_ARGS__)
+#define ATOM_DEBUG_ENSURES(...) _ATOM_CONTRACT_CHECK_DEBUG(debug_ensures, __VA_ARGS__)
+#define ATOM_STATIC_ASSERTS(...) static_assert(__VA_ARGS__)
+#define ATOM_PANIC(...) atom::_panic(atom::source_location::current() VA_ARGS(__VA_ARGS__))

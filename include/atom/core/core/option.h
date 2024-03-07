@@ -2,7 +2,7 @@
 #include "atom/core/core.h"
 #include "atom/core/tti.h"
 #include "atom/core/invokable/invokable.h"
-#include "atom/core/contracts_decl.h"
+#include "atom/core/contracts.h"
 #include "atom/core/memory/obj_helper.h"
 
 /// ------------------------------------------------------------------------------------------------

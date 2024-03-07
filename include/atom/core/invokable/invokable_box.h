@@ -3,7 +3,7 @@
 #include "atom/core/memory/box.h"
 #include "atom/core/core.h"
 #include "atom/core/invokable/invokable.h"
-#include "atom/core/contracts_decl.h"
+#include "atom/core/contracts.h"
 
 /// ------------------------------------------------------------------------------------------------
 /// implementations

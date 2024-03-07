@@ -1,6 +1,6 @@
 #pragma once
 #include "atom/core/core.h"
-#include "atom/core/contracts_decl.h"
+#include "atom/core/contracts.h"
 #include "atom/core/range/array_range_extensions.h"
 #include "atom/core/range/mut_jump_range_extensions.h"
 

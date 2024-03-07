@@ -4,7 +4,7 @@
 #include "atom/core/tti.h"
 #include "atom/core/core/static_storage.h"
 #include "atom/core/invokable/invokable_ptr.h"
-#include "atom/core/contracts_decl.h"
+#include "atom/core/contracts.h"
 #include "atom/core/memory/default_mem_allocator.h"
 #include "atom/core/preprocessors.h"
 
