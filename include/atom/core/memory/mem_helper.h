@@ -3,6 +3,7 @@
 #include "atom/core/core.h"
 #include "atom/core/contracts.h"
 #include "atom/core/_std.h"
+#include "atom/core/math.h"
 
 namespace atom
 {
@@ -49,7 +50,7 @@ namespace atom
         /// @param dest_size: size of the mem block pointed by `dest`.
         /// ----------------------------------------------------------------------------------------
         static constexpr auto fwd_copy_to(const void* src, usize src_size, void* dest,
-            usize dest_size = std::numeric_limits<usize>::max()) -> void
+            usize dest_size = math::max<usize>()) -> void
         {
             ATOM_DEBUG_EXPECTS(src != nullptr);
             ATOM_DEBUG_EXPECTS(dest != nullptr);
@@ -69,7 +70,7 @@ namespace atom
         /// @param dest_size: size of the mem block pointed by `dest`.
         /// ----------------------------------------------------------------------------------------
         static constexpr auto bwd_copy_to(const void* src, usize src_size, void* dest,
-            usize dest_size = std::numeric_limits<usize>::max()) -> void
+            usize dest_size = math::max<usize>()) -> void
         {
             ATOM_DEBUG_EXPECTS(src != nullptr);
             ATOM_DEBUG_EXPECTS(dest != nullptr);
@@ -90,7 +91,7 @@ namespace atom
         /// @param dest_size: size of the mem block pointed by `dest`.
         /// ----------------------------------------------------------------------------------------
         static constexpr auto copy_to(const void* src, usize src_size, void* dest,
-            usize dest_size = std::numeric_limits<usize>::max()) -> void
+            usize dest_size = math::max<usize>()) -> void
         {
             ATOM_DEBUG_EXPECTS(src != nullptr);
             ATOM_DEBUG_EXPECTS(dest != nullptr);
@@ -207,7 +208,7 @@ namespace atom
             }
             else
             {
-                _shift_bwd(mem, mem_size, std::abs(steps));
+                _shift_bwd(mem, mem_size, math::abs(steps));
             }
         }
 
@@ -259,7 +260,7 @@ namespace atom
             }
             else
             {
-                _shift_bwd(mem, mem_size, std::abs(steps));
+                _shift_bwd(mem, mem_size, math::abs(steps));
             }
         }
 

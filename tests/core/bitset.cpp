@@ -6,9 +6,9 @@ using namespace atom;
 
 TEST_CASE("atom.core.bitset")
 {
-    bitset8 bits = _u8(0b10101010);
-    bitset8 bits0 = _u8(0b00000000);
-    bitset8 bits1 = _u8(0b11111111);
+    bitset8 bits = u8(0b10101010);
+    bitset8 bits0 = u8(0b00000000);
+    bitset8 bits1 = u8(0b11111111);
 
     REQUIRE(bits.get_at(0) == false);
     REQUIRE(bits.get_at(1) == true);
@@ -40,17 +40,17 @@ TEST_CASE("atom.core.bitset")
     REQUIRE(bits.is_only_zero() == true);
 
     bits.flip_all();
-    REQUIRE(bits == _u8(0b01010101));
+    REQUIRE(bits == u8(0b01010101));
 
-    REQUIRE(bits.shift_left(1) == _u8(0b01010100));
-    REQUIRE(bits.shift_right(1) == _u8(0b00101010));
-    REQUIRE(bits.shift_by(-1) == _u8(0b01010100));
-    REQUIRE(bits.shift_by(1) == _u8(0b00101010));
+    REQUIRE(bits.shift_left(1) == u8(0b01010100));
+    REQUIRE(bits.shift_right(1) == u8(0b00101010));
+    REQUIRE(bits.shift_by(-1) == u8(0b01010100));
+    REQUIRE(bits.shift_by(1) == u8(0b00101010));
 
-    REQUIRE(bits.rotate_left(3) == _u8(0b01010001));
-    REQUIRE(bits.rotate_right(1) == _u8(0b10101000));
-    REQUIRE(bits.rotate_by(-1) == _u8(0b01010001));
-    REQUIRE(bits.rotate_by(1) == _u8(0b10101000));
+    REQUIRE(bits.rotate_left(3) == u8(0b01010001));
+    REQUIRE(bits.rotate_right(1) == u8(0b10101000));
+    REQUIRE(bits.rotate_by(-1) == u8(0b01010001));
+    REQUIRE(bits.rotate_by(1) == u8(0b10101000));
 
     REQUIRE(bits.is_eq(bits));
 }

@@ -1,6 +1,7 @@
 #pragma once
 #include "atom/core/core.h"
 #include "atom/core/tti.h"
+#include "atom/core/math.h"
 
 namespace atom
 {
@@ -194,7 +195,7 @@ namespace atom
         class index_of<to_get_type, index>
         {
         public:
-            static constexpr usize value = std::numeric_limits<usize>::max();
+            static constexpr usize value = math::max<usize>();
         };
 
         ////////////////////////////////////////////////////////////////////////////////////////////
@@ -207,7 +208,7 @@ namespace atom
         class has
         {
         public:
-            static constexpr bool value = index_of<in_type, 0, types...>::value != std::numeric_limits<usize>::max();
+            static constexpr bool value = index_of<in_type, 0, types...>::value != math::max<usize>();
         };
 
         ////////////////////////////////////////////////////////////////////////////////////////////

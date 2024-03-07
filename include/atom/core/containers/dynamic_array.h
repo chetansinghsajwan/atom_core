@@ -1,5 +1,4 @@
 #pragma once
-#include "atom/core/_std.h"
 #include "atom/core/core.h"
 #include "atom/core/core/int_wrapper.h"
 #include "atom/core/tti.h"
@@ -8,7 +7,7 @@
 #include "atom/core/memory/default_mem_allocator.h"
 #include "atom/core/contracts.h"
 #include "atom/core/range/array_iter.h"
-#include <limits>
+#include "atom/core/math.h"
 
 /// ------------------------------------------------------------------------------------------------
 /// implementations
@@ -270,7 +269,7 @@ namespace atom
         constexpr auto get_index_for_iter(iter_type it) const -> usize
         {
             isize index = it.get_data() - _data;
-            return index < 0 ? std::numeric_limits<usize>::max() : index;
+            return index < 0 ? math::max<usize>() : index;
         }
 
         constexpr auto is_iter_in_range(iter_type it) const -> bool
@@ -391,9 +390,9 @@ namespace atom
 
         constexpr auto _calc_cap_growth(usize required) const -> usize
         {
-            const usize max = _count < std::numeric_limits<usize>::max() / 2
+            const usize max = _count < math::max<usize>() / 2
                                   ? _count
-                                  : std::numeric_limits<usize>::max();
+                                  : math::max<usize>();
             return std::max(max, required);
         }
 
@@ -721,7 +720,7 @@ namespace atom
         constexpr auto get_index_for_iter(iter_type it) const -> usize
         {
             isize index = it.get_data() - _vector.data();
-            return index < 0 ? std::numeric_limits<usize>::max() : index;
+            return index < 0 ? math::max<usize>() : index;
         }
 
         constexpr auto is_iter_in_range(iter_type it) const -> bool

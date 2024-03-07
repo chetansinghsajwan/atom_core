@@ -69,7 +69,7 @@ namespace atom
 
         static consteval auto get_null_type_index() -> usize
         {
-            return std::numeric_limits<usize>::max();
+            return math::max<usize>();
         }
 
         template <usize i>
