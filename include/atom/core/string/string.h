@@ -1,7 +1,4 @@
 #pragma once
-#include "atom/core/_std.h"
-#include "atom/core/_fmt.h"
-#include "atom/core/core.h"
 #include "atom/core/containers/output_requirements.h"
 #include "atom/core/string/buf_string.h"
 #include "atom/core/string/string_view.h"
@@ -25,6 +22,7 @@ namespace atom
         template <typename output_type, typename... arg_types>
         static constexpr auto format_to(
             output_type&& out, format_string<arg_types...> fmt, arg_types&&... args)
+            requires(string_formatter_provider<arg_types>::has() and ...)
             // requires routput<output_type, char>
         {
             _format_to(out, fmt, atom::forward<arg_types>(args)...);
@@ -35,6 +33,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename... arg_types>
         static constexpr auto format(format_string<arg_types...> fmt, arg_types&&... args) -> string
+            requires(string_formatter_provider<arg_types>::has() and ...)
         {
             string out;
             format_to(out, fmt, atom::forward<arg_types>(args)...);
@@ -47,14 +46,8 @@ namespace atom
     /// `string_formatter` specialization for `string`.
     /// --------------------------------------------------------------------------------------------
     template <>
-    struct string_formatter<string>: public string_formatter<string_view>
-    {};
-}
-
-namespace fmt
-{
-    template <>
-    class formatter<atom::string>: public _formatter_helper<atom::string>
+    struct string_formatter<string, string_formatter_level::atom>
+        : public string_formatter<string_view, string_formatter_level::atom>
     {};
 }
 

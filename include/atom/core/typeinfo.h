@@ -43,6 +43,9 @@ namespace atom::typeinfo
     constexpr bool is_not_base_of = !is_base_of<base_type, derived_type>;
 
     template <typename value_type>
+    constexpr bool is_default_constructible = std::is_default_constructible_v<value_type>;
+
+    template <typename value_type>
     constexpr bool is_copy_constructible = std::is_copy_constructible_v<value_type>;
 
     template <typename value_type>
