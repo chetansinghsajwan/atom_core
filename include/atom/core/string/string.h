@@ -27,7 +27,7 @@ namespace atom
             output_type&& out, format_string<arg_types...> fmt, arg_types&&... args)
             // requires routput<output_type, char>
         {
-            _format_to(out, fmt, forward<arg_types>(args)...);
+            _format_to(out, fmt, atom::forward<arg_types>(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -37,7 +37,7 @@ namespace atom
         static constexpr auto format(format_string<arg_types...> fmt, arg_types&&... args) -> string
         {
             string out;
-            format_to(out, fmt, forward<arg_types>(args)...);
+            format_to(out, fmt, atom::forward<arg_types>(args)...);
 
             return out;
         }

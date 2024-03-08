@@ -174,7 +174,7 @@ namespace atom
 
         try
         {
-            fmt::format_to(out_iter_wrap(&out), fmt, forward<arg_types>(args)...);
+            fmt::format_to(out_iter_wrap(&out), fmt, atom::forward<arg_types>(args)...);
         }
         catch (const fmt::format_error& err)
         {
@@ -211,49 +211,7 @@ namespace atom
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// `string_formatter` specialization for all num types.
-    /// --------------------------------------------------------------------------------------------
-    template <typename num_type>
-        requires rnum<num_type>
-    class string_formatter<num_type>
-        : public _string_formatter_helper<typename num_type::unwrapped_type>
-    {
-    public:
-        constexpr auto format(num_type num, string_format_context& ctx) const
-        {
-            _string_formatter_helper<typename num_type::unwrapped_type>::format(
-                num, ctx);
-        }
-    };
-
-    /// --------------------------------------------------------------------------------------------
-    /// `string_formatter` specialization for `char`.
-    /// --------------------------------------------------------------------------------------------
-    template <>
-    class string_formatter<char>: public _string_formatter_helper<char>
-    {
-    public:
-        constexpr auto format(char ch, string_format_context& ctx) const
-        {
-            _string_formatter_helper<char>::format(ch, ctx);
-        }
-    };
-
-    /// --------------------------------------------------------------------------------------------
-    /// `string_formatter` specialization for `byte`.
-    /// --------------------------------------------------------------------------------------------
-    template <>
-    class string_formatter<byte>: public _string_formatter_helper<byte>
-    {
-    public:
-        constexpr auto format(byte value, string_format_context& ctx) const
-        {
-            _string_formatter_helper<byte>::format(value, ctx);
-        }
-    };
-
-    /// --------------------------------------------------------------------------------------------
-    /// `string_formatter` specialization for `string_view`.
+    /// `string_formatter` specialization for `string_view` to treat as string instead of range.
     /// --------------------------------------------------------------------------------------------
     template <>
     class string_formatter<string_view>: public _string_formatter_helper<fmt::string_view>
@@ -267,21 +225,21 @@ namespace atom
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// `string_formatter` specialization for `static_string`.
+    /// `string_formatter` specialization for `static_string` to treat as string instead of range.
     /// --------------------------------------------------------------------------------------------
     template <usize count>
     class string_formatter<static_string<count>>: public string_formatter<string_view>
     {};
 
     /// --------------------------------------------------------------------------------------------
-    /// `string_formatter` specialization for `dynamic_string`.
+    /// `string_formatter` specialization for `dynamic_string` to treat as string instead of range.
     /// --------------------------------------------------------------------------------------------
     template <typename allocator_type>
     class string_formatter<dynamic_string<allocator_type>>: public string_formatter<string_view>
     {};
 
     /// --------------------------------------------------------------------------------------------
-    /// `string_formatter` specialization for `buf_string`.
+    /// `string_formatter` specialization for `buf_string` to treat as string instead of range.
     /// --------------------------------------------------------------------------------------------
     template <usize count, typename allocator_type>
     class string_formatter<buf_string<count, allocator_type>>: public string_formatter<string_view>
@@ -323,36 +281,5 @@ namespace fmt
     template <typename type>
         requires atom::rstring_formattable<type>
     class formatter<type>: public _formatter_helper<type>
-    {};
-
-    /// --------------------------------------------------------------------------------------------
-    /// `fmt::formatter` explicit specialization for `atom::string_view`.
-    /// --------------------------------------------------------------------------------------------
-    template <>
-    class formatter<atom::string_view>: public _formatter_helper<atom::string_view>
-    {};
-
-    /// --------------------------------------------------------------------------------------------
-    /// `fmt::formatter` explicit specialization for `atom::static_string`.
-    /// --------------------------------------------------------------------------------------------
-    template <atom::usize count>
-    class formatter<atom::static_string<count>>
-        : public _formatter_helper<atom::static_string<count>>
-    {};
-
-    /// --------------------------------------------------------------------------------------------
-    /// `fmt::formatter` explicit specialization for `atom::dynamic_string`.
-    /// --------------------------------------------------------------------------------------------
-    template <typename allocator_type>
-    class formatter<atom::dynamic_string<allocator_type>>
-        : public _formatter_helper<atom::dynamic_string<allocator_type>>
-    {};
-
-    /// --------------------------------------------------------------------------------------------
-    /// `fmt::formatter` explicit specialization for `atom::buf_string`.
-    /// --------------------------------------------------------------------------------------------
-    template <atom::usize count, typename allocator_type>
-    class formatter<atom::buf_string<count, allocator_type>>
-        : public _formatter_helper<atom::buf_string<count, allocator_type>>
     {};
 }
