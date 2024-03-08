@@ -10,7 +10,7 @@ namespace atom
     template <typename type>
     class array_iter
     {
-        ATOM_STATIC_ASSERTS(tti::is_pure<type>, "array_iter supports only pure types.");
+        ATOM_STATIC_ASSERTS(tti::is_pure_type<type>, "array_iter supports only pure types.");
         ATOM_STATIC_ASSERTS(not tti::is_void<type>, "array_iter does not support void.");
 
     public:
@@ -110,7 +110,7 @@ namespace atom
     template <typename type>
     class mut_array_iter: public array_iter<type>
     {
-        ATOM_STATIC_ASSERTS(tti::is_pure<type>, "mut_array_iter supports only pure types.");
+        ATOM_STATIC_ASSERTS(tti::is_pure_type<type>, "mut_array_iter supports only pure types.");
         ATOM_STATIC_ASSERTS(not tti::is_void<type>, "mut_array_iter does not support void.");
 
     private:

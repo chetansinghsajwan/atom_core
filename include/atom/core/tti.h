@@ -76,7 +76,7 @@ namespace atom::tti
     using pure_type = remove_quailfiers_ref_type<type>;
 
     template <typename type>
-    constexpr bool is_pure = not is_qualified<type> and not is_ref<type>;
+    constexpr bool is_pure_type = not is_qualified<type> and not is_ref<type>;
 
     template <typename type>
     constexpr bool is_empty = std::is_empty_v<type>;

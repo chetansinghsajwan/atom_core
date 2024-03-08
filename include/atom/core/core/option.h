@@ -452,7 +452,7 @@ namespace atom
     template <typename type>
     class option
     {
-        ATOM_STATIC_ASSERTS(tti::is_pure<type>, "option supports only pure types");
+        ATOM_STATIC_ASSERTS(tti::is_pure_type<type>, "option supports only pure types");
         ATOM_STATIC_ASSERTS(not tti::is_void<type>, "option does not support void type.");
 
     private:

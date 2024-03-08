@@ -12,7 +12,7 @@ namespace atom
     template <typename type>
     class unique_ptr_default_destroyer
     {
-        ATOM_STATIC_ASSERTS(tti::is_pure<type>, "unique_ptr_default_destroyer only supports pure types.");
+        ATOM_STATIC_ASSERTS(tti::is_pure_type<type>, "unique_ptr_default_destroyer only supports pure types.");
         ATOM_STATIC_ASSERTS(
             not tti::is_void<type>, "unique_ptr_default_destroyer does not support void.");
 
@@ -28,9 +28,9 @@ namespace atom
         typename in_destroyer_type = unique_ptr_default_destroyer<in_value_type>>
     class unique_ptr
     {
-        ATOM_STATIC_ASSERTS(tti::is_pure<in_value_type>, "unique_ptr only supports pure types.");
+        ATOM_STATIC_ASSERTS(tti::is_pure_type<in_value_type>, "unique_ptr only supports pure types.");
         ATOM_STATIC_ASSERTS(not tti::is_void<in_value_type>, "unique_ptr does not support void.");
-        ATOM_STATIC_ASSERTS(tti::is_pure<in_destroyer_type>);
+        ATOM_STATIC_ASSERTS(tti::is_pure_type<in_destroyer_type>);
         ATOM_STATIC_ASSERTS(not tti::is_void<in_destroyer_type>);
 
     private:

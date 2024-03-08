@@ -217,7 +217,7 @@ namespace atom
     class string_formatter<string_view>: public _string_formatter_helper<fmt::string_view>
     {
     public:
-        constexpr auto format(string_view str, string_format_context& ctx) const
+        constexpr auto format(string_view str, string_format_context& ctx) -> void const
         {
             fmt::string_view fmt_str(str.get_data(), str.get_count());
             _string_formatter_helper<fmt::string_view>::format(fmt_str, ctx);
