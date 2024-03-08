@@ -1,6 +1,6 @@
 #pragma once
 #include "atom/core/core.h"
-#include "atom/core/tti.h"
+#include "atom/core/typeinfo.h"
 #include "atom/core/invokable/invokable.h"
 #include "atom/core/contracts.h"
 #include "atom/core/memory/obj_helper.h"
@@ -452,8 +452,8 @@ namespace atom
     template <typename type>
     class option
     {
-        ATOM_STATIC_ASSERTS(tti::is_pure_type<type>, "option supports only pure types");
-        ATOM_STATIC_ASSERTS(not tti::is_void<type>, "option does not support void type.");
+        ATOM_STATIC_ASSERTS(typeinfo::is_pure<type>, "option supports only pure types");
+        ATOM_STATIC_ASSERTS(not typeinfo::is_void<type>, "option does not support void type.");
 
     private:
         using this_type = option<type>;
@@ -785,7 +785,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename invokable_type>
         constexpr auto get_or_invoke(invokable_type&& or_invoke) const -> value_type
-            requires rinvokable<pure_type<invokable_type>, value_type()>
+            requires rinvokable<typeinfo::get_pure<invokable_type>, value_type()>
         {
             if (_impl.is_null())
             {
@@ -811,7 +811,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename invokable_type>
         constexpr auto get_mut_or_invoke(invokable_type&& or_invoke) -> value_type&
-            requires rinvokable<pure_type<invokable_type>, value_type&()>
+            requires rinvokable<typeinfo::get_pure<invokable_type>, value_type&()>
         {
             if (_impl.is_null())
             {

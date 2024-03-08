@@ -7,7 +7,7 @@ namespace atom
     {};
 }
 
-namespace atom::tti
+namespace atom::typeinfo
 {
     template <bool condition, typename ttrue, typename tfalse>
     using conditional_type = std::conditional_t<condition, ttrue, tfalse>;
@@ -73,10 +73,10 @@ namespace atom::tti
     constexpr bool is_qualified = is_const<type> || is_volatile<type>;
 
     template <typename type>
-    using pure_type = remove_quailfiers_ref_type<type>;
+    using get_pure = remove_quailfiers_ref_type<type>;
 
     template <typename type>
-    constexpr bool is_pure_type = not is_qualified<type> and not is_ref<type>;
+    constexpr bool is_pure = not is_qualified<type> and not is_ref<type>;
 
     template <typename type>
     constexpr bool is_empty = std::is_empty_v<type>;

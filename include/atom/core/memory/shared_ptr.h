@@ -2,7 +2,7 @@
 #include "atom/core/core.h"
 #include "atom/core/memory/unique_ptr.h"
 #include "atom/core/memory/obj_helper.h"
-#include "atom/core/tti.h"
+#include "atom/core/typeinfo.h"
 #include "atom/core/memory/default_mem_allocator.h"
 
 /// ------------------------------------------------------------------------------------------------
@@ -34,7 +34,7 @@ namespace atom
     };
 
     template <typename value_type>
-        requires tti::is_empty<value_type>
+        requires typeinfo::is_empty<value_type>
     class ebo_helper<value_type>: private value_type
     {
     public:
@@ -124,9 +124,9 @@ namespace atom
     class shared_ptr_default_destroyer
     {
         ATOM_STATIC_ASSERTS(
-            tti::is_pure_type<value_type>, "shared_ptr_default_destroyer only supports pure types.");
+            typeinfo::is_pure<value_type>, "shared_ptr_default_destroyer only supports pure types.");
         ATOM_STATIC_ASSERTS(
-            not tti::is_void<value_type>, "shared_ptr_default_destroyer does not support void.");
+            not typeinfo::is_void<value_type>, "shared_ptr_default_destroyer does not support void.");
 
     public:
         constexpr auto operator()(value_type* val)
@@ -139,8 +139,8 @@ namespace atom
     template <typename in_value_type>
     class shared_ptr
     {
-        ATOM_STATIC_ASSERTS(tti::is_pure_type<in_value_type>, "shared_ptr only supports pure types.");
-        ATOM_STATIC_ASSERTS(not tti::is_void<in_value_type>, "shared_ptr does not support void.");
+        ATOM_STATIC_ASSERTS(typeinfo::is_pure<in_value_type>, "shared_ptr only supports pure types.");
+        ATOM_STATIC_ASSERTS(not typeinfo::is_void<in_value_type>, "shared_ptr does not support void.");
 
     private:
         using this_type = shared_ptr;

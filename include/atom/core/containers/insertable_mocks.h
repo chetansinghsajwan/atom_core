@@ -1,6 +1,6 @@
 #pragma once
 #include "atom/core/core.h"
-#include "atom/core/tti.h"
+#include "atom/core/typeinfo.h"
 #include "atom/core/range.h"
 
 namespace atom::mock
@@ -11,7 +11,7 @@ namespace atom::mock
     template <typename value_type>
     class insertable
     {
-        ATOM_STATIC_ASSERTS(tti::is_pure_type<value_type>);
+        ATOM_STATIC_ASSERTS(typeinfo::is_pure<value_type>);
 
     public:
         auto insert(const value_type& el);
@@ -28,7 +28,7 @@ namespace atom::mock
     template <typename value_type>
     class front_insertable
     {
-        ATOM_STATIC_ASSERTS(tti::is_pure_type<value_type>);
+        ATOM_STATIC_ASSERTS(typeinfo::is_pure<value_type>);
 
     public:
         auto insert_front(const value_type& el);
@@ -45,7 +45,7 @@ namespace atom::mock
     template <typename value_type>
     class back_insertable
     {
-        ATOM_STATIC_ASSERTS(tti::is_pure_type<value_type>);
+        ATOM_STATIC_ASSERTS(typeinfo::is_pure<value_type>);
 
     public:
         auto insert_back(const value_type& el);
@@ -62,7 +62,7 @@ namespace atom::mock
     template <typename key_type, typename value_type>
     class key_insertable
     {
-        ATOM_STATIC_ASSERTS(tti::is_pure_type<value_type>);
+        ATOM_STATIC_ASSERTS(typeinfo::is_pure<value_type>);
 
     public:
         auto insert(key_type key, const value_type& el);

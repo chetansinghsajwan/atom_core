@@ -1,7 +1,7 @@
 #pragma once
 #include "atom/core/core.h"
 #include "atom/core/core/int_wrapper.h"
-#include "atom/core/tti.h"
+#include "atom/core/typeinfo.h"
 #include "atom/core/range.h"
 #include "atom/core/invokable/invokable.h"
 #include "atom/core/memory/default_mem_allocator.h"
@@ -752,8 +752,8 @@ namespace atom
     class basic_dynamic_array
     {
         ATOM_STATIC_ASSERTS(
-            not tti::is_ref<in_elem_type>, "dynamic_array does not supports ref types.");
-        ATOM_STATIC_ASSERTS(not tti::is_void<in_elem_type>, "dynamic_array does not support void.");
+            not typeinfo::is_ref<in_elem_type>, "dynamic_array does not supports ref types.");
+        ATOM_STATIC_ASSERTS(not typeinfo::is_void<in_elem_type>, "dynamic_array does not support void.");
 
     private:
         using _impl_type = _dynamic_array_impl_using_std_vector<in_elem_type, in_allocator_type>;
@@ -811,7 +811,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename range_type>
         constexpr basic_dynamic_array(range_type&& range)
-            requires(rrange_of<pure_type<range_type>, elem_type>)
+            requires(rrange_of<typeinfo::get_pure<range_type>, elem_type>)
             : _impl(typename _impl_type::range_tag(), range.get_iter(), range.get_iter_end())
         {}
 
@@ -1075,8 +1075,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename range_type>
         constexpr auto operator+=(range_type&& range)
-            requires(rrange_of<pure_type<range_type>, elem_type>)
-                    and (rconstructible<elem_type, typename pure_type<range_type>::elem_type>)
+            requires(rrange_of<typeinfo::get_pure<range_type>, elem_type>)
+                    and (rconstructible<elem_type, typename typeinfo::get_pure<range_type>::elem_type>)
         {
             _impl.insert_range_back(move(range.get_iter()), move(range.get_iter_end()));
         }

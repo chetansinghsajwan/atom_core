@@ -310,7 +310,7 @@ namespace atom
     template <typename value_type>
     constexpr auto operator+(value_type* ptr, isize steps) -> value_type*
     {
-        if constexpr (rsame_as<pure_type<value_type>, void>)
+        if constexpr (rsame_as<typeinfo::get_pure<value_type>, void>)
             return (char*)ptr + steps;
         else
             return ptr + steps;
@@ -319,7 +319,7 @@ namespace atom
     template <typename value_type>
     constexpr auto operator+(value_type* ptr, usize steps) -> value_type*
     {
-        if constexpr (rsame_as<pure_type<value_type>, void>)
+        if constexpr (rsame_as<typeinfo::get_pure<value_type>, void>)
             return (char*)ptr + steps;
         else
             return ptr + steps;
@@ -328,7 +328,7 @@ namespace atom
     template <typename value_type>
     constexpr auto operator-(value_type* ptr, isize steps) -> value_type*
     {
-        if constexpr (rsame_as<pure_type<value_type>, void>)
+        if constexpr (rsame_as<typeinfo::get_pure<value_type>, void>)
             return (char*)ptr - steps;
         else
             return ptr - steps;
@@ -337,7 +337,7 @@ namespace atom
     template <typename value_type>
     constexpr auto operator-(value_type* ptr, usize steps) -> value_type*
     {
-        if constexpr (rsame_as<pure_type<value_type>, void>)
+        if constexpr (rsame_as<typeinfo::get_pure<value_type>, void>)
             return (char*)ptr - steps;
         else
             return ptr - steps;

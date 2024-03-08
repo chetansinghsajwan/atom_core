@@ -1,6 +1,6 @@
 #pragma once
 #include "atom/core/core.h"
-#include "atom/core/tti.h"
+#include "atom/core/typeinfo.h"
 
 namespace atom
 {
@@ -10,8 +10,8 @@ namespace atom
     template <typename type>
     class array_iter
     {
-        ATOM_STATIC_ASSERTS(tti::is_pure_type<type>, "array_iter supports only pure types.");
-        ATOM_STATIC_ASSERTS(not tti::is_void<type>, "array_iter does not support void.");
+        ATOM_STATIC_ASSERTS(typeinfo::is_pure<type>, "array_iter supports only pure types.");
+        ATOM_STATIC_ASSERTS(not typeinfo::is_void<type>, "array_iter does not support void.");
 
     public:
         using elem_type = type;
@@ -110,8 +110,8 @@ namespace atom
     template <typename type>
     class mut_array_iter: public array_iter<type>
     {
-        ATOM_STATIC_ASSERTS(tti::is_pure_type<type>, "mut_array_iter supports only pure types.");
-        ATOM_STATIC_ASSERTS(not tti::is_void<type>, "mut_array_iter does not support void.");
+        ATOM_STATIC_ASSERTS(typeinfo::is_pure<type>, "mut_array_iter supports only pure types.");
+        ATOM_STATIC_ASSERTS(not typeinfo::is_void<type>, "mut_array_iter does not support void.");
 
     private:
         using base_type = array_iter<type>;

@@ -1,7 +1,7 @@
 #pragma once
 #include "atom/core/_std.h"
 #include "atom/core/core.h"
-#include "atom/core/tti.h"
+#include "atom/core/typeinfo.h"
 #include "atom/core/range/array_iter.h"
 #include "atom/core/range/range_literal.h"
 #include "atom/core/range/iter_requirements.h"
@@ -96,7 +96,7 @@ namespace atom
         class _type_container
         {
         public:
-            using elem_type = tti::remove_cvref_type<t_>;
+            using elem_type = typeinfo::remove_cvref_type<t_>;
         };
 
         static consteval auto _get()
@@ -131,7 +131,7 @@ namespace atom
         class _type_container
         {
         public:
-            using elem_type = tti::remove_cvref_type<t_>;
+            using elem_type = typeinfo::remove_cvref_type<t_>;
         };
 
         static consteval auto _get()

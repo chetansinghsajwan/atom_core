@@ -4,7 +4,7 @@
 #include "atom/core/contracts.h"
 #include "atom/core/memory/obj_helper.h"
 #include "atom/core/core/static_storage.h"
-#include "atom/core/tti.h"
+#include "atom/core/typeinfo.h"
 
 /// ------------------------------------------------------------------------------------------------
 /// implementations
@@ -174,7 +174,7 @@ namespace atom
         template <typename value_type>
         constexpr auto set_value(value_type&& value)
         {
-            using type = tti::remove_quailfiers_ref_type<value_type>;
+            using type = typeinfo::remove_quailfiers_ref_type<value_type>;
             usize index_to_set = get_index_for_type<type>();
 
             // the new type to set is same as current.

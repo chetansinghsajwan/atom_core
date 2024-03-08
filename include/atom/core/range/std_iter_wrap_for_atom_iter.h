@@ -1,7 +1,7 @@
 #pragma once
 #include "atom/core/_std.h"
 #include "atom/core/core.h"
-#include "atom/core/tti.h"
+#include "atom/core/typeinfo.h"
 #include "atom/core/contracts.h"
 #include "atom/core/range/iter_requirements.h"
 #include "atom/core/range/range_requirements.h"
@@ -12,11 +12,11 @@ namespace atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename iter_type>
-    using std_iter_cat_for_atom_iter = tti::conditional_type<not riter<iter_type>, void,
-        tti::conditional_type<not rfwd_iter<iter_type>, std::input_iterator_tag,
-            tti::conditional_type<not rbidi_iter<iter_type>, std::forward_iterator_tag,
-                tti::conditional_type<not rjump_iter<iter_type>, std::bidirectional_iterator_tag,
-                    tti::conditional_type<not rarray_iter<iter_type>,
+    using std_iter_cat_for_atom_iter = typeinfo::conditional_type<not riter<iter_type>, void,
+        typeinfo::conditional_type<not rfwd_iter<iter_type>, std::input_iterator_tag,
+            typeinfo::conditional_type<not rbidi_iter<iter_type>, std::forward_iterator_tag,
+                typeinfo::conditional_type<not rjump_iter<iter_type>, std::bidirectional_iterator_tag,
+                    typeinfo::conditional_type<not rarray_iter<iter_type>,
                         std::random_access_iterator_tag, std::contiguous_iterator_tag>>>>>;
 
     /// --------------------------------------------------------------------------------------------

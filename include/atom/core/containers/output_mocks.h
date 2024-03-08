@@ -1,5 +1,5 @@
 #pragma once
-#include "atom/core/tti.h"
+#include "atom/core/typeinfo.h"
 #include "atom/core/range.h"
 
 namespace atom::mock
@@ -7,7 +7,7 @@ namespace atom::mock
     template <typename value_type>
     class output
     {
-        ATOM_STATIC_ASSERTS(tti::is_pure_type<value_type>);
+        ATOM_STATIC_ASSERTS(typeinfo::is_pure<value_type>);
 
     public:
         auto operator+=(const value_type& el);

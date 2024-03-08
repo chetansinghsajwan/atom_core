@@ -1,6 +1,6 @@
 #pragma once
 #include "atom/core/core.h"
-#include "atom/core/tti.h"
+#include "atom/core/typeinfo.h"
 #include "atom/core/math.h"
 
 namespace atom
@@ -16,6 +16,32 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     namespace _type_list_ops
     {
+        template <typename type>
+        consteval auto _sizeof() -> usize
+        {
+            if constexpr (typeinfo::is_same<type, void>)
+            {
+                return 0;
+            }
+            else
+            {
+                return sizeof(type);
+            }
+        }
+
+        template <typename type>
+        consteval auto _alignof() -> usize
+        {
+            if constexpr (typeinfo::is_same<type, void>)
+            {
+                return 0;
+            }
+            else
+            {
+                return alignof(type);
+            }
+        }
+
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////
         //// count
@@ -162,7 +188,7 @@ namespace atom
         class at<index_to_get, index, in_type, ts...>
         {
         public:
-            using type = tti::conditional_type<index_to_get == index, in_type,
+            using type = typeinfo::conditional_type<index_to_get == index, in_type,
                 typename at<index_to_get, index + 1, types...>::type>;
         };
 
@@ -264,7 +290,7 @@ namespace atom
         class remove_if<predicate_type, in_type, ts...>
         {
         public:
-            using type = tti::conditional_type<predicate_type<in_type>::value,
+            using type = typeinfo::conditional_type<predicate_type<in_type>::value,
                 typename add_first<in_type,
                     typename remove_if<predicate_type, ts...>::in_type>::type,
                 typename remove_if<predicate_type, ts...>::type>;
@@ -372,7 +398,7 @@ namespace atom
         class replace_all<replace_type, with_type, in_type, ts...>
         {
             using final_type =
-                tti::conditional_type<tti::is_same<replace_type, in_type>, with_type, in_type>;
+                typeinfo::conditional_type<typeinfo::is_same<replace_type, in_type>, with_type, in_type>;
 
         public:
             using type = typename add_first<final_type,

@@ -1,7 +1,7 @@
 #pragma once
 #include "atom/core/_std.h"
 #include "atom/core/core.h"
-#include "atom/core/tti.h"
+#include "atom/core/typeinfo.h"
 #include "atom/core/core/static_storage.h"
 #include "atom/core/invokable/invokable_ptr.h"
 #include "atom/core/contracts.h"
@@ -97,7 +97,7 @@ namespace atom
             // when allocator type is different, we cannot handle heap memory. so we only move the
             // object and not the memory.
             if constexpr (not rsame_as<allocator_type,
-                              typename tti::remove_cvref_type<box_type>::allocator_type>)
+                              typename typeinfo::remove_cvref_type<box_type>::allocator_type>)
             {
                 if (that._has_val())
                 {
@@ -209,7 +209,7 @@ namespace atom
         template <typename type>
         constexpr auto set_val(type&& val, bool force_heap = false)
         {
-            emplace_val<tti::remove_cvref_type<type>>(forward<type>(val), force_heap);
+            emplace_val<typeinfo::remove_cvref_type<type>>(forward<type>(val), force_heap);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -655,7 +655,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename type, typename... arg_types>
         constexpr auto emplace(arg_types&&... args) -> type&
-            requires rsame_or_derived_from<pure_type<type>, value_type>
+            requires rsame_or_derived_from<typeinfo::get_pure<type>, value_type>
         {
             _impl.template emplace_val<type>(forward<arg_types>(args)...);
             return _impl.template get_mut_val_as<type>();
@@ -666,7 +666,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename type>
         constexpr auto set(type&& obj) -> type&
-            requires rsame_or_derived_from<pure_type<type>, value_type>
+            requires rsame_or_derived_from<typeinfo::get_pure<type>, value_type>
         {
             _impl._set_val(forward<type>(obj));
             return _impl.template get_mut_val_as<type>();
@@ -725,7 +725,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename type>
         constexpr auto get_as() const -> const type&
-            requires rsame_or_derived_from<pure_type<type>, value_type>
+            requires rsame_or_derived_from<typeinfo::get_pure<type>, value_type>
         {
             ATOM_DEBUG_EXPECTS(has_val(), "value is null.");
 
@@ -737,7 +737,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename type>
         constexpr auto get_mut_as() -> type&
-            requires rsame_or_derived_from<pure_type<type>, value_type>
+            requires rsame_or_derived_from<typeinfo::get_pure<type>, value_type>
         {
             ATOM_DEBUG_EXPECTS(has_val(), "value is null.");
 
@@ -749,7 +749,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename type>
         constexpr auto check_get_as() const -> const type&
-            requires rsame_or_derived_from<pure_type<type>, value_type>
+            requires rsame_or_derived_from<typeinfo::get_pure<type>, value_type>
         {
             expects(has_val(), "value is null.");
 
@@ -761,7 +761,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename type>
         constexpr auto check_get_mut_as() -> type&
-            requires rsame_or_derived_from<pure_type<type>, value_type>
+            requires rsame_or_derived_from<typeinfo::get_pure<type>, value_type>
         {
             expects(has_val(), "value is null.");
 
@@ -809,7 +809,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename type>
         constexpr auto mem_as() const -> const type*
-            requires rsame_or_derived_from<pure_type<type>, value_type>
+            requires rsame_or_derived_from<typeinfo::get_pure<type>, value_type>
         {
             return _impl.template mem_as<type>();
         }
@@ -819,7 +819,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename type>
         constexpr auto mut_mem_as() -> const type*
-            requires rsame_or_derived_from<pure_type<type>, value_type>
+            requires rsame_or_derived_from<typeinfo::get_pure<type>, value_type>
         {
             return _impl.template mut_mem_as<type>();
         }
@@ -829,7 +829,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename type>
         constexpr auto check_mem_as() const -> const type*
-            requires rsame_or_derived_from<pure_type<type>, value_type>
+            requires rsame_or_derived_from<typeinfo::get_pure<type>, value_type>
         {
             expects(has_val(), "value is null.");
 
@@ -841,7 +841,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename type>
         constexpr auto check_mut_mem_as() -> const type*
-            requires rsame_or_derived_from<pure_type<type>, value_type>
+            requires rsame_or_derived_from<typeinfo::get_pure<type>, value_type>
         {
             expects(has_val(), "value is null.");
 
@@ -1235,7 +1235,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename type>
         constexpr box(type&& obj)
-            requires ris_void<value_type> or rsame_or_derived_from<pure_type<type>, value_type>
+            requires ris_void<value_type> or rsame_or_derived_from<typeinfo::get_pure<type>, value_type>
             : base_type(forward<type>(obj))
         {}
 
@@ -1244,7 +1244,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename type>
         constexpr this_type& operator=(type&& obj)
-            requires ris_void<value_type> or rsame_or_derived_from<pure_type<type>, value_type>
+            requires ris_void<value_type> or rsame_or_derived_from<typeinfo::get_pure<type>, value_type>
         {
             _impl.set_val(forward<type>(obj));
             return *this;

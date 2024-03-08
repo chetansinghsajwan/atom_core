@@ -169,7 +169,7 @@ namespace atom
             }
 
         public:
-            pure_type<output_type>* out;
+            typeinfo::get_pure<output_type>* out;
         };
 
         try
