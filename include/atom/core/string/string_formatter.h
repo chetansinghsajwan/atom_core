@@ -3,6 +3,8 @@
 #include "atom/core/string/_string_type_id.h"
 #include "atom/core/typeinfo.h"
 #include "fmt/core.h"
+#include "fmt/ranges.h"
+#include "fmt/std.h"
 
 namespace atom
 {
