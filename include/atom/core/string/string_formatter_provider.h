@@ -1,6 +1,7 @@
 #pragma once
 #include "atom/core/string/_format_arg_wrapper.h"
 #include "atom/core/string/string_formatter.h"
+#include "atom/core/typeinfo.h"
 #include "fmt/core.h"
 
 namespace atom
@@ -8,9 +9,11 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     /// finds and provides `string_formatter` implementation to use.
     /// --------------------------------------------------------------------------------------------
-    template <typename value_type>
+    template <typename in_value_type>
     class string_formatter_provider
     {
+        using value_type = typeinfo::get_pure<in_value_type>;
+
     private:
         static consteval auto _get_type_indentity() -> decltype(auto)
         {

@@ -5,6 +5,7 @@
 #include "fmt/core.h"
 #include "fmt/ranges.h"
 #include "fmt/std.h"
+#include "fmt/chrono.h"
 
 namespace atom
 {
