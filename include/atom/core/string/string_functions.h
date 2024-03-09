@@ -2,11 +2,14 @@
 #include "atom/core/_std.h"
 #include "atom/core/core.h"
 #include "atom/core/range.h"
+#include "atom/core/string/_string_type_id.h"
 
 namespace atom
 {
     template <typename final_type, typename container_type>
-    class string_functions: public container_type
+    class string_functions
+        : public container_type
+        , public _string_type_id
     {
         ATOM_STATIC_ASSERTS(rsame_as<typename container_type::elem_type, char>);
 

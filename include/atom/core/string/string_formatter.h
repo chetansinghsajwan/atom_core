@@ -1,11 +1,10 @@
 #pragma once
 #include "atom/core/string/_format_arg_wrapper.h"
 #include "atom/core/string/string_format_context.h"
-#include "atom/core/string/static_string.h"
-#include "atom/core/string/dynamic_string.h"
-#include "atom/core/string/buf_string.h"
+#include "atom/core/string/_string_type_id.h"
 #include "atom/core/typeinfo.h"
-#include "fmt/format.h"
+#include "fmt/core.h"
+#include <type_traits>
 
 namespace atom
 {
@@ -48,10 +47,10 @@ namespace atom
             if constexpr (rdefault_constructible<_string_formatter_atom>)
                 return _string_formatter_atom();
 
-            if constexpr (rdefault_constructible<_string_formatter_fmt>)
+            else if constexpr (rdefault_constructible<_string_formatter_fmt>)
                 return _string_formatter_fmt();
 
-            if constexpr (rdefault_constructible<_string_formatter_user>)
+            else if constexpr (rdefault_constructible<_string_formatter_user>)
                 return _string_formatter_user();
         }
 
@@ -69,6 +68,25 @@ namespace atom
                 return false;
 
             return true;
+        }
+    };
+
+    /// --------------------------------------------------------------------------------------------
+    /// `string_formatter` specialization for all string types to treat them as string instead of
+    /// range of `char`.
+    /// --------------------------------------------------------------------------------------------
+    template <typename string_type>
+        requires typeinfo::is_derived_from<string_type, _string_type_id>
+    class string_formatter<string_type, string_formatter_level::atom>
+        : public string_formatter<fmt::string_view, string_formatter_level::fmt>
+    {
+        using base_type = string_formatter<fmt::string_view, string_formatter_level::fmt>;
+
+    public:
+        constexpr auto format(const string_type& str, string_format_context& ctx) const -> void
+        {
+            fmt::string_view fmt_str(str.get_data(), str.get_count());
+            base_type::format(fmt_str, ctx);
         }
     };
 
@@ -98,47 +116,6 @@ namespace atom
     private:
         fmt::formatter<value_type> _formatter;
     };
-
-    /// --------------------------------------------------------------------------------------------
-    /// `string_formatter` specialization for `string_view` to treat as string instead of range.
-    /// --------------------------------------------------------------------------------------------
-    template <>
-    class string_formatter<string_view, string_formatter_level::atom>
-        : public string_formatter<fmt::string_view, string_formatter_level::fmt>
-    {
-        using base_type = string_formatter<fmt::string_view, string_formatter_level::fmt>;
-
-    public:
-        constexpr auto format(string_view str, string_format_context& ctx) const -> void
-        {
-            fmt::string_view fmt_str(str.get_data(), str.get_count());
-            base_type::format(fmt_str, ctx);
-        }
-    };
-
-    /// --------------------------------------------------------------------------------------------
-    /// `string_formatter` specialization for `static_string` to treat as string instead of range.
-    /// --------------------------------------------------------------------------------------------
-    template <usize count>
-    class string_formatter<static_string<count>, string_formatter_level::atom>
-        : public string_formatter<string_view, string_formatter_level::atom>
-    {};
-
-    /// --------------------------------------------------------------------------------------------
-    /// `string_formatter` specialization for `dynamic_string` to treat as string instead of range.
-    /// --------------------------------------------------------------------------------------------
-    template <typename allocator_type>
-    class string_formatter<dynamic_string<allocator_type>, string_formatter_level::atom>
-        : public string_formatter<string_view, string_formatter_level::atom>
-    {};
-
-    /// --------------------------------------------------------------------------------------------
-    /// `string_formatter` specialization for `buf_string` to treat as string instead of range.
-    /// --------------------------------------------------------------------------------------------
-    template <usize count, typename allocator_type>
-    class string_formatter<buf_string<count, allocator_type>, string_formatter_level::atom>
-        : public string_formatter<string_view, string_formatter_level::atom>
-    {};
 }
 
 namespace fmt

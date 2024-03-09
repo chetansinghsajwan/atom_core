@@ -41,14 +41,6 @@ namespace atom
             return out;
         }
     };
-
-    /// --------------------------------------------------------------------------------------------
-    /// `string_formatter` specialization for `string`.
-    /// --------------------------------------------------------------------------------------------
-    template <>
-    struct string_formatter<string, string_formatter_level::atom>
-        : public string_formatter<string_view, string_formatter_level::atom>
-    {};
 }
 
 namespace std
