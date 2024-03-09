@@ -1,5 +1,6 @@
 #pragma once
 #include "atom/core/string/string_format_context.h"
+#include "atom/core/core/enum_helper.h"
 #include "atom/core/string/_string_type_id.h"
 #include "atom/core/typeinfo.h"
 #include "fmt/core.h"
@@ -69,6 +70,23 @@ namespace atom
         {
             fmt::string_view fmt_str(str.get_data(), str.get_count());
             base_type::format(fmt_str, ctx);
+        }
+    };
+
+    /// --------------------------------------------------------------------------------------------
+    /// `string_formatter` specialization for all enum types.
+    /// --------------------------------------------------------------------------------------------
+    template <typename enum_type>
+        requires typeinfo::is_enum<enum_type>
+    class string_formatter<enum_type, string_formatter_level::atom>
+        : public string_formatter<string_view, string_formatter_level::atom>
+    {
+        using base_type = string_formatter<string_view, string_formatter_level::atom>;
+
+    public:
+        constexpr auto format(enum_type value, string_format_context& ctx) const -> void
+        {
+            base_type::format(enum_helper::to_string_view(value), ctx);
         }
     };
 }

@@ -36,14 +36,14 @@ namespace atom::typeinfo
     template <typename value_type>
     using identity_type = std::type_identity_t<value_type>;
 
-    template <typename base_type, typename derived_type>
-    constexpr bool is_base_of = std::is_base_of_v<base_type, std::decay_t<derived_type>>;
+    template <typename enum_type>
+    constexpr bool is_enum = std::is_enum_v<enum_type>;
+
+    template <typename int_type>
+    constexpr bool is_int = std::is_integral_v<int_type>;
 
     template <typename derived_type, typename base_type>
     constexpr bool is_derived_from = std::is_base_of_v<base_type, derived_type>;
-
-    template <typename base_type, typename derived_type>
-    constexpr bool is_not_base_of = !is_base_of<base_type, derived_type>;
 
     template <typename value_type>
     constexpr bool is_default_constructible = std::is_default_constructible_v<value_type>;
@@ -62,9 +62,6 @@ namespace atom::typeinfo
 
     template <typename type0, typename type1>
     constexpr bool is_same = std::is_same_v<type0, type1>;
-
-    template <typename type0, typename type1>
-    constexpr bool is_not_same = !is_same<type0, type1>;
 
     template <typename value_type>
     constexpr bool is_void = std::is_void_v<value_type>;
