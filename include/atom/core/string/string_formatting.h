@@ -3,6 +3,7 @@
 #include "atom/core/string/format_string.h"
 #include "atom/core/string/string_format_error.h"
 #include "atom/core/string/string_formatter.h"
+#include "atom/core/string/string_formatter_provider.h"
 #include "fmt/format.h"
 
 namespace atom
