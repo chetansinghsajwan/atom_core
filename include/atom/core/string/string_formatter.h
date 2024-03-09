@@ -1,5 +1,6 @@
 #pragma once
-#include "atom/core/string/string_format_core.h"
+#include "atom/core/string/_format_arg_wrapper.h"
+#include "atom/core/string/string_format_context.h"
 #include "atom/core/string/static_string.h"
 #include "atom/core/string/dynamic_string.h"
 #include "atom/core/string/buf_string.h"
@@ -31,7 +32,7 @@ namespace atom
     template <typename value_type>
     class string_formatter_provider
     {
-        static_assert(typeinfo::is_pure<value_type>);
+        // static_assert(typeinfo::is_pure<value_type>);
 
     public:
         using _string_formatter_atom = string_formatter<value_type, string_formatter_level::atom>;
@@ -108,7 +109,7 @@ namespace atom
         using base_type = string_formatter<fmt::string_view, string_formatter_level::fmt>;
 
     public:
-        constexpr auto format(string_view str, string_format_context& ctx) -> void
+        constexpr auto format(string_view str, string_format_context& ctx) const -> void
         {
             fmt::string_view fmt_str(str.get_data(), str.get_count());
             base_type::format(fmt_str, ctx);
@@ -138,4 +139,35 @@ namespace atom
     class string_formatter<buf_string<count, allocator_type>, string_formatter_level::atom>
         : public string_formatter<string_view, string_formatter_level::atom>
     {};
+}
+
+namespace fmt
+{
+    /// --------------------------------------------------------------------------------------------
+    /// this `fmt::formatter` speicialization connects `fmt` with `atom::formatter` implementations.
+    /// calls `atom::formatter` implementation for `value_type`.
+    /// --------------------------------------------------------------------------------------------
+    template <typename value_type>
+    class formatter<atom::_format_arg_wrapper<value_type>>
+    {
+    public:
+        constexpr auto parse(fmt::format_parse_context& fmt_ctx) ->
+            typename fmt::format_parse_context::iterator
+        {
+            atom::string_format_parse_context ctx(fmt_ctx);
+            _formatter.parse(ctx);
+            return fmt_ctx.begin();
+        }
+
+        constexpr auto format(atom::_format_arg_wrapper<value_type>& value,
+            fmt::format_context& fmt_ctx) const -> typename fmt::format_context::iterator
+        {
+            atom::string_format_context ctx(fmt_ctx);
+            _formatter.format(value.value, ctx);
+            return fmt_ctx.out();
+        }
+
+    private:
+        atom::string_formatter_provider<value_type>::formatter_type _formatter;
+    };
 }

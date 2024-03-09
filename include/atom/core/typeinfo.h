@@ -33,6 +33,9 @@ namespace atom::typeinfo
     template <bool requirements, typename value_type = void>
     using enable_if_type = std::enable_if_t<requirements, value_type>;
 
+    template <typename value_type>
+    using identity_type = std::type_identity_t<value_type>;
+
     template <typename base_type, typename derived_type>
     constexpr bool is_base_of = std::is_base_of_v<base_type, std::decay_t<derived_type>>;
 

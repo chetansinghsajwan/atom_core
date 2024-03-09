@@ -1,17 +1,10 @@
 #pragma once
 #include "atom/core/range/array_iter.h"
 #include "atom/core/string/string_view.h"
-#include "fmt/format.h"
+#include "fmt/core.h"
 
 namespace atom
 {
-    /// --------------------------------------------------------------------------------------------
-    /// string type used to store format string. this also checks at compile time for format or
-    /// args.
-    /// --------------------------------------------------------------------------------------------
-    template <typename... arg_types>
-    using format_string = fmt::format_string<arg_types...>;
-
     /// --------------------------------------------------------------------------------------------
     /// context to parse format string.
     /// --------------------------------------------------------------------------------------------
