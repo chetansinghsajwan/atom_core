@@ -55,6 +55,8 @@ enable_testing()
 
 add_library(atom.core STATIC)
 target_sources(atom.core PUBLIC "source/atom.core.cpp")
+
+target_precompile_headers(atom.core PUBLIC "include/atom.core.h")
 target_include_directories(atom.core PUBLIC "include/")
 target_link_libraries(atom.core PUBLIC cpptrace::cpptrace)
 target_link_libraries(atom.core PUBLIC fmt::fmt-header-only)
@@ -70,6 +72,8 @@ add_executable(atom.core.tests)
 file(GLOB_RECURSE test_sources "tests/**.cpp")
 target_sources(atom.core.tests PRIVATE "${test_sources}")
 target_include_directories(atom.core.tests PRIVATE "tests/")
+
+target_precompile_headers(atom.core.tests REUSE_FROM atom.core)
 target_link_libraries(atom.core.tests PRIVATE atom.core)
 target_link_libraries(atom.core.tests PRIVATE Catch2::Catch2WithMain)
 
@@ -81,3 +85,4 @@ add_test(atom.core.tests atom.core.tests)
 
 add_executable(atom.core.sandbox "sandbox/sandbox.cpp")
 target_link_libraries(atom.core.sandbox PRIVATE atom.core)
+target_precompile_headers(atom.core.sandbox REUSE_FROM atom.core)
