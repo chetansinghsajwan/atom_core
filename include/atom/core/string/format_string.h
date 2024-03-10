@@ -7,6 +7,20 @@
 namespace atom
 {
     /// --------------------------------------------------------------------------------------------
+    /// type used to bypass compile time string formatting checks.
+    /// --------------------------------------------------------------------------------------------
+    class runtime_format_string
+    {
+    public:
+        constexpr runtime_format_string(string_view str)
+            : str(str)
+        {}
+
+    public:
+        string_view str;
+    };
+
+    /// --------------------------------------------------------------------------------------------
     /// string type used to store the format for formatting. this also checks at compile time for
     /// invalid format or args.
     ///
@@ -19,6 +33,10 @@ namespace atom
         template <usize count>
         consteval _format_string(const char (&str)[count])
             : str(str)
+        {}
+
+        constexpr _format_string(runtime_format_string str)
+            : str(str.str)
         {}
 
     public:
