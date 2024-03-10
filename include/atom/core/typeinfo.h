@@ -45,6 +45,9 @@ namespace atom::typeinfo
     template <typename derived_type, typename base_type>
     constexpr bool is_derived_from = std::is_base_of_v<base_type, derived_type>;
 
+    template <typename value_type, typename... arg_types>
+    constexpr bool is_constructible_from = std::is_constructible_v<value_type, arg_types...>;
+
     template <typename value_type>
     constexpr bool is_default_constructible = std::is_default_constructible_v<value_type>;
 

@@ -23,17 +23,21 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     /// string type used to store the format for formatting. this also checks at compile time for
     /// invalid format or args.
-    ///
-    /// @todo implement checks.
     /// --------------------------------------------------------------------------------------------
     template <typename... arg_types>
     class _format_string
     {
     public:
-        template <usize count>
-        consteval _format_string(const char (&str)[count])
+        template <typename string_type>
+        consteval _format_string(const string_type& str)
+            requires typeinfo::is_constructible_from<string_view, string_type>
             : str(str)
-        {}
+        {
+            using fmt_format_string =
+                fmt::format_string<_format_arg_wrapper<typeinfo::get_pure<arg_types>>...>;
+
+            fmt_format_string check(str);
+        }
 
         constexpr _format_string(runtime_format_string str)
             : str(str.str)
