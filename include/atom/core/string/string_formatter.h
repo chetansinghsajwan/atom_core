@@ -43,7 +43,7 @@ namespace atom
             native.advance_to(begin);
         }
 
-        constexpr auto format(value_type value, string_format_context& context) const
+        constexpr auto format(const value_type& value, string_format_context& context) const
         {
             fmt::format_context& native = context._release_native();
             fmt::format_context::iterator begin = _formatter.format(value, native);
