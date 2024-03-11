@@ -1,7 +1,7 @@
 #pragma once
 
 #include "atom/core/core.h"
-#include "atom/core/core/enum_helper.h"
+#include "atom/core/core/enums.h"
 #include "atom/core/print.h"
 #include "atom/core/math.h"
 #include "atom/core/memory/box.h"

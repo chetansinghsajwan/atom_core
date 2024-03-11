@@ -4,7 +4,7 @@
 #include "atom/core/core/option.h"
 #include "magic_enum.hpp"
 
-namespace atom::enum_helper
+namespace atom::enums
 {
     template <typename... value_types>
     class tuple
@@ -41,7 +41,7 @@ namespace atom::enum_helper
     ///     value3,
     /// };
     ///
-    /// example value = enum_helper::from_string<example>("value1");
+    /// example value = enums::from_string<example>("value1");
     /// ```
     ///
     /// @example value from flags.
@@ -53,7 +53,7 @@ namespace atom::enum_helper
     ///     value3 = 1 << 2,
     /// };
     ///
-    /// flags value = enum_helper::from_string<flags>("value1|value2");
+    /// flags value = enums::from_string<flags>("value1|value2");
     /// ```
     /// --------------------------------------------------------------------------------------------
     template <typename enum_type>
