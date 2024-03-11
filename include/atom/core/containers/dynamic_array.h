@@ -390,9 +390,7 @@ namespace atom
 
         constexpr auto _calc_cap_growth(usize required) const -> usize
         {
-            const usize max = _count < math::max<usize>() / 2
-                                  ? _count
-                                  : math::max<usize>();
+            const usize max = _count < math::max<usize>() / 2 ? _count : math::max<usize>();
             return std::max(max, required);
         }
 
@@ -753,7 +751,8 @@ namespace atom
     {
         ATOM_STATIC_ASSERTS(
             not typeinfo::is_ref<in_elem_type>, "dynamic_array does not supports ref types.");
-        ATOM_STATIC_ASSERTS(not typeinfo::is_void<in_elem_type>, "dynamic_array does not support void.");
+        ATOM_STATIC_ASSERTS(
+            not typeinfo::is_void<in_elem_type>, "dynamic_array does not support void.");
 
     private:
         using _impl_type = _dynamic_array_impl_using_std_vector<in_elem_type, in_allocator_type>;
@@ -1076,7 +1075,8 @@ namespace atom
         template <typename range_type>
         constexpr auto operator+=(range_type&& range)
             requires(rrange_of<typeinfo::get_pure<range_type>, elem_type>)
-                    and (rconstructible<elem_type, typename typeinfo::get_pure<range_type>::elem_type>)
+                    and (rconstructible<elem_type,
+                        typename typeinfo::get_pure<range_type>::elem_type>)
         {
             _impl.insert_range_back(move(range.get_iter()), move(range.get_iter_end()));
         }

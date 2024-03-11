@@ -28,7 +28,7 @@ namespace atom::typeinfo
     using get_pure = remove_quailfiers_ref_type<value_type>;
 
     template <typename invokable_type>
-    using get_return_type = std::result_of_t<invokable_type>;
+    using get_return_type = std::invoke_result_t<invokable_type>;
 
     template <bool requirements, typename value_type = void>
     using enable_if_type = std::enable_if_t<requirements, value_type>;
