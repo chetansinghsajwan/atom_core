@@ -3,14 +3,11 @@
 #include "atom/core/string/string_view.h"
 #include "atom/core/core/option.h"
 #include "atom/core/typeinfo.h"
+#include "atom/core/core/tuple.h"
 #include "magic_enum.hpp"
 
 namespace atom::enums
 {
-    template <typename... value_types>
-    class tuple
-    {};
-
     /// --------------------------------------------------------------------------------------------
     /// returns the underlying data type used for storage.
     /// --------------------------------------------------------------------------------------------
