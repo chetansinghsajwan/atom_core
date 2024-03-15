@@ -28,12 +28,12 @@ namespace atom
         using this_t = std_iter_wrap_for_atom_iter;
 
     public:
-        using value_t = typename iter_t::value_t;
-        using size_t = usize;
-        using difference_t = isize;
+        using value_type = typename iter_t::value_t;
+        using size_type = usize;
+        using difference_type = isize;
         using iterator_category = std_iter_cat_for_atom_iter<iter_t>;
-        using pointer = value_t*;
-        using reference = value_t&;
+        using pointer = value_type*;
+        using reference = value_type&;
 
     public:
         constexpr std_iter_wrap_for_atom_iter(const iter_t& iter)
@@ -46,13 +46,13 @@ namespace atom
         {}
 
     public:
-        constexpr auto operator*() const -> const value_t&
+        constexpr auto operator*() const -> const value_type&
             requires(is_iter<iter_t>)
         {
             return iter.value();
         }
 
-        constexpr auto operator*() -> value_t&
+        constexpr auto operator*() -> value_type&
             requires(is_mut_iter<iter_t>)
         {
             return iter.mut_value();
@@ -102,10 +102,10 @@ namespace atom
             return tmp;
         }
 
-        constexpr auto operator+(difference_t steps) -> this_t
+        constexpr auto operator+(difference_type steps) -> this_t
             requires(is_jump_iter<iter_t>)
         {
-            // todo: review this. should we accept steps as difference_t.
+            // todo: review this. should we accept steps as difference_type.
             ATOM_DEBUG_EXPECTS(steps > 0);
 
             this_t tmp(iter);
@@ -113,7 +113,7 @@ namespace atom
             return tmp;
         }
 
-        constexpr auto operator+=(difference_t steps) -> this_t
+        constexpr auto operator+=(difference_type steps) -> this_t
             requires(is_jump_iter<iter_t>)
         {
             ATOM_DEBUG_EXPECTS(steps > 0);
@@ -122,7 +122,7 @@ namespace atom
             return *this;
         }
 
-        constexpr auto operator-(difference_t steps) -> this_t
+        constexpr auto operator-(difference_type steps) -> this_t
             requires(is_jump_iter<iter_t>)
         {
             ATOM_DEBUG_EXPECTS(steps > 0);
@@ -132,7 +132,7 @@ namespace atom
             return tmp;
         }
 
-        constexpr auto operator-=(difference_t steps) -> this_t
+        constexpr auto operator-=(difference_type steps) -> this_t
             requires(is_jump_iter<iter_t>)
         {
             ATOM_DEBUG_EXPECTS(steps > 0);
@@ -141,7 +141,7 @@ namespace atom
             return *this;
         }
 
-        constexpr auto operator-(const this_t& that) const -> difference_t
+        constexpr auto operator-(const this_t& that) const -> difference_type
             requires(is_jump_iter<iter_t>)
         {
             return iter.compare(that.iter);
