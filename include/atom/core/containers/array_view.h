@@ -8,17 +8,17 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename in_elem_type>
+    template <typename in_elem_t>
     class basic_array_view
     {
-        using this_type = basic_array_view;
+        using this_t = basic_array_view;
 
     public:
-        using elem_type = in_elem_type;
-        using iter_type = array_iter<elem_type>;
-        using iter_end_type = iter_type;
-        using mut_iter_type = mut_array_iter<elem_type>;
-        using mut_iter_end_type = mut_iter_type;
+        using elem_t = in_elem_t;
+        using iter_t = array_iter<elem_t>;
+        using iter_end_t = iter_t;
+        using mut_iter_t = mut_array_iter<elem_t>;
+        using mut_iter_end_t = mut_iter_t;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -32,28 +32,28 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # trivial copy constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr basic_array_view(const this_type& that) = default;
+        constexpr basic_array_view(const this_t& that) = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # trivial copy operator
         /// ----------------------------------------------------------------------------------------
-        constexpr basic_array_view& operator=(const this_type& that) = default;
+        constexpr basic_array_view& operator=(const this_t& that) = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # trivial move constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr basic_array_view(this_type&& that) = default;
+        constexpr basic_array_view(this_t&& that) = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # trivial move operator
         /// ----------------------------------------------------------------------------------------
-        constexpr basic_array_view& operator=(this_type&& that) = default;
+        constexpr basic_array_view& operator=(this_t&& that) = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # array constructor
         /// ----------------------------------------------------------------------------------------
         template <usize count>
-        constexpr basic_array_view(const elem_type (&arr)[count])
+        constexpr basic_array_view(const elem_t (&arr)[count])
             : _data(arr)
             , _count(count)
         {}
@@ -62,7 +62,7 @@ namespace atom
         /// # array operator
         /// ----------------------------------------------------------------------------------------
         template <usize count>
-        constexpr basic_array_view& operator=(const elem_type (&arr)[count])
+        constexpr basic_array_view& operator=(const elem_t (&arr)[count])
         {
             _data = arr;
             _count = count;
@@ -71,9 +71,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # range constructor
         /// ----------------------------------------------------------------------------------------
-        template <typename range_type>
-        constexpr basic_array_view(const range_type& range)
-            requires(rarray_range_of<range_type, elem_type>)
+        template <typename range_t>
+        constexpr basic_array_view(const range_t& range)
+            requires(rarray_range_of<range_t, elem_t>)
             : _data(range.get_data())
             , _count(range.get_count())
         {}
@@ -81,9 +81,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # range operator
         /// ----------------------------------------------------------------------------------------
-        template <typename range_type>
-        constexpr basic_array_view& operator=(const range_type& range)
-            requires(rarray_range_of<range_type, elem_type>)
+        template <typename range_t>
+        constexpr basic_array_view& operator=(const range_t& range)
+            requires(rarray_range_of<range_t, elem_t>)
         {
             _data = range.get_data();
             _count = range.get_count();
@@ -98,7 +98,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_data() const -> const elem_type*
+        constexpr auto get_data() const -> const elem_t*
         {
             return _data;
         }
@@ -114,34 +114,34 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_iter() const -> iter_type
+        constexpr auto get_iter() const -> iter_t
         {
-            return iter_type(_data);
+            return iter_t(_data);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_iter_end() const -> iter_end_type
+        constexpr auto get_iter_end() const -> iter_end_t
         {
-            return iter_end_type(_data + _count);
+            return iter_end_t(_data + _count);
         }
 
     private:
-        const elem_type* _data;
+        const elem_t* _data;
         usize _count;
     };
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename elem_type>
-    class array_view: public array_range_extensions<basic_array_view<elem_type>>
+    template <typename elem_t>
+    class array_view: public array_range_extensions<basic_array_view<elem_t>>
     {
-        using base_type = array_range_extensions<basic_array_view<elem_type>>;
+        using base_t = array_range_extensions<basic_array_view<elem_t>>;
 
     public:
-        using base_type::base_type;
-        using base_type::operator=;
+        using base_t::base_t;
+        using base_t::operator=;
     };
 }

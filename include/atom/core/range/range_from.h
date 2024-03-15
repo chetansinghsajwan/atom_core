@@ -19,167 +19,167 @@
 
 namespace atom
 {
-    template <typename in_iter_type, typename in_iter_end_type>
+    template <typename in_iter_t, typename in_iter_end_t>
     class _basic_range_from_iter_pair
     {
     public:
-        using elem_type = typename in_iter_type::elem_type;
-        using iter_type = in_iter_type;
-        using iter_end_type = in_iter_end_type;
+        using elem_t = typename in_iter_t::elem_t;
+        using iter_t = in_iter_t;
+        using iter_end_t = in_iter_end_t;
 
     public:
-        constexpr _basic_range_from_iter_pair(iter_type it, iter_end_type it_end)
+        constexpr _basic_range_from_iter_pair(iter_t it, iter_end_t it_end)
             : _it(move(it))
             , _it_end(move(it_end))
         {}
 
     public:
-        constexpr auto get_iter() const -> iter_type
+        constexpr auto get_iter() const -> iter_t
         {
             return _it;
         }
 
-        constexpr auto get_iter_end() const -> iter_type
+        constexpr auto get_iter_end() const -> iter_t
         {
             return _it_end;
         }
 
-        constexpr auto get_data() const -> const elem_type*
-            requires rarray_iter_pair<iter_type, iter_end_type>
+        constexpr auto get_data() const -> const elem_t*
+            requires rarray_iter_pair<iter_t, iter_end_t>
         {
             return &_it.value();
         }
 
         constexpr auto get_count() const -> usize
-            requires rjump_iter_pair<iter_type, iter_end_type>
+            requires rjump_iter_pair<iter_t, iter_end_t>
         {
             return _it_end.compare(_it);
         }
 
     private:
-        iter_type _it;
-        iter_end_type _it_end;
+        iter_t _it;
+        iter_end_t _it_end;
     };
 
-    template <typename tmut_iter_, typename tmut_iter_end_>
+    template <typename in_mut_iter_t, typename in_mut_iter_end_t>
     class _basic_mut_range_from_iter_pair
-        : public _basic_range_from_iter_pair<tmut_iter_, tmut_iter_end_>
+        : public _basic_range_from_iter_pair<in_mut_iter_t, in_mut_iter_end_t>
     {
-        using base_type = _basic_range_from_iter_pair<tmut_iter_, tmut_iter_end_>;
+        using base_t = _basic_range_from_iter_pair<in_mut_iter_t, in_mut_iter_end_t>;
 
     public:
-        using mut_iter_type = tmut_iter_;
-        using mut_iter_end_type = tmut_iter_end_;
+        using mut_iter_t = in_mut_iter_t;
+        using mut_iter_end_t = in_mut_iter_end_t;
 
     public:
-        constexpr _basic_mut_range_from_iter_pair(mut_iter_type it, mut_iter_end_type it_end)
-            : base_type(move(it), move(it_end))
+        constexpr _basic_mut_range_from_iter_pair(mut_iter_t it, mut_iter_end_t it_end)
+            : base_t(move(it), move(it_end))
         {}
 
     public:
-        constexpr auto get_mut_iter() -> mut_iter_type
+        constexpr auto get_mut_iter() -> mut_iter_t
         {
             return this->get_iter();
         }
 
-        constexpr auto get_mut_iter_end() -> mut_iter_end_type
+        constexpr auto get_mut_iter_end() -> mut_iter_end_t
         {
             return this->get_iter_end();
         }
     };
 
-    template <typename iter_type, typename iter_end_type>
+    template <typename iter_t, typename iter_end_t>
     class _range_from_iter_extended
     {
     private:
-        template <typename t_>
+        template <typename in_elem_t>
         class _type_container
         {
         public:
-            using elem_type = typeinfo::remove_cvref_type<t_>;
+            using elem_t = typeinfo::remove_cvref_t<in_elem_t>;
         };
 
         static consteval auto _get()
         {
-            using range_type = _basic_range_from_iter_pair<iter_type, iter_end_type>;
+            using range_t = _basic_range_from_iter_pair<iter_t, iter_end_t>;
 
-            if constexpr (rarray_iter_pair<iter_type, iter_end_type>)
-                return _type_container<array_range_extensions<range_type>>();
+            if constexpr (rarray_iter_pair<iter_t, iter_end_t>)
+                return _type_container<array_range_extensions<range_t>>();
 
-            else if constexpr (rjump_iter_pair<iter_type, iter_end_type>)
-                return _type_container<jump_range_extensions<range_type>>();
+            else if constexpr (rjump_iter_pair<iter_t, iter_end_t>)
+                return _type_container<jump_range_extensions<range_t>>();
 
-            else if constexpr (rbidi_iter_pair<iter_type, iter_end_type>)
-                return _type_container<bidi_range_extensions<range_type>>();
+            else if constexpr (rbidi_iter_pair<iter_t, iter_end_t>)
+                return _type_container<bidi_range_extensions<range_t>>();
 
-            else if constexpr (rfwd_iter_pair<iter_type, iter_end_type>)
-                return _type_container<fwd_range_extensions<range_type>>();
+            else if constexpr (rfwd_iter_pair<iter_t, iter_end_t>)
+                return _type_container<fwd_range_extensions<range_t>>();
 
-            else if constexpr (riter_pair<iter_type, iter_end_type>)
-                return _type_container<range_extensions<range_type>>();
+            else if constexpr (riter_pair<iter_t, iter_end_t>)
+                return _type_container<range_extensions<range_t>>();
         }
 
     public:
-        using elem_type = typename decltype(_get())::elem_type;
+        using elem_t = typename decltype(_get())::elem_t;
     };
 
-    template <typename iter_type, typename iter_end_type>
+    template <typename iter_t, typename iter_end_t>
     class _mut_range_from_iter_extended
     {
     private:
-        template <typename t_>
+        template <typename in_elem_t>
         class _type_container
         {
         public:
-            using elem_type = typeinfo::remove_cvref_type<t_>;
+            using elem_t = typeinfo::remove_cvref_t<in_elem_t>;
         };
 
         static consteval auto _get()
         {
-            using range_type = _basic_mut_range_from_iter_pair<iter_type, iter_end_type>;
+            using range_t = _basic_mut_range_from_iter_pair<iter_t, iter_end_t>;
 
-            if constexpr (rarray_iter_pair<iter_type, iter_end_type>)
-                return _type_container<mut_array_range_extensions<range_type>>();
+            if constexpr (rarray_iter_pair<iter_t, iter_end_t>)
+                return _type_container<mut_array_range_extensions<range_t>>();
 
-            else if constexpr (rjump_iter_pair<iter_type, iter_end_type>)
-                return _type_container<mut_jump_range_extensions<range_type>>();
+            else if constexpr (rjump_iter_pair<iter_t, iter_end_t>)
+                return _type_container<mut_jump_range_extensions<range_t>>();
 
-            else if constexpr (rbidi_iter_pair<iter_type, iter_end_type>)
-                return _type_container<mut_bidi_range_extensions<range_type>>();
+            else if constexpr (rbidi_iter_pair<iter_t, iter_end_t>)
+                return _type_container<mut_bidi_range_extensions<range_t>>();
 
-            else if constexpr (rfwd_iter_pair<iter_type, iter_end_type>)
-                return _type_container<mut_fwd_range_extensions<range_type>>();
+            else if constexpr (rfwd_iter_pair<iter_t, iter_end_t>)
+                return _type_container<mut_fwd_range_extensions<range_t>>();
 
-            else if constexpr (riter_pair<iter_type, iter_end_type>)
-                return _type_container<mut_range_extensions<range_type>>();
+            else if constexpr (riter_pair<iter_t, iter_end_t>)
+                return _type_container<mut_range_extensions<range_t>>();
         }
 
     public:
-        using elem_type = typename decltype(_get())::elem_type;
+        using elem_t = typename decltype(_get())::elem_t;
     };
 
-    template <typename iter_type, typename iter_end_type>
+    template <typename iter_t, typename iter_end_t>
     class _range_from_iter_pair
-        : public _range_from_iter_extended<iter_type, iter_end_type>::elem_type
+        : public _range_from_iter_extended<iter_t, iter_end_t>::elem_t
     {
-        using base_type = _range_from_iter_extended<iter_type, iter_end_type>::elem_type;
+        using base_t = _range_from_iter_extended<iter_t, iter_end_t>::elem_t;
 
     public:
-        constexpr _range_from_iter_pair(iter_type it, iter_end_type it_end)
-            : base_type(move(it), move(it_end))
+        constexpr _range_from_iter_pair(iter_t it, iter_end_t it_end)
+            : base_t(move(it), move(it_end))
         {}
     };
 
-    template <typename mut_iter_type, typename mut_iter_end_type>
+    template <typename mut_iter_t, typename mut_iter_end_t>
     class _mut_range_from_iter_pair
-        : public _mut_range_from_iter_extended<mut_iter_type, mut_iter_end_type>::elem_type
+        : public _mut_range_from_iter_extended<mut_iter_t, mut_iter_end_t>::elem_t
     {
-        using base_type =
-            _mut_range_from_iter_extended<mut_iter_type, mut_iter_end_type>::elem_type;
+        using base_t =
+            _mut_range_from_iter_extended<mut_iter_t, mut_iter_end_t>::elem_t;
 
     public:
-        constexpr _mut_range_from_iter_pair(mut_iter_type it, mut_iter_end_type it_end)
-            : base_type(move(it), move(it_end))
+        constexpr _mut_range_from_iter_pair(mut_iter_t it, mut_iter_end_t it_end)
+            : base_t(move(it), move(it_end))
         {}
     };
 
@@ -211,8 +211,8 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename elem_type>
-    constexpr auto range_from(std::initializer_list<elem_type> list)
+    template <typename elem_t>
+    constexpr auto range_from(std::initializer_list<elem_t> list)
     {
         return _range_from_iter_pair(array_iter(list.begin()), array_iter(list.end()));
     }
@@ -220,8 +220,8 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename elem_type>
-    constexpr auto range_from(const elem_type* begin, const elem_type* end)
+    template <typename elem_t>
+    constexpr auto range_from(const elem_t* begin, const elem_t* end)
     {
         return _range_from_iter_pair(array_iter(begin), array_iter(end));
     }
@@ -229,8 +229,8 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename elem_type>
-    constexpr auto range_from(elem_type* begin, elem_type* end)
+    template <typename elem_t>
+    constexpr auto range_from(elem_t* begin, elem_t* end)
     {
         return _mut_range_from_iter_pair(mut_array_iter(begin), mut_array_iter(end));
     }
@@ -238,8 +238,8 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename elem_type>
-    constexpr auto range_from(const elem_type* begin, usize count)
+    template <typename elem_t>
+    constexpr auto range_from(const elem_t* begin, usize count)
     {
         return _range_from_iter_pair(array_iter(begin), array_iter(begin + count));
     }
@@ -247,8 +247,8 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename elem_type>
-    constexpr auto range_from(elem_type* begin, usize count)
+    template <typename elem_t>
+    constexpr auto range_from(elem_t* begin, usize count)
     {
         return _mut_range_from_iter_pair(mut_array_iter(begin), mut_array_iter(begin + count));
     }
@@ -256,8 +256,8 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename elem_type, usize count>
-    constexpr auto range_from(const elem_type (&arr)[count])
+    template <typename elem_t, usize count>
+    constexpr auto range_from(const elem_t (&arr)[count])
     {
         return _range_from_iter_pair(array_iter(ptr(arr)), array_iter(ptr(arr) + count));
     }
@@ -265,8 +265,8 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename elem_type, usize count>
-    constexpr auto range_from(elem_type (&arr)[count])
+    template <typename elem_t, usize count>
+    constexpr auto range_from(elem_t (&arr)[count])
     {
         return _mut_range_from_iter_pair(
             mut_array_iter(mut_ptr(arr)), mut_array_iter(mut_ptr(arr) + count));
@@ -293,11 +293,11 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename iter_type, typename iter_end_type>
-    constexpr auto range_from(iter_type it, iter_end_type it_end)
-        requires riter_pair<iter_type, iter_end_type>
+    template <typename iter_t, typename iter_end_t>
+    constexpr auto range_from(iter_t it, iter_end_t it_end)
+        requires riter_pair<iter_t, iter_end_t>
     {
-        if constexpr (rmut_iter<iter_type>)
+        if constexpr (rmut_iter<iter_t>)
         {
             return _mut_range_from_iter_pair(move(it), move(it_end));
         }
@@ -310,8 +310,8 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename elem_type>
-    constexpr auto range_from_literal(range_literal<elem_type> lit)
+    template <typename elem_t>
+    constexpr auto range_from_literal(range_literal<elem_t> lit)
     {
         return range_from(lit.get_data(), lit.get_count());
     }

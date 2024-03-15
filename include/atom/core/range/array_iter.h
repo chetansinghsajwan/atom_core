@@ -7,14 +7,14 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     /// array_iter iterates over raw arr.
     /// --------------------------------------------------------------------------------------------
-    template <typename type>
+    template <typename value_t>
     class array_iter
     {
-        ATOM_STATIC_ASSERTS(typeinfo::is_pure<type>, "array_iter supports only pure types.");
-        ATOM_STATIC_ASSERTS(not typeinfo::is_void<type>, "array_iter does not support void.");
+        ATOM_STATIC_ASSERTS(typeinfo::is_pure<value_t>, "array_iter supports only pure types.");
+        ATOM_STATIC_ASSERTS(not typeinfo::is_void<value_t>, "array_iter does not support void.");
 
     public:
-        using elem_type = type;
+        using elem_t = value_t;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -27,7 +27,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # value constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr array_iter(const type* it)
+        constexpr array_iter(const value_t* it)
             : _it(it)
         {}
 
@@ -35,7 +35,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// access value by ref.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto value() const -> const type&
+        constexpr auto value() const -> const value_t&
         {
             return *_it;
         }
@@ -43,7 +43,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// access value by ptr.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_data() const -> const type*
+        constexpr auto get_data() const -> const value_t*
         {
             return this->_it;
         }
@@ -101,54 +101,54 @@ namespace atom
         }
 
     protected:
-        const type* _it;
+        const value_t* _it;
     };
 
     /// --------------------------------------------------------------------------------------------
     /// mut_array_iter iterates over mut raw arr.
     /// --------------------------------------------------------------------------------------------
-    template <typename type>
-    class mut_array_iter: public array_iter<type>
+    template <typename value_t>
+    class mut_array_iter: public array_iter<value_t>
     {
-        ATOM_STATIC_ASSERTS(typeinfo::is_pure<type>, "mut_array_iter supports only pure types.");
-        ATOM_STATIC_ASSERTS(not typeinfo::is_void<type>, "mut_array_iter does not support void.");
+        ATOM_STATIC_ASSERTS(typeinfo::is_pure<value_t>, "mut_array_iter supports only pure types.");
+        ATOM_STATIC_ASSERTS(not typeinfo::is_void<value_t>, "mut_array_iter does not support void.");
 
     private:
-        using base_type = array_iter<type>;
+        using base_t = array_iter<value_t>;
 
     public:
-        using elem_type = type;
+        using elem_t = value_t;
 
     public:
         /// ----------------------------------------------------------------------------------------
         /// # default constructor
         /// ----------------------------------------------------------------------------------------
         constexpr mut_array_iter()
-            : base_type()
+            : base_t()
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # value constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr mut_array_iter(type* it)
-            : base_type(it)
+        constexpr mut_array_iter(value_t* it)
+            : base_t(it)
         {}
 
     public:
         /// ----------------------------------------------------------------------------------------
         /// access value by mut ref.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto mut_value() -> type&
+        constexpr auto mut_value() -> value_t&
         {
-            return const_cast<type&>(base_type::value());
+            return const_cast<value_t&>(base_t::value());
         }
 
         /// ----------------------------------------------------------------------------------------
         /// access value by mut ptr.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_mut_data() -> type*
+        constexpr auto get_mut_data() -> value_t*
         {
-            return const_cast<type*>(base_type::get_data());
+            return const_cast<value_t*>(base_t::get_data());
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -156,7 +156,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto next() -> mut_array_iter&
         {
-            base_type::next();
+            base_t::next();
             return *this;
         }
 
@@ -165,7 +165,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto next(usize steps) -> mut_array_iter&
         {
-            base_type::next(steps);
+            base_t::next(steps);
             return *this;
         }
 
@@ -174,7 +174,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto prev() -> mut_array_iter&
         {
-            base_type::prev();
+            base_t::prev();
             return *this;
         }
 
@@ -183,7 +183,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto prev(usize steps) -> mut_array_iter&
         {
-            base_type::prev(steps);
+            base_t::prev(steps);
             return *this;
         }
     };

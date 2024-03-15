@@ -4,13 +4,13 @@
 namespace atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// locks the lock on construction and unlocks at destruction. this_type is done to guarantee
+    /// locks the lock on construction and unlocks at destruction. this_t is done to guarantee
     /// exception safety.
     /// --------------------------------------------------------------------------------------------
-    template <typename lockable_type>
+    template <typename lockable_t>
     class lock_guard
     {
-        ATOM_STATIC_ASSERTS(rlockable<lockable_type>);
+        ATOM_STATIC_ASSERTS(rlockable<lockable_t>);
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -20,7 +20,7 @@ namespace atom
         ///
         /// @throws unkown_exception exception thrown by {lock.lock()}.
         /// ----------------------------------------------------------------------------------------
-        lock_guard(lockable_type& lock)
+        lock_guard(lockable_t& lock)
             : _lock(lock)
         {
             _lock.lock();
@@ -40,6 +40,6 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// lockable object.
         /// ----------------------------------------------------------------------------------------
-        lockable_type& _lock;
+        lockable_t& _lock;
     };
 }

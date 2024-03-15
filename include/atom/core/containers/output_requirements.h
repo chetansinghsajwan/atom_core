@@ -6,9 +6,9 @@
 
 namespace atom
 {
-    template <typename output_type, typename value_type>
+    template <typename output_t, typename value_t>
     concept routput =
-        requires(output_type out, value_type value, mock::range<value_type> range)
+        requires(output_t out, value_t value, mock::range<value_t> range)
     {
         { out += value };
         { out += move(value) };

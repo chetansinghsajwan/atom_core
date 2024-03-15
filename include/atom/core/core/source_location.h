@@ -15,7 +15,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// get the source line info of the calling site.
         ///
-        /// @note this_type default argument is used to capture the source line info of the calling
+        /// @note this_t default argument is used to capture the source line info of the calling
         ///     site. do not pass any argument for this.
         /// ----------------------------------------------------------------------------------------
 #if defined(ATOM_COMPILER_CLANG) && !defined(__cpp_lib_source_location)

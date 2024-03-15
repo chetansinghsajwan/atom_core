@@ -5,39 +5,39 @@
 
 namespace atom
 {
-    template <typename in_elem_type, usize in_count>
+    template <typename in_elem_t, usize in_count>
     class basic_static_array
     {
     public:
-        using elem_type = in_elem_type;
-        using iter_type = array_iter<elem_type>;
-        using iter_end_type = iter_type;
-        using mut_iter_type = mut_array_iter<elem_type>;
-        using mut_iter_end_type = mut_iter_type;
+        using elem_t = in_elem_t;
+        using iter_t = array_iter<elem_t>;
+        using iter_end_t = iter_t;
+        using mut_iter_t = mut_array_iter<elem_t>;
+        using mut_iter_end_t = mut_iter_t;
 
     public:
         constexpr basic_static_array() = default;
 
         template <usize other_count>
-        constexpr basic_static_array(const elem_type (&arr)[other_count])
+        constexpr basic_static_array(const elem_t (&arr)[other_count])
             requires(other_count <= in_count)
             : _arr(arr)
         {}
 
-        template <typename... arg_types>
-        constexpr basic_static_array(arg_types&&... args)
-            requires(rconvertible_to<arg_types, elem_type> and ...)
-                    and (sizeof...(arg_types) <= in_count)
+        template <typename... arg_ts>
+        constexpr basic_static_array(arg_ts&&... args)
+            requires(rconvertible_to<arg_ts, elem_t> and ...)
+                    and (sizeof...(arg_ts) <= in_count)
             : _arr(0)
         {}
 
     public:
-        constexpr auto get_data() const -> const elem_type*
+        constexpr auto get_data() const -> const elem_t*
         {
             return _arr;
         }
 
-        constexpr auto get_mut_data() -> elem_type*
+        constexpr auto get_mut_data() -> elem_t*
         {
             return _arr;
         }
@@ -47,37 +47,37 @@ namespace atom
             return in_count;
         }
 
-        constexpr auto get_iter() const -> iter_type
+        constexpr auto get_iter() const -> iter_t
         {
-            return iter_type(_arr);
+            return iter_t(_arr);
         }
 
-        constexpr auto get_iter_end() const -> iter_end_type
+        constexpr auto get_iter_end() const -> iter_end_t
         {
-            return iter_end_type(_arr + in_count);
+            return iter_end_t(_arr + in_count);
         }
 
-        constexpr auto get_mut_iter() -> mut_iter_type
+        constexpr auto get_mut_iter() -> mut_iter_t
         {
-            return mut_iter_type(_arr);
+            return mut_iter_t(_arr);
         }
 
-        constexpr auto get_mut_iter_end() -> mut_iter_end_type
+        constexpr auto get_mut_iter_end() -> mut_iter_end_t
         {
-            return mut_iter_end_type(_arr + in_count);
+            return mut_iter_end_t(_arr + in_count);
         }
 
     private:
-        elem_type _arr[in_count];
+        elem_t _arr[in_count];
     };
 
-    template <typename elem_type, usize count>
-    class static_array: public mut_array_range_extensions<basic_static_array<elem_type, count>>
+    template <typename elem_t, usize count>
+    class static_array: public mut_array_range_extensions<basic_static_array<elem_t, count>>
     {
-        using base_type = mut_array_range_extensions<basic_static_array<elem_type, count>>;
+        using base_t = mut_array_range_extensions<basic_static_array<elem_t, count>>;
 
     public:
-        using base_type::base_type;
-        using base_type::operator=;
+        using base_t::base_t;
+        using base_t::operator=;
     };
 }

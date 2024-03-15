@@ -83,7 +83,7 @@ namespace atom
 
         /// ----------------------------------------------------------------------------------------
         /// copies each byte from mem block `src` to mem block `dest` using appropriate
-        /// iteration. this_type method is safe even if `src` and `dest` overlaps.
+        /// iteration. this_t method is safe even if `src` and `dest` overlaps.
         ///
         /// @param src: mem block to copy from.
         /// @param src_size: size of the mem block pointed by `src`.
@@ -139,7 +139,7 @@ namespace atom
 
         /// ----------------------------------------------------------------------------------------
         /// copies each byte from mem block `mem` to mem block offset by `offset`.
-        /// this_type method is safe even if src and dest overlaps.
+        /// this_t method is safe even if src and dest overlaps.
         ///
         /// @param mem: mem block to copy from.
         /// @param mem_size: size of the mem block pointed by `mem`.

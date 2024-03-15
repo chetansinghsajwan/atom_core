@@ -11,12 +11,12 @@
 
 namespace atom
 {
-    using nullptr_type = std::nullptr_t;
+    using nullptr_t = std::nullptr_t;
 
-    template <typename... arg_types>
+    template <typename... arg_ts>
     class type_holder
     {};
 
-    template <typename type>
-    using initializer_list = std::initializer_list<type>;
+    template <typename value_t>
+    using initializer_list = std::initializer_list<value_t>;
 }

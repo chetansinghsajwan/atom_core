@@ -6,10 +6,10 @@ namespace atom
 {
     class string_view: public string_functions<string_view, array_view<char>>
     {
-        using base_type = string_functions<string_view, array_view<char>>;
+        using base_t = string_functions<string_view, array_view<char>>;
 
     public:
-        using base_type::base_type;
-        using base_type::operator=;
+        using base_t::base_t;
+        using base_t::operator=;
     };
 }

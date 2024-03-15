@@ -9,10 +9,10 @@ namespace atom
     class static_storage_for
     {
     private:
-        using _types = type_list<types...>;
+        using _ts = type_list<types...>;
 
     public:
-        alignas(_types::max_align) byte storage[_types::max_size];
+        alignas(_ts::max_align) byte storage[_ts::max_size];
     };
 
     template <usize in_size>

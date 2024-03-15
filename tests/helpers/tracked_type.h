@@ -151,33 +151,33 @@ namespace atom::tests
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename value_type>
-    class tracked_type_of: public tracked_type
+    template <typename value_t>
+    class tracked_t_of: public tracked_type
     {
-        using base_type = tracked_type;
+        using base_t = tracked_type;
 
     public:
-        using base_type::base_type;
-        using base_type::operator=;
+        using base_t::base_t;
+        using base_t::operator=;
 
-        constexpr tracked_type_of(const value_type& value)
-            : base_type(operation::value_copy_constructor)
+        constexpr tracked_t_of(const value_t& value)
+            : base_t(operation::value_copy_constructor)
             , value(value)
         {}
 
-        constexpr tracked_type_of(value_type&& value)
-            : base_type(operation::value_move_constructor)
+        constexpr tracked_t_of(value_t&& value)
+            : base_t(operation::value_move_constructor)
             , value(move(value))
         {}
 
-        constexpr auto operator=(const value_type& value) -> tracked_type&
+        constexpr auto operator=(const value_t& value) -> tracked_type&
         {
             last_op = operation::value_copy_operator;
             this->value = value;
             return *this;
         }
 
-        constexpr auto operator=(value_type&& value) -> tracked_type&
+        constexpr auto operator=(value_t&& value) -> tracked_type&
         {
             last_op = operation::value_move_operator;
             this->value = move(value);
@@ -185,7 +185,7 @@ namespace atom::tests
         }
 
     public:
-        value_type value;
+        value_t value;
     };
 }
 

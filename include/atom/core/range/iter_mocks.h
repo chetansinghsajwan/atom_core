@@ -12,11 +12,11 @@ namespace atom::mock
     /// --------------------------------------------------------------------------------------------
     /// `riter` mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename in_value_type>
+    template <typename in_value_t>
     class iter
     {
     public:
-        using elem_type = in_value_type;
+        using elem_t = in_value_t;
 
     public:
         iter() = delete;
@@ -28,7 +28,7 @@ namespace atom::mock
         ~iter() = default;
 
     public:
-        auto value() const -> const elem_type&;
+        auto value() const -> const elem_t&;
         auto is_eq(iter_end end) const -> bool;
         auto next() -> iter&;
     };
@@ -36,11 +36,11 @@ namespace atom::mock
     /// --------------------------------------------------------------------------------------------
     /// `rmut_iter` mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename in_value_type>
+    template <typename in_value_t>
     class mut_iter
     {
     public:
-        using elem_type = in_value_type;
+        using elem_t = in_value_t;
 
     public:
         mut_iter() = delete;
@@ -52,8 +52,8 @@ namespace atom::mock
         ~mut_iter() = default;
 
     public:
-        auto value() const -> const elem_type&;
-        auto mut_value() -> elem_type&;
+        auto value() const -> const elem_t&;
+        auto mut_value() -> elem_t&;
         auto is_eq(iter_end end) const -> bool;
         auto next() -> mut_iter&;
     };
@@ -61,15 +61,15 @@ namespace atom::mock
     /// --------------------------------------------------------------------------------------------
     /// `rfwd_iter` mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename in_value_type>
+    template <typename in_value_t>
     class fwd_iter
     {
     public:
-        using elem_type = in_value_type;
+        using elem_t = in_value_t;
 
     public:
-        auto value() const -> const elem_type&;
-        auto mut_value() -> elem_type&;
+        auto value() const -> const elem_t&;
+        auto mut_value() -> elem_t&;
         auto next() -> fwd_iter&;
         auto is_eq(iter_end end) const -> bool;
     };
@@ -77,15 +77,15 @@ namespace atom::mock
     /// --------------------------------------------------------------------------------------------
     /// `rmut_fwd_iter` mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename in_value_type>
+    template <typename in_value_t>
     class mut_fwd_iter
     {
     public:
-        using elem_type = in_value_type;
+        using elem_t = in_value_t;
 
     public:
-        auto value() const -> const elem_type&;
-        auto mut_value() -> elem_type&;
+        auto value() const -> const elem_t&;
+        auto mut_value() -> elem_t&;
         auto next() -> mut_fwd_iter&;
         auto is_eq(iter_end end) const -> bool;
     };
@@ -93,14 +93,14 @@ namespace atom::mock
     /// --------------------------------------------------------------------------------------------
     /// `rbidi_iter` mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename in_value_type>
+    template <typename in_value_t>
     class bidi_iter
     {
     public:
-        using elem_type = in_value_type;
+        using elem_t = in_value_t;
 
     public:
-        auto value() const -> const elem_type&;
+        auto value() const -> const elem_t&;
         auto next() -> bidi_iter&;
         auto prev() -> bidi_iter&;
         auto is_eq(iter_end end) const -> bool;
@@ -109,15 +109,15 @@ namespace atom::mock
     /// --------------------------------------------------------------------------------------------
     /// `rmut_bidi_iter` mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename in_value_type>
+    template <typename in_value_t>
     class mut_bidi_iter
     {
     public:
-        using elem_type = in_value_type;
+        using elem_t = in_value_t;
 
     public:
-        auto value() const -> const elem_type&;
-        auto mut_value() -> elem_type&;
+        auto value() const -> const elem_t&;
+        auto mut_value() -> elem_t&;
         auto next() -> mut_bidi_iter&;
         auto prev() -> mut_bidi_iter&;
         auto is_eq(iter_end end) const -> bool;
@@ -126,14 +126,14 @@ namespace atom::mock
     /// --------------------------------------------------------------------------------------------
     /// `rjump_iter` mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename in_value_type>
+    template <typename in_value_t>
     class jump_iter
     {
     public:
-        using elem_type = in_value_type;
+        using elem_t = in_value_t;
 
     public:
-        auto value() const -> const elem_type&;
+        auto value() const -> const elem_t&;
         auto next(usize steps = 1) -> jump_iter&;
         auto prev(usize steps = 1) -> jump_iter&;
         auto is_eq(iter_end end) const -> bool;
@@ -143,15 +143,15 @@ namespace atom::mock
     /// --------------------------------------------------------------------------------------------
     /// `rmut_jump_iter` mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename in_value_type>
+    template <typename in_value_t>
     class mut_jump_iter
     {
     public:
-        using elem_type = in_value_type;
+        using elem_t = in_value_t;
 
     public:
-        auto value() const -> const elem_type&;
-        auto mut_value() -> elem_type&;
+        auto value() const -> const elem_t&;
+        auto mut_value() -> elem_t&;
         auto next(usize steps = 1) -> mut_jump_iter&;
         auto prev(usize steps = 1) -> mut_jump_iter&;
         auto is_eq(iter_end end) const -> bool;
@@ -161,15 +161,15 @@ namespace atom::mock
     /// --------------------------------------------------------------------------------------------
     /// `rarray_iter` mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename in_value_type>
+    template <typename in_value_t>
     class array_iter
     {
     public:
-        using elem_type = in_value_type;
+        using elem_t = in_value_t;
 
     public:
-        auto value() const -> const elem_type&;
-        auto get_data() const -> const in_value_type*;
+        auto value() const -> const elem_t&;
+        auto get_data() const -> const in_value_t*;
         auto next(usize steps = 1) -> array_iter&;
         auto prev(usize steps = 1) -> array_iter&;
         auto is_eq(array_iter end) const -> bool;
@@ -179,17 +179,17 @@ namespace atom::mock
     /// --------------------------------------------------------------------------------------------
     /// `rmut_array_iter` mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename in_value_type>
+    template <typename in_value_t>
     class mut_array_iter
     {
     public:
-        using elem_type = in_value_type;
+        using elem_t = in_value_t;
 
     public:
-        auto value() const -> const elem_type&;
-        auto mut_value() -> elem_type&;
-        auto get_data() const -> const in_value_type*;
-        auto get_mut_data() -> in_value_type*;
+        auto value() const -> const elem_t&;
+        auto mut_value() -> elem_t&;
+        auto get_data() const -> const in_value_t*;
+        auto get_mut_data() -> in_value_t*;
         auto next(usize steps = 1) -> mut_array_iter&;
         auto prev(usize steps = 1) -> mut_array_iter&;
         auto is_eq(mut_array_iter end) const -> bool;

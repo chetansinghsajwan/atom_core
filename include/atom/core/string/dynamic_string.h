@@ -4,16 +4,16 @@
 
 namespace atom
 {
-    template <typename allocator_type>
+    template <typename allocator_t>
     class dynamic_string
-        : public string_functions<dynamic_string<allocator_type>,
-              dynamic_array<char, allocator_type>>
+        : public string_functions<dynamic_string<allocator_t>,
+              dynamic_array<char, allocator_t>>
     {
-        using base_type =
-            string_functions<dynamic_string<allocator_type>, dynamic_array<char, allocator_type>>;
+        using base_t =
+            string_functions<dynamic_string<allocator_t>, dynamic_array<char, allocator_t>>;
 
     public:
-        using base_type::base_type;
-        using base_type::operator=;
+        using base_t::base_t;
+        using base_t::operator=;
     };
 }

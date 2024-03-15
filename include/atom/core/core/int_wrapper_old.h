@@ -15,48 +15,48 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     /// common implementation for signed and unsigned integers.
     /// --------------------------------------------------------------------------------------------
-    template <typename in_final_type, typename in_signed_type, typename in_unsigned_type,
-        typename in_unwrapped_type, typename limit_type>
+    template <typename in_final_t, typename in_signed_t, typename in_unsigned_t,
+        typename in_unwrapped_t, typename limit_t>
     class _int_wrapper_impl
     {
     public:
-        using final_type = in_final_type;
-        using unwrapped_type = in_unwrapped_type;
-        using signed_type = in_signed_type;
-        using unsigned_type = in_unsigned_type;
+        using final_t = in_final_t;
+        using unwrapped_t = in_unwrapped_t;
+        using signed_t = in_signed_t;
+        using unsigned_t = in_unsigned_t;
 
     public:
-        static consteval auto min() -> unwrapped_type
+        static consteval auto min() -> unwrapped_t
         {
-            return unwrapped_type(std::numeric_limits<limit_type>::min());
+            return unwrapped_t(std::numeric_limits<limit_t>::min());
         }
 
-        static consteval auto max() -> unwrapped_type
+        static consteval auto max() -> unwrapped_t
         {
-            return unwrapped_type(std::numeric_limits<limit_type>::max());
+            return unwrapped_t(std::numeric_limits<limit_t>::max());
         }
 
-        static consteval auto bits() -> unwrapped_type
+        static consteval auto bits() -> unwrapped_t
         {
-            return unwrapped_type(sizeof(limit_type) * byte_get_bit_count());
+            return unwrapped_t(sizeof(limit_t) * byte_get_bit_count());
         }
 
         static consteval auto is_integer() -> bool
         {
-            return std::is_integral_v<unwrapped_type>;
+            return std::is_integral_v<unwrapped_t>;
         }
 
         static consteval auto is_float() -> bool
         {
-            return std::is_floating_point_v<unwrapped_type>;
+            return std::is_floating_point_v<unwrapped_t>;
         }
 
         static consteval auto is_signed() -> bool
         {
-            return std::is_signed_v<unwrapped_type>;
+            return std::is_signed_v<unwrapped_t>;
         }
 
-        static constexpr auto count_digits(unwrapped_type num) -> unwrapped_type
+        static constexpr auto count_digits(unwrapped_t num) -> unwrapped_t
         {
             if (num == 0)
                 return 1;
@@ -67,7 +67,7 @@ namespace atom
                 return std::log10(num) + 1;
         }
 
-        static constexpr auto is_add_safe(unwrapped_type lhs, unwrapped_type rhs) -> bool
+        static constexpr auto is_add_safe(unwrapped_t lhs, unwrapped_t rhs) -> bool
         {
             if constexpr (not is_signed())
             {
@@ -85,7 +85,7 @@ namespace atom
             }
         }
 
-        static constexpr auto is_sub_safe(unwrapped_type lhs, unwrapped_type rhs) -> bool
+        static constexpr auto is_sub_safe(unwrapped_t lhs, unwrapped_t rhs) -> bool
         {
             if constexpr (not is_signed())
             {
@@ -97,7 +97,7 @@ namespace atom
             }
         }
 
-        static constexpr auto is_mul_safe(unwrapped_type lhs, unwrapped_type rhs) -> bool
+        static constexpr auto is_mul_safe(unwrapped_t lhs, unwrapped_t rhs) -> bool
         {
             if constexpr (not is_signed())
             {
@@ -118,7 +118,7 @@ namespace atom
             }
         }
 
-        static constexpr auto is_div_safe(unwrapped_type num, unwrapped_type den) -> bool
+        static constexpr auto is_div_safe(unwrapped_t num, unwrapped_t den) -> bool
         {
             if constexpr (is_signed())
             {
@@ -132,7 +132,7 @@ namespace atom
             return true;
         }
 
-        static constexpr auto is_abs_safe(unwrapped_type num) -> bool
+        static constexpr auto is_abs_safe(unwrapped_t num) -> bool
         {
             if constexpr (is_signed())
                 return num != min();
@@ -140,7 +140,7 @@ namespace atom
             return true;
         }
 
-        static constexpr auto is_neg_safe(unwrapped_type num) -> bool
+        static constexpr auto is_neg_safe(unwrapped_t num) -> bool
         {
             if constexpr (is_signed())
                 return num != min();
@@ -148,20 +148,20 @@ namespace atom
             return true;
         }
 
-        template <typename num_type>
-        static constexpr auto is_conversion_safe_from(num_type num) -> bool
+        template <typename num_t>
+        static constexpr auto is_conversion_safe_from(num_t num) -> bool
         {
-            return is_conversion_safe_from_unwrapped<typename num_type::unwrapped_type>(
+            return is_conversion_safe_from_unwrapped<typename num_t::unwrapped_t>(
                 num);
         }
 
-        template <typename num_type>
-        static constexpr auto is_conversion_safe_from_unwrapped(num_type num) -> bool
+        template <typename num_t>
+        static constexpr auto is_conversion_safe_from_unwrapped(num_t num) -> bool
         {
             if constexpr (is_signed())
             {
-                if constexpr (std::is_signed_v<num_type>
-                              and std::numeric_limits<num_type>::min() < min())
+                if constexpr (std::is_signed_v<num_t>
+                              and std::numeric_limits<num_t>::min() < min())
                 {
                     if (num < min())
                     {
@@ -169,7 +169,7 @@ namespace atom
                     }
                 }
 
-                if constexpr (std::numeric_limits<num_type>::max() > max())
+                if constexpr (std::numeric_limits<num_t>::max() > max())
                 {
                     if (num > max())
                     {
@@ -179,11 +179,11 @@ namespace atom
             }
             else
             {
-                if constexpr (std::is_signed_v<num_type>)
+                if constexpr (std::is_signed_v<num_t>)
                     if (num < 0)
                         return false;
 
-                if constexpr (std::numeric_limits<num_type>::max() > max())
+                if constexpr (std::numeric_limits<num_t>::max() > max())
                     if (num > max())
                         return false;
             }
@@ -191,24 +191,24 @@ namespace atom
             return true;
         }
 
-        template <typename num_type>
-        static constexpr auto is_conversion_safe_to_unwrapped(unwrapped_type num) -> bool
+        template <typename num_t>
+        static constexpr auto is_conversion_safe_to_unwrapped(unwrapped_t num) -> bool
         {
             if constexpr (is_signed())
             {
-                if constexpr (min() < std::numeric_limits<num_type>::min())
-                    if (num < std::numeric_limits<num_type>::min())
+                if constexpr (min() < std::numeric_limits<num_t>::min())
+                    if (num < std::numeric_limits<num_t>::min())
                         return false;
 
-                if constexpr (max() > std::numeric_limits<num_type>::max())
-                    if (num > std::numeric_limits<num_type>::max())
+                if constexpr (max() > std::numeric_limits<num_t>::max())
+                    if (num > std::numeric_limits<num_t>::max())
                         return false;
             }
             else
             {
-                if constexpr (max() > std::numeric_limits<num_type>::max())
+                if constexpr (max() > std::numeric_limits<num_t>::max())
                 {
-                    if (num > std::numeric_limits<num_type>::max())
+                    if (num > std::numeric_limits<num_t>::max())
                         return false;
                 }
             }
@@ -216,17 +216,17 @@ namespace atom
             return true;
         }
 
-        static constexpr auto abs(unwrapped_type num) -> unwrapped_type
+        static constexpr auto abs(unwrapped_t num) -> unwrapped_t
         {
             return std::abs(num);
         }
 
-        static constexpr auto neg(unwrapped_type num) -> unwrapped_type
+        static constexpr auto neg(unwrapped_t num) -> unwrapped_t
         {
             return -num;
         }
 
-        static constexpr auto sign(unwrapped_type num) -> unwrapped_type
+        static constexpr auto sign(unwrapped_t num) -> unwrapped_t
         {
             return num < 0 ? -1 : 1;
         }
@@ -307,37 +307,37 @@ namespace atom
 
 namespace atom
 {
-    template <typename value_type>
-    constexpr auto operator+(value_type* ptr, isize steps) -> value_type*
+    template <typename value_t>
+    constexpr auto operator+(value_t* ptr, isize steps) -> value_t*
     {
-        if constexpr (rsame_as<typeinfo::get_pure<value_type>, void>)
+        if constexpr (rsame_as<typeinfo::get_pure<value_t>, void>)
             return (char*)ptr + steps;
         else
             return ptr + steps;
     }
 
-    template <typename value_type>
-    constexpr auto operator+(value_type* ptr, usize steps) -> value_type*
+    template <typename value_t>
+    constexpr auto operator+(value_t* ptr, usize steps) -> value_t*
     {
-        if constexpr (rsame_as<typeinfo::get_pure<value_type>, void>)
+        if constexpr (rsame_as<typeinfo::get_pure<value_t>, void>)
             return (char*)ptr + steps;
         else
             return ptr + steps;
     }
 
-    template <typename value_type>
-    constexpr auto operator-(value_type* ptr, isize steps) -> value_type*
+    template <typename value_t>
+    constexpr auto operator-(value_t* ptr, isize steps) -> value_t*
     {
-        if constexpr (rsame_as<typeinfo::get_pure<value_type>, void>)
+        if constexpr (rsame_as<typeinfo::get_pure<value_t>, void>)
             return (char*)ptr - steps;
         else
             return ptr - steps;
     }
 
-    template <typename value_type>
-    constexpr auto operator-(value_type* ptr, usize steps) -> value_type*
+    template <typename value_t>
+    constexpr auto operator-(value_t* ptr, usize steps) -> value_t*
     {
-        if constexpr (rsame_as<typeinfo::get_pure<value_type>, void>)
+        if constexpr (rsame_as<typeinfo::get_pure<value_t>, void>)
             return (char*)ptr - steps;
         else
             return ptr - steps;

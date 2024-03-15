@@ -58,9 +58,9 @@ namespace atom
             *(*_fmt_ctx_out)++ = ch;
         }
 
-        template <typename range_type>
-        auto write(const range_type& range)
-            requires(rrange_of<range_type, char>)
+        template <typename range_t>
+        auto write(const range_t& range)
+            requires(rrange_of<range_t, char>)
         {
             for (char ch : range)
             {

@@ -9,19 +9,19 @@
 
 namespace atom
 {
-    template <typename range_type>
+    template <typename range_t>
     class _range_extensions_impl
     {
     protected:
-        using _impl_type = range_type;
+        using _impl_t = range_t;
 
     public:
-        using elem_type = typename _impl_type::elem_type;
-        using iter_type = typename _impl_type::iter_type;
-        using iter_end_type = typename _impl_type::iter_end_type;
+        using elem_t = typename _impl_t::elem_t;
+        using iter_t = typename _impl_t::iter_t;
+        using iter_end_t = typename _impl_t::iter_end_t;
 
     public:
-        constexpr _range_extensions_impl(range_type& range)
+        constexpr _range_extensions_impl(range_t& range)
             : _range_(range)
         {}
 
@@ -29,7 +29,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_iter() const -> iter_type
+        constexpr auto get_iter() const -> iter_t
         {
             return _range().get_iter();
         }
@@ -37,7 +37,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_iter_end() const -> iter_end_type
+        constexpr auto get_iter_end() const -> iter_end_t
         {
             return _range().get_iter_end();
         }
@@ -45,8 +45,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename telem1>
-        constexpr auto find_elem(const telem1& el) const -> iter_type
+        template <typename elem1_t>
+        constexpr auto find_elem(const elem1_t& el) const -> iter_t
         {
             std_iter_wrap_for_atom_iter std_iter(get_iter());
             std_iter_wrap_for_atom_iter std_iter_end(get_iter_end());
@@ -56,8 +56,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename other_range_type>
-        constexpr auto find_range(const other_range_type& range) const -> iter_type
+        template <typename other_range_t>
+        constexpr auto find_range(const other_range_t& range) const -> iter_t
         {
             std_iter_wrap_for_atom_iter std_iter(get_iter());
             std_iter_wrap_for_atom_iter std_iter_end(get_iter_end());
@@ -69,8 +69,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename other_range_type>
-        auto compare(const other_range_type& range) const -> i8
+        template <typename other_range_t>
+        auto compare(const other_range_t& range) const -> i8
         {
             std_iter_wrap_for_atom_iter std_iter(get_iter());
             std_iter_wrap_for_atom_iter std_iter_end(get_iter_end());
@@ -85,7 +85,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto get_count() const -> usize
         {
-            if constexpr (rjump_iter_pair<iter_type, iter_end_type>)
+            if constexpr (rjump_iter_pair<iter_t, iter_end_t>)
             {
                 return get_iter_end() - get_iter();
             }
@@ -98,37 +98,37 @@ namespace atom
         }
 
     protected:
-        constexpr auto _range() const -> const range_type&
+        constexpr auto _range() const -> const range_t&
         {
             return _range_;
         }
 
-        constexpr auto _range() -> range_type&
+        constexpr auto _range() -> range_t&
         {
             return _range_;
         }
 
     private:
-        range_type& _range_;
+        range_t& _range_;
     };
 
-    template <typename range_type, typename _trange_extensions_impl = void>
-    class range_extensions: public range_type
+    template <typename range_t, typename _range_extensions_impl_t = void>
+    class range_extensions: public range_t
     {
-        using this_type = range_extensions;
-        using base_type = range_type;
+        using this_t = range_extensions;
+        using base_t = range_t;
 
     protected:
-        using _impl_type = _trange_extensions_impl;
+        using _impl_t = _range_extensions_impl_t;
 
     public:
-        using elem_type = typename _impl_type::elem_type;
-        using iter_type = typename _impl_type::iter_type;
-        using iter_end_type = typename _impl_type::iter_end_type;
+        using elem_t = typename _impl_t::elem_t;
+        using iter_t = typename _impl_t::iter_t;
+        using iter_end_t = typename _impl_t::iter_end_t;
 
     public:
-        using base_type::base_type;
-        using base_type::operator=;
+        using base_t::base_t;
+        using base_t::operator=;
 
     public:
         ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -140,7 +140,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_iter() const -> iter_type
+        constexpr auto get_iter() const -> iter_t
         {
             return _impl().get_iter();
         }
@@ -148,7 +148,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_iter_end() const -> iter_end_type
+        constexpr auto get_iter_end() const -> iter_end_t
         {
             return _impl().get_iter_end();
         }
@@ -178,9 +178,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename telem1>
-        constexpr auto find(const telem1& el) const -> iter_type
-            requires(requality_comparable_with<elem_type, telem1>)
+        template <typename elem1_t>
+        constexpr auto find(const elem1_t& el) const -> iter_t
+            requires(requality_comparable_with<elem_t, elem1_t>)
         {
             return _impl().find_elem(el);
         }
@@ -188,16 +188,16 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename other_range_type>
-        constexpr auto find_range(const other_range_type& range) const -> iter_type
-            requires(rfwd_range<other_range_type>)
-                    and (requality_comparable_with<elem_type, typename other_range_type::elem_type>)
+        template <typename other_range_t>
+        constexpr auto find_range(const other_range_t& range) const -> iter_t
+            requires(rfwd_range<other_range_t>)
+                    and (requality_comparable_with<elem_t, typename other_range_t::elem_t>)
         {
             return _impl().find_range(range);
         }
 
-        template <typename other_range_type>
-        auto count_any(const other_range_type& range) const -> usize
+        template <typename other_range_t>
+        auto count_any(const other_range_t& range) const -> usize
         {
             usize count = 0;
             for (auto it = get_iter(); it.compare(get_iter_end()) != 0; it++)
@@ -213,9 +213,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename telem1>
-        constexpr auto contains(const telem1& el) const -> bool
-            requires(requality_comparable_with<elem_type, telem1>)
+        template <typename elem1_t>
+        constexpr auto contains(const elem1_t& el) const -> bool
+            requires(requality_comparable_with<elem_t, elem1_t>)
         {
             return _impl().find_elem(el).compare(_impl().get_iter_end()) != 0;
         }
@@ -223,10 +223,10 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename other_range_type>
-        constexpr auto contains(const other_range_type& range) const -> bool
-            requires(rfwd_range<other_range_type>)
-                    and (requality_comparable_with<elem_type, typename other_range_type::elem_type>)
+        template <typename other_range_t>
+        constexpr auto contains(const other_range_t& range) const -> bool
+            requires(rfwd_range<other_range_t>)
+                    and (requality_comparable_with<elem_t, typename other_range_t::elem_t>)
         {
             return _impl().find_range(range).compare(_impl().get_iter_end()) != 0;
         }
@@ -240,10 +240,10 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename other_range_type>
-        constexpr auto compare(const other_range_type& range) const -> i8
-            requires(rrange<other_range_type>)
-                    and (requality_comparable_with<elem_type, typename other_range_type::elem_type>)
+        template <typename other_range_t>
+        constexpr auto compare(const other_range_t& range) const -> i8
+            requires(rrange<other_range_t>)
+                    and (requality_comparable_with<elem_t, typename other_range_t::elem_t>)
         {
             return _impl().compare(range);
         }
@@ -251,10 +251,10 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename other_range_type>
-        constexpr auto is_eq(const other_range_type& range) const -> bool
-            requires(rrange<other_range_type>)
-                    and (requality_comparable_with<elem_type, typename other_range_type::elem_type>)
+        template <typename other_range_t>
+        constexpr auto is_eq(const other_range_t& range) const -> bool
+            requires(rrange<other_range_t>)
+                    and (requality_comparable_with<elem_t, typename other_range_t::elem_t>)
         {
             return _impl().compare(range) == 0;
         }
@@ -272,7 +272,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto can_get_count() const -> bool
         {
-            return rfwd_iter_pair<iter_type, iter_end_type>;
+            return rfwd_iter_pair<iter_t, iter_end_t>;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -284,25 +284,25 @@ namespace atom
         }
 
     protected:
-        constexpr auto _impl() const -> const _impl_type
+        constexpr auto _impl() const -> const _impl_t
         {
-            return _impl_type(const_cast<this_type&>(*this));
+            return _impl_t(const_cast<this_t&>(*this));
         }
 
-        constexpr auto _impl() -> _impl_type
+        constexpr auto _impl() -> _impl_t
         {
-            return _impl_type(*this);
+            return _impl_t(*this);
         }
     };
 
-    template <typename range_type>
-    class range_extensions<range_type, void>
-        : public range_extensions<range_type, _range_extensions_impl<range_type>>
+    template <typename range_t>
+    class range_extensions<range_t, void>
+        : public range_extensions<range_t, _range_extensions_impl<range_t>>
     {
-        using base_type = range_extensions<range_type, _range_extensions_impl<range_type>>;
+        using base_t = range_extensions<range_t, _range_extensions_impl<range_t>>;
 
     public:
-        using base_type::base_type;
-        using base_type::operator=;
+        using base_t::base_t;
+        using base_t::operator=;
     };
 }

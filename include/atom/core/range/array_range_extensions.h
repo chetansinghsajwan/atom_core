@@ -8,25 +8,25 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     /// implementation of [`array_range_extensions`].
     /// --------------------------------------------------------------------------------------------
-    template <typename range_type>
-    class _array_range_extensions_impl: public _jump_range_extensions_impl<range_type>
+    template <typename range_t>
+    class _array_range_extensions_impl: public _jump_range_extensions_impl<range_t>
     {
-        using base_type = _jump_range_extensions_impl<range_type>;
+        using base_t = _jump_range_extensions_impl<range_t>;
 
     protected:
-        using _impl_type = typename base_type::_impl_type;
+        using _impl_t = typename base_t::_impl_t;
 
     public:
-        using elem_type = typename base_type::elem_type;
-        using iter_type = typename base_type::iter_type;
-        using iter_end_type = typename base_type::iter_end_type;
+        using elem_t = typename base_t::elem_t;
+        using iter_t = typename base_t::iter_t;
+        using iter_end_t = typename base_t::iter_end_t;
 
     public:
-        using base_type::base_type;
-        using base_type::operator=;
+        using base_t::base_t;
+        using base_t::operator=;
 
     public:
-        constexpr auto get_data() const -> const elem_type*
+        constexpr auto get_data() const -> const elem_t*
         {
             return _range().get_data();
         }
@@ -36,19 +36,19 @@ namespace atom
             return _range().get_count();
         }
 
-        constexpr auto get_at(usize i) const -> const elem_type&
+        constexpr auto get_at(usize i) const -> const elem_t&
         {
             ATOM_DEBUG_EXPECTS(is_index_in_range(i));
 
             return get_data()[i];
         }
 
-        constexpr auto get_front() const -> const elem_type&
+        constexpr auto get_front() const -> const elem_t&
         {
             return get_at(0);
         }
 
-        constexpr auto get_back() const -> const elem_type&
+        constexpr auto get_back() const -> const elem_t&
         {
             return get_back(get_count() - 1);
         }
@@ -58,35 +58,35 @@ namespace atom
             return i < get_count();
         }
 
-        constexpr auto get_iter_at(usize i) const -> iter_type
+        constexpr auto get_iter_at(usize i) const -> iter_t
         {
-            return base_type::get_iter().next(i);
+            return base_t::get_iter().next(i);
         }
 
     protected:
-        using base_type::_range;
+        using base_t::_range;
     };
 
     /// --------------------------------------------------------------------------------------------
     /// [array_range_extensions].
     /// --------------------------------------------------------------------------------------------
-    template <typename range_type, typename _trange_extensions_impl_ = void>
-    class array_range_extensions: public jump_range_extensions<range_type, _trange_extensions_impl_>
+    template <typename range_t, typename _range_extensions_impl_t = void>
+    class array_range_extensions: public jump_range_extensions<range_t, _range_extensions_impl_t>
     {
-        using base_type = jump_range_extensions<range_type, _trange_extensions_impl_>;
+        using base_t = jump_range_extensions<range_t, _range_extensions_impl_t>;
 
     protected:
-        using _impl_type = typename base_type::_impl_type;
+        using _impl_t = typename base_t::_impl_t;
 
     public:
-        using elem_type = typename base_type::elem_type;
-        using iter_type = typename base_type::iter_type;
-        using iter_end_type = typename base_type::iter_end_type;
-        using view_type = int;
+        using elem_t = typename base_t::elem_t;
+        using iter_t = typename base_t::iter_t;
+        using iter_end_t = typename base_t::iter_end_t;
+        using view_t = int;
 
     public:
-        using base_type::base_type;
-        using base_type::operator=;
+        using base_t::base_t;
+        using base_t::operator=;
 
     public:
         ////////////////////////////////////////////////////////////////////////////////////////////
@@ -98,7 +98,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// get underlying ptr to arr.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_data() const -> const elem_type*
+        constexpr auto get_data() const -> const elem_t*
         {
             return _impl().get_data();
         }
@@ -112,7 +112,7 @@ namespace atom
         /// # time complexity
         /// constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_at(usize i) const -> const elem_type&
+        constexpr auto get_at(usize i) const -> const elem_t&
         {
             ATOM_EXPECTS(is_index_in_range(i), "index is out of range.");
 
@@ -128,7 +128,7 @@ namespace atom
         /// # time complexity
         /// constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator[](usize i) const -> const elem_type&
+        constexpr auto operator[](usize i) const -> const elem_t&
         {
             ATOM_DEBUG_EXPECTS(is_index_in_range(i), "index is out of range.");
 
@@ -141,7 +141,7 @@ namespace atom
         /// # time complexity
         /// constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_front() const -> const elem_type&
+        constexpr auto get_front() const -> const elem_t&
         {
             ATOM_DEBUG_EXPECTS(not is_empty(), "range is empty.");
 
@@ -154,7 +154,7 @@ namespace atom
         /// # time complexity
         /// constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_back() const -> const elem_type&
+        constexpr auto get_back() const -> const elem_t&
         {
             ATOM_DEBUG_EXPECTS(not is_empty(), "range is empty.");
 
@@ -190,7 +190,7 @@ namespace atom
         ///
         /// - `i`: index of the element to get iter at.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_iter_at(usize i) const -> iter_type
+        constexpr auto get_iter_at(usize i) const -> iter_t
         {
             ATOM_EXPECTS(is_index_in_range(i), "index is out of range.");
 
@@ -206,25 +206,25 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_view(usize from, usize to) const -> view_type
+        constexpr auto get_view(usize from, usize to) const -> view_t
         {
-            return view_type();
+            return view_t();
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_view_from(usize from) const -> view_type
+        constexpr auto get_view_from(usize from) const -> view_t
         {
-            return view_type();
+            return view_t();
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_view_to(usize to) const -> view_type
+        constexpr auto get_view_to(usize to) const -> view_t
         {
-            return view_type();
+            return view_t();
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////
@@ -239,21 +239,20 @@ namespace atom
         }
 
     protected:
-        using base_type::_impl;
+        using base_t::_impl;
     };
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename range_type>
-    class array_range_extensions<range_type, void>
-        : public array_range_extensions<range_type, _array_range_extensions_impl<range_type>>
+    template <typename range_t>
+    class array_range_extensions<range_t, void>
+        : public array_range_extensions<range_t, _array_range_extensions_impl<range_t>>
     {
-        using base_type =
-            array_range_extensions<range_type, _array_range_extensions_impl<range_type>>;
+        using base_t = array_range_extensions<range_t, _array_range_extensions_impl<range_t>>;
 
     public:
-        using base_type::base_type;
-        using base_type::operator=;
+        using base_t::base_t;
+        using base_t::operator=;
     };
 }

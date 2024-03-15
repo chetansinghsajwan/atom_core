@@ -3,6 +3,6 @@
 
 namespace atom
 {
-    template <typename... value_types>
-    using tuple = std::tuple<value_types...>;
+    template <typename... value_ts>
+    using tuple = std::tuple<value_ts...>;
 }

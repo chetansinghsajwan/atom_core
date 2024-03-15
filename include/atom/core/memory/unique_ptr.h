@@ -6,53 +6,53 @@
 
 namespace atom
 {
-    template <typename type>
+    template <typename value_t>
     class shared_ptr;
 
-    template <typename type>
+    template <typename value_t>
     class unique_ptr_default_destroyer
     {
-        ATOM_STATIC_ASSERTS(typeinfo::is_pure<type>, "unique_ptr_default_destroyer only supports pure types.");
+        ATOM_STATIC_ASSERTS(typeinfo::is_pure<value_t>, "unique_ptr_default_destroyer only supports pure types.");
         ATOM_STATIC_ASSERTS(
-            not typeinfo::is_void<type>, "unique_ptr_default_destroyer does not support void.");
+            not typeinfo::is_void<value_t>, "unique_ptr_default_destroyer does not support void.");
 
     public:
-        constexpr auto operator()(type* val)
+        constexpr auto operator()(value_t* val)
         {
-            obj_helper().destruct_as<type>(val);
+            obj_helper().destruct_as<value_t>(val);
             default_mem_allocator().dealloc(val);
         }
     };
 
-    template <typename in_value_type,
-        typename in_destroyer_type = unique_ptr_default_destroyer<in_value_type>>
+    template <typename in_value_t,
+        typename in_destroyer_t = unique_ptr_default_destroyer<in_value_t>>
     class unique_ptr
     {
-        ATOM_STATIC_ASSERTS(typeinfo::is_pure<in_value_type>, "unique_ptr only supports pure types.");
-        ATOM_STATIC_ASSERTS(not typeinfo::is_void<in_value_type>, "unique_ptr does not support void.");
-        ATOM_STATIC_ASSERTS(typeinfo::is_pure<in_destroyer_type>);
-        ATOM_STATIC_ASSERTS(not typeinfo::is_void<in_destroyer_type>);
+        ATOM_STATIC_ASSERTS(typeinfo::is_pure<in_value_t>, "unique_ptr only supports pure types.");
+        ATOM_STATIC_ASSERTS(not typeinfo::is_void<in_value_t>, "unique_ptr does not support void.");
+        ATOM_STATIC_ASSERTS(typeinfo::is_pure<in_destroyer_t>);
+        ATOM_STATIC_ASSERTS(not typeinfo::is_void<in_destroyer_t>);
 
     private:
-        template <typename other_value_type, typename other_destroyer_type>
+        template <typename other_value_t, typename other_destroyer_t>
         friend class unique_ptr;
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// type of value `this_type` holds.
+        /// value_t of value `this_t` holds.
         /// ----------------------------------------------------------------------------------------
-        using value_type = in_value_type;
+        using value_t = in_value_t;
 
         /// ----------------------------------------------------------------------------------------
-        /// type of destroyer used to destroy value and dealloc memory.
+        /// value_t of destroyer used to destroy value and dealloc memory.
         /// ----------------------------------------------------------------------------------------
-        using destroyer_type = in_destroyer_type;
+        using destroyer_t = in_destroyer_t;
 
     public:
         /// ----------------------------------------------------------------------------------------
         /// # default constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr unique_ptr(destroyer_type destroyer = destroyer_type())
+        constexpr unique_ptr(destroyer_t destroyer = destroyer_t())
             : _ptr(nullptr)
             , _destroyer(move(destroyer))
         {}
@@ -89,9 +89,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # template move constructor
         /// ----------------------------------------------------------------------------------------
-        template <typename other_value_type>
-        constexpr unique_ptr(unique_ptr<other_value_type, destroyer_type>&& that)
-            requires rsame_or_derived_from<other_value_type, value_type>
+        template <typename other_value_t>
+        constexpr unique_ptr(unique_ptr<other_value_t, destroyer_t>&& that)
+            requires rsame_or_derived_from<other_value_t, value_t>
             : _ptr(that._ptr)
             , _destroyer(move(that._destroyer))
         {
@@ -101,9 +101,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # template move operator
         /// ----------------------------------------------------------------------------------------
-        template <typename other_value_type>
-        constexpr unique_ptr& operator=(unique_ptr<other_value_type, destroyer_type>&& that)
-            requires rsame_or_derived_from<other_value_type, value_type>
+        template <typename other_value_t>
+        constexpr unique_ptr& operator=(unique_ptr<other_value_t, destroyer_t>&& that)
+            requires rsame_or_derived_from<other_value_t, value_t>
         {
             _move(move(that));
         }
@@ -111,7 +111,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # value constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr explicit unique_ptr(value_type* ptr, destroyer_type destroyer = destroyer_type())
+        constexpr explicit unique_ptr(value_t* ptr, destroyer_t destroyer = destroyer_t())
             : _ptr(ptr)
             , _destroyer(move(destroyer))
         {}
@@ -128,7 +128,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto set(value_type* ptr)
+        constexpr auto set(value_t* ptr)
         {
             _check_and_destroy_value();
             _set_ptr(ptr);
@@ -137,7 +137,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto set(value_type* ptr, destroyer_type destroyer = destroyer_type())
+        constexpr auto set(value_t* ptr, destroyer_t destroyer = destroyer_t())
         {
             _check_and_destroy_value();
 
@@ -148,7 +148,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto set(nullptr_type)
+        constexpr auto set(nullptr_t)
         {
             _check_and_destroy_value();
         }
@@ -156,7 +156,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto release() -> value_type*
+        constexpr auto release() -> value_t*
         {
             return _release_value();
         }
@@ -172,7 +172,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// returns the underlying ptr.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto to_unwrapped() const -> const value_type*
+        constexpr auto to_unwrapped() const -> const value_t*
         {
             return _ptr;
         }
@@ -180,7 +180,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// returns the underlying ptr.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto to_unwrapped() -> value_type*
+        constexpr auto to_unwrapped() -> value_t*
         {
             return _ptr;
         }
@@ -188,9 +188,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename new_value_type = value_type>
-        constexpr auto to_shared() -> shared_ptr<new_value_type>
-            requires rsame_or_derived_from<new_value_type, value_type>
+        template <typename new_value_t = value_t>
+        constexpr auto to_shared() -> shared_ptr<new_value_t>
+            requires rsame_or_derived_from<new_value_t, value_t>
         {
             return _to_shared();
         }
@@ -198,17 +198,17 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename allocator_type, typename new_value_type = value_type>
-        constexpr auto to_shared_with_alloc(allocator_type allocator = allocator_type())
-            -> shared_ptr<new_value_type>
-            requires rsame_or_derived_from<new_value_type, value_type>
+        template <typename allocator_t, typename new_value_t = value_t>
+        constexpr auto to_shared_with_alloc(allocator_t allocator = allocator_t())
+            -> shared_ptr<new_value_t>
+            requires rsame_or_derived_from<new_value_t, value_t>
         {
             return _to_shared();
         }
 
     private:
-        template <typename other_value_type>
-        constexpr auto _move(unique_ptr<other_value_type, destroyer_type>&& that)
+        template <typename other_value_t>
+        constexpr auto _move(unique_ptr<other_value_t, destroyer_t>&& that)
         {
             _check_and_destroy_value();
 
@@ -226,9 +226,9 @@ namespace atom
             }
         }
 
-        constexpr auto _release_value() -> value_type*
+        constexpr auto _release_value() -> value_t*
         {
-            value_type* ptr = _get_mut_ptr();
+            value_t* ptr = _get_mut_ptr();
             _set_ptr(nullptr);
             return ptr;
         }
@@ -238,48 +238,48 @@ namespace atom
             _destroyer(_get_mut_ptr());
         }
 
-        constexpr auto _get_ptr() const -> const value_type*
+        constexpr auto _get_ptr() const -> const value_t*
         {
             return _ptr;
         }
 
-        constexpr auto _get_mut_ptr() -> value_type*
+        constexpr auto _get_mut_ptr() -> value_t*
         {
             return _ptr;
         }
 
-        constexpr auto _set_ptr(value_type* ptr)
+        constexpr auto _set_ptr(value_t* ptr)
         {
             return _ptr = ptr;
         }
 
-        template <typename allocator_type, typename other_value_type>
-        constexpr auto _to_shared(allocator_type allocator) -> shared_ptr<other_value_type>;
+        template <typename allocator_t, typename other_value_t>
+        constexpr auto _to_shared(allocator_t allocator) -> shared_ptr<other_value_t>;
 
     private:
-        destroyer_type _destroyer;
-        value_type* _ptr;
+        destroyer_t _destroyer;
+        value_t* _ptr;
     };
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename value_type, typename... arg_types>
-    auto make_unique(arg_types&&... args) -> unique_ptr<value_type>
+    template <typename value_t, typename... arg_ts>
+    auto make_unique(arg_ts&&... args) -> unique_ptr<value_t>
     {
-        return make_unique_with_alloc<value_type, default_mem_allocator>(
-            default_mem_allocator(), forward<arg_types>(args)...);
+        return make_unique_with_alloc<value_t, default_mem_allocator>(
+            default_mem_allocator(), forward<arg_ts>(args)...);
     }
 
     /// --------------------------------------------------------------------------------------------
     /// # todo: fix this implementation, maybe store allocator in destroyer.
     /// --------------------------------------------------------------------------------------------
-    template <typename value_type, typename allocator_type, typename... arg_types>
-    auto make_unique_with_alloc(allocator_type allocator, arg_types&&... args)
-        -> unique_ptr<value_type>
+    template <typename value_t, typename allocator_t, typename... arg_ts>
+    auto make_unique_with_alloc(allocator_t allocator, arg_ts&&... args)
+        -> unique_ptr<value_t>
     {
-        value_type* mem = (value_type*)allocator.alloc(sizeof(value_type));
-        obj_helper().construct_as<value_type>(mem, forward<arg_types>(args)...);
-        return unique_ptr<value_type>(mem);
+        value_t* mem = (value_t*)allocator.alloc(sizeof(value_t));
+        obj_helper().construct_as<value_t>(mem, forward<arg_ts>(args)...);
+        return unique_ptr<value_t>(mem);
     }
 }

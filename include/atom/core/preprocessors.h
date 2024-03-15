@@ -6,11 +6,11 @@
 #define ATOM_ALIAS(THIS_TYPE, ...)                                                                 \
     class THIS_TYPE: public __VA_ARGS__                                                            \
     {                                                                                              \
-        using base_type = __VA_ARGS__;                                                             \
+        using base_t = __VA_ARGS__;                                                             \
                                                                                                    \
     public:                                                                                        \
-        using base_type::base_type;                                                                \
-        using base_type::operator=;                                                                \
+        using base_t::base_t;                                                                \
+        using base_t::operator=;                                                                \
     }
 
 /// ------------------------------------------------------------------------------------------------
@@ -158,6 +158,6 @@
 //     class _empty
 //     {};
 
-//     template <bool cond, typename type>
+//     template <bool cond, typename value_t>
 //     using conditional_field = std::conditional_t<cond, type, _empty>;
 // }

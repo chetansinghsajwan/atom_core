@@ -2,48 +2,48 @@
 #include "atom/core/_std.h"
 #include "atom/core/core.h"
 #include "atom/core/range.h"
-#include "atom/core/string/_string_type_id.h"
+#include "atom/core/string/_string_t_id.h"
 
 namespace atom
 {
-    template <typename final_type, typename container_type>
+    template <typename final_t, typename container_t>
     class string_functions
-        : public container_type
-        , public _string_type_id
+        : public container_t
+        , public _string_t_id
     {
-        ATOM_STATIC_ASSERTS(rsame_as<typename container_type::elem_type, char>);
+        ATOM_STATIC_ASSERTS(rsame_as<typename container_t::elem_t, char>);
 
     private:
-        using this_type = string_functions;
-        using base_type = container_type;
+        using this_t = string_functions;
+        using base_t = container_t;
 
     public:
-        using iter_type = typename base_type::iter_type;
-        using iter_end_type = typename base_type::iter_end_type;
-        // using mut_iter_type = typename base_type::mut_iter_type;
-        // using mut_iter_end_type = typename base_type::mut_iter_end_type;
+        using iter_t = typename base_t::iter_t;
+        using iter_end_t = typename base_t::iter_end_t;
+        // using mut_iter_t = typename base_t::mut_iter_t;
+        // using mut_iter_end_t = typename base_t::mut_iter_end_t;
 
     public:
-        using base_type::base_type;
-        using base_type::operator=;
+        using base_t::base_t;
+        using base_t::operator=;
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
         template <usize count>
         constexpr string_functions(const char (&str)[count])
-            : base_type(range_from(str, count))
+            : base_t(range_from(str, count))
         {}
 
     public:
         static constexpr auto from_std(std::string_view str)
         {
-            return final_type(range_from(str));
+            return final_t(range_from(str));
         }
 
         constexpr auto to_std() const -> std::string_view
         {
-            return std::string_view(base_type::get_data(), base_type::get_count());
+            return std::string_view(base_t::get_data(), base_t::get_count());
         }
     };
 }

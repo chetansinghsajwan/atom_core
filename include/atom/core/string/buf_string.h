@@ -5,16 +5,16 @@
 
 namespace atom
 {
-    template <usize buf_size, typename allocator_type>
+    template <usize buf_size, typename allocator_t>
     class buf_string
-        : public string_functions<buf_string<buf_size, allocator_type>,
-              buf_array<char, buf_size, allocator_type>>
+        : public string_functions<buf_string<buf_size, allocator_t>,
+              buf_array<char, buf_size, allocator_t>>
     {
-        using base_type = string_functions<buf_string<buf_size, allocator_type>,
-            buf_array<char, buf_size, allocator_type>>;
+        using base_t = string_functions<buf_string<buf_size, allocator_t>,
+            buf_array<char, buf_size, allocator_t>>;
 
     public:
-        using base_type::base_type;
-        using base_type::operator=;
+        using base_t::base_t;
+        using base_t::operator=;
     };
 }

@@ -10,54 +10,54 @@
 /// ------------------------------------------------------------------------------------------------
 namespace atom
 {
-    class invokable_box_type_id
+    class invokable_box_t_id
     {};
 
-    template <typename result_type, typename... arg_types>
+    template <typename result_t, typename... arg_ts>
     class _invokable_box_interface
     {
     public:
-        virtual auto invoke(arg_types... args) -> result_type = 0;
+        virtual auto invoke(arg_ts... args) -> result_t = 0;
     };
 
-    template <typename invokable_type, typename result_type, typename... arg_types>
-    class _invokable_box_wrapper: public _invokable_box_interface<result_type, arg_types...>
+    template <typename invokable_t, typename result_t, typename... arg_ts>
+    class _invokable_box_wrapper: public _invokable_box_interface<result_t, arg_ts...>
     {
     public:
-        _invokable_box_wrapper(invokable_type&& invokable)
+        _invokable_box_wrapper(invokable_t&& invokable)
             : _invokable(invokable)
         {}
 
     public:
-        virtual auto invoke(arg_types... args) -> result_type override final
+        virtual auto invoke(arg_ts... args) -> result_t override final
         {
-            if constexpr (rsame_as<result_type, void>)
+            if constexpr (rsame_as<result_t, void>)
             {
-                _invokable(forward<arg_types>(args)...);
+                _invokable(forward<arg_ts>(args)...);
             }
             else
             {
-                return _invokable(forward<arg_types>(args)...);
+                return _invokable(forward<arg_ts>(args)...);
             }
         }
 
     public:
-        invokable_type _invokable;
+        invokable_t _invokable;
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// stores an invokable type using boxing.
+    /// stores an invokable value_t using boxing.
     /// --------------------------------------------------------------------------------------------
-    template <typename result_type, typename... arg_types>
+    template <typename result_t, typename... arg_ts>
     class _invokable_box_impl
     {
-        using this_type = _invokable_box_impl<result_type, arg_types...>;
-        using _box_type = std::function<result_type(arg_types...)>;
-        // using _interface_type = _invokable_box_interface<result_type, arg_types...>;
-        // using _box_type = copy_move_box<_interface_type, true, 50>;
+        using this_t = _invokable_box_impl<result_t, arg_ts...>;
+        using _box_t = std::function<result_t(arg_ts...)>;
+        // using _interface_t = _invokable_box_interface<result_t, arg_ts...>;
+        // using _box_t = copy_move_box<_interface_t, true, 50>;
 
-        // template <typename invokable_type>
-        // using _wrapper_type = _invokable_box_wrapper<invokable_type, result_type, arg_types...>;
+        // template <typename invokable_t>
+        // using _wrapper_t = _invokable_box_wrapper<invokable_t, result_t, arg_ts...>;
 
     public:
         class copy_tag
@@ -74,27 +74,27 @@ namespace atom
             : _box()
         {}
 
-        _invokable_box_impl(copy_tag, const this_type& that)
+        _invokable_box_impl(copy_tag, const this_t& that)
             : _box(that._box)
         {}
 
-        auto copy_that(const this_type& that)
+        auto copy_that(const this_t& that)
         {
             _box = that._box;
         }
 
-        _invokable_box_impl(move_tag, this_type& that)
+        _invokable_box_impl(move_tag, this_t& that)
             : _box(atom::move(that._box))
         {}
 
-        auto move_that(this_type& that)
+        auto move_that(this_t& that)
         {
             _box = atom::move(that._box);
         }
 
-        template <typename invokable_type>
-        _invokable_box_impl(value_tag, invokable_type&& invokable)
-            : _box(forward<invokable_type>(invokable))
+        template <typename invokable_t>
+        _invokable_box_impl(value_tag, invokable_t&& invokable)
+            : _box(forward<invokable_t>(invokable))
         {}
 
         ~_invokable_box_impl() {}
@@ -103,33 +103,33 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// stores invokable.
         /// ----------------------------------------------------------------------------------------
-        template <typename invokable_type>
-        auto set_invokable(invokable_type&& invokable)
+        template <typename invokable_t>
+        auto set_invokable(invokable_t&& invokable)
         {
-            // _box.set_val(_wrapper_type<invokable_type>(forward<invokable_type>(invokable)));
-            _box = forward<invokable_type>(invokable);
+            // _box.set_val(_wrapper_t<invokable_t>(forward<invokable_t>(invokable)));
+            _box = forward<invokable_t>(invokable);
         }
 
         /// ----------------------------------------------------------------------------------------
         /// get invokable.
         /// ----------------------------------------------------------------------------------------
-        template <typename invokable_type>
-        auto get_invokable_as() -> invokable_type*
+        template <typename invokable_t>
+        auto get_invokable_as() -> invokable_t*
         {
-            // if (typeid(invokable_type) != get_invokable_type())
+            // if (typeid(invokable_t) != get_invokable_t())
             //     return nullptr;
 
-            // return _box.template mut_mem_as<invokable_type>();
-            return _box.template get_type<invokable_type>();
+            // return _box.template mut_mem_as<invokable_t>();
+            return _box.template get_t<invokable_t>();
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        auto get_invokable_type() const -> const std::type_info&
+        auto get_invokable_t() const -> const std::type_info&
         {
-            // return _box.val_type();
-            return _box.target_type();
+            // return _box.val_t();
+            return _box.target_t();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -144,10 +144,10 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// invokes stored invokable.
         /// ----------------------------------------------------------------------------------------
-        auto invoke_invokable(arg_types&&... args) -> result_type
+        auto invoke_invokable(arg_ts&&... args) -> result_t
         {
-            // return _box.get_mut().invoke(forward<arg_types>(args)...);
-            return _box(forward<arg_types>(args)...);
+            // return _box.get_mut().invoke(forward<arg_ts>(args)...);
+            return _box(forward<arg_ts>(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -160,7 +160,7 @@ namespace atom
         }
 
     private:
-        _box_type _box;
+        _box_t _box;
     };
 }
 
@@ -176,12 +176,12 @@ namespace atom
     class invokable_box;
 
     /// --------------------------------------------------------------------------------------------
-    /// stores an invokable type using boxing.
+    /// stores an invokable value_t using boxing.
     /// --------------------------------------------------------------------------------------------
-    template <typename result_type, typename... arg_types>
-    class invokable_box<result_type(arg_types...)>: public invokable_box_type_id
+    template <typename result_t, typename... arg_ts>
+    class invokable_box<result_t(arg_ts...)>: public invokable_box_t_id
     {
-        using _impl_type = _invokable_box_impl<result_type, arg_types...>;
+        using _impl_t = _invokable_box_impl<result_t, arg_ts...>;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -195,7 +195,7 @@ namespace atom
         /// # copy constructor
         /// ----------------------------------------------------------------------------------------
         invokable_box(const invokable_box& that)
-            : _impl(typename _impl_type::copy_tag(), that._impl)
+            : _impl(typename _impl_t::copy_tag(), that._impl)
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -211,7 +211,7 @@ namespace atom
         /// # move constructor
         /// ----------------------------------------------------------------------------------------
         invokable_box(invokable_box&& that)
-            : _impl(typename _impl_type::move_tag(), that._impl)
+            : _impl(typename _impl_t::move_tag(), that._impl)
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -226,14 +226,14 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # null constructor.
         /// ----------------------------------------------------------------------------------------
-        invokable_box(nullptr_type null)
+        invokable_box(nullptr_t null)
             : _impl()
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # null operator.
         /// ----------------------------------------------------------------------------------------
-        auto operator=(nullptr_type null) -> invokable_box&
+        auto operator=(nullptr_t null) -> invokable_box&
         {
             _impl.destroy_invokable();
             return *this;
@@ -242,22 +242,22 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # value constructor
         /// ----------------------------------------------------------------------------------------
-        template <typename invokable_type>
-        invokable_box(invokable_type&& invokable)
-            requires rinvokable<invokable_type, result_type(arg_types...)>
-                     and (not rderived_from<invokable_type, invokable_box_type_id>)
-            : _impl(typename _impl_type::value_tag(), forward<invokable_type>(invokable))
+        template <typename invokable_t>
+        invokable_box(invokable_t&& invokable)
+            requires rinvokable<invokable_t, result_t(arg_ts...)>
+                     and (not rderived_from<invokable_t, invokable_box_t_id>)
+            : _impl(typename _impl_t::value_tag(), forward<invokable_t>(invokable))
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # value operator
         /// ----------------------------------------------------------------------------------------
-        template <typename invokable_type>
-        invokable_box& operator=(invokable_type&& invokable)
-            requires rinvokable<invokable_type, result_type(arg_types...)>
-                     and (not rderived_from<invokable_type, invokable_box_type_id>)
+        template <typename invokable_t>
+        invokable_box& operator=(invokable_t&& invokable)
+            requires rinvokable<invokable_t, result_t(arg_ts...)>
+                     and (not rderived_from<invokable_t, invokable_box_t_id>)
         {
-            _impl.set_invokable(forward<invokable_type>(invokable));
+            _impl.set_invokable(forward<invokable_t>(invokable));
             return *this;
         }
 
@@ -270,56 +270,56 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// stores the invokable.
         /// ----------------------------------------------------------------------------------------
-        template <typename invokable_type>
-        auto set(invokable_type&& invokable)
+        template <typename invokable_t>
+        auto set(invokable_t&& invokable)
         {
-            _impl.set_invokable(forward<invokable_type>(invokable));
+            _impl.set_invokable(forward<invokable_t>(invokable));
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns stored invokable as a `mut_ptr` to `type`.
+        /// returns stored invokable as a `mut_ptr` to `value_t`.
         /// ----------------------------------------------------------------------------------------
-        template <typename type>
-        auto get_as() -> type*
+        template <typename value_t>
+        auto get_as() -> value_t*
         {
-            return _impl.template get_invokable_as<type>();
+            return _impl.template get_invokable_as<value_t>();
         }
 
         /// ----------------------------------------------------------------------------------------
         /// returns the typeid for the stored invokable.
         /// ----------------------------------------------------------------------------------------
-        auto get_type() const -> const std::type_info&
+        auto get_t() const -> const std::type_info&
         {
-            return _impl.get_invokable_type();
+            return _impl.get_invokable_t();
         }
 
         /// ----------------------------------------------------------------------------------------
         /// invokes the stored invokable.
         /// ----------------------------------------------------------------------------------------
-        auto invoke(arg_types&&... args) -> result_type
+        auto invoke(arg_ts&&... args) -> result_t
         {
             ATOM_EXPECTS(has(), "no invokable is present.");
 
-            return _impl.invoke_invokable(forward<arg_types>(args)...);
+            return _impl.invoke_invokable(forward<arg_ts>(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
         /// invokes the stored invokable if any.
         /// ----------------------------------------------------------------------------------------
-        auto invoke_try(result_type* out, arg_types&&... args) -> result_type
+        auto invoke_try(result_t* out, arg_ts&&... args) -> result_t
         {
             if (not _impl.has_invokable())
                 return;
 
-            *out = _impl.invoke_invokable(forward<arg_types>(args)...);
+            *out = _impl.invoke_invokable(forward<arg_ts>(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
         /// returns `invoke(args...)`.
         /// ----------------------------------------------------------------------------------------
-        auto operator()(arg_types&&... args) -> result_type
+        auto operator()(arg_ts&&... args) -> result_t
         {
-            return invoke(forward<arg_types>(args)...);
+            return invoke(forward<arg_ts>(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -341,12 +341,12 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// returns `true` if this doesn't contain an invokable.
         /// ----------------------------------------------------------------------------------------
-        auto is_eq(nullptr_type null) const -> bool
+        auto is_eq(nullptr_t null) const -> bool
         {
             return not _impl.has_invokable();
         }
 
     private:
-        _impl_type _impl;
+        _impl_t _impl;
     };
 }

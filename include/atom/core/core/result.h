@@ -3,33 +3,33 @@
 
 namespace atom
 {
-    template <typename result_type, typename... error_types>
-    class result: public variant<result_type, error_types...>
+    template <typename result_t, typename... error_ts>
+    class result: public variant<result_t, error_ts...>
     {
-        using base_type = variant<result_type, error_types...>;
+        using base_t = variant<result_t, error_ts...>;
 
     public:
-        using base_type::base_type;
-        using base_type::operator=;
+        using base_t::base_t;
+        using base_t::operator=;
     };
 
     class _result_void
     {};
 
-    template <typename... error_types>
-    class result<void, error_types...>: public variant<_result_void, error_types...>
+    template <typename... error_ts>
+    class result<void, error_ts...>: public variant<_result_void, error_ts...>
     {
-        using base_type = variant<_result_void, error_types...>;
+        using base_t = variant<_result_void, error_ts...>;
 
     public:
-        using base_type::base_type;
-        using base_type::operator=;
+        using base_t::base_t;
+        using base_t::operator=;
     };
 
-    template <typename... error_types>
-    constexpr auto success() -> result<void, error_types...>
+    template <typename... error_ts>
+    constexpr auto success() -> result<void, error_ts...>
     {
-        using result_type = result<void, error_types...>;
-        return result_type(_result_void());
+        using result_t = result<void, error_ts...>;
+        return result_t(_result_void());
     }
 }

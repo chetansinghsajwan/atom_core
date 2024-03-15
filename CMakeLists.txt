@@ -62,6 +62,8 @@ target_link_libraries(atom.core PUBLIC cpptrace::cpptrace)
 target_link_libraries(atom.core PUBLIC fmt::fmt-header-only)
 target_link_libraries(atom.core PUBLIC magic_enum::magic_enum)
 target_link_libraries(atom.core PUBLIC libassert::assert)
+target_compile_options(atom.core PUBLIC "-ferror-limit=1000")
+
 
 # --------------------------------------------------------------------------------------------------
 # atom.core.tests

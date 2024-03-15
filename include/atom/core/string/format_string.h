@@ -24,17 +24,17 @@ namespace atom
     /// string type used to store the format for formatting. this also checks at compile time for
     /// invalid format or args.
     /// --------------------------------------------------------------------------------------------
-    template <typename... arg_types>
+    template <typename... arg_ts>
     class _format_string
     {
     public:
-        template <typename string_type>
-        consteval _format_string(const string_type& str)
-            requires typeinfo::is_constructible_from<string_view, string_type>
+        template <typename string_t>
+        consteval _format_string(const string_t& str)
+            requires typeinfo::is_constructible_from<string_view, string_t>
             : str(str)
         {
             using fmt_format_string =
-                fmt::format_string<_format_arg_wrapper<typeinfo::get_pure<arg_types>>...>;
+                fmt::format_string<_format_arg_wrapper<typeinfo::get_pure<arg_ts>>...>;
 
             fmt_format_string check(str);
         }
@@ -47,6 +47,6 @@ namespace atom
         string_view str;
     };
 
-    template <typename... arg_types>
-    using format_string = _format_string<typeinfo::identity_type<arg_types>...>;
+    template <typename... arg_ts>
+    using format_string = _format_string<typeinfo::identity_t<arg_ts>...>;
 }

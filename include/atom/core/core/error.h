@@ -9,8 +9,8 @@ namespace atom
     class error
     {
     public:
-        template <typename string_view_type>
-        constexpr error(string_view_type msg)
+        template <typename string_view_t>
+        constexpr error(string_view_t msg)
             : msg(msg.get_data(), msg.get_count())
         {}
 

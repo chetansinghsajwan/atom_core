@@ -10,36 +10,36 @@
 /// ------------------------------------------------------------------------------------------------
 namespace atom
 {
-    template <typename... event_arg_types>
+    template <typename... event_arg_ts>
     class _event_source_impl
     {
     public:
-        using signature_type = void(event_arg_types...);
-        using key_type = const std::type_info&;
+        using signature_t = void(event_arg_ts...);
+        using key_t = const std::type_info&;
 
     public:
-        template <typename invokable_type>
-        auto add_listener(invokable_type&& invokable) -> key_type
+        template <typename invokable_t>
+        auto add_listener(invokable_t&& invokable) -> key_t
         {
-            invokable_box<signature_type> box(forward<invokable_type>(invokable));
-            key_type key = box.get_type();
+            invokable_box<signature_t> box(forward<invokable_t>(invokable));
+            key_t key = box.get_t();
 
             _listeners.emplace_back(move(box));
             return key;
         }
 
-        auto remove_listener(key_type key) -> usize
+        auto remove_listener(key_t key) -> usize
         {
             return _listeners.remove_one_if(
-                [&](const auto& listener) { return listener.get_type() == key; });
+                [&](const auto& listener) { return listener.get_t() == key; });
         }
 
-        auto count_listeners(key_type key) -> usize
+        auto count_listeners(key_t key) -> usize
         {
             usize count = 0;
             for (auto& listener : _listeners)
             {
-                if (listener.get_type() == key)
+                if (listener.get_t() == key)
                 {
                     count++;
                 }
@@ -48,7 +48,7 @@ namespace atom
             return count;
         }
 
-        auto dispatch(event_arg_types... args) -> void
+        auto dispatch(event_arg_ts... args) -> void
         {
             for (auto& listener : _listeners)
             {
@@ -57,7 +57,7 @@ namespace atom
         }
 
     private:
-        dynamic_array<invokable_box<signature_type>> _listeners;
+        dynamic_array<invokable_box<signature_t>> _listeners;
     };
 }
 
@@ -83,34 +83,34 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     /// event_source is used to manage listeners and dispatch event.
     /// --------------------------------------------------------------------------------------------
-    template <typename... event_arg_types>
+    template <typename... event_arg_ts>
     class event_source
     {
-        using _impl_type = _event_source_impl<event_arg_types...>;
+        using _impl_t = _event_source_impl<event_arg_ts...>;
 
     public:
-        using signature_type = void(event_arg_types...);
-        using key_type = event_key;
+        using signature_t = void(event_arg_ts...);
+        using key_t = event_key;
 
     public:
         /// ----------------------------------------------------------------------------------------
         /// calls `subscribe(listener)` on the source.
         /// ----------------------------------------------------------------------------------------
-        template <typename invokable_type>
-        auto subscribe(invokable_type&& listener) -> event_key
-            requires(rinvokable<invokable_type, signature_type>)
+        template <typename invokable_t>
+        auto subscribe(invokable_t&& listener) -> event_key
+            requires(rinvokable<invokable_t, signature_t>)
         {
-            return event_key(_impl.add_listener(forward<invokable_type>(listener)));
+            return event_key(_impl.add_listener(forward<invokable_t>(listener)));
         }
 
         /// ----------------------------------------------------------------------------------------
         /// calls `subscribe(listener)`.
         /// ----------------------------------------------------------------------------------------
-        template <typename invokable_type>
-        auto operator+=(invokable_type&& listener) -> event_key
-            requires(rinvokable<invokable_type, signature_type>)
+        template <typename invokable_t>
+        auto operator+=(invokable_t&& listener) -> event_key
+            requires(rinvokable<invokable_t, signature_t>)
         {
-            return subscribe(forward<invokable_type>(listener));
+            return subscribe(forward<invokable_t>(listener));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -132,24 +132,24 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// dispatches the events. calls each event listener(invokables) with given args.
         /// ----------------------------------------------------------------------------------------
-        auto dispatch(event_arg_types... args)
+        auto dispatch(event_arg_ts... args)
         {
-            _impl.dispatch(forward<event_arg_types>(args)...);
+            _impl.dispatch(forward<event_arg_ts>(args)...);
         }
 
     private:
-        _impl_type _impl;
+        _impl_t _impl;
     };
 
     /// --------------------------------------------------------------------------------------------
     /// this type is just a frontend to [`event_source`] to prevent users from dispatching events.
     /// --------------------------------------------------------------------------------------------
-    template <typename... event_arg_types>
+    template <typename... event_arg_ts>
     class event_source_view
     {
     public:
-        using source_type = event_source<event_arg_types...>;
-        using signature_type = typename source_type::signature_type;
+        using source_t = event_source<event_arg_ts...>;
+        using signature_t = typename source_t::signature_t;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -160,7 +160,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # value constructor
         /// ----------------------------------------------------------------------------------------
-        event_source_view(source_type& source)
+        event_source_view(source_t& source)
             : _source(source)
         {}
 
@@ -193,21 +193,21 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// calls `subscribe(listener)` on the source.
         /// ----------------------------------------------------------------------------------------
-        template <typename invokable_type>
-        auto subscribe(invokable_type&& listener) -> event_key
-            requires(rinvokable<invokable_type, signature_type>)
+        template <typename invokable_t>
+        auto subscribe(invokable_t&& listener) -> event_key
+            requires(rinvokable<invokable_t, signature_t>)
         {
-            return _source.subscribe(forward<invokable_type>(listener));
+            return _source.subscribe(forward<invokable_t>(listener));
         }
 
         /// ----------------------------------------------------------------------------------------
         /// calls `subscribe(listener)`.
         /// ----------------------------------------------------------------------------------------
-        template <typename invokable_type>
-        auto operator+=(invokable_type&& listener) -> event_key
-            requires(rinvokable<invokable_type, signature_type>)
+        template <typename invokable_t>
+        auto operator+=(invokable_t&& listener) -> event_key
+            requires(rinvokable<invokable_t, signature_t>)
         {
-            return subscribe(forward<invokable_type>(listener));
+            return subscribe(forward<invokable_t>(listener));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -227,6 +227,6 @@ namespace atom
         }
 
     private:
-        source_type& _source;
+        source_t& _source;
     };
 }

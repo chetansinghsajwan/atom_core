@@ -10,7 +10,7 @@
 /// ------------------------------------------------------------------------------------------------
 namespace atom
 {
-    template <typename value_type>
+    template <typename value_t>
     union _option_storage
     {
         class _dummy
@@ -27,49 +27,49 @@ namespace atom
         constexpr _option_storage(_option_storage&&) = default;
         constexpr _option_storage& operator=(_option_storage&&) = default;
 
-        template <typename... arg_types>
-        constexpr _option_storage(arg_types&&... args)
-            : _value(forward<arg_types>(args)...)
+        template <typename... arg_ts>
+        constexpr _option_storage(arg_ts&&... args)
+            : _value(forward<arg_ts>(args)...)
         {}
 
         constexpr ~_option_storage()
-            requires(rtrivially_destructible<value_type>)
+            requires(rtrivially_destructible<value_t>)
         = default;
 
         constexpr ~_option_storage()
-            requires(not rtrivially_destructible<value_type>)
+            requires(not rtrivially_destructible<value_t>)
         {}
 
     public:
-        constexpr auto get_data() -> value_type*
+        constexpr auto get_data() -> value_t*
         {
             return &_value;
         }
 
-        constexpr auto get_data() const -> const value_type*
+        constexpr auto get_data() const -> const value_t*
         {
             return &_value;
         }
 
     private:
-        value_type _value;
+        value_t _value;
         _dummy _dummy;
     };
 
-    template <typename in_value_type>
+    template <typename in_value_t>
     class _option_impl
     {
-        using this_type = _option_impl<in_value_type>;
+        using this_t = _option_impl<in_value_t>;
 
         /// --------------------------------------------------------------------------------------------
         /// # to do
         ///
-        /// - create `static_aligned_storage_for<in_value_type>` to replace this.
+        /// - create `static_aligned_storage_for<in_value_t>` to replace this.
         /// --------------------------------------------------------------------------------------------
-        using _storage_type = _option_storage<in_value_type>;
+        using _storage_t = _option_storage<in_value_t>;
 
     public:
-        using value_type = in_value_type;
+        using value_t = in_value_t;
 
         class ctor_default
         {};
@@ -82,11 +82,11 @@ namespace atom
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// get the default value of [`value_type`].
+        /// get the default value of [`value_t`].
         /// ----------------------------------------------------------------------------------------
-        static consteval auto get_default() -> value_type
+        static consteval auto get_default() -> value_t
         {
-            return value_type();
+            return value_t();
         }
 
     public:
@@ -106,13 +106,13 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # trivial copy constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr _option_impl(const this_type& that) = default;
+        constexpr _option_impl(const this_t& that) = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # copy constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr _option_impl(ctor_copy, const this_type& that)
-            : this_type(ctor_default())
+        constexpr _option_impl(ctor_copy, const this_t& that)
+            : this_t(ctor_default())
         {
             if (that._is_value)
             {
@@ -124,18 +124,18 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # trivial copy operator
         /// ----------------------------------------------------------------------------------------
-        constexpr _option_impl& operator=(const this_type& that) = default;
+        constexpr _option_impl& operator=(const this_t& that) = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # trivial mov constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr _option_impl(this_type&& that) = default;
+        constexpr _option_impl(this_t&& that) = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # mov constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr _option_impl(ctor_move, this_type&& that)
-            : this_type()
+        constexpr _option_impl(ctor_move, this_t&& that)
+            : this_t()
         {
             if (that._is_value)
             {
@@ -147,14 +147,14 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # trivial mov operator
         /// ----------------------------------------------------------------------------------------
-        constexpr _option_impl& operator=(this_type&& that) = default;
+        constexpr _option_impl& operator=(this_t&& that) = default;
 
-        template <typename... arg_types>
+        template <typename... arg_ts>
         /// ----------------------------------------------------------------------------------------
         /// # value constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr _option_impl(arg_types&&... args)
-            : _storage(forward<arg_types>(args)...)
+        constexpr _option_impl(arg_ts&&... args)
+            : _storage(forward<arg_ts>(args)...)
             , _is_value(true)
         {}
 
@@ -203,17 +203,17 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// destroys current value if any and constructs new value wih `args`.
         /// ----------------------------------------------------------------------------------------
-        template <typename... arg_types>
-        constexpr auto emplace_value(arg_types&&... args)
+        template <typename... arg_ts>
+        constexpr auto emplace_value(arg_ts&&... args)
         {
             if (_is_value)
             {
                 _destroy_value();
-                _create_value(forward<arg_types>(args)...);
+                _create_value(forward<arg_ts>(args)...);
             }
             else
             {
-                _create_value(forward<arg_types>(args)...);
+                _create_value(forward<arg_ts>(args)...);
                 _is_value = true;
             }
         }
@@ -239,7 +239,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// get const ref to current value.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_value() const -> const value_type&
+        constexpr auto get_value() const -> const value_t&
         {
             return _get_value();
         }
@@ -247,7 +247,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// get ref to current value.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_mut_value() -> value_type&
+        constexpr auto get_mut_value() -> value_t&
         {
             return _get_mut_value();
         }
@@ -281,8 +281,8 @@ namespace atom
         }
 
     private:
-        template <bool mov, typename option_type>
-        constexpr auto _set_value_from_option(option_type&& that)
+        template <bool mov, typename option_t>
+        constexpr auto _set_value_from_option(option_t&& that)
         {
             if (that._is_value)
             {
@@ -313,8 +313,8 @@ namespace atom
             }
         }
 
-        template <typename option_type>
-        constexpr auto _copy(const option_type& that)
+        template <typename option_t>
+        constexpr auto _copy(const option_t& that)
         {
             if (that._is_value)
             {
@@ -338,8 +338,8 @@ namespace atom
             }
         }
 
-        template <typename option_type>
-        constexpr auto _mov(option_type&& that)
+        template <typename option_t>
+        constexpr auto _mov(option_t&& that)
         {
             if (that._is_value)
             {
@@ -389,41 +389,41 @@ namespace atom
             }
         }
 
-        template <typename... arg_types>
-        constexpr auto _create_value(arg_types&&... args)
+        template <typename... arg_ts>
+        constexpr auto _create_value(arg_ts&&... args)
         {
-            obj_helper().construct_as<value_type>(_storage.get_data(), forward<arg_types>(args)...);
+            obj_helper().construct_as<value_t>(_storage.get_data(), forward<arg_ts>(args)...);
         }
 
-        template <typename arg_type>
-        constexpr auto _set_value(arg_type&& val)
+        template <typename arg_t>
+        constexpr auto _set_value(arg_t&& val)
         {
-            obj_helper().assign_as<value_type>(_storage.get_data(), forward<arg_type>(val));
+            obj_helper().assign_as<value_t>(_storage.get_data(), forward<arg_t>(val));
         }
 
-        constexpr auto _swap_value(value_type& that)
+        constexpr auto _swap_value(value_t& that)
         {
             obj_helper().swap(_get_mut_value(), that);
         }
 
-        constexpr auto _get_value() const -> const value_type&
+        constexpr auto _get_value() const -> const value_t&
         {
             return *_storage.get_data();
         }
 
-        constexpr auto _get_mut_value() -> value_type&
+        constexpr auto _get_mut_value() -> value_t&
         {
             return *_storage.get_data();
         }
 
         constexpr auto _destroy_value()
         {
-            obj_helper().destruct_as<value_type>(_storage.get_data());
+            obj_helper().destruct_as<value_t>(_storage.get_data());
         }
 
     private:
         bool _is_value;
-        _storage_type _storage;
+        _storage_t _storage;
     };
 }
 
@@ -439,31 +439,31 @@ namespace atom
     {};
 
     /// --------------------------------------------------------------------------------------------
-    /// the option class is used to wrap the object of type `value_type`. this_type class contain either the
+    /// the option class is used to wrap the object of type `value_t`. this_t class contain either the
     /// value or can be empty representing no value.
     ///
-    /// this_type is useful when we want to return a value that may or may not exist, without
+    /// this_t is useful when we want to return a value that may or may not exist, without
     /// using null pointers or exceptions. or just want to add the ability of being null to a type
     /// like `i32`.
     ///
     /// # template parameters
     /// - `type`: type of value to store.
     /// --------------------------------------------------------------------------------------------
-    template <typename type>
+    template <typename in_value_t>
     class option
     {
-        ATOM_STATIC_ASSERTS(typeinfo::is_pure<type>, "option supports only pure types");
-        ATOM_STATIC_ASSERTS(not typeinfo::is_void<type>, "option does not support void type.");
+        ATOM_STATIC_ASSERTS(typeinfo::is_pure<in_value_t>, "option supports only pure types");
+        ATOM_STATIC_ASSERTS(not typeinfo::is_void<in_value_t>, "option does not support void type.");
 
     private:
-        using this_type = option<type>;
-        using _impl_type = _option_impl<type>;
+        using this_t = option<in_value_t>;
+        using _impl_t = _option_impl<in_value_t>;
 
     public:
         /// ----------------------------------------------------------------------------------------
         /// type of value this option holds.
         /// ----------------------------------------------------------------------------------------
-        using value_type = type;
+        using value_t = in_value_t;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -472,14 +472,14 @@ namespace atom
         /// constructs with no value.
         /// ----------------------------------------------------------------------------------------
         constexpr option()
-            : _impl(typename _impl_type::ctor_default())
+            : _impl(typename _impl_t::ctor_default())
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # trivial copy constructor.
         /// ----------------------------------------------------------------------------------------
         constexpr option(const option& that)
-            requires(rtrivially_copy_constructible<value_type>)
+            requires(rtrivially_copy_constructible<value_t>)
         = default;
 
         /// ----------------------------------------------------------------------------------------
@@ -489,16 +489,16 @@ namespace atom
         /// else constructs wih no value.
         /// ----------------------------------------------------------------------------------------
         constexpr option(const option& that)
-            requires(not rtrivially_copy_constructible<value_type>)
-                    and (rcopy_constructible<value_type>)
-            : _impl(typename _impl_type::ctor_copy(), that._impl)
+            requires(not rtrivially_copy_constructible<value_t>)
+                    and (rcopy_constructible<value_t>)
+            : _impl(typename _impl_t::ctor_copy(), that._impl)
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # trivial copy operator
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator=(const option& that) -> option&
-            requires(rtrivially_copy_assignable<value_type>)
+            requires(rtrivially_copy_assignable<value_t>)
         = default;
 
         /// ----------------------------------------------------------------------------------------
@@ -512,7 +512,7 @@ namespace atom
         ///     else, does nothing.
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator=(const option& that) -> option&
-            requires(not rtrivially_copy_assignable<value_type>) and (rcopyable<value_type>)
+            requires(not rtrivially_copy_assignable<value_t>) and (rcopyable<value_t>)
         {
             _impl.copy(that._impl);
             return *this;
@@ -522,7 +522,7 @@ namespace atom
         /// # trivial move constructor
         /// ----------------------------------------------------------------------------------------
         constexpr option(option&& that)
-            requires(rtrivially_move_constructible<value_type>)
+            requires(rtrivially_move_constructible<value_t>)
         = default;
 
         /// ----------------------------------------------------------------------------------------
@@ -532,16 +532,16 @@ namespace atom
         /// else constructs wih no value.
         /// ----------------------------------------------------------------------------------------
         constexpr option(option&& that)
-            requires(not rtrivially_move_constructible<value_type>)
-                    and (rmove_constructible<value_type>)
-            : _impl(typename _impl_type::ctor_move(), move(that._impl))
+            requires(not rtrivially_move_constructible<value_t>)
+                    and (rmove_constructible<value_t>)
+            : _impl(typename _impl_t::ctor_move(), move(that._impl))
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # trivial move operator
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator=(option&& that) -> option&
-            requires(rtrivially_move_assignable<value_type>)
+            requires(rtrivially_move_assignable<value_t>)
         = default;
 
         /// ----------------------------------------------------------------------------------------
@@ -555,7 +555,7 @@ namespace atom
         ///     else, does nothing.
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator=(option&& that) -> option&
-            requires(not rtrivially_move_assignable<value_type>) and (rmoveable<value_type>)
+            requires(not rtrivially_move_assignable<value_t>) and (rmoveable<value_t>)
         {
             _impl.mov(move(that._impl));
             return *this;
@@ -567,7 +567,7 @@ namespace atom
         /// constructs with no value.
         /// ----------------------------------------------------------------------------------------
         constexpr option(nullopt)
-            : _impl(typename _impl_type::ctor_default())
+            : _impl(typename _impl_t::ctor_default())
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -590,7 +590,7 @@ namespace atom
         ///
         /// - `val`: value to construct with.
         /// ----------------------------------------------------------------------------------------
-        constexpr option(const value_type& val)
+        constexpr option(const value_t& val)
             : _impl(val)
         {}
 
@@ -604,7 +604,7 @@ namespace atom
         ///
         /// - `val`: value to assign or construct with.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator=(const value_type& val) -> option&
+        constexpr auto operator=(const value_t& val) -> option&
         {
             _impl.set_value(val);
             return *this;
@@ -619,7 +619,7 @@ namespace atom
         ///
         /// - `val`: value to construct with.
         /// ----------------------------------------------------------------------------------------
-        constexpr option(value_type&& val)
+        constexpr option(value_t&& val)
             : _impl(move(val))
         {}
 
@@ -633,7 +633,7 @@ namespace atom
         ///
         /// - `val`: value to assign or construct with.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator=(value_type&& val) -> option&
+        constexpr auto operator=(value_t&& val) -> option&
         {
             _impl.set_value(move(val));
             return *this;
@@ -643,7 +643,7 @@ namespace atom
         /// # trivial destructor
         /// ----------------------------------------------------------------------------------------
         constexpr ~option()
-            requires(rtrivially_destructible<value_type>)
+            requires(rtrivially_destructible<value_t>)
         = default;
 
         /// ----------------------------------------------------------------------------------------
@@ -652,7 +652,7 @@ namespace atom
         /// destroys value if stored.
         /// ----------------------------------------------------------------------------------------
         constexpr ~option()
-            requires(not rtrivially_destructible<value_type>) and (rdestructible<value_type>)
+            requires(not rtrivially_destructible<value_t>) and (rdestructible<value_t>)
         {
             _impl.destroy();
         }
@@ -666,11 +666,11 @@ namespace atom
         ///
         /// - `args`: arguments to construct the new value with.
         /// ----------------------------------------------------------------------------------------
-        template <typename... arg_types>
-        constexpr auto emplace(arg_types&&... args)
-            requires(rconstructible<value_type, arg_types...>)
+        template <typename... arg_ts>
+        constexpr auto emplace(arg_ts&&... args)
+            requires(rconstructible<value_t, arg_ts...>)
         {
-            _impl.emplace_value(forward<arg_types>(args)...);
+            _impl.emplace_value(forward<arg_ts>(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -684,7 +684,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// access the value by ref.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get() const& -> const value_type&
+        constexpr auto get() const& -> const value_t&
         {
             ATOM_EXPECTS(is_value(), "does not contain value.");
 
@@ -694,7 +694,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// access the value by ref.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_mut() & -> value_type&
+        constexpr auto get_mut() & -> value_t&
         {
             ATOM_EXPECTS(is_value(), "does not contain value.");
 
@@ -704,7 +704,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// access the value by ptr.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator->() const -> const value_type*
+        constexpr auto operator->() const -> const value_t*
         {
             ATOM_DEBUG_EXPECTS(is_value(), "does not contain value.");
 
@@ -714,7 +714,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// access the value by ptr.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator->() -> value_type*
+        constexpr auto operator->() -> value_t*
         {
             ATOM_DEBUG_EXPECTS(is_value(), "does not contain value.");
 
@@ -735,7 +735,7 @@ namespace atom
         ///
         /// const ref to `this` value or `or_val`.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_or(const value_type& or_val) const -> const value_type&
+        constexpr auto get_or(const value_t& or_val) const -> const value_t&
         {
             if (_impl.is_null())
             {
@@ -759,7 +759,7 @@ namespace atom
         ///
         /// ref to `this` value or `or_val`.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_mut_or(value_type& or_val) -> value_type&
+        constexpr auto get_mut_or(value_t& or_val) -> value_t&
         {
             if (_impl.is_null())
             {
@@ -783,9 +783,9 @@ namespace atom
         ///
         /// const ref to `this` value or or_invoke value returned by invoking `or_invoke`.
         /// ----------------------------------------------------------------------------------------
-        template <typename invokable_type>
-        constexpr auto get_or_invoke(invokable_type&& or_invoke) const -> value_type
-            requires rinvokable<typeinfo::get_pure<invokable_type>, value_type()>
+        template <typename invokable_t>
+        constexpr auto get_or_invoke(invokable_t&& or_invoke) const -> value_t
+            requires rinvokable<typeinfo::get_pure<invokable_t>, value_t()>
         {
             if (_impl.is_null())
             {
@@ -809,9 +809,9 @@ namespace atom
         ///
         /// ref to `this` value or or_invoke value returned by invoking `or_invoke`.
         /// ----------------------------------------------------------------------------------------
-        template <typename invokable_type>
-        constexpr auto get_mut_or_invoke(invokable_type&& or_invoke) -> value_type&
-            requires rinvokable<typeinfo::get_pure<invokable_type>, value_type&()>
+        template <typename invokable_t>
+        constexpr auto get_mut_or_invoke(invokable_t&& or_invoke) -> value_t&
+            requires rinvokable<typeinfo::get_pure<invokable_t>, value_t&()>
         {
             if (_impl.is_null())
             {
@@ -827,12 +827,12 @@ namespace atom
         /// if `this` contains value, get `this` value.
         /// else, get default constructed value.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_or_default() const& -> value_type
-            requires(rdefault_constructible<value_type>)
+        constexpr auto get_or_default() const& -> value_t
+            requires(rdefault_constructible<value_t>)
         {
             if (_impl.is_null())
             {
-                return _impl_type::get_default();
+                return _impl_t::get_default();
             }
 
             return _impl.get_value();
@@ -886,9 +886,9 @@ namespace atom
         /// if `this` is null and `that` is not null or vice versa, returns `false`.
         /// if `this` and `that` are not null, returns `this.get() == that.get()`.
         /// --------------------------------------------------------------------------------------------
-        template <typename that_value_type>
-        constexpr auto is_eq(const option<that_value_type>& that) const -> bool
-            requires(requality_comparable_with<value_type, that_value_type>)
+        template <typename that_value_t>
+        constexpr auto is_eq(const option<that_value_t>& that) const -> bool
+            requires(requality_comparable_with<value_t, that_value_t>)
         {
             if (is_value() != that.is_value())
                 // one is null and one has value.
@@ -907,9 +907,9 @@ namespace atom
         /// if `this` or `that` is null, returns false.
         /// else, returns `this.get() < that.get()`.
         /// --------------------------------------------------------------------------------------------
-        template <typename that_value_type>
-        constexpr auto is_lt(const option<that_value_type>& that) const -> bool
-            requires(rcomparable_with<value_type, that_value_type>)
+        template <typename that_value_t>
+        constexpr auto is_lt(const option<that_value_t>& that) const -> bool
+            requires(rcomparable_with<value_t, that_value_t>)
         {
             if (is_null() or that.is_null())
                 return false;
@@ -923,9 +923,9 @@ namespace atom
         /// if `opt0` or `that` is null, returns false.
         /// else, returns `this.get() > that.get()`.
         /// --------------------------------------------------------------------------------------------
-        template <typename that_value_type>
-        constexpr auto is_gt(const option<that_value_type>& that) const -> bool
-            requires(rcomparable_with<value_type, that_value_type>)
+        template <typename that_value_t>
+        constexpr auto is_gt(const option<that_value_t>& that) const -> bool
+            requires(rcomparable_with<value_t, that_value_t>)
         {
             if (is_null() or that.is_null())
                 return false;
@@ -939,9 +939,9 @@ namespace atom
         /// if `opt0` or `that` is null, returns false.
         /// else, returns `this.get() <= that.get()`.
         /// --------------------------------------------------------------------------------------------
-        template <typename that_value_type>
-        constexpr auto is_le(const option<that_value_type>& that) const -> bool
-            requires(rcomparable_with<value_type, that_value_type>)
+        template <typename that_value_t>
+        constexpr auto is_le(const option<that_value_t>& that) const -> bool
+            requires(rcomparable_with<value_t, that_value_t>)
         {
             if (is_null() or that.is_null())
                 return false;
@@ -955,9 +955,9 @@ namespace atom
         /// if `opt0` or `that` is null, returns false.
         /// else, returns `this.get() >= that.get()`.
         /// --------------------------------------------------------------------------------------------
-        template <typename that_value_type>
-        constexpr auto is_ge(const option<that_value_type>& that) const -> bool
-            requires(rcomparable_with<value_type, that_value_type>)
+        template <typename that_value_t>
+        constexpr auto is_ge(const option<that_value_t>& that) const -> bool
+            requires(rcomparable_with<value_t, that_value_t>)
         {
             if (is_null() or that.is_null())
                 return false;
@@ -966,6 +966,6 @@ namespace atom
         }
 
     private:
-        _impl_type _impl;
+        _impl_t _impl;
     };
 }

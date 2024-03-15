@@ -210,9 +210,9 @@ namespace atom
     };
 }
 
-template <typename enum_type>
-    requires atom::_enums_impl<enum_type>::is_enum
-struct magic_enum::customize::enum_range<enum_type>
+template <typename enum_t>
+    requires atom::_enums_impl<enum_t>::is_enum
+struct magic_enum::customize::enum_range<enum_t>
 {
-    static constexpr bool is_flags = atom::_enums_impl<enum_type>::is_flags();
+    static constexpr bool is_flags = atom::_enums_impl<enum_t>::is_flags();
 };
