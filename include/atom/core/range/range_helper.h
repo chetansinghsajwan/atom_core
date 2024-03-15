@@ -34,12 +34,12 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <class range_t, class elem_t>
-        constexpr auto fill(range_t&& range, elem_t&& val) const -> void
+        template <class range_t, class value_t>
+        constexpr auto fill(range_t&& range, value_t&& val) const -> void
             requires is_mut_range<range_t>
-                     and is_assignable<typename range_t::elem_t, elem_t>
+                     and is_assignable<typename range_t::value_t, value_t>
         {
-            _fill(range.get_iter(), range.get_iter_end(), forward<elem_t>(val));
+            _fill(range.get_iter(), range.get_iter_end(), forward<value_t>(val));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -47,12 +47,12 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ATOM_PRAGMA_OPTIMIZE_OFF
 
-        template <class range_t, typename elem_t>
-        constexpr auto fill_explicit(range_t&& range, elem_t&& val) const -> void
+        template <class range_t, typename value_t>
+        constexpr auto fill_explicit(range_t&& range, value_t&& val) const -> void
             requires is_mut_range<range_t>
-                     and is_assignable<typename range_t::elem_t, elem_t>
+                     and is_assignable<typename range_t::value_t, value_t>
         {
-            _fill(range.get_iter(), range.get_iter_end(), forward<elem_t>(val));
+            _fill(range.get_iter(), range.get_iter_end(), forward<value_t>(val));
         }
 
         ATOM_PRAGMA_OPTIMIZE_ON
@@ -63,8 +63,8 @@ namespace atom
         template <class range_t_0, class range_t_1>
         constexpr auto fwd_copy_to(const range_t_0& range0, range_t_1&& range1) const -> void
             requires is_range<range_t_0> and is_mut_range<range_t_1>
-                     and is_assignable<typename range_t_1::elem_t,
-                         typename range_t_0::elem_t>
+                     and is_assignable<typename range_t_1::value_t,
+                         typename range_t_0::value_t>
         {
             _fwd_copy(range0.get_iter(), range0.get_iter_end(), range1.get_iter(),
                 range1.get_iter_end());
@@ -76,8 +76,8 @@ namespace atom
         template <class range_t_0, class range_t_1>
         constexpr auto bwd_copy_to(const range_t_0& range0, range_t_1&& range1) const -> void
             requires is_range<range_t_0> and is_mut_range<range_t_1>
-                     and is_assignable<typename range_t_1::elem_t,
-                         typename range_t_0::elem_t>
+                     and is_assignable<typename range_t_1::value_t,
+                         typename range_t_0::value_t>
         {
             _bwd_copy(range0.get_iter(), range0.get_iter_end(), range1.get_iter(),
                 range1.get_iter_end());
@@ -89,8 +89,8 @@ namespace atom
         template <class range_t_0, class range_t_1>
         constexpr auto fwd_move_to(range_t_0&& range0, range_t_1&& range1) const -> void
             requires is_mut_range<range_t_0> and is_mut_range<range_t_1>
-                     and is_assignable<typename range_t_1::elem_t,
-                         typename range_t_0::elem_t>
+                     and is_assignable<typename range_t_1::value_t,
+                         typename range_t_0::value_t>
         {
             _fwd_move(range0.get_iter(), range0.get_iter_end(), range1.get_iter(),
                 range1.get_iter_end());
@@ -102,8 +102,8 @@ namespace atom
         template <class range_t_0, class range_t_1>
         constexpr auto bwd_move_to(range_t_0&& range0, range_t_1&& range1) const -> void
             requires is_mut_range<range_t_0> and is_mut_range<range_t_1>
-                     and is_assignable<typename range_t_1::elem_t,
-                         typename range_t_0::elem_t>
+                     and is_assignable<typename range_t_1::value_t,
+                         typename range_t_0::value_t>
         {
             _bwd_move(range0.get_iter(), range0.get_iter_end(), range1.get_iter(),
                 range1.get_iter_end());
@@ -114,7 +114,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <class range_t>
         constexpr auto shift_fwd(range_t&& range, usize steps) const -> void
-            requires is_mut_fwd_range<range_t> and is_move_assignable<typename range_t::elem_t>
+            requires is_mut_fwd_range<range_t> and is_move_assignable<typename range_t::value_t>
         {
             _fwd_shift(range.get_iter(), range.get_iter_end(), steps);
         }
@@ -124,7 +124,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <class range_t>
         constexpr auto shift_bwd(range_t&& range, usize steps) const -> void
-            requires is_mut_fwd_range<range_t> and is_move_assignable<typename range_t::elem_t>
+            requires is_mut_fwd_range<range_t> and is_move_assignable<typename range_t::value_t>
         {
             _bwd_shift(range.get_iter(), range.get_iter_end(), steps);
         }
@@ -134,7 +134,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <class range_t>
         constexpr auto shift_by(range_t&& range, isize steps) const -> void
-            requires is_mut_fwd_range<range_t> and is_swappable<typename range_t::elem_t>
+            requires is_mut_fwd_range<range_t> and is_swappable<typename range_t::value_t>
         {
             if (steps > 0)
             {
@@ -151,7 +151,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <class range_t>
         constexpr auto rotate_fwd(range_t&& range, usize steps) const -> void
-            requires is_mut_range<range_t> and is_swappable<typename range_t::elem_t>
+            requires is_mut_range<range_t> and is_swappable<typename range_t::value_t>
         {
             _fwd_rotate(range.get_iter(), range.get_iter_end(), steps);
         }
@@ -161,7 +161,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <class range_t>
         constexpr auto rotate_bwd(range_t&& range, usize steps) const -> void
-            requires is_mut_range<range_t> and is_swappable<typename range_t::elem_t>
+            requires is_mut_range<range_t> and is_swappable<typename range_t::value_t>
         {
             _bwd_rotate(range.get_iter(), range.get_iter_end(), steps);
         }
@@ -171,7 +171,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <class range_t>
         constexpr auto rotate_by(range_t&& range, isize steps) const -> void
-            requires is_mut_range<range_t> and is_swappable<typename range_t::elem_t>
+            requires is_mut_range<range_t> and is_swappable<typename range_t::value_t>
         {
             if (steps > 0)
             {
@@ -188,7 +188,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <class range_t>
         constexpr auto destruct(range_t&& range) const -> void
-            requires is_mut_range<range_t> and is_destructible<typename range_t::elem_t>
+            requires is_mut_range<range_t> and is_destructible<typename range_t::value_t>
         {
             _destruct(range.get_iter(), range.get_iter_end());
         }
@@ -209,13 +209,13 @@ namespace atom
             return count;
         }
 
-        template <class iter_t, class iter_end_t, typename elem_t>
-        constexpr auto _fill(iter_t iter, iter_end_t iter_end, elem_t&& val) const -> void
+        template <class iter_t, class iter_end_t, typename value_t>
+        constexpr auto _fill(iter_t iter, iter_end_t iter_end, value_t&& val) const -> void
         {
             std_iter_wrap_for_atom_iter std_iter(iter);
             std_iter_wrap_for_atom_iter std_iter_end(iter_end);
 
-            std::fill(std_iter, std_iter_end, forward<elem_t>(val));
+            std::fill(std_iter, std_iter_end, forward<value_t>(val));
         }
 
         template <class iter_t_0, class iter_end_t_0, class iter_t_1,

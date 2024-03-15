@@ -18,7 +18,7 @@ namespace atom
         using _impl_t = typename base_t::_impl_t;
 
     public:
-        using elem_t = typename base_t::elem_t;
+        using value_t = typename base_t::value_t;
         using iter_t = typename base_t::iter_t;
         using iter_end_t = typename base_t::iter_end_t;
         using mut_iter_t = typename _impl_t::mut_iter_t;
@@ -63,7 +63,7 @@ namespace atom
         using _impl_t = typename base_t::_impl_t;
 
     public:
-        using elem_t = typename base_t::elem_t;
+        using value_t = typename base_t::value_t;
         using iter_t = typename base_t::iter_t;
         using iter_end_t = typename base_t::iter_end_t;
         using mut_iter_t = typename _impl_t::mut_iter_t;
@@ -127,7 +127,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename type1>
         constexpr auto write_elems(type1& val) const -> void
-            requires(is_assignable<elem_t, type1>)
+            requires(is_assignable<value_t, type1>)
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -137,7 +137,7 @@ namespace atom
 
         template <typename type1>
         constexpr auto write_elems_no_optimize(type1& val) const -> void
-            requires(is_assignable<elem_t, type1>)
+            requires(is_assignable<value_t, type1>)
         {}
 
         ATOM_PRAGMA_OPTIMIZE_ON
@@ -146,49 +146,49 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         constexpr auto shift_fwd(usize steps)
-            requires(is_move_assignable<elem_t>)
+            requires(is_move_assignable<value_t>)
         {}
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
         constexpr auto shift_bwd(usize steps)
-            requires(is_move_assignable<elem_t>)
+            requires(is_move_assignable<value_t>)
         {}
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
         constexpr auto shift_by(isize steps)
-            requires(is_swappable<elem_t>)
+            requires(is_swappable<value_t>)
         {}
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
         constexpr auto rotate_fwd(usize steps)
-            requires(is_swappable<elem_t>)
+            requires(is_swappable<value_t>)
         {}
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
         constexpr auto rotate_bwd(usize steps)
-            requires(is_swappable<elem_t>)
+            requires(is_swappable<value_t>)
         {}
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
         constexpr auto rotate_by(isize steps)
-            requires(is_swappable<elem_t>)
+            requires(is_swappable<value_t>)
         {}
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
         constexpr auto destroy_elems()
-            requires(is_destructible<elem_t>)
+            requires(is_destructible<value_t>)
         {}
 
     protected:

@@ -20,11 +20,11 @@ namespace atom
         using this_t = _dynamic_array_impl;
 
     public:
-        using elem_t = in_elem_t;
+        using value_t = in_elem_t;
         using allocator_t = in_allocator_t;
-        using iter_t = array_iter<elem_t>;
+        using iter_t = array_iter<value_t>;
         using iter_end_t = iter_t;
-        using mut_iter_t = mut_array_iter<elem_t>;
+        using mut_iter_t = mut_array_iter<value_t>;
         using mut_iter_end_t = mut_iter_t;
 
     public:
@@ -92,12 +92,12 @@ namespace atom
             _allocator = that._allocator;
         }
 
-        constexpr auto get_at(usize index) const -> const elem_t&
+        constexpr auto get_at(usize index) const -> const value_t&
         {
             return _data[index];
         }
 
-        constexpr auto get_mut_at(usize index) -> elem_t&
+        constexpr auto get_mut_at(usize index) -> value_t&
         {
             return _data[index];
         }
@@ -236,12 +236,12 @@ namespace atom
             return _count;
         }
 
-        constexpr auto get_data() const -> const elem_t*
+        constexpr auto get_data() const -> const value_t*
         {
             return _data;
         }
 
-        constexpr auto get_mut_data() -> elem_t*
+        constexpr auto get_mut_data() -> value_t*
         {
             return _data;
         }
@@ -403,7 +403,7 @@ namespace atom
             _update_iter_debug_id();
 
             usize new_cap = _calc_cap_growth(count);
-            elem_t* new_data = (elem_t*)_allocator.alloc(new_cap);
+            value_t* new_data = (value_t*)_allocator.alloc(new_cap);
 
             if (_count != 0)
             {
@@ -422,58 +422,58 @@ namespace atom
         template <typename... arg_ts>
         constexpr auto _construct_at(usize index, arg_ts&&... args) -> void
         {
-            elem_t* src = _data + index;
+            value_t* src = _data + index;
             std::construct_at(src, forward<arg_ts>(args)...);
         }
 
         constexpr auto _destruct_at(usize index) -> void
         {
-            elem_t* src = _data + index;
+            value_t* src = _data + index;
             std::destroy_at(src);
         }
 
         constexpr auto _destruct_range(usize index, usize count) -> void
         {
-            elem_t* begin = _data + index;
-            elem_t* end = begin + count;
+            value_t* begin = _data + index;
+            value_t* end = begin + count;
             std::destroy(begin, end);
         }
 
         constexpr auto _destruct_all() -> void
         {
-            elem_t* begin = _data;
-            elem_t* end = _data + _count;
+            value_t* begin = _data;
+            value_t* end = _data + _count;
             std::destroy(begin, end);
         }
 
         constexpr auto _shift_range_front(usize index, usize steps) -> void
         {
-            elem_t* begin = _data + index;
-            elem_t* end = _data + _count;
-            elem_t* dest = begin - steps;
+            value_t* begin = _data + index;
+            value_t* end = _data + _count;
+            value_t* dest = begin - steps;
             std::move(begin, end, dest);
         }
 
         constexpr auto _shift_range_back(usize index, usize steps) -> void
         {
-            elem_t* begin = _data + index;
-            elem_t* end = _data + _count;
-            elem_t* dest = begin + steps;
+            value_t* begin = _data + index;
+            value_t* end = _data + _count;
+            value_t* dest = begin + steps;
             std::move_backward(begin, end, dest);
         }
 
         constexpr auto _rotate_range_back(usize index, usize count) -> void
         {
-            elem_t* begin = _data;
-            elem_t* mid = begin + index;
-            elem_t* end = begin + _count;
+            value_t* begin = _data;
+            value_t* mid = begin + index;
+            value_t* end = begin + _count;
             std::rotate(begin, mid, end);
         }
 
-        constexpr auto _move_range_to(usize index, elem_t* dest) -> void
+        constexpr auto _move_range_to(usize index, value_t* dest) -> void
         {
-            elem_t* begin = _data + index;
-            elem_t* end = _data + _count;
+            value_t* begin = _data + index;
+            value_t* end = _data + _count;
             std::move(begin, end, dest);
         }
 
@@ -500,7 +500,7 @@ namespace atom
         }
 
     private:
-        elem_t* _data;
+        value_t* _data;
         usize _count;
         usize _capacity;
         allocator_t _allocator;
@@ -512,11 +512,11 @@ namespace atom
         using this_t = _dynamic_array_impl_using_std_vector;
 
     public:
-        using elem_t = in_elem_t;
+        using value_t = in_elem_t;
         using allocator_t = in_allocator_t;
-        using iter_t = array_iter<elem_t>;
+        using iter_t = array_iter<value_t>;
         using iter_end_t = iter_t;
-        using mut_iter_t = mut_array_iter<elem_t>;
+        using mut_iter_t = mut_array_iter<value_t>;
         using mut_iter_end_t = mut_iter_t;
 
     public:
@@ -559,12 +559,12 @@ namespace atom
             _vector = std::move(that._vector);
         }
 
-        constexpr auto get_at(usize index) const -> const elem_t&
+        constexpr auto get_at(usize index) const -> const value_t&
         {
             return _vector[index];
         }
 
-        constexpr auto get_mut_at(usize index) -> elem_t&
+        constexpr auto get_mut_at(usize index) -> value_t&
         {
             return _vector[index];
         }
@@ -685,12 +685,12 @@ namespace atom
             return _vector.size();
         }
 
-        constexpr auto get_data() const -> const elem_t*
+        constexpr auto get_data() const -> const value_t*
         {
             return _vector.data();
         }
 
-        constexpr auto get_mut_data() -> elem_t*
+        constexpr auto get_mut_data() -> value_t*
         {
             return _vector.data();
         }
@@ -732,7 +732,7 @@ namespace atom
         }
 
     private:
-        std::vector<elem_t> _vector;
+        std::vector<value_t> _vector;
     };
 }
 
@@ -758,11 +758,11 @@ namespace atom
         using _impl_t = _dynamic_array_impl_using_std_vector<in_elem_t, in_allocator_t>;
 
     public:
-        using elem_t = in_elem_t;
+        using value_t = in_elem_t;
         using allocator_t = in_allocator_t;
-        using iter_t = array_iter<elem_t>;
+        using iter_t = array_iter<value_t>;
         using iter_end_t = iter_t;
-        using mut_iter_t = mut_array_iter<elem_t>;
+        using mut_iter_t = mut_array_iter<value_t>;
         using mut_iter_end_t = mut_iter_t;
 
     public:
@@ -810,7 +810,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename range_t>
         constexpr basic_dynamic_array(range_t&& range)
-            requires(is_range_of<typeinfo::get_pure<range_t>, elem_t>)
+            requires(is_range_of<typeinfo::get_pure<range_t>, value_t>)
             : _impl(typename _impl_t::range_tag(), range.get_iter(), range.get_iter_end())
         {}
 
@@ -819,7 +819,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename range_t>
         constexpr basic_dynamic_array& operator=(range_t&& range)
-            requires(is_range_of<range_t, elem_t>)
+            requires(is_range_of<range_t, value_t>)
         {
             _impl.assign_range(range.get_iter(), range.get_iter_end());
         }
@@ -833,7 +833,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_at(usize index) const -> const elem_t&
+        constexpr auto get_at(usize index) const -> const value_t&
         {
             ATOM_DEBUG_EXPECTS(is_index_in_range(index));
 
@@ -843,7 +843,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_mut_at(usize index) -> elem_t&
+        constexpr auto get_mut_at(usize index) -> value_t&
         {
             ATOM_DEBUG_EXPECTS(is_index_in_range(index));
 
@@ -866,7 +866,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename... arg_ts>
         constexpr auto emplace_at(usize index, arg_ts&&... args)
-            requires(is_constructible<elem_t, arg_ts...>)
+            requires(is_constructible<value_t, arg_ts...>)
         {
             ATOM_DEBUG_EXPECTS(is_index_in_range_or_end(index), "index is out of range.");
 
@@ -893,7 +893,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename... arg_ts>
         constexpr auto emplace_at(iter_t it, arg_ts&&... args) -> mut_iter_t
-            requires(is_constructible<elem_t, arg_ts...>)
+            requires(is_constructible<value_t, arg_ts...>)
         {
             ATOM_DEBUG_EXPECTS(is_iter_valid(it), "invalid iter.");
             ATOM_DEBUG_EXPECTS(is_iter_in_range_or_end(it), "iter is out of range.");
@@ -924,8 +924,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename range_t>
         constexpr auto insert_range_at(usize index, range_t&& range) -> usize
-            requires(is_range_of<range_t, elem_t>)
-                    and (is_constructible<elem_t, typename range_t::elem_t>)
+            requires(is_range_of<range_t, value_t>)
+                    and (is_constructible<value_t, typename range_t::value_t>)
         {
             ATOM_DEBUG_EXPECTS(is_index_in_range_or_end(index), "index is out of range.");
 
@@ -953,8 +953,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename range_t>
         constexpr auto insert_range_at(iter_t it, range_t&& range)
-            requires(is_range_of<range_t, elem_t>)
-                    and (is_constructible<elem_t, typename range_t::elem_t>)
+            requires(is_range_of<range_t, value_t>)
+                    and (is_constructible<value_t, typename range_t::value_t>)
         {
             ATOM_DEBUG_EXPECTS(is_iter_valid(it), "invalid iter.");
             ATOM_DEBUG_EXPECTS(is_iter_in_range_or_end(it), "iter is out of range.");
@@ -979,7 +979,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename... arg_ts>
         constexpr auto emplace_front(arg_ts&&... args)
-            requires(is_constructible<elem_t, arg_ts...>)
+            requires(is_constructible<value_t, arg_ts...>)
         {
             _impl.emplace_front(forward<arg_ts>(args)...);
         }
@@ -1004,8 +1004,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename range_t>
         constexpr auto insert_range_front(range_t&& range) -> mut_iter_t
-            requires(is_range_of<range_t, elem_t>)
-                    and (is_constructible<elem_t, typename range_t::elem_t>)
+            requires(is_range_of<range_t, value_t>)
+                    and (is_constructible<value_t, typename range_t::value_t>)
         {
             usize count = _impl.insert_range_front(forward<range_t&&>(range));
             return _impl.get_mut_iter(count);
@@ -1026,7 +1026,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename... arg_ts>
         constexpr auto emplace_back(arg_ts&&... args)
-            requires(is_constructible<elem_t, arg_ts...>)
+            requires(is_constructible<value_t, arg_ts...>)
         {
             _impl.emplace_back(forward<arg_ts>(args)...);
         }
@@ -1036,7 +1036,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename arg_t>
         constexpr auto operator+=(arg_t&& el)
-            requires(is_constructible<elem_t, arg_t>)
+            requires(is_constructible<value_t, arg_t>)
         {
             _impl.emplace_back(forward<arg_t>(el));
         }
@@ -1061,8 +1061,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename range_t>
         constexpr auto insert_range_back(range_t&& range) -> mut_iter_t
-            requires(is_range_of<range_t, elem_t>)
-                    and (is_constructible<elem_t, typename range_t::elem_t>)
+            requires(is_range_of<range_t, value_t>)
+                    and (is_constructible<value_t, typename range_t::value_t>)
         {
             usize count = _impl.insert_range_back(range.get_iter(), range.get_iter_end());
             return _impl.get_mut_iter_at(_impl.get_count() - count);
@@ -1074,9 +1074,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename range_t>
         constexpr auto operator+=(range_t&& range)
-            requires(is_range_of<typeinfo::get_pure<range_t>, elem_t>)
-                    and (is_constructible<elem_t,
-                        typename typeinfo::get_pure<range_t>::elem_t>)
+            requires(is_range_of<typeinfo::get_pure<range_t>, value_t>)
+                    and (is_constructible<value_t,
+                        typename typeinfo::get_pure<range_t>::value_t>)
         {
             _impl.insert_range_back(move(range.get_iter()), move(range.get_iter_end()));
         }
@@ -1194,7 +1194,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto remove_one_find(const elem_t& elem) -> bool
+        constexpr auto remove_one_find(const value_t& elem) -> bool
         {
             for (usize i = 0; i < _impl.get_count(); i++)
             {
@@ -1211,7 +1211,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto remove_all_find(const elem_t& elem) -> usize
+        constexpr auto remove_all_find(const value_t& elem) -> usize
         {
             usize removed_count = 0;
             for (usize i = 0; i < _impl.get_count(); i++)
@@ -1232,7 +1232,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename pred_t>
         constexpr auto remove_one_if(pred_t&& pred) -> bool
-            requires(is_invokable<pred_t, bool(const elem_t&)>)
+            requires(is_invokable<pred_t, bool(const value_t&)>)
         {
             for (usize i = 0; i < _impl.get_count(); i++)
             {
@@ -1251,7 +1251,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename pred_t>
         constexpr auto remove_all_if(pred_t&& pred) -> usize
-            requires(is_invokable<pred_t, bool(const elem_t&)>)
+            requires(is_invokable<pred_t, bool(const value_t&)>)
         {
             usize removed_count = 0;
             for (usize i = 0; i < _impl.get_count(); i++)
@@ -1281,7 +1281,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_data() const -> const elem_t*
+        constexpr auto get_data() const -> const value_t*
         {
             return _impl.get_data();
         }
@@ -1289,7 +1289,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_mut_data() -> elem_t*
+        constexpr auto get_mut_data() -> value_t*
         {
             return _impl.get_mut_data();
         }
@@ -1442,12 +1442,12 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename elem_t, typename allocator_t = default_mem_allocator>
+    template <typename value_t, typename allocator_t = default_mem_allocator>
     class dynamic_array
-        : public mut_array_range_extensions<basic_dynamic_array<elem_t, allocator_t>>
+        : public mut_array_range_extensions<basic_dynamic_array<value_t, allocator_t>>
     {
         using base_t =
-            mut_array_range_extensions<basic_dynamic_array<elem_t, allocator_t>>;
+            mut_array_range_extensions<basic_dynamic_array<value_t, allocator_t>>;
 
     public:
         using base_t::base_t;

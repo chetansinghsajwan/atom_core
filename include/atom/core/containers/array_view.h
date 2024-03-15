@@ -14,10 +14,10 @@ namespace atom
         using this_t = basic_array_view;
 
     public:
-        using elem_t = in_elem_t;
-        using iter_t = array_iter<elem_t>;
+        using value_t = in_elem_t;
+        using iter_t = array_iter<value_t>;
         using iter_end_t = iter_t;
-        using mut_iter_t = mut_array_iter<elem_t>;
+        using mut_iter_t = mut_array_iter<value_t>;
         using mut_iter_end_t = mut_iter_t;
 
     public:
@@ -53,7 +53,7 @@ namespace atom
         /// # array constructor
         /// ----------------------------------------------------------------------------------------
         template <usize count>
-        constexpr basic_array_view(const elem_t (&arr)[count])
+        constexpr basic_array_view(const value_t (&arr)[count])
             : _data(arr)
             , _count(count)
         {}
@@ -62,7 +62,7 @@ namespace atom
         /// # array operator
         /// ----------------------------------------------------------------------------------------
         template <usize count>
-        constexpr basic_array_view& operator=(const elem_t (&arr)[count])
+        constexpr basic_array_view& operator=(const value_t (&arr)[count])
         {
             _data = arr;
             _count = count;
@@ -73,7 +73,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename range_t>
         constexpr basic_array_view(const range_t& range)
-            requires(is_array_range_of<range_t, elem_t>)
+            requires(is_array_range_of<range_t, value_t>)
             : _data(range.get_data())
             , _count(range.get_count())
         {}
@@ -83,7 +83,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename range_t>
         constexpr basic_array_view& operator=(const range_t& range)
-            requires(is_array_range_of<range_t, elem_t>)
+            requires(is_array_range_of<range_t, value_t>)
         {
             _data = range.get_data();
             _count = range.get_count();
@@ -98,7 +98,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_data() const -> const elem_t*
+        constexpr auto get_data() const -> const value_t*
         {
             return _data;
         }
@@ -128,17 +128,17 @@ namespace atom
         }
 
     private:
-        const elem_t* _data;
+        const value_t* _data;
         usize _count;
     };
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename elem_t>
-    class array_view: public array_range_extensions<basic_array_view<elem_t>>
+    template <typename value_t>
+    class array_view: public array_range_extensions<basic_array_view<value_t>>
     {
-        using base_t = array_range_extensions<basic_array_view<elem_t>>;
+        using base_t = array_range_extensions<basic_array_view<value_t>>;
 
     public:
         using base_t::base_t;

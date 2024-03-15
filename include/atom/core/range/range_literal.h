@@ -3,23 +3,23 @@
 
 namespace atom
 {
-    template <typename elem_t>
+    template <typename value_t>
     class range_literal
     {
     public:
         template <usize count>
-        constexpr range_literal(const elem_t (&arr)[count])
+        constexpr range_literal(const value_t (&arr)[count])
             : _arr(arr)
             , _count(count)
         {}
 
-        constexpr range_literal(initializer_list<elem_t> list)
+        constexpr range_literal(initializer_list<value_t> list)
             : _arr(list.begin())
             , _count(list.size())
         {}
 
     public:
-        constexpr auto get_data() const -> const elem_t*
+        constexpr auto get_data() const -> const value_t*
         {
             return _arr;
         }
@@ -30,7 +30,7 @@ namespace atom
         }
 
     private:
-        const elem_t* _arr;
+        const value_t* _arr;
         usize _count;
     };
 }

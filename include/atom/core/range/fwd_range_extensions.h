@@ -28,7 +28,7 @@ namespace atom
         using _impl_t = typename base_t::_impl_t;
 
     public:
-        using elem_t = typename base_t::elem_t;
+        using value_t = typename base_t::value_t;
         using iter_t = typename base_t::iter_t;
         using iter_end_t = typename base_t::iter_end_t;
 

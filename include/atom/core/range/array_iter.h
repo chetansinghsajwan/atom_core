@@ -7,14 +7,14 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     /// array_iter iterates over raw arr.
     /// --------------------------------------------------------------------------------------------
-    template <typename value_t>
+    template <typename in_value_t>
     class array_iter
     {
-        ATOM_STATIC_ASSERTS(typeinfo::is_pure<value_t>, "array_iter supports only pure types.");
-        ATOM_STATIC_ASSERTS(not typeinfo::is_void<value_t>, "array_iter does not support void.");
+        ATOM_STATIC_ASSERTS(typeinfo::is_pure<in_value_t>, "array_iter supports only pure types.");
+        ATOM_STATIC_ASSERTS(not typeinfo::is_void<in_value_t>, "array_iter does not support void.");
 
     public:
-        using elem_t = value_t;
+        using value_t = in_value_t;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -107,17 +107,16 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     /// mut_array_iter iterates over mut raw arr.
     /// --------------------------------------------------------------------------------------------
-    template <typename value_t>
-    class mut_array_iter: public array_iter<value_t>
+    template <typename in_value_t>
+    class mut_array_iter: public array_iter<in_value_t>
     {
-        ATOM_STATIC_ASSERTS(typeinfo::is_pure<value_t>, "mut_array_iter supports only pure types.");
-        ATOM_STATIC_ASSERTS(not typeinfo::is_void<value_t>, "mut_array_iter does not support void.");
+        ATOM_STATIC_ASSERTS(typeinfo::is_pure<in_value_t>, "mut_array_iter supports only pure types.");
+        ATOM_STATIC_ASSERTS(not typeinfo::is_void<in_value_t>, "mut_array_iter does not support void.");
 
-    private:
-        using base_t = array_iter<value_t>;
+        using base_t = array_iter<in_value_t>;
 
     public:
-        using elem_t = value_t;
+        using value_t = in_value_t;
 
     public:
         /// ----------------------------------------------------------------------------------------

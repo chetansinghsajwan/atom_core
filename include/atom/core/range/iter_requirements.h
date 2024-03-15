@@ -9,19 +9,19 @@ namespace atom
     template <typename iter_t, typename value_t>
     concept _is_iter_of = requires
     {
-        requires is_convertible_to<typename iter_t::elem_t, value_t>;
+        requires is_convertible_to<typename iter_t::value_t, value_t>;
     };
 
     template <typename iter_t>
     concept _is_mut_iter = requires(iter_t it)
     {
-        { it.mut_value() } -> is_convertible_to<typename iter_t::elem_t&>;
+        { it.mut_value() } -> is_convertible_to<typename iter_t::value_t&>;
     };
 
     template <typename iter_t, typename value_t>
     concept _is_mut_iter_of = requires
     {
-        requires is_same_as<typename iter_t::elem_t, value_t>;
+        requires is_same_as<typename iter_t::value_t, value_t>;
         requires _is_mut_iter<iter_t>;
     };
 }
@@ -41,12 +41,12 @@ namespace atom
     template <typename iter_t>
     concept is_iter = requires(iter_t it, const iter_t cit)
     {
-        typename iter_t::elem_t;
+        typename iter_t::value_t;
 
         requires is_moveable<iter_t>;
         requires is_destructible<iter_t>;
 
-        { cit.value() } -> is_convertible_to<const typename iter_t::elem_t&>;
+        { cit.value() } -> is_convertible_to<const typename iter_t::value_t&>;
         { it.next() } -> is_convertible_to<iter_t&>;
     };
 
@@ -276,7 +276,7 @@ namespace atom
     {
         requires is_jump_iter<iter_t>;
 
-        { cit.get_data() } -> is_convertible_to<const typename iter_t::elem_t*>;
+        { cit.get_data() } -> is_convertible_to<const typename iter_t::value_t*>;
     };
 
     template <typename iter_t>
@@ -285,7 +285,7 @@ namespace atom
         requires is_array_iter<iter_t>;
         requires _is_mut_iter<iter_t>;
 
-        { it.get_mut_data() } -> is_convertible_to<typename iter_t::elem_t*>;
+        { it.get_mut_data() } -> is_convertible_to<typename iter_t::value_t*>;
     };
 
     template <typename iter_t, typename value_t>

@@ -23,7 +23,7 @@ namespace atom
     class _basic_range_from_iter_pair
     {
     public:
-        using elem_t = typename in_iter_t::elem_t;
+        using value_t = typename in_iter_t::value_t;
         using iter_t = in_iter_t;
         using iter_end_t = in_iter_end_t;
 
@@ -44,7 +44,7 @@ namespace atom
             return _it_end;
         }
 
-        constexpr auto get_data() const -> const elem_t*
+        constexpr auto get_data() const -> const value_t*
             requires is_array_iter_pair<iter_t, iter_end_t>
         {
             return &_it.value();
@@ -96,7 +96,7 @@ namespace atom
         class _type_container
         {
         public:
-            using elem_t = typeinfo::remove_cvref_t<in_elem_t>;
+            using value_t = typeinfo::remove_cvref_t<in_elem_t>;
         };
 
         static consteval auto _get()
@@ -120,7 +120,7 @@ namespace atom
         }
 
     public:
-        using elem_t = typename decltype(_get())::elem_t;
+        using value_t = typename decltype(_get())::value_t;
     };
 
     template <typename iter_t, typename iter_end_t>
@@ -131,7 +131,7 @@ namespace atom
         class _type_container
         {
         public:
-            using elem_t = typeinfo::remove_cvref_t<in_elem_t>;
+            using value_t = typeinfo::remove_cvref_t<in_elem_t>;
         };
 
         static consteval auto _get()
@@ -155,14 +155,14 @@ namespace atom
         }
 
     public:
-        using elem_t = typename decltype(_get())::elem_t;
+        using value_t = typename decltype(_get())::value_t;
     };
 
     template <typename iter_t, typename iter_end_t>
     class _range_from_iter_pair
-        : public _range_from_iter_extended<iter_t, iter_end_t>::elem_t
+        : public _range_from_iter_extended<iter_t, iter_end_t>::value_t
     {
-        using base_t = _range_from_iter_extended<iter_t, iter_end_t>::elem_t;
+        using base_t = _range_from_iter_extended<iter_t, iter_end_t>::value_t;
 
     public:
         constexpr _range_from_iter_pair(iter_t it, iter_end_t it_end)
@@ -172,10 +172,10 @@ namespace atom
 
     template <typename mut_iter_t, typename mut_iter_end_t>
     class _mut_range_from_iter_pair
-        : public _mut_range_from_iter_extended<mut_iter_t, mut_iter_end_t>::elem_t
+        : public _mut_range_from_iter_extended<mut_iter_t, mut_iter_end_t>::value_t
     {
         using base_t =
-            _mut_range_from_iter_extended<mut_iter_t, mut_iter_end_t>::elem_t;
+            _mut_range_from_iter_extended<mut_iter_t, mut_iter_end_t>::value_t;
 
     public:
         constexpr _mut_range_from_iter_pair(mut_iter_t it, mut_iter_end_t it_end)
@@ -211,8 +211,8 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename elem_t>
-    constexpr auto range_from(std::initializer_list<elem_t> list)
+    template <typename value_t>
+    constexpr auto range_from(std::initializer_list<value_t> list)
     {
         return _range_from_iter_pair(array_iter(list.begin()), array_iter(list.end()));
     }
@@ -220,8 +220,8 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename elem_t>
-    constexpr auto range_from(const elem_t* begin, const elem_t* end)
+    template <typename value_t>
+    constexpr auto range_from(const value_t* begin, const value_t* end)
     {
         return _range_from_iter_pair(array_iter(begin), array_iter(end));
     }
@@ -229,8 +229,8 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename elem_t>
-    constexpr auto range_from(elem_t* begin, elem_t* end)
+    template <typename value_t>
+    constexpr auto range_from(value_t* begin, value_t* end)
     {
         return _mut_range_from_iter_pair(mut_array_iter(begin), mut_array_iter(end));
     }
@@ -238,8 +238,8 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename elem_t>
-    constexpr auto range_from(const elem_t* begin, usize count)
+    template <typename value_t>
+    constexpr auto range_from(const value_t* begin, usize count)
     {
         return _range_from_iter_pair(array_iter(begin), array_iter(begin + count));
     }
@@ -247,8 +247,8 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename elem_t>
-    constexpr auto range_from(elem_t* begin, usize count)
+    template <typename value_t>
+    constexpr auto range_from(value_t* begin, usize count)
     {
         return _mut_range_from_iter_pair(mut_array_iter(begin), mut_array_iter(begin + count));
     }
@@ -256,8 +256,8 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename elem_t, usize count>
-    constexpr auto range_from(const elem_t (&arr)[count])
+    template <typename value_t, usize count>
+    constexpr auto range_from(const value_t (&arr)[count])
     {
         return _range_from_iter_pair(array_iter(ptr(arr)), array_iter(ptr(arr) + count));
     }
@@ -265,8 +265,8 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename elem_t, usize count>
-    constexpr auto range_from(elem_t (&arr)[count])
+    template <typename value_t, usize count>
+    constexpr auto range_from(value_t (&arr)[count])
     {
         return _mut_range_from_iter_pair(
             mut_array_iter(mut_ptr(arr)), mut_array_iter(mut_ptr(arr) + count));
@@ -310,8 +310,8 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename elem_t>
-    constexpr auto range_from_literal(range_literal<elem_t> lit)
+    template <typename value_t>
+    constexpr auto range_from_literal(range_literal<value_t> lit)
     {
         return range_from(lit.get_data(), lit.get_count());
     }

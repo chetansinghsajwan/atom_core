@@ -16,7 +16,7 @@ namespace atom::mock
     class iter
     {
     public:
-        using elem_t = in_value_t;
+        using value_t = in_value_t;
 
     public:
         iter() = delete;
@@ -28,7 +28,7 @@ namespace atom::mock
         ~iter() = default;
 
     public:
-        auto value() const -> const elem_t&;
+        auto value() const -> const value_t&;
         auto is_eq(iter_end end) const -> bool;
         auto next() -> iter&;
     };
@@ -40,7 +40,7 @@ namespace atom::mock
     class mut_iter
     {
     public:
-        using elem_t = in_value_t;
+        using value_t = in_value_t;
 
     public:
         mut_iter() = delete;
@@ -52,8 +52,8 @@ namespace atom::mock
         ~mut_iter() = default;
 
     public:
-        auto value() const -> const elem_t&;
-        auto mut_value() -> elem_t&;
+        auto value() const -> const value_t&;
+        auto mut_value() -> value_t&;
         auto is_eq(iter_end end) const -> bool;
         auto next() -> mut_iter&;
     };
@@ -65,11 +65,11 @@ namespace atom::mock
     class fwd_iter
     {
     public:
-        using elem_t = in_value_t;
+        using value_t = in_value_t;
 
     public:
-        auto value() const -> const elem_t&;
-        auto mut_value() -> elem_t&;
+        auto value() const -> const value_t&;
+        auto mut_value() -> value_t&;
         auto next() -> fwd_iter&;
         auto is_eq(iter_end end) const -> bool;
     };
@@ -81,11 +81,11 @@ namespace atom::mock
     class mut_fwd_iter
     {
     public:
-        using elem_t = in_value_t;
+        using value_t = in_value_t;
 
     public:
-        auto value() const -> const elem_t&;
-        auto mut_value() -> elem_t&;
+        auto value() const -> const value_t&;
+        auto mut_value() -> value_t&;
         auto next() -> mut_fwd_iter&;
         auto is_eq(iter_end end) const -> bool;
     };
@@ -97,10 +97,10 @@ namespace atom::mock
     class bidi_iter
     {
     public:
-        using elem_t = in_value_t;
+        using value_t = in_value_t;
 
     public:
-        auto value() const -> const elem_t&;
+        auto value() const -> const value_t&;
         auto next() -> bidi_iter&;
         auto prev() -> bidi_iter&;
         auto is_eq(iter_end end) const -> bool;
@@ -113,11 +113,11 @@ namespace atom::mock
     class mut_bidi_iter
     {
     public:
-        using elem_t = in_value_t;
+        using value_t = in_value_t;
 
     public:
-        auto value() const -> const elem_t&;
-        auto mut_value() -> elem_t&;
+        auto value() const -> const value_t&;
+        auto mut_value() -> value_t&;
         auto next() -> mut_bidi_iter&;
         auto prev() -> mut_bidi_iter&;
         auto is_eq(iter_end end) const -> bool;
@@ -130,10 +130,10 @@ namespace atom::mock
     class jump_iter
     {
     public:
-        using elem_t = in_value_t;
+        using value_t = in_value_t;
 
     public:
-        auto value() const -> const elem_t&;
+        auto value() const -> const value_t&;
         auto next(usize steps = 1) -> jump_iter&;
         auto prev(usize steps = 1) -> jump_iter&;
         auto is_eq(iter_end end) const -> bool;
@@ -147,11 +147,11 @@ namespace atom::mock
     class mut_jump_iter
     {
     public:
-        using elem_t = in_value_t;
+        using value_t = in_value_t;
 
     public:
-        auto value() const -> const elem_t&;
-        auto mut_value() -> elem_t&;
+        auto value() const -> const value_t&;
+        auto mut_value() -> value_t&;
         auto next(usize steps = 1) -> mut_jump_iter&;
         auto prev(usize steps = 1) -> mut_jump_iter&;
         auto is_eq(iter_end end) const -> bool;
@@ -165,10 +165,10 @@ namespace atom::mock
     class array_iter
     {
     public:
-        using elem_t = in_value_t;
+        using value_t = in_value_t;
 
     public:
-        auto value() const -> const elem_t&;
+        auto value() const -> const value_t&;
         auto get_data() const -> const in_value_t*;
         auto next(usize steps = 1) -> array_iter&;
         auto prev(usize steps = 1) -> array_iter&;
@@ -183,11 +183,11 @@ namespace atom::mock
     class mut_array_iter
     {
     public:
-        using elem_t = in_value_t;
+        using value_t = in_value_t;
 
     public:
-        auto value() const -> const elem_t&;
-        auto mut_value() -> elem_t&;
+        auto value() const -> const value_t&;
+        auto mut_value() -> value_t&;
         auto get_data() const -> const in_value_t*;
         auto get_mut_data() -> in_value_t*;
         auto next(usize steps = 1) -> mut_array_iter&;

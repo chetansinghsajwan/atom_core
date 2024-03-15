@@ -20,7 +20,7 @@ namespace atom
         using _impl_t = typename base_t::_impl_t;
 
     public:
-        using elem_t = typename base_t::elem_t;
+        using value_t = typename base_t::value_t;
         using iter_t = typename base_t::iter_t;
         using iter_end_t = typename base_t::iter_end_t;
         using mut_iter_t = typename base_t::mut_iter_t;
@@ -31,7 +31,7 @@ namespace atom
         using base_t::operator=;
 
     public:
-        constexpr auto get_mut_data() -> elem_t*
+        constexpr auto get_mut_data() -> value_t*
         {
             return _range().get_mut_data();
         }
@@ -41,17 +41,17 @@ namespace atom
             return _range().get_count();
         }
 
-        constexpr auto get_mut_at(usize i) -> elem_t&
+        constexpr auto get_mut_at(usize i) -> value_t&
         {
             return (get_mut_data() + i).get_mut();
         }
 
-        constexpr auto mut_front() -> elem_t&
+        constexpr auto mut_front() -> value_t&
         {
             return get_mut_at(0);
         }
 
-        constexpr auto mut_back() -> elem_t&
+        constexpr auto mut_back() -> value_t&
         {
             ATOM_DEBUG_EXPECTS(get_count() > 0);
 
@@ -96,7 +96,7 @@ namespace atom
         using _impl_t = typename base_t::_impl_t;
 
     public:
-        using elem_t = typename base_t::elem_t;
+        using value_t = typename base_t::value_t;
         using iter_t = typename base_t::iter_t;
         using iter_end_t = typename base_t::iter_end_t;
         using mut_iter_t = typename base_t::mut_iter_t;
@@ -116,7 +116,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// get underlying ptr to arr.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_mut_data() -> elem_t*
+        constexpr auto get_mut_data() -> value_t*
         {
             return _impl().get_mut_data();
         }
@@ -130,7 +130,7 @@ namespace atom
         /// # time complexity
         /// constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_mut_at(usize i) -> elem_t&
+        constexpr auto get_mut_at(usize i) -> value_t&
         {
             ATOM_EXPECTS(is_index_in_range(i), "index is out of range.");
 
@@ -146,7 +146,7 @@ namespace atom
         /// # time complexity
         /// constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator[](usize i) -> elem_t&
+        constexpr auto operator[](usize i) -> value_t&
         {
             ATOM_DEBUG_EXPECTS(is_index_in_range(i), "index is out of range.");
 
@@ -161,7 +161,7 @@ namespace atom
         /// # time complexity
         /// constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto mut_front() -> elem_t&
+        constexpr auto mut_front() -> value_t&
         {
             ATOM_DEBUG_EXPECTS(not is_empty(), "range is empty.");
 
@@ -174,7 +174,7 @@ namespace atom
         /// # time complexity
         /// constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto mut_back() -> elem_t&
+        constexpr auto mut_back() -> value_t&
         {
             ATOM_DEBUG_EXPECTS(not is_empty(), "range is empty.");
 

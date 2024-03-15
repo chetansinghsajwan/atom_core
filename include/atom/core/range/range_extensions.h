@@ -16,7 +16,7 @@ namespace atom
         using _impl_t = range_t;
 
     public:
-        using elem_t = typename _impl_t::elem_t;
+        using value_t = typename _impl_t::value_t;
         using iter_t = typename _impl_t::iter_t;
         using iter_end_t = typename _impl_t::iter_end_t;
 
@@ -122,7 +122,7 @@ namespace atom
         using _impl_t = _range_extensions_impl_t;
 
     public:
-        using elem_t = typename _impl_t::elem_t;
+        using value_t = typename _impl_t::value_t;
         using iter_t = typename _impl_t::iter_t;
         using iter_end_t = typename _impl_t::iter_end_t;
 
@@ -180,7 +180,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename elem1_t>
         constexpr auto find(const elem1_t& el) const -> iter_t
-            requires(is_equality_comparable_with<elem_t, elem1_t>)
+            requires(is_equality_comparable_with<value_t, elem1_t>)
         {
             return _impl().find_elem(el);
         }
@@ -191,7 +191,7 @@ namespace atom
         template <typename other_range_t>
         constexpr auto find_range(const other_range_t& range) const -> iter_t
             requires(is_fwd_range<other_range_t>)
-                    and (is_equality_comparable_with<elem_t, typename other_range_t::elem_t>)
+                    and (is_equality_comparable_with<value_t, typename other_range_t::value_t>)
         {
             return _impl().find_range(range);
         }
@@ -215,7 +215,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename elem1_t>
         constexpr auto contains(const elem1_t& el) const -> bool
-            requires(is_equality_comparable_with<elem_t, elem1_t>)
+            requires(is_equality_comparable_with<value_t, elem1_t>)
         {
             return _impl().find_elem(el).compare(_impl().get_iter_end()) != 0;
         }
@@ -226,7 +226,7 @@ namespace atom
         template <typename other_range_t>
         constexpr auto contains(const other_range_t& range) const -> bool
             requires(is_fwd_range<other_range_t>)
-                    and (is_equality_comparable_with<elem_t, typename other_range_t::elem_t>)
+                    and (is_equality_comparable_with<value_t, typename other_range_t::value_t>)
         {
             return _impl().find_range(range).compare(_impl().get_iter_end()) != 0;
         }
@@ -243,7 +243,7 @@ namespace atom
         template <typename other_range_t>
         constexpr auto compare(const other_range_t& range) const -> i8
             requires(is_range<other_range_t>)
-                    and (is_equality_comparable_with<elem_t, typename other_range_t::elem_t>)
+                    and (is_equality_comparable_with<value_t, typename other_range_t::value_t>)
         {
             return _impl().compare(range);
         }
@@ -254,7 +254,7 @@ namespace atom
         template <typename other_range_t>
         constexpr auto is_eq(const other_range_t& range) const -> bool
             requires(is_range<other_range_t>)
-                    and (is_equality_comparable_with<elem_t, typename other_range_t::elem_t>)
+                    and (is_equality_comparable_with<value_t, typename other_range_t::value_t>)
         {
             return _impl().compare(range) == 0;
         }

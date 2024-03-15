@@ -17,7 +17,7 @@ namespace atom
         using _impl_t = typename base_t::_impl_t;
 
     public:
-        using elem_t = typename base_t::elem_t;
+        using value_t = typename base_t::value_t;
         using iter_t = typename base_t::iter_t;
         using iter_end_t = typename base_t::iter_end_t;
 
@@ -26,7 +26,7 @@ namespace atom
         using base_t::operator=;
 
     public:
-        constexpr auto get_data() const -> const elem_t*
+        constexpr auto get_data() const -> const value_t*
         {
             return _range().get_data();
         }
@@ -36,19 +36,19 @@ namespace atom
             return _range().get_count();
         }
 
-        constexpr auto get_at(usize i) const -> const elem_t&
+        constexpr auto get_at(usize i) const -> const value_t&
         {
             ATOM_DEBUG_EXPECTS(is_index_in_range(i));
 
             return get_data()[i];
         }
 
-        constexpr auto get_front() const -> const elem_t&
+        constexpr auto get_front() const -> const value_t&
         {
             return get_at(0);
         }
 
-        constexpr auto get_back() const -> const elem_t&
+        constexpr auto get_back() const -> const value_t&
         {
             return get_back(get_count() - 1);
         }
@@ -79,7 +79,7 @@ namespace atom
         using _impl_t = typename base_t::_impl_t;
 
     public:
-        using elem_t = typename base_t::elem_t;
+        using value_t = typename base_t::value_t;
         using iter_t = typename base_t::iter_t;
         using iter_end_t = typename base_t::iter_end_t;
         using view_t = int;
@@ -98,7 +98,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// get underlying ptr to arr.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_data() const -> const elem_t*
+        constexpr auto get_data() const -> const value_t*
         {
             return _impl().get_data();
         }
@@ -112,7 +112,7 @@ namespace atom
         /// # time complexity
         /// constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_at(usize i) const -> const elem_t&
+        constexpr auto get_at(usize i) const -> const value_t&
         {
             ATOM_EXPECTS(is_index_in_range(i), "index is out of range.");
 
@@ -128,7 +128,7 @@ namespace atom
         /// # time complexity
         /// constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator[](usize i) const -> const elem_t&
+        constexpr auto operator[](usize i) const -> const value_t&
         {
             ATOM_DEBUG_EXPECTS(is_index_in_range(i), "index is out of range.");
 
@@ -141,7 +141,7 @@ namespace atom
         /// # time complexity
         /// constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_front() const -> const elem_t&
+        constexpr auto get_front() const -> const value_t&
         {
             ATOM_DEBUG_EXPECTS(not is_empty(), "range is empty.");
 
@@ -154,7 +154,7 @@ namespace atom
         /// # time complexity
         /// constant.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_back() const -> const elem_t&
+        constexpr auto get_back() const -> const value_t&
         {
             ATOM_DEBUG_EXPECTS(not is_empty(), "range is empty.");
 

@@ -11,7 +11,7 @@ namespace atom
         : public container_t
         , public _string_t_id
     {
-        ATOM_STATIC_ASSERTS(is_same_as<typename container_t::elem_t, char>);
+        ATOM_STATIC_ASSERTS(is_same_as<typename container_t::value_t, char>);
 
     private:
         using this_t = string_functions;

@@ -11,11 +11,11 @@ namespace atom
     template <typename range_t>
     concept _is_range = requires(const range_t& range)
     {
-        typename range_t::elem_t;
+        typename range_t::value_t;
         typename range_t::iter_t;
         typename range_t::iter_end_t;
 
-        requires is_same_as<typename range_t::elem_t, typename range_t::iter_t::elem_t>;
+        requires is_same_as<typename range_t::value_t, typename range_t::iter_t::value_t>;
 
         { range.get_iter() } -> is_same_as<typename range_t::iter_t>;
         { range.get_iter_end() } -> is_same_as<typename range_t::iter_end_t>;
@@ -28,7 +28,7 @@ namespace atom
     concept _is_range_of = requires(const range_t& range)
     {
         requires _is_range<range_t>;
-        requires is_convertible_to<typename range_t::elem_t, value_t>;
+        requires is_convertible_to<typename range_t::value_t, value_t>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -53,7 +53,7 @@ namespace atom
     concept _is_mut_range_of = requires(range_t& range)
     {
         requires _is_mut_range<range_t>;
-        requires is_convertible_to<typename range_t::elem_t, value_t>;
+        requires is_convertible_to<typename range_t::value_t, value_t>;
     };
 
     /// --------------------------------------------------------------------------------------------

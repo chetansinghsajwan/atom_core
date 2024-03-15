@@ -28,7 +28,7 @@ namespace atom
         using this_t = std_iter_wrap_for_atom_iter;
 
     public:
-        using value_t = typename iter_t::elem_t;
+        using value_t = typename iter_t::value_t;
         using size_t = usize;
         using difference_t = isize;
         using iterator_category = std_iter_cat_for_atom_iter<iter_t>;

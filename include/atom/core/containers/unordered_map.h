@@ -3,6 +3,6 @@
 
 namespace atom
 {
-    template <typename key_t, typename elem_t>
-    using unordered_map = std::unordered_map<key_t, elem_t>;
+    template <typename key_t, typename value_t>
+    using unordered_map = std::unordered_map<key_t, value_t>;
 }
