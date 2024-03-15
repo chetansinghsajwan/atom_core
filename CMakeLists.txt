@@ -5,40 +5,42 @@ enable_language(CXX)
 cmake_policy(SET "CMP0076" NEW)
 
 include(FetchContent)
+set(FETCHCONTENT_QUIET "OFF")
 
 FetchContent_Declare(
     catch2
     GIT_REPOSITORY "https://github.com/catchorg/Catch2.git"
-    GIT_TAG        "v3.5.1"
-    GIT_SHALLOW    true
-)
+    GIT_TAG "v3.5.1"
+    GIT_PROGRESS true
+    GIT_SHALLOW true)
 
 FetchContent_Declare(
     fmt
     GIT_REPOSITORY "https://github.com/fmtlib/fmt.git"
-    GIT_TAG        "10.2.1"
-    GIT_SHALLOW    true
-)
+    GIT_TAG "10.2.1"
+    GIT_PROGRESS true
+    GIT_SHALLOW true)
 
 FetchContent_Declare(
     cpptrace
     GIT_REPOSITORY "https://github.com/jeremy-rifkin/cpptrace.git"
-    GIT_TAG        "v0.3.1"
-    GIT_SHALLOW    true
-)
+    GIT_TAG "v0.3.1"
+    GIT_PROGRESS true
+    GIT_SHALLOW true)
 
 FetchContent_Declare(
     magic_enum
     GIT_REPOSITORY "https://github.com/Neargye/magic_enum.git"
-    GIT_TAG        "v0.9.5"
-    GIT_SHALLOW    true
-)
+    GIT_TAG "v0.9.5"
+    GIT_PROGRESS true
+    GIT_SHALLOW true)
 
 FetchContent_Declare(
-  libassert
-  GIT_REPOSITORY "https://github.com/jeremy-rifkin/libassert.git"
-  GIT_TAG        "v2.0.0-alpha"
-)
+    libassert
+    GIT_REPOSITORY "https://github.com/jeremy-rifkin/libassert.git"
+    GIT_TAG "v2.0.0-alpha"
+    GIT_PROGRESS true
+    GIT_SHALLOW true)
 
 FetchContent_MakeAvailable(catch2 fmt cpptrace magic_enum libassert)
 
@@ -63,7 +65,6 @@ target_link_libraries(atom.core PUBLIC fmt::fmt-header-only)
 target_link_libraries(atom.core PUBLIC magic_enum::magic_enum)
 target_link_libraries(atom.core PUBLIC libassert::assert)
 target_compile_options(atom.core PUBLIC "-ferror-limit=1000")
-
 
 # --------------------------------------------------------------------------------------------------
 # atom.core.tests

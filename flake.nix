@@ -15,6 +15,7 @@
         devShells.${system}.default = stdenv.mkDerivation {
             name = "atom.core";
             buildInputs = with pkgs; [
+                cmake-format
                 coreutils
                 git
                 cmake
