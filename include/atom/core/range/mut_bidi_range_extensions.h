@@ -23,8 +23,7 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     template <typename range_t>
     class _mut_bidi_range_extensions_impl<range_t, void>
-        : public _mut_bidi_range_extensions_impl<range_t,
-              _bidi_range_extensions_impl<range_t>>
+        : public _mut_bidi_range_extensions_impl<range_t, _bidi_range_extensions_impl<range_t>>
     {
         using base_t =
             _mut_bidi_range_extensions_impl<range_t, _bidi_range_extensions_impl<range_t>>;

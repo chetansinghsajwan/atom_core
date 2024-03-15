@@ -453,7 +453,8 @@ namespace atom
     class option
     {
         ATOM_STATIC_ASSERTS(typeinfo::is_pure<in_value_t>, "option supports only pure types");
-        ATOM_STATIC_ASSERTS(not typeinfo::is_void<in_value_t>, "option does not support void type.");
+        ATOM_STATIC_ASSERTS(
+            not typeinfo::is_void<in_value_t>, "option does not support void type.");
 
     private:
         using this_t = option<in_value_t>;

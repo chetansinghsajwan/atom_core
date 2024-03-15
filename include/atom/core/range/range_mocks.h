@@ -124,7 +124,6 @@ namespace atom::mock
     /// `is_mut_common_range` mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename value_t>
-    class mut_common_range
-        : public _mut_range<mut_fwd_iter<value_t>, mut_fwd_iter<value_t>, value_t>
+    class mut_common_range: public _mut_range<mut_fwd_iter<value_t>, mut_fwd_iter<value_t>, value_t>
     {};
 }

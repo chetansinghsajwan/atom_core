@@ -44,8 +44,7 @@ namespace atom
     class bidi_range_extensions<range_t, void>
         : public bidi_range_extensions<range_t, _bidi_range_extensions_impl<range_t>>
     {
-        using base_t =
-            bidi_range_extensions<range_t, _bidi_range_extensions_impl<range_t>>;
+        using base_t = bidi_range_extensions<range_t, _bidi_range_extensions_impl<range_t>>;
 
     public:
         using base_t::base_t;

@@ -276,8 +276,7 @@ namespace atom
         {
             if (ptr != nullptr)
             {
-                _state =
-                    _create_state<destroyer_t, allocator_t>(move(destroyer), move(allocator));
+                _state = _create_state<destroyer_t, allocator_t>(move(destroyer), move(allocator));
             }
         }
 
@@ -307,8 +306,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename value_t,
-            typename destroyer_t = shared_ptr_default_destroyer<value_t>,
+        template <typename value_t, typename destroyer_t = shared_ptr_default_destroyer<value_t>,
             typename allocator_t = shared_ptr_default_allocator>
         constexpr auto set(value_t* ptr, destroyer_t destroyer = destroyer_t(),
             allocator_t allocator = allocator_t())
@@ -412,8 +410,7 @@ namespace atom
         constexpr auto _create_state(destroyer_t destroyer, allocator_t allocator)
             -> _shared_ptr_state*
         {
-            using state_t =
-                _default_shared_ptr_state<value_t, destroyer_t, allocator_t>;
+            using state_t = _default_shared_ptr_state<value_t, destroyer_t, allocator_t>;
 
             state_t* state = static_cast<state_t*>(allocator.alloc(sizeof(state_t)));
             obj_helper().construct_as<state_t>(state, move(destroyer), move(allocator));
@@ -447,11 +444,10 @@ namespace atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename value_t, typename allocator_t, typename... arg_ts>
-    auto make_shared_with_alloc(allocator_t allocator, arg_ts&&... args)
-        -> shared_ptr<value_t>
+    auto make_shared_with_alloc(allocator_t allocator, arg_ts&&... args) -> shared_ptr<value_t>
     {
-        using state_t = _default_shared_ptr_state<value_t,
-            shared_ptr_default_destroyer<value_t>, shared_ptr_default_allocator>;
+        using state_t = _default_shared_ptr_state<value_t, shared_ptr_default_destroyer<value_t>,
+            shared_ptr_default_allocator>;
 
         void* mem = allocator.alloc(sizeof(state_t) + sizeof(value_t));
         state_t* state = mem;

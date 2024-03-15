@@ -1007,29 +1007,21 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename type>
-        constexpr auto mem_as() const -> const type*
-            requires(not is_void<type>)
-        {
-            return _impl.template mem_as<type>();
-        }
+        constexpr auto mem_as() const
+            -> const type* requires(not is_void<type>) { return _impl.template mem_as<type>(); }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename type>
-        constexpr auto mut_mem_as() -> const type*
-            requires(not is_void<type>)
-        {
-            return _impl.template mut_mem_as<type>();
-        }
+        constexpr auto mut_mem_as()
+            -> const type* requires(not is_void<type>) { return _impl.template mut_mem_as<type>(); }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename type>
-        constexpr auto check_mem_as() const -> const void*
-            requires(not is_void<type>)
-        {
+        constexpr auto check_mem_as() const -> const void* requires(not is_void<type>) {
             expects(has_val(), "value is null.");
 
             return _impl.template get_mem_as<type>();
@@ -1039,9 +1031,7 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename type>
-        constexpr auto check_mut_mem_as() -> void*
-            requires(not is_void<type>)
-        {
+        constexpr auto check_mut_mem_as() -> void* requires(not is_void<type>) {
             expects(has_val(), "value is null.");
 
             return _impl.template get_mut_mem_as<type>();
@@ -1081,12 +1071,10 @@ namespace atom
 /// ------------------------------------------------------------------------------------------------
 namespace atom
 {
-    template <typename value_t, usize buf_size = 50,
-        typename allocator_t = default_mem_allocator>
+    template <typename value_t, usize buf_size = 50, typename allocator_t = default_mem_allocator>
     class box;
 
-    template <typename value_t, usize buf_size = 50,
-        typename allocator_t = default_mem_allocator>
+    template <typename value_t, usize buf_size = 50, typename allocator_t = default_mem_allocator>
     class copy_box;
 
     template <typename value_t, bool allow_non_move = true, usize buf_size = 50,
@@ -1098,8 +1086,7 @@ namespace atom
     class copy_move_box;
 
     template <typename value_t, usize buf_size, typename allocator_t>
-    class box
-        : public box_functions<_box_impl<value_t, false, false, false, buf_size, allocator_t>>
+    class box: public box_functions<_box_impl<value_t, false, false, false, buf_size, allocator_t>>
     {
         using this_t = box<value_t, buf_size, allocator_t>;
         using base_t =
@@ -1147,8 +1134,7 @@ namespace atom
         /// # null assignment
         /// ----------------------------------------------------------------------------------------
         template <typename type, usize that_buf_size, typename that_allocator_t>
-        constexpr this_t& operator=(
-            const copy_box<type, that_buf_size, that_allocator_t>& that)
+        constexpr this_t& operator=(const copy_box<type, that_buf_size, that_allocator_t>& that)
             requires is_void<value_t> or is_same_or_derived_from<type, value_t>
         {
             _impl.copy_box(that._impl);
@@ -1189,8 +1175,7 @@ namespace atom
         /// # template move operator
         /// ----------------------------------------------------------------------------------------
         template <typename type, usize that_buf_size, typename that_allocator_t>
-        constexpr this_t& operator=(
-            move_box<type, true, that_buf_size, that_allocator_t>&& that)
+        constexpr this_t& operator=(move_box<type, true, that_buf_size, that_allocator_t>&& that)
             requires(is_void<value_t>) or is_same_or_derived_from<type, value_t>
         {
             _impl.move_box(that._impl);
@@ -1264,8 +1249,7 @@ namespace atom
         : public box_functions<_box_impl<value_t, true, false, false, buf_size, allocator_t>>
     {
         using this_t = copy_box<value_t, buf_size, allocator_t>;
-        using base_t =
-            box_functions<_box_impl<value_t, true, false, false, buf_size, allocator_t>>;
+        using base_t = box_functions<_box_impl<value_t, true, false, false, buf_size, allocator_t>>;
         using _impl_t = typename base_t::_impl_t;
 
     public:
@@ -1371,8 +1355,8 @@ namespace atom
               _box_impl<value_t, false, true, allow_non_move, buf_size, allocator_t>>
     {
         using this_t = move_box<value_t, allow_non_move, buf_size, allocator_t>;
-        using base_t = box_functions<
-            _box_impl<value_t, false, true, allow_non_move, buf_size, allocator_t>>;
+        using base_t =
+            box_functions<_box_impl<value_t, false, true, allow_non_move, buf_size, allocator_t>>;
         using _impl_t = typename base_t::_impl_t;
 
     public:
@@ -1407,8 +1391,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename type, usize that_buf_size, typename that_allocator_t>
             requires allow_non_move
-        constexpr move_box& operator=(
-            const copy_box<type, that_buf_size, that_allocator_t>& that)
+        constexpr move_box& operator=(const copy_box<type, that_buf_size, that_allocator_t>& that)
         {
             _impl.move_box(that._impl);
             return *this;
@@ -1505,8 +1488,8 @@ namespace atom
               _box_impl<value_t, true, true, allow_non_move, buf_size, allocator_t>>
     {
         using this_t = copy_move_box<value_t, allow_non_move, buf_size, allocator_t>;
-        using base_t = box_functions<
-            _box_impl<value_t, true, true, allow_non_move, buf_size, allocator_t>>;
+        using base_t =
+            box_functions<_box_impl<value_t, true, true, allow_non_move, buf_size, allocator_t>>;
         using _impl_t = typename base_t::_impl_t;
 
     private:

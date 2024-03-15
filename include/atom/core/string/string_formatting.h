@@ -64,8 +64,7 @@ namespace atom
     }
 
     template <typename output_t, typename... arg_ts>
-    constexpr auto _format_to(
-        output_t&& out, format_string<arg_ts...> fmt, arg_ts&&... args)
+    constexpr auto _format_to(output_t&& out, format_string<arg_ts...> fmt, arg_ts&&... args)
     {
         try
         {

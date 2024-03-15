@@ -110,8 +110,10 @@ namespace atom
     template <typename in_value_t>
     class mut_array_iter: public array_iter<in_value_t>
     {
-        ATOM_STATIC_ASSERTS(typeinfo::is_pure<in_value_t>, "mut_array_iter supports only pure types.");
-        ATOM_STATIC_ASSERTS(not typeinfo::is_void<in_value_t>, "mut_array_iter does not support void.");
+        ATOM_STATIC_ASSERTS(
+            typeinfo::is_pure<in_value_t>, "mut_array_iter supports only pure types.");
+        ATOM_STATIC_ASSERTS(
+            not typeinfo::is_void<in_value_t>, "mut_array_iter does not support void.");
 
         using base_t = array_iter<in_value_t>;
 

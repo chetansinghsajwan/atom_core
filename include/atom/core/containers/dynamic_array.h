@@ -299,8 +299,7 @@ namespace atom
         }
 
         template <typename other_iter_t>
-        constexpr auto _insert_range_at_counted(usize index, other_iter_t it, usize count)
-            -> usize
+        constexpr auto _insert_range_at_counted(usize index, other_iter_t it, usize count) -> usize
         {
             if (count == 0)
                 return index;
@@ -484,8 +483,7 @@ namespace atom
         }
 
         template <typename other_iter_t, typename other_iter_end_t>
-        static constexpr auto _get_range_size(other_iter_t it, other_iter_end_t it_end)
-            -> usize
+        static constexpr auto _get_range_size(other_iter_t it, other_iter_end_t it_end) -> usize
         {
             if constexpr (is_jump_iter_pair<other_iter_t, other_iter_end_t>)
             {
@@ -1075,8 +1073,7 @@ namespace atom
         template <typename range_t>
         constexpr auto operator+=(range_t&& range)
             requires(is_range_of<typeinfo::get_pure<range_t>, value_t>)
-                    and (is_constructible<value_t,
-                        typename typeinfo::get_pure<range_t>::value_t>)
+                    and (is_constructible<value_t, typename typeinfo::get_pure<range_t>::value_t>)
         {
             _impl.insert_range_back(move(range.get_iter()), move(range.get_iter_end()));
         }
@@ -1446,8 +1443,7 @@ namespace atom
     class dynamic_array
         : public mut_array_range_extensions<basic_dynamic_array<value_t, allocator_t>>
     {
-        using base_t =
-            mut_array_range_extensions<basic_dynamic_array<value_t, allocator_t>>;
+        using base_t = mut_array_range_extensions<basic_dynamic_array<value_t, allocator_t>>;
 
     public:
         using base_t::base_t;

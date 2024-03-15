@@ -6,11 +6,11 @@
 #define ATOM_ALIAS(THIS_TYPE, ...)                                                                 \
     class THIS_TYPE: public __VA_ARGS__                                                            \
     {                                                                                              \
-        using base_t = __VA_ARGS__;                                                             \
+        using base_t = __VA_ARGS__;                                                                \
                                                                                                    \
     public:                                                                                        \
-        using base_t::base_t;                                                                \
-        using base_t::operator=;                                                                \
+        using base_t::base_t;                                                                      \
+        using base_t::operator=;                                                                   \
     }
 
 /// ------------------------------------------------------------------------------------------------

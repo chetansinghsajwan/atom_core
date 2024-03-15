@@ -59,16 +59,14 @@ namespace atom
         }
 
         template <class iter_end_t>
-        constexpr auto operator==(const std_iter_wrap_for_atom_iter<iter_end_t>& that) const
-            -> bool
+        constexpr auto operator==(const std_iter_wrap_for_atom_iter<iter_end_t>& that) const -> bool
             requires(is_iter_with_end<iter_t, iter_end_t>)
         {
             return iter.is_eq(that.iter);
         }
 
         template <class iter_end_t>
-        constexpr auto operator!=(const std_iter_wrap_for_atom_iter<iter_end_t>& that) const
-            -> bool
+        constexpr auto operator!=(const std_iter_wrap_for_atom_iter<iter_end_t>& that) const -> bool
             requires(is_iter_with_end<iter_t, iter_end_t>)
         {
             return not iter.is_eq(that.iter);

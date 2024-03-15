@@ -25,8 +25,7 @@ namespace atom
     class _mut_fwd_range_extensions_impl<range_t, void>
         : public _mut_fwd_range_extensions_impl<range_t, _fwd_range_extensions_impl<range_t>>
     {
-        using base_t =
-            _mut_fwd_range_extensions_impl<range_t, _fwd_range_extensions_impl<range_t>>;
+        using base_t = _mut_fwd_range_extensions_impl<range_t, _fwd_range_extensions_impl<range_t>>;
 
     public:
         using base_t::base_t;
@@ -37,8 +36,7 @@ namespace atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename range_t, typename _const_range_extensions_t = void>
-    class mut_fwd_range_extensions
-        : public mut_range_extensions<range_t, _const_range_extensions_t>
+    class mut_fwd_range_extensions: public mut_range_extensions<range_t, _const_range_extensions_t>
     {
         using base_t = mut_range_extensions<range_t, _const_range_extensions_t>;
 

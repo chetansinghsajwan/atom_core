@@ -159,8 +159,7 @@ namespace atom
     };
 
     template <typename iter_t, typename iter_end_t>
-    class _range_from_iter_pair
-        : public _range_from_iter_extended<iter_t, iter_end_t>::value_t
+    class _range_from_iter_pair: public _range_from_iter_extended<iter_t, iter_end_t>::value_t
     {
         using base_t = _range_from_iter_extended<iter_t, iter_end_t>::value_t;
 
@@ -174,8 +173,7 @@ namespace atom
     class _mut_range_from_iter_pair
         : public _mut_range_from_iter_extended<mut_iter_t, mut_iter_end_t>::value_t
     {
-        using base_t =
-            _mut_range_from_iter_extended<mut_iter_t, mut_iter_end_t>::value_t;
+        using base_t = _mut_range_from_iter_extended<mut_iter_t, mut_iter_end_t>::value_t;
 
     public:
         constexpr _mut_range_from_iter_pair(mut_iter_t it, mut_iter_end_t it_end)
@@ -277,8 +275,7 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     constexpr auto range_from(const char* str)
     {
-        return _range_from_iter_pair(
-            array_iter(str), array_iter(str + _range_find_str_len(str)));
+        return _range_from_iter_pair(array_iter(str), array_iter(str + _range_find_str_len(str)));
     }
 
     /// --------------------------------------------------------------------------------------------

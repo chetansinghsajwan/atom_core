@@ -36,8 +36,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <class range_t, class value_t>
         constexpr auto fill(range_t&& range, value_t&& val) const -> void
-            requires is_mut_range<range_t>
-                     and is_assignable<typename range_t::value_t, value_t>
+            requires is_mut_range<range_t> and is_assignable<typename range_t::value_t, value_t>
         {
             _fill(range.get_iter(), range.get_iter_end(), forward<value_t>(val));
         }
@@ -49,8 +48,7 @@ namespace atom
 
         template <class range_t, typename value_t>
         constexpr auto fill_explicit(range_t&& range, value_t&& val) const -> void
-            requires is_mut_range<range_t>
-                     and is_assignable<typename range_t::value_t, value_t>
+            requires is_mut_range<range_t> and is_assignable<typename range_t::value_t, value_t>
         {
             _fill(range.get_iter(), range.get_iter_end(), forward<value_t>(val));
         }
@@ -63,11 +61,10 @@ namespace atom
         template <class range_t_0, class range_t_1>
         constexpr auto fwd_copy_to(const range_t_0& range0, range_t_1&& range1) const -> void
             requires is_range<range_t_0> and is_mut_range<range_t_1>
-                     and is_assignable<typename range_t_1::value_t,
-                         typename range_t_0::value_t>
+                     and is_assignable<typename range_t_1::value_t, typename range_t_0::value_t>
         {
-            _fwd_copy(range0.get_iter(), range0.get_iter_end(), range1.get_iter(),
-                range1.get_iter_end());
+            _fwd_copy(
+                range0.get_iter(), range0.get_iter_end(), range1.get_iter(), range1.get_iter_end());
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -76,11 +73,10 @@ namespace atom
         template <class range_t_0, class range_t_1>
         constexpr auto bwd_copy_to(const range_t_0& range0, range_t_1&& range1) const -> void
             requires is_range<range_t_0> and is_mut_range<range_t_1>
-                     and is_assignable<typename range_t_1::value_t,
-                         typename range_t_0::value_t>
+                     and is_assignable<typename range_t_1::value_t, typename range_t_0::value_t>
         {
-            _bwd_copy(range0.get_iter(), range0.get_iter_end(), range1.get_iter(),
-                range1.get_iter_end());
+            _bwd_copy(
+                range0.get_iter(), range0.get_iter_end(), range1.get_iter(), range1.get_iter_end());
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -89,11 +85,10 @@ namespace atom
         template <class range_t_0, class range_t_1>
         constexpr auto fwd_move_to(range_t_0&& range0, range_t_1&& range1) const -> void
             requires is_mut_range<range_t_0> and is_mut_range<range_t_1>
-                     and is_assignable<typename range_t_1::value_t,
-                         typename range_t_0::value_t>
+                     and is_assignable<typename range_t_1::value_t, typename range_t_0::value_t>
         {
-            _fwd_move(range0.get_iter(), range0.get_iter_end(), range1.get_iter(),
-                range1.get_iter_end());
+            _fwd_move(
+                range0.get_iter(), range0.get_iter_end(), range1.get_iter(), range1.get_iter_end());
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -102,11 +97,10 @@ namespace atom
         template <class range_t_0, class range_t_1>
         constexpr auto bwd_move_to(range_t_0&& range0, range_t_1&& range1) const -> void
             requires is_mut_range<range_t_0> and is_mut_range<range_t_1>
-                     and is_assignable<typename range_t_1::value_t,
-                         typename range_t_0::value_t>
+                     and is_assignable<typename range_t_1::value_t, typename range_t_0::value_t>
         {
-            _bwd_move(range0.get_iter(), range0.get_iter_end(), range1.get_iter(),
-                range1.get_iter_end());
+            _bwd_move(
+                range0.get_iter(), range0.get_iter_end(), range1.get_iter(), range1.get_iter_end());
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -218,8 +212,7 @@ namespace atom
             std::fill(std_iter, std_iter_end, forward<value_t>(val));
         }
 
-        template <class iter_t_0, class iter_end_t_0, class iter_t_1,
-            class iter_end_t_1>
+        template <class iter_t_0, class iter_end_t_0, class iter_t_1, class iter_end_t_1>
         constexpr auto _fwd_copy(iter_t_0 iter0, iter_end_t_0 iter_end0, iter_t_1 iter1,
             iter_end_t_1 iter_end1) const -> void
         {
@@ -230,8 +223,7 @@ namespace atom
             std::copy(std_iter0, std_iter_end0, std_iter1);
         }
 
-        template <class iter_t_0, class iter_end_t_0, class iter_t_1,
-            class iter_end_t_1>
+        template <class iter_t_0, class iter_end_t_0, class iter_t_1, class iter_end_t_1>
         constexpr auto _bwd_copy(iter_t_0 iter0, iter_end_t_0 iter_end0, iter_t_1 iter1,
             iter_end_t_1 iter_end1) const -> void
         {
@@ -242,8 +234,7 @@ namespace atom
             std::copy_backward(std_iter0, std_iter_end0, std_iter1);
         }
 
-        template <class iter_t_0, class iter_end_t_0, class iter_t_1,
-            class iter_end_t_1>
+        template <class iter_t_0, class iter_end_t_0, class iter_t_1, class iter_end_t_1>
         constexpr auto _fwd_move(iter_t_0 iter0, iter_end_t_0 iter_end0, iter_t_1 iter1,
             iter_end_t_1 iter_end1) const -> void
         {
@@ -254,8 +245,7 @@ namespace atom
             std::move(std_iter0, std_iter_end0, std_iter1);
         }
 
-        template <class iter_t_0, class iter_end_t_0, class iter_t_1,
-            class iter_end_t_1>
+        template <class iter_t_0, class iter_end_t_0, class iter_t_1, class iter_end_t_1>
         constexpr auto _bwd_move(iter_t_0 iter0, iter_end_t_0 iter_end0, iter_t_1 iter1,
             iter_end_t_1 iter_end1) const -> void
         {
@@ -297,8 +287,7 @@ namespace atom
         }
 
         template <class iter_t, class iter_end_t>
-        constexpr auto _bwd_rotate(iter_t iter, iter_end_t iter_end, usize steps) const
-            -> void
+        constexpr auto _bwd_rotate(iter_t iter, iter_end_t iter_end, usize steps) const -> void
         {
             if constexpr (is_array_iter_pair<iter_t, iter_end_t>)
             {
@@ -313,8 +302,7 @@ namespace atom
         }
 
         template <class iter_t, class iter_end_t>
-        constexpr auto _fwd_rotate(iter_t iter, iter_end_t iter_end, isize steps) const
-            -> void
+        constexpr auto _fwd_rotate(iter_t iter, iter_end_t iter_end, isize steps) const -> void
         {
             if constexpr (is_array_iter_pair<iter_t, iter_end_t>)
             {

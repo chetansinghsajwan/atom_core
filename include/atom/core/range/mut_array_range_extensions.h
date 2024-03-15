@@ -13,8 +13,7 @@ namespace atom
     class _mut_array_range_extensions_impl
         : public _mut_jump_range_extensions_impl<range_t, _const_range_extensions_impl_t>
     {
-        using base_t =
-            _mut_jump_range_extensions_impl<range_t, _const_range_extensions_impl_t>;
+        using base_t = _mut_jump_range_extensions_impl<range_t, _const_range_extensions_impl_t>;
 
     protected:
         using _impl_t = typename base_t::_impl_t;
@@ -72,8 +71,7 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     template <typename range_t>
     class _mut_array_range_extensions_impl<range_t, void>
-        : public _mut_array_range_extensions_impl<range_t,
-              _array_range_extensions_impl<range_t>>
+        : public _mut_array_range_extensions_impl<range_t, _array_range_extensions_impl<range_t>>
     {
         using base_t =
             _mut_array_range_extensions_impl<range_t, _array_range_extensions_impl<range_t>>;

@@ -12,7 +12,8 @@ namespace atom
     template <typename value_t>
     class unique_ptr_default_destroyer
     {
-        ATOM_STATIC_ASSERTS(typeinfo::is_pure<value_t>, "unique_ptr_default_destroyer only supports pure types.");
+        ATOM_STATIC_ASSERTS(
+            typeinfo::is_pure<value_t>, "unique_ptr_default_destroyer only supports pure types.");
         ATOM_STATIC_ASSERTS(
             not typeinfo::is_void<value_t>, "unique_ptr_default_destroyer does not support void.");
 
@@ -275,8 +276,7 @@ namespace atom
     /// # todo: fix this implementation, maybe store allocator in destroyer.
     /// --------------------------------------------------------------------------------------------
     template <typename value_t, typename allocator_t, typename... arg_ts>
-    auto make_unique_with_alloc(allocator_t allocator, arg_ts&&... args)
-        -> unique_ptr<value_t>
+    auto make_unique_with_alloc(allocator_t allocator, arg_ts&&... args) -> unique_ptr<value_t>
     {
         value_t* mem = (value_t*)allocator.alloc(sizeof(value_t));
         obj_helper().construct_as<value_t>(mem, forward<arg_ts>(args)...);

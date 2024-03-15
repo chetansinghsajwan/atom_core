@@ -151,8 +151,7 @@ namespace atom
         template <typename num_t>
         static constexpr auto is_conversion_safe_from(num_t num) -> bool
         {
-            return is_conversion_safe_from_unwrapped<typename num_t::unwrapped_t>(
-                num);
+            return is_conversion_safe_from_unwrapped<typename num_t::unwrapped_t>(num);
         }
 
         template <typename num_t>
@@ -160,8 +159,7 @@ namespace atom
         {
             if constexpr (is_signed())
             {
-                if constexpr (std::is_signed_v<num_t>
-                              and std::numeric_limits<num_t>::min() < min())
+                if constexpr (std::is_signed_v<num_t> and std::numeric_limits<num_t>::min() < min())
                 {
                     if (num < min())
                     {

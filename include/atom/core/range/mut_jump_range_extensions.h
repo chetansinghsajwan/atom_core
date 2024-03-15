@@ -11,8 +11,7 @@ namespace atom
     class _mut_jump_range_extensions_impl
         : public _mut_bidi_range_extensions_impl<range_t, _tconst_range_extensions_impl>
     {
-        using base_t =
-            _mut_bidi_range_extensions_impl<range_t, _tconst_range_extensions_impl>;
+        using base_t = _mut_bidi_range_extensions_impl<range_t, _tconst_range_extensions_impl>;
 
     public:
         using base_t::base_t;
@@ -24,8 +23,7 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     template <typename range_t>
     class _mut_jump_range_extensions_impl<range_t, void>
-        : public _mut_bidi_range_extensions_impl<range_t,
-              _bidi_range_extensions_impl<range_t>>
+        : public _mut_bidi_range_extensions_impl<range_t, _bidi_range_extensions_impl<range_t>>
     {
         using base_t =
             _mut_bidi_range_extensions_impl<range_t, _bidi_range_extensions_impl<range_t>>;

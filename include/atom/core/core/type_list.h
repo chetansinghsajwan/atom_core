@@ -212,9 +212,8 @@ namespace atom
         class index_of<to_get_t, index, in_t, types...>
         {
         public:
-            static constexpr usize value = is_same_as<to_get_t, in_t>
-                                               ? index
-                                               : index_of<to_get_t, index + 1, types...>::value;
+            static constexpr usize value =
+                is_same_as<to_get_t, in_t> ? index : index_of<to_get_t, index + 1, types...>::value;
         };
 
         template <typename to_get_t, usize index>
@@ -285,14 +284,12 @@ namespace atom
             using value_t = type_list<>;
         };
 
-        template <template <typename in_t> typename predicate_t, typename in_t,
-            typename... types>
+        template <template <typename in_t> typename predicate_t, typename in_t, typename... types>
         class remove_if<predicate_t, in_t, types...>
         {
         public:
             using value_t = typeinfo::conditional_t<predicate_t<in_t>::value,
-                typename add_first<in_t,
-                    typename remove_if<predicate_t, types...>::in_t>::value_t,
+                typename add_first<in_t, typename remove_if<predicate_t, types...>::in_t>::value_t,
                 typename remove_if<predicate_t, types...>::value_t>;
         };
 
@@ -466,8 +463,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename in_t>
             requires(has<in_t>)
-        static constexpr usize index_of =
-            _list_ops_t::template index_of<in_t, 0, types...>::value;
+        static constexpr usize index_of = _list_ops_t::template index_of<in_t, 0, types...>::value;
 
         /// ----------------------------------------------------------------------------------------
         ///
