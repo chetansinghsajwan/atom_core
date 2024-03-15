@@ -85,7 +85,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto get_count() const -> usize
         {
-            if constexpr (rjump_iter_pair<iter_t, iter_end_t>)
+            if constexpr (is_jump_iter_pair<iter_t, iter_end_t>)
             {
                 return get_iter_end() - get_iter();
             }
@@ -180,7 +180,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename elem1_t>
         constexpr auto find(const elem1_t& el) const -> iter_t
-            requires(requality_comparable_with<elem_t, elem1_t>)
+            requires(is_equality_comparable_with<elem_t, elem1_t>)
         {
             return _impl().find_elem(el);
         }
@@ -190,8 +190,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename other_range_t>
         constexpr auto find_range(const other_range_t& range) const -> iter_t
-            requires(rfwd_range<other_range_t>)
-                    and (requality_comparable_with<elem_t, typename other_range_t::elem_t>)
+            requires(is_fwd_range<other_range_t>)
+                    and (is_equality_comparable_with<elem_t, typename other_range_t::elem_t>)
         {
             return _impl().find_range(range);
         }
@@ -215,7 +215,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename elem1_t>
         constexpr auto contains(const elem1_t& el) const -> bool
-            requires(requality_comparable_with<elem_t, elem1_t>)
+            requires(is_equality_comparable_with<elem_t, elem1_t>)
         {
             return _impl().find_elem(el).compare(_impl().get_iter_end()) != 0;
         }
@@ -225,8 +225,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename other_range_t>
         constexpr auto contains(const other_range_t& range) const -> bool
-            requires(rfwd_range<other_range_t>)
-                    and (requality_comparable_with<elem_t, typename other_range_t::elem_t>)
+            requires(is_fwd_range<other_range_t>)
+                    and (is_equality_comparable_with<elem_t, typename other_range_t::elem_t>)
         {
             return _impl().find_range(range).compare(_impl().get_iter_end()) != 0;
         }
@@ -242,8 +242,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename other_range_t>
         constexpr auto compare(const other_range_t& range) const -> i8
-            requires(rrange<other_range_t>)
-                    and (requality_comparable_with<elem_t, typename other_range_t::elem_t>)
+            requires(is_range<other_range_t>)
+                    and (is_equality_comparable_with<elem_t, typename other_range_t::elem_t>)
         {
             return _impl().compare(range);
         }
@@ -253,8 +253,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename other_range_t>
         constexpr auto is_eq(const other_range_t& range) const -> bool
-            requires(rrange<other_range_t>)
-                    and (requality_comparable_with<elem_t, typename other_range_t::elem_t>)
+            requires(is_range<other_range_t>)
+                    and (is_equality_comparable_with<elem_t, typename other_range_t::elem_t>)
         {
             return _impl().compare(range) == 0;
         }
@@ -272,7 +272,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto can_get_count() const -> bool
         {
-            return rfwd_iter_pair<iter_t, iter_end_t>;
+            return is_fwd_iter_pair<iter_t, iter_end_t>;
         }
 
         /// ----------------------------------------------------------------------------------------

@@ -10,7 +10,7 @@ namespace atom
     template <typename lockable_t>
     class lock_guard
     {
-        ATOM_STATIC_ASSERTS(rlockable<lockable_t>);
+        ATOM_STATIC_ASSERTS(is_lockable<lockable_t>);
 
     public:
         /// ----------------------------------------------------------------------------------------

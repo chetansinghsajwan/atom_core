@@ -45,13 +45,13 @@ namespace atom
         }
 
         constexpr auto get_data() const -> const elem_t*
-            requires rarray_iter_pair<iter_t, iter_end_t>
+            requires is_array_iter_pair<iter_t, iter_end_t>
         {
             return &_it.value();
         }
 
         constexpr auto get_count() const -> usize
-            requires rjump_iter_pair<iter_t, iter_end_t>
+            requires is_jump_iter_pair<iter_t, iter_end_t>
         {
             return _it_end.compare(_it);
         }
@@ -103,19 +103,19 @@ namespace atom
         {
             using range_t = _basic_range_from_iter_pair<iter_t, iter_end_t>;
 
-            if constexpr (rarray_iter_pair<iter_t, iter_end_t>)
+            if constexpr (is_array_iter_pair<iter_t, iter_end_t>)
                 return _type_container<array_range_extensions<range_t>>();
 
-            else if constexpr (rjump_iter_pair<iter_t, iter_end_t>)
+            else if constexpr (is_jump_iter_pair<iter_t, iter_end_t>)
                 return _type_container<jump_range_extensions<range_t>>();
 
-            else if constexpr (rbidi_iter_pair<iter_t, iter_end_t>)
+            else if constexpr (is_bidi_iter_pair<iter_t, iter_end_t>)
                 return _type_container<bidi_range_extensions<range_t>>();
 
-            else if constexpr (rfwd_iter_pair<iter_t, iter_end_t>)
+            else if constexpr (is_fwd_iter_pair<iter_t, iter_end_t>)
                 return _type_container<fwd_range_extensions<range_t>>();
 
-            else if constexpr (riter_pair<iter_t, iter_end_t>)
+            else if constexpr (is_iter_pair<iter_t, iter_end_t>)
                 return _type_container<range_extensions<range_t>>();
         }
 
@@ -138,19 +138,19 @@ namespace atom
         {
             using range_t = _basic_mut_range_from_iter_pair<iter_t, iter_end_t>;
 
-            if constexpr (rarray_iter_pair<iter_t, iter_end_t>)
+            if constexpr (is_array_iter_pair<iter_t, iter_end_t>)
                 return _type_container<mut_array_range_extensions<range_t>>();
 
-            else if constexpr (rjump_iter_pair<iter_t, iter_end_t>)
+            else if constexpr (is_jump_iter_pair<iter_t, iter_end_t>)
                 return _type_container<mut_jump_range_extensions<range_t>>();
 
-            else if constexpr (rbidi_iter_pair<iter_t, iter_end_t>)
+            else if constexpr (is_bidi_iter_pair<iter_t, iter_end_t>)
                 return _type_container<mut_bidi_range_extensions<range_t>>();
 
-            else if constexpr (rfwd_iter_pair<iter_t, iter_end_t>)
+            else if constexpr (is_fwd_iter_pair<iter_t, iter_end_t>)
                 return _type_container<mut_fwd_range_extensions<range_t>>();
 
-            else if constexpr (riter_pair<iter_t, iter_end_t>)
+            else if constexpr (is_iter_pair<iter_t, iter_end_t>)
                 return _type_container<mut_range_extensions<range_t>>();
         }
 
@@ -295,9 +295,9 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     template <typename iter_t, typename iter_end_t>
     constexpr auto range_from(iter_t it, iter_end_t it_end)
-        requires riter_pair<iter_t, iter_end_t>
+        requires is_iter_pair<iter_t, iter_end_t>
     {
-        if constexpr (rmut_iter<iter_t>)
+        if constexpr (is_mut_iter<iter_t>)
         {
             return _mut_range_from_iter_pair(move(it), move(it_end));
         }

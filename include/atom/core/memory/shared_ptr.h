@@ -178,7 +178,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename that_t>
         constexpr shared_ptr(const shared_ptr<that_t>& that)
-            requires rsame_or_derived_from<that_t, value_t>
+            requires is_same_or_derived_from<that_t, value_t>
             : _ptr(that._ptr)
             , _state(that._state)
         {
@@ -195,7 +195,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename other_value_t>
         constexpr shared_ptr& operator=(const shared_ptr<other_value_t>& that)
-            requires rsame_or_derived_from<other_value_t, value_t>
+            requires is_same_or_derived_from<other_value_t, value_t>
         {
             _check_and_release();
 
@@ -222,7 +222,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename that_t>
         constexpr shared_ptr(shared_ptr<that_t>&& that)
-            requires rsame_or_derived_from<that_t, value_t>
+            requires is_same_or_derived_from<that_t, value_t>
             : _ptr(that._ptr)
             , _state(that._state)
         {
@@ -235,7 +235,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename that_t>
         constexpr shared_ptr& operator=(shared_ptr<that_t>&& that)
-            requires rsame_or_derived_from<that_t, value_t>
+            requires is_same_or_derived_from<that_t, value_t>
         {
             _check_and_release();
 
@@ -312,7 +312,7 @@ namespace atom
             typename allocator_t = shared_ptr_default_allocator>
         constexpr auto set(value_t* ptr, destroyer_t destroyer = destroyer_t(),
             allocator_t allocator = allocator_t())
-            requires rsame_or_derived_from<value_t, value_t>
+            requires is_same_or_derived_from<value_t, value_t>
         {
             if (_ptr != nullptr)
             {

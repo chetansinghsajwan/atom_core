@@ -24,5 +24,5 @@ namespace atom
     };
 
     template <typename invokable_t, typename... tsignature>
-    concept rinvokable = _is_invokable_impl<invokable_t, tsignature...>::value;
+    concept is_invokable = _is_invokable_impl<invokable_t, tsignature...>::value;
 }

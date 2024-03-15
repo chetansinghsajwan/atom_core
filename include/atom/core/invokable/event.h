@@ -98,7 +98,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename invokable_t>
         auto subscribe(invokable_t&& listener) -> event_key
-            requires(rinvokable<invokable_t, signature_t>)
+            requires(is_invokable<invokable_t, signature_t>)
         {
             return event_key(_impl.add_listener(forward<invokable_t>(listener)));
         }
@@ -108,7 +108,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename invokable_t>
         auto operator+=(invokable_t&& listener) -> event_key
-            requires(rinvokable<invokable_t, signature_t>)
+            requires(is_invokable<invokable_t, signature_t>)
         {
             return subscribe(forward<invokable_t>(listener));
         }
@@ -195,7 +195,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename invokable_t>
         auto subscribe(invokable_t&& listener) -> event_key
-            requires(rinvokable<invokable_t, signature_t>)
+            requires(is_invokable<invokable_t, signature_t>)
         {
             return _source.subscribe(forward<invokable_t>(listener));
         }
@@ -205,7 +205,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename invokable_t>
         auto operator+=(invokable_t&& listener) -> event_key
-            requires(rinvokable<invokable_t, signature_t>)
+            requires(is_invokable<invokable_t, signature_t>)
         {
             return subscribe(forward<invokable_t>(listener));
         }

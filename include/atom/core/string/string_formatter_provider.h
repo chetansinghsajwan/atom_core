@@ -21,15 +21,15 @@ namespace atom
             using _formatter_fmt = string_formatter<value_t, string_formatter_level::fmt>;
             using _formatter_user = string_formatter<value_t, string_formatter_level::user>;
 
-            if constexpr (rdefault_constructible<_formatter_atom>)
+            if constexpr (is_default_constructible<_formatter_atom>)
             {
                 return std::type_identity<_formatter_atom>();
             }
-            else if constexpr (rdefault_constructible<_formatter_fmt>)
+            else if constexpr (is_default_constructible<_formatter_fmt>)
             {
                 return std::type_identity<_formatter_fmt>();
             }
-            else if constexpr (rdefault_constructible<_formatter_user>)
+            else if constexpr (is_default_constructible<_formatter_user>)
             {
                 return std::type_identity<_formatter_user>();
             }

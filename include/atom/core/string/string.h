@@ -23,7 +23,7 @@ namespace atom
         static constexpr auto format_to(
             output_t&& out, format_string<arg_ts...> fmt, arg_ts&&... args)
             requires(string_formatter_provider<arg_ts>::has() and ...)
-            // requires routput<output_t, char>
+            // requires is_output<output_t, char>
         {
             _format_to(out, fmt, atom::forward<arg_ts>(args)...);
         }

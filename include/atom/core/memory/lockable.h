@@ -9,11 +9,11 @@ namespace atom
     /// requirements for lockable type.
     /// --------------------------------------------------------------------------------------------
     template <typename lockable_t>
-    concept rlockable = requires(lockable_t lock)
+    concept is_lockable = requires(lockable_t lock)
     {
-        { lock.lock() } -> rsame_as<void>;
-        { lock.try_lock() } -> rsame_as<bool>;
-        { lock.unlock() } -> rsame_as<void>;
+        { lock.lock() } -> is_same_as<void>;
+        { lock.try_lock() } -> is_same_as<bool>;
+        { lock.unlock() } -> is_same_as<void>;
     };
 }
 

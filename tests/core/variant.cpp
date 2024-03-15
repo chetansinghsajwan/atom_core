@@ -58,7 +58,7 @@ TEST_CASE("atom.core.variant")
     {
         // # to do: fix this. check _variant_impl default value for _index.
         //
-        // STATIC_REQUIRE(rtrivially_default_constructible<
+        // STATIC_REQUIRE(is_trivially_default_constructible<
         //     variant<i32, char, f32>>);
     }
 
@@ -73,7 +73,7 @@ TEST_CASE("atom.core.variant")
 
     SECTION("trivial copy constructor")
     {
-        STATIC_REQUIRE(rtrivially_copy_constructible<variant<i32, char, f32>>);
+        STATIC_REQUIRE(is_trivially_copy_constructible<variant<i32, char, f32>>);
     }
 
     SECTION("copy constructor")
@@ -106,7 +106,7 @@ TEST_CASE("atom.core.variant")
 
     SECTION("trivial copy assignment operator")
     {
-        STATIC_REQUIRE(rtrivially_copy_assignable<variant<i32, char, f32>>);
+        STATIC_REQUIRE(is_trivially_copy_assignable<variant<i32, char, f32>>);
     }
 
     SECTION("copy assignment operator")
@@ -167,7 +167,7 @@ TEST_CASE("atom.core.variant")
 
     SECTION("trivial move constructor")
     {
-        STATIC_REQUIRE(rtrivially_move_constructible<variant<i32, char, f32>>);
+        STATIC_REQUIRE(is_trivially_move_constructible<variant<i32, char, f32>>);
     }
 
     SECTION("move constructor")
@@ -200,7 +200,7 @@ TEST_CASE("atom.core.variant")
 
     SECTION("trivial move assignment operator")
     {
-        STATIC_REQUIRE(rtrivially_move_assignable<variant<i32, char, f32>>);
+        STATIC_REQUIRE(is_trivially_move_assignable<variant<i32, char, f32>>);
     }
 
     SECTION("move assignment operator")

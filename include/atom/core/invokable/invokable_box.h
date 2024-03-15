@@ -31,7 +31,7 @@ namespace atom
     public:
         virtual auto invoke(arg_ts... args) -> result_t override final
         {
-            if constexpr (rsame_as<result_t, void>)
+            if constexpr (is_same_as<result_t, void>)
             {
                 _invokable(forward<arg_ts>(args)...);
             }
@@ -244,8 +244,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename invokable_t>
         invokable_box(invokable_t&& invokable)
-            requires rinvokable<invokable_t, result_t(arg_ts...)>
-                     and (not rderived_from<invokable_t, invokable_box_t_id>)
+            requires is_invokable<invokable_t, result_t(arg_ts...)>
+                     and (not is_derived_from<invokable_t, invokable_box_t_id>)
             : _impl(typename _impl_t::value_tag(), forward<invokable_t>(invokable))
         {}
 
@@ -254,8 +254,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename invokable_t>
         invokable_box& operator=(invokable_t&& invokable)
-            requires rinvokable<invokable_t, result_t(arg_ts...)>
-                     and (not rderived_from<invokable_t, invokable_box_t_id>)
+            requires is_invokable<invokable_t, result_t(arg_ts...)>
+                     and (not is_derived_from<invokable_t, invokable_box_t_id>)
         {
             _impl.set_invokable(forward<invokable_t>(invokable));
             return *this;

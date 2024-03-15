@@ -12,13 +12,13 @@ namespace atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename num_t>
-    concept _rnum = std::is_integral_v<num_t> or std::is_floating_point_v<num_t>;
+    concept _is_num = std::is_integral_v<num_t> or std::is_floating_point_v<num_t>;
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename num_t>
-    concept rnum = std::derived_from<num_t, _num_wrapper_id>;
+    concept is_num = std::derived_from<num_t, _num_wrapper_id>;
 
     /// --------------------------------------------------------------------------------------------
     /// wraps any numeric type to provide safe operations like overflow and underflow checks.
@@ -71,7 +71,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename num_t>
         explicit constexpr num_wrapper(num_t num)
-            requires rnum<num_t>
+            requires is_num<num_t>
             : _value(num._value)
         {
             ATOM_DEBUG_EXPECTS(is_conversion_safe_from(num));
@@ -84,7 +84,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename num_t>
         constexpr num_wrapper(num_t num)
-            requires _rnum<num_t>
+            requires _is_num<num_t>
             : _value(num)
         {
             ATOM_DEBUG_EXPECTS(is_conversion_safe_from_unwrapped(num));
@@ -97,7 +97,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename num_t>
         constexpr auto operator=(num_t num) -> final_t&
-            requires _rnum<num_t>
+            requires _is_num<num_t>
         {
             ATOM_DEBUG_EXPECTS(is_conversion_safe_from_unwrapped(num));
 
@@ -184,7 +184,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename num_t>
         static constexpr auto from(num_t num) -> final_t
-            requires rnum<num_t>
+            requires is_num<num_t>
         {
             ATOM_DEBUG_EXPECTS(is_conversion_safe_from(num));
 
@@ -196,7 +196,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename num_t>
         static constexpr auto from_checked(num_t num) -> final_t
-            requires rnum<num_t>
+            requires is_num<num_t>
         {
             ATOM_EXPECTS(is_conversion_safe_from(num));
 
@@ -208,7 +208,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename num_t>
         static constexpr auto from_unchecked(num_t num) -> final_t
-            requires rnum<num_t>
+            requires is_num<num_t>
         {
             return _wrap_final(num._value);
         }
@@ -219,7 +219,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename num_t>
         static constexpr auto is_conversion_safe_from(num_t num) -> bool
-            requires rnum<num_t>
+            requires is_num<num_t>
         {
             return impl_t::is_conversion_safe_from(num);
         }
@@ -229,7 +229,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename num_t>
         static constexpr auto from_unwrapped(num_t num) -> final_t
-            requires _rnum<num_t>
+            requires _is_num<num_t>
         {
             ATOM_DEBUG_EXPECTS(is_conversion_safe_from_unwrapped(num));
 
@@ -241,7 +241,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename num_t>
         static constexpr auto from_unwrapped_checked(num_t num) -> final_t
-            requires _rnum<num_t>
+            requires _is_num<num_t>
         {
             ATOM_EXPECTS(is_conversion_safe_from_unwrapped(num));
 
@@ -253,7 +253,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename num_t>
         static constexpr auto from_unwrapped_unchecked(num_t num) -> final_t
-            requires _rnum<num_t>
+            requires _is_num<num_t>
         {
             return _wrap_final(num);
         }
@@ -264,7 +264,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename num_t>
         static constexpr auto is_conversion_safe_from_unwrapped(num_t num) -> bool
-            requires _rnum<num_t>
+            requires _is_num<num_t>
         {
             return impl_t::is_conversion_safe_from_unwrapped(num);
         }
@@ -274,7 +274,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename num_t>
         constexpr auto to() const -> num_t
-            requires rnum<num_t>
+            requires is_num<num_t>
         {
             return num_t::from(_this_final());
         }
@@ -284,7 +284,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename num_t>
         constexpr auto to_checked() const -> num_t
-            requires rnum<num_t>
+            requires is_num<num_t>
         {
             return num_t::from_checked(_this_final());
         }
@@ -294,7 +294,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename num_t>
         constexpr auto to_unchecked() const -> num_t
-            requires rnum<num_t>
+            requires is_num<num_t>
         {
             return num_t::from_unchecked(_this_final());
         }
@@ -305,7 +305,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename num_t>
         constexpr auto is_conversion_safe_to() -> bool
-            requires rnum<num_t>
+            requires is_num<num_t>
         {
             return num_t::template is_conversion_safe_from<this_t>(_this_final());
         }
@@ -323,7 +323,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename num_t>
         constexpr auto to_unwrapped() const -> num_t
-            requires _rnum<num_t>
+            requires _is_num<num_t>
         {
             ATOM_DEBUG_EXPECTS(is_conversion_safe_to_unwrapped<num_t>());
 
@@ -335,7 +335,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename num_t>
         constexpr auto to_unwrapped_checked() const -> num_t
-            requires _rnum<num_t>
+            requires _is_num<num_t>
         {
             ATOM_EXPECTS(is_conversion_safe_to_unwrapped<num_t>());
 
@@ -347,7 +347,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename num_t>
         constexpr auto to_unwrapped_unchecked() const -> num_t
-            requires _rnum<num_t>
+            requires _is_num<num_t>
         {
             return num_t(_value);
         }
@@ -358,7 +358,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename num_t>
         constexpr auto is_conversion_safe_to_unwrapped() const -> bool
-            requires _rnum<num_t>
+            requires _is_num<num_t>
         {
             return impl_t::template is_conversion_safe_to_unwrapped<num_t>(_value);
         }

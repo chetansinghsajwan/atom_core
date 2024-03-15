@@ -212,7 +212,7 @@ namespace atom
         class index_of<to_get_t, index, in_t, types...>
         {
         public:
-            static constexpr usize value = rsame_as<to_get_t, in_t>
+            static constexpr usize value = is_same_as<to_get_t, in_t>
                                                ? index
                                                : index_of<to_get_t, index + 1, types...>::value;
         };
@@ -308,7 +308,7 @@ namespace atom
             template <typename check_t>
             class _pred
             {
-                static constexpr bool value = rsame_as<in_t, check_t>;
+                static constexpr bool value = is_same_as<in_t, check_t>;
             };
 
         public:

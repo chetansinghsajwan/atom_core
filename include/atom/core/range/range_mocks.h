@@ -43,70 +43,70 @@ namespace atom::mock
 namespace atom::mock
 {
     /// --------------------------------------------------------------------------------------------
-    /// `rrange` mock object.
+    /// `is_range` mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename elem_t>
     class range: public _range<iter<elem_t>, iter_end, elem_t>
     {};
 
     /// --------------------------------------------------------------------------------------------
-    /// `rmut_range` mock object.
+    /// `is_mut_range` mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename elem_t>
     class mut_range: public _mut_range<mut_iter<elem_t>, iter_end, elem_t>
     {};
 
     /// --------------------------------------------------------------------------------------------
-    /// `rfwd_range` mock object.
+    /// `is_fwd_range` mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename elem_t>
     class fwd_range: public _range<fwd_iter<elem_t>, iter_end, elem_t>
     {};
 
     /// --------------------------------------------------------------------------------------------
-    /// `rmut_fwd_range` mock object.
+    /// `is_mut_fwd_range` mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename elem_t>
     class mut_fwd_range: public _mut_range<mut_fwd_iter<elem_t>, iter_end, elem_t>
     {};
 
     /// --------------------------------------------------------------------------------------------
-    /// `rbidi_range` mock object.
+    /// `is_bidi_range` mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename elem_t>
     class bidi_range: public _range<bidi_iter<elem_t>, iter_end, elem_t>
     {};
 
     /// --------------------------------------------------------------------------------------------
-    /// `rmut_bidi_range` mock object.
+    /// `is_mut_bidi_range` mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename elem_t>
     class mut_bidi_range: public _mut_range<mut_bidi_iter<elem_t>, iter_end, elem_t>
     {};
 
     /// --------------------------------------------------------------------------------------------
-    /// `rjump_range` mock object.
+    /// `is_jump_range` mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename elem_t>
     class jump_range: public _range<jump_iter<elem_t>, iter_end, elem_t>
     {};
 
     /// --------------------------------------------------------------------------------------------
-    /// `rmut_jump_range` mock object.
+    /// `is_mut_jump_range` mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename elem_t>
     class mut_jump_range: public _mut_range<mut_jump_iter<elem_t>, iter_end, elem_t>
     {};
 
     /// --------------------------------------------------------------------------------------------
-    /// `rarray_range` mock object.
+    /// `is_array_range` mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename elem_t>
     class array_range: public _range<array_iter<elem_t>, array_iter<elem_t>, elem_t>
     {};
 
     /// --------------------------------------------------------------------------------------------
-    /// `rmut_array_range` mock object.
+    /// `is_mut_array_range` mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename elem_t>
     class mut_array_range
@@ -121,7 +121,7 @@ namespace atom::mock
     {};
 
     /// --------------------------------------------------------------------------------------------
-    /// `rmut_common_range` mock object.
+    /// `is_mut_common_range` mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename elem_t>
     class mut_common_range

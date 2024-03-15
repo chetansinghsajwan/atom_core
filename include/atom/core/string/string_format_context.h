@@ -60,7 +60,7 @@ namespace atom
 
         template <typename range_t>
         auto write(const range_t& range)
-            requires(rrange_of<range_t, char>)
+            requires(is_range_of<range_t, char>)
         {
             for (char ch : range)
             {

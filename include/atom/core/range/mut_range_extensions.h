@@ -127,7 +127,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename type1>
         constexpr auto write_elems(type1& val) const -> void
-            requires(rassignable<elem_t, type1>)
+            requires(is_assignable<elem_t, type1>)
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -137,7 +137,7 @@ namespace atom
 
         template <typename type1>
         constexpr auto write_elems_no_optimize(type1& val) const -> void
-            requires(rassignable<elem_t, type1>)
+            requires(is_assignable<elem_t, type1>)
         {}
 
         ATOM_PRAGMA_OPTIMIZE_ON
@@ -146,49 +146,49 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         constexpr auto shift_fwd(usize steps)
-            requires(rmove_assignable<elem_t>)
+            requires(is_move_assignable<elem_t>)
         {}
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
         constexpr auto shift_bwd(usize steps)
-            requires(rmove_assignable<elem_t>)
+            requires(is_move_assignable<elem_t>)
         {}
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
         constexpr auto shift_by(isize steps)
-            requires(rswappable<elem_t>)
+            requires(is_swappable<elem_t>)
         {}
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
         constexpr auto rotate_fwd(usize steps)
-            requires(rswappable<elem_t>)
+            requires(is_swappable<elem_t>)
         {}
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
         constexpr auto rotate_bwd(usize steps)
-            requires(rswappable<elem_t>)
+            requires(is_swappable<elem_t>)
         {}
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
         constexpr auto rotate_by(isize steps)
-            requires(rswappable<elem_t>)
+            requires(is_swappable<elem_t>)
         {}
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
         constexpr auto destroy_elems()
-            requires(rdestructible<elem_t>)
+            requires(is_destructible<elem_t>)
         {}
 
     protected:

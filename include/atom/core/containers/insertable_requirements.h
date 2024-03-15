@@ -26,7 +26,7 @@ namespace atom
     /// ensures `insertable_t` is `insertable` for type `value_t`.
     /// --------------------------------------------------------------------------------------------
     template <typename insertable_t, typename value_t>
-    concept rinsertable =
+    concept is_insertable =
         requires(insertable_t insertable, value_t el, mock::range<value_t> range)
     {
         insertable.insert(el);
@@ -37,7 +37,7 @@ namespace atom
     /// ensures `insertable_t` is `front_insertable` for type `value_t`.
     /// --------------------------------------------------------------------------------------------
     template <typename front_insertable_t, typename value_t>
-    concept rfront_insertable = 
+    concept is_front_insertable = 
         requires(front_insertable_t insertable, value_t el, mock::range<value_t> range)
     {
         insertable.insert_front(el);
@@ -48,7 +48,7 @@ namespace atom
     /// ensures `insertable_t` is `back_insertable` for type `value_t`.
     /// --------------------------------------------------------------------------------------------
     template <typename insertable_t, typename value_t>
-    concept rback_insertable =
+    concept is_back_insertable =
         requires(insertable_t insertable, value_t el, mock::range<value_t> range)
     {
         insertable.insert_back(el);
@@ -59,7 +59,7 @@ namespace atom
     /// ensures `insertable_t` is `key_insertable` for type `value_t`.
     /// --------------------------------------------------------------------------------------------
     template <typename insertable_t, typename key_t, typename value_t>
-    concept rkey_insertable = requires(insertable_t insertable, key_t key, value_t el,
+    concept is_key_insertable = requires(insertable_t insertable, key_t key, value_t el,
         mock::range<value_t> range)
     {
         insertable.insert(key, el);
@@ -70,7 +70,7 @@ namespace atom
     /// ensures `insertable_t` is `index_insertable` for type `value_t`.
     /// --------------------------------------------------------------------------------------------
     template <typename insertable_t, typename value_t>
-    concept rindex_insertable = rkey_insertable<insertable_t, usize, value_t>;
+    concept is_index_insertable = is_key_insertable<insertable_t, usize, value_t>;
 }
 
 // clang-format on

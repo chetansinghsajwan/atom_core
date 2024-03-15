@@ -6,7 +6,7 @@
 namespace atom::mock
 {
     /// --------------------------------------------------------------------------------------------
-    /// `rinsertable` mock object.
+    /// `is_insertable` mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename value_t>
     class insertable
@@ -19,11 +19,11 @@ namespace atom::mock
 
         template <typename range_t>
         auto insert(const range_t& range)
-            requires(rrange_of<range_t, value_t>);
+            requires(is_range_of<range_t, value_t>);
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// `rfront_insertable` mock object.
+    /// `is_front_insertable` mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename value_t>
     class front_insertable
@@ -36,11 +36,11 @@ namespace atom::mock
 
         template <typename range_t>
         auto insert_front(const range_t& range)
-            requires(rrange_of<range_t, value_t>);
+            requires(is_range_of<range_t, value_t>);
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// `rback_insertable` mock object.
+    /// `is_back_insertable` mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename value_t>
     class back_insertable
@@ -53,11 +53,11 @@ namespace atom::mock
 
         template <typename range_t>
         auto insert_back(const range_t& range)
-            requires(rrange_of<range_t, value_t>);
+            requires(is_range_of<range_t, value_t>);
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// `rkey_insertable` mock object.
+    /// `is_key_insertable` mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename key_t, typename value_t>
     class key_insertable
@@ -70,11 +70,11 @@ namespace atom::mock
 
         template <typename range_t>
         auto insert(key_t key, const range_t& range)
-            requires(rrange_of<range_t, value_t>);
+            requires(is_range_of<range_t, value_t>);
     };
 
     /// --------------------------------------------------------------------------------------------
-    /// `rindex_insertable` mock object.
+    /// `is_index_insertable` mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename value_t>
     using index_insertable = key_insertable<usize, value_t>;

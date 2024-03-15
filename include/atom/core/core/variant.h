@@ -89,15 +89,13 @@ namespace atom
         template <typename... other_ts>
         constexpr auto construct_value_from_variant(const _variant_impl<other_ts...>& that)
         {
-            _construct_value_from_variant_impl<false, 0, other_ts...>(
-                that, that.get_t_index());
+            _construct_value_from_variant_impl<false, 0, other_ts...>(that, that.get_t_index());
         }
 
         template <typename... other_ts>
         constexpr auto construct_value_from_variant(_variant_impl<other_ts...>&& that)
         {
-            _construct_value_from_variant_impl<true, 0, other_ts...>(
-                that, that.get_t_index());
+            _construct_value_from_variant_impl<true, 0, other_ts...>(that, that.get_t_index());
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -312,8 +310,7 @@ namespace atom
 
                 if constexpr (mov)
                 {
-                    _construct_value_as<other_t>(
-                        move(that.template _get_value_as<other_t>()));
+                    _construct_value_as<other_t>(move(that.template _get_value_as<other_t>()));
                 }
                 else
                 {
@@ -361,7 +358,7 @@ namespace atom
         template <typename value_t>
         constexpr auto _destruct_value_as()
         {
-            if constexpr (not rsame_as<value_t, void>)
+            if constexpr (not is_same_as<value_t, void>)
                 obj_helper().destruct(_get_data_as<value_t>());
         }
 
@@ -408,8 +405,10 @@ namespace atom
     template <typename... value_ts>
     class variant
     {
-        ATOM_STATIC_ASSERTS(type_list<value_ts...>::are_unique, "every type in value_ts... should be unique.");
-        ATOM_STATIC_ASSERTS(type_list<value_ts...>::count > 0, "at least one type needs to be specified.");
+        ATOM_STATIC_ASSERTS(
+            type_list<value_ts...>::are_unique, "every type in value_ts... should be unique.");
+        ATOM_STATIC_ASSERTS(
+            type_list<value_ts...>::count > 0, "at least one type needs to be specified.");
 
     private:
         using this_t = variant<value_ts...>;
@@ -485,7 +484,7 @@ namespace atom
         /// # default constructor
         /// ----------------------------------------------------------------------------------------
         constexpr variant()
-            requires(rdefault_constructible<first_t>) or (ris_void<first_t>)
+            requires(is_default_constructible<first_t>) or (is_void<first_t>)
         {
             _impl.template construct_value_by_index<0>();
         }
@@ -499,8 +498,8 @@ namespace atom
         /// # copy constructor
         /// ----------------------------------------------------------------------------------------
         constexpr variant(const variant& that)
-            requires(rcopy_constructible_all<value_ts...>)
-                    and (not rtrivially_copy_constructible_all<value_ts...>)
+            requires(is_copy_constructible<value_ts> and ...)
+                    and (not is_trivially_copy_constructible<value_ts> and ...)
         {
             _impl.construct_value_from_variant(that._impl);
         }
@@ -510,7 +509,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename... other_ts>
         constexpr variant(const variant<other_ts...>& that)
-            requires(rcopy_constructible_all<other_ts...>)
+            requires(is_copy_constructible<other_ts> and ...)
                     and (type_list::template has<other_ts...>)
         {
             _impl.construct_value_from_variant(that._impl);
@@ -525,7 +524,8 @@ namespace atom
         /// # copy assignment operator
         /// ----------------------------------------------------------------------------------------
         constexpr variant& operator=(const variant& that)
-            requires(rcopyable_all<value_ts...>) and (not rtrivially_copy_assignable_all<value_ts...>)
+            requires(is_copyable<value_ts> and ...)
+                    and (not is_trivially_copy_assignable<value_ts> and ...)
         {
             _impl.set_value_from_variant(that._impl);
             return *this;
@@ -536,7 +536,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename... other_ts>
         constexpr variant& operator=(const variant<other_ts...>& that)
-            requires(rcopyable_all<other_ts...>) and (type_list::template has<other_ts...>)
+            requires(is_copyable<other_ts> and ...) and (type_list::template has<other_ts...>)
         {
             _impl.set_value_from_variant(that._impl);
             return *this;
@@ -551,8 +551,8 @@ namespace atom
         /// # move constructor
         /// ----------------------------------------------------------------------------------------
         constexpr variant(variant&& that)
-            requires(rmove_constructible_all<value_ts...>)
-                    and (not rtrivially_move_constructible_all<value_ts...>)
+            requires(is_move_constructible<value_ts> and ...)
+                    and (not is_trivially_move_constructible<value_ts> and ...)
         {
             _impl.construct_value_from_variant(move(that._impl));
         }
@@ -562,7 +562,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename... other_ts>
         constexpr variant(variant<other_ts...>&& that)
-            requires(rmove_constructible_all<other_ts...>)
+            requires(is_move_constructible<other_ts> and ...)
                     and (type_list::template has<other_ts...>)
         {
             _impl.construct_value_from_variant(move(that._impl));
@@ -577,7 +577,8 @@ namespace atom
         /// # move assignment operator
         /// ----------------------------------------------------------------------------------------
         constexpr variant& operator=(variant&& that)
-            requires(rmoveable_all<value_ts...>) and (not rtrivially_move_assignable_all<value_ts...>)
+            requires(is_moveable<value_ts> and ...)
+                    and (not is_trivially_move_assignable<value_ts> and ...)
         {
             _impl.set_value_from_variant(move(that._impl));
             return *this;
@@ -588,7 +589,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename... other_ts>
         constexpr variant& operator=(variant<other_ts...>&& that)
-            requires(rmoveable_all<value_ts...>) and (type_list::template has<other_ts...>)
+            requires(is_moveable<value_ts> and ...) and (type_list::template has<other_ts...>)
         {
             _impl.set_value_from_variant(move(that._impl));
             return *this;
@@ -671,7 +672,7 @@ namespace atom
         /// destructs value.
         /// ----------------------------------------------------------------------------------------
         constexpr ~variant()
-            requires(not rtrivially_destructible_all<value_ts...>)
+            requires(not is_trivially_destructible<value_ts> and ...)
         {
             _impl.destroy_value();
         }
@@ -686,7 +687,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename value_t, typename... arg_ts>
         constexpr auto emplace(arg_ts&&... args)
-            requires(has<value_t>()) and (rconstructible<value_t, arg_ts...>)
+            requires(has<value_t>()) and (is_constructible<value_t, arg_ts...>)
         {
             _impl.template emplace_value_by_t<value_t>(forward<arg_ts>(args)...);
         }
@@ -700,7 +701,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <usize index, typename... arg_ts>
         constexpr auto emplace(arg_ts&&... args)
-            requires(has<index>()) and (rconstructible<type_at<index>, arg_ts...>)
+            requires(has<index>()) and (is_constructible<type_at<index>, arg_ts...>)
         {
             _impl.template emplace_value_by_index<index>(forward<arg_ts>(args)...);
         }
@@ -714,7 +715,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename value_t>
         constexpr auto set(const value_t&& value)
-            requires(has<value_t>()) and (rcopy_constructible<value_t>)
+            requires(has<value_t>()) and (is_copy_constructible<value_t>)
         {
             _impl.set_value(value);
         }
@@ -728,7 +729,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename value_t>
         constexpr auto set(value_t&& value)
-            requires(has<value_t>()) and (rmove_constructible<value_t>)
+            requires(has<value_t>()) and (is_move_constructible<value_t>)
         {
             _impl.set_value(move(value));
         }
@@ -742,7 +743,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename value_t>
         constexpr auto as() const -> const value_t&
-            requires(has<value_t>()) and (not ris_void<value_t>)
+            requires(has<value_t>()) and (not is_void<value_t>)
         {
             ATOM_EXPECTS(is<value_t>(), "access to invalid type.");
 
@@ -758,7 +759,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename value_t>
         constexpr auto as() -> value_t&
-            requires(has<value_t>()) and (not ris_void<value_t>)
+            requires(has<value_t>()) and (not is_void<value_t>)
         {
             ATOM_DEBUG_EXPECTS(is<value_t>(), "access to invalid type.");
 
@@ -770,7 +771,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename value_t>
         constexpr auto as_check() const -> const value_t&
-            requires(has<value_t>()) and (not ris_void<value_t>)
+            requires(has<value_t>()) and (not is_void<value_t>)
         {
             ATOM_EXPECTS(is<value_t>(), "access to invalid type.");
 
@@ -782,7 +783,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename value_t>
         constexpr auto as_check() -> value_t&
-            requires(has<value_t>()) and (not ris_void<value_t>)
+            requires(has<value_t>()) and (not is_void<value_t>)
         {
             ATOM_EXPECTS(is<value_t>(), "access to invalid type.");
 
@@ -802,7 +803,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <usize index>
         constexpr auto get_at() const -> const type_at<index>&
-            requires(has<index>()) and (not ris_void<type_at<index>>)
+            requires(has<index>()) and (not is_void<type_at<index>>)
         {
             ATOM_EXPECTS(is<index>(), "access to invalid type by index.");
 
@@ -822,7 +823,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <usize index>
         constexpr auto get_at() -> type_at<index>&
-            requires(has<index>()) and (not ris_void<type_at<index>>)
+            requires(has<index>()) and (not is_void<type_at<index>>)
         {
             ATOM_DEBUG_EXPECTS(is<index>(), "access to invalid type by index.");
 
@@ -834,7 +835,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <usize index>
         constexpr auto at_check() const -> const type_at<index>&
-            requires(has<index>()) and (not ris_void<type_at<index>>)
+            requires(has<index>()) and (not is_void<type_at<index>>)
         {
             ATOM_EXPECTS(is<index>(), "access to invalid type by index.");
 
@@ -846,7 +847,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <usize index>
         constexpr auto at_check() -> type_at<index>&
-            requires(has<index>()) and (not ris_void<type_at<index>>)
+            requires(has<index>()) and (not is_void<type_at<index>>)
         {
             ATOM_EXPECTS(is<index>(), "access to invalid type by index.");
 

@@ -69,7 +69,7 @@ namespace atom
         constexpr void unlock() {}
     };
 
-    ATOM_STATIC_ASSERTS(rlockable<null_lockable>);
+    ATOM_STATIC_ASSERTS(is_lockable<null_lockable>);
 
     /// --------------------------------------------------------------------------------------------
     /// specialization for null_lockable to avoid any performance overhead.
