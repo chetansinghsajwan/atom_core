@@ -10,6 +10,9 @@
 namespace atom
 {
     template <typename enum_t>
+    constexpr auto _enum_impl_is_flags() -> bool;
+
+    template <typename enum_t>
     class _enums_impl
     {
         using magic_string_t = magic_enum::string;
@@ -211,8 +214,8 @@ namespace atom
 }
 
 template <typename enum_t>
-    requires atom::_enums_impl<enum_t>::is_enum
+    requires(atom::_enums_impl<enum_t>::is_enum())
 struct magic_enum::customize::enum_range<enum_t>
 {
-    static constexpr bool is_flags = atom::_enums_impl<enum_t>::is_flags();
+    static constexpr bool is_flags = atom::_enum_impl_is_flags<enum_t>();
 };

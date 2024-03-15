@@ -343,4 +343,11 @@ namespace atom
     {
         return _enums_impl<enum_t>::get_uncommon_flags(lhs, rhs);
     }
+
+    template <typename enum_t>
+    constexpr auto _enum_impl_is_flags() -> bool
+        requires enums::is_enum<enum_t>
+    {
+        return enums::is_flags<enum_t>;
+    }
 }
