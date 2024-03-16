@@ -12,7 +12,7 @@ namespace atom
     template <typename enum_t>
     constexpr auto _enum_impl_is_flags() -> bool;
 
-    template <typename enum_t>
+    template <typename enum_t, bool in_is_flags>
     class _enums_impl
     {
         using magic_string_t = magic_enum::string;
@@ -29,6 +29,11 @@ namespace atom
 
     public:
         using underlying_t = magic_enum::underlying_type_t<enum_t>;
+
+        static consteval auto is_flags() -> bool
+        {
+            return in_is_flags;
+        }
 
         static consteval auto is_enum() -> bool
         {
@@ -159,7 +164,7 @@ namespace atom
 
         static constexpr auto to_string_view(enum_t value) -> string_view
         {
-            return string_view::from_std(magic_enum::enum_name(value));
+            return string_view::from_std(magic_enum::enum_name<enum_t>(value));
         }
 
         /// @todo implement this.
@@ -214,8 +219,8 @@ namespace atom
 }
 
 template <typename enum_t>
-    requires(atom::_enums_impl<enum_t>::is_enum())
+    requires(atom::_enums_impl<enum_t, true>::is_enum())
 struct magic_enum::customize::enum_range<enum_t>
 {
-    static constexpr bool is_flags = atom::_enum_impl_is_flags<enum_t>();
+    static constexpr bool is_flags = true;
 };
