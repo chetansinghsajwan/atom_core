@@ -323,24 +323,73 @@ namespace atom::enums
 
 namespace atom
 {
+    /// --------------------------------------------------------------------------------------------
+    /// returns `enums::get_reverse_flags(flags)`;
+    /// --------------------------------------------------------------------------------------------
+    template <typename enum_t>
+    constexpr auto operator~(enum_t flags) -> enum_t
+        requires enums::is_enum<enum_t> and enums::is_flags<enum_t>
+    {
+        return enums::get_reverse_flags(flags);
+    }
+
+    /// --------------------------------------------------------------------------------------------
+    /// returns `enums::add_flags(lhs, rhs)`;
+    /// --------------------------------------------------------------------------------------------
     template <typename enum_t>
     constexpr auto operator|(enum_t lhs, enum_t rhs) -> enum_t
         requires enums::is_enum<enum_t> and enums::is_flags<enum_t>
     {
-        return _enums_impl<enum_t, enums::is_flags<enum_t>>::add_flags(lhs, rhs);
+        return enums::add_flags(lhs, rhs);
     }
 
+    /// --------------------------------------------------------------------------------------------
+    /// returns `lhs = lhs | rhs`;
+    /// --------------------------------------------------------------------------------------------
+    template <typename enum_t>
+    constexpr auto operator|=(enum_t& lhs, enum_t rhs) -> enum_t&
+        requires enums::is_enum<enum_t> and enums::is_flags<enum_t>
+    {
+        return lhs = lhs | rhs;
+    }
+
+    /// --------------------------------------------------------------------------------------------
+    /// returns `enums::get_common_flags(lhs, rhs)`;
+    /// --------------------------------------------------------------------------------------------
     template <typename enum_t>
     constexpr auto operator&(enum_t lhs, enum_t rhs) -> enum_t
         requires enums::is_enum<enum_t> and enums::is_flags<enum_t>
     {
-        return _enums_impl<enum_t, enums::is_flags<enum_t>>::get_common_flags(lhs, rhs);
+        return enums::get_common_flags(lhs, rhs);
     }
 
+    /// --------------------------------------------------------------------------------------------
+    /// returns `lhs = lhs & rhs`;
+    /// --------------------------------------------------------------------------------------------
+    template <typename enum_t>
+    constexpr auto operator&=(enum_t& lhs, enum_t rhs) -> enum_t&
+        requires enums::is_enum<enum_t> and enums::is_flags<enum_t>
+    {
+        return lhs = lhs & rhs;
+    }
+
+    /// --------------------------------------------------------------------------------------------
+    /// returns `enums::get_uncommon_flags(lhs, rhs)`;
+    /// --------------------------------------------------------------------------------------------
     template <typename enum_t>
     constexpr auto operator^(enum_t lhs, enum_t rhs) -> enum_t
         requires enums::is_enum<enum_t> and enums::is_flags<enum_t>
     {
-        return _enums_impl<enum_t, enums::is_flags<enum_t>>::get_uncommon_flags(lhs, rhs);
+        return enums::get_uncommon_flags(lhs, rhs);
+    }
+
+    /// --------------------------------------------------------------------------------------------
+    /// returns `lhs = lhs ^ rhs`;
+    /// --------------------------------------------------------------------------------------------
+    template <typename enum_t>
+    constexpr auto operator^=(enum_t& lhs, enum_t rhs) -> enum_t&
+        requires enums::is_enum<enum_t> and enums::is_flags<enum_t>
+    {
+        return lhs = lhs ^ rhs;
     }
 }
