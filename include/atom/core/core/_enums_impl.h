@@ -47,7 +47,13 @@ namespace atom
 
         static constexpr auto from_string(string_view str) -> option<enum_t>
         {
-            auto result = magic_enum::enum_cast<enum_t>(str.to_std());
+            magic_optional_t<enum_t> result = [&] {
+                if constexpr (is_flags())
+                    return magic_enum::enum_flags_cast<enum_t>(str.to_std());
+                else
+                    magic_enum::enum_cast<enum_t>(str.to_std());
+            }();
+
             if (not result.has_value())
                 return nullopt();
 
@@ -57,8 +63,14 @@ namespace atom
         template <typename comparer_t>
         static constexpr auto from_string(string_view str, comparer_t&& comparer) -> option<enum_t>
         {
-            auto result =
-                magic_enum::enum_cast<enum_t>(str.to_std(), forward<comparer_t>(comparer));
+            magic_optional_t<enum_t> result = [&] {
+                if constexpr (is_flags())
+                    return magic_enum::enum_flags_cast<enum_t>(
+                        str.to_std(), forward<comparer_t>(comparer));
+                else
+                    magic_enum::enum_cast<enum_t>(str.to_std(), forward<comparer_t>(comparer));
+            }();
+
             if (not result.has_value())
                 return nullopt();
 
@@ -72,7 +84,13 @@ namespace atom
 
         static constexpr auto from_underlying_try(underlying_t value) -> option<enum_t>
         {
-            magic_optional_t value_opt = magic_enum::enum_cast<enum_t>(value);
+            magic_optional_t<enum_t> value_opt = [&] {
+                if constexpr (is_flags())
+                    return magic_enum::enum_flags_cast<enum_t>(value);
+                else
+                    magic_enum::enum_cast<enum_t>(value);
+            }();
+
             if (not value_opt.has_value())
                 return nullopt();
 
@@ -139,7 +157,10 @@ namespace atom
 
         static constexpr auto is_value_valid(enum_t value) -> bool
         {
-            return magic_enum::enum_contains(value);
+            if constexpr (is_flags())
+                return magic_enum::enum_flags_contains(value);
+            else
+                return magic_enum::enum_contains(value);
         }
 
         static constexpr auto is_index_valid(usize index) -> bool
@@ -149,7 +170,10 @@ namespace atom
 
         static constexpr auto is_underlying_valid(underlying_t value) -> bool
         {
-            return magic_enum::enum_contains(value);
+            if constexpr (is_flags())
+                return magic_enum::enum_flags_contains(value);
+            else
+                return magic_enum::enum_contains(value);
         }
 
         static constexpr auto to_index(enum_t value) -> usize
@@ -164,7 +188,16 @@ namespace atom
 
         static constexpr auto to_string_view(enum_t value) -> string_view
         {
-            return string_view::from_std(magic_enum::enum_name<enum_t>(value));
+            return string_view::from_std([value] {
+                if constexpr (is_flags())
+                {
+                    return magic_enum::enum_flags_name<enum_t>(value);
+                }
+                else
+                {
+                    return magic_enum::enum_name<enum_t>(value);
+                }
+            }());
         }
 
         /// @todo implement this.
