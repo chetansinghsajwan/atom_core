@@ -30,7 +30,7 @@ namespace atom
         }
 
         template <typename value_t>
-        consteval auto _alignof() -> usize
+        consteval auto _get_alignof() -> usize
         {
             if constexpr (typeinfo::is_same<value_t, void>)
             {
@@ -98,7 +98,7 @@ namespace atom
         class min_size<min, in_t, types...>
         {
         private:
-            static constexpr usize _this_size = _alignof<in_t>();
+            static constexpr usize _this_size = _get_alignof<in_t>();
 
         public:
             static constexpr usize value =
@@ -128,7 +128,7 @@ namespace atom
         class max_align<max, in_t, types...>
         {
         private:
-            static constexpr usize _this_align = _alignof<in_t>();
+            static constexpr usize _this_align = _get_alignof<in_t>();
 
         public:
             static constexpr usize value =
