@@ -6,6 +6,9 @@
 
 namespace atom
 {
+    using string_iter = array_iter<char>;
+    using mut_string_iter = mut_array_iter<char>;
+    
     template <typename final_t, typename container_t>
     class string_functions
         : public container_t

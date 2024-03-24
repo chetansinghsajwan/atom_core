@@ -63,7 +63,7 @@ namespace atom
             std_iter_wrap_for_atom_iter std_iter_end(get_iter_end());
             std_iter_wrap_for_atom_iter std_iter1(range.get_iter());
             std_iter_wrap_for_atom_iter std_iter_end1(range.get_iter_end());
-            return std::find(std_iter, std_iter_end, std_iter1, std_iter_end1);
+            return std::search(std_iter, std_iter_end, std_iter1, std_iter_end1).iter;
         }
 
         /// ----------------------------------------------------------------------------------------
