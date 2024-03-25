@@ -16,27 +16,18 @@ namespace atom
         using iter_end_t = typename _impl_t::iter_end_t;
 
     public:
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
         template <typename this_range_type>
         static constexpr auto get_iter(const this_range_type& this_range) -> iter_t
         {
             return this_range.get_iter();
         }
 
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
         template <typename this_range_type>
         static constexpr auto get_iter_end(const this_range_type& this_range) -> iter_end_t
         {
             return this_range.get_iter_end();
         }
 
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
         template <typename this_range_type, typename that_elem_type>
         static constexpr auto find_elem(const this_range_type& this_range, const that_elem_type& el) -> iter_t
         {
@@ -45,9 +36,6 @@ namespace atom
             return std::find(std_iter, std_iter_end, el).iter;
         }
 
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
         template <typename this_range_type, typename that_range_type>
         static constexpr auto find_range(const this_range_type& this_range, const that_range_type& that_range) -> iter_t
         {
@@ -58,9 +46,6 @@ namespace atom
             return std::search(std_iter, std_iter_end, std_iter1, std_iter_end1).iter;
         }
 
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
         template <typename this_range_type, typename that_range_type>
         static constexpr auto compare(const const this_range_type& this_range, that_range_type& that_range) -> i8
         {
@@ -72,9 +57,6 @@ namespace atom
             return std::equal(std_iter, std_iter_end, std_iter1, std_iter_end1);
         }
 
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
         template <typename this_range_type>
         static constexpr auto get_count(const this_range_type& this_range) -> usize
         {
