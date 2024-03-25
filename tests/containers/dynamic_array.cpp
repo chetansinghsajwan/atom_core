@@ -8,7 +8,7 @@
 // TEST_CASE("atom.core.dynamic_array")
 // {
 //     using tracked_i32 = tracked_t_of<i32>;
-//     using dynamic_array_tracked_i32 = basic_dynamic_array<tracked_i32, default_mem_allocator>;
+//     using dynamic_array_tracked_i32 = dynamic_array<tracked_i32, default_mem_allocator>;
 
 //     SECTION("default constructor")
 //     {

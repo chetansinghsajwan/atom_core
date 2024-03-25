@@ -6,7 +6,7 @@
 namespace atom
 {
     template <typename in_elem_t, usize in_count>
-    class basic_static_array
+    class static_array: public range_extensions
     {
     public:
         using value_t = in_elem_t;
@@ -16,16 +16,16 @@ namespace atom
         using mut_iter_end_t = mut_iter_t;
 
     public:
-        constexpr basic_static_array() = default;
+        constexpr static_array() = default;
 
         template <usize other_count>
-        constexpr basic_static_array(const value_t (&arr)[other_count])
+        constexpr static_array(const value_t (&arr)[other_count])
             requires(other_count <= in_count)
             : _arr(arr)
         {}
 
         template <typename... arg_ts>
-        constexpr basic_static_array(arg_ts&&... args)
+        constexpr static_array(arg_ts&&... args)
             requires(is_convertible_to<arg_ts, value_t> and ...) and (sizeof...(arg_ts) <= in_count)
             : _arr(0)
         {}
@@ -68,15 +68,5 @@ namespace atom
 
     private:
         value_t _arr[in_count];
-    };
-
-    template <typename value_t, usize count>
-    class static_array: public mut_array_range_extensions<basic_static_array<value_t, count>>
-    {
-        using base_t = mut_array_range_extensions<basic_static_array<value_t, count>>;
-
-    public:
-        using base_t::base_t;
-        using base_t::operator=;
     };
 }

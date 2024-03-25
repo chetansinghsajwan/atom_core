@@ -9,9 +9,9 @@ namespace atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename in_elem_t>
-    class basic_array_view
+    class array_view: public range_extensions
     {
-        using this_t = basic_array_view;
+        using this_t = array_view;
 
     public:
         using value_t = in_elem_t;
@@ -24,7 +24,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # default constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr basic_array_view()
+        constexpr array_view()
             : _data(nullptr)
             , _count(0)
         {}
@@ -32,28 +32,28 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # trivial copy constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr basic_array_view(const this_t& that) = default;
+        constexpr array_view(const this_t& that) = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # trivial copy operator
         /// ----------------------------------------------------------------------------------------
-        constexpr basic_array_view& operator=(const this_t& that) = default;
+        constexpr array_view& operator=(const this_t& that) = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # trivial move constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr basic_array_view(this_t&& that) = default;
+        constexpr array_view(this_t&& that) = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # trivial move operator
         /// ----------------------------------------------------------------------------------------
-        constexpr basic_array_view& operator=(this_t&& that) = default;
+        constexpr array_view& operator=(this_t&& that) = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # array constructor
         /// ----------------------------------------------------------------------------------------
         template <usize count>
-        constexpr basic_array_view(const value_t (&arr)[count])
+        constexpr array_view(const value_t (&arr)[count])
             : _data(arr)
             , _count(count)
         {}
@@ -62,7 +62,7 @@ namespace atom
         /// # array operator
         /// ----------------------------------------------------------------------------------------
         template <usize count>
-        constexpr basic_array_view& operator=(const value_t (&arr)[count])
+        constexpr array_view& operator=(const value_t (&arr)[count])
         {
             _data = arr;
             _count = count;
@@ -72,7 +72,7 @@ namespace atom
         /// # range constructor
         /// ----------------------------------------------------------------------------------------
         template <typename range_t>
-        constexpr basic_array_view(const range_t& range)
+        constexpr array_view(const range_t& range)
             requires(is_array_range_of<range_t, value_t>)
             : _data(range.get_data())
             , _count(range.get_count())
@@ -82,7 +82,7 @@ namespace atom
         /// # range operator
         /// ----------------------------------------------------------------------------------------
         template <typename range_t>
-        constexpr basic_array_view& operator=(const range_t& range)
+        constexpr array_view& operator=(const range_t& range)
             requires(is_array_range_of<range_t, value_t>)
         {
             _data = range.get_data();
@@ -92,7 +92,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # trivial destructor
         /// ----------------------------------------------------------------------------------------
-        constexpr ~basic_array_view() = default;
+        constexpr ~array_view() = default;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -130,18 +130,5 @@ namespace atom
     private:
         const value_t* _data;
         usize _count;
-    };
-
-    /// --------------------------------------------------------------------------------------------
-    ///
-    /// --------------------------------------------------------------------------------------------
-    template <typename value_t>
-    class array_view: public array_range_extensions<basic_array_view<value_t>>
-    {
-        using base_t = array_range_extensions<basic_array_view<value_t>>;
-
-    public:
-        using base_t::base_t;
-        using base_t::operator=;
     };
 }

@@ -1,5 +1,6 @@
 #pragma once
 #include "_dynamic_array_vector.h"
+#include "atom/core/range.h"
 
 namespace atom
 {
@@ -8,8 +9,8 @@ namespace atom
     /// - write time complexities after writing implementation.
     /// - add note for case, where element or elements to be inserted are from this array.
     /// --------------------------------------------------------------------------------------------
-    template <typename in_elem_t, typename in_allocator_t>
-    class basic_dynamic_array
+    template <typename in_elem_t, typename in_allocator_t = default_mem_allocator>
+    class dynamic_array: public range_extensions
     {
         ATOM_STATIC_ASSERTS(
             not typeinfo::is_ref<in_elem_t>, "dynamic_array does not supports ref types.");
@@ -31,21 +32,21 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # default constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr basic_dynamic_array()
+        constexpr dynamic_array()
             : _impl()
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # copy constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr basic_dynamic_array(const basic_dynamic_array& that)
+        constexpr dynamic_array(const dynamic_array& that)
             : _impl(typename _impl_t::copy_tag(), that._impl)
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # copy operator
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator=(const basic_dynamic_array& that) -> basic_dynamic_array&
+        constexpr auto operator=(const dynamic_array& that) -> dynamic_array&
         {
             _impl.assign_range(that.get_iter(), that.get_iter_end());
             return *this;
@@ -54,14 +55,14 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # move constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr basic_dynamic_array(basic_dynamic_array&& that)
+        constexpr dynamic_array(dynamic_array&& that)
             : _impl(typename _impl_t::move_tag(), that._impl)
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # move operator
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator=(basic_dynamic_array&& that) -> basic_dynamic_array&
+        constexpr auto operator=(dynamic_array&& that) -> dynamic_array&
         {
             _impl.move_this(that._impl);
             return *this;
@@ -71,7 +72,7 @@ namespace atom
         /// # range constructor
         /// ----------------------------------------------------------------------------------------
         template <typename range_t>
-        constexpr basic_dynamic_array(range_t&& range)
+        constexpr dynamic_array(range_t&& range)
             requires(is_range_of<typeinfo::get_pure<range_t>, value_t>)
             : _impl(typename _impl_t::range_tag(), range.get_iter(), range.get_iter_end())
         {}
@@ -80,7 +81,7 @@ namespace atom
         /// # range operator
         /// ----------------------------------------------------------------------------------------
         template <typename range_t>
-        constexpr basic_dynamic_array& operator=(range_t&& range)
+        constexpr dynamic_array& operator=(range_t&& range)
             requires(is_range_of<range_t, value_t>)
         {
             _impl.assign_range(range.get_iter(), range.get_iter_end());
@@ -89,7 +90,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # destroyor
         /// ----------------------------------------------------------------------------------------
-        constexpr ~basic_dynamic_array() {}
+        constexpr ~dynamic_array() {}
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -698,19 +699,5 @@ namespace atom
 
     private:
         _impl_t _impl;
-    };
-
-    /// --------------------------------------------------------------------------------------------
-    ///
-    /// --------------------------------------------------------------------------------------------
-    template <typename value_t, typename allocator_t = default_mem_allocator>
-    class dynamic_array
-        : public mut_array_range_extensions<basic_dynamic_array<value_t, allocator_t>>
-    {
-        using base_t = mut_array_range_extensions<basic_dynamic_array<value_t, allocator_t>>;
-
-    public:
-        using base_t::base_t;
-        using base_t::operator=;
     };
 }

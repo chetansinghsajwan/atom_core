@@ -2,7 +2,7 @@
 #include "atom/core/_std.h"
 #include "atom/core/core.h"
 #include "atom/core/range.h"
-#include "atom/core/string/_string_t_id.h"
+#include "atom/core/string/_string_type_id.h"
 
 namespace atom
 {
@@ -12,7 +12,7 @@ namespace atom
     template <typename final_t, typename container_t>
     class string_functions
         : public container_t
-        , public _string_t_id
+        , public _string_type_id
     {
         ATOM_STATIC_ASSERTS(is_same_as<typename container_t::value_t, char>);
 

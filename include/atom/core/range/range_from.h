@@ -7,20 +7,11 @@
 #include "atom/core/range/iter_requirements.h"
 #include "atom/core/range/range_requirements.h"
 #include "atom/core/range/range_extensions.h"
-#include "atom/core/range/fwd_range_extensions.h"
-#include "atom/core/range/bidi_range_extensions.h"
-#include "atom/core/range/jump_range_extensions.h"
-#include "atom/core/range/array_range_extensions.h"
-#include "atom/core/range/mut_range_extensions.h"
-#include "atom/core/range/mut_fwd_range_extensions.h"
-#include "atom/core/range/mut_bidi_range_extensions.h"
-#include "atom/core/range/mut_jump_range_extensions.h"
-#include "atom/core/range/mut_array_range_extensions.h"
 
 namespace atom
 {
     template <typename in_iter_t, typename in_iter_end_t>
-    class _basic_range_from_iter_pair
+    class _range_from_iter_pair: public range_extensions
     {
     public:
         using value_t = typename in_iter_t::value_t;
@@ -28,7 +19,7 @@ namespace atom
         using iter_end_t = in_iter_end_t;
 
     public:
-        constexpr _basic_range_from_iter_pair(iter_t it, iter_end_t it_end)
+        constexpr _range_from_iter_pair(iter_t it, iter_end_t it_end)
             : _it(move(it))
             , _it_end(move(it_end))
         {}
@@ -62,17 +53,17 @@ namespace atom
     };
 
     template <typename in_mut_iter_t, typename in_mut_iter_end_t>
-    class _basic_mut_range_from_iter_pair
-        : public _basic_range_from_iter_pair<in_mut_iter_t, in_mut_iter_end_t>
+    class _mut_range_from_iter_pair
+        : public _range_from_iter_pair<in_mut_iter_t, in_mut_iter_end_t>
     {
-        using base_t = _basic_range_from_iter_pair<in_mut_iter_t, in_mut_iter_end_t>;
+        using base_t = _range_from_iter_pair<in_mut_iter_t, in_mut_iter_end_t>;
 
     public:
         using mut_iter_t = in_mut_iter_t;
         using mut_iter_end_t = in_mut_iter_end_t;
 
     public:
-        constexpr _basic_mut_range_from_iter_pair(mut_iter_t it, mut_iter_end_t it_end)
+        constexpr _mut_range_from_iter_pair(mut_iter_t it, mut_iter_end_t it_end)
             : base_t(move(it), move(it_end))
         {}
 
@@ -86,99 +77,6 @@ namespace atom
         {
             return this->get_iter_end();
         }
-    };
-
-    template <typename iter_t, typename iter_end_t>
-    class _range_from_iter_extended
-    {
-    private:
-        template <typename in_elem_t>
-        class _type_container
-        {
-        public:
-            using value_t = typeinfo::remove_cvref_t<in_elem_t>;
-        };
-
-        static consteval auto _get()
-        {
-            using range_t = _basic_range_from_iter_pair<iter_t, iter_end_t>;
-
-            if constexpr (is_array_iter_pair<iter_t, iter_end_t>)
-                return _type_container<array_range_extensions<range_t>>();
-
-            else if constexpr (is_jump_iter_pair<iter_t, iter_end_t>)
-                return _type_container<jump_range_extensions<range_t>>();
-
-            else if constexpr (is_bidi_iter_pair<iter_t, iter_end_t>)
-                return _type_container<bidi_range_extensions<range_t>>();
-
-            else if constexpr (is_fwd_iter_pair<iter_t, iter_end_t>)
-                return _type_container<fwd_range_extensions<range_t>>();
-
-            else if constexpr (is_iter_pair<iter_t, iter_end_t>)
-                return _type_container<range_extensions<range_t>>();
-        }
-
-    public:
-        using value_t = typename decltype(_get())::value_t;
-    };
-
-    template <typename iter_t, typename iter_end_t>
-    class _mut_range_from_iter_extended
-    {
-    private:
-        template <typename in_elem_t>
-        class _type_container
-        {
-        public:
-            using value_t = typeinfo::remove_cvref_t<in_elem_t>;
-        };
-
-        static consteval auto _get()
-        {
-            using range_t = _basic_mut_range_from_iter_pair<iter_t, iter_end_t>;
-
-            if constexpr (is_array_iter_pair<iter_t, iter_end_t>)
-                return _type_container<mut_array_range_extensions<range_t>>();
-
-            else if constexpr (is_jump_iter_pair<iter_t, iter_end_t>)
-                return _type_container<mut_jump_range_extensions<range_t>>();
-
-            else if constexpr (is_bidi_iter_pair<iter_t, iter_end_t>)
-                return _type_container<mut_bidi_range_extensions<range_t>>();
-
-            else if constexpr (is_fwd_iter_pair<iter_t, iter_end_t>)
-                return _type_container<mut_fwd_range_extensions<range_t>>();
-
-            else if constexpr (is_iter_pair<iter_t, iter_end_t>)
-                return _type_container<mut_range_extensions<range_t>>();
-        }
-
-    public:
-        using value_t = typename decltype(_get())::value_t;
-    };
-
-    template <typename iter_t, typename iter_end_t>
-    class _range_from_iter_pair: public _range_from_iter_extended<iter_t, iter_end_t>::value_t
-    {
-        using base_t = _range_from_iter_extended<iter_t, iter_end_t>::value_t;
-
-    public:
-        constexpr _range_from_iter_pair(iter_t it, iter_end_t it_end)
-            : base_t(move(it), move(it_end))
-        {}
-    };
-
-    template <typename mut_iter_t, typename mut_iter_end_t>
-    class _mut_range_from_iter_pair
-        : public _mut_range_from_iter_extended<mut_iter_t, mut_iter_end_t>::value_t
-    {
-        using base_t = _mut_range_from_iter_extended<mut_iter_t, mut_iter_end_t>::value_t;
-
-    public:
-        constexpr _mut_range_from_iter_pair(mut_iter_t it, mut_iter_end_t it_end)
-            : base_t(move(it), move(it_end))
-        {}
     };
 
     /// --------------------------------------------------------------------------------------------

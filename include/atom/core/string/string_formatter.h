@@ -1,7 +1,7 @@
 #pragma once
 #include "atom/core/string/string_format_context.h"
 #include "atom/core/core/enums.h"
-#include "atom/core/string/_string_t_id.h"
+#include "atom/core/string/_string_type_id.h"
 #include "atom/core/typeinfo.h"
 #include "fmt/core.h"
 #include "fmt/ranges.h"
@@ -59,7 +59,7 @@ namespace atom
     /// range of `char`.
     /// --------------------------------------------------------------------------------------------
     template <typename string_t>
-        requires typeinfo::is_derived_from<string_t, _string_t_id>
+        requires typeinfo::is_derived_from<string_t, _string_type_id>
     class string_formatter<string_t, string_formatter_level::atom>
         : public string_formatter<fmt::string_view, string_formatter_level::fmt>
     {

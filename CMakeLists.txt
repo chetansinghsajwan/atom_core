@@ -47,7 +47,7 @@ FetchContent_MakeAvailable(catch2 fmt cpptrace magic_enum libassert)
 # --------------------------------------------------------------------------------------------------
 # C++20 Global Config
 # --------------------------------------------------------------------------------------------------
-set(CMAKE_CXX_STANDARD "20")
+set(CMAKE_CXX_STANDARD "23")
 set(CMAKE_CXX_STANDARD_REQUIRED "ON")
 enable_testing()
 
