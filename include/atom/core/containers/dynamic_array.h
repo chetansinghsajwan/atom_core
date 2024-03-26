@@ -88,6 +88,23 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
+        /// # array constructor
+        /// ----------------------------------------------------------------------------------------
+        template <usize count>
+        constexpr dynamic_array(const value_t (&array)[count])
+            : _impl(typename _impl_t::range_tag(), iter_t(array), iter_t(array + count))
+        {}
+
+        /// ----------------------------------------------------------------------------------------
+        /// # array operator
+        /// ----------------------------------------------------------------------------------------
+        template <usize count>
+        constexpr dynamic_array& operator=(const value_t (&array)[count])
+        {
+            _impl.assign_range(iter_t(array), iter_t(array + count));
+        }
+
+        /// ----------------------------------------------------------------------------------------
         /// # destroyor
         /// ----------------------------------------------------------------------------------------
         constexpr ~dynamic_array() {}
