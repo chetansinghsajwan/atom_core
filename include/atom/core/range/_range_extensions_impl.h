@@ -1,6 +1,7 @@
 #pragma once
 #include "atom/core/core.h"
 #include "atom/core/range/std_iter_wrap_for_atom_iter.h"
+#include <algorithm>
 
 namespace atom
 {
@@ -14,6 +15,12 @@ namespace atom
         using value_t = typename _impl_t::value_t;
         using iter_t = typename _impl_t::iter_t;
         using iter_end_t = typename _impl_t::iter_end_t;
+        using mut_iter_t = typename _impl_t::mut_iter_t;
+        using mut_iter_end_t = typename _impl_t::mut_iter_end_t;
+        using std_iter_t = std_iter_wrap_for_atom_iter<iter_t>;
+        using std_iter_end_t = std_iter_wrap_for_atom_iter<iter_end_t>;
+        using std_mut_iter_t = std_iter_wrap_for_atom_iter<mut_iter_t>;
+        using std_mut_iter_end_t = std_iter_wrap_for_atom_iter<mut_iter_end_t>;
 
     public:
         template <typename this_range_type>
@@ -28,37 +35,131 @@ namespace atom
             return this_range.get_iter_end();
         }
 
-        template <typename this_range_type, typename that_elem_type>
-        static constexpr auto find_elem(const this_range_type& this_range, const that_elem_type& el) -> iter_t
+        template <typename this_range_type>
+        static constexpr auto get_iter_at(const this_range_type& this_range, usize i) -> iter_t
         {
-            std_iter_wrap_for_atom_iter std_iter(get_iter(this_range));
-            std_iter_wrap_for_atom_iter std_iter_end(get_iter_end(this_range));
-            return std::find(std_iter, std_iter_end, el).iter;
+            return this_range.get_iter().next(i);
         }
 
-        template <typename this_range_type, typename that_range_type>
-        static constexpr auto find_range(const this_range_type& this_range, const that_range_type& that_range) -> iter_t
+        template <typename this_range_type>
+        static constexpr auto get_mut_iter(this_range_type& this_range) -> mut_iter_t
         {
-            std_iter_wrap_for_atom_iter std_iter(get_iter(this_range));
-            std_iter_wrap_for_atom_iter std_iter_end(get_iter_end(this_range));
-            std_iter_wrap_for_atom_iter std_iter1(that_range.get_iter(this_range));
-            std_iter_wrap_for_atom_iter std_iter_end1(that_range.get_iter_end(this_range));
-            return std::search(std_iter, std_iter_end, std_iter1, std_iter_end1).iter;
+            return this_range.get_mut_iter();
         }
 
-        template <typename this_range_type, typename that_range_type>
-        static constexpr auto compare(const const this_range_type& this_range, that_range_type& that_range) -> i8
+        template <typename this_range_type>
+        static constexpr auto get_mut_iter_end(this_range_type& this_range) -> mut_iter_end_t
         {
-            std_iter_wrap_for_atom_iter std_iter(get_iter(this_range));
-            std_iter_wrap_for_atom_iter std_iter_end(get_iter_end(this_range));
-            std_iter_wrap_for_atom_iter std_iter1(that_range.get_iter(this_range));
-            std_iter_wrap_for_atom_iter std_iter_end1(that_range.get_iter_end(this_range));
+            return this_range.get_mut_iter_end();
+        }
 
-            return std::equal(std_iter, std_iter_end, std_iter1, std_iter_end1);
+        template <typename this_range_type>
+        static constexpr auto get_mut_iter_at(this_range_type& this_range, usize i) -> iter_t
+        {
+            return this_range.get_mut_iter().next(i);
+        }
+
+        template <typename this_range_type>
+        static constexpr auto begin(const this_range_type& this_range) -> std_iter_t
+        {
+            return std_iter_wrap_for_atom_iter(get_iter(this_range));
+        }
+
+        template <typename this_range_type>
+        static constexpr auto end(const this_range_type& this_range) -> std_iter_end_t
+        {
+            return std_iter_wrap_for_atom_iter(get_iter_end(this_range));
+        }
+
+        template <typename this_range_type>
+        static constexpr auto begin(this_range_type& this_range) -> std_mut_iter_t
+        {
+            return std_iter_wrap_for_atom_iter(get_mut_iter(this_range));
+        }
+
+        template <typename this_range_type>
+        static constexpr auto end(this_range_type& this_range) -> std_mut_iter_end_t
+        {
+            return std_iter_wrap_for_atom_iter(get_mut_iter_end(this_range));
+        }
+
+        template <typename this_range_type>
+        static constexpr auto get_data(const this_range_type& this_range) -> const value_t*
+        {
+            return this_range.get_data();
+        }
+
+        template <typename this_range_type>
+        static constexpr auto get_mut_data(this_range_type& this_range) -> value_t*
+        {
+            return this_range.get_mut_data();
+        }
+
+        template <typename this_range_type>
+        static constexpr auto get_at(const this_range_type& this_range, usize i) -> const value_t&
+        {
+            return get_data(this_range)[i];
+        }
+
+        template <typename this_range_type>
+        static constexpr auto get_mut_at(this_range_type& this_range, usize i) -> value_t&
+        {
+            return get_mut_data(this_range)[i];
         }
 
         template <typename this_range_type>
         static constexpr auto get_count(const this_range_type& this_range) -> usize
+        {
+            return this_range.get_count();
+        }
+
+        template <typename this_range_type>
+        static constexpr auto is_empty(const this_range_type& this_range) -> bool
+        {
+            return get_count(this_range) == 0;
+        }
+
+        template <typename this_range_type, typename that_value_type>
+        static constexpr auto find_elem(
+            const this_range_type& this_range, const that_value_type& value) -> iter_t
+        {
+            std_iter_wrap_for_atom_iter std_begin(get_iter(this_range));
+            std_iter_wrap_for_atom_iter std_end(get_iter_end(this_range));
+            return std::find(std_begin, std_end, value).iter;
+        }
+
+        template <typename this_range_type, typename that_range_type>
+        static constexpr auto find_range(
+            const this_range_type& this_range, const that_range_type& that_range) -> iter_t
+        {
+            std_iter_wrap_for_atom_iter std_this_begin(get_iter(this_range));
+            std_iter_wrap_for_atom_iter std_this_end(get_iter_end(this_range));
+            std_iter_wrap_for_atom_iter std_that_begin(that_range.get_iter());
+            std_iter_wrap_for_atom_iter std_that_end(that_range.get_iter_end());
+            return std::search(std_this_begin, std_this_end, std_that_begin, std_that_end).iter;
+        }
+
+        template <typename this_range_type, typename that_range_type>
+        static constexpr auto compare(
+            const const this_range_type& this_range, that_range_type& that_range) -> i8
+        {
+            std_iter_wrap_for_atom_iter std_this_begin(get_iter(this_range));
+            std_iter_wrap_for_atom_iter std_this_end(get_iter_end(this_range));
+            std_iter_wrap_for_atom_iter std_that_begin(that_range.get_iter());
+            std_iter_wrap_for_atom_iter std_that_end(that_range.get_iter_end());
+
+            return std::equal(std_this_begin, std_this_end, std_that_begin, std_that_end);
+        }
+
+        template <typename this_range_type, typename that_range_type>
+        static constexpr auto is_eq(
+            const this_range_type& this_range, const that_range_type& that_range) -> bool
+        {
+            return compare(this_range, that_range) == 0;
+        }
+
+        template <typename this_range_type>
+        static constexpr auto count_elems(const this_range_type& this_range) -> usize
         {
             if constexpr (is_jump_iter_pair<iter_t, iter_end_t>)
             {
@@ -70,6 +171,12 @@ namespace atom
                 count++;
 
             return count;
+        }
+
+        template <typename this_range_type>
+        static constexpr auto is_index_in_range(const this_range_type& this_range, usize i) -> bool
+        {
+            return i < get_count(this_range);
         }
     };
 }

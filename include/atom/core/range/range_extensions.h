@@ -9,6 +9,8 @@ namespace atom
 {
     class range_extensions
     {
+        using this_type = range_extensions;
+
     public:
         template <typename this_range_type>
         using get_impl_type = _range_extensions_impl<this_range_type>;
@@ -59,7 +61,7 @@ namespace atom
         template <typename this_range_type>
         constexpr auto get_iter(
             this const this_range_type& this_range) -> get_iter_type<this_range_type>
-            requires is_range<this_range_type>
+            // requires is_range<this_range_type>
         {
             using impl_type = get_impl_type<this_range_type>;
             return impl_type::get_iter(this_range);
@@ -71,7 +73,7 @@ namespace atom
         template <typename this_range_type>
         constexpr auto get_iter_end(
             this const this_range_type& this_range) -> get_iter_end_type<this_range_type>
-            requires is_range<this_range_type>
+            // requires is_range<this_range_type>
         {
             using impl_type = get_impl_type<this_range_type>;
             return impl_type::get_iter_end(this_range);
@@ -87,10 +89,9 @@ namespace atom
         template <typename this_range_type>
         constexpr auto get_iter_at(
             this const this_range_type& this_range, usize i) -> get_iter_type<this_range_type>
-            requires is_array_range<this_range_type>
+            // requires is_array_range<this_range_type>
         {
-            ATOM_EXPECTS(this_range.this_range_type::is_index_in_range(this_range, i),
-                "index is out of range.");
+            ATOM_EXPECTS(this_range.this_type::is_index_in_range(i), "index is out of range.");
 
             using impl_type = get_impl_type<this_range_type>;
             return impl_type::get_iter_at(this_range, i);
@@ -102,7 +103,7 @@ namespace atom
         template <typename this_range_type>
         constexpr auto get_mut_iter(
             this this_range_type& this_range) -> get_mut_iter_type<this_range_type>
-            requires is_mut_range<this_range_type>
+            // requires is_mut_range<this_range_type>
         {
             using impl_type = get_impl_type<this_range_type>;
             return impl_type::get_mut_iter(this_range);
@@ -114,7 +115,7 @@ namespace atom
         template <typename this_range_type>
         constexpr auto get_mut_iter_end(
             this this_range_type& this_range) -> get_mut_iter_end_type<this_range_type>
-            requires is_mut_range<this_range_type>
+            // requires is_mut_range<this_range_type>
         {
             using impl_type = get_impl_type<this_range_type>;
             return impl_type::get_mut_iter_end(this_range);
@@ -130,10 +131,9 @@ namespace atom
         template <typename this_range_type>
         constexpr auto get_mut_iter_at(
             this this_range_type& this_range, usize i) -> get_mut_iter_type<this_range_type>
-            requires is_mut_array_range<this_range_type>
+            // requires is_mut_array_range<this_range_type>
         {
-            ATOM_EXPECTS(this_range.this_range_type::is_index_in_range(this_range, i),
-                "index is out of range.");
+            ATOM_EXPECTS(this_range.this_type::is_index_in_range(i), "index is out of range.");
 
             using impl_type = get_impl_type<this_range_type>;
             return impl_type::get_mut_iter_at(this_range, i);
@@ -142,10 +142,34 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
+        // template <typename this_range_type>
+        // constexpr auto begin(
+        //     this const this_range_type& this_range) -> get_std_iter_type<this_range_type>
+        // requires is_range<this_range_type>
+        // {
+        //     using impl_type = get_impl_type<this_range_type>;
+        //     return impl_type::begin(this_range);
+        // }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        // template <typename this_range_type>
+        // constexpr auto end(
+        //     this const this_range_type& this_range) -> get_std_iter_end_type<this_range_type>
+        // requires is_range<this_range_type>
+        // {
+        //     using impl_type = get_impl_type<this_range_type>;
+        //     return impl_type::end(this_range);
+        // }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
         template <typename this_range_type>
-        constexpr auto begin(
-            this const this_range_type& this_range) -> get_std_iter_type<this_range_type>
-            requires is_range<this_range_type>
+        constexpr auto begin(this this_range_type& this_range)
+            //  -> get_std_mut_iter_type<this_range_type>
+            // requires is_mut_range<this_range_type>
         {
             using impl_type = get_impl_type<this_range_type>;
             return impl_type::begin(this_range);
@@ -155,33 +179,9 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename this_range_type>
-        constexpr auto end(
-            this const this_range_type& this_range) -> get_std_iter_end_type<this_range_type>
-            requires is_range<this_range_type>
-        {
-            using impl_type = get_impl_type<this_range_type>;
-            return impl_type::end(this_range);
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename this_range_type>
-        constexpr auto begin(
-            this this_range_type& this_range) -> get_std_mut_iter_type<this_range_type>
-            requires is_mut_range<this_range_type>
-        {
-            using impl_type = get_impl_type<this_range_type>;
-            return impl_type::begin(this_range);
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename this_range_type>
-        constexpr auto end(
-            this this_range_type& this_range) -> get_std_mut_iter_end_type<this_range_type>
-            requires is_mut_range<this_range_type>
+        constexpr auto end(this this_range_type& this_range)
+            //  -> get_std_mut_iter_end_type<this_range_type>
+            // requires is_mut_range<this_range_type>
         {
             using impl_type = get_impl_type<this_range_type>;
             return impl_type::end(this_range);
@@ -231,8 +231,7 @@ namespace atom
             usize i) -> const get_value_type<this_range_type>&
             requires is_array_range<this_range_type>
         {
-            ATOM_EXPECTS(this_range.this_range_type::is_index_in_range(this_range, i),
-                "index is out of range.");
+            ATOM_EXPECTS(this_range.this_type::is_index_in_range(i), "index is out of range.");
 
             using impl_type = get_impl_type<this_range_type>;
             return impl_type::get_at(this_range, i);
@@ -252,8 +251,7 @@ namespace atom
             this this_range_type& this_range, usize i) -> get_value_type<this_range_type>&
             requires is_mut_array_range<this_range_type>
         {
-            ATOM_EXPECTS(this_range.this_range_type::is_index_in_range(this_range, i),
-                "index is out of range.");
+            ATOM_EXPECTS(this_range.this_type::is_index_in_range(i), "index is out of range.");
 
             using impl_type = get_impl_type<this_range_type>;
             return impl_type::get_mut_at(this_range, i);
@@ -273,8 +271,8 @@ namespace atom
             usize i) -> const get_value_type<this_range_type>&
             requires is_array_range<this_range_type>
         {
-            ATOM_DEBUG_EXPECTS(this_range.this_range_type::is_index_in_range(this_range, i),
-                "index is out of range.");
+            ATOM_DEBUG_EXPECTS(
+                this_range.this_type::is_index_in_range(i), "index is out of range.");
 
             using impl_type = get_impl_type<this_range_type>;
             return impl_type::get_at(this_range, i);
@@ -294,8 +292,8 @@ namespace atom
             this this_range_type& this_range, usize i) -> get_value_type<this_range_type>&
             requires is_mut_array_range<this_range_type>
         {
-            ATOM_DEBUG_EXPECTS(this_range.this_range_type::is_index_in_range(this_range, i),
-                "index is out of range.");
+            ATOM_DEBUG_EXPECTS(
+                this_range.this_type::is_index_in_range(i), "index is out of range.");
 
             using impl_type = get_impl_type<this_range_type>;
             return impl_type::get_mut_at(this_range, i);
@@ -312,7 +310,7 @@ namespace atom
             this const this_range_type& this_range) -> const get_value_type<this_range_type>&
             requires is_array_range<this_range_type>
         {
-            ATOM_DEBUG_EXPECTS(not this_range.this_range_type::is_empty(), "range is empty.");
+            ATOM_DEBUG_EXPECTS(not this_range.this_type::is_empty(), "range is empty.");
 
             using impl_type = get_impl_type<this_range_type>;
             return impl_type::get_front(this_range);
@@ -329,7 +327,7 @@ namespace atom
             this this_range_type& this_range) -> get_value_type<this_range_type>&
             requires is_mut_array_range<this_range_type>
         {
-            ATOM_DEBUG_EXPECTS(not this_range.this_range_type::is_empty(), "range is empty.");
+            ATOM_DEBUG_EXPECTS(not this_range.this_type::is_empty(), "range is empty.");
 
             using impl_type = get_impl_type<this_range_type>;
             return impl_type::get_mut_front(this_range);
@@ -346,7 +344,7 @@ namespace atom
             this const this_range_type& this_range) -> const get_value_type<this_range_type>&
             requires is_array_range<this_range_type>
         {
-            ATOM_DEBUG_EXPECTS(not this_range.this_range_type::is_empty(), "range is empty.");
+            ATOM_DEBUG_EXPECTS(not this_range.this_type::is_empty(), "range is empty.");
 
             using impl_type = get_impl_type<this_range_type>;
             return impl_type::get_back(this_range);
@@ -363,7 +361,7 @@ namespace atom
             this this_range_type& this_range) -> get_value_type<this_range_type>&
             requires is_mut_array_range<this_range_type>
         {
-            ATOM_DEBUG_EXPECTS(not this_range.this_range_type::is_empty(), "range is empty.");
+            ATOM_DEBUG_EXPECTS(not this_range.this_type::is_empty(), "range is empty.");
 
             using impl_type = get_impl_type<this_range_type>;
             return impl_type::get_mut_back(this_range);
@@ -438,7 +436,7 @@ namespace atom
             requires is_array_range<this_range_type>
         {
             using impl_type = get_impl_type<this_range_type>;
-            return impl_type::this_range.this_range_type::is_index_in_range(this_range, i);
+            return impl_type::is_index_in_range(this_range, i);
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -472,7 +470,7 @@ namespace atom
                          typename that_range_type::value_t>
         {
             using impl_type = get_impl_type<this_range_type>;
-            return impl_type::find_elem(this_range, that_range);
+            return impl_type::find_range(this_range, that_range);
         }
 
         template <typename this_range_type, typename that_range_type>
@@ -548,10 +546,7 @@ namespace atom
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////
-        //// helpers
-        ////
-        //// # to do
-        //// - add range helper functions.
+        //// manipulations
         ////
         ////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -564,8 +559,6 @@ namespace atom
         {
             using impl_type = get_impl_type<this_range_type>;
             return impl_type::can_get_count(this_range);
-
-            // return is_fwd_iter_pair<iter_t, iter_end_t>;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -578,12 +571,6 @@ namespace atom
             using impl_type = get_impl_type<this_range_type>;
             return impl_type::count_elems(this_range);
         }
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        ////
-        //// manipulations
-        ////
-        ////////////////////////////////////////////////////////////////////////////////////////////
 
         /// ----------------------------------------------------------------------------------------
         ///
