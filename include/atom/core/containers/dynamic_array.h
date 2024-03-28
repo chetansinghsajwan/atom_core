@@ -341,8 +341,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename range_t>
         constexpr auto insert_range_back(range_t&& range) -> mut_iter_t
-            requires(is_range_of<range_t, value_t>)
-                    and (is_constructible<value_t, typename range_t::value_t>)
+            requires(is_range_of<typeinfo::get_pure<range_t>, value_t>)
+                    and (is_constructible<value_t, typename typeinfo::get_pure<range_t>::value_t>)
         {
             usize count = _impl.insert_range_back(range.get_iter(), range.get_iter_end());
             return _impl.get_mut_iter_at(_impl.get_count() - count);

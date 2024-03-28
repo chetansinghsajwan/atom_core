@@ -46,7 +46,7 @@ namespace atom
         constexpr _dynamic_array_impl_using_std_vector(
             range_tag, other_iter_t it, other_iter_end_t it_end)
             : _vector(
-                std_iter_wrap_for_atom_iter(move(it)), std_iter_wrap_for_atom_iter(move(it_end)))
+                  std_iter_wrap_for_atom_iter(move(it)), std_iter_wrap_for_atom_iter(move(it_end)))
         {}
 
         constexpr ~_dynamic_array_impl_using_std_vector() {}
@@ -112,8 +112,8 @@ namespace atom
         }
 
         template <typename other_iter_t, typename other_iter_end_t>
-        constexpr auto insert_range_at(usize index, other_iter_t it, other_iter_end_t it_end)
-            -> usize
+        constexpr auto insert_range_at(
+            usize index, other_iter_t it, other_iter_end_t it_end) -> usize
         {
             usize old_size = _vector.size();
             _vector.insert(_vector.begin() + index, std_iter_wrap_for_atom_iter(move(it)),
@@ -149,6 +149,17 @@ namespace atom
         constexpr auto remove_at(usize index)
         {
             _vector.erase(_vector.begin() + index);
+        }
+
+        constexpr auto remove_front(usize index)
+        {
+            _vector.erase(_vector.begin());
+        }
+
+        constexpr auto remove_back(usize index)
+        {
+            if (_vector.size() > 0)
+                _vector.erase(_vector.begin() + _vector.size() - 1);
         }
 
         constexpr auto remove_range(usize begin, usize count)

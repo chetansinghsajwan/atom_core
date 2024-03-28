@@ -44,7 +44,7 @@ namespace atom
         using _storage_t = _variant_storage<value_ts...>;
 
     public:
-        static constexpr auto get_t_count() -> usize
+        static constexpr auto get_type_count() -> usize
         {
             return _list_t::count;
         }
@@ -77,7 +77,7 @@ namespace atom
 
         using first_t = type_at_index<0>;
 
-        using last_t = type_at_index<get_t_count() - 1>;
+        using last_t = type_at_index<get_type_count() - 1>;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -476,7 +476,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         static consteval auto get_count() -> usize
         {
-            return _impl_t::get_t_count();
+            return _impl_t::get_type_count();
         }
 
     public:

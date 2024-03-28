@@ -58,86 +58,86 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename this_range_type>
-        constexpr auto get_iter(
-            this const this_range_type& this_range) -> get_iter_type<this_range_type>
-            // requires is_range<this_range_type>
-        {
-            using impl_type = get_impl_type<this_range_type>;
-            return impl_type::get_iter(this_range);
-        }
+        // template <typename this_range_type>
+        // constexpr auto get_iter(
+        //     this const this_range_type& this_range) -> get_iter_type<this_range_type>
+        //     // requires is_range<this_range_type>
+        // {
+        //     using impl_type = get_impl_type<this_range_type>;
+        //     return impl_type::get_iter(this_range);
+        // }
 
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename this_range_type>
-        constexpr auto get_iter_end(
-            this const this_range_type& this_range) -> get_iter_end_type<this_range_type>
-            // requires is_range<this_range_type>
-        {
-            using impl_type = get_impl_type<this_range_type>;
-            return impl_type::get_iter_end(this_range);
-        }
+        // /// ----------------------------------------------------------------------------------------
+        // ///
+        // /// ----------------------------------------------------------------------------------------
+        // template <typename this_range_type>
+        // constexpr auto get_iter_end(
+        //     this const this_range_type& this_range) -> get_iter_end_type<this_range_type>
+        //     // requires is_range<this_range_type>
+        // {
+        //     using impl_type = get_impl_type<this_range_type>;
+        //     return impl_type::get_iter_end(this_range);
+        // }
 
-        /// ----------------------------------------------------------------------------------------
-        /// get iter to element at index `i`.
-        ///
-        /// # parameters
-        ///
-        /// - `i`: index of the element to get iter at.
-        /// ----------------------------------------------------------------------------------------
-        template <typename this_range_type>
-        constexpr auto get_iter_at(
-            this const this_range_type& this_range, usize i) -> get_iter_type<this_range_type>
-            // requires is_array_range<this_range_type>
-        {
-            ATOM_EXPECTS(this_range.this_type::is_index_in_range(i), "index is out of range.");
+        // /// ----------------------------------------------------------------------------------------
+        // /// get iter to element at index `i`.
+        // ///
+        // /// # parameters
+        // ///
+        // /// - `i`: index of the element to get iter at.
+        // /// ----------------------------------------------------------------------------------------
+        // template <typename this_range_type>
+        // constexpr auto get_iter_at(
+        //     this const this_range_type& this_range, usize i) -> get_iter_type<this_range_type>
+        //     // requires is_array_range<this_range_type>
+        // {
+        //     ATOM_EXPECTS(this_range.this_type::is_index_in_range(i), "index is out of range.");
 
-            using impl_type = get_impl_type<this_range_type>;
-            return impl_type::get_iter_at(this_range, i);
-        }
+        //     using impl_type = get_impl_type<this_range_type>;
+        //     return impl_type::get_iter_at(this_range, i);
+        // }
 
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename this_range_type>
-        constexpr auto get_mut_iter(
-            this this_range_type& this_range) -> get_mut_iter_type<this_range_type>
-            // requires is_mut_range<this_range_type>
-        {
-            using impl_type = get_impl_type<this_range_type>;
-            return impl_type::get_mut_iter(this_range);
-        }
+        // /// ----------------------------------------------------------------------------------------
+        // ///
+        // /// ----------------------------------------------------------------------------------------
+        // template <typename this_range_type>
+        // constexpr auto get_mut_iter(
+        //     this this_range_type& this_range) -> get_mut_iter_type<this_range_type>
+        //     // requires is_mut_range<this_range_type>
+        // {
+        //     using impl_type = get_impl_type<this_range_type>;
+        //     return impl_type::get_mut_iter(this_range);
+        // }
 
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename this_range_type>
-        constexpr auto get_mut_iter_end(
-            this this_range_type& this_range) -> get_mut_iter_end_type<this_range_type>
-            // requires is_mut_range<this_range_type>
-        {
-            using impl_type = get_impl_type<this_range_type>;
-            return impl_type::get_mut_iter_end(this_range);
-        }
+        // /// ----------------------------------------------------------------------------------------
+        // ///
+        // /// ----------------------------------------------------------------------------------------
+        // template <typename this_range_type>
+        // constexpr auto get_mut_iter_end(
+        //     this this_range_type& this_range) -> get_mut_iter_end_type<this_range_type>
+        //     // requires is_mut_range<this_range_type>
+        // {
+        //     using impl_type = get_impl_type<this_range_type>;
+        //     return impl_type::get_mut_iter_end(this_range);
+        // }
 
-        /// ----------------------------------------------------------------------------------------
-        /// get iter to element at index `i`.
-        ///
-        /// # parameters
-        ///
-        /// - `i`: index of the element to get iter at.
-        /// ----------------------------------------------------------------------------------------
-        template <typename this_range_type>
-        constexpr auto get_mut_iter_at(
-            this this_range_type& this_range, usize i) -> get_mut_iter_type<this_range_type>
-            // requires is_mut_array_range<this_range_type>
-        {
-            ATOM_EXPECTS(this_range.this_type::is_index_in_range(i), "index is out of range.");
+        // /// ----------------------------------------------------------------------------------------
+        // /// get iter to element at index `i`.
+        // ///
+        // /// # parameters
+        // ///
+        // /// - `i`: index of the element to get iter at.
+        // /// ----------------------------------------------------------------------------------------
+        // template <typename this_range_type>
+        // constexpr auto get_mut_iter_at(
+        //     this this_range_type& this_range, usize i) -> get_mut_iter_type<this_range_type>
+        //     // requires is_mut_array_range<this_range_type>
+        // {
+        //     ATOM_EXPECTS(this_range.this_type::is_index_in_range(i), "index is out of range.");
 
-            using impl_type = get_impl_type<this_range_type>;
-            return impl_type::get_mut_iter_at(this_range, i);
-        }
+        //     using impl_type = get_impl_type<this_range_type>;
+        //     return impl_type::get_mut_iter_at(this_range, i);
+        // }
 
         /// ----------------------------------------------------------------------------------------
         ///

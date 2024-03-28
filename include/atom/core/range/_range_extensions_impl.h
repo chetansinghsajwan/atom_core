@@ -72,15 +72,23 @@ namespace atom
         }
 
         template <typename this_range_type>
-        static constexpr auto begin(this_range_type& this_range) -> std_mut_iter_t
+        static constexpr auto begin(this_range_type& this_range)
+        // -> std_mut_iter_t
         {
-            return std_iter_wrap_for_atom_iter(get_mut_iter(this_range));
+            if constexpr (is_mut_range<this_range_type>)
+                return std_iter_wrap_for_atom_iter(get_mut_iter(this_range));
+            else
+                return std_iter_wrap_for_atom_iter(get_iter(this_range));
         }
 
         template <typename this_range_type>
-        static constexpr auto end(this_range_type& this_range) -> std_mut_iter_end_t
+        static constexpr auto end(this_range_type& this_range)
+        // -> std_mut_iter_end_t
         {
-            return std_iter_wrap_for_atom_iter(get_mut_iter_end(this_range));
+            if constexpr (is_mut_range<this_range_type>)
+                return std_iter_wrap_for_atom_iter(get_mut_iter_end(this_range));
+            else
+                return std_iter_wrap_for_atom_iter(get_iter_end(this_range));
         }
 
         template <typename this_range_type>
@@ -105,6 +113,30 @@ namespace atom
         static constexpr auto get_mut_at(this_range_type& this_range, usize i) -> value_t&
         {
             return get_mut_data(this_range)[i];
+        }
+
+        template <typename this_range_type>
+        static constexpr auto get_front(const this_range_type& this_range) -> const value_t&
+        {
+            return get_data(this_range)[0];
+        }
+
+        template <typename this_range_type>
+        static constexpr auto get_front_mut(this_range_type& this_range) -> value_t&
+        {
+            return get_data(this_range)[0];
+        }
+
+        template <typename this_range_type>
+        static constexpr auto get_back(const this_range_type& this_range) -> const value_t&
+        {
+            return get_data(this_range)[get_count(this_range) - 1];
+        }
+
+        template <typename this_range_type>
+        static constexpr auto get_back_mut(this_range_type& this_range) -> value_t&
+        {
+            return get_data(this_range)[get_count(this_range) - 1];
         }
 
         template <typename this_range_type>

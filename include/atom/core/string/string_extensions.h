@@ -16,6 +16,11 @@ namespace atom
         using this_t = string_extensions;
 
     public:
+        static constexpr auto from_empty()
+        {
+            return final_t();
+        }
+
         static constexpr auto from_std(std::string_view str)
         {
             return final_t(range_from(str));

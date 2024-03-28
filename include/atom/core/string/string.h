@@ -17,7 +17,7 @@ namespace atom
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         static constexpr auto with_capacity(usize count) -> string
         {
@@ -56,14 +56,20 @@ namespace atom
 namespace std
 {
     template <>
-    class hash<atom::string>
+    struct hash<atom::string>
     {
-    public:
         constexpr auto operator()(const atom::string& str) const -> std::size_t
         {
-            const char* begin = str.get_data();
-            atom::usize count = str.get_count();
-            return hash<std::string_view>()(std::string_view(begin, count));
+            return hash<std::string_view>()(str.to_std());
+        }
+    };
+
+    template <>
+    struct hash<atom::string_view>
+    {
+        constexpr auto operator()(const atom::string_view& str) const -> std::size_t
+        {
+            return hash<std::string_view>()(str.to_std());
         }
     };
 }
