@@ -3,10 +3,11 @@
 
 namespace atom
 {
-    template <typename value_t>
+    template <typename in_value_t>
     class typeinfo
     {
     public:
+        using value_t = in_value_t;
         using pure_t = std::remove_cvref_t<value_t>;
 
         using with_const_t = std::add_const_t<value_t>;
@@ -14,6 +15,7 @@ namespace atom
         using with_ref_t = std::add_const_t<value_t>;
         using without_ref_t = std::remove_const_t<value_t>;
 
+        using remove_ptr_t = std::remove_pointer_t<value_t>;
         using remove_cvref_t = std::remove_cvref_t<value_t>;
         using remove_quailfiers_ref_t = std::remove_cvref_t<value_t>;
         using unqualified_t = std::remove_cv_t<value_t>;
@@ -41,20 +43,32 @@ namespace atom
 
         template <typename... args_t>
         static constexpr bool is_constructible_from = std::is_constructible_v<value_t, args_t...>;
+
+        template <typename... args_t>
+        static constexpr bool is_assignable_from = std::is_assignable_v<value_t, args_t...>;
+
         static constexpr bool is_default_constructible = std::is_default_constructible_v<value_t>;
         static constexpr bool is_copy_constructible = std::is_copy_constructible_v<value_t>;
-        static constexpr bool is_move_constructible = std::is_copy_constructible_v<value_t>;
         static constexpr bool is_copy_assignable = std::is_copy_assignable_v<value_t>;
+        static constexpr bool is_copyable = is_copy_constructible and is_copy_assignable;
+        static constexpr bool is_move_constructible = std::is_copy_constructible_v<value_t>;
         static constexpr bool is_move_assignable = std::is_move_assignable_v<value_t>;
+        static constexpr bool is_moveable = is_move_constructible and is_move_assignable;
         static constexpr bool is_destructible = std::is_destructible_v<value_t>;
 
         template <typename... args_t>
         static constexpr bool is_trivially_constructible_from = std::is_trivially_constructible_v<value_t, args_t...>;
+
+        template <typename... args_t>
+        static constexpr bool is_trivially_asignable_from = std::is_trivially_assignable_v<value_t, args_t...>;
+
         static constexpr bool is_trivially_default_constructible = std::is_trivially_default_constructible_v<value_t>;
         static constexpr bool is_trivially_copy_constructible = std::is_trivially_copy_constructible_v<value_t>;
-        static constexpr bool is_trivially_move_constructible = std::is_trivially_copy_constructible_v<value_t>;
         static constexpr bool is_trivially_copy_assignable = std::is_trivially_copy_assignable_v<value_t>;
+        static constexpr bool is_trivially_copyable = is_trivially_copy_constructible and is_trivially_copy_assignable;
+        static constexpr bool is_trivially_move_constructible = std::is_trivially_copy_constructible_v<value_t>;
         static constexpr bool is_trivially_move_assignable = std::is_trivially_move_assignable_v<value_t>;
+        static constexpr bool is_trivially_moveable = is_trivially_move_constructible and is_trivially_move_assignable;
         static constexpr bool is_trivially_destructible = std::is_trivially_destructible_v<value_t>;
     };
 

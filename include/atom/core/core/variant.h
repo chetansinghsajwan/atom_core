@@ -50,7 +50,7 @@ namespace atom
         }
 
         template <typename value_t>
-        static consteval auto has_t() -> bool
+        static consteval auto has_type() -> bool
         {
             return _list_t::template has<value_t>;
         }
@@ -406,7 +406,7 @@ namespace atom
     class variant
     {
         ATOM_STATIC_ASSERTS(
-            type_list<value_ts...>::are_unique, "every type in value_ts... should be unique.");
+            type_list<value_ts...>::are_unique(), "every type in value_ts... should be unique.");
         ATOM_STATIC_ASSERTS(
             type_list<value_ts...>::count > 0, "at least one type needs to be specified.");
 
@@ -432,7 +432,7 @@ namespace atom
         template <typename value_t>
         static consteval auto has() -> bool
         {
-            return _impl_t::template has_t<value_t>();
+            return _impl_t::template has_type<value_t>();
         }
 
         /// ----------------------------------------------------------------------------------------

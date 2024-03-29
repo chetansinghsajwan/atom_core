@@ -409,6 +409,8 @@ namespace atom
     template <typename type0, typename... types>
     class type_list_impl<type0, types...>
     {
+        using this_t = type_list_impl;
+
     public:
         template <typename invokable_t>
         static consteval auto for_each(invokable_t&& func) -> void
@@ -426,6 +428,27 @@ namespace atom
 
             return type_list_impl<types...>::are_all(forward<predicate_t>(pred));
         }
+
+        template <typename typeinfo_t>
+        static consteval auto has(typeinfo_t info) -> bool
+        {
+            if (typeinfo<type0>::template is_same_as<typename typeinfo_t::value_t>)
+                return true;
+
+            return type_list_impl<types...>::has(info);
+        }
+
+        template <typename other_type0, typename... other_types>
+        static consteval auto has_all(type_list_impl<other_type0, other_types...> list) -> bool
+        {
+            if (not has(typeinfo<other_type0>()))
+                return false;
+
+            if constexpr (sizeof...(other_types) == 0)
+                return true;
+            else
+                return this_t::has_all(type_list_impl<other_types...>());
+        }
     };
 
     template <>
@@ -440,6 +463,12 @@ namespace atom
         static consteval auto are_all(predicate_t&& pred) -> bool
         {
             return true;
+        }
+
+        template <typename typeinfo_t>
+        static consteval auto has(typeinfo_t info) -> bool
+        {
+            return false;
         }
     };
 
@@ -488,9 +517,21 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename... ts_to_check>
+        using front_t = typeutils::conditional_t<count == 0, void,
+            typename _list_ops_t::template at<0, 0, types...>::value_t>;
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        using back_t = typeutils::conditional_t<count == 0, void,
+            typename _list_ops_t::template at<count - 1, 0, types...>::value_t>;
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename... types_to_check>
         static constexpr bool has =
-            (_list_ops_t::template has<ts_to_check, types...>::value and ...);
+            (_list_ops_t::template has<types_to_check, types...>::value and ...);
 
         /// ----------------------------------------------------------------------------------------
         ///
@@ -507,11 +548,6 @@ namespace atom
             requires(has<in_t>)
         static constexpr usize index_of = _list_ops_t::template index_of<in_t, 0, types...>::value;
 
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        static constexpr bool are_unique = _list_ops_t::template are_unique<types...>::value;
-
         template <typename invokable_t>
         static consteval auto for_each(invokable_t&& func) -> void
         {
@@ -522,6 +558,17 @@ namespace atom
         static consteval auto are_all(predicate_t&& pred) -> bool
         {
             return impl_t::are_all(pred);
+        }
+
+        static consteval auto are_unique() -> bool
+        {
+            return _list_ops_t::template are_unique<types...>::value;
+        }
+
+        template <typename typelist_t>
+        static consteval auto has_all(const typelist_t& list) -> bool
+        {
+            return impl_t::has_all(typename typelist_t::impl_t());
         }
     };
 }
