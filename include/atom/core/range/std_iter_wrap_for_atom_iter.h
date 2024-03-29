@@ -12,11 +12,11 @@ namespace atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename iter_t>
-    using std_iter_cat_for_atom_iter = typeinfo::conditional_t<not is_iter<iter_t>, void,
-        typeinfo::conditional_t<not is_fwd_iter<iter_t>, std::input_iterator_tag,
-            typeinfo::conditional_t<not is_bidi_iter<iter_t>, std::forward_iterator_tag,
-                typeinfo::conditional_t<not is_jump_iter<iter_t>, std::bidirectional_iterator_tag,
-                    typeinfo::conditional_t<not is_array_iter<iter_t>,
+    using std_iter_cat_for_atom_iter = typeutils::conditional_t<not is_iter<iter_t>, void,
+        typeutils::conditional_t<not is_fwd_iter<iter_t>, std::input_iterator_tag,
+            typeutils::conditional_t<not is_bidi_iter<iter_t>, std::forward_iterator_tag,
+                typeutils::conditional_t<not is_jump_iter<iter_t>, std::bidirectional_iterator_tag,
+                    typeutils::conditional_t<not is_array_iter<iter_t>,
                         std::random_access_iterator_tag, std::contiguous_iterator_tag>>>>>;
 
     /// --------------------------------------------------------------------------------------------

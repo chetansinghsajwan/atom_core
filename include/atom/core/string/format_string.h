@@ -30,11 +30,11 @@ namespace atom
     public:
         template <typename string_t>
         consteval _format_string(const string_t& str)
-            requires typeinfo::is_constructible_from<string_view, string_t>
+            requires typeinfo<string_view>::is_constructible_from<string_t>
             : str(str)
         {
             using fmt_format_string =
-                fmt::format_string<_format_arg_wrapper<typeinfo::get_pure<arg_ts>>...>;
+                fmt::format_string<_format_arg_wrapper<typename typeinfo<arg_ts>::pure_t>...>;
 
             fmt_format_string check(str);
         }
@@ -48,5 +48,5 @@ namespace atom
     };
 
     template <typename... arg_ts>
-    using format_string = _format_string<typeinfo::identity_t<arg_ts>...>;
+    using format_string = _format_string<typeutils::identity_t<arg_ts>...>;
 }

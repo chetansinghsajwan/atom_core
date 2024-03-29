@@ -13,9 +13,9 @@ namespace atom
     class unique_ptr_default_destroyer
     {
         ATOM_STATIC_ASSERTS(
-            typeinfo::is_pure<value_t>, "unique_ptr_default_destroyer only supports pure types.");
+            typeinfo<value_t>::is_pure, "unique_ptr_default_destroyer only supports pure types.");
         ATOM_STATIC_ASSERTS(
-            not typeinfo::is_void<value_t>, "unique_ptr_default_destroyer does not support void.");
+            not typeinfo<value_t>::is_void, "unique_ptr_default_destroyer does not support void.");
 
     public:
         constexpr auto operator()(value_t* val)
@@ -29,10 +29,10 @@ namespace atom
         typename in_destroyer_t = unique_ptr_default_destroyer<in_value_t>>
     class unique_ptr
     {
-        ATOM_STATIC_ASSERTS(typeinfo::is_pure<in_value_t>, "unique_ptr only supports pure types.");
-        ATOM_STATIC_ASSERTS(not typeinfo::is_void<in_value_t>, "unique_ptr does not support void.");
-        ATOM_STATIC_ASSERTS(typeinfo::is_pure<in_destroyer_t>);
-        ATOM_STATIC_ASSERTS(not typeinfo::is_void<in_destroyer_t>);
+        ATOM_STATIC_ASSERTS(typeinfo<in_value_t>::is_pure, "unique_ptr only supports pure types.");
+        ATOM_STATIC_ASSERTS(not typeinfo<in_value_t>::is_void, "unique_ptr does not support void.");
+        ATOM_STATIC_ASSERTS(typeinfo<in_destroyer_t>::is_pure);
+        ATOM_STATIC_ASSERTS(not typeinfo<in_destroyer_t>::is_void);
 
     private:
         template <typename other_value_t, typename other_destroyer_t>
@@ -200,8 +200,8 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename allocator_t, typename new_value_t = value_t>
-        constexpr auto to_shared_with_alloc(allocator_t allocator = allocator_t())
-            -> shared_ptr<new_value_t>
+        constexpr auto to_shared_with_alloc(
+            allocator_t allocator = allocator_t()) -> shared_ptr<new_value_t>
             requires is_same_or_derived_from<new_value_t, value_t>
         {
             return _to_shared();

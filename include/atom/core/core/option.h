@@ -452,9 +452,9 @@ namespace atom
     template <typename in_value_t>
     class option
     {
-        ATOM_STATIC_ASSERTS(typeinfo::is_pure<in_value_t>, "option supports only pure types");
+        ATOM_STATIC_ASSERTS(typeinfo<in_value_t>::is_pure, "option supports only pure types");
         ATOM_STATIC_ASSERTS(
-            not typeinfo::is_void<in_value_t>, "option does not support void type.");
+            not typeinfo<in_value_t>::is_void, "option does not support void type.");
 
     private:
         using this_t = option<in_value_t>;
@@ -786,7 +786,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename invokable_t>
         constexpr auto get_or_invoke(invokable_t&& or_invoke) const -> value_t
-            requires is_invokable<typeinfo::get_pure<invokable_t>, value_t()>
+            requires is_invokable<typename typeinfo<invokable_t>::pure_t, value_t()>
         {
             if (_impl.is_null())
             {
@@ -812,7 +812,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename invokable_t>
         constexpr auto get_mut_or_invoke(invokable_t&& or_invoke) -> value_t&
-            requires is_invokable<typeinfo::get_pure<invokable_t>, value_t&()>
+            requires is_invokable<typename typeinfo<invokable_t>::pure_t, value_t&()>
         {
             if (_impl.is_null())
             {

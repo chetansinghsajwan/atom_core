@@ -57,7 +57,7 @@ namespace atom
             }
 
         public:
-            typeinfo::get_pure<output_t>* out;
+            typeinfo<output_t>::pure_t* out;
         };
 
         return _wrapper(out);

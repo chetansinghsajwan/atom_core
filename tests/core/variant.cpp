@@ -28,9 +28,9 @@ TEST_CASE("atom.core.variant")
         REQUIRE(var::index_of<tracked_type1>() == 1);
         REQUIRE(var::index_of<tracked_type2>() == 2);
 
-        REQUIRE(typeinfo::is_same<var::type_at<0>, tracked_i32>);
-        REQUIRE(typeinfo::is_same<var::type_at<1>, tracked_f32>);
-        REQUIRE(typeinfo::is_same<var::type_at<2>, tracked_uchar>);
+        REQUIRE(typeinfo<var::type_at<0>>::template is_same_as<tracked_i32>);
+        REQUIRE(typeinfo<var::type_at<1>>::template is_same_as<tracked_f32>);
+        REQUIRE(typeinfo<var::type_at<2>>::template is_same_as<tracked_uchar>);
     }
 
     SECTION("count")

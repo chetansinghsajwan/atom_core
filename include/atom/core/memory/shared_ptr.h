@@ -34,7 +34,7 @@ namespace atom
     };
 
     template <typename value_t>
-        requires typeinfo::is_empty<value_t>
+        requires typeinfo<value_t>::is_empty
     class ebo_helper<value_t>: private value_t
     {
     public:
@@ -124,9 +124,9 @@ namespace atom
     class shared_ptr_default_destroyer
     {
         ATOM_STATIC_ASSERTS(
-            typeinfo::is_pure<value_t>, "shared_ptr_default_destroyer only supports pure types.");
+            typeinfo<value_t>::is_pure, "shared_ptr_default_destroyer only supports pure types.");
         ATOM_STATIC_ASSERTS(
-            not typeinfo::is_void<value_t>, "shared_ptr_default_destroyer does not support void.");
+            not typeinfo<value_t>::is_void, "shared_ptr_default_destroyer does not support void.");
 
     public:
         constexpr auto operator()(value_t* val)
@@ -139,8 +139,8 @@ namespace atom
     template <typename in_value_t>
     class shared_ptr
     {
-        ATOM_STATIC_ASSERTS(typeinfo::is_pure<in_value_t>, "shared_ptr only supports pure types.");
-        ATOM_STATIC_ASSERTS(not typeinfo::is_void<in_value_t>, "shared_ptr does not support void.");
+        ATOM_STATIC_ASSERTS(typeinfo<in_value_t>::is_pure, "shared_ptr only supports pure types.");
+        ATOM_STATIC_ASSERTS(not typeinfo<in_value_t>::is_void, "shared_ptr does not support void.");
 
     private:
         using this_t = shared_ptr;

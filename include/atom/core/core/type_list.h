@@ -19,7 +19,7 @@ namespace atom
         template <typename value_t>
         consteval auto _sizeof() -> usize
         {
-            if constexpr (typeinfo::is_same<value_t, void>)
+            if constexpr (typeinfo<value_t>::is_void)
             {
                 return 0;
             }
@@ -32,7 +32,7 @@ namespace atom
         template <typename value_t>
         consteval auto _get_alignof() -> usize
         {
-            if constexpr (typeinfo::is_same<value_t, void>)
+            if constexpr (typeinfo<value_t>::is_void)
             {
                 return 0;
             }
@@ -188,7 +188,7 @@ namespace atom
         class at<index_to_get, index, in_t, types...>
         {
         public:
-            using value_t = typeinfo::conditional_t<index_to_get == index, in_t,
+            using value_t = typeutils::conditional_t<index_to_get == index, in_t,
                 typename at<index_to_get, index + 1, types...>::value_t>;
         };
 
@@ -288,7 +288,7 @@ namespace atom
         class remove_if<predicate_t, in_t, types...>
         {
         public:
-            using value_t = typeinfo::conditional_t<predicate_t<in_t>::value,
+            using value_t = typeutils::conditional_t<predicate_t<in_t>::value,
                 typename add_first<in_t, typename remove_if<predicate_t, types...>::in_t>::value_t,
                 typename remove_if<predicate_t, types...>::value_t>;
         };
@@ -395,7 +395,7 @@ namespace atom
         class replace_all<replace_t, with_t, in_t, types...>
         {
             using final_t =
-                typeinfo::conditional_t<typeinfo::is_same<replace_t, in_t>, with_t, in_t>;
+                typeutils::conditional_t<typeinfo<replace_t>::template is_same_as<in_t>, with_t, in_t>;
 
         public:
             using value_t = typename add_first<final_t,

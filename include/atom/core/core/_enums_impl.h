@@ -37,7 +37,7 @@ namespace atom
 
         static consteval auto is_enum() -> bool
         {
-            return typeinfo::is_enum<enum_t>;
+            return typeinfo<enum_t>::is_enum;
         }
 
         static consteval auto is_scoped() -> bool

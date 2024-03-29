@@ -11,9 +11,9 @@ namespace atom
     template <typename lockable_t>
     concept is_lockable = requires(lockable_t lock)
     {
-        { lock.lock() } -> is_same_as<void>;
+        { lock.lock() } -> is_void;
         { lock.try_lock() } -> is_same_as<bool>;
-        { lock.unlock() } -> is_same_as<void>;
+        { lock.unlock() } -> is_void;
     };
 }
 

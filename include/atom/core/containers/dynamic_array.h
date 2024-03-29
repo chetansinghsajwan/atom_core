@@ -13,9 +13,9 @@ namespace atom
     class dynamic_array: public range_extensions
     {
         ATOM_STATIC_ASSERTS(
-            not typeinfo::is_ref<in_elem_t>, "dynamic_array does not supports ref types.");
+            not typeinfo<in_elem_t>::is_ref, "dynamic_array does not supports ref types.");
         ATOM_STATIC_ASSERTS(
-            not typeinfo::is_void<in_elem_t>, "dynamic_array does not support void.");
+            not typeinfo<in_elem_t>::is_void, "dynamic_array does not support void.");
 
     private:
         using _impl_t = _dynamic_array_impl_using_std_vector<in_elem_t, in_allocator_t>;
@@ -73,7 +73,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename range_t>
         constexpr dynamic_array(range_t&& range)
-            requires(is_range_of<typeinfo::get_pure<range_t>, value_t>)
+            requires(is_range_of<typename typeinfo<range_t>::pure_t, value_t>)
             : _impl(typename _impl_t::range_tag(), range.get_iter(), range.get_iter_end())
         {}
 
@@ -341,8 +341,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename range_t>
         constexpr auto insert_range_back(range_t&& range) -> mut_iter_t
-            requires(is_range_of<typeinfo::get_pure<range_t>, value_t>)
-                    and (is_constructible<value_t, typename typeinfo::get_pure<range_t>::value_t>)
+            requires(is_range_of<typename typeinfo<range_t>::pure_t, value_t>)
+                    and (is_constructible<value_t, typename typeinfo<range_t>::pure_t::value_t>)
         {
             usize count = _impl.insert_range_back(range.get_iter(), range.get_iter_end());
             return _impl.get_mut_iter_at(_impl.get_count() - count);
@@ -354,8 +354,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename range_t>
         constexpr auto operator+=(range_t&& range)
-            requires(is_range_of<typeinfo::get_pure<range_t>, value_t>)
-                    and (is_constructible<value_t, typename typeinfo::get_pure<range_t>::value_t>)
+            requires(is_range_of<typename typeinfo<range_t>::pure_t, value_t>)
+                    and (is_constructible<value_t, typename typeinfo<range_t>::pure_t::value_t>)
         {
             _impl.insert_range_back(move(range.get_iter()), move(range.get_iter_end()));
         }

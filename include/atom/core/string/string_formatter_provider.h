@@ -12,7 +12,7 @@ namespace atom
     template <typename in_value_t>
     class string_formatter_provider
     {
-        using value_t = typeinfo::get_pure<in_value_t>;
+        using value_t = typeinfo<in_value_t>::pure_t;
 
     private:
         static consteval auto _get_t_indentity() -> decltype(auto)
@@ -50,7 +50,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         static consteval auto has() -> bool
         {
-            if constexpr (typeinfo::is_same<formatter_t, void>)
+            if constexpr (typeinfo<formatter_t>::is_void)
                 return false;
 
             return true;

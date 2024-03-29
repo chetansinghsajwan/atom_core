@@ -11,7 +11,7 @@ namespace atom::mock
     template <typename value_t>
     class insertable
     {
-        ATOM_STATIC_ASSERTS(typeinfo::is_pure<value_t>);
+        ATOM_STATIC_ASSERTS(typeinfo<value_t>::is_pure);
 
     public:
         auto insert(const value_t& el);
@@ -28,7 +28,7 @@ namespace atom::mock
     template <typename value_t>
     class front_insertable
     {
-        ATOM_STATIC_ASSERTS(typeinfo::is_pure<value_t>);
+        ATOM_STATIC_ASSERTS(typeinfo<value_t>::is_pure);
 
     public:
         auto insert_front(const value_t& el);
@@ -45,7 +45,7 @@ namespace atom::mock
     template <typename value_t>
     class back_insertable
     {
-        ATOM_STATIC_ASSERTS(typeinfo::is_pure<value_t>);
+        ATOM_STATIC_ASSERTS(typeinfo<value_t>::is_pure);
 
     public:
         auto insert_back(const value_t& el);
@@ -62,7 +62,7 @@ namespace atom::mock
     template <typename key_t, typename value_t>
     class key_insertable
     {
-        ATOM_STATIC_ASSERTS(typeinfo::is_pure<value_t>);
+        ATOM_STATIC_ASSERTS(typeinfo<value_t>::is_pure);
 
     public:
         auto insert(key_t key, const value_t& el);
