@@ -394,13 +394,53 @@ namespace atom
         template <typename replace_t, typename with_t, typename in_t, typename... types>
         class replace_all<replace_t, with_t, in_t, types...>
         {
-            using final_t =
-                typeutils::conditional_t<typeinfo<replace_t>::template is_same_as<in_t>, with_t, in_t>;
+            using final_t = typeutils::conditional_t<typeinfo<replace_t>::template is_same_as<in_t>,
+                with_t, in_t>;
 
         public:
             using value_t = typename add_first<final_t,
                 typename replace_all<replace_t, with_t, types...>::in_t>::value_t;
         };
+    };
+
+    template <typename... types>
+    class type_list_impl;
+
+    template <typename type0, typename... types>
+    class type_list_impl<type0, types...>
+    {
+    public:
+        template <typename invokable_t>
+        static consteval auto for_each(invokable_t&& func) -> void
+        {
+            func(typeinfo<type0>());
+
+            type_list_impl<types...>::for_each(forward<invokable_t>(func));
+        }
+
+        template <typename predicate_t>
+        static consteval auto are_all(predicate_t&& pred) -> bool
+        {
+            if (not pred(typeinfo<type0>()))
+                return false;
+
+            return type_list_impl<types...>::are_all(forward<predicate_t>(pred));
+        }
+    };
+
+    template <>
+    class type_list_impl<>
+    {
+    public:
+        template <typename invokable_t>
+        static consteval auto for_each(invokable_t&& func) -> void
+        {}
+
+        template <typename predicate_t>
+        static consteval auto are_all(predicate_t&& pred) -> bool
+        {
+            return true;
+        }
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -409,6 +449,8 @@ namespace atom
     template <typename... ts>
     class type_list
     {
+        using impl_t = type_list_impl<types...>;
+
     public:
         /// ----------------------------------------------------------------------------------------
         ///
@@ -469,5 +511,17 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         static constexpr bool are_unique = _list_ops_t::template are_unique<types...>::value;
+
+        template <typename invokable_t>
+        static consteval auto for_each(invokable_t&& func) -> void
+        {
+            impl_t::for_each(func);
+        }
+
+        template <typename predicate_t>
+        static consteval auto are_all(predicate_t&& pred) -> bool
+        {
+            return impl_t::are_all(pred);
+        }
     };
 }
