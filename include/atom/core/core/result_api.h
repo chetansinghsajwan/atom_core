@@ -3,7 +3,7 @@
 
 namespace atom
 {
-    class success
+    class result_void
     {};
 
     /// --------------------------------------------------------------------------------------------
@@ -317,7 +317,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # void value constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr result_api(success)
+        constexpr result_api(result_void)
             requires value_type_info_t::is_void
             : _impl(typename impl_t::value_tag(), {})
         {}
