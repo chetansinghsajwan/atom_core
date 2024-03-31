@@ -87,44 +87,44 @@ namespace atom
 
     public:
         template <typename... args_t>
-        constexpr auto emplace_value(this this_t& this_, args_t&&... args) -> void
+        constexpr auto emplace_value(this this_t& self, args_t&&... args) -> void
         {
-            this_._variant.template emplace_value_by_index<value_index>(forward<args_t>(args)...);
+            self._variant.template emplace_value_by_index<value_index>(forward<args_t>(args)...);
         }
 
-        constexpr auto set_value(this this_t& this_, const value_t& value) -> void
+        constexpr auto set_value(this this_t& self, const value_t& value) -> void
             requires(not is_void<value_t>)
         {
-            this_._variant.template emplace_value_by_index<value_index>(value);
+            self._variant.template emplace_value_by_index<value_index>(value);
         }
 
-        constexpr auto set_value(this this_t& this_, value_t&& value) -> void
+        constexpr auto set_value(this this_t& self, value_t&& value) -> void
             requires(not is_void<value_t>)
         {
-            this_._variant.template emplace_value_by_index<value_index>(move(value));
+            self._variant.template emplace_value_by_index<value_index>(move(value));
         }
 
-        constexpr auto set_value_void(this this_t& this_) -> void
+        constexpr auto set_value_void(this this_t& self) -> void
             requires(not is_void<value_t>)
         {
-            this_._variant.template emplace_value_by_index<value_index>();
+            self._variant.template emplace_value_by_index<value_index>();
         }
 
-        constexpr auto get_value(this const this_t& this_) -> const value_t&
+        constexpr auto get_value(this const this_t& self) -> const value_t&
             requires(not is_void<value_t>)
         {
-            return this_._variant.template get_at<value_index>();
+            return self._variant.template get_at<value_index>();
         }
 
-        constexpr auto get_value(this this_t& this_) -> value_t&&
+        constexpr auto get_value(this this_t& self) -> value_t&&
             requires(not is_void<value_t>)
         {
-            return this_._variant.template get_at<value_index>();
+            return self._variant.template get_at<value_index>();
         }
 
-        constexpr auto is_value(this const this_t& this_) -> bool
+        constexpr auto is_value(this const this_t& self) -> bool
         {
-            return this_._variant.template is<value_t>();
+            return self._variant.template is<value_t>();
         }
 
         consteval auto get_error_count() -> usize
@@ -142,59 +142,59 @@ namespace atom
         }
 
         template <typename error_t, typename... args_t>
-        constexpr auto emplace_error(this this_t& this_, args_t&&... args) -> void
+        constexpr auto emplace_error(this this_t& self, args_t&&... args) -> void
         {
-            this_._variant.template emplace<error_t>(forward<args_t>(args)...);
+            self._variant.template emplace<error_t>(forward<args_t>(args)...);
         }
 
         template <typename error_t>
-        constexpr auto set_error(this this_t& this_, const error_t& error) -> void
+        constexpr auto set_error(this this_t& self, const error_t& error) -> void
         {
-            this_._variant.template emplace<error_t>(error);
+            self._variant.template emplace<error_t>(error);
         }
 
         template <typename error_t>
-        constexpr auto set_error(this this_t& this_, error_t&& error) -> void
+        constexpr auto set_error(this this_t& self, error_t&& error) -> void
         {
-            this_._variant.template emplace<error_t>(move(error));
+            self._variant.template emplace<error_t>(move(error));
         }
 
         template <typename error_t>
-        constexpr auto get_error(this const this_t& this_) -> const error_t&
+        constexpr auto get_error(this const this_t& self) -> const error_t&
         {
-            return this_._variant.template get<error_t>();
+            return self._variant.template get<error_t>();
         }
 
         template <typename error_t>
-        constexpr auto get_error(this this_t& this_) -> error_t&
+        constexpr auto get_error(this this_t& self) -> error_t&
         {
-            return this_._variant.template get_mut<error_t>();
+            return self._variant.template get_mut<error_t>();
         }
 
-        constexpr auto get_first_error(this const this_t& this_) -> const first_error_t&
+        constexpr auto get_first_error(this const this_t& self) -> const first_error_t&
         {
-            return this_._variant.template get<first_error_t>();
+            return self._variant.template get<first_error_t>();
         }
 
-        constexpr auto get_first_error(this this_t& this_) -> first_error_t&
+        constexpr auto get_first_error(this this_t& self) -> first_error_t&
         {
-            return this_._variant.template get_mut<first_error_t>();
+            return self._variant.template get_mut<first_error_t>();
         }
 
-        constexpr auto is_error(this const this_t& this_) -> bool
+        constexpr auto is_error(this const this_t& self) -> bool
         {
-            return not this_._variant.template is<value_t>();
+            return not self._variant.template is<value_t>();
         }
 
         template <typename error_t>
-        constexpr auto is_error(this const this_t& this_) -> bool
+        constexpr auto is_error(this const this_t& self) -> bool
         {
-            return this_._variant.template is<error_t>();
+            return self._variant.template is<error_t>();
         }
 
-        constexpr auto panic_on_error(this const this_t& this_) -> void
+        constexpr auto panic_on_error(this const this_t& self) -> void
         {
-            if (this_.is_error())
+            if (self.is_error())
                 ATOM_PANIC();
         }
 

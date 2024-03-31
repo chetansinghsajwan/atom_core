@@ -436,168 +436,168 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename... args_t>
-        constexpr auto emplace_value(this this_t& this_, args_t&&... args) -> void
+        constexpr auto emplace_value(this this_t& self, args_t&&... args) -> void
         {
-            this_._impl.emplace_value(forward<args_t>(args)...);
+            self._impl.emplace_value(forward<args_t>(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename this_t = this_t>
-        constexpr auto set_value(this this_t& this_, const this_t::value_t& value) -> void
+        constexpr auto set_value(this this_t& self, const this_t::value_t& value) -> void
             requires(not value_type_info_t::is_void)
         {
-            this_._impl.set_value(value);
+            self._impl.set_value(value);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename this_t = this_t>
-        constexpr auto set_value(this this_t& this_, this_t::value_t&& value) -> void
+        constexpr auto set_value(this this_t& self, this_t::value_t&& value) -> void
             requires(not value_type_info_t::is_void)
         {
-            this_._impl.set_value(move(value));
+            self._impl.set_value(move(value));
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto set_value(this this_t& this_) -> void
+        constexpr auto set_value(this this_t& self) -> void
             requires value_type_info_t::is_void
         {
-            this_._impl.set_value_void();
+            self._impl.set_value_void();
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename this_t = this_t>
-        constexpr auto get_value(this const this_t& this_) -> const this_t::value_t&
+        constexpr auto get_value(this const this_t& self) -> const this_t::value_t&
             requires(not value_type_info_t::is_void)
         {
-            return this_._impl.get_value();
+            return self._impl.get_value();
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename this_t = this_t>
-        constexpr auto get_value(this this_t& this_) -> this_t::value_t&
+        constexpr auto get_value(this this_t& self) -> this_t::value_t&
             requires(not value_type_info_t::is_void)
         {
-            return this_._impl.get_value();
+            return self._impl.get_value();
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto is_value(this const this_t& this_) -> bool
+        constexpr auto is_value(this const this_t& self) -> bool
         {
-            return this_._impl.is_value();
+            return self._impl.is_value();
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_error_count(this const this_t& this_) -> usize
+        constexpr auto get_error_count(this const this_t& self) -> usize
         {
-            return this_._impl.get_error_count();
+            return self._impl.get_error_count();
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename error_t, typename... args_t>
-        constexpr auto emplace_error(this this_t& this_, args_t&&... args) -> void
+        constexpr auto emplace_error(this this_t& self, args_t&&... args) -> void
             requires(has_error<error_t>())
         {
-            this_._impl.template emplace_error<error_t>(forward<args_t>(args)...);
+            self._impl.template emplace_error<error_t>(forward<args_t>(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename error_t>
-        constexpr auto set_error(this this_t& this_, const error_t& error) -> void
+        constexpr auto set_error(this this_t& self, const error_t& error) -> void
             requires(has_error<error_t>())
         {
-            this_._impl.set_error(error);
+            self._impl.set_error(error);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename error_t>
-        constexpr auto set_error(this this_t& this_, error_t&& error) -> void
+        constexpr auto set_error(this this_t& self, error_t&& error) -> void
             requires(has_error<error_t>())
         {
-            this_._impl.set_error(move(error));
+            self._impl.set_error(move(error));
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename error_t>
-        constexpr auto get_error(this const this_t& this_) -> const error_t&
+        constexpr auto get_error(this const this_t& self) -> const error_t&
             requires(has_error<error_t>())
         {
-            return this_._impl.template get_error<error_t>();
+            return self._impl.template get_error<error_t>();
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename error_t>
-        constexpr auto get_error(this this_t& this_) -> error_t&
+        constexpr auto get_error(this this_t& self) -> error_t&
             requires(has_error<error_t>())
         {
-            return this_._impl.template get_error<error_t>();
+            return self._impl.template get_error<error_t>();
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_error(this const this_t& this_) -> const first_error_t&
+        constexpr auto get_error(this const this_t& self) -> const first_error_t&
             requires(get_error_count() == 1)
         {
-            return this_._impl.get_first_error();
+            return self._impl.get_first_error();
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_error(this this_t& this_) -> first_error_t&
+        constexpr auto get_error(this this_t& self) -> first_error_t&
             requires(get_error_count() == 1)
         {
-            return this_._impl.get_first_error();
+            return self._impl.get_first_error();
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto is_error(this const this_t& this_) -> bool
+        constexpr auto is_error(this const this_t& self) -> bool
         {
-            return this_._impl.is_error();
+            return self._impl.is_error();
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename error_t>
-        constexpr auto is_error(this const this_t& this_) -> bool
+        constexpr auto is_error(this const this_t& self) -> bool
             requires(has_error<error_t>())
         {
-            return this_._impl.template is_error<error_t>();
+            return self._impl.template is_error<error_t>();
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto panic_on_error(this const this_t& this_) -> void
+        constexpr auto panic_on_error(this const this_t& self) -> void
         {
-            this_._impl.panic_on_error();
+            self._impl.panic_on_error();
         }
 
     protected:
