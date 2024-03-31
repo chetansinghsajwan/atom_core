@@ -73,7 +73,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename range_t>
         constexpr dynamic_array(range_t&& range)
-            requires(is_range_of<typename typeinfo<range_t>::pure_t::value_t, value_t>)
+            requires is_range_of<typename typeinfo<range_t>::pure_t::value_t, value_t>
             : _impl(typename _impl_t::range_tag(), range.get_iter(), range.get_iter_end())
         {}
 
@@ -82,7 +82,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename range_t>
         constexpr dynamic_array& operator=(range_t&& range)
-            requires(is_range_of<range_t, value_t>)
+            requires is_range_of<range_t, value_t>
         {
             _impl.assign_range(range.get_iter(), range.get_iter_end());
         }
@@ -146,7 +146,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename... arg_ts>
         constexpr auto emplace_at(usize index, arg_ts&&... args)
-            requires(is_constructible<value_t, arg_ts...>)
+            requires(typeinfo<value_t>::template is_constructible_from<arg_ts...>)
         {
             ATOM_DEBUG_EXPECTS(is_index_in_range_or_end(index), "index is out of range.");
 
@@ -173,7 +173,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename... arg_ts>
         constexpr auto emplace_at(iter_t it, arg_ts&&... args) -> mut_iter_t
-            requires(is_constructible<value_t, arg_ts...>)
+            requires(typeinfo<value_t>::template is_constructible_from<arg_ts...>)
         {
             ATOM_DEBUG_EXPECTS(is_iter_valid(it), "invalid iter.");
             ATOM_DEBUG_EXPECTS(is_iter_in_range_or_end(it), "iter is out of range.");
@@ -204,8 +204,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename range_t>
         constexpr auto insert_range_at(usize index, range_t&& range) -> usize
-            requires(is_range_of<range_t, value_t>)
-                    and (is_constructible<value_t, typename range_t::value_t>)
+            requires is_range_of<range_t, value_t>
+                     and (typeinfo<value_t>::template is_constructible_from<
+                         typename range_t::value_t>)
         {
             ATOM_DEBUG_EXPECTS(is_index_in_range_or_end(index), "index is out of range.");
 
@@ -233,8 +234,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename range_t>
         constexpr auto insert_range_at(iter_t it, range_t&& range)
-            requires(is_range_of<range_t, value_t>)
-                    and (is_constructible<value_t, typename range_t::value_t>)
+            requires is_range_of<range_t, value_t>
+                     and (typeinfo<value_t>::template is_constructible_from<
+                         typename range_t::value_t>)
         {
             ATOM_DEBUG_EXPECTS(is_iter_valid(it), "invalid iter.");
             ATOM_DEBUG_EXPECTS(is_iter_in_range_or_end(it), "iter is out of range.");
@@ -259,7 +261,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename... arg_ts>
         constexpr auto emplace_front(arg_ts&&... args)
-            requires(is_constructible<value_t, arg_ts...>)
+            requires(typeinfo<value_t>::template is_constructible_from<arg_ts...>)
         {
             _impl.emplace_front(forward<arg_ts>(args)...);
         }
@@ -284,8 +286,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename range_t>
         constexpr auto insert_range_front(range_t&& range) -> mut_iter_t
-            requires(is_range_of<range_t, value_t>)
-                    and (is_constructible<value_t, typename range_t::value_t>)
+            requires is_range_of<range_t, value_t>
+                     and (typeinfo<value_t>::template is_constructible_from<
+                         typename range_t::value_t>)
         {
             usize count = _impl.insert_range_front(forward<range_t&&>(range));
             return _impl.get_mut_iter(count);
@@ -306,7 +309,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename... arg_ts>
         constexpr auto emplace_back(arg_ts&&... args)
-            requires(is_constructible<value_t, arg_ts...>)
+            requires(typeinfo<value_t>::template is_constructible_from<arg_ts...>)
         {
             _impl.emplace_back(forward<arg_ts>(args)...);
         }
@@ -316,7 +319,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename arg_t>
         constexpr auto operator+=(arg_t&& el)
-            requires(is_constructible<value_t, arg_t>)
+            requires typeinfo<value_t>::template
+        is_constructible_from<arg_t>
         {
             _impl.emplace_back(forward<arg_t>(el));
         }
@@ -341,9 +345,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename range_t>
         constexpr auto insert_range_back(range_t&& range) -> mut_iter_t
-            requires(is_range_of<typename typeinfo<range_t>::pure_t::value_t, value_t>)
-                    and (is_constructible<value_t,
-                        typename typeinfo<range_t>::pure_t::value_t::value_t>)
+            requires is_range_of<typename typeinfo<range_t>::pure_t::value_t, value_t>
+                     and (typeinfo<value_t>::template is_constructible_from<
+                         typename typeinfo<range_t>::pure_t::value_t::value_t>)
         {
             usize count = _impl.insert_range_back(range.get_iter(), range.get_iter_end());
             return _impl.get_mut_iter_at(_impl.get_count() - count);
@@ -355,9 +359,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename range_t>
         constexpr auto operator+=(range_t&& range)
-            requires(is_range_of<typename typeinfo<range_t>::pure_t::value_t, value_t>)
-                    and (is_constructible<value_t,
-                        typename typeinfo<range_t>::pure_t::value_t::value_t>)
+            requires is_range_of<typename typeinfo<range_t>::pure_t::value_t, value_t>
+                     and (typeinfo<value_t>::template is_constructible_from<
+                         typename typeinfo<range_t>::pure_t::value_t::value_t>)
         {
             _impl.insert_range_back(move(range.get_iter()), move(range.get_iter_end()));
         }
@@ -513,7 +517,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename predicate_t>
         constexpr auto remove_one_if(predicate_t&& pred) -> bool
-            requires typeinfo<predicate_t>::template is_invokable<bool(const value_t&)>
+            requires typeinfo<predicate_t>::template
+        is_invokable<bool(const value_t&)>
         {
             for (usize i = 0; i < _impl.get_count(); i++)
             {
@@ -532,7 +537,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename predicate_t>
         constexpr auto remove_all_if(predicate_t&& pred) -> usize
-            requires typeinfo<predicate_t>::template is_invokable<bool(const value_t&)>
+            requires typeinfo<predicate_t>::template
+        is_invokable<bool(const value_t&)>
         {
             usize removed_count = 0;
             for (usize i = 0; i < _impl.get_count(); i++)

@@ -92,7 +92,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename other_value_t>
         constexpr unique_ptr(unique_ptr<other_value_t, destroyer_t>&& that)
-            requires is_same_or_derived_from<other_value_t, value_t>
+            requires(typeinfo<other_value_t>::template is_same_or_derived_from<value_t>)
             : _ptr(that._ptr)
             , _destroyer(move(that._destroyer))
         {
@@ -104,7 +104,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename other_value_t>
         constexpr unique_ptr& operator=(unique_ptr<other_value_t, destroyer_t>&& that)
-            requires is_same_or_derived_from<other_value_t, value_t>
+            requires(typeinfo<other_value_t>::template is_same_or_derived_from<value_t>)
         {
             _move(move(that));
         }
@@ -191,7 +191,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename new_value_t = value_t>
         constexpr auto to_shared() -> shared_ptr<new_value_t>
-            requires is_same_or_derived_from<new_value_t, value_t>
+            requires(typeinfo<new_value_t>::template is_same_or_derived_from<value_t>)
         {
             return _to_shared();
         }
@@ -202,7 +202,7 @@ namespace atom
         template <typename allocator_t, typename new_value_t = value_t>
         constexpr auto to_shared_with_alloc(
             allocator_t allocator = allocator_t()) -> shared_ptr<new_value_t>
-            requires is_same_or_derived_from<new_value_t, value_t>
+            requires(typeinfo<new_value_t>::template is_same_or_derived_from<value_t>)
         {
             return _to_shared();
         }

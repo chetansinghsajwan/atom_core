@@ -54,7 +54,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename range_t>
         constexpr array_view(const range_t& range)
-            requires(is_array_range_of<range_t, value_t>)
+            requires is_array_range_of<range_t, value_t>
             : _data(range.get_data())
             , _count(range.get_count())
         {}
@@ -64,7 +64,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename range_t>
         constexpr array_view& operator=(const range_t& range)
-            requires(is_array_range_of<range_t, value_t>)
+            requires is_array_range_of<range_t, value_t>
         {
             _data = range.get_data();
             _count = range.get_count();

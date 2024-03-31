@@ -156,8 +156,8 @@ namespace atom
         friend class shared_ptr;
 
         template <typename value_t, typename allocator_t, typename... arg_ts>
-        friend auto make_shared_with_alloc(allocator_t alloc, arg_ts&&... args)
-            -> shared_ptr<value_t>;
+        friend auto make_shared_with_alloc(
+            allocator_t alloc, arg_ts&&... args) -> shared_ptr<value_t>;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -178,7 +178,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename that_t>
         constexpr shared_ptr(const shared_ptr<that_t>& that)
-            requires is_same_or_derived_from<that_t, value_t>
+            requires(typeinfo<that_t>::template is_same_or_derived_from<value_t>)
             : _ptr(that._ptr)
             , _state(that._state)
         {
@@ -195,7 +195,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename other_value_t>
         constexpr shared_ptr& operator=(const shared_ptr<other_value_t>& that)
-            requires is_same_or_derived_from<other_value_t, value_t>
+            requires(typeinfo<other_value_t>::template is_same_or_derived_from<value_t>)
         {
             _check_and_release();
 
@@ -222,7 +222,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename that_t>
         constexpr shared_ptr(shared_ptr<that_t>&& that)
-            requires is_same_or_derived_from<that_t, value_t>
+            requires(typeinfo<that_t>::template is_same_or_derived_from<value_t>)
             : _ptr(that._ptr)
             , _state(that._state)
         {
@@ -235,7 +235,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename that_t>
         constexpr shared_ptr& operator=(shared_ptr<that_t>&& that)
-            requires is_same_or_derived_from<that_t, value_t>
+            requires(typeinfo<that_t>::template is_same_or_derived_from<value_t>)
         {
             _check_and_release();
 
@@ -310,7 +310,7 @@ namespace atom
             typename allocator_t = shared_ptr_default_allocator>
         constexpr auto set(value_t* ptr, destroyer_t destroyer = destroyer_t(),
             allocator_t allocator = allocator_t())
-            requires is_same_or_derived_from<value_t, value_t>
+            requires(typeinfo<value_t>::template is_same_or_derived_from<value_t>)
         {
             if (_ptr != nullptr)
             {
@@ -407,8 +407,8 @@ namespace atom
         }
 
         template <typename destroyer_t, typename allocator_t>
-        constexpr auto _create_state(destroyer_t destroyer, allocator_t allocator)
-            -> _shared_ptr_state*
+        constexpr auto _create_state(
+            destroyer_t destroyer, allocator_t allocator) -> _shared_ptr_state*
         {
             using state_t = _default_shared_ptr_state<value_t, destroyer_t, allocator_t>;
 
@@ -465,8 +465,8 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     template <typename value_t, typename destroyer_t>
     template <typename allocator_t, typename other_value_t>
-    constexpr auto unique_ptr<value_t, destroyer_t>::_to_shared(allocator_t allocator)
-        -> shared_ptr<other_value_t>
+    constexpr auto unique_ptr<value_t, destroyer_t>::_to_shared(
+        allocator_t allocator) -> shared_ptr<other_value_t>
     {
         return make_shared_with_alloc(move(allocator), _ptr);
     }

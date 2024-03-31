@@ -15,7 +15,7 @@ namespace atom
         using value_t = typeinfo<in_value_t>::pure_t::value_t;
 
     private:
-        static consteval auto _get_t_indentity() -> decltype(auto)
+        static consteval auto _get_type() -> decltype(auto)
         {
             using _formatter_atom = string_formatter<value_t, string_formatter_level::atom>;
             using _formatter_fmt = string_formatter<value_t, string_formatter_level::fmt>;
@@ -23,19 +23,19 @@ namespace atom
 
             if constexpr (is_default_constructible<_formatter_atom>)
             {
-                return std::type_identity<_formatter_atom>();
+                return typeinfo<_formatter_atom>();
             }
             else if constexpr (is_default_constructible<_formatter_fmt>)
             {
-                return std::type_identity<_formatter_fmt>();
+                return typeinfo<_formatter_fmt>();
             }
             else if constexpr (is_default_constructible<_formatter_user>)
             {
-                return std::type_identity<_formatter_user>();
+                return typeinfo<_formatter_user>();
             }
             else
             {
-                return std::type_identity<void>();
+                return typeinfo<void>();
             }
         }
 
@@ -43,7 +43,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// type of formatter specialization.
         /// ----------------------------------------------------------------------------------------
-        using formatter_t = decltype(_get_t_indentity())::type;
+        using formatter_t = decltype(_get_type())::value_t;
 
         /// ----------------------------------------------------------------------------------------
         /// returns `true` if an implementation exists.

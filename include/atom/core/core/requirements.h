@@ -12,47 +12,10 @@ namespace atom
     concept is_same_as = std::same_as<value_t0, value_t1>;
 
     /// --------------------------------------------------------------------------------------------
-    /// ensures `value_t0` is `void`.
+    /// 
     /// --------------------------------------------------------------------------------------------
     template <typename value_t>
-    concept is_void = is_same_as<value_t, void>;
-
-    /// --------------------------------------------------------------------------------------------
-    /// ensures unqualified type of `value_t0` is same as unqualified type of `value_t1`.
-    /// --------------------------------------------------------------------------------------------
-    template <typename value_t0, typename value_t1>
-    concept is_same_as_unqualified =
-        std::same_as<std::remove_cvref_t<value_t0>, std::remove_cvref_t<value_t1>>;
-
-    /// --------------------------------------------------------------------------------------------
-    /// enusres `type` is const-qualified.
-    /// --------------------------------------------------------------------------------------------
-    template <typename value_t>
-    concept is_const = std::is_const_v<value_t>;
-
-    /// --------------------------------------------------------------------------------------------
-    /// enusres `type` is volatile-qualified.
-    /// --------------------------------------------------------------------------------------------
-    template <typename value_t>
-    concept is_volatile = std::is_volatile_v<value_t>;
-
-    /// --------------------------------------------------------------------------------------------
-    /// enusres `type` is ref.
-    /// --------------------------------------------------------------------------------------------
-    template <typename value_t>
-    concept is_ref = std::is_reference_v<value_t>;
-
-    /// --------------------------------------------------------------------------------------------
-    /// enusres `type` is l-value ref.
-    /// --------------------------------------------------------------------------------------------
-    template <typename value_t>
-    concept is_lvalue_ref = std::is_lvalue_reference_v<value_t>;
-
-    /// --------------------------------------------------------------------------------------------
-    /// enusres `type` is r-value ref.
-    /// --------------------------------------------------------------------------------------------
-    template <typename value_t>
-    concept is_rvalue_ref = std::is_rvalue_reference_v<value_t>;
+    concept is_void = std::same_as<value_t, void>;
 
     /// --------------------------------------------------------------------------------------------
     /// ensures `from_t` is `convertible` to `to_t`.
@@ -299,25 +262,6 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     template <typename value_t>
     concept is_comparable = is_comparable_with<value_t, value_t>;
-
-    /// --------------------------------------------------------------------------------------------
-    /// 
-    /// --------------------------------------------------------------------------------------------
-    template <typename value_t>
-    concept is_pure = not std::is_const_v<value_t> and not std::is_volatile_v<value_t>
-        and not std::is_reference_v<value_t>;
-
-    /// --------------------------------------------------------------------------------------------
-    /// ensures `type` is {semi_regular}.
-    /// --------------------------------------------------------------------------------------------
-    template <typename value_t>
-    concept is_semi_regular = is_copyable<value_t> && is_default_initializable<value_t>;
-
-    /// --------------------------------------------------------------------------------------------
-    /// ensures `type` is {regular}.
-    /// --------------------------------------------------------------------------------------------
-    template <class value_t>
-    concept is_regular = is_semi_regular<value_t> && is_equality_comparable<value_t>;
 }
 
 // clang-format on

@@ -19,7 +19,7 @@ namespace atom::mock
 
         template <typename range_t>
         auto insert(const range_t& range)
-            requires(is_range_of<range_t, value_t>);
+            requires is_range_of<range_t, value_t>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -36,7 +36,7 @@ namespace atom::mock
 
         template <typename range_t>
         auto insert_front(const range_t& range)
-            requires(is_range_of<range_t, value_t>);
+            requires is_range_of<range_t, value_t>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -53,7 +53,7 @@ namespace atom::mock
 
         template <typename range_t>
         auto insert_back(const range_t& range)
-            requires(is_range_of<range_t, value_t>);
+            requires is_range_of<range_t, value_t>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -70,7 +70,7 @@ namespace atom::mock
 
         template <typename range_t>
         auto insert(key_t key, const range_t& range)
-            requires(is_range_of<range_t, value_t>);
+            requires is_range_of<range_t, value_t>;
     };
 
     /// --------------------------------------------------------------------------------------------

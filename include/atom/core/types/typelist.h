@@ -475,13 +475,20 @@ namespace atom
         }
     };
 
+    template <typename...>
+    class typeinfo_list;
+
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename... ts>
     class type_list
     {
+        using this_t = type_list;
         using impl_t = type_list_impl<types...>;
+
+    public:
+        using info_t = typeinfo_list<this_t>;
 
     public:
         /// ----------------------------------------------------------------------------------------

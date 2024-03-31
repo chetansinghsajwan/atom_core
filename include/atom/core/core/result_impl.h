@@ -96,31 +96,31 @@ namespace atom
         }
 
         constexpr auto set_value(this this_t& self, const value_t& value) -> void
-            requires(not is_void<value_t>)
+            requires(not typeinfo<value_t>::is_void)
         {
             self._variant.template emplace_value_by_index<value_index>(value);
         }
 
         constexpr auto set_value(this this_t& self, value_t&& value) -> void
-            requires(not is_void<value_t>)
+            requires(not typeinfo<value_t>::is_void)
         {
             self._variant.template emplace_value_by_index<value_index>(move(value));
         }
 
         constexpr auto set_value_void(this this_t& self) -> void
-            requires(not is_void<value_t>)
+            requires(not typeinfo<value_t>::is_void)
         {
             self._variant.template emplace_value_by_index<value_index>();
         }
 
         constexpr auto get_value(this const this_t& self) -> const value_t&
-            requires(not is_void<value_t>)
+            requires(not typeinfo<value_t>::is_void)
         {
             return self._variant.template get_at<value_index>();
         }
 
         constexpr auto get_value(this this_t& self) -> value_t&
-            requires(not is_void<value_t>)
+            requires(not typeinfo<value_t>::is_void)
         {
             return self._variant.template get_at<value_index>();
         }
@@ -138,7 +138,7 @@ namespace atom
         template <typename error_t>
         static consteval auto has_error() -> bool
         {
-            if (is_same_as<error_t, value_t>)
+            if (typeinfo<error_t>::template is_same_as<value_t>)
                 return false;
 
             return _variant_t::template has<error_t>();

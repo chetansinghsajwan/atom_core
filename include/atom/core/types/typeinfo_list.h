@@ -15,6 +15,9 @@ namespace atom
         using value_types_list = type_list<values_t...>;
 
     public:
+        static constexpr bool are_pure =
+            value_types_list::are_all([](auto info) { return info.is_pure; });
+
         static constexpr bool are_default_constructible =
             value_types_list::are_all([](auto info) { return info.is_default_constructible; });
 
@@ -48,14 +51,21 @@ namespace atom
         static constexpr bool are_trivially_copy_assignable =
             value_types_list::are_all([](auto info) { return info.is_trivially_copy_assignable; });
 
+        static constexpr bool are_not_trivially_copy_assignable = not are_trivially_copy_assignable;
+
         static constexpr bool are_trivially_copyable =
             value_types_list::are_all([](auto info) { return info.is_trivially_copyable; });
 
         static constexpr bool are_trivially_move_constructible = value_types_list::are_all(
             [](auto info) { return info.is_trivially_move_constructible; });
 
+        static constexpr bool are_not_trivially_move_constructible =
+            not are_trivially_move_constructible;
+
         static constexpr bool are_trivially_move_assignable =
             value_types_list::are_all([](auto info) { return info.is_trivially_move_assignable; });
+
+        static constexpr bool are_not_trivially_move_assignable = not are_trivially_move_assignable;
 
         static constexpr bool are_trivially_moveable =
             value_types_list::are_all([](auto info) { return info.is_trivially_moveable; });

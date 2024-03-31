@@ -9,7 +9,7 @@
 /// ------------------------------------------------------------------------------------------------
 namespace atom
 {
-    class invokable_box_t_id
+    class invokable_box_tag
     {};
 
     template <typename result_t, typename... arg_ts>
@@ -30,7 +30,7 @@ namespace atom
     public:
         virtual auto invoke(arg_ts... args) -> result_t override final
         {
-            if constexpr (is_same_as<result_t, void>)
+            if constexpr (typeinfo<result_t>::is_void)
             {
                 _invokable(forward<arg_ts>(args)...);
             }
@@ -178,7 +178,7 @@ namespace atom
     /// stores an invokable value_t using boxing.
     /// --------------------------------------------------------------------------------------------
     template <typename result_t, typename... arg_ts>
-    class invokable_box<result_t(arg_ts...)>: public invokable_box_t_id
+    class invokable_box<result_t(arg_ts...)>: public invokable_box_tag
     {
         using _impl_t = _invokable_box_impl<result_t, arg_ts...>;
 
@@ -243,8 +243,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename invokable_t>
         invokable_box(invokable_t&& invokable)
-            requires typeinfo<invokable_t>::template is_invokable<result_t(arg_ts...)>
-                     and (not is_derived_from<invokable_t, invokable_box_t_id>)
+            requires(typeinfo<invokable_t>::template is_invokable<result_t(arg_ts...)>)
+                    and (typeinfo<invokable_t>::template is_not_derived_from<invokable_box_tag>)
             : _impl(typename _impl_t::value_tag(), forward<invokable_t>(invokable))
         {}
 
@@ -253,8 +253,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename invokable_t>
         invokable_box& operator=(invokable_t&& invokable)
-            requires typeinfo<invokable_t>::template is_invokable<result_t(arg_ts...)>
-                     and (not is_derived_from<invokable_t, invokable_box_t_id>)
+            requires typeinfo<invokable_t>::template
+        is_invokable<result_t(arg_ts...)>
+            and (typeinfo<invokable_t>::template is_not_derived_from<invokable_box_tag>)
         {
             _impl.set_invokable(forward<invokable_t>(invokable));
             return *this;
