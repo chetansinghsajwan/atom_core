@@ -1,18 +1,18 @@
 #pragma once
 #include "atom/core/core.h"
-#include "atom/core/core/type_list.h"
+#include "atom/core/types.h"
 #include "atom/core/contracts.h"
 
 namespace atom
 {
-    template <typename... types>
+    template <typename... values_t>
     class static_storage_for
     {
     private:
-        using _ts = type_list<types...>;
+        using value_types_list = type_list<values_t...>;
 
     public:
-        alignas(_ts::max_align) byte storage[_ts::max_size];
+        alignas(value_types_list::max_align) byte storage[value_types_list::max_size];
     };
 
     template <usize in_size>

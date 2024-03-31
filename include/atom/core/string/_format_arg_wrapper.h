@@ -1,5 +1,5 @@
 #pragma once
-#include "atom/core/typeinfo.h"
+#include "atom/core/types.h"
 #include "fmt/core.h"
 
 namespace atom

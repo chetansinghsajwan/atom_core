@@ -1,5 +1,5 @@
 #pragma once
-#include "atom/core/typeinfo.h"
+#include "atom/core/types.h"
 #include "atom/core/range.h"
 
 namespace atom::mock

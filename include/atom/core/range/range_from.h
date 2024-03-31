@@ -1,7 +1,7 @@
 #pragma once
 #include "atom/core/_std.h"
 #include "atom/core/core.h"
-#include "atom/core/typeinfo.h"
+#include "atom/core/types.h"
 #include "atom/core/range/array_iter.h"
 #include "atom/core/range/range_literal.h"
 #include "atom/core/range/iter_requirements.h"

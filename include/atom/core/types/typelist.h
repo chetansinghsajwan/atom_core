@@ -1,7 +1,9 @@
 #pragma once
-#include "atom/core/core.h"
-#include "atom/core/typeinfo.h"
+#include "atom/core/types/typeutils.h"
+#include "atom/core/types/typeinfo.h"
 #include "atom/core/math.h"
+
+#include <concepts>
 
 namespace atom
 {
@@ -212,8 +214,9 @@ namespace atom
         class index_of<to_get_t, index, in_t, types...>
         {
         public:
-            static constexpr usize value =
-                is_same_as<to_get_t, in_t> ? index : index_of<to_get_t, index + 1, types...>::value;
+            static constexpr usize value = typeinfo<to_get_t>::template is_same_as<in_t>
+                                               ? index
+                                               : index_of<to_get_t, index + 1, types...>::value;
         };
 
         template <typename to_get_t, usize index>
@@ -305,7 +308,7 @@ namespace atom
             template <typename check_t>
             class _pred
             {
-                static constexpr bool value = is_same_as<in_t, check_t>;
+                static constexpr bool value = typeinfo<in_t>::template is_same_as<check_t>;
             };
 
         public:
