@@ -15,7 +15,6 @@
 #include "atom/core/core/static_storage.h"
 #include "atom/core/time.h"
 #include "atom/core/typeinfo.h"
-#include "atom/core/invokable/invokable.h"
 #include "atom/core/invokable/invokable_ptr.h"
 #include "atom/core/invokable/invokable_box.h"
 #include "atom/core/core/type_list.h"

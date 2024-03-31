@@ -2,7 +2,6 @@
 #include "atom/core/_std.h"
 #include "atom/core/memory/box.h"
 #include "atom/core/core.h"
-#include "atom/core/invokable/invokable.h"
 #include "atom/core/contracts.h"
 
 /// ------------------------------------------------------------------------------------------------
@@ -244,7 +243,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename invokable_t>
         invokable_box(invokable_t&& invokable)
-            requires is_invokable<invokable_t, result_t(arg_ts...)>
+            requires typeinfo<invokable_t>::template is_invokable<result_t(arg_ts...)>
                      and (not is_derived_from<invokable_t, invokable_box_t_id>)
             : _impl(typename _impl_t::value_tag(), forward<invokable_t>(invokable))
         {}
@@ -254,7 +253,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename invokable_t>
         invokable_box& operator=(invokable_t&& invokable)
-            requires is_invokable<invokable_t, result_t(arg_ts...)>
+            requires typeinfo<invokable_t>::template is_invokable<result_t(arg_ts...)>
                      and (not is_derived_from<invokable_t, invokable_box_t_id>)
         {
             _impl.set_invokable(forward<invokable_t>(invokable));

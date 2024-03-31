@@ -145,7 +145,8 @@ namespace atom
         using pure_t = typeinfo<std::remove_cvref_t<value_t>>;
 
         template <typename like_t>
-        using unpure_like_t = typeinfo<typename typeinfo_impl::unpure_like_t<in_value_t, like_t>::value_t>;
+        using unpure_like_t =
+            typeinfo<typename typeinfo_impl::unpure_like_t<in_value_t, like_t>::value_t>;
 
         template <typename other_t>
         static constexpr bool is_same_as = std::is_same_v<value_t, other_t>;
@@ -162,7 +163,7 @@ namespace atom
         static constexpr bool is_enum = std::is_enum_v<value_t>;
 
         template <typename signature>
-        static constexpr bool is_invokable = typeinfo_impl::is_invokable<value_t, signature>::value;
+        static constexpr bool is_invokable = typeinfo_impl::template is_invokable<value_t, signature>::value;
 
         template <typename base_t>
         static constexpr bool is_derived_from = std::is_base_of_v<base_t, value_t>;

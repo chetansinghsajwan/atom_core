@@ -1,7 +1,6 @@
 #pragma once
 #include "atom/core/_std.h"
 #include "atom/core/core.h"
-#include "atom/core/invokable/invokable.h"
 #include "atom/core/invokable/invokable_box.h"
 #include "atom/core/containers/dynamic_array.h"
 
@@ -98,7 +97,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename invokable_t>
         auto subscribe(invokable_t&& listener) -> event_key
-            requires(is_invokable<invokable_t, signature_t>)
+            requires typeinfo<invokable_t>::template is_invokable<signature_t>
         {
             return event_key(_impl.add_listener(forward<invokable_t>(listener)));
         }
@@ -108,7 +107,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename invokable_t>
         auto operator+=(invokable_t&& listener) -> event_key
-            requires(is_invokable<invokable_t, signature_t>)
+            requires typeinfo<invokable_t>::template is_invokable<signature_t>
         {
             return subscribe(forward<invokable_t>(listener));
         }
@@ -195,7 +194,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename invokable_t>
         auto subscribe(invokable_t&& listener) -> event_key
-            requires(is_invokable<invokable_t, signature_t>)
+            requires typeinfo<invokable_t>::template is_invokable<signature_t>
         {
             return _source.subscribe(forward<invokable_t>(listener));
         }
@@ -205,7 +204,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename invokable_t>
         auto operator+=(invokable_t&& listener) -> event_key
-            requires(is_invokable<invokable_t, signature_t>)
+            requires typeinfo<invokable_t>::template is_invokable<signature_t>
         {
             return subscribe(forward<invokable_t>(listener));
         }

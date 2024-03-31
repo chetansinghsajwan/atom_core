@@ -1,5 +1,4 @@
 #pragma once
-#include "atom/core/invokable/invokable.h"
 
 namespace atom
 {

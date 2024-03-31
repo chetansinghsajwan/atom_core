@@ -1,7 +1,6 @@
 #pragma once
 #include "atom/core/core.h"
 #include "atom/core/typeinfo.h"
-#include "atom/core/invokable/invokable.h"
 #include "atom/core/contracts.h"
 #include "atom/core/memory/obj_helper.h"
 
@@ -786,7 +785,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename invokable_t>
         constexpr auto get_or_invoke(invokable_t&& or_invoke) const -> value_t
-            requires is_invokable<typename typeinfo<invokable_t>::pure_t::value_t, value_t()>
+            requires typeinfo<invokable_t>::template is_invokable<value_t()>
         {
             if (_impl.is_null())
             {
@@ -812,7 +811,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename invokable_t>
         constexpr auto get_mut_or_invoke(invokable_t&& or_invoke) -> value_t&
-            requires is_invokable<typename typeinfo<invokable_t>::pure_t::value_t, value_t&()>
+            requires typeinfo<invokable_t>::template is_invokable<value_t&()>
         {
             if (_impl.is_null())
             {

@@ -342,7 +342,8 @@ namespace atom
         template <typename range_t>
         constexpr auto insert_range_back(range_t&& range) -> mut_iter_t
             requires(is_range_of<typename typeinfo<range_t>::pure_t::value_t, value_t>)
-                    and (is_constructible<value_t, typename typeinfo<range_t>::pure_t::value_t::value_t>)
+                    and (is_constructible<value_t,
+                        typename typeinfo<range_t>::pure_t::value_t::value_t>)
         {
             usize count = _impl.insert_range_back(range.get_iter(), range.get_iter_end());
             return _impl.get_mut_iter_at(_impl.get_count() - count);
@@ -355,7 +356,8 @@ namespace atom
         template <typename range_t>
         constexpr auto operator+=(range_t&& range)
             requires(is_range_of<typename typeinfo<range_t>::pure_t::value_t, value_t>)
-                    and (is_constructible<value_t, typename typeinfo<range_t>::pure_t::value_t::value_t>)
+                    and (is_constructible<value_t,
+                        typename typeinfo<range_t>::pure_t::value_t::value_t>)
         {
             _impl.insert_range_back(move(range.get_iter()), move(range.get_iter_end()));
         }
@@ -509,9 +511,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename pred_t>
-        constexpr auto remove_one_if(pred_t&& pred) -> bool
-            requires(is_invokable<pred_t, bool(const value_t&)>)
+        template <typename predicate_t>
+        constexpr auto remove_one_if(predicate_t&& pred) -> bool
+            requires typeinfo<predicate_t>::template is_invokable<bool(const value_t&)>
         {
             for (usize i = 0; i < _impl.get_count(); i++)
             {
@@ -528,9 +530,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename pred_t>
-        constexpr auto remove_all_if(pred_t&& pred) -> usize
-            requires(is_invokable<pred_t, bool(const value_t&)>)
+        template <typename predicate_t>
+        constexpr auto remove_all_if(predicate_t&& pred) -> usize
+            requires typeinfo<predicate_t>::template is_invokable<bool(const value_t&)>
         {
             usize removed_count = 0;
             for (usize i = 0; i < _impl.get_count(); i++)
