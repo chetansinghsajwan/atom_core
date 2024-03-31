@@ -12,7 +12,7 @@ namespace atom
     template <typename in_value_t>
     class string_formatter_provider
     {
-        using value_t = typeinfo<in_value_t>::pure_t;
+        using value_t = typeinfo<in_value_t>::pure_t::value_t;
 
     private:
         static consteval auto _get_t_indentity() -> decltype(auto)

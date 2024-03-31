@@ -786,7 +786,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename invokable_t>
         constexpr auto get_or_invoke(invokable_t&& or_invoke) const -> value_t
-            requires is_invokable<typename typeinfo<invokable_t>::pure_t, value_t()>
+            requires is_invokable<typename typeinfo<invokable_t>::pure_t::value_t, value_t()>
         {
             if (_impl.is_null())
             {
@@ -812,7 +812,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename invokable_t>
         constexpr auto get_mut_or_invoke(invokable_t&& or_invoke) -> value_t&
-            requires is_invokable<typename typeinfo<invokable_t>::pure_t, value_t&()>
+            requires is_invokable<typename typeinfo<invokable_t>::pure_t::value_t, value_t&()>
         {
             if (_impl.is_null())
             {

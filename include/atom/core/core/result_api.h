@@ -73,7 +73,7 @@ namespace atom
         template <typename in_that_t>
         static constexpr bool should_enable_universal_copy_constructor = []
         {
-            using that_t = typeinfo<in_that_t>::pure_t;
+            using that_t = typeinfo<in_that_t>::pure_t::value_t;
 
             if constexpr (not is_result_api<that_t>::value)
                 return false;
@@ -110,7 +110,7 @@ namespace atom
         template <typename in_that_t>
         static constexpr bool should_enable_universal_copy_operator = []
         {
-            using that_t = typeinfo<in_that_t>::pure_t;
+            using that_t = typeinfo<in_that_t>::pure_t::value_t;
 
             if constexpr (not is_result_api<that_t>::value)
                 return false;
@@ -148,7 +148,7 @@ namespace atom
         template <typename in_that_t>
         static constexpr bool should_enable_universal_move_constructor = []
         {
-            using that_t = typeinfo<in_that_t>::pure_t;
+            using that_t = typeinfo<in_that_t>::pure_t::value_t;
 
             if constexpr (not is_result_api<that_t>::value)
                 return false;
@@ -185,7 +185,7 @@ namespace atom
         template <typename in_that_t>
         static constexpr bool should_enable_universal_move_operator = []
         {
-            using that_t = typeinfo<in_that_t>::pure_t;
+            using that_t = typeinfo<in_that_t>::pure_t::value_t;
 
             if constexpr (not is_result_api<that_t>::value)
                 return false;
@@ -396,7 +396,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename error_t>
         constexpr result_api(const error_t& error)
-            requires(has_error<typename typeinfo<error_t>::pure_t>())
+            requires(has_error<typename typeinfo<error_t>::pure_t::value_t>())
             : _impl(typename impl_t::error_tag(), error)
         {}
 
@@ -405,7 +405,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename error_t>
         constexpr result_api(error_t&& error)
-            requires(has_error<typename typeinfo<error_t>::pure_t>())
+            requires(has_error<typename typeinfo<error_t>::pure_t::value_t>())
             : _impl(typename impl_t::error_tag(), move(error))
         {}
 
@@ -414,7 +414,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename error_t>
         constexpr this_t& operator=(const error_t& error)
-            requires(has_error<typename typeinfo<error_t>::pure_t>())
+            requires(has_error<typename typeinfo<error_t>::pure_t::value_t>())
         {
             _impl.set_error(error);
             return *this;
@@ -425,7 +425,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename error_t>
         constexpr this_t& operator=(error_t&& error)
-            requires(has_error<typename typeinfo<error_t>::pure_t>())
+            requires(has_error<typename typeinfo<error_t>::pure_t::value_t>())
         {
             _impl.set_error(move(error));
             return *this;
@@ -624,17 +624,18 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         template <typename this_final_qualified_t, typename invokable_qualified_t>
         static constexpr bool should_enable_on_value_function = []
         {
-            using this_t = typeinfo<this_final_qualified_t>::pure_t;
+            using this_t = typeinfo<this_final_qualified_t>::pure_t::value_t;
 
             if constexpr (is_result_api<this_t>::value)
             {
-                using value_qualified_t = typeinfo<
-                    typename this_t::value_t>::template qualified_like_t<this_final_qualified_t>;
+                using value_qualified_t =
+                    typeinfo<typename this_t::value_t>::template unpure_like_t<
+                        this_final_qualified_t>::value_t;
                 using signature_t = void(value_qualified_t);
 
                 if (not typeinfo<invokable_qualified_t>::template is_invokable<signature_t>)
@@ -662,7 +663,7 @@ namespace atom
         template <typename this_final_qualified_t, typename invokable_qualified_t, typename error_t>
         static constexpr bool should_enable_on_error_function = []
         {
-            using this_t = typeinfo<this_final_qualified_t>::pure_t;
+            using this_t = typeinfo<this_final_qualified_t>::pure_t::value_t;
 
             if constexpr (is_result_api<this_t>::value)
             {
@@ -673,7 +674,7 @@ namespace atom
                     return false;
 
                 using error_qualified_t =
-                    typeinfo<error_t>::template qualified_like_t<this_final_qualified_t>;
+                    typeinfo<error_t>::template unpure_like_t<this_final_qualified_t>::value_t;
                 using signature_t = void(error_qualified_t);
 
                 if (not typeinfo<invokable_qualified_t>::template is_invokable<signature_t>)
@@ -702,7 +703,7 @@ namespace atom
         template <typename this_final_qualified_t, typename invokable_qualified_t>
         static constexpr bool should_enable_on_universal_error_function = []
         {
-            using this_t = typeinfo<this_final_qualified_t>::pure_t;
+            using this_t = typeinfo<this_final_qualified_t>::pure_t::value_t;
 
             if constexpr (is_result_api<this_t>::value)
             {
@@ -713,14 +714,15 @@ namespace atom
                     return false;
 
                 using error_qualified_t =
-                    typeinfo<error_t>::template qualified_like_t<this_final_qualified_t>;
+                    typeinfo<error_t>::template unpure_like_t<this_final_qualified_t>::value_t;
                 using signature_t = void(error_qualified_t);
 
                 if (not this_t::error_types_list::are_all(
                         [](auto info)
                         {
-                            using error_qualified_t = typeinfo<typename decltype(info)::value_t>::
-                                template qualified_like_t<this_final_qualified_t>;
+                            using error_qualified_t =
+                                typeinfo<typename decltype(info)::value_t>::template unpure_like_t<
+                                    this_final_qualified_t>::value_t;
                             using signature_t = void(error_qualified_t);
 
                             return typeinfo<invokable_qualified_t>::template is_invokable<

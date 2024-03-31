@@ -11,73 +11,73 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
 
         template <typename in_value_t, typename other_t>
-        struct qualified_like_t
+        struct unpure_like_t
         {
             using value_t = std::remove_cvref_t<in_value_t>;
         };
 
         template <typename in_value_t, typename other_t>
-        struct qualified_like_t<in_value_t, const other_t>
+        struct unpure_like_t<in_value_t, const other_t>
         {
             using value_t = const std::remove_cvref_t<in_value_t>;
         };
 
         template <typename in_value_t, typename other_t>
-        struct qualified_like_t<in_value_t, volatile other_t>
+        struct unpure_like_t<in_value_t, volatile other_t>
         {
             using value_t = volatile std::remove_cvref_t<in_value_t>;
         };
 
         template <typename in_value_t, typename other_t>
-        struct qualified_like_t<in_value_t, const volatile other_t>
+        struct unpure_like_t<in_value_t, const volatile other_t>
         {
             using value_t = const volatile std::remove_cvref_t<in_value_t>;
         };
 
         template <typename in_value_t, typename other_t>
-        struct qualified_like_t<in_value_t, other_t&>
+        struct unpure_like_t<in_value_t, other_t&>
         {
             using value_t = std::remove_cvref_t<in_value_t>&;
         };
 
         template <typename in_value_t, typename other_t>
-        struct qualified_like_t<in_value_t, other_t&&>
+        struct unpure_like_t<in_value_t, other_t&&>
         {
             using value_t = std::remove_cvref_t<in_value_t>&&;
         };
 
         template <typename in_value_t, typename other_t>
-        struct qualified_like_t<in_value_t, const other_t&>
+        struct unpure_like_t<in_value_t, const other_t&>
         {
             using value_t = const std::remove_cvref_t<in_value_t>&;
         };
 
         template <typename in_value_t, typename other_t>
-        struct qualified_like_t<in_value_t, const other_t&&>
+        struct unpure_like_t<in_value_t, const other_t&&>
         {
             using value_t = const std::remove_cvref_t<in_value_t>&&;
         };
 
         template <typename in_value_t, typename other_t>
-        struct qualified_like_t<in_value_t, volatile other_t&>
+        struct unpure_like_t<in_value_t, volatile other_t&>
         {
             using value_t = volatile std::remove_cvref_t<in_value_t>&;
         };
 
         template <typename in_value_t, typename other_t>
-        struct qualified_like_t<in_value_t, volatile other_t&&>
+        struct unpure_like_t<in_value_t, volatile other_t&&>
         {
             using value_t = volatile std::remove_cvref_t<in_value_t>&&;
         };
 
         template <typename in_value_t, typename other_t>
-        struct qualified_like_t<in_value_t, const volatile other_t&>
+        struct unpure_like_t<in_value_t, const volatile other_t&>
         {
             using value_t = const volatile std::remove_cvref_t<in_value_t>&;
         };
 
         template <typename in_value_t, typename other_t>
-        struct qualified_like_t<in_value_t, const volatile other_t&&>
+        struct unpure_like_t<in_value_t, const volatile other_t&&>
         {
             using value_t = const volatile std::remove_cvref_t<in_value_t>&&;
         };
@@ -126,40 +126,40 @@ namespace atom
 
     public:
         using value_t = in_value_t;
-        using pure_type = typeinfo<std::remove_cvref_t<value_t>>;
-        using pure_t = std::remove_cvref_t<value_t>;
 
-        using with_const_t = std::add_const_t<value_t>;
-        using without_const_t = std::remove_const_t<value_t>;
-        using with_ref_t = std::add_const_t<value_t>;
-        using without_ref_t = std::remove_const_t<value_t>;
+        using add_const_t = typeinfo<std::add_const_t<value_t>>;
+        using remove_const_t = typeinfo<std::remove_const_t<value_t>>;
 
-        using remove_ptr_t = std::remove_pointer_t<value_t>;
-        using remove_cvref_t = std::remove_cvref_t<value_t>;
-        using remove_quailfiers_ref_t = std::remove_cvref_t<value_t>;
-        using unqualified_t = std::remove_cv_t<value_t>;
+        using add_volatile_t = typeinfo<std::add_volatile_t<value_t>>;
+        using remove_volatile_t = typeinfo<std::remove_volatile_t<value_t>>;
 
-        template <typename other_t>
-        using qualified_like_t =
-            typename typeinfo_impl::qualified_like_t<in_value_t, other_t>::value_t;
+        using unqualified_t = typeinfo<std::remove_cv_t<value_t>>;
 
-        template <typename invokable_t>
-        using get_return_t = std::invoke_result_t<invokable_t>;
+        using add_lvalue_ref_t = typeinfo<std::add_lvalue_reference_t<value_t>>;
+        using add_rvalue_ref_t = typeinfo<std::add_rvalue_reference_t<value_t>>;
+        using remove_ref_t = typeinfo<std::remove_reference_t<value_t>>;
+
+        using add_ptr_t = typeinfo<std::add_pointer_t<value_t>>;
+        using remove_ptr_t = typeinfo<std::remove_pointer_t<value_t>>;
+
+        using pure_t = typeinfo<std::remove_cvref_t<value_t>>;
+
+        template <typename like_t>
+        using unpure_like_t = typeinfo<typename typeinfo_impl::unpure_like_t<in_value_t, like_t>::value_t>;
 
         template <typename other_t>
         static constexpr bool is_same_as = std::is_same_v<value_t, other_t>;
 
         static constexpr bool is_void = std::is_void_v<value_t>;
+        static constexpr bool is_lvalue_ref = std::is_lvalue_reference_v<value_t>;
+        static constexpr bool is_rvalue_ref = std::is_rvalue_reference_v<value_t>;
         static constexpr bool is_ref = std::is_reference_v<value_t>;
-        static constexpr bool is_lref = std::is_lvalue_reference_v<value_t>;
-        static constexpr bool is_rref = std::is_rvalue_reference_v<value_t>;
         static constexpr bool is_const = std::is_const_v<value_t>;
         static constexpr bool is_volatile = std::is_volatile_v<value_t>;
         static constexpr bool is_qualified = is_const || is_volatile;
         static constexpr bool is_empty = std::is_empty_v<value_t>;
         static constexpr bool is_pure = not is_qualified and not is_ref;
         static constexpr bool is_enum = std::is_enum_v<value_t>;
-        static constexpr bool is_int = std::is_integral_v<value_t>;
 
         template <typename signature>
         static constexpr bool is_invokable = typeinfo_impl::is_invokable<value_t, signature>::value;

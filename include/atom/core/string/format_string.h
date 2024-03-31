@@ -34,7 +34,7 @@ namespace atom
             : str(str)
         {
             using fmt_format_string =
-                fmt::format_string<_format_arg_wrapper<typename typeinfo<arg_ts>::pure_t>...>;
+                fmt::format_string<_format_arg_wrapper<typename typeinfo<arg_ts>::pure_t::value_t>...>;
 
             fmt_format_string check(str);
         }

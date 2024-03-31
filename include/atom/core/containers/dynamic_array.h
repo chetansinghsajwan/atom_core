@@ -73,7 +73,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename range_t>
         constexpr dynamic_array(range_t&& range)
-            requires(is_range_of<typename typeinfo<range_t>::pure_t, value_t>)
+            requires(is_range_of<typename typeinfo<range_t>::pure_t::value_t, value_t>)
             : _impl(typename _impl_t::range_tag(), range.get_iter(), range.get_iter_end())
         {}
 
@@ -341,8 +341,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename range_t>
         constexpr auto insert_range_back(range_t&& range) -> mut_iter_t
-            requires(is_range_of<typename typeinfo<range_t>::pure_t, value_t>)
-                    and (is_constructible<value_t, typename typeinfo<range_t>::pure_t::value_t>)
+            requires(is_range_of<typename typeinfo<range_t>::pure_t::value_t, value_t>)
+                    and (is_constructible<value_t, typename typeinfo<range_t>::pure_t::value_t::value_t>)
         {
             usize count = _impl.insert_range_back(range.get_iter(), range.get_iter_end());
             return _impl.get_mut_iter_at(_impl.get_count() - count);
@@ -354,8 +354,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename range_t>
         constexpr auto operator+=(range_t&& range)
-            requires(is_range_of<typename typeinfo<range_t>::pure_t, value_t>)
-                    and (is_constructible<value_t, typename typeinfo<range_t>::pure_t::value_t>)
+            requires(is_range_of<typename typeinfo<range_t>::pure_t::value_t, value_t>)
+                    and (is_constructible<value_t, typename typeinfo<range_t>::pure_t::value_t::value_t>)
         {
             _impl.insert_range_back(move(range.get_iter()), move(range.get_iter_end()));
         }

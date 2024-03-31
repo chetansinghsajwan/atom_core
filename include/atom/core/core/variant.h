@@ -172,7 +172,7 @@ namespace atom
         template <typename in_value_t>
         constexpr auto set_value(in_value_t&& value)
         {
-            using type = typeinfo<in_value_t>::pure_t;
+            using type = typeinfo<in_value_t>::pure_t::value_t;
             usize index_to_set = get_index_for_t<in_value_t>();
 
             // the new type to set is same as current.

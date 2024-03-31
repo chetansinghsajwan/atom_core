@@ -97,7 +97,7 @@ namespace atom
             // when allocator type is different, we cannot handle heap memory. so we only move the
             // object and not the memory.
             if constexpr (not is_same_as<allocator_t,
-                              typename typeinfo<box_t>::pure_t::allocator_t>)
+                              typename typeinfo<box_t>::pure_t::value_t::allocator_t>)
             {
                 if (that._has_val())
                 {
@@ -209,7 +209,7 @@ namespace atom
         template <typename type>
         constexpr auto set_val(type&& val, bool force_heap = false)
         {
-            emplace_val<typename typeinfo<type>::pure_t>(forward<type>(val), force_heap);
+            emplace_val<typename typeinfo<type>::pure_t::value_t>(forward<type>(val), force_heap);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -655,7 +655,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename type, typename... arg_ts>
         constexpr auto emplace(arg_ts&&... args) -> type&
-            requires is_same_or_derived_from<typename typeinfo<type>::pure_t, value_t>
+            requires is_same_or_derived_from<typename typeinfo<type>::pure_t::value_t, value_t>
         {
             _impl.template emplace_val<type>(forward<arg_ts>(args)...);
             return _impl.template get_mut_val_as<type>();
@@ -666,7 +666,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename type>
         constexpr auto set(type&& obj) -> type&
-            requires is_same_or_derived_from<typename typeinfo<type>::pure_t, value_t>
+            requires is_same_or_derived_from<typename typeinfo<type>::pure_t::value_t, value_t>
         {
             _impl._set_val(forward<type>(obj));
             return _impl.template get_mut_val_as<type>();
@@ -725,7 +725,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename type>
         constexpr auto get_as() const -> const type&
-            requires is_same_or_derived_from<typename typeinfo<type>::pure_t, value_t>
+            requires is_same_or_derived_from<typename typeinfo<type>::pure_t::value_t, value_t>
         {
             ATOM_DEBUG_EXPECTS(has_val(), "value is null.");
 
@@ -737,7 +737,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename type>
         constexpr auto get_mut_as() -> type&
-            requires is_same_or_derived_from<typename typeinfo<type>::pure_t, value_t>
+            requires is_same_or_derived_from<typename typeinfo<type>::pure_t::value_t, value_t>
         {
             ATOM_DEBUG_EXPECTS(has_val(), "value is null.");
 
@@ -749,7 +749,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename type>
         constexpr auto check_get_as() const -> const type&
-            requires is_same_or_derived_from<typename typeinfo<type>::pure_t, value_t>
+            requires is_same_or_derived_from<typename typeinfo<type>::pure_t::value_t, value_t>
         {
             expects(has_val(), "value is null.");
 
@@ -761,7 +761,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename type>
         constexpr auto check_get_mut_as() -> type&
-            requires is_same_or_derived_from<typename typeinfo<type>::pure_t, value_t>
+            requires is_same_or_derived_from<typename typeinfo<type>::pure_t::value_t, value_t>
         {
             expects(has_val(), "value is null.");
 
@@ -809,7 +809,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename type>
         constexpr auto mem_as() const -> const type*
-            requires is_same_or_derived_from<typename typeinfo<type>::pure_t, value_t>
+            requires is_same_or_derived_from<typename typeinfo<type>::pure_t::value_t, value_t>
         {
             return _impl.template mem_as<type>();
         }
@@ -819,7 +819,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename type>
         constexpr auto mut_mem_as() -> const type*
-            requires is_same_or_derived_from<typename typeinfo<type>::pure_t, value_t>
+            requires is_same_or_derived_from<typename typeinfo<type>::pure_t::value_t, value_t>
         {
             return _impl.template mut_mem_as<type>();
         }
@@ -829,7 +829,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename type>
         constexpr auto check_mem_as() const -> const type*
-            requires is_same_or_derived_from<typename typeinfo<type>::pure_t, value_t>
+            requires is_same_or_derived_from<typename typeinfo<type>::pure_t::value_t, value_t>
         {
             expects(has_val(), "value is null.");
 
@@ -841,7 +841,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename type>
         constexpr auto check_mut_mem_as() -> const type*
-            requires is_same_or_derived_from<typename typeinfo<type>::pure_t, value_t>
+            requires is_same_or_derived_from<typename typeinfo<type>::pure_t::value_t, value_t>
         {
             expects(has_val(), "value is null.");
 
@@ -1220,7 +1220,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename type>
         constexpr box(type&& obj)
-            requires is_void<value_t> or is_same_or_derived_from<typename typeinfo<type>::pure_t, value_t>
+            requires is_void<value_t> or is_same_or_derived_from<typename typeinfo<type>::pure_t::value_t, value_t>
             : base_t(forward<type>(obj))
         {}
 
@@ -1229,7 +1229,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename type>
         constexpr this_t& operator=(type&& obj)
-            requires is_void<value_t> or is_same_or_derived_from<typename typeinfo<type>::pure_t, value_t>
+            requires is_void<value_t> or is_same_or_derived_from<typename typeinfo<type>::pure_t::value_t, value_t>
         {
             _impl.set_val(forward<type>(obj));
             return *this;
