@@ -1,5 +1,7 @@
 #pragma once
 #include "atom/core/core/variant.h"
+#include "atom/core/core/option.h"
+#include <utility>
 
 namespace atom
 {
@@ -20,7 +22,8 @@ namespace atom
     public:
         using value_t = in_value_t;
         using out_value_t =
-            typeutils::conditional_t<typeinfo<value_t>::template is_same_as<_result_void>, void, value_t>;
+            typeutils::conditional_t<typeinfo<value_t>::template is_same_as<_result_void>, void,
+                value_t>;
         using error_types_list = type_list<error_ts...>;
         using first_error_t = typename error_types_list::front_t;
 
@@ -116,7 +119,7 @@ namespace atom
             return self._variant.template get_at<value_index>();
         }
 
-        constexpr auto get_value(this this_t& self) -> value_t&&
+        constexpr auto get_value(this this_t& self) -> value_t&
             requires(not is_void<value_t>)
         {
             return self._variant.template get_at<value_index>();
@@ -196,6 +199,49 @@ namespace atom
         {
             if (self.is_error())
                 ATOM_PANIC();
+        }
+
+        constexpr auto on_value(this auto& self, auto&& action) -> void
+        {
+            if (self.is_value())
+            {
+                // action(self.get_value());
+            }
+        }
+
+        template <typename invokable_t>
+        constexpr auto on_error(invokable_t&& action) -> void
+        {
+            if (is_error())
+            {
+                // action(get_error());
+            }
+        }
+
+        template <typename error_t, typename invokable_t>
+        constexpr auto on_error(invokable_t&& action) -> void
+        {
+            if (is_error())
+            {
+                action(get_error<error_t>());
+            }
+        }
+
+        constexpr auto to_option(this auto&& self) -> option<value_t>
+        {
+            if (self.is_error())
+                return nullopt();
+
+            return option(self.get_value());
+        }
+
+        template <typename error_t>
+        constexpr auto to_option_error(this auto&& self) -> option<error_t>
+        {
+            if (self.template is_error<error_t>())
+                return nullopt();
+
+            return option(self.template get_error<error_t>());
         }
 
     protected:

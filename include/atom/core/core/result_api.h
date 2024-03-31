@@ -6,11 +6,14 @@ namespace atom
     class result_void
     {};
 
+    class result_tag
+    {};
+
     /// --------------------------------------------------------------------------------------------
     /// @todo update docs.
     /// --------------------------------------------------------------------------------------------
     template <typename in_impl_t>
-    class result_api
+    class result_api: public result_tag
     {
         template <typename that_impl_t>
         friend class result_api;
@@ -19,13 +22,7 @@ namespace atom
         template <typename that_t>
         struct is_result_api
         {
-            static constexpr bool value = false;
-        };
-
-        template <typename that_impl_t>
-        struct is_result_api<result_api<that_impl_t>>
-        {
-            static constexpr bool value = true;
+            static constexpr bool value = typeinfo<that_t>::template is_derived_from<result_tag>;
         };
 
     private:
@@ -57,7 +54,8 @@ namespace atom
             "non destructible error types are not supported.");
 
     public:
-        static constexpr bool should_enable_copy_constructor = [] {
+        static constexpr bool should_enable_copy_constructor = []
+        {
             if (not value_type_info_t::is_copy_constructible)
                 return false;
 
@@ -73,7 +71,8 @@ namespace atom
         };
 
         template <typename in_that_t>
-        static constexpr bool should_enable_universal_copy_constructor = [] {
+        static constexpr bool should_enable_universal_copy_constructor = []
+        {
             using that_t = typeinfo<in_that_t>::pure_t;
 
             if constexpr (not is_result_api<that_t>::value)
@@ -93,7 +92,8 @@ namespace atom
             return true;
         }();
 
-        static constexpr bool should_enable_copy_operator = [] {
+        static constexpr bool should_enable_copy_operator = []
+        {
             if (not value_type_info_t::is_copyable)
                 return false;
 
@@ -108,7 +108,8 @@ namespace atom
         }();
 
         template <typename in_that_t>
-        static constexpr bool should_enable_universal_copy_operator = [] {
+        static constexpr bool should_enable_universal_copy_operator = []
+        {
             using that_t = typeinfo<in_that_t>::pure_t;
 
             if constexpr (not is_result_api<that_t>::value)
@@ -128,7 +129,8 @@ namespace atom
             return true;
         }();
 
-        static constexpr bool should_enable_move_constructor = [] {
+        static constexpr bool should_enable_move_constructor = []
+        {
             if (not value_type_info_t::is_move_constructible)
                 return false;
 
@@ -144,7 +146,8 @@ namespace atom
         }();
 
         template <typename in_that_t>
-        static constexpr bool should_enable_universal_move_constructor = [] {
+        static constexpr bool should_enable_universal_move_constructor = []
+        {
             using that_t = typeinfo<in_that_t>::pure_t;
 
             if constexpr (not is_result_api<that_t>::value)
@@ -164,7 +167,8 @@ namespace atom
             return true;
         }();
 
-        static constexpr bool should_enable_move_operator = [] {
+        static constexpr bool should_enable_move_operator = []
+        {
             if (not value_type_info_t::is_moveable)
                 return false;
 
@@ -179,7 +183,8 @@ namespace atom
         }();
 
         template <typename in_that_t>
-        static constexpr bool should_enable_universal_move_operator = [] {
+        static constexpr bool should_enable_universal_move_operator = []
+        {
             using that_t = typeinfo<in_that_t>::pure_t;
 
             if constexpr (not is_result_api<that_t>::value)
@@ -598,6 +603,145 @@ namespace atom
         constexpr auto panic_on_error(this const this_t& self) -> void
         {
             self._impl.panic_on_error();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto to_option(this auto&& self) -> option<value_t>
+        {
+            return self._impl.to_option();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename error_t>
+        constexpr auto to_option_error(this auto&& self) -> option<error_t>
+            requires(has_error<error_t>())
+        {
+            return self._impl.template to_option_error<error_t>();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        template <typename this_final_qualified_t, typename invokable_qualified_t>
+        static constexpr bool should_enable_on_value_function = []
+        {
+            using this_t = typeinfo<this_final_qualified_t>::pure_t;
+
+            if constexpr (is_result_api<this_t>::value)
+            {
+                using value_qualified_t = typeinfo<
+                    typename this_t::value_t>::template qualified_like_t<this_final_qualified_t>;
+                using signature_t = void(value_qualified_t);
+
+                if (not typeinfo<invokable_qualified_t>::template is_invokable<signature_t>)
+                    return false;
+
+                return true;
+            }
+
+            return false;
+        }();
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto on_value(this auto&& self, auto&& action) -> decltype(self)
+            requires should_enable_on_value_function<decltype(self), decltype(action)>
+        {
+            self._impl.on_value(forward<decltype(action)>(action));
+            return self;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename this_final_qualified_t, typename invokable_qualified_t, typename error_t>
+        static constexpr bool should_enable_on_error_function = []
+        {
+            using this_t = typeinfo<this_final_qualified_t>::pure_t;
+
+            if constexpr (is_result_api<this_t>::value)
+            {
+                if (not typeinfo<error_t>::is_pure)
+                    return false;
+
+                if (not has_error<error_t>())
+                    return false;
+
+                using error_qualified_t =
+                    typeinfo<error_t>::template qualified_like_t<this_final_qualified_t>;
+                using signature_t = void(error_qualified_t);
+
+                if (not typeinfo<invokable_qualified_t>::template is_invokable<signature_t>)
+                    return false;
+
+                return true;
+            }
+
+            return false;
+        }();
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename error_t>
+        constexpr auto on_error(this auto&& self, auto&& action) -> decltype(self)
+            requires should_enable_on_error_function<decltype(self), decltype(action), error_t>
+        {
+            self._impl.template on_error<error_t>(forward<decltype(action)>(action));
+            return self;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename this_final_qualified_t, typename invokable_qualified_t>
+        static constexpr bool should_enable_on_universal_error_function = []
+        {
+            using this_t = typeinfo<this_final_qualified_t>::pure_t;
+
+            if constexpr (is_result_api<this_t>::value)
+            {
+                if (not typeinfo<error_t>::is_pure)
+                    return false;
+
+                if (not has_error<error_t>())
+                    return false;
+
+                using error_qualified_t =
+                    typeinfo<error_t>::template qualified_like_t<this_final_qualified_t>;
+                using signature_t = void(error_qualified_t);
+
+                if (not this_t::error_types_list::are_all(
+                        [](auto info)
+                        {
+                            using error_qualified_t = typeinfo<typename decltype(info)::value_t>::
+                                template qualified_like_t<this_final_qualified_t>;
+                            using signature_t = void(error_qualified_t);
+
+                            return typeinfo<invokable_qualified_t>::template is_invokable<
+                                signature_t>;
+                        }))
+                    return false;
+
+                return true;
+            }
+
+            return false;
+        }();
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto on_error(this auto&& self, auto&& action) -> decltype(self)
+            requires should_enable_on_universal_error_function<decltype(self), decltype(action)>
+        {
+            self._impl.on_error(forward<decltype(action)>(action));
+            return self;
         }
 
     protected:
