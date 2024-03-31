@@ -1,13 +1,132 @@
 #pragma once
 #include <type_traits>
+#include <utility>
 
 namespace atom
 {
+    namespace typeinfo_impl
+    {
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+
+        template <typename in_value_t, typename other_t>
+        struct qualified_like_t
+        {
+            using value_t = std::remove_cvref_t<in_value_t>;
+        };
+
+        template <typename in_value_t, typename other_t>
+        struct qualified_like_t<in_value_t, const other_t>
+        {
+            using value_t = const std::remove_cvref_t<in_value_t>;
+        };
+
+        template <typename in_value_t, typename other_t>
+        struct qualified_like_t<in_value_t, volatile other_t>
+        {
+            using value_t = volatile std::remove_cvref_t<in_value_t>;
+        };
+
+        template <typename in_value_t, typename other_t>
+        struct qualified_like_t<in_value_t, const volatile other_t>
+        {
+            using value_t = const volatile std::remove_cvref_t<in_value_t>;
+        };
+
+        template <typename in_value_t, typename other_t>
+        struct qualified_like_t<in_value_t, other_t&>
+        {
+            using value_t = std::remove_cvref_t<in_value_t>&;
+        };
+
+        template <typename in_value_t, typename other_t>
+        struct qualified_like_t<in_value_t, other_t&&>
+        {
+            using value_t = std::remove_cvref_t<in_value_t>&&;
+        };
+
+        template <typename in_value_t, typename other_t>
+        struct qualified_like_t<in_value_t, const other_t&>
+        {
+            using value_t = const std::remove_cvref_t<in_value_t>&;
+        };
+
+        template <typename in_value_t, typename other_t>
+        struct qualified_like_t<in_value_t, const other_t&&>
+        {
+            using value_t = const std::remove_cvref_t<in_value_t>&&;
+        };
+
+        template <typename in_value_t, typename other_t>
+        struct qualified_like_t<in_value_t, volatile other_t&>
+        {
+            using value_t = volatile std::remove_cvref_t<in_value_t>&;
+        };
+
+        template <typename in_value_t, typename other_t>
+        struct qualified_like_t<in_value_t, volatile other_t&&>
+        {
+            using value_t = volatile std::remove_cvref_t<in_value_t>&&;
+        };
+
+        template <typename in_value_t, typename other_t>
+        struct qualified_like_t<in_value_t, const volatile other_t&>
+        {
+            using value_t = const volatile std::remove_cvref_t<in_value_t>&;
+        };
+
+        template <typename in_value_t, typename other_t>
+        struct qualified_like_t<in_value_t, const volatile other_t&&>
+        {
+            using value_t = const volatile std::remove_cvref_t<in_value_t>&&;
+        };
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+
+        template <typename value_t, typename signature>
+        struct is_invokable
+        {
+            static constexpr bool value = false;
+        };
+
+        template <typename value_t, typename return_t, typename... args_t>
+        struct is_invokable<value_t, return_t(args_t...)>
+        {
+            static constexpr bool value = std::is_invocable_r_v<return_t, value_t, args_t...>;
+        };
+
+        template <typename value_t, typename return_t, typename... args_t>
+        struct is_invokable<value_t, return_t(args_t...) const>
+        {
+            static constexpr bool value = std::is_invocable_r_v<return_t, const value_t, args_t...>;
+        };
+
+        template <typename value_t, typename return_t, typename... args_t>
+        struct is_invokable<value_t, return_t(args_t...) volatile>
+        {
+            static constexpr bool value =
+                std::is_invocable_r_v<return_t, volatile value_t, args_t...>;
+        };
+
+        template <typename value_t, typename return_t, typename... args_t>
+        struct is_invokable<value_t, return_t(args_t...) const volatile>
+        {
+            static constexpr bool value =
+                std::is_invocable_r_v<return_t, const volatile value_t, args_t...>;
+        };
+    };
+
     template <typename in_value_t>
     class typeinfo
     {
+        using this_t = typeinfo;
+
     public:
         using value_t = in_value_t;
+        using pure_type = typeinfo<std::remove_cvref_t<value_t>>;
         using pure_t = std::remove_cvref_t<value_t>;
 
         using with_const_t = std::add_const_t<value_t>;
@@ -19,6 +138,10 @@ namespace atom
         using remove_cvref_t = std::remove_cvref_t<value_t>;
         using remove_quailfiers_ref_t = std::remove_cvref_t<value_t>;
         using unqualified_t = std::remove_cv_t<value_t>;
+
+        template <typename other_t>
+        using qualified_like_t =
+            typename typeinfo_impl::qualified_like_t<in_value_t, other_t>::value_t;
 
         template <typename invokable_t>
         using get_return_t = std::invoke_result_t<invokable_t>;
@@ -37,6 +160,9 @@ namespace atom
         static constexpr bool is_pure = not is_qualified and not is_ref;
         static constexpr bool is_enum = std::is_enum_v<value_t>;
         static constexpr bool is_int = std::is_integral_v<value_t>;
+
+        template <typename signature>
+        static constexpr bool is_invokable = typeinfo_impl::is_invokable<value_t, signature>::value;
 
         template <typename base_t>
         static constexpr bool is_derived_from = std::is_base_of_v<base_t, value_t>;
@@ -57,19 +183,45 @@ namespace atom
         static constexpr bool is_destructible = std::is_destructible_v<value_t>;
 
         template <typename... args_t>
-        static constexpr bool is_trivially_constructible_from = std::is_trivially_constructible_v<value_t, args_t...>;
+        static constexpr bool is_trivially_constructible_from =
+            std::is_trivially_constructible_v<value_t, args_t...>;
 
         template <typename... args_t>
-        static constexpr bool is_trivially_asignable_from = std::is_trivially_assignable_v<value_t, args_t...>;
+        static constexpr bool is_trivially_asignable_from =
+            std::is_trivially_assignable_v<value_t, args_t...>;
 
-        static constexpr bool is_trivially_default_constructible = std::is_trivially_default_constructible_v<value_t>;
-        static constexpr bool is_trivially_copy_constructible = std::is_trivially_copy_constructible_v<value_t>;
-        static constexpr bool is_trivially_copy_assignable = std::is_trivially_copy_assignable_v<value_t>;
-        static constexpr bool is_trivially_copyable = is_trivially_copy_constructible and is_trivially_copy_assignable;
-        static constexpr bool is_trivially_move_constructible = std::is_trivially_copy_constructible_v<value_t>;
-        static constexpr bool is_trivially_move_assignable = std::is_trivially_move_assignable_v<value_t>;
-        static constexpr bool is_trivially_moveable = is_trivially_move_constructible and is_trivially_move_assignable;
+        static constexpr bool is_trivially_default_constructible =
+            std::is_trivially_default_constructible_v<value_t>;
+        static constexpr bool is_trivially_copy_constructible =
+            std::is_trivially_copy_constructible_v<value_t>;
+        static constexpr bool is_trivially_copy_assignable =
+            std::is_trivially_copy_assignable_v<value_t>;
+        static constexpr bool is_trivially_copyable =
+            is_trivially_copy_constructible and is_trivially_copy_assignable;
+        static constexpr bool is_trivially_move_constructible =
+            std::is_trivially_copy_constructible_v<value_t>;
+        static constexpr bool is_trivially_move_assignable =
+            std::is_trivially_move_assignable_v<value_t>;
+        static constexpr bool is_trivially_moveable =
+            is_trivially_move_constructible and is_trivially_move_assignable;
         static constexpr bool is_trivially_destructible = std::is_trivially_destructible_v<value_t>;
+
+        constexpr auto operator==(this const this_t& self, const this_t& other) -> bool
+        {
+            return true;
+        }
+
+        template <typename other_t>
+        constexpr auto operator==(this const this_t& self, const other_t& other) -> bool
+        {
+            return false;
+        }
+
+        template <typename other_t>
+        constexpr auto operator!=(this const this_t& self, const other_t& other) -> bool
+        {
+            return not self == other;
+        }
     };
 
     class typeutils

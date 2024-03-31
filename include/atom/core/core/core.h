@@ -26,5 +26,5 @@ namespace atom
     }
 
 #define ATOM_FORWARD(...) static_cast<decltype(__VA_ARGS__)&&>(__VA_ARGS__)
-#define ATOM_MOVE() static_cast<std::remove_reference_t<decltype(__VA_ARGS__)>&&>(__VA_ARGS__)
+#define ATOM_MOVE(...) static_cast<std::remove_reference_t<decltype(__VA_ARGS__)>&&>(__VA_ARGS__)
 }
