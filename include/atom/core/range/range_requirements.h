@@ -1,5 +1,4 @@
 #pragma once
-#include "atom/core/core/requirements.h"
 #include "atom/core/range/iter_requirements.h"
 
 // clang-format off
@@ -15,10 +14,10 @@ namespace atom
         typename range_t::iter_t;
         typename range_t::iter_end_t;
 
-        requires is_same_as<typename range_t::value_t, typename range_t::iter_t::value_t>;
+        requires std::same_as<typename range_t::value_t, typename range_t::iter_t::value_t>;
 
-        { range.get_iter() } -> is_same_as<typename range_t::iter_t>;
-        { range.get_iter_end() } -> is_same_as<typename range_t::iter_end_t>;
+        { range.get_iter() } -> std::same_as<typename range_t::iter_t>;
+        { range.get_iter_end() } -> std::same_as<typename range_t::iter_end_t>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -28,7 +27,7 @@ namespace atom
     concept _is_range_of = requires(const range_t& range)
     {
         requires _is_range<range_t>;
-        requires is_convertible_to<typename range_t::value_t, value_t>;
+        requires std::convertible_to<typename range_t::value_t, value_t>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -42,8 +41,8 @@ namespace atom
         typename range_t::mut_iter_t;
         typename range_t::mut_iter_end_t;
 
-        { range.get_mut_iter() } -> is_same_as<typename range_t::mut_iter_t>;
-        { range.get_mut_iter_end() } -> is_same_as<typename range_t::mut_iter_end_t>;
+        { range.get_mut_iter() } -> std::same_as<typename range_t::mut_iter_t>;
+        { range.get_mut_iter_end() } -> std::same_as<typename range_t::mut_iter_end_t>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -53,7 +52,7 @@ namespace atom
     concept _is_mut_range_of = requires(range_t& range)
     {
         requires _is_mut_range<range_t>;
-        requires is_convertible_to<typename range_t::value_t, value_t>;
+        requires std::convertible_to<typename range_t::value_t, value_t>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -309,7 +308,7 @@ namespace atom
     concept is_common_range = requires
     {
         requires _is_range<range_t>;
-        requires is_same_as<typename range_t::iter_t, typename range_t::iter_end_t>;
+        requires std::same_as<typename range_t::iter_t, typename range_t::iter_end_t>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -319,6 +318,6 @@ namespace atom
     concept is_mut_common_range = requires
     {
         requires is_common_range<range_t>;
-        requires is_same_as<typename range_t::mut_iter_t, typename range_t::mut_iter_end_t>;
+        requires std::same_as<typename range_t::mut_iter_t, typename range_t::mut_iter_end_t>;
     };
 }

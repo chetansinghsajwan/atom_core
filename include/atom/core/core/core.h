@@ -2,6 +2,8 @@
 #include "atom/core/_std.h"
 #include "atom/core/core/core.h"
 
+#include <concepts>
+
 namespace atom
 {
     template <typename value_t>
@@ -27,4 +29,65 @@ namespace atom
 
 #define ATOM_FORWARD(...) static_cast<decltype(__VA_ARGS__)&&>(__VA_ARGS__)
 #define ATOM_MOVE(...) static_cast<std::remove_reference_t<decltype(__VA_ARGS__)>&&>(__VA_ARGS__)
+}
+
+namespace atom
+{
+    template <typename value_t0, typename value_t1>
+    concept _is_equality_comparable_with = requires(const value_t0 v0, const value_t1 v1) {
+        { v0.is_eq(v1) } -> std::same_as<bool>;
+    };
+
+    template <typename value_t0, typename value_t1>
+    concept _is_comparable_with = requires(const value_t0 v0, const value_t1 v1) {
+        requires _is_equality_comparable_with<value_t0, value_t1>;
+
+        { v0.is_lt(v1) } -> std::same_as<bool>;
+        { v0.is_gt(v1) } -> std::same_as<bool>;
+        { v0.is_le(v1) } -> std::same_as<bool>;
+        { v0.is_ge(v1) } -> std::same_as<bool>;
+    };
+
+    template <typename value_t0, typename value_t1>
+    constexpr auto operator==(const value_t0& v0, const value_t1& v1) -> bool
+        requires _is_equality_comparable_with<value_t0, value_t1>
+    {
+        return v0.is_eq(v1);
+    }
+
+    template <typename value_t0, typename value_t1>
+    constexpr auto operator!=(const value_t0& v0, const value_t1& v1) -> bool
+        requires _is_equality_comparable_with<value_t0, value_t1>
+    {
+        return not v0.is_eq(v1);
+    }
+
+    template <typename value_t0, typename value_t1>
+    constexpr auto operator<(const value_t0& v0, const value_t1& v1) -> bool
+        requires _is_comparable_with<value_t0, value_t1>
+    {
+        return v0.is_lt(v1);
+    }
+
+    template <typename value_t0, typename value_t1>
+    constexpr auto operator>(const value_t0& v0, const value_t1& v1) -> bool
+        requires _is_comparable_with<value_t0, value_t1>
+    {
+        return v0.is_gt(v1);
+    }
+
+    template <typename value_t0, typename value_t1>
+    constexpr auto operator<=(const value_t0& v0, const value_t1& v1) -> bool
+        requires _is_comparable_with<value_t0, value_t1>
+    {
+        return v0.is_le(v1);
+    }
+
+    template <typename value_t0, typename value_t1>
+    constexpr auto operator>=(const value_t0& v0, const value_t1& v1) -> bool
+
+        requires _is_comparable_with<value_t0, value_t1>
+    {
+        return v0.is_ge(v1);
+    }
 }

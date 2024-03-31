@@ -72,5 +72,9 @@ namespace atom
 
         static constexpr bool are_trivially_destructible =
             value_types_list::are_all([](auto info) { return info.is_trivially_destructible; });
+
+        template <typename other_t>
+        static constexpr bool are_convertible_to = value_types_list::are_all(
+            [](auto info) { return info.template is_convertible_to<other_t>; });
     };
 }

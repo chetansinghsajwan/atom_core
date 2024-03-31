@@ -1,6 +1,5 @@
 #pragma once
 #include "atom/core/core/core.h"
-#include "atom/core/core/requirements.h"
 #include "atom/core/core/bitset.h"
 #include "atom/core/core/build_config.h"
 #include "atom/core/core/byte.h"

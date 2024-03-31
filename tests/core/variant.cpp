@@ -73,7 +73,7 @@ TEST_CASE("atom.core.variant")
 
     SECTION("trivial copy constructor")
     {
-        STATIC_REQUIRE(is_trivially_copy_constructible<variant<i32, char, f32>>);
+        STATIC_REQUIRE(typeinfo<variant<i32, char, f32>>::is_trivially_copy_constructible);
     }
 
     SECTION("copy constructor")
@@ -106,7 +106,7 @@ TEST_CASE("atom.core.variant")
 
     SECTION("trivial copy assignment operator")
     {
-        STATIC_REQUIRE(is_trivially_copy_assignable<variant<i32, char, f32>>);
+        STATIC_REQUIRE(typeinfo<variant<i32, char, f32>>::is_trivially_copy_assignable);
     }
 
     SECTION("copy assignment operator")
@@ -167,7 +167,7 @@ TEST_CASE("atom.core.variant")
 
     SECTION("trivial move constructor")
     {
-        STATIC_REQUIRE(is_trivially_move_constructible<variant<i32, char, f32>>);
+        STATIC_REQUIRE(typeinfo<variant<i32, char, f32>>::is_trivially_move_constructible);
     }
 
     SECTION("move constructor")
@@ -200,7 +200,7 @@ TEST_CASE("atom.core.variant")
 
     SECTION("trivial move assignment operator")
     {
-        STATIC_REQUIRE(is_trivially_move_assignable<variant<i32, char, f32>>);
+        STATIC_REQUIRE(typeinfo<variant<i32, char, f32>>::is_trivially_move_assignable);
     }
 
     SECTION("move assignment operator")

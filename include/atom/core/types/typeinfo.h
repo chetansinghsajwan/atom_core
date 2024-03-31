@@ -89,6 +89,11 @@ namespace atom
         template <typename... args_t>
         static constexpr bool is_assignable_from = std::is_assignable_v<value_t, args_t...>;
 
+        static constexpr bool is_swappable = std::is_swappable_v<value_t>;
+
+        template <typename other_t>
+        static constexpr bool is_convertible_to = std::is_convertible_v<value_t, other_t>;
+
         template <typename... args_t>
         static constexpr bool is_trivially_asignable_from =
             std::is_trivially_assignable_v<value_t, args_t...>;

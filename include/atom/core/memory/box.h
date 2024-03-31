@@ -96,7 +96,7 @@ namespace atom
         {
             // when allocator type is different, we cannot handle heap memory. so we only move the
             // object and not the memory.
-            if constexpr (not is_same_as<allocator_t,
+            if constexpr (not typeinfo<allocator_t>::template is_same_as<
                               typename typeinfo<box_t>::pure_t::value_t::allocator_t>)
             {
                 if (that._has_val())
@@ -355,7 +355,7 @@ namespace atom
 
             if constexpr (is_movable())
             {
-                if constexpr (is_move_constructible<type>)
+                if constexpr (typeinfo<type>::is_move_constructible)
                 {
                     _val.move = [](void* val, void* that)
                     { new (val) type(move(*reinterpret_cast<type*>(that))); };
@@ -370,7 +370,8 @@ namespace atom
 
             // if the object is not movable but in_allow_non_move is allowed, we allocate it on heap to
             // avoid object's move constructor.
-            if constexpr (is_movable() and allow_non_movable() and not is_move_constructible<type>)
+            if constexpr (is_movable() and allow_non_movable()
+                          and not typeinfo<type>::is_move_constructible)
             {
                 on_heap = true;
             }
@@ -653,7 +654,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename type, typename... arg_ts>
         constexpr auto emplace(arg_ts&&... args) -> type&
-            requires is_same_or_derived_from<typename typeinfo<type>::pure_t::value_t, value_t>
+            requires(typeinfo<type>::template is_same_or_derived_from<value_t>)
         {
             _impl.template emplace_val<type>(forward<arg_ts>(args)...);
             return _impl.template get_mut_val_as<type>();
@@ -664,7 +665,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename type>
         constexpr auto set(type&& obj) -> type&
-            requires is_same_or_derived_from<typename typeinfo<type>::pure_t::value_t, value_t>
+            requires(typeinfo<type>::template is_same_or_derived_from<value_t>)
         {
             _impl._set_val(forward<type>(obj));
             return _impl.template get_mut_val_as<type>();
@@ -723,7 +724,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename type>
         constexpr auto get_as() const -> const type&
-            requires is_same_or_derived_from<typename typeinfo<type>::pure_t::value_t, value_t>
+            requires(typeinfo<type>::template is_same_or_derived_from<value_t>)
         {
             ATOM_DEBUG_EXPECTS(has_val(), "value is null.");
 
@@ -735,7 +736,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename type>
         constexpr auto get_mut_as() -> type&
-            requires is_same_or_derived_from<typename typeinfo<type>::pure_t::value_t, value_t>
+            requires(typeinfo<type>::template is_same_or_derived_from<value_t>)
         {
             ATOM_DEBUG_EXPECTS(has_val(), "value is null.");
 
@@ -747,7 +748,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename type>
         constexpr auto check_get_as() const -> const type&
-            requires is_same_or_derived_from<typename typeinfo<type>::pure_t::value_t, value_t>
+            requires(typeinfo<type>::template is_same_or_derived_from<value_t>)
         {
             expects(has_val(), "value is null.");
 
@@ -759,7 +760,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename type>
         constexpr auto check_get_mut_as() -> type&
-            requires is_same_or_derived_from<typename typeinfo<type>::pure_t::value_t, value_t>
+            requires(typeinfo<type>::template is_same_or_derived_from<value_t>)
         {
             expects(has_val(), "value is null.");
 
@@ -806,9 +807,8 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename type>
-        constexpr auto mem_as() const -> const type*
-            requires is_same_or_derived_from<typename typeinfo<type>::pure_t::value_t, value_t>
-        {
+        constexpr auto mem_as() const
+            -> const type* requires(typeinfo<type>::template is_same_or_derived_from<value_t>) {
             return _impl.template mem_as<type>();
         }
 
@@ -816,9 +816,8 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename type>
-        constexpr auto mut_mem_as() -> const type*
-            requires is_same_or_derived_from<typename typeinfo<type>::pure_t::value_t, value_t>
-        {
+        constexpr auto mut_mem_as() -> const type* requires(
+                                        typeinfo<type>::template is_same_or_derived_from<value_t>) {
             return _impl.template mut_mem_as<type>();
         }
 
@@ -826,9 +825,8 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename type>
-        constexpr auto check_mem_as() const -> const type*
-            requires is_same_or_derived_from<typename typeinfo<type>::pure_t::value_t, value_t>
-        {
+        constexpr auto check_mem_as() const
+            -> const type* requires(typeinfo<type>::template is_same_or_derived_from<value_t>) {
             expects(has_val(), "value is null.");
 
             return _impl.template mem_as<type>();
@@ -838,9 +836,8 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename type>
-        constexpr auto check_mut_mem_as() -> const type*
-            requires is_same_or_derived_from<typename typeinfo<type>::pure_t::value_t, value_t>
-        {
+        constexpr auto check_mut_mem_as()
+            -> const type* requires(typeinfo<type>::template is_same_or_derived_from<value_t>) {
             expects(has_val(), "value is null.");
 
             return _impl.template mut_mem_as<type>();
@@ -1220,7 +1217,7 @@ namespace atom
         constexpr box(type_holder<type> arg_t, arg_ts&&... args)
             requires(typeinfo<value_t>::is_void
                         or (typeinfo<type>::template is_same_or_derived_from<value_t>))
-                    and is_constructible<type, arg_ts...>
+                    and (typeinfo<type>::template is_constructible_from<arg_ts...>)
             : base_t(arg_t, forward<arg_ts>(args)...)
         {}
 
@@ -1230,7 +1227,7 @@ namespace atom
         template <typename type>
         constexpr box(type&& obj)
             requires typeinfo<value_t>::is_void
-                     or is_same_or_derived_from<typename typeinfo<type>::pure_t::value_t, value_t>
+                     or (typeinfo<type>::template is_same_or_derived_from<value_t>)
             : base_t(forward<type>(obj))
         {}
 
@@ -1240,7 +1237,7 @@ namespace atom
         template <typename type>
         constexpr this_t& operator=(type&& obj)
             requires typeinfo<value_t>::is_void
-                     or is_same_or_derived_from<typename typeinfo<type>::pure_t::value_t, value_t>
+                     or (typeinfo<type>::template is_same_or_derived_from<value_t>)
         {
             _impl.set_val(forward<type>(obj));
             return *this;
@@ -1345,7 +1342,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename type>
         constexpr this_t& operator=(type&& obj)
-            requires(is_copyable<type>)
+            requires typeinfo<type>::is_copyable
         {
             _impl.set_val(forward<type>(obj));
             return *this;

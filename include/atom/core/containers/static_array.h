@@ -26,7 +26,8 @@ namespace atom
 
         template <typename... arg_ts>
         constexpr static_array(arg_ts&&... args)
-            requires(is_convertible_to<arg_ts, value_t> and ...) and (sizeof...(arg_ts) <= in_count)
+            requires(type_list<arg_ts...>::info_t::template are_convertible_to<value_t>)
+                    and (type_list<arg_ts...>::count <= in_count)
             : _arr(0)
         {}
 

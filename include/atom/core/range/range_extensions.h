@@ -1,6 +1,5 @@
 #pragma once
 #include "_range_extensions_impl.h"
-#include "atom/core/core/requirements.h"
 #include "atom/core/range/iter_requirements.h"
 #include "atom/core/range/range_requirements.h"
 #include "atom/core/range/std_iter_wrap_for_atom_iter.h"
@@ -168,8 +167,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename this_range_type>
         constexpr auto begin(this this_range_type& this_range)
-            //  -> get_std_mut_iter_type<this_range_type>
-            // requires is_mut_range<this_range_type>
+        //  -> get_std_mut_iter_type<this_range_type>
+        // requires is_mut_range<this_range_type>
         {
             using impl_type = get_impl_type<this_range_type>;
             return impl_type::begin(this_range);
@@ -180,8 +179,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename this_range_type>
         constexpr auto end(this this_range_type& this_range)
-            //  -> get_std_mut_iter_end_type<this_range_type>
-            // requires is_mut_range<this_range_type>
+        //  -> get_std_mut_iter_end_type<this_range_type>
+        // requires is_mut_range<this_range_type>
         {
             using impl_type = get_impl_type<this_range_type>;
             return impl_type::end(this_range);
@@ -452,8 +451,8 @@ namespace atom
         constexpr auto find(this const this_range_type& this_range,
             const that_value_type& value) -> get_iter_type<this_range_type>
             requires is_range<this_range_type>
-                     and is_equality_comparable_with<get_value_type<this_range_type>,
-                         that_value_type>
+                     and (typeinfo<get_value_type<this_range_type>>::
+                             template is_equality_comparable_with<that_value_type>)
         {
             using impl_type = get_impl_type<this_range_type>;
             return impl_type::find_elem(this_range, value);
@@ -466,8 +465,9 @@ namespace atom
         constexpr auto find_range(this const this_range_type& this_range,
             const that_range_type& that_range) -> get_iter_type<this_range_type>
             requires is_range<this_range_type> and is_fwd_range<that_range_type>
-                     and is_equality_comparable_with<get_value_type<this_range_type>,
-                         typename that_range_type::value_t>
+                     and (typeinfo<get_value_type<this_range_type>>::
+                             template is_equality_comparable_with<
+                                 typename that_range_type::value_t>)
         {
             using impl_type = get_impl_type<this_range_type>;
             return impl_type::find_range(this_range, that_range);
@@ -489,8 +489,8 @@ namespace atom
         constexpr auto contains(
             this const this_range_type& this_range, const that_value_type& value) -> bool
             requires is_range<this_range_type>
-                     and is_equality_comparable_with<get_value_type<this_range_type>,
-                         that_value_type>
+                     and (typeinfo<get_value_type<this_range_type>>::
+                             template is_equality_comparable_with<that_value_type>)
         {
             using impl_type = get_impl_type<this_range_type>;
             return impl_type::contains(this_range, value);
@@ -503,8 +503,9 @@ namespace atom
         constexpr auto contains(
             this const this_range_type& this_range, const that_range_type& that_range) -> bool
             requires is_range<this_range_type> and is_fwd_range<that_range_type>
-                     and is_equality_comparable_with<get_value_type<this_range_type>,
-                         typename that_range_type::value_t>
+                     and (typeinfo<get_value_type<this_range_type>>::
+                             template is_equality_comparable_with<
+                                 typename that_range_type::value_t>)
         {
             using impl_type = get_impl_type<this_range_type>;
             return impl_type::contains(this_range, that_range);
@@ -523,8 +524,9 @@ namespace atom
         constexpr auto compare(
             this const this_range_type& this_range, const that_range_type& that_range) -> i8
             requires is_range<this_range_type> and is_range<that_range_type>
-                     and is_equality_comparable_with<get_value_type<this_range_type>,
-                         typename that_range_type::value_t>
+                     and (typeinfo<get_value_type<this_range_type>>::
+                             template is_equality_comparable_with<
+                                 typename that_range_type::value_t>)
         {
             using impl_type = get_impl_type<this_range_type>;
             return impl_type::compare(this_range, that_range);
@@ -537,8 +539,9 @@ namespace atom
         constexpr auto is_eq(
             this const this_range_type& this_range, const that_range_type& that_range) -> bool
             requires is_range<this_range_type> and is_range<that_range_type>
-                     and is_equality_comparable_with<get_value_type<this_range_type>,
-                         typename that_range_type::value_t>
+                     and (typeinfo<get_value_type<this_range_type>>::
+                             template is_equality_comparable_with<
+                                 typename that_range_type::value_t>)
         {
             using impl_type = get_impl_type<this_range_type>;
             return impl_type::is_eq(this_range, that_range);
@@ -579,7 +582,8 @@ namespace atom
         constexpr auto write_elems(
             this this_range_type& this_range, value_type1& val) -> this_range_type&
             requires is_mut_range<this_range_type>
-                     and is_assignable<get_value_type<this_range_type>, value_type1>
+                     and (typeinfo<get_value_type<this_range_type>>::template is_assignable_from<
+                         value_type1>)
         {
             using impl_type = get_impl_type<this_range_type>;
             impl_type::write_elems(this_range, val);
@@ -595,7 +599,8 @@ namespace atom
         constexpr auto write_elems_no_optimize(
             this this_range_type& this_range, value_type1& val) -> this_range_type&
             requires is_mut_range<this_range_type>
-                     and is_assignable<get_value_type<this_range_type>, value_type1>
+                     and (typeinfo<get_value_type<this_range_type>>::template is_assignable_from<
+                         value_type1>)
         {
             using impl_type = get_impl_type<this_range_type>;
             impl_type::write_elems_no_optimize(this_range, val);
@@ -610,7 +615,7 @@ namespace atom
         template <typename this_range_type>
         constexpr auto shift_fwd(this this_range_type& this_range, usize steps) -> this_range_type&
             requires is_mut_range<this_range_type>
-                     and is_move_assignable<get_value_type<this_range_type>>
+                     and typeinfo<get_value_type<this_range_type>>::is_move_assignable
         {
             using impl_type = get_impl_type<this_range_type>;
             impl_type::shift_fwd(this_range, steps);
@@ -623,7 +628,7 @@ namespace atom
         template <typename this_range_type>
         constexpr auto shift_bwd(this this_range_type& this_range, usize steps) -> this_range_type&
             requires is_mut_range<this_range_type>
-                     and is_move_assignable<get_value_type<this_range_type>>
+                     and typeinfo<get_value_type<this_range_type>>::is_move_assignable
         {
             using impl_type = get_impl_type<this_range_type>;
             impl_type::shift_bwd(this_range, steps);
@@ -635,7 +640,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename this_range_type>
         constexpr auto shift_by(this this_range_type& this_range, isize steps) -> this_range_type&
-            requires is_mut_range<this_range_type> and is_swappable<get_value_type<this_range_type>>
+            requires is_mut_range<this_range_type>
+                     and typeinfo<get_value_type<this_range_type>>::is_swappable
         {
             using impl_type = get_impl_type<this_range_type>;
             impl_type::shift_by(this_range, steps);
@@ -647,7 +653,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename this_range_type>
         constexpr auto rotate_fwd(this this_range_type& this_range, usize steps) -> this_range_type&
-            requires is_mut_range<this_range_type> and is_swappable<get_value_type<this_range_type>>
+            requires is_mut_range<this_range_type>
+                     and typeinfo<get_value_type<this_range_type>>::is_swappable
         {
             using impl_type = get_impl_type<this_range_type>;
             impl_type::rotate_fwd(this_range, steps);
@@ -659,7 +666,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename this_range_type>
         constexpr auto rotate_bwd(this this_range_type& this_range, usize steps) -> this_range_type&
-            requires is_mut_range<this_range_type> and is_swappable<get_value_type<this_range_type>>
+            requires is_mut_range<this_range_type>
+                     and typeinfo<get_value_type<this_range_type>>::is_swappable
         {
             using impl_type = get_impl_type<this_range_type>;
             impl_type::rotate_bwd(this_range, steps);
@@ -671,7 +679,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename this_range_type>
         constexpr auto rotate_by(this this_range_type& this_range, isize steps) -> this_range_type&
-            requires is_mut_range<this_range_type> and is_swappable<get_value_type<this_range_type>>
+            requires is_mut_range<this_range_type>
+                     and typeinfo<get_value_type<this_range_type>>::is_swappable
         {
             using impl_type = get_impl_type<this_range_type>;
             impl_type::rotate_by(this_range, steps);
@@ -684,7 +693,7 @@ namespace atom
         template <typename this_range_type>
         constexpr auto destroy_elems(this this_range_type& this_range) -> this_range_type&
             requires is_mut_range<this_range_type>
-                     and is_destructible<get_value_type<this_range_type>>
+                     and typeinfo<get_value_type<this_range_type>>::is_destructible
         {
             using impl_type = get_impl_type<this_range_type>;
             impl_type::destroy_elems(this_range);
