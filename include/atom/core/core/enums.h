@@ -75,7 +75,8 @@ namespace atom::enums
     constexpr auto from_string(string_view str, comparer_t&& comparer) -> option<enum_t>
         requires is_enum<enum_t>
     {
-        return _enums_impl<enum_t, is_flags<enum_t>>::from_string(str, ATOM_FORWARD(comparer));
+        return _enums_impl<enum_t, is_flags<enum_t>>::from_string(
+            str, forward<comparer_t>(comparer));
     }
 
     /// --------------------------------------------------------------------------------------------
