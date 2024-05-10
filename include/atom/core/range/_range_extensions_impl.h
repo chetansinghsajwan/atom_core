@@ -143,7 +143,7 @@ namespace atom
         template <typename this_range_t>
         static constexpr auto get_front_mut(this_range_t& this_range) -> value_t&
         {
-            return get_data(this_range)[0];
+            return get_mut_data(this_range)[0];
         }
 
         template <typename this_range_t>

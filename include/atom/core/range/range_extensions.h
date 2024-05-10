@@ -326,10 +326,29 @@ namespace atom
             this this_range_type& this_range) -> get_value_type<this_range_type>&
             requires is_mut_array_range<this_range_type>
         {
+            // todo: fix this, this check is giving wrong result in atom.engine.
             ATOM_DEBUG_EXPECTS(not this_range.this_type::is_empty(), "range is empty.");
 
             using impl_type = get_impl_type<this_range_type>;
-            return impl_type::get_mut_front(this_range);
+            return impl_type::get_front_mut(this_range);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// access first element.
+        ///
+        /// # time complexity
+        /// constant.
+        /// ----------------------------------------------------------------------------------------
+        template <typename this_range_type>
+        constexpr auto get_mut_front(
+            this this_range_type&& this_range) -> get_value_type<this_range_type>&
+            requires is_mut_array_range<this_range_type>
+        {
+            // todo: fix this, this check is giving wrong result in atom.engine.
+            ATOM_DEBUG_EXPECTS(not this_range.this_type::is_empty(), "range is empty.");
+
+            using impl_type = get_impl_type<this_range_type>;
+            return impl_type::get_front_mut(this_range);
         }
 
         /// ----------------------------------------------------------------------------------------

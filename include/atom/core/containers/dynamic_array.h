@@ -18,6 +18,7 @@ namespace atom
             not typeinfo<in_elem_t>::is_void, "dynamic_array does not support void.");
 
     private:
+        using this_t = dynamic_array<in_elem_t, in_allocator_t>;
         using _impl_t = _dynamic_array_impl_using_std_vector<in_elem_t, in_allocator_t>;
 
     public:
@@ -27,6 +28,23 @@ namespace atom
         using iter_end_t = iter_t;
         using mut_iter_t = mut_array_iter<value_t>;
         using mut_iter_end_t = mut_iter_t;
+
+    public:
+        static constexpr auto with_count(usize count, const value_t& value) -> this_t&&
+        {
+            this_t arr;
+            for (usize i = 0; i < count; i++)
+                arr._impl.emplace_back(value);
+
+            return move(arr);
+        }
+
+        static constexpr auto with_capacity(usize capacity) -> this_t&&
+        {
+            this_t arr;
+            arr.reserve(capacity);
+            return move(arr);
+        }
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -457,23 +475,23 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// removes `count_` elements from front.
+        /// removes `count` elements from front.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto remove_front(usize count_ = 1)
+        constexpr auto remove_front(usize count = 1)
         {
-            ATOM_DEBUG_EXPECTS(count_ <= get_count());
+            ATOM_DEBUG_EXPECTS(count <= get_count());
 
-            _impl.remove_front(count_);
+            _impl.remove_front(count);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// removes `count_` elements from back.
+        /// removes `count` elements from back.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto remove_back(usize count_ = 1)
+        constexpr auto remove_back(usize count = 1)
         {
-            ATOM_DEBUG_EXPECTS(count_ <= get_count());
+            ATOM_DEBUG_EXPECTS(count <= get_count());
 
-            _impl.remove_back(count_);
+            _impl.remove_back(count);
         }
 
         /// ----------------------------------------------------------------------------------------
