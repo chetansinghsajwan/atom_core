@@ -26,6 +26,26 @@ namespace atom
             return final_t(range_from(str));
         }
 
+        static constexpr auto from_cstr(const char* str)
+        {
+            return final_t(range_from(str));
+        }
+
+        static constexpr auto from_cstr(const char* str, const usize max_count)
+        {
+            usize count = max_count;
+            for (usize i = 0; i < max_count; i++)
+            {
+                if (str[i] == '\0')
+                {
+                    count = i + 1;
+                    break;
+                }
+            }
+
+            return final_t(range_from(str, count));
+        }
+
         template <typename this_string_type>
         constexpr auto to_std(this const this_string_type& self) -> std::string_view
         {

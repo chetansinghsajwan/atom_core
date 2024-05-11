@@ -29,4 +29,10 @@ namespace atom::math
     {
         return std::clamp(num, low, high);
     }
+
+    template <typename num_t>
+    constexpr auto min_of(num_t num0, num_t num1) -> num_t
+    {
+        return num0 < num1 ? num0 : num1;
+    }
 }
