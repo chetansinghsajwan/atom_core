@@ -2,7 +2,8 @@
 #include "atom/core/string/_format_arg_wrapper.h"
 #include "atom/core/string/string_formatter.h"
 #include "atom/core/types.h"
-#include "fmt/core.h"
+
+// #include "fmt/core.h"
 
 namespace atom
 {
@@ -21,17 +22,21 @@ namespace atom
             using _formatter_fmt = string_formatter<value_t, string_formatter_level::fmt>;
             using _formatter_user = string_formatter<value_t, string_formatter_level::user>;
 
-            if constexpr (std::default_initializable<_formatter_atom>)
+            using _formatter_atom_typeinfo = typeinfo<_formatter_atom>;
+            using _formatter_fmt_typeinfo = typeinfo<_formatter_fmt>;
+            using _formatter_user_typeinfo = typeinfo<_formatter_user>;
+
+            if constexpr (_formatter_atom_typeinfo::is_complete)
             {
-                return typeinfo<_formatter_atom>();
+                return _formatter_atom_typeinfo();
             }
-            else if constexpr (std::default_initializable<_formatter_fmt>)
+            else if constexpr (_formatter_fmt_typeinfo::is_complete)
             {
-                return typeinfo<_formatter_fmt>();
+                return _formatter_fmt_typeinfo();
             }
-            else if constexpr (std::default_initializable<_formatter_user>)
+            else if constexpr (_formatter_user_typeinfo::is_complete)
             {
-                return typeinfo<_formatter_user>();
+                return _formatter_user_typeinfo();
             }
             else
             {

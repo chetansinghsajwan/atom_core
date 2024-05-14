@@ -2,7 +2,7 @@
 #include "atom/core/string/_format_arg_wrapper.h"
 #include "atom/core/string/string_view.h"
 #include "atom/core/types.h"
-#include "fmt/core.h"
+// #include "fmt/core.h"
 
 namespace atom
 {

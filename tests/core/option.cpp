@@ -1,4 +1,5 @@
-#include "atom.core.h"
+import atom.core;
+
 #include "helpers/tracked_type.h"
 #include "helpers/custom_type.h"
 #include "catch2/catch_test_macros.hpp"

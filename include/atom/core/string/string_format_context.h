@@ -1,7 +1,7 @@
 #pragma once
 #include "atom/core/range/array_iter.h"
 #include "atom/core/string/string_view.h"
-#include "fmt/core.h"
+// #include "fmt/core.h"
 
 namespace atom
 {

@@ -45,6 +45,8 @@ namespace atom
         static constexpr bool is_same_or_derived_from =
             is_same_as<other_t> or is_derived_from<other_t>;
 
+        static constexpr bool is_complete = typeinfo_impl::is_complete<value_t>::value;
+
         static constexpr bool is_void = std::is_void_v<value_t>;
         static constexpr bool is_not_void = not is_void;
 

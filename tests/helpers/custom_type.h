@@ -1,5 +1,4 @@
 #pragma once
-#include "atom.core.h"
 
 namespace atom::tests
 {

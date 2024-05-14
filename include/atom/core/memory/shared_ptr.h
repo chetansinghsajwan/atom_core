@@ -123,9 +123,9 @@ namespace atom
     template <typename value_t>
     class shared_ptr_default_destroyer
     {
-        ATOM_STATIC_ASSERTS(
+        static_assert(
             typeinfo<value_t>::is_pure, "shared_ptr_default_destroyer only supports pure types.");
-        ATOM_STATIC_ASSERTS(
+        static_assert(
             not typeinfo<value_t>::is_void, "shared_ptr_default_destroyer does not support void.");
 
     public:
@@ -139,8 +139,8 @@ namespace atom
     template <typename in_value_t>
     class shared_ptr
     {
-        ATOM_STATIC_ASSERTS(typeinfo<in_value_t>::is_pure, "shared_ptr only supports pure types.");
-        ATOM_STATIC_ASSERTS(not typeinfo<in_value_t>::is_void, "shared_ptr does not support void.");
+        static_assert(typeinfo<in_value_t>::is_pure, "shared_ptr only supports pure types.");
+        static_assert(not typeinfo<in_value_t>::is_void, "shared_ptr does not support void.");
 
     private:
         using this_t = shared_ptr;

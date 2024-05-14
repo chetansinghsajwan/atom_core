@@ -1,11 +1,28 @@
 #pragma once
-#include <type_traits>
-#include <utility>
+
+// #include <type_traits>
+// #include <utility>
 
 namespace atom
 {
     namespace typeinfo_impl
     {
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+
+        template <class T, class = void>
+        struct is_complete
+        {
+            static constexpr bool value = false;
+        };
+
+        template <class T>
+        struct is_complete<T, decltype(void(sizeof(T)))>
+        {
+            static constexpr bool value = true;
+        };
+
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------

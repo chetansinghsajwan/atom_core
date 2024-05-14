@@ -29,8 +29,8 @@ namespace atom
 
     public:
         using value_type = typename iter_t::value_t;
-        using size_type = usize;
-        using difference_type = isize;
+        using size_type = std::size_t;
+        using difference_type = std::ptrdiff_t;
         using iterator_category = std_iter_cat_for_atom_iter<iter_t>;
         using pointer = value_type*;
         using reference = value_type&;
@@ -47,40 +47,52 @@ namespace atom
 
     public:
         constexpr auto operator*() const -> const value_type&
-            requires(is_iter<iter_t>)
+            requires is_iter<iter_t>
         {
             return iter.value();
         }
 
         constexpr auto operator*() -> value_type&
-            requires(is_mut_iter<iter_t>)
+            requires is_mut_iter<iter_t>
         {
             return iter.mut_value();
         }
 
+        constexpr auto operator->() const -> const value_type*
+            requires is_iter<iter_t>
+        {
+            return &iter.value();
+        }
+
+        constexpr auto operator->() -> value_type*
+            requires is_mut_iter<iter_t>
+        {
+            return &iter.mut_value();
+        }
+
         template <class iter_end_t>
         constexpr auto operator==(const std_iter_wrap_for_atom_iter<iter_end_t>& that) const -> bool
-            requires(is_iter_with_end<iter_t, iter_end_t>)
+            requires is_iter_with_end<iter_t, iter_end_t>
         {
             return iter.is_eq(that.iter);
         }
 
         template <class iter_end_t>
         constexpr auto operator!=(const std_iter_wrap_for_atom_iter<iter_end_t>& that) const -> bool
-            requires(is_iter_with_end<iter_t, iter_end_t>)
+            requires is_iter_with_end<iter_t, iter_end_t>
         {
             return not iter.is_eq(that.iter);
         }
 
         constexpr auto operator++() -> this_t&
-            requires(is_iter<iter_t>)
+            requires is_iter<iter_t>
         {
             iter.next();
             return *this;
         }
 
         constexpr auto operator++(int) -> this_t
-            requires(is_iter<iter_t>)
+            requires is_iter<iter_t>
         {
             this_t tmp(iter);
             tmp.iter.next();
@@ -88,14 +100,14 @@ namespace atom
         }
 
         constexpr auto operator--() -> this_t&
-            requires(is_bidi_iter<iter_t>)
+            requires is_bidi_iter<iter_t>
         {
             iter.prev();
             return *this;
         }
 
         constexpr auto operator--(int) const -> this_t
-            requires(is_bidi_iter<iter_t>)
+            requires is_bidi_iter<iter_t>
         {
             this_t tmp(iter);
             tmp.iter.prev();
@@ -103,7 +115,7 @@ namespace atom
         }
 
         constexpr auto operator+(difference_type steps) -> this_t
-            requires(is_jump_iter<iter_t>)
+            requires is_jump_iter<iter_t>
         {
             // todo: review this. should we accept steps as difference_type.
             ATOM_DEBUG_EXPECTS(steps >= 0);
@@ -114,7 +126,7 @@ namespace atom
         }
 
         constexpr auto operator+=(difference_type steps) -> this_t
-            requires(is_jump_iter<iter_t>)
+            requires is_jump_iter<iter_t>
         {
             ATOM_DEBUG_EXPECTS(steps >= 0);
 
@@ -123,7 +135,7 @@ namespace atom
         }
 
         constexpr auto operator-(difference_type steps) -> this_t
-            requires(is_jump_iter<iter_t>)
+            requires is_jump_iter<iter_t>
         {
             ATOM_DEBUG_EXPECTS(steps >= 0);
 
@@ -133,7 +145,7 @@ namespace atom
         }
 
         constexpr auto operator-=(difference_type steps) -> this_t
-            requires(is_jump_iter<iter_t>)
+            requires is_jump_iter<iter_t>
         {
             ATOM_DEBUG_EXPECTS(steps >= 0);
 
@@ -142,7 +154,7 @@ namespace atom
         }
 
         constexpr auto operator-(const this_t& that) const -> difference_type
-            requires(is_jump_iter<iter_t>)
+            requires is_jump_iter<iter_t>
         {
             return iter.compare(that.iter);
         }

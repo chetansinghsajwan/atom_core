@@ -12,9 +12,9 @@ namespace atom
     template <typename in_elem_t, typename in_allocator_t = default_mem_allocator>
     class dynamic_array: public range_extensions
     {
-        ATOM_STATIC_ASSERTS(
+        static_assert(
             not typeinfo<in_elem_t>::is_ref, "dynamic_array does not supports ref types.");
-        ATOM_STATIC_ASSERTS(
+        static_assert(
             not typeinfo<in_elem_t>::is_void, "dynamic_array does not support void.");
 
     private:

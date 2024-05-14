@@ -404,9 +404,9 @@ namespace atom
     template <typename... value_ts>
     class variant
     {
-        ATOM_STATIC_ASSERTS(
+        static_assert(
             type_list<value_ts...>::are_unique(), "every type in value_ts... should be unique.");
-        ATOM_STATIC_ASSERTS(
+        static_assert(
             type_list<value_ts...>::count > 0, "at least one type needs to be specified.");
 
     private:

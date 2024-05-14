@@ -9,17 +9,16 @@
     let
         system = "x86_64-linux";
         pkgs = nixpkgs.legacyPackages.${system};
-        stdenv = pkgs.llvmPackages_17.libcxxStdenv;
+        stdenv = pkgs.llvmPackages_18.libcxxStdenv;
     in
     {
         devShells.${system}.default = stdenv.mkDerivation {
             name = "atom.core";
             buildInputs = with pkgs; [
-                cmake-format
-                coreutils
-                git
                 cmake
+                cmake-format
                 ninja
+                git
             ];
         };
     };

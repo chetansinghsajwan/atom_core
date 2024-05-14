@@ -1,6 +1,6 @@
 #pragma once
 #include "atom/core/types.h"
-#include "fmt/core.h"
+// #include "fmt/core.h"
 
 namespace atom
 {

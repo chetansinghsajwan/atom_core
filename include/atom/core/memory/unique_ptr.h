@@ -12,9 +12,9 @@ namespace atom
     template <typename value_t>
     class unique_ptr_default_destroyer
     {
-        ATOM_STATIC_ASSERTS(
+        static_assert(
             typeinfo<value_t>::is_pure, "unique_ptr_default_destroyer only supports pure types.");
-        ATOM_STATIC_ASSERTS(
+        static_assert(
             not typeinfo<value_t>::is_void, "unique_ptr_default_destroyer does not support void.");
 
     public:
@@ -29,10 +29,10 @@ namespace atom
         typename in_destroyer_t = unique_ptr_default_destroyer<in_value_t>>
     class unique_ptr
     {
-        ATOM_STATIC_ASSERTS(typeinfo<in_value_t>::is_pure, "unique_ptr only supports pure types.");
-        ATOM_STATIC_ASSERTS(not typeinfo<in_value_t>::is_void, "unique_ptr does not support void.");
-        ATOM_STATIC_ASSERTS(typeinfo<in_destroyer_t>::is_pure);
-        ATOM_STATIC_ASSERTS(not typeinfo<in_destroyer_t>::is_void);
+        static_assert(typeinfo<in_value_t>::is_pure, "unique_ptr only supports pure types.");
+        static_assert(not typeinfo<in_value_t>::is_void, "unique_ptr does not support void.");
+        static_assert(typeinfo<in_destroyer_t>::is_pure);
+        static_assert(not typeinfo<in_destroyer_t>::is_void);
 
     private:
         template <typename other_value_t, typename other_destroyer_t>

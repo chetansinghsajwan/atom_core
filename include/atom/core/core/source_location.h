@@ -1,8 +1,8 @@
 #pragma once
 #include "atom/core/core/build_config.h"
 
-#include <source_location>
-#include <string_view>
+// #include <source_location>
+// #include <string_view>
 
 namespace atom
 {
@@ -24,25 +24,19 @@ namespace atom
             u32 column = __builtin_COLUMN()) -> source_location
         {
             return source_location{
-                .line = line, .column = column, .func_name = func_name, .file_name = file_name
+                .file_name = file_name,
+                .line = line,
+                .column = column,
+                .func_name = func_name,
             };
         }
 #else
-        static consteval auto current(std::source_location src = std::source_location::current())
-            -> source_location
+        static consteval auto current(
+            std::source_location src = std::source_location::current()) -> source_location
         {
             return source_location(src.file_name(), src.line(), src.column(), src.function_name());
         }
 #endif
-
-    public:
-        constexpr source_location(std::string_view file_name, unsigned int line,
-            unsigned int column, std::string_view func_name)
-            : file_name(file_name)
-            , line(line)
-            , column(column)
-            , func_name(func_name)
-        {}
 
     public:
         std::string_view file_name;

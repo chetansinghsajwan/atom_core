@@ -703,16 +703,6 @@ namespace atom
 
             if constexpr (is_result_api<this_t>::value)
             {
-                if (not typeinfo<error_t>::is_pure)
-                    return false;
-
-                if (not has_error<error_t>())
-                    return false;
-
-                using error_qualified_t =
-                    typeinfo<error_t>::template unpure_like_t<this_final_qualified_t>::value_t;
-                using signature_t = void(error_qualified_t);
-
                 if (not this_t::error_types_list::are_all(
                         [](auto info)
                         {

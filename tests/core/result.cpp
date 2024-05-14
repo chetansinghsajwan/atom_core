@@ -1,4 +1,5 @@
-#include "atom.core.h"
+import atom.core;
+
 #include "catch2/catch_all.hpp"
 
 using namespace atom;

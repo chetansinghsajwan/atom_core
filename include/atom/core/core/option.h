@@ -451,8 +451,8 @@ namespace atom
     template <typename in_value_t>
     class option
     {
-        ATOM_STATIC_ASSERTS(typeinfo<in_value_t>::is_pure, "option supports only pure types");
-        ATOM_STATIC_ASSERTS(
+        static_assert(typeinfo<in_value_t>::is_pure, "option supports only pure types");
+        static_assert(
             not typeinfo<in_value_t>::is_void, "option does not support void type.");
 
     private:

@@ -1,7 +1,7 @@
 #pragma once
 #include "atom/core/core.h"
 #include "atom/core/range/std_iter_wrap_for_atom_iter.h"
-#include <algorithm>
+// #include <algorithm>
 
 namespace atom
 {
@@ -192,7 +192,7 @@ namespace atom
 
         template <typename this_range_t, typename that_range_type>
         static constexpr auto compare(
-            const const this_range_t& this_range, that_range_type& that_range) -> i8
+            const this_range_t& this_range, that_range_type& that_range) -> i8
         {
             std_iter_wrap_for_atom_iter std_this_begin(get_iter(this_range));
             std_iter_wrap_for_atom_iter std_this_end(get_iter_end(this_range));

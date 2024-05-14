@@ -3,7 +3,7 @@
 #include "atom/core/types/typeinfo.h"
 #include "atom/core/math.h"
 
-#include <concepts>
+// #include <concepts>
 
 namespace atom
 {

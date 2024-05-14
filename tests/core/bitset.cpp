@@ -1,6 +1,6 @@
-#include "catch2/catch_test_macros.hpp"
+import atom.core;
 
-#include "atom.core.h"
+#include "catch2/catch_test_macros.hpp"
 
 using namespace atom;
 
