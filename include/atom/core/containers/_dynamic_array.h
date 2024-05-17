@@ -5,7 +5,7 @@
 #include "atom/core/memory/default_mem_allocator.h"
 #include "atom/core/contracts.h"
 #include "atom/core/range/array_iter.h"
-#include "atom/core/math.h"
+// #include "atom/core/math.h"
 
 namespace atom
 {

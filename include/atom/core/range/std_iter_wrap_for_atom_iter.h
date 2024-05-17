@@ -1,7 +1,7 @@
 #pragma once
-#include "atom/core/_std.h"
+// #include "atom/core/_std.h"
 #include "atom/core/core.h"
-#include "atom/core/types.h"
+// #include "atom/core/types.h"
 #include "atom/core/contracts.h"
 #include "atom/core/range/iter_requirements.h"
 #include "atom/core/range/range_requirements.h"

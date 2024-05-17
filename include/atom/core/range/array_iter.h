@@ -1,6 +1,6 @@
 #pragma once
 #include "atom/core/core.h"
-#include "atom/core/types.h"
+// #include "atom/core/types.h"
 
 namespace atom
 {

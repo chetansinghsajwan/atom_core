@@ -1,17 +1,19 @@
-#pragma once
-#include "atom/core/types/typeutils.h"
-#include "atom/core/types/typeinfo.h"
-#include "atom/core/math.h"
+export module atom.core:types.typelist;
 
-// #include <concepts>
+import std;
+import :types.typeutils;
+import :types.typeinfo;
+import :math;
 
 namespace atom
 {
+    using usize = std::size_t;
+
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename... types>
-    class type_list;
+    export template <typename... types>
+    class typelist;
 
     /// --------------------------------------------------------------------------------------------
     ///
@@ -249,10 +251,10 @@ namespace atom
         class add_first;
 
         template <typename in_t, typename... types>
-        class add_first<in_t, type_list<types...>>
+        class add_first<in_t, typelist<types...>>
         {
         public:
-            using value_t = type_list<in_t, types...>;
+            using value_t = typelist<in_t, types...>;
         };
 
         ////////////////////////////////////////////////////////////////////////////////////////////
@@ -265,10 +267,10 @@ namespace atom
         class add_last;
 
         template <typename in_t, typename... types>
-        class add_last<in_t, type_list<types...>>
+        class add_last<in_t, typelist<types...>>
         {
         public:
-            using value_t = type_list<types..., in_t>;
+            using value_t = typelist<types..., in_t>;
         };
 
         ////////////////////////////////////////////////////////////////////////////////////////////
@@ -284,7 +286,7 @@ namespace atom
         class remove_if<predicate_t>
         {
         public:
-            using value_t = type_list<>;
+            using value_t = typelist<>;
         };
 
         template <template <typename in_t> typename predicate_t, typename in_t, typename... types>
@@ -328,7 +330,7 @@ namespace atom
         class remove_first<in_t, types...>
         {
         public:
-            using value_t = type_list<types...>;
+            using value_t = typelist<types...>;
         };
 
         ////////////////////////////////////////////////////////////////////////////////////////////
@@ -351,7 +353,7 @@ namespace atom
         class remove_last<in_t>
         {
         public:
-            using value_t = type_list<>;
+            using value_t = typelist<>;
         };
 
         ////////////////////////////////////////////////////////////////////////////////////////////
@@ -391,7 +393,7 @@ namespace atom
         class replace_all<replace_t, with_t>
         {
         public:
-            using value_t = type_list<>;
+            using value_t = typelist<>;
         };
 
         template <typename replace_t, typename with_t, typename in_t, typename... types>
@@ -407,12 +409,12 @@ namespace atom
     };
 
     template <typename... types>
-    class type_list_impl;
+    class typelist_impl;
 
     template <typename type0, typename... types>
-    class type_list_impl<type0, types...>
+    class typelist_impl<type0, types...>
     {
-        using this_t = type_list_impl;
+        using this_t = typelist_impl;
 
     public:
         template <typename invokable_t>
@@ -420,7 +422,7 @@ namespace atom
         {
             func(typeinfo<type0>());
 
-            type_list_impl<types...>::for_each(forward<invokable_t>(func));
+            typelist_impl<types...>::for_each(forward<invokable_t>(func));
         }
 
         template <typename predicate_t>
@@ -429,7 +431,7 @@ namespace atom
             if (not pred(typeinfo<type0>()))
                 return false;
 
-            return type_list_impl<types...>::are_all(forward<predicate_t>(pred));
+            return typelist_impl<types...>::are_all(forward<predicate_t>(pred));
         }
 
         template <typename typeinfo_t>
@@ -438,11 +440,11 @@ namespace atom
             if (typeinfo<type0>::template is_same_as<typename typeinfo_t::value_t>)
                 return true;
 
-            return type_list_impl<types...>::has(info);
+            return typelist_impl<types...>::has(info);
         }
 
         template <typename other_type0, typename... other_types>
-        static consteval auto has_all(type_list_impl<other_type0, other_types...> list) -> bool
+        static consteval auto has_all(typelist_impl<other_type0, other_types...> list) -> bool
         {
             if (not has(typeinfo<other_type0>()))
                 return false;
@@ -450,12 +452,12 @@ namespace atom
             if constexpr (sizeof...(other_types) == 0)
                 return true;
             else
-                return this_t::has_all(type_list_impl<other_types...>());
+                return this_t::has_all(typelist_impl<other_types...>());
         }
     };
 
     template <>
-    class type_list_impl<>
+    class typelist_impl<>
     {
     public:
         template <typename invokable_t>
@@ -475,17 +477,17 @@ namespace atom
         }
     };
 
-    template <typename...>
+    export template <typename...>
     class typeinfo_list;
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename... ts>
-    class type_list
+    export template <typename... types>
+    class typelist
     {
-        using this_t = type_list;
-        using impl_t = type_list_impl<types...>;
+        using this_t = typelist;
+        using impl_t = typelist_impl<types...>;
 
     public:
         using info_t = typeinfo_list<this_t>;

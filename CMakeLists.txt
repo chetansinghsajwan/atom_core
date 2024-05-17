@@ -15,12 +15,14 @@ find_package(magic_enum REQUIRED)
 
 add_library(atom.core STATIC)
 
-file(GLOB_RECURSE modules "source/**.cppm")
+file(GLOB_RECURSE modules "source/**.cppm" "include/**.cppm")
 target_sources(atom.core PUBLIC FILE_SET CXX_MODULES FILES ${modules})
 
 target_include_directories(atom.core PRIVATE "include/")
 target_link_libraries(atom.core PRIVATE "fmt::fmt-header-only" "magic_enum::magic_enum")
 target_compile_features(atom.core PUBLIC "cxx_std_23")
+target_compile_options(atom.core PUBLIC "-Wno-deprecated-declarations"
+                                        "-Wno-reserved-module-identifier")
 
 # --------------------------------------------------------------------------------------------------
 # atom.core.tests

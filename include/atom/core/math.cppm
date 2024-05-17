@@ -1,7 +1,6 @@
-#pragma once
+export module atom.core:math;
 
-// #include <limits>
-// #include <algorithm>
+import std;
 
 namespace atom::math
 {

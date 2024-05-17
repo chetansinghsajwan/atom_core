@@ -1,9 +1,9 @@
 #pragma once
 
 #include "atom/core/core.h"
-#include "atom/core/types.h"
+// #include "atom/core/types.h"
 #include "atom/core/print.h"
-#include "atom/core/math.h"
+// #include "atom/core/math.h"
 #include "atom/core/memory/box.h"
 #include "atom/core/contracts.h"
 #include "atom/core/time.h"

@@ -6,6 +6,8 @@ import cpptrace;
 import libassert;
 import magic_enum;
 
+export import :types;
+
 export
 {
 #include "atom.core.h"

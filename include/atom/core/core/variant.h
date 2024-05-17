@@ -1,6 +1,6 @@
 #pragma once
 #include "atom/core/core.h"
-#include "atom/core/types.h"
+// #include "atom/core/types.h"
 #include "atom/core/contracts.h"
 #include "atom/core/memory/obj_helper.h"
 #include "atom/core/core/static_storage.h"
@@ -39,7 +39,7 @@ namespace atom
         friend class _variant_impl;
 
     private:
-        using _list_t = type_list<value_ts...>;
+        using _list_t = typelist<value_ts...>;
         using _storage_t = _variant_storage<value_ts...>;
 
     public:
@@ -242,7 +242,7 @@ namespace atom
         template <bool mov, usize index, typename other_t, typename... others_t>
         constexpr auto _construct_value_from_variant_impl(auto& that, usize that_index)
         {
-            using that_ts = type_list<others_t...>;
+            using that_ts = typelist<others_t...>;
 
             if (index != that_index)
             {
@@ -273,7 +273,7 @@ namespace atom
         template <bool mov, usize index, typename other_t, typename... others_t>
         constexpr auto _set_value_from_variant_impl(auto&& that, usize that_index)
         {
-            using that_ts = type_list<others_t...>;
+            using that_ts = typelist<others_t...>;
 
             if (index != that_index)
             {
@@ -323,7 +323,7 @@ namespace atom
         template <usize index, typename value_t, typename... others_t>
         constexpr auto _destroy_value_impl(usize i)
         {
-            using _list_t = type_list<others_t...>;
+            using _list_t = typelist<others_t...>;
 
             if (i != index)
             {
@@ -399,15 +399,15 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     /// # to do
     /// - check requirements for assignments.
-    /// - check if requirements using type_list functionality can be made concepts.
+    /// - check if requirements using typelist functionality can be made concepts.
     /// --------------------------------------------------------------------------------------------
     template <typename... value_ts>
     class variant
     {
         static_assert(
-            type_list<value_ts...>::are_unique(), "every type in value_ts... should be unique.");
+            typelist<value_ts...>::are_unique(), "every type in value_ts... should be unique.");
         static_assert(
-            type_list<value_ts...>::count > 0, "at least one type needs to be specified.");
+            typelist<value_ts...>::count > 0, "at least one type needs to be specified.");
 
     private:
         using this_t = variant<value_ts...>;
@@ -420,9 +420,9 @@ namespace atom
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// type_list of this variant.
+        /// typelist of this variant.
         /// ----------------------------------------------------------------------------------------
-        using value_types_list = type_list<value_ts...>;
+        using value_types_list = typelist<value_ts...>;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -508,7 +508,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename... others_t>
         constexpr variant(const variant<others_t...>& that)
-            requires type_list<others_t...>::info_t::are_copy_constructible
+            requires typelist<others_t...>::info_t::are_copy_constructible
                      and (value_types_list::template has<others_t...>)
         {
             _impl.construct_value_from_variant(that._impl);
@@ -562,7 +562,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename... others_t>
         constexpr variant(variant<others_t...>&& that)
-            requires type_list<others_t...>::info_t::are_move_constructible
+            requires typelist<others_t...>::info_t::are_move_constructible
                      and (value_types_list::template has<others_t...>)
         {
             _impl.construct_value_from_variant(move(that._impl));

@@ -2,7 +2,7 @@
 #include "atom/core/string/string_format_context.h"
 #include "atom/core/core/enums.h"
 #include "atom/core/string/_string_type_id.h"
-#include "atom/core/types.h"
+// #include "atom/core/types.h"
 // #include "fmt/core.h"
 // #include "fmt/ranges.h"
 // #include "fmt/std.h"

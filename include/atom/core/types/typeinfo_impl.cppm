@@ -1,7 +1,6 @@
-#pragma once
+export module atom.core:types.typeinfo_impl;
 
-// #include <type_traits>
-// #include <utility>
+import std;
 
 namespace atom
 {

@@ -1,7 +1,7 @@
 #pragma once
 #include "atom/core/string/_format_arg_wrapper.h"
 #include "atom/core/string/string_formatter.h"
-#include "atom/core/types.h"
+// #include "atom/core/types.h"
 
 // #include "fmt/core.h"
 

@@ -24,7 +24,7 @@ namespace atom
         using out_value_t =
             typeutils::conditional_t<typeinfo<value_t>::template is_same_as<_result_void>, void,
                 value_t>;
-        using error_types_list = type_list<error_ts...>;
+        using error_types_list = typelist<error_ts...>;
         using first_error_t = typename error_types_list::front_t;
 
         static_assert(error_types_list::count != 0);

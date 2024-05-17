@@ -1,5 +1,5 @@
 #pragma once
-#include "atom/core/_std.h"
+// #include "atom/core/_std.h"
 
 namespace atom
 {

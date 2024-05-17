@@ -1,18 +1,19 @@
-#pragma once
-#include "atom/core/types/typeinfo.h"
-#include "atom/core/types/typelist.h"
+export module atom.core:types.typeinfo_list;
+
+import :types.typeinfo;
+import :types.typelist;
 
 namespace atom
 {
-    template <typename... values_t>
-    class typeinfo_list: public typeinfo_list<type_list<values_t...>>
+    export template <typename... values_t>
+    class typeinfo_list: public typeinfo_list<typelist<values_t...>>
     {};
 
-    template <typename... values_t>
-    class typeinfo_list<type_list<values_t...>>
+    export template <typename... values_t>
+    class typeinfo_list<typelist<values_t...>>
     {
     public:
-        using value_types_list = type_list<values_t...>;
+        using value_types_list = typelist<values_t...>;
 
     public:
         static constexpr bool are_pure =

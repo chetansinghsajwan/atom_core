@@ -14,7 +14,7 @@
 #include "atom/core/core/static_storage.h"
 #include "atom/core/core/source_location.h"
 
-#include "atom/core/_std.h"
+// #include "atom/core/_std.h"
 
 namespace atom
 {

@@ -1,6 +1,6 @@
 #pragma once
 #include "atom/core/core.h"
-#include "atom/core/types.h"
+// #include "atom/core/types.h"
 #include "atom/core/contracts.h"
 
 namespace atom
@@ -9,7 +9,7 @@ namespace atom
     class static_storage_for
     {
     private:
-        using value_types_list = type_list<values_t...>;
+        using value_types_list = typelist<values_t...>;
 
     public:
         alignas(value_types_list::max_align) byte storage[value_types_list::max_size];

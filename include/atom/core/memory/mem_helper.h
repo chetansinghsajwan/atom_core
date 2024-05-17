@@ -2,8 +2,8 @@
 #include "atom/core/preprocessors.h"
 #include "atom/core/core.h"
 #include "atom/core/contracts.h"
-#include "atom/core/_std.h"
-#include "atom/core/math.h"
+// #include "atom/core/_std.h"
+// #include "atom/core/math.h"
 
 namespace atom
 {

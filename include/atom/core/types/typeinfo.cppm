@@ -1,9 +1,11 @@
-#pragma once
-#include "atom/core/types/typeinfo_impl.h"
+export module atom.core:types.typeinfo;
+
+import std;
+import :types.typeinfo_impl;
 
 namespace atom
 {
-    template <typename in_value_t>
+    export template <typename in_value_t>
     class typeinfo
     {
         using this_t = typeinfo;

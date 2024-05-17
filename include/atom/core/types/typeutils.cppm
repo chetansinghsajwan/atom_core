@@ -1,9 +1,10 @@
-#pragma once
-// #include <type_traits>
+export module atom.core:types.typeutils;
+
+import std;
 
 namespace atom
 {
-    class typeutils
+    export class typeutils
     {
     public:
         class empty
