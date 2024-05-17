@@ -14,13 +14,15 @@
         pkgs = inputs.nixpkgs.legacyPackages.${system};
         stdenv = pkgs.llvmPackages_18.libcxxStdenv;
         lib = pkgs.lib;
-    in
+    in rec
     {
-        devShells.${system}.default = stdenv.mkDerivation {
+        derivation = stdenv.mkDerivation {
 
             name = "atom.core";
 
-            buildInputs = with pkgs; [
+            src = ./.;
+
+            nativeBuildInputs = with pkgs; [
                 catch2_3
                 fmt
                 magic-enum
@@ -31,8 +33,17 @@
                 git
             ];
 
-            cpptrace_DIR = inputs.cpptrace;
-            catch2_DIR = pkgs.catch2_3;
+            configurePhase = ''
+                cmake -S . -B build
+            '';
+
+            buildPhase = ''
+                cmake --build build --target atom.core
+            '';
+
+            installPhase = ''
+                cmake --install build --prefix $out
+            '';
 
             CXXFLAGS = lib.strings.concatStrings [
                 " -I /nix/store/csml9b5w7z51yc7hxgd2ax4m6vj36iyq-libcxx-18.1.5-dev/include"
@@ -50,5 +61,9 @@
             CMAKE_BUILD_TYPE = "Debug";
             CMAKE_EXPORT_COMPILE_COMMANDS = "true";
         };
+
+        devShells.${system}.default = derivation;
+
+        packages.${system}.default = derivation;
     };
 }
