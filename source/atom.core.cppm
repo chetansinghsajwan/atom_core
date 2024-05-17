@@ -7,6 +7,7 @@ import libassert;
 import magic_enum;
 
 export import :types;
+export import :contracts;
 
 export
 {

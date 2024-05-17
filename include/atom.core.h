@@ -5,7 +5,7 @@
 #include "atom/core/print.h"
 // #include "atom/core/math.h"
 #include "atom/core/memory/box.h"
-#include "atom/core/contracts.h"
+// #include "atom/core/contracts.h"
 #include "atom/core/time.h"
 #include "atom/core/invokable/invokable_ptr.h"
 #include "atom/core/invokable/invokable_box.h"

@@ -1,15 +1,13 @@
-#pragma once
-#include "atom/core/core/build_config.h"
+export module atom.core:core.source_location;
 
-// #include <source_location>
-// #include <string_view>
+import std;
 
 namespace atom
 {
     /// --------------------------------------------------------------------------------------------
     /// info about the source code line.
     /// --------------------------------------------------------------------------------------------
-    class source_location
+    export class source_location
     {
     public:
         /// ----------------------------------------------------------------------------------------

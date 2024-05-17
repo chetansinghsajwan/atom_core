@@ -1,16 +1,22 @@
-#pragma once
-#include "atom/core/core/build_config.h"
-#include "atom/core/core/source_location.h"
+export module atom.core:contracts;
+
+import std;
+import fmt;
+import :core.build_config;
+import :core.source_location;
 
 namespace atom
 {
     template <auto type, typename... arg_types>
     constexpr auto _contract_check(source_location src, bool assert, arg_types&&... args) -> void;
 
-    inline auto _panic(source_location src, std::string_view msg, auto&&... args) -> void;
+    constexpr auto _panic(source_location src, std::string_view msg, auto&&... args) -> void;
 
     constexpr auto _contract_type_to_string(auto type) -> std::string_view;
+};
 
+export namespace atom
+{
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
@@ -194,7 +200,10 @@ namespace atom
             default_contract_violation_handler();
         static inline contract_violation_handler* _handler = &_default_handler;
     };
+}
 
+namespace atom
+{
     template <auto type, typename... arg_types>
     constexpr auto _contract_check(source_location src, bool assert, arg_types&&... args) -> void
     {
@@ -223,8 +232,11 @@ namespace atom
         contract_violation_handler_manager::get_handler().handle(violation);
     }
 
-    inline auto _panic(source_location src, std::string_view msg, auto&&... args) -> void
+    constexpr auto _panic(source_location src, std::string_view msg, auto&&... args) -> void
     {
+        if (std::is_constant_evaluated())
+            return;
+
         std::cerr << msg << std::endl;
         std::terminate();
     }

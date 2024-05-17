@@ -1,9 +1,10 @@
-#pragma once
+export module atom.core:core.build_config;
+
 #include "atom/core/preprocessors.h"
 
 namespace atom
 {
-    class build_config
+    export class build_config
     {
     public:
         enum class mode

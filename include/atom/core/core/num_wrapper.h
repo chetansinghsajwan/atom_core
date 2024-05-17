@@ -1,7 +1,7 @@
 #pragma once
 // #include "atom/core/_std.h"
 #include "atom/core/core/byte.h"
-#include "atom/core/contracts.h"
+// #include "atom/core/contracts.h"
 
 namespace atom
 {

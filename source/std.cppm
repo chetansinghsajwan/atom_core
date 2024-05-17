@@ -206,6 +206,7 @@ export namespace std
 
     using std::exception;
     using std::terminate;
+    using std::source_location;
 
     namespace chrono
     {
