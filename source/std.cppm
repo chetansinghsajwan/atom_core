@@ -34,17 +34,18 @@ module;
 #include <cstring>
 #include <functional>
 #include <chrono>
+#include <exception>
 
 export module std;
 
 export
 {
-    using ::FILE;
-    using ::stdout;
-    using ::stdin;
-    using ::stderr;
     using ::fflush;
+    using ::FILE;
     using ::fwrite;
+    using ::stderr;
+    using ::stdin;
+    using ::stdout;
 }
 
 export namespace std
@@ -83,6 +84,7 @@ export namespace std
     using std::nullptr_t;
 
     using std::cout;
+    using std::cerr;
     using std::endl;
     using std::ifstream;
     using std::ios;
@@ -91,8 +93,6 @@ export namespace std
     using std::ofstream;
     using std::ostream;
 
-    using std::false_type;
-    using std::true_type;
     using std::add_const_t;
     using std::add_lvalue_reference_t;
     using std::add_pointer_t;
@@ -100,6 +100,7 @@ export namespace std
     using std::add_volatile_t;
     using std::conditional_t;
     using std::enable_if_t;
+    using std::false_type;
     using std::is_assignable_v;
     using std::is_base_of_v;
     using std::is_const_v;
@@ -135,6 +136,7 @@ export namespace std
     using std::remove_pointer_t;
     using std::remove_reference_t;
     using std::remove_volatile_t;
+    using std::true_type;
     using std::type_identity_t;
 
     using std::convertible_to;
@@ -148,24 +150,24 @@ export namespace std
 
     using std::array;
     using std::bitset;
+    using std::get;
+    using std::hash;
     using std::optional;
     using std::pair;
     using std::string;
     using std::string_view;
     using std::tuple;
-    using std::tuple_size;
     using std::tuple_element;
+    using std::tuple_size;
     using std::unordered_map;
     using std::variant;
     using std::vector;
-    using std::get;
-    using std::hash;
 
+    using std::make_shared;
+    using std::make_unique;
     using std::shared_ptr;
     using std::unique_ptr;
     using std::weak_ptr;
-    using std::make_shared;
-    using std::make_unique;
 
     using std::bidirectional_iterator_tag;
     using std::contiguous_iterator_tag;
@@ -201,6 +203,9 @@ export namespace std
     using std::mutex;
     using std::realloc;
     using std::type_info;
+
+    using std::exception;
+    using std::terminate;
 
     namespace chrono
     {
