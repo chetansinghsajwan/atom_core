@@ -90,7 +90,7 @@ namespace atom
         //     this const this_range_type& this_range, usize i) -> get_iter_type<this_range_type>
         //     // requires is_array_range<this_range_type>
         // {
-        //     ATOM_EXPECTS(this_range.this_type::is_index_in_range(i), "index is out of range.");
+        //     contract_expects(this_range.this_type::is_index_in_range(i), "index is out of range.");
 
         //     using impl_type = get_impl_type<this_range_type>;
         //     return impl_type::get_iter_at(this_range, i);
@@ -132,7 +132,7 @@ namespace atom
         //     this this_range_type& this_range, usize i) -> get_mut_iter_type<this_range_type>
         //     // requires is_mut_array_range<this_range_type>
         // {
-        //     ATOM_EXPECTS(this_range.this_type::is_index_in_range(i), "index is out of range.");
+        //     contract_expects(this_range.this_type::is_index_in_range(i), "index is out of range.");
 
         //     using impl_type = get_impl_type<this_range_type>;
         //     return impl_type::get_mut_iter_at(this_range, i);
@@ -230,7 +230,7 @@ namespace atom
             usize i) -> const get_value_type<this_range_type>&
             requires is_array_range<this_range_type>
         {
-            ATOM_EXPECTS(this_range.this_type::is_index_in_range(i), "index is out of range.");
+            contract_expects(this_range.this_type::is_index_in_range(i), "index is out of range.");
 
             using impl_type = get_impl_type<this_range_type>;
             return impl_type::get_at(this_range, i);
@@ -250,7 +250,7 @@ namespace atom
             this this_range_type& this_range, usize i) -> get_value_type<this_range_type>&
             requires is_mut_array_range<this_range_type>
         {
-            ATOM_EXPECTS(this_range.this_type::is_index_in_range(i), "index is out of range.");
+            contract_expects(this_range.this_type::is_index_in_range(i), "index is out of range.");
 
             using impl_type = get_impl_type<this_range_type>;
             return impl_type::get_mut_at(this_range, i);
@@ -270,7 +270,7 @@ namespace atom
             usize i) -> const get_value_type<this_range_type>&
             requires is_array_range<this_range_type>
         {
-            ATOM_DEBUG_EXPECTS(
+            contract_debug_expects(
                 this_range.this_type::is_index_in_range(i), "index is out of range.");
 
             using impl_type = get_impl_type<this_range_type>;
@@ -291,7 +291,7 @@ namespace atom
             this this_range_type& this_range, usize i) -> get_value_type<this_range_type>&
             requires is_mut_array_range<this_range_type>
         {
-            ATOM_DEBUG_EXPECTS(
+            contract_debug_expects(
                 this_range.this_type::is_index_in_range(i), "index is out of range.");
 
             using impl_type = get_impl_type<this_range_type>;
@@ -309,7 +309,7 @@ namespace atom
             this const this_range_type& this_range) -> const get_value_type<this_range_type>&
             requires is_array_range<this_range_type>
         {
-            ATOM_DEBUG_EXPECTS(not this_range.this_type::is_empty(), "range is empty.");
+            contract_debug_expects(not this_range.this_type::is_empty(), "range is empty.");
 
             using impl_type = get_impl_type<this_range_type>;
             return impl_type::get_front(this_range);
@@ -327,7 +327,7 @@ namespace atom
             requires is_mut_array_range<this_range_type>
         {
             // todo: fix this, this check is giving wrong result in atom.engine.
-            ATOM_DEBUG_EXPECTS(not this_range.this_type::is_empty(), "range is empty.");
+            contract_debug_expects(not this_range.this_type::is_empty(), "range is empty.");
 
             using impl_type = get_impl_type<this_range_type>;
             return impl_type::get_front_mut(this_range);
@@ -345,7 +345,7 @@ namespace atom
             requires is_mut_array_range<this_range_type>
         {
             // todo: fix this, this check is giving wrong result in atom.engine.
-            ATOM_DEBUG_EXPECTS(not this_range.this_type::is_empty(), "range is empty.");
+            contract_debug_expects(not this_range.this_type::is_empty(), "range is empty.");
 
             using impl_type = get_impl_type<this_range_type>;
             return impl_type::get_front_mut(this_range);
@@ -362,7 +362,7 @@ namespace atom
             this const this_range_type& this_range) -> const get_value_type<this_range_type>&
             requires is_array_range<this_range_type>
         {
-            ATOM_DEBUG_EXPECTS(not this_range.this_type::is_empty(), "range is empty.");
+            contract_debug_expects(not this_range.this_type::is_empty(), "range is empty.");
 
             using impl_type = get_impl_type<this_range_type>;
             return impl_type::get_back(this_range);
@@ -379,7 +379,7 @@ namespace atom
             this this_range_type& this_range) -> get_value_type<this_range_type>&
             requires is_mut_array_range<this_range_type>
         {
-            ATOM_DEBUG_EXPECTS(not this_range.this_type::is_empty(), "range is empty.");
+            contract_debug_expects(not this_range.this_type::is_empty(), "range is empty.");
 
             using impl_type = get_impl_type<this_range_type>;
             return impl_type::get_mut_back(this_range);

@@ -690,7 +690,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto get() const& -> const value_t&
         {
-            ATOM_EXPECTS(is_value(), "does not contain value.");
+            contract_expects(is_value(), "does not contain value.");
 
             return _impl.get_value();
         }
@@ -700,7 +700,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto get_mut() & -> value_t&
         {
-            ATOM_EXPECTS(is_value(), "does not contain value.");
+            contract_expects(is_value(), "does not contain value.");
 
             return _impl.get_mut_value();
         }
@@ -710,7 +710,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator->() const -> const value_t*
         {
-            ATOM_DEBUG_EXPECTS(is_value(), "does not contain value.");
+            contract_debug_expects(is_value(), "does not contain value.");
 
             return &_impl.get_value();
         }
@@ -720,7 +720,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator->() -> value_t*
         {
-            ATOM_DEBUG_EXPECTS(is_value(), "does not contain value.");
+            contract_debug_expects(is_value(), "does not contain value.");
 
             return &_impl.get_mut_value();
         }

@@ -189,7 +189,7 @@ namespace atom
         template <typename value_t>
         constexpr auto get_value_by_t() const -> const value_t&
         {
-            ATOM_DEBUG_EXPECTS(get_index_for_t<value_t>() == get_t_index(),
+            contract_debug_expects(get_index_for_t<value_t>() == get_t_index(),
                 "current type is not same as requested type.");
 
             return _get_value_as<value_t>();
@@ -198,7 +198,7 @@ namespace atom
         template <typename value_t>
         constexpr auto get_value_by_t() -> value_t&
         {
-            ATOM_DEBUG_EXPECTS(get_index_for_t<value_t>() == get_t_index(),
+            contract_debug_expects(get_index_for_t<value_t>() == get_t_index(),
                 "current type is not same as requested type.");
 
             return _get_value_as<value_t>();
@@ -248,7 +248,7 @@ namespace atom
             {
                 if constexpr (that_ts::count == 0)
                 {
-                    ATOM_PANIC("there is no type for current index.");
+                    contract_panic("there is no type for current index.");
                 }
                 else
                 {
@@ -279,7 +279,7 @@ namespace atom
             {
                 if constexpr (that_ts::count == 0)
                 {
-                    ATOM_PANIC("there is no type for current index.");
+                    contract_panic("there is no type for current index.");
                 }
                 else
                 {
@@ -329,7 +329,7 @@ namespace atom
             {
                 if constexpr (_list_t::count == 0)
                 {
-                    ATOM_PANIC("there is no type for current index.");
+                    contract_panic("there is no type for current index.");
                 }
                 else
                 {
@@ -748,7 +748,7 @@ namespace atom
         constexpr auto as() const -> const value_t&
             requires(has<value_t>()) and typeinfo<value_t>::is_not_void
         {
-            ATOM_EXPECTS(is<value_t>(), "access to invalid type.");
+            contract_expects(is<value_t>(), "access to invalid type.");
 
             return _impl.template get_value_by_t<value_t>();
         }
@@ -764,7 +764,7 @@ namespace atom
         constexpr auto as() -> value_t&
             requires(has<value_t>()) and typeinfo<value_t>::is_not_void
         {
-            ATOM_DEBUG_EXPECTS(is<value_t>(), "access to invalid type.");
+            contract_debug_expects(is<value_t>(), "access to invalid type.");
 
             return _impl.template get_value_by_t<value_t>();
         }
@@ -776,7 +776,7 @@ namespace atom
         constexpr auto as_check() const -> const value_t&
             requires(has<value_t>()) and typeinfo<value_t>::is_not_void
         {
-            ATOM_EXPECTS(is<value_t>(), "access to invalid type.");
+            contract_expects(is<value_t>(), "access to invalid type.");
 
             return _impl.template get_value_by_t<value_t>();
         }
@@ -788,7 +788,7 @@ namespace atom
         constexpr auto as_check() -> value_t&
             requires(has<value_t>()) and typeinfo<value_t>::is_not_void
         {
-            ATOM_EXPECTS(is<value_t>(), "access to invalid type.");
+            contract_expects(is<value_t>(), "access to invalid type.");
 
             return _impl.template get_value_by_t<value_t>();
         }
@@ -808,7 +808,7 @@ namespace atom
         constexpr auto get_at() const -> const type_at<index>&
             requires(has<index>()) and typeinfo<type_at<index>>::is_not_void
         {
-            ATOM_EXPECTS(is<index>(), "access to invalid type by index.");
+            contract_expects(is<index>(), "access to invalid type by index.");
 
             return _impl.template get_value_by_index<i>();
         }
@@ -828,7 +828,7 @@ namespace atom
         constexpr auto get_at() -> type_at<index>&
             requires(has<index>()) and typeinfo<type_at<index>>::is_not_void
         {
-            ATOM_DEBUG_EXPECTS(is<index>(), "access to invalid type by index.");
+            contract_debug_expects(is<index>(), "access to invalid type by index.");
 
             return _impl.template get_value_by_index<index>();
         }
@@ -840,7 +840,7 @@ namespace atom
         constexpr auto at_check() const -> const type_at<index>&
             requires(has<index>()) and typeinfo<type_at<index>>::is_not_void
         {
-            ATOM_EXPECTS(is<index>(), "access to invalid type by index.");
+            contract_expects(is<index>(), "access to invalid type by index.");
 
             return _impl.template get_value_by_index<index>();
         }
@@ -852,7 +852,7 @@ namespace atom
         constexpr auto at_check() -> type_at<index>&
             requires(has<index>()) and typeinfo<type_at<index>>::is_not_void
         {
-            ATOM_EXPECTS(is<index>(), "access to invalid type by index.");
+            contract_expects(is<index>(), "access to invalid type by index.");
 
             return _impl.template get_value_by_index<index>();
         }

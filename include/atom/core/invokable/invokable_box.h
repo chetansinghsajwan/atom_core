@@ -298,7 +298,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         auto invoke(arg_ts&&... args) -> result_t
         {
-            ATOM_EXPECTS(has(), "no invokable is present.");
+            contract_expects(has(), "no invokable is present.");
 
             return _impl.invoke_invokable(forward<arg_ts>(args)...);
         }

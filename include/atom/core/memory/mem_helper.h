@@ -22,7 +22,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         static constexpr auto fill(void* mem, usize mem_size, byte val) -> void
         {
-            ATOM_DEBUG_EXPECTS(mem != nullptr);
+            contract_debug_expects(mem != nullptr);
 
             _fill(mem, mem_size, val);
         }
@@ -34,7 +34,7 @@ namespace atom
 
         static constexpr auto fill_explicit(void* mem, usize mem_size, byte val) -> void
         {
-            ATOM_DEBUG_EXPECTS(mem != nullptr);
+            contract_debug_expects(mem != nullptr);
 
             _fill(mem, mem_size, val);
         }
@@ -52,10 +52,10 @@ namespace atom
         static constexpr auto fwd_copy_to(const void* src, usize src_size, void* dest,
             usize dest_size = math::max<usize>()) -> void
         {
-            ATOM_DEBUG_EXPECTS(src != nullptr);
-            ATOM_DEBUG_EXPECTS(dest != nullptr);
-            ATOM_DEBUG_EXPECTS(dest_size >= src_size);
-            ATOM_DEBUG_EXPECTS(dest >= src and dest < ((byte*)src + src_size),
+            contract_debug_expects(src != nullptr);
+            contract_debug_expects(dest != nullptr);
+            contract_debug_expects(dest_size >= src_size);
+            contract_debug_expects(dest >= src and dest < ((byte*)src + src_size),
                 "dest mem block overlaps src mem block.");
 
             _fwd_copy(src, src_size, dest);
@@ -72,9 +72,9 @@ namespace atom
         static constexpr auto bwd_copy_to(const void* src, usize src_size, void* dest,
             usize dest_size = math::max<usize>()) -> void
         {
-            ATOM_DEBUG_EXPECTS(src != nullptr);
-            ATOM_DEBUG_EXPECTS(dest != nullptr);
-            ATOM_DEBUG_EXPECTS(((byte*)dest + src_size) <= src
+            contract_debug_expects(src != nullptr);
+            contract_debug_expects(dest != nullptr);
+            contract_debug_expects(((byte*)dest + src_size) <= src
                                    and ((byte*)dest + src_size) > ((byte*)src + src_size),
                 "dest mem block overlaps src mem block.");
 
@@ -93,9 +93,9 @@ namespace atom
         static constexpr auto copy_to(const void* src, usize src_size, void* dest,
             usize dest_size = math::max<usize>()) -> void
         {
-            ATOM_DEBUG_EXPECTS(src != nullptr);
-            ATOM_DEBUG_EXPECTS(dest != nullptr);
-            ATOM_DEBUG_EXPECTS(dest_size >= src_size);
+            contract_debug_expects(src != nullptr);
+            contract_debug_expects(dest != nullptr);
+            contract_debug_expects(dest_size >= src_size);
 
             if (dest > src)
             {
@@ -116,8 +116,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         static constexpr auto copy_fwd(void* mem, usize mem_size, usize outset) -> void
         {
-            ATOM_DEBUG_EXPECTS(mem != nullptr);
-            ATOM_DEBUG_EXPECTS(outset > 0);
+            contract_debug_expects(mem != nullptr);
+            contract_debug_expects(outset > 0);
 
             _bwd_copy(mem, mem_size, (byte*)mem + outset);
         }
@@ -131,8 +131,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         static constexpr auto copy_bwd(void* mem, usize mem_size, usize inset) -> void
         {
-            ATOM_DEBUG_EXPECTS(mem != nullptr);
-            ATOM_DEBUG_EXPECTS(inset > 0);
+            contract_debug_expects(mem != nullptr);
+            contract_debug_expects(inset > 0);
 
             _fwd_copy(mem, mem_size, (byte*)mem - inset);
         }
@@ -147,8 +147,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         static constexpr auto copy_by(const void* mem, usize mem_size, isize offset) -> void
         {
-            ATOM_DEBUG_EXPECTS(mem != nullptr);
-            ATOM_DEBUG_EXPECTS(offset != 0);
+            contract_debug_expects(mem != nullptr);
+            contract_debug_expects(offset != 0);
 
             if (offset > 0)
             {
@@ -169,8 +169,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         static constexpr auto shift_fwd(void* mem, usize mem_size, usize steps) -> void
         {
-            ATOM_DEBUG_EXPECTS(mem != nullptr);
-            ATOM_DEBUG_EXPECTS(steps > 0);
+            contract_debug_expects(mem != nullptr);
+            contract_debug_expects(steps > 0);
 
             _shift_fwd(mem, mem_size, steps);
         }
@@ -184,8 +184,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         static constexpr auto shift_bwd(void* mem, usize mem_size, usize steps) -> void
         {
-            ATOM_DEBUG_EXPECTS(mem != nullptr);
-            ATOM_DEBUG_EXPECTS(steps > 0);
+            contract_debug_expects(mem != nullptr);
+            contract_debug_expects(steps > 0);
 
             _shift_bwd(mem, mem_size, steps);
         }
@@ -199,8 +199,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         static constexpr auto shift_by(void* mem, usize mem_size, isize steps) -> void
         {
-            ATOM_DEBUG_EXPECTS(mem != nullptr);
-            ATOM_DEBUG_EXPECTS(steps != 0);
+            contract_debug_expects(mem != nullptr);
+            contract_debug_expects(steps != 0);
 
             if (steps > 0)
             {
@@ -221,8 +221,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         static constexpr auto rotate_fwd(void* mem, usize mem_size, usize steps) -> void
         {
-            ATOM_DEBUG_EXPECTS(mem != nullptr);
-            ATOM_DEBUG_EXPECTS(steps > 0);
+            contract_debug_expects(mem != nullptr);
+            contract_debug_expects(steps > 0);
 
             _rotate_fwd(mem, mem_size, steps);
         }
@@ -236,8 +236,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         static constexpr auto rotate_bwd(void* mem, usize mem_size, usize steps) -> void
         {
-            ATOM_DEBUG_EXPECTS(mem != nullptr);
-            ATOM_DEBUG_EXPECTS(steps > 0);
+            contract_debug_expects(mem != nullptr);
+            contract_debug_expects(steps > 0);
 
             _rotate_bwd(mem, mem_size, steps);
         }
@@ -251,8 +251,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         static constexpr auto rotate_by(void* mem, usize mem_size, isize steps) -> void
         {
-            ATOM_DEBUG_EXPECTS(mem != nullptr);
-            ATOM_DEBUG_EXPECTS(steps != 0);
+            contract_debug_expects(mem != nullptr);
+            contract_debug_expects(steps != 0);
 
             if (steps > 0)
             {

@@ -198,7 +198,7 @@ namespace atom
         constexpr auto panic_on_error(this const this_t& self) -> void
         {
             if (self.is_error())
-                ATOM_PANIC();
+                contract_panic();
         }
 
         constexpr auto on_value(this auto& self, auto&& action) -> void

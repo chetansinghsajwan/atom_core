@@ -27,28 +27,28 @@ namespace atom
     public:
         constexpr auto mem(usize i = 0) const -> const void*
         {
-            ATOM_DEBUG_EXPECTS(i < size());
+            contract_debug_expects(i < size());
 
             return ptr(_storage + i);
         }
 
         constexpr auto mut_mem(usize i = 0) -> void*
         {
-            ATOM_DEBUG_EXPECTS(i < size());
+            contract_debug_expects(i < size());
 
             return mut_ptr(_storage + i);
         }
 
         constexpr auto ref(usize i) const -> const byte&
         {
-            ATOM_DEBUG_EXPECTS(i < size());
+            contract_debug_expects(i < size());
 
             return _storage[i];
         }
 
         constexpr auto mut_ref(usize i) -> byte&
         {
-            ATOM_DEBUG_EXPECTS(i < size());
+            contract_debug_expects(i < size());
 
             return _storage[i];
         }

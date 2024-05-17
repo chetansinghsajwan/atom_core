@@ -243,13 +243,3 @@ namespace atom
         }
     }
 }
-
-#define ATOM_EXPECTS(...) atom::contract_expects(__VA_ARGS__);
-#define ATOM_ASSERTS(...) atom::contract_asserts(__VA_ARGS__);
-#define ATOM_ENSURES(...) atom::contract_ensures(__VA_ARGS__);
-#define ATOM_DEBUG_EXPECTS(...) atom::contract_debug_expects(__VA_ARGS__);
-#define ATOM_DEBUG_ASSERTS(...) atom::contract_debug_asserts(__VA_ARGS__);
-#define ATOM_DEBUG_ENSURES(...) atom::contract_ensures(__VA_ARGS__);
-#define ATOM_PANIC(...) atom::contract_panic(__VA_ARGS__);
-constexpr auto ATOM_DEBUG_PANIC(auto&&... args) -> void;
-constexpr auto ATOM_UNREACHABLE(auto&&... args) -> void;

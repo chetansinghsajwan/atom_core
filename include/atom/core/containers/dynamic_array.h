@@ -133,7 +133,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto get_at(usize index) const -> const value_t&
         {
-            ATOM_DEBUG_EXPECTS(is_index_in_range(index));
+            contract_debug_expects(is_index_in_range(index));
 
             return _impl.get_at(index);
         }
@@ -143,7 +143,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto get_mut_at(usize index) -> value_t&
         {
-            ATOM_DEBUG_EXPECTS(is_index_in_range(index));
+            contract_debug_expects(is_index_in_range(index));
 
             return _impl.get_mut_at(index);
         }
@@ -166,7 +166,7 @@ namespace atom
         constexpr auto emplace_at(usize index, arg_ts&&... args)
             requires(typeinfo<value_t>::template is_constructible_from<arg_ts...>)
         {
-            ATOM_DEBUG_EXPECTS(is_index_in_range_or_end(index), "index is out of range.");
+            contract_debug_expects(is_index_in_range_or_end(index), "index is out of range.");
 
             _impl.emplace_at(index, forward<arg_ts>(args)...);
         }
@@ -193,8 +193,8 @@ namespace atom
         constexpr auto emplace_at(iter_t it, arg_ts&&... args) -> mut_iter_t
             requires(typeinfo<value_t>::template is_constructible_from<arg_ts...>)
         {
-            ATOM_DEBUG_EXPECTS(is_iter_valid(it), "invalid iter.");
-            ATOM_DEBUG_EXPECTS(is_iter_in_range_or_end(it), "iter is out of range.");
+            contract_debug_expects(is_iter_valid(it), "invalid iter.");
+            contract_debug_expects(is_iter_in_range_or_end(it), "iter is out of range.");
 
             usize index = get_index_for_iter(it);
             _impl.emplace_at(index, forward<arg_ts>(args)...);
@@ -226,7 +226,7 @@ namespace atom
                      and (typeinfo<value_t>::template is_constructible_from<
                          typename range_t::value_t>)
         {
-            ATOM_DEBUG_EXPECTS(is_index_in_range_or_end(index), "index is out of range.");
+            contract_debug_expects(is_index_in_range_or_end(index), "index is out of range.");
 
             return _impl.insert_range_at(index, range.get_iter(), range.get_iter_end());
         }
@@ -256,8 +256,8 @@ namespace atom
                      and (typeinfo<value_t>::template is_constructible_from<
                          typename range_t::value_t>)
         {
-            ATOM_DEBUG_EXPECTS(is_iter_valid(it), "invalid iter.");
-            ATOM_DEBUG_EXPECTS(is_iter_in_range_or_end(it), "iter is out of range.");
+            contract_debug_expects(is_iter_valid(it), "invalid iter.");
+            contract_debug_expects(is_iter_in_range_or_end(it), "iter is out of range.");
 
             usize index = get_index_for_iter(it);
             usize count = _impl.insert_range_at(index, range.get_iter(), range.get_iter_end());
@@ -393,7 +393,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto remove_at(usize index)
         {
-            ATOM_DEBUG_EXPECTS(is_index_in_range(index), "index is out of range.");
+            contract_debug_expects(is_index_in_range(index), "index is out of range.");
 
             _impl.remove_at(index);
         }
@@ -412,8 +412,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto remove_at(iter_t it) -> mut_iter_t
         {
-            ATOM_DEBUG_EXPECTS(is_iter_valid(it), "invalid iter.");
-            ATOM_DEBUG_EXPECTS(is_iter_in_range(it), "iter is out of range.");
+            contract_debug_expects(is_iter_valid(it), "invalid iter.");
+            contract_debug_expects(is_iter_in_range(it), "iter is out of range.");
 
             usize index = get_index_for_iter(it);
             _impl.remove_at(index);
@@ -440,8 +440,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto remove_range(usize from, usize to) -> usize
         {
-            ATOM_DEBUG_EXPECTS(is_index_in_range(to), "index was out of range.");
-            ATOM_DEBUG_EXPECTS(from <= to, "index was out of range.");
+            contract_debug_expects(is_index_in_range(to), "index was out of range.");
+            contract_debug_expects(from <= to, "index was out of range.");
 
             _impl.remove_range(from, to);
             return from;
@@ -462,11 +462,11 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto remove_range(iter_t it, iter_t it_end) -> mut_iter_t
         {
-            ATOM_DEBUG_EXPECTS(is_iter_valid(it), "invalid iter.");
-            ATOM_DEBUG_EXPECTS(is_iter_valid(it_end), "invalid iter.");
-            ATOM_DEBUG_EXPECTS(is_iter_in_range(it), "iter is out range.");
-            ATOM_DEBUG_EXPECTS(is_iter_in_range(it_end), "iter is out range.");
-            ATOM_DEBUG_EXPECTS(it.compare(it_end) <= 0, "invalid range.");
+            contract_debug_expects(is_iter_valid(it), "invalid iter.");
+            contract_debug_expects(is_iter_valid(it_end), "invalid iter.");
+            contract_debug_expects(is_iter_in_range(it), "iter is out range.");
+            contract_debug_expects(is_iter_in_range(it_end), "iter is out range.");
+            contract_debug_expects(it.compare(it_end) <= 0, "invalid range.");
 
             usize from = get_index_for_iter(it);
             usize to = get_index_for_iter(it_end);
@@ -479,7 +479,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto remove_front(usize count = 1)
         {
-            ATOM_DEBUG_EXPECTS(count <= get_count());
+            contract_debug_expects(count <= get_count());
 
             _impl.remove_front(count);
         }
@@ -489,7 +489,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto remove_back(usize count = 1)
         {
-            ATOM_DEBUG_EXPECTS(count <= get_count());
+            contract_debug_expects(count <= get_count());
 
             _impl.remove_back(count);
         }

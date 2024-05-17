@@ -74,7 +74,7 @@ namespace atom
             requires is_num<num_t>
             : _value(num._value)
         {
-            ATOM_DEBUG_EXPECTS(is_conversion_safe_from(num));
+            contract_debug_expects(is_conversion_safe_from(num));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -87,7 +87,7 @@ namespace atom
             requires _is_num<num_t>
             : _value(num)
         {
-            ATOM_DEBUG_EXPECTS(is_conversion_safe_from_unwrapped(num));
+            contract_debug_expects(is_conversion_safe_from_unwrapped(num));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -99,7 +99,7 @@ namespace atom
         constexpr auto operator=(num_t num) -> final_t&
             requires _is_num<num_t>
         {
-            ATOM_DEBUG_EXPECTS(is_conversion_safe_from_unwrapped(num));
+            contract_debug_expects(is_conversion_safe_from_unwrapped(num));
 
             _value = num;
             return _this_final();
@@ -186,7 +186,7 @@ namespace atom
         static constexpr auto from(num_t num) -> final_t
             requires is_num<num_t>
         {
-            ATOM_DEBUG_EXPECTS(is_conversion_safe_from(num));
+            contract_debug_expects(is_conversion_safe_from(num));
 
             return _wrap_final(num._value);
         }
@@ -198,7 +198,7 @@ namespace atom
         static constexpr auto from_checked(num_t num) -> final_t
             requires is_num<num_t>
         {
-            ATOM_EXPECTS(is_conversion_safe_from(num));
+            contract_expects(is_conversion_safe_from(num));
 
             return _wrap_final(num._value);
         }
@@ -231,7 +231,7 @@ namespace atom
         static constexpr auto from_unwrapped(num_t num) -> final_t
             requires _is_num<num_t>
         {
-            ATOM_DEBUG_EXPECTS(is_conversion_safe_from_unwrapped(num));
+            contract_debug_expects(is_conversion_safe_from_unwrapped(num));
 
             return _wrap_final(num);
         }
@@ -243,7 +243,7 @@ namespace atom
         static constexpr auto from_unwrapped_checked(num_t num) -> final_t
             requires _is_num<num_t>
         {
-            ATOM_EXPECTS(is_conversion_safe_from_unwrapped(num));
+            contract_expects(is_conversion_safe_from_unwrapped(num));
 
             return _wrap_final(num);
         }
@@ -325,7 +325,7 @@ namespace atom
         constexpr auto to_unwrapped() const -> num_t
             requires _is_num<num_t>
         {
-            ATOM_DEBUG_EXPECTS(is_conversion_safe_to_unwrapped<num_t>());
+            contract_debug_expects(is_conversion_safe_to_unwrapped<num_t>());
 
             return num_t(_value);
         }
@@ -337,7 +337,7 @@ namespace atom
         constexpr auto to_unwrapped_checked() const -> num_t
             requires _is_num<num_t>
         {
-            ATOM_EXPECTS(is_conversion_safe_to_unwrapped<num_t>());
+            contract_expects(is_conversion_safe_to_unwrapped<num_t>());
 
             return num_t(_value);
         }
@@ -368,7 +368,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto add(final_t num) const -> final_t
         {
-            ATOM_DEBUG_EXPECTS(is_add_safe(num));
+            contract_debug_expects(is_add_safe(num));
 
             return _wrap_final(_value + num._value);
         }
@@ -378,7 +378,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto add_checked(final_t num) const -> final_t
         {
-            ATOM_EXPECTS(is_add_safe(num));
+            contract_expects(is_add_safe(num));
 
             return _wrap_final(_value + num._value);
         }
@@ -404,7 +404,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto add_assign(final_t num) -> final_t&
         {
-            ATOM_DEBUG_EXPECTS(is_add_safe(num));
+            contract_debug_expects(is_add_safe(num));
 
             _value += num._value;
             return _this_final();
@@ -415,7 +415,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto add_assign_checked(final_t num) -> final_t&
         {
-            ATOM_EXPECTS(is_add_safe(num));
+            contract_expects(is_add_safe(num));
 
             _value += num._value;
             return _this_final();
@@ -435,7 +435,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator+=(final_t num) -> final_t&
         {
-            ATOM_DEBUG_EXPECTS(is_add_safe(num));
+            contract_debug_expects(is_add_safe(num));
 
             return add_assign(num);
         }
@@ -461,7 +461,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto sub(final_t num) const -> final_t
         {
-            ATOM_DEBUG_EXPECTS(is_sub_safe(num));
+            contract_debug_expects(is_sub_safe(num));
 
             return _wrap_final(_value - num._value);
         }
@@ -471,7 +471,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto sub_checked(final_t num) const -> final_t
         {
-            ATOM_EXPECTS(is_sub_safe(num));
+            contract_expects(is_sub_safe(num));
 
             return _wrap_final(_value - num._value);
         }
@@ -497,7 +497,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto sub_assign(final_t num) -> final_t&
         {
-            ATOM_DEBUG_EXPECTS(is_sub_safe(num));
+            contract_debug_expects(is_sub_safe(num));
 
             _value -= num._value;
             return _this_final();
@@ -508,7 +508,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto sub_assign_checked(final_t num) -> final_t&
         {
-            ATOM_EXPECTS(is_sub_safe(num));
+            contract_expects(is_sub_safe(num));
 
             _value -= num._value;
             return _this_final();
@@ -552,7 +552,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto mul(final_t num) const -> final_t
         {
-            ATOM_DEBUG_EXPECTS(is_mul_safe(num));
+            contract_debug_expects(is_mul_safe(num));
 
             return _wrap_final(_value * num._value);
         }
@@ -562,7 +562,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto mul_checked(final_t num) const -> final_t
         {
-            ATOM_EXPECTS(is_mul_safe(num));
+            contract_expects(is_mul_safe(num));
 
             return _wrap_final(_value * num._value);
         }
@@ -588,7 +588,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto mul_assign(final_t num) -> final_t&
         {
-            ATOM_DEBUG_EXPECTS(is_mul_safe(num));
+            contract_debug_expects(is_mul_safe(num));
 
             _value *= num._value;
             return _this_final();
@@ -599,7 +599,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto mul_assign_checked(final_t num) -> final_t&
         {
-            ATOM_EXPECTS(is_mul_safe(num));
+            contract_expects(is_mul_safe(num));
 
             _value *= num._value;
             return _this_final();
@@ -635,7 +635,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto div(final_t num) const -> final_t
         {
-            ATOM_DEBUG_EXPECTS(is_div_safe(num));
+            contract_debug_expects(is_div_safe(num));
 
             return _wrap_final(_value / num._value);
         }
@@ -645,7 +645,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto div_checked(final_t num) const -> final_t
         {
-            ATOM_EXPECTS(is_div_safe(num));
+            contract_expects(is_div_safe(num));
 
             return _wrap_final(_value / num._value);
         }
@@ -671,7 +671,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto div_assign(final_t num) -> final_t&
         {
-            ATOM_DEBUG_EXPECTS(is_div_safe(num));
+            contract_debug_expects(is_div_safe(num));
 
             _value /= num._value;
             return _this_final();
@@ -682,7 +682,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto div_assign_checked(final_t num) -> final_t&
         {
-            ATOM_EXPECTS(is_div_safe(num));
+            contract_expects(is_div_safe(num));
 
             _value /= num._value;
             return _this_final();
@@ -710,7 +710,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto rem(final_t num) const -> final_t
         {
-            ATOM_DEBUG_EXPECTS(is_div_safe(num));
+            contract_debug_expects(is_div_safe(num));
 
             return _wrap_final(_value % num._value);
         }
@@ -720,7 +720,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto rem_checked(final_t num) const -> final_t
         {
-            ATOM_EXPECTS(is_div_safe(num));
+            contract_expects(is_div_safe(num));
 
             return _wrap_final(_value % num._value);
         }
@@ -746,7 +746,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto rem_assign(final_t num) -> final_t&
         {
-            ATOM_DEBUG_EXPECTS(is_div_safe(num));
+            contract_debug_expects(is_div_safe(num));
 
             _value %= num._value;
             return _this_final();
@@ -757,7 +757,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto rem_assign_checked(final_t num) -> final_t&
         {
-            ATOM_EXPECTS(is_div_safe(num));
+            contract_expects(is_div_safe(num));
 
             _value %= num._value;
             return _this_final();
@@ -854,7 +854,7 @@ namespace atom
         constexpr auto abs() const -> final_t
             requires(is_signed())
         {
-            ATOM_DEBUG_EXPECTS(is_abs_safe());
+            contract_debug_expects(is_abs_safe());
 
             return _wrap_final(impl_t::abs(_value));
         }
@@ -865,7 +865,7 @@ namespace atom
         constexpr auto abs_checked() const -> final_t
             requires(is_signed())
         {
-            ATOM_EXPECTS(is_abs_safe());
+            contract_expects(is_abs_safe());
 
             return _wrap_final(impl_t::abs(_value));
         }
@@ -903,7 +903,7 @@ namespace atom
         constexpr auto neg() const -> final_t
             requires(is_signed())
         {
-            ATOM_DEBUG_EXPECTS(is_neg_safe());
+            contract_debug_expects(is_neg_safe());
 
             return _wrap_final(impl_t::neg(_value));
         }
@@ -914,7 +914,7 @@ namespace atom
         constexpr auto neg_checked() const -> final_t
             requires(is_signed())
         {
-            ATOM_EXPECTS(is_neg_safe());
+            contract_expects(is_neg_safe());
 
             return _wrap_final(impl_t::neg(_value));
         }
