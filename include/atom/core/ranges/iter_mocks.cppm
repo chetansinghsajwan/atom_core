@@ -1,7 +1,8 @@
-#pragma once
-// #include "atom/core/core.h"
+export module atom.core:ranges.iter_mocks;
 
-namespace atom::mock
+import :core;
+
+export namespace atom::mock
 {
     /// --------------------------------------------------------------------------------------------
     /// mock object used as `iter_end`.

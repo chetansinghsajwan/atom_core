@@ -1,9 +1,10 @@
-#pragma once
-// #include "atom/core/core.h"
+export module atom.core:ranges.range_literal;
+
+import :core;
 
 namespace atom
 {
-    template <typename value_t>
+    export template <typename value_t>
     class range_literal
     {
     public:

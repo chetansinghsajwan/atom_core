@@ -1,13 +1,17 @@
-#pragma once
+export module atom.core:ranges.range_extensions;
+
+import :core;
+import :types;
+import :ranges.range_extensions_impl;
+import :ranges.std_iter_wrap_for_atom_iter;
+import :ranges.iter_requirements;
+import :ranges.range_requirements;
+
 #include "atom/core/preprocessors.h"
-#include "_range_extensions_impl.h"
-#include "atom/core/range/iter_requirements.h"
-#include "atom/core/range/range_requirements.h"
-#include "atom/core/range/std_iter_wrap_for_atom_iter.h"
 
 namespace atom
 {
-    class range_extensions
+    export class range_extensions
     {
         using this_type = range_extensions;
 

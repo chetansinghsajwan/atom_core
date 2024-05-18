@@ -1,5 +1,7 @@
-#pragma once
-// #include "atom/core/core.h"
+export module atom.core:ranges.iter_requirements;
+
+import std;
+import :core;
 
 // clang-format off
 
@@ -25,7 +27,7 @@ namespace atom
     };
 }
 
-namespace atom
+export namespace atom
 {
     template <typename iter_t, typename iter_end_t>
     concept is_iter_with_end = requires(iter_t it, iter_end_t it_end)

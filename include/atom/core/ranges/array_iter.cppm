@@ -1,13 +1,14 @@
-#pragma once
-// #include "atom/core/core.h"
-// #include "atom/core/types.h"
+export module atom.core:ranges.array_iter;
+
+import :core;
+import :types;
 
 namespace atom
 {
     /// --------------------------------------------------------------------------------------------
     /// array_iter iterates over raw arr.
     /// --------------------------------------------------------------------------------------------
-    template <typename in_value_t>
+    export template <typename in_value_t>
     class array_iter
     {
         static_assert(typeinfo<in_value_t>::is_pure, "array_iter supports only pure types.");
@@ -107,7 +108,7 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     /// mut_array_iter iterates over mut raw arr.
     /// --------------------------------------------------------------------------------------------
-    template <typename in_value_t>
+    export template <typename in_value_t>
     class mut_array_iter: public array_iter<in_value_t>
     {
         static_assert(

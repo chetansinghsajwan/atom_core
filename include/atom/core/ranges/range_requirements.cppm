@@ -1,5 +1,7 @@
-#pragma once
-#include "atom/core/range/iter_requirements.h"
+export module atom.core:ranges.range_requirements;
+
+import std;
+import :ranges.iter_requirements;
 
 // clang-format off
 namespace atom
@@ -54,7 +56,10 @@ namespace atom
         requires _is_mut_range<range_t>;
         requires std::convertible_to<typename range_t::value_t, value_t>;
     };
+}
 
+export namespace atom
+{
     /// --------------------------------------------------------------------------------------------
     /// ensures `range_t` is `range`.
     /// --------------------------------------------------------------------------------------------

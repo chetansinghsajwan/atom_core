@@ -1,7 +1,11 @@
-#pragma once
-// #include "atom/core/core.h"
-#include "atom/core/range/std_iter_wrap_for_atom_iter.h"
-// #include <algorithm>
+export module atom.core:ranges.range_extensions_impl;
+
+import std;
+import :core;
+import :types;
+import :ranges.iter_requirements;
+import :ranges.range_requirements;
+import :ranges.std_iter_wrap_for_atom_iter;
 
 namespace atom
 {

@@ -1,12 +1,12 @@
-#pragma once
-// #include "atom/core/_std.h"
-// #include "atom/core/core.h"
-// #include "atom/core/types.h"
-#include "atom/core/range/array_iter.h"
-#include "atom/core/range/range_literal.h"
-#include "atom/core/range/iter_requirements.h"
-#include "atom/core/range/range_requirements.h"
-#include "atom/core/range/range_extensions.h"
+export module atom.core:ranges.range_from;
+
+import std;
+import :core;
+import :ranges.array_iter;
+import :ranges.range_literal;
+import :ranges.iter_requirements;
+import :ranges.range_requirements;
+import :ranges.range_extensions;
 
 namespace atom
 {
@@ -102,7 +102,7 @@ namespace atom
     }
 }
 
-namespace atom
+export namespace atom
 {
     /// --------------------------------------------------------------------------------------------
     ///

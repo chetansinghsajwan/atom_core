@@ -1,5 +1,6 @@
-#pragma once
-#include "atom/core/range/iter_mocks.h"
+export module atom.core:ranges.range_mocks;
+
+import :ranges.iter_mocks;
 
 namespace atom::mock
 {
@@ -40,7 +41,7 @@ namespace atom::mock
     };
 }
 
-namespace atom::mock
+export namespace atom::mock
 {
     /// --------------------------------------------------------------------------------------------
     /// `is_range` mock object.

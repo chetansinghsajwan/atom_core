@@ -1,17 +1,17 @@
-#pragma once
-// #include "atom/core/_std.h"
-// #include "atom/core/core.h"
-// #include "atom/core/types.h"
-// #include "atom/core/contracts.h"
-#include "atom/core/range/iter_requirements.h"
-#include "atom/core/range/range_requirements.h"
+export module atom.core:ranges.std_iter_wrap_for_atom_iter;
+
+import std;
+import :core;
+import :types;
+import :contracts;
+import :ranges.iter_requirements;
 
 namespace atom
 {
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename iter_t>
+    export template <typename iter_t>
     using std_iter_cat_for_atom_iter = typeutils::conditional_t<not is_iter<iter_t>, void,
         typeutils::conditional_t<not is_fwd_iter<iter_t>, std::input_iterator_tag,
             typeutils::conditional_t<not is_bidi_iter<iter_t>, std::forward_iterator_tag,
@@ -22,7 +22,7 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename iter_t>
+    export template <typename iter_t>
     class std_iter_wrap_for_atom_iter
     {
         using this_t = std_iter_wrap_for_atom_iter;
@@ -166,7 +166,7 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename iter_t>
+    export template <typename iter_t>
         requires(not is_iter<iter_t>)
     class std_iter_wrap_for_atom_iter<iter_t>
     {
