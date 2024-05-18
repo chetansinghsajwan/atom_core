@@ -1,6 +1,11 @@
-#pragma once
-#include "_dynamic_array_vector.h"
-// #include "atom/core/range.h"
+export module atom.core:containers.dynamic_array;
+
+import :core;
+import :ranges;
+import :types;
+import :contracts;
+import :default_mem_allocator;
+import :containers.dynamic_array_impl_vector;
 
 namespace atom
 {
@@ -9,7 +14,7 @@ namespace atom
     /// - write time complexities after writing implementation.
     /// - add note for case, where element or elements to be inserted are from this array.
     /// --------------------------------------------------------------------------------------------
-    template <typename in_elem_t, typename in_allocator_t = default_mem_allocator>
+    export template <typename in_elem_t, typename in_allocator_t = default_mem_allocator>
     class dynamic_array: public range_extensions
     {
         static_assert(

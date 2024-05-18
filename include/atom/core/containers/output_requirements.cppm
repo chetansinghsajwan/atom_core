@@ -1,6 +1,7 @@
-#pragma once
-// #include "atom/core/core.h"
-// #include "atom/core/range.h"
+export module atom.core:containers.output_requirements;
+
+import :core;
+import :ranges;
 
 // clang-format off
 

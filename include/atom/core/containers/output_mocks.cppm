@@ -1,10 +1,11 @@
-#pragma once
-// #include "atom/core/types.h"
-// #include "atom/core/range.h"
+export module atom.core:containers.output_mocks;
+
+import :types;
+import :ranges;
 
 namespace atom::mock
 {
-    template <typename value_t>
+    export template <typename value_t>
     class output
     {
         static_assert(typeinfo<value_t>::is_pure);

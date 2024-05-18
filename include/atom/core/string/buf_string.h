@@ -1,7 +1,7 @@
 #pragma once
 // #include "atom/core/core.h"
 #include "atom/core/string/string_extensions.h"
-#include "atom/core/containers/buf_array.h"
+// #include "atom/core/containers/buf_array.h"
 
 namespace atom
 {

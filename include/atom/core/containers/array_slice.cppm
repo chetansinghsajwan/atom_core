@@ -1,30 +1,34 @@
-#pragma once
-// #include "atom/core/range/array_iter.h"
-// #include "atom/core/range.h"
+export module atom.core:containers.array_slice;
+
+import :core;
+import :ranges;
+import :types;
 
 namespace atom
 {
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename in_elem_t>
-    class array_view: public range_extensions
+    export template <typename in_elem_t>
+    class array_slice: public range_extensions
     {
         static_assert(typeinfo<in_elem_t>::is_pure);
 
     private:
-        using this_t = array_view;
+        using this_t = array_slice;
 
     public:
         using value_t = in_elem_t;
         using iter_t = array_iter<value_t>;
         using iter_end_t = iter_t;
+        using mut_iter_t = mut_array_iter<value_t>;
+        using mut_iter_end_t = mut_iter_t;
 
     public:
         /// ----------------------------------------------------------------------------------------
         /// # default constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr array_view()
+        constexpr array_slice()
             : _data(nullptr)
             , _count(0)
         {}
@@ -32,30 +36,30 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # trivial copy constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr array_view(const this_t& that) = default;
+        constexpr array_slice(const this_t& that) = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # trivial copy operator
         /// ----------------------------------------------------------------------------------------
-        constexpr array_view& operator=(const this_t& that) = default;
+        constexpr array_slice& operator=(const this_t& that) = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # trivial move constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr array_view(this_t&& that) = default;
+        constexpr array_slice(this_t&& that) = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # trivial move operator
         /// ----------------------------------------------------------------------------------------
-        constexpr array_view& operator=(this_t&& that) = default;
+        constexpr array_slice& operator=(this_t&& that) = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # range constructor
         /// ----------------------------------------------------------------------------------------
         template <typename range_t>
-        constexpr array_view(const range_t& range)
-            requires is_array_range_of<range_t, value_t>
-            : _data(range.get_data())
+        constexpr array_slice(range_t& range)
+            requires is_mut_array_range_of<range_t, value_t>
+            : _data(range.get_mut_data())
             , _count(range.get_count())
         {}
 
@@ -63,10 +67,10 @@ namespace atom
         /// # range operator
         /// ----------------------------------------------------------------------------------------
         template <typename range_t>
-        constexpr array_view& operator=(const range_t& range)
-            requires is_array_range_of<range_t, value_t>
+        constexpr array_slice& operator=(range_t& range)
+            requires is_mut_array_range_of<range_t, value_t>
         {
-            _data = range.get_data();
+            _data = range.get_mut_data();
             _count = range.get_count();
         }
 
@@ -74,7 +78,7 @@ namespace atom
         /// # array constructor
         /// ----------------------------------------------------------------------------------------
         template <usize count>
-        constexpr array_view(const value_t (&arr)[count])
+        constexpr array_slice(const value_t (&arr)[count])
             : _data(arr)
             , _count(count)
         {}
@@ -83,7 +87,7 @@ namespace atom
         /// # array operator
         /// ----------------------------------------------------------------------------------------
         template <usize count>
-        constexpr array_view& operator=(const value_t (&arr)[count])
+        constexpr array_slice& operator=(const value_t (&arr)[count])
         {
             _data = arr;
             _count = count;
@@ -92,51 +96,75 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # trivial destructor
         /// ----------------------------------------------------------------------------------------
-        constexpr ~array_view() = default;
+        constexpr ~array_slice() = default;
 
     public:
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_data() const -> const value_t*
+        constexpr auto get_data(this const this_t& self) -> const value_t*
         {
-            return _data;
+            return self._data;
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_count() const -> usize
+        constexpr auto get_data(this this_t& self) -> value_t*
         {
-            return _count;
+            return self._data;
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_size() const -> usize
+        constexpr auto get_mut_data(this this_t& self) -> value_t*
         {
-            return _count * sizeof(char) / sizeof(byte);
+            return self._data;
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_iter() const -> iter_t
+        constexpr auto get_count(this const this_t& self) -> usize
         {
-            return iter_t(_data);
+            return self._count;
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_iter_end() const -> iter_end_t
+        constexpr auto get_iter(this const this_t& self) -> iter_t
         {
-            return iter_end_t(_data + _count);
+            return iter_t(self._data);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto get_iter_end(this const this_t& self) -> iter_end_t
+        {
+            return iter_end_t(self._data + self._count);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto get_mut_iter(this this_t& self) -> mut_iter_t
+        {
+            return mut_iter_t(self._data);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto get_mut_iter_end(this this_t& self) -> mut_iter_end_t
+        {
+            return mut_iter_end_t(self._data + self._count);
         }
 
     private:
-        const value_t* _data;
+        value_t* _data;
         usize _count;
     };
 }

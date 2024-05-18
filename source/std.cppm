@@ -34,6 +34,7 @@ module;
 #include <cstring>
 #include <functional>
 #include <chrono>
+#include <unordered_map>
 #include <exception>
 
 export module std;
@@ -162,6 +163,7 @@ export namespace std
     using std::unordered_map;
     using std::variant;
     using std::vector;
+    using std::unordered_map;
 
     using std::make_shared;
     using std::make_unique;

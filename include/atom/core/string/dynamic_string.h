@@ -1,6 +1,6 @@
 #pragma once
 #include "atom/core/string/string_extensions.h"
-#include "atom/core/containers/dynamic_array.h"
+// #include "atom/core/containers/dynamic_array.h"
 
 namespace atom
 {

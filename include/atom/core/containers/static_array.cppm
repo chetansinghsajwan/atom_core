@@ -1,11 +1,12 @@
-#pragma once
-// #include "atom/core/core.h"
-// #include "atom/core/range/array_iter.h"
-// #include "atom/core/range.h"
+export module atom.core:containers.static_array;
+
+import :core;
+import :types;
+import :ranges;
 
 namespace atom
 {
-    template <typename in_elem_t, usize in_count>
+    export template <typename in_elem_t, usize in_count>
     class static_array: public range_extensions
     {
     public:

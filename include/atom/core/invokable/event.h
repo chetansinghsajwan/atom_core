@@ -2,7 +2,7 @@
 // #include "atom/core/_std.h"
 // #include "atom/core/core.h"
 #include "atom/core/invokable/invokable_box.h"
-#include "atom/core/containers/dynamic_array.h"
+// #include "atom/core/containers/dynamic_array.h"
 
 /// ------------------------------------------------------------------------------------------------
 /// implementations

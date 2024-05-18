@@ -3,7 +3,7 @@
 #include "atom/core/memory/unique_ptr.h"
 // #include "atom/core/memory/obj_helper.h"
 // #include "atom/core/types.h"
-#include "atom/core/memory/default_mem_allocator.h"
+// #include "atom/core/memory/default_mem_allocator.h"
 
 /// ------------------------------------------------------------------------------------------------
 /// implementations

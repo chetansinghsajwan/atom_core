@@ -1,6 +1,6 @@
 #pragma once
 #include "atom/core/string/string_extensions.h"
-#include "atom/core/containers/static_array.h"
+// #include "atom/core/containers/static_array.h"
 
 namespace atom
 {

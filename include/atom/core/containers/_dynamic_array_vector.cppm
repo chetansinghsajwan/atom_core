@@ -1,6 +1,9 @@
-#pragma once
-// #include "atom/core/core.h"
-// #include <vector>
+export module atom.core:containers.dynamic_array_impl_vector;
+
+import std;
+import :core;
+import :ranges;
+import :math;
 
 namespace atom
 {
