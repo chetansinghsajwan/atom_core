@@ -1,14 +1,16 @@
-#pragma once
-// #include "atom/core/range/array_iter.h"
-#include "atom/core/string/string_view.h"
-// #include "fmt/core.h"
+export module atom.core:strings.string_format_context;
+
+import fmt;
+import :core;
+import :ranges;
+import :strings.string_view;
 
 namespace atom
 {
     /// --------------------------------------------------------------------------------------------
     /// context to parse format string.
     /// --------------------------------------------------------------------------------------------
-    class string_format_parse_context
+    export class string_format_parse_context
     {
     public:
         constexpr string_format_parse_context(fmt::format_parse_context& fmt_ctx)
@@ -38,7 +40,7 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     /// context to write formatted string.
     /// --------------------------------------------------------------------------------------------
-    class string_format_context
+    export class string_format_context
     {
     public:
         constexpr string_format_context(fmt::format_context& ctx)

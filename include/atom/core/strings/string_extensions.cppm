@@ -1,15 +1,16 @@
-#pragma once
-// #include "atom/core/_std.h"
-// #include "atom/core/core.h"
-// #include "atom/core/range.h"
-#include "atom/core/string/_string_type_id.h"
+export module atom.core:strings.string_extensions;
+
+import std;
+import :core;
+import :ranges;
+import :strings._string_type_id;
 
 namespace atom
 {
-    using string_iter = array_iter<char>;
-    using mut_string_iter = mut_array_iter<char>;
+    export using string_iter = array_iter<char>;
+    export using mut_string_iter = mut_array_iter<char>;
 
-    template <typename final_t>
+    export template <typename final_t>
     class string_extensions: public _string_type_id
     {
     private:

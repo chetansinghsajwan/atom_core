@@ -1,6 +1,6 @@
-#pragma once
-// #include "atom/core/types.h"
-// #include "fmt/core.h"
+export module atom.core:strings._format_arg_wrapper;
+
+import :types;
 
 namespace atom
 {

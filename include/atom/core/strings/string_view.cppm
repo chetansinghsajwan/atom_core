@@ -1,10 +1,11 @@
-#pragma once
-#include "atom/core/string/string_extensions.h"
-// #include "atom/core/containers/array_view.h"
+export module atom.core:strings.string_view;
+
+import :containers;
+import :strings.string_extensions;
 
 namespace atom
 {
-    class string_view
+    export class string_view
         : public array_view<char>
         , public string_extensions<string_view>
     {

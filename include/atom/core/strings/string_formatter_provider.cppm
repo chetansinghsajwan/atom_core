@@ -1,16 +1,17 @@
-#pragma once
-#include "atom/core/string/_format_arg_wrapper.h"
-#include "atom/core/string/string_formatter.h"
-// #include "atom/core/types.h"
+export module atom.core:strings.string_formatter_provider;
 
-// #include "fmt/core.h"
+import fmt;
+import :types;
+import :strings.string_formatter;
+import :strings.string_format_context;
+import :strings._format_arg_wrapper;
 
 namespace atom
 {
     /// --------------------------------------------------------------------------------------------
     /// finds and provides `string_formatter` implementation to use.
     /// --------------------------------------------------------------------------------------------
-    template <typename in_value_t>
+    export template <typename in_value_t>
     class string_formatter_provider
     {
         using value_t = typeinfo<in_value_t>::pure_t::value_t;
@@ -78,7 +79,7 @@ namespace fmt
     /// this `fmt::formatter` speicialization connects `fmt` with `atom::formatter` implementations.
     /// calls `atom::formatter` implementation for `value_t`.
     /// --------------------------------------------------------------------------------------------
-    template <typename value_t>
+    export template <typename value_t>
     class formatter<atom::_format_arg_wrapper<value_t>>
     {
     public:

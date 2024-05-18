@@ -1,10 +1,11 @@
-#pragma once
-#include "atom/core/string/string_extensions.h"
-// #include "atom/core/containers/static_array.h"
+export module atom.core:strings.static_string;
+
+import :containers;
+import :strings.string_extensions;
 
 namespace atom
 {
-    template <usize size>
+    export template <usize size>
     class static_string
         : public static_array<char, size>
         , public string_extensions<static_string<size>>

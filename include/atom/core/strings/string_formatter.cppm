@@ -1,19 +1,17 @@
-#pragma once
-#include "atom/core/string/string_format_context.h"
-// #include "atom/core/core/enums.h"
-#include "atom/core/string/_string_type_id.h"
-// #include "atom/core/types.h"
-// #include "fmt/core.h"
-// #include "fmt/ranges.h"
-// #include "fmt/std.h"
-// #include "fmt/chrono.h"
+export module atom.core:strings.string_formatter;
+
+import fmt;
+import :types;
+import :strings.string_view;
+import :strings.string_format_context;
+import :strings._string_type_id;
 
 namespace atom
 {
     /// --------------------------------------------------------------------------------------------
     /// level of `string_formatter` implementation, this is used to prevent ambiguities.
     /// --------------------------------------------------------------------------------------------
-    enum class string_formatter_level
+    export enum class string_formatter_level
     {
         atom,
         fmt,
@@ -24,14 +22,14 @@ namespace atom
     /// parses and writes string representation for types according to the specified format
     /// specifiers.
     /// --------------------------------------------------------------------------------------------
-    template <typename value_t, string_formatter_level level = string_formatter_level::user>
+    export template <typename value_t, string_formatter_level level = string_formatter_level::user>
     class string_formatter;
 
     /// --------------------------------------------------------------------------------------------
     /// `string_formatter` specialization for all types for which exists a `fmt::formatter`
     /// specialization.
     /// --------------------------------------------------------------------------------------------
-    template <typename value_t>
+    export template <typename value_t>
         requires typeinfo<fmt::formatter<value_t>>::is_default_constructible
     class string_formatter<value_t, string_formatter_level::fmt>
     {
@@ -58,7 +56,7 @@ namespace atom
     /// `string_formatter` specialization for all string types to treat them as string instead of
     /// range of `char`.
     /// --------------------------------------------------------------------------------------------
-    template <typename string_t>
+    export template <typename string_t>
         requires typeinfo<string_t>::template is_derived_from<_string_type_id>
     class string_formatter<string_t, string_formatter_level::atom>
         : public string_formatter<fmt::string_view, string_formatter_level::fmt>
@@ -76,7 +74,7 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     /// `string_formatter` specialization for all enum types.
     /// --------------------------------------------------------------------------------------------
-    template <typename enum_t>
+    export template <typename enum_t>
         requires typeinfo<enum_t>::is_enum
     class string_formatter<enum_t, string_formatter_level::atom>
         : public string_formatter<string_view, string_formatter_level::atom>

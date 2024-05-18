@@ -1,11 +1,15 @@
-#pragma once
-#include "atom/core/string/_format_arg_wrapper.h"
-#include "atom/core/string/format_string.h"
-#include "atom/core/string/string_format_error.h"
-#include "atom/core/string/string_formatter.h"
-#include "atom/core/string/string_formatter_provider.h"
-// #include "fmt/core.h"
-// #include "fmt/format.h"
+export module atom.core:strings.string_formatting;
+
+import std;
+import fmt;
+import :core;
+import :types;
+import :strings.string_formatter;
+import :strings.string_format_context;
+import :strings.string_formatter_provider;
+import :strings.string_format_error;
+import :strings.format_string;
+import :strings._format_arg_wrapper;
 
 namespace atom
 {

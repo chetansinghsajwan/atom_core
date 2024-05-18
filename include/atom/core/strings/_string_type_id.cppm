@@ -1,4 +1,4 @@
-#pragma once
+export module atom.core:strings._string_type_id;
 
 namespace atom
 {

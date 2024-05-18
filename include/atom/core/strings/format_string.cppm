@@ -1,8 +1,9 @@
-#pragma once
-#include "atom/core/string/_format_arg_wrapper.h"
-#include "atom/core/string/string_view.h"
-// #include "atom/core/types.h"
-// #include "fmt/core.h"
+export module atom.core:strings.format_string;
+
+import fmt;
+import :types;
+import :strings._format_arg_wrapper;
+import :strings.string_view;
 
 namespace atom
 {

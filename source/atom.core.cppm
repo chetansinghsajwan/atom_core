@@ -11,10 +11,11 @@ export import :contracts;
 export import :core;
 export import :mem_helper;
 export import :obj_helper;
-export import :ranges;
-export import :containers;
 export import :default_mem_allocator;
 export import :legacy_mem_allocator;
+export import :ranges;
+export import :containers;
+export import :strings;
 
 export
 {

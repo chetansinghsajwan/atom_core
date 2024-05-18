@@ -1,13 +1,15 @@
-#pragma once
-// #include "atom/core/containers/output_requirements.h"
-#include "atom/core/string/buf_string.h"
-#include "atom/core/string/string_view.h"
-#include "atom/core/string/string_formatting.h"
-// #include "atom/core/memory/default_mem_allocator.h"
+export module atom.core:strings.string;
+
+import :core;
+import :default_mem_allocator;
+import :strings.buf_string;
+import :strings.format_string;
+import :strings.string_formatting;
+import :strings.string_formatter_provider;
 
 namespace atom
 {
-    class string: public buf_string<40, default_mem_allocator>
+    export class string: public buf_string<40, default_mem_allocator>
     {
         using base_t = buf_string<40, default_mem_allocator>;
 
@@ -49,27 +51,6 @@ namespace atom
             format_to(out, fmt, atom::forward<arg_ts>(args)...);
 
             return out;
-        }
-    };
-}
-
-namespace std
-{
-    template <>
-    struct hash<atom::string>
-    {
-        constexpr auto operator()(const atom::string& str) const -> std::size_t
-        {
-            return hash<std::string_view>()(str.to_std());
-        }
-    };
-
-    template <>
-    struct hash<atom::string_view>
-    {
-        constexpr auto operator()(const atom::string_view& str) const -> std::size_t
-        {
-            return hash<std::string_view>()(str.to_std());
         }
     };
 }
