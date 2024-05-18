@@ -2,8 +2,6 @@ export module atom.core;
 
 export import std;
 import fmt;
-import cpptrace;
-import libassert;
 import magic_enum;
 
 export import :types;
