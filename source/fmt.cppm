@@ -17,4 +17,6 @@ export namespace fmt
     using fmt::format_error;
     using fmt::runtime;
     using fmt::string_view;
+    using fmt::print;
+    using fmt::println;
 }

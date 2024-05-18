@@ -18,6 +18,7 @@ export import :containers;
 export import :strings;
 export import :invokable_ptr;
 export import :invokable_box;
+export import :print;
 
 export
 {
