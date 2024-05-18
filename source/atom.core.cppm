@@ -9,21 +9,23 @@ import magic_enum;
 export import :types;
 export import :contracts;
 export import :core;
-export import :mem_helper;
-export import :obj_helper;
-export import :default_mem_allocator;
-export import :legacy_mem_allocator;
 export import :ranges;
 export import :containers;
 export import :strings;
-export import :invokable_ptr;
-export import :invokable_box;
 export import :print;
 
-export
-{
-#include "atom.core.h"
-}
+export import :mem_helper;
+export import :obj_helper;
+export import :lock_guard;
+export import :lockable;
+export import :mutex;
+export import :null_lockable;
+export import :shared_ptr;
+export import :unique_ptr;
+export import :default_mem_allocator;
+export import :legacy_mem_allocator;
+export import :invokable_ptr;
+export import :invokable_box;
 
 export
 {

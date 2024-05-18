@@ -1,85 +1,94 @@
-#pragma once
-// #include "atom/core/_std.h"
+export module atom.core:null_lockable;
+
+import :lockable;
+import :lock_guard;
 
 namespace atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// simple_mutex implementation.
+    /// null_lockable is a stateless object that does not has any locking mechanism.
+    /// it's used where a lockable implementation is needed but thread-safety is not needed.
     ///
-    /// @todo implement this class without {std::lock}.
+    /// @todo: should we delete its constructors and operators to match {simple_mutex}?
     /// --------------------------------------------------------------------------------------------
-    class simple_mutex
+    export class null_lockable
     {
     public:
         /// ----------------------------------------------------------------------------------------
-        /// default_constructor.
-        ///
-        /// @post mutex is not locked.
+        /// default_constructor. does nothing.
         /// ----------------------------------------------------------------------------------------
-        simple_mutex() {}
+        constexpr null_lockable() {}
 
         /// ----------------------------------------------------------------------------------------
-        /// copy_constructor is deleted.
+        /// copy_constructor is default.
         /// ----------------------------------------------------------------------------------------
-        simple_mutex(const simple_mutex& other) = delete;
+        constexpr null_lockable(const null_lockable& other) {}
 
         /// ----------------------------------------------------------------------------------------
-        /// move_constructor is delete.
+        /// move_constructor is default.
         /// ----------------------------------------------------------------------------------------
-        simple_mutex(simple_mutex&& other) = delete;
+        constexpr null_lockable(null_lockable&& other) {}
 
         /// ----------------------------------------------------------------------------------------
-        /// copy_operator is deleted.
+        /// copy_operator is default.
         /// ----------------------------------------------------------------------------------------
-        auto operator=(const simple_mutex& other) = delete;
+        constexpr auto operator=(const null_lockable& other) -> null_lockable&
+        {
+            return *this;
+        }
 
         /// ----------------------------------------------------------------------------------------
-        /// move_operator is delete.
+        /// move_operator is default.
         /// ----------------------------------------------------------------------------------------
-        auto operator=(simple_mutex&& other) = delete;
+        constexpr auto operator=(null_lockable&& other) -> null_lockable&
+        {
+            return *this;
+        }
 
         /// ----------------------------------------------------------------------------------------
-        /// destructor.
-        ///
-        /// @note if lock is locked by some thread and lock is destroyed, behaviour is undefined.
+        /// destructor. does nothing.
         /// ----------------------------------------------------------------------------------------
-        ~simple_mutex() {}
+        constexpr ~null_lockable() {}
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// locks the lock. if the lock is already locked by some thread then blocks the calling
-        /// thread until lock is acquired.
+        /// does nothing.
+        /// ----------------------------------------------------------------------------------------
+        constexpr void lock() {}
+
+        /// ----------------------------------------------------------------------------------------
+        /// always returns true.
+        /// ----------------------------------------------------------------------------------------
+        constexpr bool try_lock()
+        {
+            return true;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// does nothing.
+        /// ----------------------------------------------------------------------------------------
+        constexpr void unlock() {}
+    };
+
+    static_assert(is_lockable<null_lockable>);
+
+    /// --------------------------------------------------------------------------------------------
+    /// specialization for null_lockable to avoid any performance overhead.
+    /// --------------------------------------------------------------------------------------------
+    export template <>
+    class lock_guard<null_lockable>
+    {
+    public:
+        /// ----------------------------------------------------------------------------------------
+        /// constructor. does nothing.
         ///
-        /// @see try_lock().
+        /// @param[in] lock null_lockable reference. (unused).
         /// ----------------------------------------------------------------------------------------
-        auto lock()
-        {
-            _impl.lock();
-        }
+        constexpr lock_guard(null_lockable& lock) {}
 
         /// ----------------------------------------------------------------------------------------
-        /// tries to lock the lock. if the lock is already locked by some thread then returns but
-        /// does not blocks the thread.
-        ///
-        /// @returns `true` if lock acquired, else `false`.
+        /// destructor. does nothing.
         /// ----------------------------------------------------------------------------------------
-        auto try_lock() -> bool
-        {
-            return _impl.try_lock();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// unlocks the lock.
-        /// ----------------------------------------------------------------------------------------
-        auto unlock()
-        {
-            _impl.unlock();
-        }
-
-    private:
-        /// ----------------------------------------------------------------------------------------
-        /// mutex implementation.
-        /// ----------------------------------------------------------------------------------------
-        std::mutex _impl;
+        constexpr ~lock_guard() {}
     };
 }

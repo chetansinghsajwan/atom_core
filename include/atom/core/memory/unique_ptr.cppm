@@ -1,10 +1,11 @@
-#pragma once
-// #include "atom/core/core.h"
-// #include "atom/core/memory/obj_helper.h"
-// #include "atom/core/types.h"
-// #include "atom/core/memory/default_mem_allocator.h"
+export module atom.core:unique_ptr;
 
-namespace atom
+import std;
+import :types;
+import :default_mem_allocator;
+import :obj_helper;
+
+export namespace atom
 {
     template <typename value_t>
     class shared_ptr;
@@ -149,7 +150,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto set(nullptr_t)
+        constexpr auto set(std::nullptr_t)
         {
             _check_and_destroy_value();
         }

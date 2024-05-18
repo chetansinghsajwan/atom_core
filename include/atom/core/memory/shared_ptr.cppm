@@ -1,9 +1,10 @@
-#pragma once
-// #include "atom/core/core.h"
-#include "atom/core/memory/unique_ptr.h"
-// #include "atom/core/memory/obj_helper.h"
-// #include "atom/core/types.h"
-// #include "atom/core/memory/default_mem_allocator.h"
+export module atom.core:shared_ptr;
+
+import :core;
+import :types;
+import :unique_ptr;
+import :obj_helper;
+import :default_mem_allocator;
 
 /// ------------------------------------------------------------------------------------------------
 /// implementations
@@ -112,7 +113,7 @@ namespace atom
 /// ------------------------------------------------------------------------------------------------
 /// apis
 /// ------------------------------------------------------------------------------------------------
-namespace atom
+export namespace atom
 {
     class shared_ptr_default_allocator: public default_mem_allocator
     {};
