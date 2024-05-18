@@ -1,8 +1,8 @@
 #pragma once
 // #include "atom/core/_std.h"
-#include "atom/core/core.h"
+// #include "atom/core/core.h"
 // #include "atom/core/types.h"
-#include "atom/core/core/static_storage.h"
+// #include "atom/core/core/static_storage.h"
 #include "atom/core/invokable/invokable_ptr.h"
 // #include "atom/core/contracts.h"
 #include "atom/core/memory/default_mem_allocator.h"

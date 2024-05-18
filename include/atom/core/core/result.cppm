@@ -1,13 +1,14 @@
-#pragma once
-#include "atom/core/core/result_api.h"
-#include "atom/core/core/result_impl.h"
+export module atom.core:core.result;
+
+import :core.result_impl;
+import :core.result_api;
 
 namespace atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// 
+    ///
     /// --------------------------------------------------------------------------------------------
-    template <typename value_t, typename... error_ts>
+    export template <typename value_t, typename... error_ts>
     class result: public result_api<result_impl<value_t, error_ts...>>
     {
         using this_t = result;

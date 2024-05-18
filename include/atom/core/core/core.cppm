@@ -1,10 +1,8 @@
-#pragma once
-// #include "atom/core/_std.h"
-#include "atom/core/core/core.h"
+export module atom.core:core.core;
 
-// #include <concepts>
+import std;
 
-namespace atom
+export namespace atom
 {
     template <typename value_t>
     constexpr auto move(value_t&& val) -> typename std::remove_reference_t<value_t>&&
@@ -26,9 +24,18 @@ namespace atom
 
         return static_cast<value_t&&>(val);
     }
+
+    using nullptr_t = std::nullptr_t;
+
+    template <typename... arg_ts>
+    class type_holder
+    {};
+
+    template <typename value_t>
+    using initializer_list = std::initializer_list<value_t>;
 }
 
-namespace atom
+export namespace atom
 {
     template <typename value_t0, typename value_t1>
     concept _is_equality_comparable_with = requires(const value_t0 v0, const value_t1 v1) {

@@ -1,12 +1,13 @@
-#pragma once
-// #include "atom/core/_std.h"
+export module atom.core:core.error;
+
+import std;
 
 namespace atom
 {
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    class error
+    export class error
     {
     public:
         constexpr error()
@@ -22,6 +23,6 @@ namespace atom
         std::string_view msg;
     };
 
-    class value_exists_error: public error
+    export class value_exists_error: public error
     {};
 }

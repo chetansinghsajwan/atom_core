@@ -1,9 +1,10 @@
-#pragma once
-#include "atom/core/core.h"
-// #include "atom/core/types.h"
-// #include "atom/core/contracts.h"
-#include "atom/core/memory/obj_helper.h"
-#include "atom/core/core/static_storage.h"
+export module atom.core:core.variant;
+
+import :contracts;
+import :types;
+import :obj_helper;
+import :core.core;
+import :core.static_storage;
 
 /// ------------------------------------------------------------------------------------------------
 /// implementations
@@ -401,7 +402,7 @@ namespace atom
     /// - check requirements for assignments.
     /// - check if requirements using typelist functionality can be made concepts.
     /// --------------------------------------------------------------------------------------------
-    template <typename... value_ts>
+    export template <typename... value_ts>
     class variant
     {
         static_assert(

@@ -1,7 +1,8 @@
-#pragma once
-// #include "atom/core/_std.h"
-#include "atom/core/core/char_wrapper.h"
-#include "atom/core/core/num_wrapper.h"
+export module atom.core:core.float_wrapper;
+
+import std;
+import :core.num_wrapper;
+
 #include "atom/core/preprocessors.h"
 
 /// ------------------------------------------------------------------------------------------------
@@ -98,18 +99,15 @@ namespace atom
     };
 }
 
-/// ------------------------------------------------------------------------------------------------
-/// final types
-/// ------------------------------------------------------------------------------------------------
 namespace atom
 {
-    using _f16 = float;
-    using _f32 = float;
-    using _f64 = double;
-    using _f128 = long double;
+    export using _f16 = float;
+    export using _f32 = float;
+    export using _f64 = double;
+    export using _f128 = long double;
 
-    ATOM_ALIAS(f16, num_wrapper<_float_wrapper_impl<f16, _f16>>);
-    ATOM_ALIAS(f32, num_wrapper<_float_wrapper_impl<f32, _f32>>);
-    ATOM_ALIAS(f64, num_wrapper<_float_wrapper_impl<f64, _f64>>);
-    ATOM_ALIAS(f128, num_wrapper<_float_wrapper_impl<f128, _f128>>);
+    export ATOM_ALIAS(f16, num_wrapper<_float_wrapper_impl<f16, _f16>>);
+    export ATOM_ALIAS(f32, num_wrapper<_float_wrapper_impl<f32, _f32>>);
+    export ATOM_ALIAS(f64, num_wrapper<_float_wrapper_impl<f64, _f64>>);
+    export ATOM_ALIAS(f128, num_wrapper<_float_wrapper_impl<f128, _f128>>);
 }

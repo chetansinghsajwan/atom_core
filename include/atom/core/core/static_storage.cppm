@@ -1,11 +1,14 @@
-#pragma once
-#include "atom/core/core.h"
-// #include "atom/core/types.h"
-// #include "atom/core/contracts.h"
+export module atom.core:core.static_storage;
+
+import :contracts;
+import :types;
+import :core.core;
+import :core.byte;
+import :core.int_wrapper;
 
 namespace atom
 {
-    template <typename... values_t>
+    export template <typename... values_t>
     class static_storage_for
     {
     private:
@@ -15,7 +18,7 @@ namespace atom
         alignas(value_types_list::max_align) byte storage[value_types_list::max_size];
     };
 
-    template <usize in_size>
+    export template <usize in_size>
     class static_storage
     {
     public:

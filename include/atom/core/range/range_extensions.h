@@ -1,4 +1,5 @@
 #pragma once
+#include "atom/core/preprocessors.h"
 #include "_range_extensions_impl.h"
 #include "atom/core/range/iter_requirements.h"
 #include "atom/core/range/range_requirements.h"

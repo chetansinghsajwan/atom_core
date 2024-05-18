@@ -8,6 +8,9 @@ import magic_enum;
 
 export import :types;
 export import :contracts;
+export import :core;
+export import :mem_helper;
+export import :obj_helper;
 
 export
 {

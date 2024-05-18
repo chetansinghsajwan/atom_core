@@ -1,16 +1,19 @@
-#pragma once
+export module atom.core:mem_helper;
+
+import std;
+import :core.byte;
+import :core.int_wrapper;
+import :math;
+import :contracts;
+
 #include "atom/core/preprocessors.h"
-#include "atom/core/core.h"
-// #include "atom/core/contracts.h"
-// #include "atom/core/_std.h"
-// #include "atom/core/math.h"
 
 namespace atom
 {
     /// --------------------------------------------------------------------------------------------
     /// contains basic memory utility functions.
     /// --------------------------------------------------------------------------------------------
-    class mem_helper
+    export class mem_helper
     {
     public:
         /// ----------------------------------------------------------------------------------------

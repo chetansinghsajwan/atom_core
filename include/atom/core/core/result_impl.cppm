@@ -1,7 +1,10 @@
-#pragma once
-#include "atom/core/core/variant.h"
-#include "atom/core/core/option.h"
-// #include <utility>
+export module atom.core:core.result_impl;
+
+import :types;
+import :contracts;
+import :core.core;
+import :core.option;
+import :core.variant;
 
 namespace atom
 {

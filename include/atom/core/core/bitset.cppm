@@ -1,6 +1,7 @@
-#pragma once
-// #include "atom/core/_std.h"
-#include "atom/core/core/int_wrapper.h"
+export module atom.core:core.bitset;
+
+import std;
+import :core.int_wrapper;
 
 namespace atom
 {
@@ -212,7 +213,7 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     /// type to hold and manage a number of bits.
     /// --------------------------------------------------------------------------------------------
-    template <typename storage_t>
+    export template <typename storage_t>
     class bitset
     {
         using this_t = bitset<storage_t>;
@@ -483,8 +484,8 @@ namespace atom
         _impl_t _impl;
     };
 
-    using bitset8 = bitset<std::uint8_t>;
-    using bitset16 = bitset<std::uint16_t>;
-    using bitset32 = bitset<std::uint32_t>;
-    using bitset64 = bitset<std::uint64_t>;
+    export using bitset8 = bitset<std::uint8_t>;
+    export using bitset16 = bitset<std::uint16_t>;
+    export using bitset32 = bitset<std::uint32_t>;
+    export using bitset64 = bitset<std::uint64_t>;
 }

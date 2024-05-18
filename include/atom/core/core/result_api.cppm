@@ -1,20 +1,21 @@
-#pragma once
-#include "atom/core/core/core.h"
-#include "atom/core/core/option.h"
-// #include "atom/core/types.h"
+export module atom.core:core.result_api;
+
+import :types;
+import :core.core;
+import :core.option;
 
 namespace atom
 {
-    class result_void
+    export class result_void
     {};
 
-    class result_tag
+    export class result_tag
     {};
 
     /// --------------------------------------------------------------------------------------------
     /// @todo update docs.
     /// --------------------------------------------------------------------------------------------
-    template <typename in_impl_t>
+    export template <typename in_impl_t>
     class result_api: public result_tag
     {
         template <typename that_impl_t>

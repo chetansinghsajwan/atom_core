@@ -1,5 +1,5 @@
 #pragma once
-#include "atom/core/core.h"
+// #include "atom/core/core.h"
 #include "atom/core/range.h"
 
 // clang-format off

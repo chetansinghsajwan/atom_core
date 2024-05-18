@@ -1,6 +1,6 @@
 #pragma once
 
-#include "atom/core/core.h"
+// #include "atom/core/core.h"
 // #include "atom/core/types.h"
 #include "atom/core/print.h"
 // #include "atom/core/math.h"
@@ -18,8 +18,8 @@
 #include "atom/core/memory/lockable.h"
 #include "atom/core/memory/null_lockable.h"
 #include "atom/core/memory/mutex.h"
-#include "atom/core/memory/mem_helper.h"
-#include "atom/core/memory/obj_helper.h"
+// #include "atom/core/memory/mem_helper.h"
+// #include "atom/core/memory/obj_helper.h"
 #include "atom/core/range.h"
 #include "atom/core/range/array_iter.h"
 #include "atom/core/containers/output_requirements.h"

@@ -1,6 +1,6 @@
 #pragma once
 #include "atom/core/string/string_format_context.h"
-#include "atom/core/core/enums.h"
+// #include "atom/core/core/enums.h"
 #include "atom/core/string/_string_type_id.h"
 // #include "atom/core/types.h"
 // #include "fmt/core.h"
@@ -86,7 +86,7 @@ namespace atom
     public:
         constexpr auto format(enum_t value, string_format_context& ctx) const -> void
         {
-            base_t::format(enums::to_string_view(value), ctx);
+            // base_t::format(enums::to_string_view(value), ctx);
         }
     };
 }

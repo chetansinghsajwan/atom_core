@@ -1,12 +1,12 @@
-#pragma once
-#include "atom/core/core.h"
-#include "atom/core/memory/mem_helper.h"
-// #include "atom/core/contracts.h"
-// #include "atom/core/_std.h"
+export module atom.core:obj_helper;
+
+import std;
+import :mem_helper;
+import :contracts;
 
 namespace atom
 {
-    class obj_helper
+    export class obj_helper
     {
     public:
         template <typename value_t, typename... arg_ts>

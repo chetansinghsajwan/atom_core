@@ -1,8 +1,9 @@
-#pragma once
-#include "atom/core/core.h"
-// #include "atom/core/types.h"
-// #include "atom/core/contracts.h"
-#include "atom/core/memory/obj_helper.h"
+export module atom.core:core.option;
+
+import :types;
+import :contracts;
+import :obj_helper;
+import :core.core;
 
 /// ------------------------------------------------------------------------------------------------
 /// implementations
@@ -434,7 +435,7 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     /// type used to initialize option with no value.
     /// --------------------------------------------------------------------------------------------
-    class nullopt
+    export class nullopt
     {};
 
     /// --------------------------------------------------------------------------------------------
@@ -448,12 +449,11 @@ namespace atom
     /// # template parameters
     /// - `type`: type of value to store.
     /// --------------------------------------------------------------------------------------------
-    template <typename in_value_t>
+    export template <typename in_value_t>
     class option
     {
         static_assert(typeinfo<in_value_t>::is_pure, "option supports only pure types");
-        static_assert(
-            not typeinfo<in_value_t>::is_void, "option does not support void type.");
+        static_assert(not typeinfo<in_value_t>::is_void, "option does not support void type.");
 
     private:
         using this_t = option<in_value_t>;

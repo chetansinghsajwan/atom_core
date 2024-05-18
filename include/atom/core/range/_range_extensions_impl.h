@@ -1,5 +1,5 @@
 #pragma once
-#include "atom/core/core.h"
+// #include "atom/core/core.h"
 #include "atom/core/range/std_iter_wrap_for_atom_iter.h"
 // #include <algorithm>
 

@@ -1,7 +1,7 @@
-#pragma once
-// #include "atom/core/_std.h"
-#include "atom/core/core/byte.h"
-// #include "atom/core/contracts.h"
+export module atom.core:core.num_wrapper;
+
+import std;
+import :contracts;
 
 namespace atom
 {
