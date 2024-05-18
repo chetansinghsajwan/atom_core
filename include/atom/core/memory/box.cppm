@@ -1,11 +1,12 @@
-#pragma once
-// #include "atom/core/_std.h"
-// #include "atom/core/core.h"
-// #include "atom/core/types.h"
-// #include "atom/core/core/static_storage.h"
-#include "atom/core/invokable/invokable_ptr.h"
-// #include "atom/core/contracts.h"
-// #include "atom/core/memory/default_mem_allocator.h"
+export module atom.core:box;
+
+import std;
+import :types;
+import :core;
+import :invokable_ptr;
+import :contracts;
+import :default_mem_allocator;
+
 #include "atom/core/preprocessors.h"
 
 /// ------------------------------------------------------------------------------------------------
@@ -1066,7 +1067,7 @@ namespace atom
 /// ------------------------------------------------------------------------------------------------
 /// final types
 /// ------------------------------------------------------------------------------------------------
-namespace atom
+export namespace atom
 {
     template <typename value_t, usize buf_size = 50, typename allocator_t = default_mem_allocator>
     class box;

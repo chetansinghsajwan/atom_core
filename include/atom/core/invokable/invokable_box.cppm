@@ -1,8 +1,10 @@
-#pragma once
-// #include "atom/core/_std.h"
-#include "atom/core/memory/box.h"
-// #include "atom/core/core.h"
-// #include "atom/core/contracts.h"
+export module atom.core:invokable_box;
+
+import std;
+import :core;
+import :types;
+import :box;
+import :contracts;
 
 /// ------------------------------------------------------------------------------------------------
 /// implementations
@@ -171,13 +173,13 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     /// [`invokable_box`] declaration.
     /// --------------------------------------------------------------------------------------------
-    template <typename signature>
+    export template <typename signature>
     class invokable_box;
 
     /// --------------------------------------------------------------------------------------------
     /// stores an invokable value_t using boxing.
     /// --------------------------------------------------------------------------------------------
-    template <typename result_t, typename... arg_ts>
+    export template <typename result_t, typename... arg_ts>
     class invokable_box<result_t(arg_ts...)>: public invokable_box_tag
     {
         using _impl_t = _invokable_box_impl<result_t, arg_ts...>;

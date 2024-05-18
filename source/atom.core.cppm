@@ -16,6 +16,8 @@ export import :legacy_mem_allocator;
 export import :ranges;
 export import :containers;
 export import :strings;
+export import :invokable_ptr;
+export import :invokable_box;
 
 export
 {
