@@ -6,8 +6,8 @@ cmake_policy(SET CMP0076 NEW)
 cmake_policy(SET CMP0155 NEW)
 
 find_package(fmt REQUIRED)
-find_package(Catch2 REQUIRED)
 find_package(magic_enum REQUIRED)
+find_package(Catch2 REQUIRED)
 
 # --------------------------------------------------------------------------------------------------
 # atom.core
@@ -54,13 +54,27 @@ target_link_libraries(atom.core.sandbox PRIVATE atom.core)
 # install phase
 # --------------------------------------------------------------------------------------------------
 
+include(CMakePackageConfigHelpers)
+
+write_basic_package_version_file(
+    "atom_core-config-version.cmake"
+    VERSION ${PACKAGE_VERSION}
+    COMPATIBILITY AnyNewerVersion)
+
 install(
     TARGETS atom.core
     EXPORT atom_core-targets
-    FILE_SET CXX_MODULES DESTINATION "lib")
+    FILE_SET CXX_MODULES DESTINATION "lib"
+    INCLUDES DESTINATION "include")
 
 install(
     EXPORT atom_core-targets
-    FILE "atom_core-config.cmake"
+    FILE "atom_core-targets.cmake"
     NAMESPACE "atom::"
     DESTINATION "cmake/")
+
+install(
+    DIRECTORY "include/" DESTINATION "include/")
+
+install(FILES "cmake/atom_core-config.cmake"
+              "${CMAKE_CURRENT_BINARY_DIR}/atom_core-config-version.cmake" DESTINATION "cmake/")
