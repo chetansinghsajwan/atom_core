@@ -69,9 +69,8 @@ install(
 
 install(
     EXPORT atom_core-targets
-    FILE "atom_core-targets.cmake"
-    NAMESPACE "atom::"
-    DESTINATION "cmake/")
+    FILE "atom_core-targets.cmake" DESTINATION "cmake/"
+    NAMESPACE "atom::")
 
 install(
     DIRECTORY "include/" DESTINATION "include/")
