@@ -22,7 +22,7 @@
 
             src = ./.;
 
-            nativeBuildInputs = with pkgs; [
+            buildInputs = with pkgs; [
                 catch2_3
                 fmt
                 magic-enum

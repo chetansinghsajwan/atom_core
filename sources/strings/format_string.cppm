@@ -10,7 +10,7 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     /// type used to bypass compile time string formatting checks.
     /// --------------------------------------------------------------------------------------------
-    class runtime_format_string
+    export class runtime_format_string
     {
     public:
         constexpr runtime_format_string(string_view str)
@@ -48,6 +48,6 @@ namespace atom
         string_view str;
     };
 
-    template <typename... arg_ts>
+    export template <typename... arg_ts>
     using format_string = _format_string<typeutils::identity_t<arg_ts>...>;
 }

@@ -14,7 +14,7 @@ namespace atom
         {
             contract_debug_expects(mem != nullptr);
 
-            std::construct_at((value_t*)mem, forward<arg_ts>(args)...);
+            std::construct_at((value_t*)mem, std::forward<arg_ts>(args)...);
         }
 
         template <typename value_t, typename... arg_ts>
@@ -22,7 +22,7 @@ namespace atom
         {
             contract_debug_expects(mem != nullptr);
 
-            std::construct_at(mem, forward<arg_ts>(args)...);
+            std::construct_at(mem, std::forward<arg_ts>(args)...);
         }
 
         template <typename value_t, typename arg_t>
@@ -30,7 +30,7 @@ namespace atom
         {
             contract_debug_expects(mem != nullptr);
 
-            *mem = forward<arg_t>(arg);
+            *mem = std::forward<arg_t>(arg);
         }
 
         template <typename value_t, typename arg_t>
@@ -38,7 +38,7 @@ namespace atom
         {
             contract_debug_expects(mem != nullptr);
 
-            *mem = forward<arg_t>(arg);
+            *mem = std::forward<arg_t>(arg);
         }
 
         template <typename value_t>

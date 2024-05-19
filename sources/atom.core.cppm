@@ -11,11 +11,16 @@ export import :ranges;
 export import :containers;
 export import :strings;
 export import :print;
+export import :time;
+export import :hash;
+export import :math;
 
 export import :mem_helper;
 export import :obj_helper;
 export import :lock_guard;
 export import :lockable;
+export import :box;
+export import :atomic;
 export import :mutex;
 export import :null_lockable;
 export import :shared_ptr;
