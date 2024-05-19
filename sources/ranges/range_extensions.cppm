@@ -2,6 +2,7 @@ export module atom.core:ranges.range_extensions;
 
 import :core;
 import :types;
+import :contracts;
 import :ranges.range_extensions_impl;
 import :ranges.std_iter_wrap_for_atom_iter;
 import :ranges.iter_requirements;
