@@ -2,6 +2,7 @@ export module atom.core:core.variant;
 
 import :contracts;
 import :types;
+import :math;
 import :obj_helper;
 import :core.core;
 import :core.static_storage;

@@ -2,7 +2,7 @@ export module atom.core:math;
 
 import std;
 
-namespace atom::math
+export namespace atom::math
 {
     template <typename num_t>
     constexpr auto min() -> num_t
