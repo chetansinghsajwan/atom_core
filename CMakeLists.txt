@@ -5,9 +5,10 @@ enable_language(CXX)
 cmake_policy(SET CMP0076 NEW)
 cmake_policy(SET CMP0155 NEW)
 
+option(ATOM_CORE_BUILD_TESTS "Enable this to build tests." OFF)
+
 find_package(fmt REQUIRED)
 find_package(magic_enum REQUIRED)
-find_package(Catch2 REQUIRED)
 
 # --------------------------------------------------------------------------------------------------
 # atom.core
@@ -29,26 +30,30 @@ target_compile_options(
            "-Wno-reserved-module-identifier")
 
 # --------------------------------------------------------------------------------------------------
-# atom.core.tests
-# --------------------------------------------------------------------------------------------------
-
-add_executable(atom.core.tests)
-
-file(GLOB_RECURSE test_sources "tests/**.cpp")
-target_sources(atom.core.tests PRIVATE "${test_sources}")
-
-target_include_directories(atom.core.tests PRIVATE "tests/")
-target_link_libraries(atom.core.tests PRIVATE atom.core Catch2::Catch2WithMain)
-
-add_test(atom.core.tests atom.core.tests)
-
-# --------------------------------------------------------------------------------------------------
 # atom.core.sandbox
 # --------------------------------------------------------------------------------------------------
 
 add_executable(atom.core.sandbox)
 target_sources(atom.core.sandbox PRIVATE "sandbox/sandbox.cpp")
 target_link_libraries(atom.core.sandbox PRIVATE atom.core)
+
+# --------------------------------------------------------------------------------------------------
+# atom.core.tests
+# --------------------------------------------------------------------------------------------------
+
+if (ATOM_CORE_BUILD_TESTS)
+    find_package(Catch2 REQUIRED)
+
+    add_executable(atom.core.tests)
+
+    file(GLOB_RECURSE test_sources "tests/**.cpp")
+    target_sources(atom.core.tests PRIVATE "${test_sources}")
+
+    target_include_directories(atom.core.tests PRIVATE "tests/")
+    target_link_libraries(atom.core.tests PRIVATE atom.core Catch2::Catch2WithMain)
+
+    add_test(atom.core.tests atom.core.tests)
+endif()
 
 # --------------------------------------------------------------------------------------------------
 # install phase
