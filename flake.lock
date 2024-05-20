@@ -16,13 +16,30 @@
         "type": "github"
       }
     },
+    "libdwarf-lite": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1714245344,
+        "narHash": "sha256-jcdBQGukZIDEltlx306IWgKQ2IqbE29T8sa0zTSDrxw=",
+        "owner": "jeremy-rifkin",
+        "repo": "libdwarf-lite",
+        "rev": "87401f22cd05628d23059cb29ee6448a55c3a88a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "jeremy-rifkin",
+        "ref": "v0.9.2",
+        "repo": "libdwarf-lite",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1715787315,
-        "narHash": "sha256-cYApT0NXJfqBkKcci7D9Kr4CBYZKOQKDYA23q8XNuWg=",
+        "lastModified": 1716137900,
+        "narHash": "sha256-sowPU+tLQv8GlqtVtsXioTKeaQvlMz/pefcdwg8MvfM=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "33d1e753c82ffc557b4a585c77de43d4c922ebb5",
+        "rev": "6c0b7a92c30122196a761b440ac0d46d3d9954f1",
         "type": "github"
       },
       "original": {
@@ -35,7 +52,26 @@
     "root": {
       "inputs": {
         "cpptrace": "cpptrace",
-        "nixpkgs": "nixpkgs"
+        "libdwarf-lite": "libdwarf-lite",
+        "nixpkgs": "nixpkgs",
+        "zstd": "zstd"
+      }
+    },
+    "zstd": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1680639232,
+        "narHash": "sha256-tHHHIsQU7vJySrVhJuMKUSq11MzkmC+Pcsj00uFJdnQ=",
+        "owner": "facebook",
+        "repo": "zstd",
+        "rev": "63779c798237346c2b245c546c40b72a5a5913fe",
+        "type": "github"
+      },
+      "original": {
+        "owner": "facebook",
+        "ref": "v1.5.5",
+        "repo": "zstd",
+        "type": "github"
       }
     }
   },
