@@ -15,6 +15,7 @@ find_package(magic_enum REQUIRED)
 # --------------------------------------------------------------------------------------------------
 
 add_library(atom.core STATIC)
+add_library(atom::atom.core ALIAS atom.core)
 
 file(GLOB_RECURSE modules "sources/**.cppm")
 target_sources(atom.core PUBLIC FILE_SET CXX_MODULES FILES ${modules})
