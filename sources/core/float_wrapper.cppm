@@ -106,8 +106,13 @@ namespace atom
     export using _f64 = double;
     export using _f128 = long double;
 
-    export ATOM_ALIAS(f16, num_wrapper<_float_wrapper_impl<f16, _f16>>);
-    export ATOM_ALIAS(f32, num_wrapper<_float_wrapper_impl<f32, _f32>>);
-    export ATOM_ALIAS(f64, num_wrapper<_float_wrapper_impl<f64, _f64>>);
-    export ATOM_ALIAS(f128, num_wrapper<_float_wrapper_impl<f128, _f128>>);
+    // export ATOM_ALIAS(f16, num_wrapper<_float_wrapper_impl<f16, _f16>>);
+    // export ATOM_ALIAS(f32, num_wrapper<_float_wrapper_impl<f32, _f32>>);
+    // export ATOM_ALIAS(f64, num_wrapper<_float_wrapper_impl<f64, _f64>>);
+    // export ATOM_ALIAS(f128, num_wrapper<_float_wrapper_impl<f128, _f128>>);
+
+    export using f16 = _f16;
+    export using f32 = _f32;
+    export using f64 = _f64;
+    export using f128 = _f128;
 }
