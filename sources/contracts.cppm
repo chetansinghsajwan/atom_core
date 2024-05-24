@@ -10,6 +10,7 @@ namespace atom
     template <auto type, typename... arg_types>
     constexpr auto _contract_check(source_location src, bool assert, arg_types&&... args) -> void;
 
+    [[noreturn]]
     constexpr auto _panic(source_location src, std::string_view msg, auto&&... args) -> void;
 
     constexpr auto _contract_type_to_string(auto type) -> std::string_view;
@@ -88,6 +89,7 @@ export namespace atom
     ///
     /// ------------------------------------------------------------------------------------------------
     template <typename... arg_types>
+    [[noreturn]]
     constexpr auto contract_panic(
         std::string_view msg = "", source_location _src = source_location::current())
     {
@@ -235,7 +237,7 @@ namespace atom
     constexpr auto _panic(source_location src, std::string_view msg, auto&&... args) -> void
     {
         if (std::is_constant_evaluated())
-            return;
+            throw 0;
 
         std::cerr << msg << std::endl;
         std::terminate();
