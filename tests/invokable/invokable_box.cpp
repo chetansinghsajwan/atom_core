@@ -6,7 +6,7 @@ import atom.core;
 
 using namespace atom;
 
-TEST_CASE("atom.core.invokable_box")
+TEST_CASE("atom.core.function_box")
 {
     SECTION("not_move_assignable result")
     {
@@ -22,17 +22,17 @@ TEST_CASE("atom.core.invokable_box")
             auto operator=(not_move_assignable&& other) -> not_move_assignable& = delete;
         };
 
-        invokable_box<not_move_assignable(i32)> invokable = [](i32 value) {
+        function_box<not_move_assignable(i32)> function = [](i32 value) {
             return not_move_assignable();
         };
     }
 
     SECTION("invocation")
     {
-        invokable_box<bool(i32)> lambda_invokable = [](i32 value) { return value == 1; };
+        function_box<bool(i32)> lambda_function = [](i32 value) { return value == 1; };
 
-        REQUIRE(lambda_invokable(0) == false);
-        REQUIRE(lambda_invokable(1) == true);
+        REQUIRE(lambda_function(0) == false);
+        REQUIRE(lambda_function(1) == true);
 
         class lambda final
         {
@@ -65,21 +65,21 @@ TEST_CASE("atom.core.invokable_box")
         };
 
         i32 captured_value = 10;
-        invokable_box<i32()> capture_lambda_invokable = lambda(&captured_value);
+        function_box<i32()> capture_lambda_function = lambda(&captured_value);
 
-        REQUIRE(capture_lambda_invokable() != 0);
-        REQUIRE(capture_lambda_invokable() == captured_value);
+        REQUIRE(capture_lambda_function() != 0);
+        REQUIRE(capture_lambda_function() == captured_value);
     }
 }
 
-TEST_CASE("atom.core.invokable_box", "[benchmarks]")
+TEST_CASE("atom.core.function_box", "[benchmarks]")
 {
     //// |-----------------------------------------------------------------------------------------|
     //// | benchmark name                                 samples       iterations    estimated    |
     //// |                                                mean          low mean      high mean    |
     //// |                                                std dev       low std dev   high std dev |
     //// |-----------------------------------------------------------------------------------------|
-    //// | atom::invokable_box construction                         100          7253     1.4506 ms |
+    //// | atom::function_box construction                         100          7253     1.4506 ms |
     //// |                                                  2.44725 ns    2.44685 ns    2.44778 ns |
     //// |                                               0.00232811 ns 0.00185345 ns 0.00373542 ns |
     //// |                                                                                         |
@@ -87,7 +87,7 @@ TEST_CASE("atom.core.invokable_box", "[benchmarks]")
     //// |                                                  1.46872 ns    1.46849 ns    1.46896 ns |
     //// |                                               0.00118305 ns 0.00109721 ns 0.00130371 ns |
     //// |                                                                                         |
-    //// | atom::invokable_box                                      100         12116     1.2116 ms |
+    //// | atom::function_box                                      100         12116     1.2116 ms |
     //// |                                                  1.50155 ns    1.47038 ns    1.57987 ns |
     //// |                                                 0.221244 ns  0.0197346 ns   0.420887 ns |
     //// |                                                                                         |
@@ -96,11 +96,11 @@ TEST_CASE("atom.core.invokable_box", "[benchmarks]")
     //// |                                                 0.193768 ns  0.0177648 ns   0.356329 ns |
     //// |-----------------------------------------------------------------------------------------|
 
-    BENCHMARK("atom::invokable_box [construction]")
+    BENCHMARK("atom::function_box [construction]")
     {
-        invokable_box<bool(i32)> invokable = [](i32 value) { return value == 1; };
+        function_box<bool(i32)> function = [](i32 value) { return value == 1; };
 
-        return invokable;
+        return function;
     };
 
     BENCHMARK("std::function [construction]")
@@ -110,13 +110,13 @@ TEST_CASE("atom.core.invokable_box", "[benchmarks]")
         return function;
     };
 
-    invokable_box<bool(i32)> invokable = [](i32 value) { return value == 1; };
+    function_box<bool(i32)> function = [](i32 value) { return value == 1; };
 
     std::function<bool(i32)> function = [](i32 value) { return value == 1; };
 
-    BENCHMARK("atom::invokable_box [invocation]")
+    BENCHMARK("atom::function_box [invocation]")
     {
-        return invokable(0);
+        return function(0);
     };
 
     BENCHMARK("std::function [invocation]")

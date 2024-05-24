@@ -623,7 +623,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename this_final_qualified_t, typename invokable_qualified_t>
+        template <typename this_final_qualified_t, typename function_qualified_t>
         static constexpr bool should_enable_on_value_function = []
         {
             using this_t = typeinfo<this_final_qualified_t>::pure_t::value_t;
@@ -635,7 +635,7 @@ namespace atom
                         this_final_qualified_t>::value_t;
                 using signature_t = void(value_qualified_t);
 
-                if (not typeinfo<invokable_qualified_t>::template is_invokable<signature_t>)
+                if (not typeinfo<function_qualified_t>::template is_function<signature_t>)
                     return false;
 
                 return true;
@@ -657,7 +657,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename this_final_qualified_t, typename invokable_qualified_t, typename error_t>
+        template <typename this_final_qualified_t, typename function_qualified_t, typename error_t>
         static constexpr bool should_enable_on_error_function = []
         {
             using this_t = typeinfo<this_final_qualified_t>::pure_t::value_t;
@@ -674,7 +674,7 @@ namespace atom
                     typeinfo<error_t>::template unpure_like_t<this_final_qualified_t>::value_t;
                 using signature_t = void(error_qualified_t);
 
-                if (not typeinfo<invokable_qualified_t>::template is_invokable<signature_t>)
+                if (not typeinfo<function_qualified_t>::template is_function<signature_t>)
                     return false;
 
                 return true;
@@ -697,7 +697,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename this_final_qualified_t, typename invokable_qualified_t>
+        template <typename this_final_qualified_t, typename function_qualified_t>
         static constexpr bool should_enable_on_universal_error_function = []
         {
             using this_t = typeinfo<this_final_qualified_t>::pure_t::value_t;
@@ -712,7 +712,7 @@ namespace atom
                                     this_final_qualified_t>::value_t;
                             using signature_t = void(error_qualified_t);
 
-                            return typeinfo<invokable_qualified_t>::template is_invokable<
+                            return typeinfo<function_qualified_t>::template is_function<
                                 signature_t>;
                         }))
                     return false;

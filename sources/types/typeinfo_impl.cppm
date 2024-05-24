@@ -103,32 +103,32 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
 
         template <typename value_t, typename signature>
-        struct is_invokable
+        struct is_function
         {
             static constexpr bool value = false;
         };
 
         template <typename value_t, typename return_t, typename... args_t>
-        struct is_invokable<value_t, return_t(args_t...)>
+        struct is_function<value_t, return_t(args_t...)>
         {
             static constexpr bool value = std::is_invocable_r_v<return_t, value_t, args_t...>;
         };
 
         template <typename value_t, typename return_t, typename... args_t>
-        struct is_invokable<value_t, return_t(args_t...) const>
+        struct is_function<value_t, return_t(args_t...) const>
         {
             static constexpr bool value = std::is_invocable_r_v<return_t, const value_t, args_t...>;
         };
 
         template <typename value_t, typename return_t, typename... args_t>
-        struct is_invokable<value_t, return_t(args_t...) volatile>
+        struct is_function<value_t, return_t(args_t...) volatile>
         {
             static constexpr bool value =
                 std::is_invocable_r_v<return_t, volatile value_t, args_t...>;
         };
 
         template <typename value_t, typename return_t, typename... args_t>
-        struct is_invokable<value_t, return_t(args_t...) const volatile>
+        struct is_function<value_t, return_t(args_t...) const volatile>
         {
             static constexpr bool value =
                 std::is_invocable_r_v<return_t, const volatile value_t, args_t...>;

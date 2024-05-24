@@ -541,7 +541,7 @@ namespace atom
         template <typename predicate_t>
         constexpr auto remove_one_if(predicate_t&& pred) -> bool
             requires typeinfo<predicate_t>::template
-        is_invokable<bool(const value_t&)>
+        is_function<bool(const value_t&)>
         {
             for (usize i = 0; i < _impl.get_count(); i++)
             {
@@ -561,7 +561,7 @@ namespace atom
         template <typename predicate_t>
         constexpr auto remove_all_if(predicate_t&& pred) -> usize
             requires typeinfo<predicate_t>::template
-        is_invokable<bool(const value_t&)>
+        is_function<bool(const value_t&)>
         {
             usize removed_count = 0;
             for (usize i = 0; i < _impl.get_count(); i++)

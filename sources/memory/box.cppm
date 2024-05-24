@@ -3,7 +3,6 @@ export module atom.core:box;
 import std;
 import :types;
 import :core;
-import :invokable_ptr;
 import :contracts;
 import :default_mem_allocator;
 
@@ -614,10 +613,10 @@ namespace atom
             value_t* val;
             usize size;
             const std::type_info* type;
-            invokable_ptr<void(void*)> dtor;
+            function_ptr<void(void*)> dtor;
 
-            ATOM_CONDITIONAL_FIELD(is_copyable(), invokable_ptr<void(void*, const void*)>) copy;
-            ATOM_CONDITIONAL_FIELD(is_movable(), invokable_ptr<void(void*, void*)>) move;
+            ATOM_CONDITIONAL_FIELD(is_copyable(), function_ptr<void(void*, const void*)>) copy;
+            ATOM_CONDITIONAL_FIELD(is_movable(), function_ptr<void(void*, void*)>) move;
         };
 
     private:

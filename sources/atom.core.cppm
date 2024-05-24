@@ -27,8 +27,7 @@ export import :shared_ptr;
 export import :unique_ptr;
 export import :default_mem_allocator;
 export import :legacy_mem_allocator;
-export import :invokable_ptr;
-export import :invokable_box;
+export import :function_box;
 
 export
 {

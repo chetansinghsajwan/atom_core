@@ -212,8 +212,8 @@ namespace atom
             }
         }
 
-        template <typename invokable_t>
-        constexpr auto on_error(invokable_t&& action) -> void
+        template <typename function_t>
+        constexpr auto on_error(function_t&& action) -> void
         {
             if (is_error())
             {
@@ -221,8 +221,8 @@ namespace atom
             }
         }
 
-        template <typename error_t, typename invokable_t>
-        constexpr auto on_error(invokable_t&& action) -> void
+        template <typename error_t, typename function_t>
+        constexpr auto on_error(function_t&& action) -> void
         {
             if (is_error())
             {

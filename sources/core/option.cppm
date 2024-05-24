@@ -781,16 +781,16 @@ namespace atom
         ///
         /// # parameters
         ///
-        /// - `or_invoke`: invokable to return or_invoke value.
+        /// - `or_invoke`: function to return or_invoke value.
         ///
         /// # returns
         ///
         /// const ref to `this` value or or_invoke value returned by invoking `or_invoke`.
         /// ----------------------------------------------------------------------------------------
-        template <typename invokable_t>
-        constexpr auto get_or_invoke(invokable_t&& or_invoke) const -> value_t
-            requires typeinfo<invokable_t>::template
-        is_invokable<value_t()>
+        template <typename function_t>
+        constexpr auto get_or_invoke(function_t&& or_invoke) const -> value_t
+            requires typeinfo<function_t>::template
+        is_function<value_t()>
         {
             if (_impl.is_null())
             {
@@ -808,16 +808,16 @@ namespace atom
         ///
         /// # parameters
         ///
-        /// - `or_invoke`: invokable to return or_invoke value.
+        /// - `or_invoke`: function to return or_invoke value.
         ///
         /// # returns
         ///
         /// ref to `this` value or or_invoke value returned by invoking `or_invoke`.
         /// ----------------------------------------------------------------------------------------
-        template <typename invokable_t>
-        constexpr auto get_mut_or_invoke(invokable_t&& or_invoke) -> value_t&
-            requires typeinfo<invokable_t>::template
-        is_invokable<value_t&()>
+        template <typename function_t>
+        constexpr auto get_mut_or_invoke(function_t&& or_invoke) -> value_t&
+            requires typeinfo<function_t>::template
+        is_function<value_t&()>
         {
             if (_impl.is_null())
             {

@@ -80,8 +80,8 @@ namespace atom
         static constexpr bool is_not_enum = not is_enum;
 
         template <typename signature>
-        static constexpr bool is_invokable =
-            typeinfo_impl::template is_invokable<value_t, signature>::value;
+        static constexpr bool is_function =
+            typeinfo_impl::template is_function<value_t, signature>::value;
 
         template <typename... args_t>
         static constexpr bool is_constructible_from = std::is_constructible_v<value_t, args_t...>;

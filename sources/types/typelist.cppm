@@ -417,12 +417,12 @@ namespace atom
         using this_t = typelist_impl;
 
     public:
-        template <typename invokable_t>
-        static consteval auto for_each(invokable_t&& func) -> void
+        template <typename function_t>
+        static consteval auto for_each(function_t&& func) -> void
         {
             func(typeinfo<type0>());
 
-            typelist_impl<types...>::for_each(forward<invokable_t>(func));
+            typelist_impl<types...>::for_each(forward<function_t>(func));
         }
 
         template <typename predicate_t>
@@ -460,8 +460,8 @@ namespace atom
     class typelist_impl<>
     {
     public:
-        template <typename invokable_t>
-        static consteval auto for_each(invokable_t&& func) -> void
+        template <typename function_t>
+        static consteval auto for_each(function_t&& func) -> void
         {}
 
         template <typename predicate_t>
@@ -560,8 +560,8 @@ namespace atom
             requires(has<in_t>)
         static constexpr usize index_of = _list_ops_t::template index_of<in_t, 0, types...>::value;
 
-        template <typename invokable_t>
-        static consteval auto for_each(invokable_t&& func) -> void
+        template <typename function_t>
+        static consteval auto for_each(function_t&& func) -> void
         {
             impl_t::for_each(func);
         }
