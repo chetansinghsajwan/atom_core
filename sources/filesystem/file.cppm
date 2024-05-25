@@ -13,7 +13,7 @@ import :strings;
 namespace atom::filesystem
 {
     /// --------------------------------------------------------------------------------------------
-    ///
+    /// error representing system level error.
     /// --------------------------------------------------------------------------------------------
     export class system_error: public error
     {
@@ -28,7 +28,7 @@ namespace atom::filesystem
     };
 
     /// --------------------------------------------------------------------------------------------
-    ///
+    /// error representing some filesystem error.
     /// --------------------------------------------------------------------------------------------
     export class filesystem_error: public system_error
     {
@@ -39,7 +39,7 @@ namespace atom::filesystem
     };
 
     /// --------------------------------------------------------------------------------------------
-    ///
+    /// error representing invalid options.
     /// --------------------------------------------------------------------------------------------
     export class invalid_options_error: public error
     {
@@ -53,7 +53,7 @@ namespace atom::filesystem
     {
     public:
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// flags used to handle file opening.
         /// ----------------------------------------------------------------------------------------
         enum class open_flags : byte
         {
@@ -67,7 +67,7 @@ namespace atom::filesystem
 
     public:
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// returns the maximum count of files that can be opened on this system.
         /// ----------------------------------------------------------------------------------------
         static auto get_max_open_count() -> usize
         {
@@ -75,7 +75,7 @@ namespace atom::filesystem
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// returns the maximum count of chars allowed in the filename on this system.
         /// ----------------------------------------------------------------------------------------
         static auto get_max_filename_count() -> usize
         {
@@ -83,7 +83,7 @@ namespace atom::filesystem
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// constant used to represent end of file.
         /// ----------------------------------------------------------------------------------------
         static constexpr usize eof = EOF;
 
@@ -95,6 +95,8 @@ namespace atom::filesystem
 
     public:
         /// ----------------------------------------------------------------------------------------
+        /// opens a file at `path` with access specified by `flags`.
+        ///
         /// @feature add more error types, like `file_already_exists`.
         /// ----------------------------------------------------------------------------------------
         static auto open(string_view path,
@@ -120,7 +122,7 @@ namespace atom::filesystem
 
     public:
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// reopens the file with new flags.
         /// ----------------------------------------------------------------------------------------
         auto reopen(open_flags flags) -> result<void, filesystem_error, invalid_options_error>
         {
@@ -146,7 +148,7 @@ namespace atom::filesystem
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// closes the file.
         /// ----------------------------------------------------------------------------------------
         auto close() -> void
         {
@@ -157,7 +159,7 @@ namespace atom::filesystem
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// returns `true` if the file is closed.
         /// ----------------------------------------------------------------------------------------
         auto is_closed() const -> bool
         {
@@ -165,9 +167,9 @@ namespace atom::filesystem
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// reads the file contents from begining to end as string.
         /// ----------------------------------------------------------------------------------------
-        auto read_all() -> string
+        auto read_str_all() -> string
         {
             contract_debug_expects(not is_closed(), "the file is closed.");
 
@@ -183,9 +185,9 @@ namespace atom::filesystem
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// reads the file contents from current to end as string.
         /// ----------------------------------------------------------------------------------------
-        auto read_remaining() -> string
+        auto read_str_remaining() -> string
         {
             contract_debug_expects(not is_closed(), "the file is closed.");
 
@@ -202,7 +204,7 @@ namespace atom::filesystem
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// writes bytes to the file.
         /// ----------------------------------------------------------------------------------------
         auto write_bytes(const void* data, usize count) -> void
         {
@@ -212,20 +214,10 @@ namespace atom::filesystem
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        auto write_str(string_view content) -> void
-        {
-            contract_debug_expects(not is_closed(), "the file is closed.");
-
-            std::fwrite(content.get_data(), sizeof(byte), content.get_count(), _file);
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
+        /// writes a formatted string to the file.
         /// ----------------------------------------------------------------------------------------
         template <typename... arg_types>
-        auto write_fmt(format_string<arg_types...> fmt, arg_types&&... args) -> void
+        auto write_str(format_string<arg_types...> fmt, arg_types&&... args) -> void
         {
             contract_debug_expects(not is_closed(), "the file is closed.");
 
@@ -233,18 +225,28 @@ namespace atom::filesystem
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// writes a formatted string to the file ending with a new line character.
         /// ----------------------------------------------------------------------------------------
-        auto write_line(string_view content) -> void
+        template <typename... arg_types>
+        auto write_line(format_string<arg_types...> fmt, arg_types&&... args) -> void
         {
             contract_debug_expects(not is_closed(), "the file is closed.");
 
-            std::fwrite(content.get_data(), sizeof(byte), content.get_count(), _file);
+            fmt::println(_file, _convert_format_string_atom_to_fmt(fmt), fowrard<arg_types>(args)...);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// writes a new line character to the file.
+        /// ----------------------------------------------------------------------------------------
+        auto write_line() -> void
+        {
+            contract_debug_expects(not is_closed(), "the file is closed.");
+
             std::fputc('\n', _file);
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// flushes the data from the buffer to the file.
         /// ----------------------------------------------------------------------------------------
         auto flush() -> void
         {
@@ -256,7 +258,7 @@ namespace atom::filesystem
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// returns the size of the file from begining to end.
         /// ----------------------------------------------------------------------------------------
         auto get_size() -> usize
         {
@@ -272,7 +274,7 @@ namespace atom::filesystem
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// returns the size of the file from current to end.
         /// ----------------------------------------------------------------------------------------
         auto get_size_remaining() -> usize
         {
@@ -288,7 +290,7 @@ namespace atom::filesystem
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// returns the current position in file.
         /// ----------------------------------------------------------------------------------------
         auto get_pos() -> usize
         {
@@ -301,7 +303,7 @@ namespace atom::filesystem
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// sets the current position in file.
         /// ----------------------------------------------------------------------------------------
         auto set_pos(usize pos) -> void
         {
@@ -311,17 +313,17 @@ namespace atom::filesystem
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// moves the current position in file by `steps`.
         /// ----------------------------------------------------------------------------------------
-        auto set_pos_move(isize pos) -> void
+        auto set_pos_move(isize steps) -> void
         {
             contract_debug_expects(not is_closed(), "the file is closed.");
 
-            std::fseek(_file, pos, SEEK_CUR);
+            std::fseek(_file, steps, SEEK_CUR);
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// sets the current position to the begining of the file.
         /// ----------------------------------------------------------------------------------------
         auto set_pos_begin() -> void
         {
@@ -331,7 +333,7 @@ namespace atom::filesystem
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// sets the current position to the end of the file.
         /// ----------------------------------------------------------------------------------------
         auto set_pos_end() -> void
         {
@@ -341,7 +343,7 @@ namespace atom::filesystem
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// returns the flags used to open the file.
         /// ----------------------------------------------------------------------------------------
         auto get_flags() -> open_flags
         {
@@ -351,7 +353,7 @@ namespace atom::filesystem
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// returns `true` if read operations can be performed.
         /// ----------------------------------------------------------------------------------------
         auto can_read() const -> bool
         {
@@ -361,7 +363,7 @@ namespace atom::filesystem
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// returns `true` if write operations can be performed.
         /// ----------------------------------------------------------------------------------------
         auto can_write() const -> bool
         {
@@ -371,7 +373,7 @@ namespace atom::filesystem
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// returns `true` if the file is accessed as binary data.
         /// ----------------------------------------------------------------------------------------
         auto is_binary() const -> bool
         {
@@ -381,7 +383,7 @@ namespace atom::filesystem
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// returns a wrapper to treat file contents as a range.
         /// ----------------------------------------------------------------------------------------
         auto as_range() -> decltype(auto)
         {
