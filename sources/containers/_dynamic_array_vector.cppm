@@ -8,9 +8,9 @@ import :math;
 namespace atom
 {
     template <typename in_elem_t, typename in_allocator_t>
-    class _dynamic_array_impl_using_std_vector
+    class _dynamic_array_impl_vector
     {
-        using this_t = _dynamic_array_impl_using_std_vector;
+        using this_t = _dynamic_array_impl_vector;
 
     public:
         using value_t = in_elem_t;
@@ -31,28 +31,39 @@ namespace atom
         {};
 
     public:
-        constexpr _dynamic_array_impl_using_std_vector()
+        constexpr _dynamic_array_impl_vector()
             : _vector()
         {}
 
-        constexpr _dynamic_array_impl_using_std_vector(
-            copy_tag, const _dynamic_array_impl_using_std_vector& that)
+        constexpr _dynamic_array_impl_vector(copy_tag, const _dynamic_array_impl_vector& that)
             : _vector(that._vector)
         {}
 
-        constexpr _dynamic_array_impl_using_std_vector(
-            move_tag, _dynamic_array_impl_using_std_vector& that)
+        constexpr _dynamic_array_impl_vector(move_tag, _dynamic_array_impl_vector& that)
             : _vector(std::move(that._vector))
         {}
 
         template <typename other_iter_t, typename other_iter_end_t>
-        constexpr _dynamic_array_impl_using_std_vector(
-            range_tag, other_iter_t it, other_iter_end_t it_end)
+        constexpr _dynamic_array_impl_vector(range_tag, other_iter_t it, other_iter_end_t it_end)
             : _vector(
                   std_iter_wrap_for_atom_iter(move(it)), std_iter_wrap_for_atom_iter(move(it_end)))
         {}
 
-        constexpr ~_dynamic_array_impl_using_std_vector() {}
+        constexpr _dynamic_array_impl_vector(_with_count_type, usize count)
+            : _vector(count)
+        {}
+
+        constexpr _dynamic_array_impl_vector(_with_count_type, usize count, const value_t& value)
+            : _vector{ count, value }
+        {}
+
+        constexpr _dynamic_array_impl_vector(_with_capacity_type, usize capacity)
+            : _vector{}
+        {
+            _vector.reserve(capacity);
+        }
+
+        constexpr ~_dynamic_array_impl_vector() {}
 
     public:
         constexpr auto move_this(this_t& that) -> void

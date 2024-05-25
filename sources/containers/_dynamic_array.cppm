@@ -33,21 +33,21 @@ namespace atom
 
     public:
         constexpr _dynamic_array_impl()
-            : _data(nullptr)
-            , _count(0)
-            , _capacity(0)
-            , _allocator()
+            : _data{ nullptr }
+            , _count{ 0 }
+            , _capacity{ 0 }
+            , _allocator{}
         {}
 
         constexpr _dynamic_array_impl(copy_tag, const _dynamic_array_impl& that)
-            : this_t(range_tag(), that.get_iter(), that.get_iter_end())
+            : this_t{ range_tag(), that.get_iter(), that.get_iter_end() }
         {}
 
         constexpr _dynamic_array_impl(move_tag, _dynamic_array_impl& that)
-            : _data(that._data)
-            , _count(that._count)
-            , _capacity(that._capacity)
-            , _allocator(that._allocator)
+            : _data{ that._data }
+            , _count{ that._count }
+            , _capacity{ that._capacity }
+            , _allocator{ that._allocator }
         {
             that._data = nullptr;
             that._count = 0;
@@ -57,9 +57,36 @@ namespace atom
 
         template <typename other_iter_t, typename other_iter_end_t>
         constexpr _dynamic_array_impl(range_tag, other_iter_t it, other_iter_end_t it_end)
-            : _dynamic_array_impl()
+            : _dynamic_array_impl{}
         {
             insert_range_back(move(it), move(it_end));
+        }
+
+        constexpr _dynamic_array_impl(_with_count_type, usize count)
+            : _count{ count }
+            , _capacity{ count }
+            , _allocator{}
+        {
+            _data = (value_t*)_allocator.alloc(count);
+        }
+
+        constexpr _dynamic_array_impl(_with_count_type, usize count, const value_t& value)
+            : _count{ count }
+            , _capacity{ count }
+            , _allocator{}
+        {
+            _data = (value_t*)_allocator.alloc(count);
+
+            for (usize i = 0; i < _count; i++)
+                _data[i] = value;
+        }
+
+        constexpr _dynamic_array_impl(_with_capacity_type, usize capacity)
+            : _count{ 0 }
+            , _capacity{ capacity }
+            , _allocator{}
+        {
+            _data = (value_t*)_allocator.alloc(capacity);
         }
 
         constexpr ~_dynamic_array_impl()
@@ -140,8 +167,8 @@ namespace atom
         }
 
         template <typename other_iter_t, typename other_iter_end_t>
-        constexpr auto insert_range_at(usize index, other_iter_t it, other_iter_end_t it_end)
-            -> usize
+        constexpr auto insert_range_at(
+            usize index, other_iter_t it, other_iter_end_t it_end) -> usize
         {
             if constexpr (_can_get_range_size<other_iter_t, other_iter_end_t>())
             {
@@ -361,8 +388,8 @@ namespace atom
         }
 
         template <typename other_iter_t, typename other_iter_end_t>
-        constexpr auto _insert_range_back_uncounted(other_iter_t it, other_iter_end_t it_end)
-            -> usize
+        constexpr auto _insert_range_back_uncounted(
+            other_iter_t it, other_iter_end_t it_end) -> usize
         {
             usize count = 0;
             while (not it.is_eq(it_end))

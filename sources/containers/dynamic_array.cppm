@@ -17,14 +17,12 @@ namespace atom
     export template <typename in_elem_t, typename in_allocator_t = default_mem_allocator>
     class dynamic_array: public range_extensions
     {
-        static_assert(
-            not typeinfo<in_elem_t>::is_ref, "dynamic_array does not supports ref types.");
-        static_assert(
-            not typeinfo<in_elem_t>::is_void, "dynamic_array does not support void.");
+        static_assert(typeinfo<in_elem_t>::is_pure, "dynamic_array does not non pure types.");
+        static_assert(not typeinfo<in_elem_t>::is_void, "dynamic_array does not support void.");
 
     private:
         using this_t = dynamic_array<in_elem_t, in_allocator_t>;
-        using _impl_t = _dynamic_array_impl_using_std_vector<in_elem_t, in_allocator_t>;
+        using _impl_t = _dynamic_array_impl_vector<in_elem_t, in_allocator_t>;
 
     public:
         using value_t = in_elem_t;
@@ -33,20 +31,6 @@ namespace atom
         using iter_end_t = iter_t;
         using mut_iter_t = mut_array_iter<value_t>;
         using mut_iter_end_t = mut_iter_t;
-
-    public:
-        dynamic_array(_with_count_type, usize count, const value_t& value = value_t{})
-            : this_t{}
-        {
-            for (usize i = 0; i < count; i++)
-                _impl.emplace_back(value);
-        }
-
-        dynamic_array(_with_capacity_type, usize capacity)
-            : this_t{}
-        {
-            reserve(capacity);
-        }
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -123,6 +107,27 @@ namespace atom
         {
             _impl.assign_range(iter_t(array), iter_t(array + count));
         }
+
+        /// ----------------------------------------------------------------------------------------
+        /// # named constructor
+        /// ----------------------------------------------------------------------------------------
+        constexpr dynamic_array(_with_count_type, usize count)
+            : _impl{ _with_count, count }
+        {}
+
+        /// ----------------------------------------------------------------------------------------
+        /// # named constructor
+        /// ----------------------------------------------------------------------------------------
+        constexpr dynamic_array(_with_count_type, usize count, const value_t& value)
+            : _impl{ _with_count, count, value }
+        {}
+
+        /// ----------------------------------------------------------------------------------------
+        /// # named constructor
+        /// ----------------------------------------------------------------------------------------
+        constexpr dynamic_array(_with_capacity_type, usize capacity)
+            : _impl{ _with_count, capacity }
+        {}
 
         /// ----------------------------------------------------------------------------------------
         /// # destroyor
