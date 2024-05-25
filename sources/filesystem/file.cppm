@@ -87,7 +87,7 @@ namespace atom::filesystem
         /// ----------------------------------------------------------------------------------------
         static constexpr usize eof = EOF;
 
-    private:
+    public:
         file(FILE* file, open_flags flags)
             : _file{ file }
             , _flags{ flags }

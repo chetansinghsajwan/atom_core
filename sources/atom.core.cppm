@@ -13,6 +13,7 @@ export import :time;
 export import :hash;
 export import :math;
 export import :filesystem;
+export import :io;
 
 export import :mem_helper;
 export import :obj_helper;
