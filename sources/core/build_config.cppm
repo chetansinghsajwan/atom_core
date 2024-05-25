@@ -140,7 +140,7 @@ namespace atom
 
         static consteval auto is_mode_release() -> bool
         {
-            return get_mode() == mode::debug;
+            return get_mode() == mode::release;
         }
 
         static consteval auto get_platform() -> platform
