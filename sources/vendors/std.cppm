@@ -220,6 +220,7 @@ export namespace std
     using std::exception;
     using std::source_location;
     using std::fopen;
+    using std::freopen;
     using std::fclose;
     using std::fflush;
     using std::ftell;
