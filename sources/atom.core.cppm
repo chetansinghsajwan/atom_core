@@ -14,6 +14,7 @@ export import :print;
 export import :time;
 export import :hash;
 export import :math;
+export import :filesystem;
 
 export import :mem_helper;
 export import :obj_helper;

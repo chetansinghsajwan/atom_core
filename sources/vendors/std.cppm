@@ -1,5 +1,6 @@
 module;
 
+#include <cerrno>
 #include <cstdio>
 #include <istream>
 #include <ostream>
@@ -36,6 +37,7 @@ module;
 #include <chrono>
 #include <unordered_map>
 #include <exception>
+#include <filesystem>
 
 export module std;
 
@@ -84,8 +86,8 @@ export namespace std
     using std::initializer_list;
     using std::nullptr_t;
 
-    using std::cout;
     using std::cerr;
+    using std::cout;
     using std::endl;
     using std::ifstream;
     using std::ios;
@@ -163,7 +165,6 @@ export namespace std
     using std::unordered_map;
     using std::variant;
     using std::vector;
-    using std::unordered_map;
 
     using std::make_shared;
     using std::make_unique;
@@ -206,9 +207,27 @@ export namespace std
     using std::realloc;
     using std::type_info;
 
+    auto get_errno() -> int
+    {
+        return errno;
+    }
+
+    auto set_errno(int value) -> void
+    {
+        errno = value;
+    }
+
     using std::exception;
-    using std::terminate;
     using std::source_location;
+    using std::fopen;
+    using std::fclose;
+    using std::fflush;
+    using std::ftell;
+    using std::fseek;
+    using std::strerror;
+    using std::terminate;
+
+    using namespace std::filesystem;
 
     namespace chrono
     {

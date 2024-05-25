@@ -4,6 +4,12 @@ import std;
 
 export namespace atom
 {
+    struct _with_count_type{};
+    struct _with_capacity_type{};
+
+    constexpr auto _with_count = _with_count_type{};
+    constexpr auto _with_capacity = _with_capacity_type{};
+
     template <typename value_t>
     constexpr auto move(value_t&& val) -> typename std::remove_reference_t<value_t>&&
     {

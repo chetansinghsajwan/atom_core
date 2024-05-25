@@ -35,20 +35,17 @@ namespace atom
         using mut_iter_end_t = mut_iter_t;
 
     public:
-        static constexpr auto with_count(usize count, const value_t& value) -> this_t&&
+        dynamic_array(_with_count_type, usize count, const value_t& value = value_t{})
+            : this_t{}
         {
-            this_t arr;
             for (usize i = 0; i < count; i++)
-                arr._impl.emplace_back(value);
-
-            return move(arr);
+                _impl.emplace_back(value);
         }
 
-        static constexpr auto with_capacity(usize capacity) -> this_t&&
+        dynamic_array(_with_capacity_type, usize capacity)
+            : this_t{}
         {
-            this_t arr;
-            arr.reserve(capacity);
-            return move(arr);
+            reserve(capacity);
         }
 
     public:

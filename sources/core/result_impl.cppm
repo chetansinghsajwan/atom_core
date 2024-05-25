@@ -174,7 +174,7 @@ namespace atom
         template <typename error_t>
         constexpr auto get_error(this this_t& self) -> error_t&
         {
-            return self._variant.template get_mut<error_t>();
+            return self._variant.template as<error_t>();
         }
 
         constexpr auto get_first_error(this const this_t& self) -> const first_error_t&
