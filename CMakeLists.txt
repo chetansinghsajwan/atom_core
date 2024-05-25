@@ -8,6 +8,7 @@ cmake_policy(SET CMP0155 NEW)
 option(ATOM_CORE_BUILD_TESTS "Enable this to build tests." OFF)
 
 find_package(fmt REQUIRED)
+find_package(cpptrace REQUIRED)
 find_package(magic_enum REQUIRED)
 
 # --------------------------------------------------------------------------------------------------
@@ -21,7 +22,8 @@ file(GLOB_RECURSE modules "sources/**.cppm")
 target_sources(atom.core PUBLIC FILE_SET CXX_MODULES FILES ${modules})
 
 target_include_directories(atom.core PRIVATE "include")
-target_link_libraries(atom.core PRIVATE "fmt::fmt-header-only" "magic_enum::magic_enum")
+target_link_libraries(atom.core PRIVATE "fmt::fmt-header-only" "magic_enum::magic_enum"
+                                        "cpptrace::cpptrace")
 target_compile_features(atom.core PUBLIC "cxx_std_23")
 target_compile_options(
     atom.core
@@ -42,7 +44,7 @@ target_link_libraries(atom.core.sandbox PRIVATE atom.core)
 # atom.core.tests
 # --------------------------------------------------------------------------------------------------
 
-if (ATOM_CORE_BUILD_TESTS)
+if(ATOM_CORE_BUILD_TESTS)
     find_package(Catch2 REQUIRED)
 
     add_executable(atom.core.tests)
@@ -70,16 +72,18 @@ write_basic_package_version_file(
 install(
     TARGETS atom.core
     EXPORT atom_core-targets
-    FILE_SET CXX_MODULES DESTINATION "lib"
-    INCLUDES DESTINATION "include")
+    FILE_SET CXX_MODULES
+    DESTINATION "lib"
+    INCLUDES
+    DESTINATION "include")
 
 install(
     EXPORT atom_core-targets
-    FILE "atom_core-targets.cmake" DESTINATION "cmake/"
+    FILE "atom_core-targets.cmake"
+    DESTINATION "cmake/"
     NAMESPACE "atom::")
 
-install(
-    DIRECTORY "include/" DESTINATION "include/")
+install(DIRECTORY "include/" DESTINATION "include/")
 
 install(FILES "cmake/atom_core-config.cmake"
               "${CMAKE_CURRENT_BINARY_DIR}/atom_core-config-version.cmake" DESTINATION "cmake/")
