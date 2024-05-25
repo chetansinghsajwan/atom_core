@@ -16,3 +16,4 @@ export import :core.tuple;
 export import :core.static_storage;
 export import :core.source_location;
 export import :core.function_ptr;
+export import :core.enums;

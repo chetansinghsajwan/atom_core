@@ -1,8 +1,6 @@
 export module atom.core;
 
 export import std;
-import fmt;
-import magic_enum;
 
 export import :types;
 export import :contracts;

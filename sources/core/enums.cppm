@@ -1,5 +1,6 @@
 export module atom.core:core.enums;
 
+import magic_enum;
 // import std;
 // import :core.enums_impl;
 // import :core.option;
@@ -399,3 +400,14 @@ export module atom.core:core.enums;
 //         return lhs = lhs ^ rhs;
 //     }
 // }
+
+export namespace atom
+{
+    using magic_enum::bitwise_operators::operator~;
+    using magic_enum::bitwise_operators::operator|;
+    using magic_enum::bitwise_operators::operator|=;
+    using magic_enum::bitwise_operators::operator&;
+    using magic_enum::bitwise_operators::operator&=;
+    using magic_enum::bitwise_operators::operator^;
+    using magic_enum::bitwise_operators::operator^=;
+}

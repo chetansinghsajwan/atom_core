@@ -23,6 +23,17 @@ export namespace magic_enum
     using magic_enum::string_view;
     using magic_enum::underlying_type_t;
 
+    namespace bitwise_operators
+    {
+        using bitwise_operators::operator~;
+        using bitwise_operators::operator|;
+        using bitwise_operators::operator|=;
+        using bitwise_operators::operator&;
+        using bitwise_operators::operator&=;
+        using bitwise_operators::operator^;
+        using bitwise_operators::operator^=;
+    }
+
     namespace customize
     {
         using customize::enum_range;
