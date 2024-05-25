@@ -87,8 +87,12 @@ export namespace std
     using std::nullptr_t;
 
     using std::cerr;
+    using std::cin;
     using std::cout;
     using std::endl;
+    using ::stderr;
+    using ::stdin;
+    using ::stdout;
     using std::ifstream;
     using std::ios;
     using std::iostream;
@@ -218,13 +222,13 @@ export namespace std
     }
 
     using std::exception;
-    using std::source_location;
-    using std::fopen;
-    using std::freopen;
     using std::fclose;
     using std::fflush;
-    using std::ftell;
+    using std::fopen;
+    using std::freopen;
     using std::fseek;
+    using std::ftell;
+    using std::source_location;
     using std::strerror;
     using std::terminate;
 

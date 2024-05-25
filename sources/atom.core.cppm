@@ -8,7 +8,6 @@ export import :core;
 export import :ranges;
 export import :containers;
 export import :strings;
-export import :print;
 export import :time;
 export import :hash;
 export import :math;
