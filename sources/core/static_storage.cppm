@@ -66,7 +66,7 @@ namespace atom
             return mut_ref(i);
         }
 
-        constexpr auto is_eq(const static_storage& that) const -> bool
+        constexpr auto operator==(const static_storage& that) const -> bool
         {
             for (usize i = 0; i < size(); i++)
             {

@@ -246,54 +246,54 @@ TEST_CASE("atom.core.option")
         option<tracked_type> opt1;
 
         // both have null state, so they are compared equal.
-        REQUIRE(opt0.is_eq(opt1));
+        REQUIRE(opt0 == opt1);
 
         // both have null state, they will not be compared.
-        REQUIRE(not opt0.is_lt(opt1));
-        REQUIRE(not opt0.is_gt(opt1));
-        REQUIRE(not opt0.is_le(opt1));
-        REQUIRE(not opt0.is_ge(opt1));
+        REQUIRE(not opt0 < opt1);
+        REQUIRE(not opt0 > opt1);
+        REQUIRE(not opt0 <= opt1);
+        REQUIRE(not opt0 >= opt1);
 
         // if either have them null state, still they will not be compared.
         opt0 = tracked_type();
         opt0->last_op = tracked_type::operation::none;
 
-        REQUIRE(not opt0.is_eq(opt1));
+        REQUIRE(not opt0 == opt1);
         REQUIRE(opt0.get().last_op == tracked_type::operation::none);
 
-        REQUIRE(not opt0.is_lt(opt1));
+        REQUIRE(not opt0 < opt1);
         REQUIRE(opt0.get().last_op == tracked_type::operation::none);
 
-        REQUIRE(not opt0.is_gt(opt1));
+        REQUIRE(not opt0 > opt1);
         REQUIRE(opt0.get().last_op == tracked_type::operation::none);
 
-        REQUIRE(not opt0.is_le(opt1));
+        REQUIRE(not opt0 <= opt1);
         REQUIRE(opt0.get().last_op == tracked_type::operation::none);
 
-        REQUIRE(not opt0.is_ge(opt1));
+        REQUIRE(not opt0 >= opt1);
         REQUIRE(opt0.get().last_op == tracked_type::operation::none);
 
         // they will be compared if they both have value state.
         opt1 = tracked_type();
         opt1->last_op = tracked_type::operation::none;
 
-        REQUIRE(opt0.is_eq(opt1));
+        REQUIRE(opt0 == opt1);
         REQUIRE(opt0.get().last_op == tracked_type::operation::equal_operator);
         REQUIRE(opt1.get().last_op == tracked_type::operation::equal_operator);
 
-        REQUIRE(opt0.is_lt(opt1));
+        REQUIRE(opt0 < opt1);
         REQUIRE(opt0.get().last_op == tracked_type::operation::less_than_operator);
         REQUIRE(opt1.get().last_op == tracked_type::operation::less_than_operator);
 
-        REQUIRE(opt0.is_gt(opt1));
+        REQUIRE(opt0 > opt1);
         REQUIRE(opt0.get().last_op == tracked_type::operation::greater_than_operator);
         REQUIRE(opt1.get().last_op == tracked_type::operation::greater_than_operator);
 
-        REQUIRE(opt0.is_le(opt1));
+        REQUIRE(opt0 <= opt1);
         REQUIRE(opt0.get().last_op == tracked_type::operation::less_than_or_equal_operator);
         REQUIRE(opt1.get().last_op == tracked_type::operation::less_than_or_equal_operator);
 
-        REQUIRE(opt0.is_ge(opt1));
+        REQUIRE(opt0 >= opt1);
         REQUIRE(opt0.get().last_op == tracked_type::operation::greater_than_or_equal_operator);
         REQUIRE(opt1.get().last_op == tracked_type::operation::greater_than_or_equal_operator);
     }

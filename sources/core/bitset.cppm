@@ -198,7 +198,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// returns `true` if values of all bits matches value of `that` bits.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto is_eq(const this_t& that) const -> bool
+        constexpr auto operator==(const this_t& that) const -> bool
         {
             return true;
         }
@@ -475,9 +475,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// returns `true` if values of all bits matches value of `that` bits.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto is_eq(const this_t& that) const -> bool
+        constexpr auto operator==(const this_t& that) const -> bool
         {
-            return _impl.is_eq(that._impl);
+            return _impl == that._impl;
         }
 
     public:

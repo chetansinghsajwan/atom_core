@@ -561,7 +561,7 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename this_range_type, typename that_range_type>
-        constexpr auto is_eq(
+        constexpr auto operator==(
             this const this_range_type& this_range, const that_range_type& that_range) -> bool
             requires is_range<this_range_type> and is_range<that_range_type>
                      and (typeinfo<get_value_type<this_range_type>>::

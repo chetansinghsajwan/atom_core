@@ -11,14 +11,14 @@ TEST_CASE("atom.core.unique_ptr")
     {
         unique_ptr<tracked_type> ptr;
 
-        // REQUIRE(ptr.is_eq(nullptr));
+        // REQUIRE(ptr == nullptr);
     }
 
     SECTION("null constructor")
     {
         unique_ptr<tracked_type> ptr(nullptr);
 
-        // REQUIRE(ptr.is_eq(nullptr));
+        // REQUIRE(ptr == nullptr);
     }
 
     SECTION("value constructor")
@@ -26,7 +26,7 @@ TEST_CASE("atom.core.unique_ptr")
         tracked_type val;
         unique_ptr<tracked_type> ptr(&val);
 
-        // REQUIRE(ptr.is_eq(&val));
+        // REQUIRE(ptr == &val);
     }
 
     SECTION("copy constructor")
@@ -40,8 +40,8 @@ TEST_CASE("atom.core.unique_ptr")
         unique_ptr<tracked_type> ptr1(&val);
         unique_ptr<tracked_type> ptr2(move(ptr1));
 
-        // REQUIRE(ptr1.is_eq(nullptr));
-        // REQUIRE(ptr2.is_eq(&val));
+        // REQUIRE(ptr1 == nullptr);
+        // REQUIRE(ptr2 == &val);
     }
 
     SECTION("destructor")
@@ -69,8 +69,8 @@ TEST_CASE("atom.core.unique_ptr")
 
         ptr2 = move(ptr1);
 
-        // REQUIRE(ptr1.is_eq(nullptr));
-        // REQUIRE(ptr2.is_eq(&val1));
+        // REQUIRE(ptr1 == nullptr);
+        // REQUIRE(ptr2 == &val1);
         REQUIRE(val1.last_op == tracked_type::operation::default_constructor);
         REQUIRE(val2.last_op == tracked_type::operation::destructor);
     }
@@ -92,7 +92,7 @@ TEST_CASE("atom.core.unique_ptr")
 
         ptr.release();
 
-        // REQUIRE(ptr.is_eq(nullptr));
+        // REQUIRE(ptr == nullptr);
         REQUIRE(val.last_op == tracked_type::operation::default_constructor);
     }
 
@@ -103,7 +103,7 @@ TEST_CASE("atom.core.unique_ptr")
 
         ptr.destroy();
 
-        // REQUIRE(ptr.is_eq(nullptr));
+        // REQUIRE(ptr == nullptr);
         REQUIRE(val.last_op == tracked_type::operation::destructor);
     }
 }

@@ -392,7 +392,7 @@ namespace atom
             other_iter_t it, other_iter_end_t it_end) -> usize
         {
             usize count = 0;
-            while (not it.is_eq(it_end))
+            while (it != it_end)
             {
                 _ensure_space_back(1);
                 _construct_at(_count + count, it.value());
@@ -512,7 +512,7 @@ namespace atom
             }
 
             usize count = 0;
-            for (; it.is_eq(it_end); it.next())
+            for (; it != it_end; it++)
                 count++;
 
             return count;

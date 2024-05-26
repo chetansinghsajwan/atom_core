@@ -976,7 +976,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// returns `true` if `this` is equal to `num`.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto is_eq(final_t num) const -> bool
+        constexpr auto operator==(final_t num) const -> bool
         {
             return _value == num._value;
         }
@@ -984,7 +984,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// returns `true` if `this` is less than `num`.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto is_lt(final_t num) const -> bool
+        constexpr auto operator<(final_t num) const -> bool
         {
             return _value < num._value;
         }
@@ -992,7 +992,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// returns `true` if `this` is equal to or less than `num`.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto is_le(final_t num) const -> bool
+        constexpr auto operator<=(final_t num) const -> bool
         {
             return _value <= num._value;
         }
@@ -1000,7 +1000,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// returns `true` if `this` is greater than `num`.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto is_gt(final_t num) const -> bool
+        constexpr auto operator>(final_t num) const -> bool
         {
             return _value > num._value;
         }
@@ -1008,7 +1008,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// returns `true` if `this` is equal to or greater than `num`.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto is_ge(final_t num) const -> bool
+        constexpr auto operator>=(final_t num) const -> bool
         {
             return _value >= num._value;
         }

@@ -880,7 +880,7 @@ namespace atom
         ///
         /// `true` if this contains value, else `false`.
         /// --------------------------------------------------------------------------------------------
-        constexpr auto is_eq(nullopt) const -> bool
+        constexpr auto operator==(nullopt) const -> bool
         {
             return is_null();
         }
@@ -893,7 +893,7 @@ namespace atom
         /// if `this` and `that` are not null, returns `this.get() == that.get()`.
         /// --------------------------------------------------------------------------------------------
         template <typename that_value_t>
-        constexpr auto is_eq(const option<that_value_t>& that) const -> bool
+        constexpr auto operator==(const option<that_value_t>& that) const -> bool
             requires typeinfo<value_t>::template
         is_equality_comparable_with<that_value_t>
         {
@@ -915,7 +915,7 @@ namespace atom
         /// else, returns `this.get() < that.get()`.
         /// --------------------------------------------------------------------------------------------
         template <typename that_value_t>
-        constexpr auto is_lt(const option<that_value_t>& that) const -> bool
+        constexpr auto operator<(const option<that_value_t>& that) const -> bool
             requires typeinfo<value_t>::template
         is_comparable_with<that_value_t>
         {
@@ -932,7 +932,7 @@ namespace atom
         /// else, returns `this.get() > that.get()`.
         /// --------------------------------------------------------------------------------------------
         template <typename that_value_t>
-        constexpr auto is_gt(const option<that_value_t>& that) const -> bool
+        constexpr auto operator>(const option<that_value_t>& that) const -> bool
             requires typeinfo<value_t>::template
         is_comparable_with<that_value_t>
         {
@@ -949,7 +949,7 @@ namespace atom
         /// else, returns `this.get() <= that.get()`.
         /// --------------------------------------------------------------------------------------------
         template <typename that_value_t>
-        constexpr auto is_le(const option<that_value_t>& that) const -> bool
+        constexpr auto operator<=(const option<that_value_t>& that) const -> bool
             requires typeinfo<value_t>::template
         is_comparable_with<that_value_t>
         {
@@ -966,7 +966,7 @@ namespace atom
         /// else, returns `this.get() >= that.get()`.
         /// --------------------------------------------------------------------------------------------
         template <typename that_value_t>
-        constexpr auto is_ge(const option<that_value_t>& that) const -> bool
+        constexpr auto operator>=(const option<that_value_t>& that) const -> bool
             requires typeinfo<value_t>::template
         is_comparable_with<that_value_t>
         {

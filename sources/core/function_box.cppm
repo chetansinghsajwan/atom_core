@@ -343,7 +343,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// returns `true` if this doesn't contain an function.
         /// ----------------------------------------------------------------------------------------
-        auto is_eq(nullptr_t null) const -> bool
+        auto operator==(nullptr_t null) const -> bool
         {
             return not _impl.has_function();
         }

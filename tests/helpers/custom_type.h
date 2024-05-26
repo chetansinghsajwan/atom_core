@@ -160,7 +160,7 @@ namespace atom::tests
         /// ----------------------------------------------------------------------------------------
         /// # equal to opeartor
         /// ----------------------------------------------------------------------------------------
-        constexpr auto is_eq(const custom_type& that) const -> bool
+        constexpr auto operator==(const custom_type& that) const -> bool
             requires(enum_flag_utils::has_flag(flags, ecustom_t_flags::equal_to_operator))
         {
             return true;
@@ -169,7 +169,7 @@ namespace atom::tests
         /// ----------------------------------------------------------------------------------------
         /// # less than opeartor
         /// ----------------------------------------------------------------------------------------
-        constexpr auto is_lt(const custom_type& that) const -> bool
+        constexpr auto operator<(const custom_type& that) const -> bool
             requires(enum_flag_utils::has_flag(flags, ecustom_t_flags::less_than_to_operator))
         {
             return true;
@@ -178,7 +178,7 @@ namespace atom::tests
         /// ----------------------------------------------------------------------------------------
         /// # greater than opeartor
         /// ----------------------------------------------------------------------------------------
-        constexpr auto is_gt(const custom_type& that) const -> bool
+        constexpr auto operator>(const custom_type& that) const -> bool
             requires(enum_flag_utils::has_flag(flags, ecustom_t_flags::greater_than_to_operator))
         {
             return true;
@@ -187,7 +187,7 @@ namespace atom::tests
         /// ----------------------------------------------------------------------------------------
         /// # less than or equal to opeartor
         /// ----------------------------------------------------------------------------------------
-        constexpr auto is_le(const custom_type& that) const -> bool
+        constexpr auto operator<=(const custom_type& that) const -> bool
             requires(enum_flag_utils::has_flag(
                 flags, ecustom_t_flags::less_than_or_equal_to_operator))
         {
@@ -197,7 +197,7 @@ namespace atom::tests
         /// ----------------------------------------------------------------------------------------
         /// # greater than or equal to opeartor
         /// ----------------------------------------------------------------------------------------
-        constexpr auto is_ge(const custom_type& that) const -> bool
+        constexpr auto operator>=(const custom_type& that) const -> bool
             requires(enum_flag_utils::has_flag(
                 flags, ecustom_t_flags::greater_than_or_equal_to_operator))
         {

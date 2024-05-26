@@ -52,5 +52,5 @@ TEST_CASE("atom.core.bitset")
     REQUIRE(bits.rotate_by(-1) == u8(0b01010001));
     REQUIRE(bits.rotate_by(1) == u8(0b10101000));
 
-    REQUIRE(bits.is_eq(bits));
+    REQUIRE(bits == bits);
 }

@@ -30,7 +30,7 @@ export namespace atom::mock
 
     public:
         auto value() const -> const value_t&;
-        auto is_eq(iter_end end) const -> bool;
+        auto operator==(iter_end end) const -> bool;
         auto next() -> iter&;
     };
 
@@ -55,7 +55,7 @@ export namespace atom::mock
     public:
         auto value() const -> const value_t&;
         auto mut_value() -> value_t&;
-        auto is_eq(iter_end end) const -> bool;
+        auto operator==(iter_end end) const -> bool;
         auto next() -> mut_iter&;
     };
 
@@ -72,7 +72,7 @@ export namespace atom::mock
         auto value() const -> const value_t&;
         auto mut_value() -> value_t&;
         auto next() -> fwd_iter&;
-        auto is_eq(iter_end end) const -> bool;
+        auto operator==(iter_end end) const -> bool;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -88,7 +88,7 @@ export namespace atom::mock
         auto value() const -> const value_t&;
         auto mut_value() -> value_t&;
         auto next() -> mut_fwd_iter&;
-        auto is_eq(iter_end end) const -> bool;
+        auto operator==(iter_end end) const -> bool;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -104,7 +104,7 @@ export namespace atom::mock
         auto value() const -> const value_t&;
         auto next() -> bidi_iter&;
         auto prev() -> bidi_iter&;
-        auto is_eq(iter_end end) const -> bool;
+        auto operator==(iter_end end) const -> bool;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -121,7 +121,7 @@ export namespace atom::mock
         auto mut_value() -> value_t&;
         auto next() -> mut_bidi_iter&;
         auto prev() -> mut_bidi_iter&;
-        auto is_eq(iter_end end) const -> bool;
+        auto operator==(iter_end end) const -> bool;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -137,7 +137,7 @@ export namespace atom::mock
         auto value() const -> const value_t&;
         auto next(usize steps = 1) -> jump_iter&;
         auto prev(usize steps = 1) -> jump_iter&;
-        auto is_eq(iter_end end) const -> bool;
+        auto operator==(iter_end end) const -> bool;
         auto compare(const jump_iter& that) const -> isize;
     };
 
@@ -155,7 +155,7 @@ export namespace atom::mock
         auto mut_value() -> value_t&;
         auto next(usize steps = 1) -> mut_jump_iter&;
         auto prev(usize steps = 1) -> mut_jump_iter&;
-        auto is_eq(iter_end end) const -> bool;
+        auto operator==(iter_end end) const -> bool;
         auto compare(const mut_jump_iter& that) const -> isize;
     };
 
@@ -173,7 +173,7 @@ export namespace atom::mock
         auto get_data() const -> const in_value_t*;
         auto next(usize steps = 1) -> array_iter&;
         auto prev(usize steps = 1) -> array_iter&;
-        auto is_eq(array_iter end) const -> bool;
+        auto operator==(array_iter end) const -> bool;
         auto compare(const array_iter& that) const -> isize;
     };
 
@@ -193,7 +193,7 @@ export namespace atom::mock
         auto get_mut_data() -> in_value_t*;
         auto next(usize steps = 1) -> mut_array_iter&;
         auto prev(usize steps = 1) -> mut_array_iter&;
-        auto is_eq(mut_array_iter end) const -> bool;
+        auto operator==(mut_array_iter end) const -> bool;
         auto compare(const mut_array_iter& that) const -> isize;
     };
 }
