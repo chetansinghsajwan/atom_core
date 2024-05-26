@@ -38,13 +38,13 @@ namespace atom
         constexpr auto get_data() const -> const value_t*
             requires is_array_iter_pair<iter_t, iter_end_t>
         {
-            return &_it.value();
+            return &*_it;
         }
 
         constexpr auto get_count() const -> usize
             requires is_jump_iter_pair<iter_t, iter_end_t>
         {
-            return _it_end.compare(_it);
+            return _it_end - _it;
         }
 
     private:

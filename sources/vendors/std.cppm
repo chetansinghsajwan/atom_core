@@ -176,11 +176,17 @@ export namespace std
     using std::unique_ptr;
     using std::weak_ptr;
 
+    using std::iterator_traits;
+    using std::bidirectional_iterator;
+    using std::contiguous_iterator;
+    using std::forward_iterator;
+    using std::input_iterator;
+    using std::output_iterator;
+    using std::random_access_iterator;
     using std::bidirectional_iterator_tag;
     using std::contiguous_iterator_tag;
     using std::forward_iterator_tag;
     using std::input_iterator_tag;
-    using std::iterator_traits;
     using std::output_iterator_tag;
     using std::random_access_iterator_tag;
 

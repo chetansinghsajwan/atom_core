@@ -25,7 +25,7 @@ namespace atom
 
         constexpr auto advance_to(array_iter<char> it) -> void
         {
-            _fmt_ctx.advance_to(it.get_data());
+            _fmt_ctx.advance_to(&*it);
         }
 
         constexpr auto _release_native() -> fmt::format_parse_context&
@@ -55,13 +55,13 @@ namespace atom
         }
 
     public:
-        auto write(char ch)
+        auto write(char ch) -> void
         {
             *(*_fmt_ctx_out)++ = ch;
         }
 
         template <typename range_t>
-        auto write(const range_t& range)
+        auto write(const range_t& range) -> void
             requires(is_range_of<range_t, char>)
         {
             for (char ch : range)

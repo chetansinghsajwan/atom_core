@@ -1,5 +1,6 @@
 export module atom.core:ranges.array_iter;
 
+import std;
 import :core;
 import :types;
 
@@ -7,6 +8,8 @@ namespace atom
 {
     /// --------------------------------------------------------------------------------------------
     /// array_iter iterates over raw arr.
+    ///
+    /// @todo update docs.
     /// --------------------------------------------------------------------------------------------
     export template <typename in_value_t>
     class array_iter
@@ -14,8 +17,17 @@ namespace atom
         static_assert(typeinfo<in_value_t>::is_pure, "array_iter supports only pure types.");
         static_assert(not typeinfo<in_value_t>::is_void, "array_iter does not support void.");
 
+        using this_type = array_iter<in_value_t>;
+
     public:
         using value_t = in_value_t;
+
+        using value_type = value_t;
+        using size_type = std::size_t;
+        using difference_type = std::ptrdiff_t;
+        using iterator_category = std::contiguous_iterator_tag;
+        using pointer = value_type*;
+        using reference = value_type&;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -36,157 +48,241 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// access value by ref.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto value() const -> const value_t&
+        constexpr auto operator*() const -> const value_t&
         {
             return *_it;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// access value by ptr.
+        /// access value by ref.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_data() const -> const value_t*
+        constexpr auto operator->() const -> const value_t*
         {
-            return this->_it;
+            return _it;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// access value by index.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto operator[](isize i) const -> const value_t&
+        {
+            return _it[i];
         }
 
         /// ----------------------------------------------------------------------------------------
         /// move fwd by 1 step.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto next() -> array_iter&
+        template <typename self_type>
+        constexpr auto operator++(this self_type&& self) -> self_type&
         {
-            _it++;
-            return *this;
+            ++self._it;
+            return &self;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// move fwd by `steps`.
+        /// move fwd by 1 step.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto next(usize steps) -> array_iter&
+        template <typename self_type>
+        constexpr auto operator++(this const self_type& self, int) -> self_type
         {
-            _it += steps;
-            return *this;
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// move bwd by 1 step.
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto prev() -> array_iter&
-        {
-            _it--;
-            return *this;
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// move bwd by `steps`.
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto prev(usize steps) -> array_iter&
-        {
-            _it -= steps;
-            return *this;
+            self_type tmp{ self._it };
+            ++self._it;
+            return tmp;
         }
 
         /// ----------------------------------------------------------------------------------------
         /// check if this iter is same as `that`. used to compare wth end.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto is_eq(const array_iter& that) const -> bool
+        constexpr auto operator==(const this_type& that) const -> bool
         {
-            return this->_it == that._it;
+            return _it == that._it;
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// compares `this` data with `that` data.
+        /// check if this iter is not same as `that`. used to compare wth end.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto compare(const array_iter& that) const -> isize
+        constexpr auto operator!=(const this_type& that) const -> bool
         {
-            return this->_it - that._it;
+            return _it != that._it;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// check if this iter is same as `that`. used to compare wth end.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto operator<(const this_type& that) const -> bool
+        {
+            return _it < that._it;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// check if this iter is same as `that`. used to compare wth end.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto operator<=(const this_type& that) const -> bool
+        {
+            return _it <= that._it;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// check if this iter is same as `that`. used to compare wth end.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto operator>(const this_type& that) const -> bool
+        {
+            return _it > that._it;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// check if this iter is same as `that`. used to compare wth end.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto operator>=(const this_type& that) const -> bool
+        {
+            return _it >= that._it;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// move fwd by `steps`.
+        /// ----------------------------------------------------------------------------------------
+        template <typename self_type>
+        constexpr auto operator+(this const self_type& self, isize steps) -> self_type
+        {
+            return self_type{ self._it + steps };
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// move fwd by `steps`.
+        /// ----------------------------------------------------------------------------------------
+        template <typename self_type>
+        constexpr auto operator+=(this self_type&& self, isize steps) -> self_type&
+        {
+            self._it += steps;
+            return self;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// move bwd by 1 step.
+        /// ----------------------------------------------------------------------------------------
+        template <typename self_type>
+        constexpr auto operator--(this self_type&& self) -> self_type&
+        {
+            --self._it;
+            return &self;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// move bwd by 1 step.
+        /// ----------------------------------------------------------------------------------------
+        template <typename self_type>
+        constexpr auto operator--(this const self_type& self, int) -> self_type
+        {
+            self_type tmp{ self._it };
+            --self._it;
+            return tmp;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// move bwd by `steps`.
+        /// ----------------------------------------------------------------------------------------
+        template <typename self_type>
+        constexpr auto operator-(this const self_type& self, isize steps) -> self_type
+        {
+            return self_type{ self._it - steps };
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// move bwd by `steps`.
+        /// ----------------------------------------------------------------------------------------
+        template <typename self_type>
+        constexpr auto operator-=(this const self_type& self, isize steps) -> self_type&
+        {
+            self._it -= steps;
+            return self;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns the difference between `this` and `that`.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto operator-(const this_type& that) const -> isize
+        {
+            return _it - that._it;
         }
 
     protected:
         const value_t* _it;
     };
 
+    template <typename value_type>
+    constexpr auto operator+(isize steps, const array_iter<value_type>& it) -> array_iter<value_type>
+    {
+        return it + steps;
+    }
+
     /// --------------------------------------------------------------------------------------------
     /// mut_array_iter iterates over mut raw arr.
+    ///
+    /// @todo update docs.
     /// --------------------------------------------------------------------------------------------
     export template <typename in_value_t>
     class mut_array_iter: public array_iter<in_value_t>
     {
-        static_assert(
-            typeinfo<in_value_t>::is_pure, "mut_array_iter supports only pure types.");
-        static_assert(
-            not typeinfo<in_value_t>::is_void, "mut_array_iter does not support void.");
+        static_assert(typeinfo<in_value_t>::is_pure, "mut_array_iter supports only pure types.");
+        static_assert(not typeinfo<in_value_t>::is_void, "mut_array_iter does not support void.");
 
+        using this_type = mut_array_iter<in_value_t>;
         using base_t = array_iter<in_value_t>;
 
     public:
         using value_t = in_value_t;
+        using value_type = value_t;
 
     public:
         /// ----------------------------------------------------------------------------------------
         /// # default constructor
         /// ----------------------------------------------------------------------------------------
         constexpr mut_array_iter()
-            : base_t()
+            : base_t{}
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # value constructor
         /// ----------------------------------------------------------------------------------------
         constexpr mut_array_iter(value_t* it)
-            : base_t(it)
+            : base_t{ it }
         {}
 
     public:
         /// ----------------------------------------------------------------------------------------
         /// access value by mut ref.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto mut_value() -> value_t&
+        constexpr auto operator*() -> value_t&
         {
-            return const_cast<value_t&>(base_t::value());
+            return const_cast<value_t&>(*this->_it);
         }
 
-        /// ----------------------------------------------------------------------------------------
-        /// access value by mut ptr.
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto get_mut_data() -> value_t*
-        {
-            return const_cast<value_t*>(base_t::get_data());
-        }
+        using base_t::operator*;
 
         /// ----------------------------------------------------------------------------------------
-        /// move fwd by 1 step.
+        /// access value by mut ref.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto next() -> mut_array_iter&
+        constexpr auto operator->() -> value_t*
         {
-            base_t::next();
-            return *this;
+            return const_cast<value_t*>(this->_it);
         }
 
-        /// ----------------------------------------------------------------------------------------
-        /// move fwd by `steps`.
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto next(usize steps) -> mut_array_iter&
-        {
-            base_t::next(steps);
-            return *this;
-        }
+        using base_t::operator->;
 
         /// ----------------------------------------------------------------------------------------
-        /// move bwd by 1 step.
+        /// access value by index.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto prev() -> mut_array_iter&
+        constexpr auto operator[](isize i) const -> value_t&
         {
-            base_t::prev();
-            return *this;
+            return this->_it[i];
         }
 
-        /// ----------------------------------------------------------------------------------------
-        /// move bwd by `steps`.
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto prev(usize steps) -> mut_array_iter&
-        {
-            base_t::prev(steps);
-            return *this;
-        }
+        using base_t::operator[];
     };
+
+    template <typename value_type>
+    constexpr auto operator+(isize steps, const mut_array_iter<value_type>& it) -> mut_array_iter<value_type>
+    {
+        return it + steps;
+    }
 }
