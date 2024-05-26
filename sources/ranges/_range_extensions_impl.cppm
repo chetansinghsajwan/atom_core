@@ -5,7 +5,6 @@ import :core;
 import :types;
 import :ranges.iter_requirements;
 import :ranges.range_requirements;
-import :ranges.std_iter_wrap_for_atom_iter;
 
 namespace atom
 {
@@ -37,10 +36,6 @@ namespace atom
         using iter_end_t = typename _impl_t::iter_end_t;
         using mut_iter_t = typename _mut_aliases_resolver<_impl_t>::mut_iter_t;
         using mut_iter_end_t = typename _mut_aliases_resolver<_impl_t>::mut_iter_end_t;
-        using std_iter_t = std_iter_wrap_for_atom_iter<iter_t>;
-        using std_iter_end_t = std_iter_wrap_for_atom_iter<iter_end_t>;
-        using std_mut_iter_t = std_iter_wrap_for_atom_iter<mut_iter_t>;
-        using std_mut_iter_end_t = std_iter_wrap_for_atom_iter<mut_iter_end_t>;
 
     public:
         template <typename this_range_t>
@@ -85,13 +80,13 @@ namespace atom
         // template <typename this_range_t>
         // static constexpr auto begin(const this_range_t& this_range) -> std_iter_t
         // {
-        //     return std_iter_wrap_for_atom_iter(get_iter(this_range));
+        //     return get_iter(this_range);
         // }
 
         // template <typename this_range_t>
         // static constexpr auto end(const this_range_t& this_range) -> std_iter_end_t
         // {
-        //     return std_iter_wrap_for_atom_iter(get_iter_end(this_range));
+        //     return get_iter_end(this_range);
         // }
 
         template <typename this_range_t>
@@ -99,9 +94,9 @@ namespace atom
         // -> std_mut_iter_t
         {
             if constexpr (is_mut_range<this_range_t>)
-                return std_iter_wrap_for_atom_iter(get_mut_iter(this_range));
+                return get_mut_iter(this_range);
             else
-                return std_iter_wrap_for_atom_iter(get_iter(this_range));
+                return get_iter(this_range);
         }
 
         template <typename this_range_t>
@@ -109,9 +104,9 @@ namespace atom
         // -> std_mut_iter_end_t
         {
             if constexpr (is_mut_range<this_range_t>)
-                return std_iter_wrap_for_atom_iter(get_mut_iter_end(this_range));
+                return get_mut_iter_end(this_range);
             else
-                return std_iter_wrap_for_atom_iter(get_iter_end(this_range));
+                return get_iter_end(this_range);
         }
 
         template <typename this_range_t>
@@ -178,32 +173,34 @@ namespace atom
         static constexpr auto find_elem(
             const this_range_t& this_range, const that_value_t& value) -> iter_t
         {
-            std_iter_wrap_for_atom_iter std_begin(get_iter(this_range));
-            std_iter_wrap_for_atom_iter std_end(get_iter_end(this_range));
-            return std::find(std_begin, std_end, value).iter;
+            auto begin = get_iter(this_range);
+            auto end = get_iter_end(this_range);
+
+            return std::find(begin, end, value).iter;
         }
 
         template <typename this_range_t, typename that_range_type>
         static constexpr auto find_range(
             const this_range_t& this_range, const that_range_type& that_range) -> iter_t
         {
-            std_iter_wrap_for_atom_iter std_this_begin(get_iter(this_range));
-            std_iter_wrap_for_atom_iter std_this_end(get_iter_end(this_range));
-            std_iter_wrap_for_atom_iter std_that_begin(that_range.get_iter());
-            std_iter_wrap_for_atom_iter std_that_end(that_range.get_iter_end());
-            return std::search(std_this_begin, std_this_end, std_that_begin, std_that_end).iter;
+            auto this_begin = get_iter(this_range);
+            auto this_end = get_iter_end(this_range);
+            auto that_begin = that_range.get_iter();
+            auto that_end = that_range.get_iter_end();
+
+            return std::search(this_begin, this_end, that_begin, that_end).iter;
         }
 
         template <typename this_range_t, typename that_range_type>
         static constexpr auto compare(
             const this_range_t& this_range, that_range_type& that_range) -> i8
         {
-            std_iter_wrap_for_atom_iter std_this_begin(get_iter(this_range));
-            std_iter_wrap_for_atom_iter std_this_end(get_iter_end(this_range));
-            std_iter_wrap_for_atom_iter std_that_begin(that_range.get_iter());
-            std_iter_wrap_for_atom_iter std_that_end(that_range.get_iter_end());
+            auto this_begin = get_iter(this_range);
+            auto this_end = get_iter_end(this_range);
+            auto that_begin = that_range.get_iter();
+            auto that_end = that_range.get_iter_end();
 
-            return std::equal(std_this_begin, std_this_end, std_that_begin, std_that_end);
+            return std::equal(this_begin, this_end, that_begin, that_end);
         }
 
         template <typename this_range_t, typename that_range_type>

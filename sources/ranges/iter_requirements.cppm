@@ -6,11 +6,11 @@ import :core;
 namespace atom
 {
     template <typename iter_t, typename value_t>
-    concept _is_iter_of = std::same_as<typename iter_t::value_t, value_t>;
+    concept _is_iter_of = std::same_as<typename iter_t::value_type, value_t>;
 
     template <typename iter_t>
     concept _is_mut_iter = requires(iter_t it) {
-        { *it } -> std::same_as<typename iter_t::value_t&>;
+        { *it } -> std::same_as<typename iter_t::value_type&>;
     };
 
     template <typename iter_t, typename value_t>

@@ -32,21 +32,20 @@ namespace atom
 
     public:
         constexpr _dynamic_array_impl_vector()
-            : _vector()
+            : _vector{}
         {}
 
         constexpr _dynamic_array_impl_vector(copy_tag, const _dynamic_array_impl_vector& that)
-            : _vector(that._vector)
+            : _vector{ that._vector }
         {}
 
         constexpr _dynamic_array_impl_vector(move_tag, _dynamic_array_impl_vector& that)
-            : _vector(std::move(that._vector))
+            : _vector{ std::move(that._vector) }
         {}
 
         template <typename other_iter_t, typename other_iter_end_t>
         constexpr _dynamic_array_impl_vector(range_tag, other_iter_t it, other_iter_end_t it_end)
-            : _vector(
-                  std_iter_wrap_for_atom_iter(move(it)), std_iter_wrap_for_atom_iter(move(it_end)))
+            : _vector{ move(it), move(it_end) }
         {}
 
         constexpr _dynamic_array_impl_vector(_with_count_type, usize count)
@@ -114,8 +113,8 @@ namespace atom
         template <typename other_iter_t, typename other_iter_end_t>
         constexpr auto assign_range(other_iter_t in_it, other_iter_end_t in_it_end)
         {
-            auto it = std_iter_wrap_for_atom_iter(move(in_it));
-            auto it_end = std_iter_wrap_for_atom_iter(move(in_it_end));
+            auto it = move(in_it);
+            auto it_end = move(in_it_end);
             _vector.assign(it, it_end);
         }
 
@@ -130,8 +129,7 @@ namespace atom
             usize index, other_iter_t it, other_iter_end_t it_end) -> usize
         {
             usize old_size = _vector.size();
-            _vector.insert(_vector.begin() + index, std_iter_wrap_for_atom_iter(move(it)),
-                std_iter_wrap_for_atom_iter(move(it_end)));
+            _vector.insert(_vector.begin() + index, move(it), move(it_end));
 
             return _vector.size() - old_size;
         }

@@ -4,7 +4,6 @@ import :core;
 import :types;
 import :contracts;
 import :ranges.range_extensions_impl;
-import :ranges.std_iter_wrap_for_atom_iter;
 import :ranges.iter_requirements;
 import :ranges.range_requirements;
 
@@ -34,21 +33,6 @@ namespace atom
 
         template <typename this_range_type>
         using get_mut_iter_end_type = typename this_range_type::mut_iter_end_t;
-
-        template <typename this_range_type>
-        using get_std_iter_type = std_iter_wrap_for_atom_iter<get_iter_type<this_range_type>>;
-
-        template <typename this_range_type>
-        using get_std_iter_end_type =
-            std_iter_wrap_for_atom_iter<get_iter_end_type<this_range_type>>;
-
-        template <typename this_range_type>
-        using get_std_mut_iter_type =
-            std_iter_wrap_for_atom_iter<get_mut_iter_type<this_range_type>>;
-
-        template <typename this_range_type>
-        using get_std_mut_iter_end_type =
-            std_iter_wrap_for_atom_iter<get_mut_iter_end_type<this_range_type>>;
 
         template <typename this_range_type>
         using get_view_type = int;

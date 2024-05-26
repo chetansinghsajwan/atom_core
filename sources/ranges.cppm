@@ -8,4 +8,3 @@ export import :ranges.range_extensions;
 export import :ranges.range_from;
 export import :ranges.iter_mocks;
 export import :ranges.range_mocks;
-export import :ranges.std_iter_wrap_for_atom_iter;

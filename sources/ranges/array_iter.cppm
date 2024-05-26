@@ -3,6 +3,7 @@ export module atom.core:ranges.array_iter;
 import std;
 import :core;
 import :types;
+import :ranges.iter_requirements;
 
 namespace atom
 {
@@ -22,26 +23,26 @@ namespace atom
     public:
         using value_t = in_value_t;
 
-        using value_type = value_t;
+        using value_type = in_value_t;
         using size_type = std::size_t;
         using difference_type = std::ptrdiff_t;
         using iterator_category = std::contiguous_iterator_tag;
-        using pointer = value_type*;
-        using reference = value_type&;
+        using pointer = const value_type*;
+        using reference = const value_type&;
 
     public:
         /// ----------------------------------------------------------------------------------------
         /// # default constructor
         /// ----------------------------------------------------------------------------------------
         constexpr array_iter()
-            : _it(nullptr)
+            : _it{ nullptr }
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # value constructor
         /// ----------------------------------------------------------------------------------------
         constexpr array_iter(const value_t* it)
-            : _it(it)
+            : _it{ it }
         {}
 
     public:
@@ -76,7 +77,7 @@ namespace atom
         constexpr auto operator++(this self_type&& self) -> self_type&
         {
             ++self._it;
-            return &self;
+            return self;
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -209,8 +210,9 @@ namespace atom
         const value_t* _it;
     };
 
-    template <typename value_type>
-    constexpr auto operator+(isize steps, const array_iter<value_type>& it) -> array_iter<value_type>
+    export template <typename value_type>
+    constexpr auto operator+(
+        isize steps, const array_iter<value_type>& it) -> array_iter<value_type>
     {
         return it + steps;
     }
@@ -223,7 +225,8 @@ namespace atom
     export template <typename in_value_t>
     class mut_array_iter: public array_iter<in_value_t>
     {
-        static_assert(typeinfo<in_value_t>::is_pure, "mut_array_iter supports only pure types.");
+        static_assert(
+            typeinfo<in_value_t>::is_pure, "mut_array_iter doesn't support non pure types.");
         static_assert(not typeinfo<in_value_t>::is_void, "mut_array_iter does not support void.");
 
         using this_type = mut_array_iter<in_value_t>;
@@ -231,7 +234,13 @@ namespace atom
 
     public:
         using value_t = in_value_t;
+
         using value_type = value_t;
+        using size_type = std::size_t;
+        using difference_type = std::ptrdiff_t;
+        using iterator_category = std::contiguous_iterator_tag;
+        using pointer = value_type*;
+        using reference = value_type&;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -252,36 +261,31 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// access value by mut ref.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator*() -> value_t&
+        constexpr auto operator*() const -> value_t&
         {
             return const_cast<value_t&>(*this->_it);
         }
 
-        using base_t::operator*;
-
         /// ----------------------------------------------------------------------------------------
         /// access value by mut ref.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator->() -> value_t*
+        constexpr auto operator->() const -> value_t*
         {
             return const_cast<value_t*>(this->_it);
         }
-
-        using base_t::operator->;
 
         /// ----------------------------------------------------------------------------------------
         /// access value by index.
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator[](isize i) const -> value_t&
         {
-            return this->_it[i];
+            return const_cast<value_t&>(this->_it[i]);
         }
-
-        using base_t::operator[];
     };
 
-    template <typename value_type>
-    constexpr auto operator+(isize steps, const mut_array_iter<value_type>& it) -> mut_array_iter<value_type>
+    export template <typename value_type>
+    constexpr auto operator+(
+        isize steps, const mut_array_iter<value_type>& it) -> mut_array_iter<value_type>
     {
         return it + steps;
     }
