@@ -214,10 +214,33 @@ namespace atom::filesystem
         }
 
         /// ----------------------------------------------------------------------------------------
+        /// writes a string to the file.
+        /// ----------------------------------------------------------------------------------------
+        template <typename... arg_types>
+        auto write_str(string_view str) -> void
+        {
+            contract_debug_expects(not is_closed(), "the file is closed.");
+
+            std::fwrite(str.get_data(), sizeof(char), str.get_count(), _file);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// writes a string to the file ending with a new line character.
+        /// ----------------------------------------------------------------------------------------
+        template <typename... arg_types>
+        auto write_line_str(string_view str) -> void
+        {
+            contract_debug_expects(not is_closed(), "the file is closed.");
+
+            std::fwrite(str.get_data(), sizeof(char), str.get_count(), _file);
+            std::fputc('\n', _file);
+        }
+
+        /// ----------------------------------------------------------------------------------------
         /// writes a formatted string to the file.
         /// ----------------------------------------------------------------------------------------
         template <typename... arg_types>
-        auto write_str(format_string<arg_types...> fmt, arg_types&&... args) -> void
+        auto write_fmt(format_string<arg_types...> fmt, arg_types&&... args) -> void
         {
             contract_debug_expects(not is_closed(), "the file is closed.");
 
@@ -228,11 +251,12 @@ namespace atom::filesystem
         /// writes a formatted string to the file ending with a new line character.
         /// ----------------------------------------------------------------------------------------
         template <typename... arg_types>
-        auto write_line(format_string<arg_types...> fmt, arg_types&&... args) -> void
+        auto write_line_fmt(format_string<arg_types...> fmt, arg_types&&... args) -> void
         {
             contract_debug_expects(not is_closed(), "the file is closed.");
 
-            fmt::println(_file, _convert_format_string_atom_to_fmt(fmt), fowrard<arg_types>(args)...);
+            fmt::println(
+                _file, _convert_format_string_atom_to_fmt(fmt), fowrard<arg_types>(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -401,7 +425,7 @@ namespace atom::filesystem
                 case open_flags::read:                                               return "r";
                 case open_flags::write:
                 case open_flags::write | open_flags::create:
-                case open_flags::write | open_flags::overwrite:                     return "w";
+                case open_flags::write | open_flags::overwrite:                      return "w";
                 case open_flags::append:                                             return "a";
                 case open_flags::read | open_flags::binary:                          return "rb";
                 case open_flags::write | open_flags::binary:
@@ -427,4 +451,57 @@ namespace atom::filesystem
         FILE* _file;
         open_flags _flags;
     };
+
+    auto read_file_str(string_view path) -> result<string, filesystem_error>
+    {
+        result<file, filesystem_error, invalid_options_error> result =
+            file::open(path, file::open_flags::read);
+
+        contract_asserts(result.is_error<invalid_options_error>());
+
+        if (result.is_value())
+        {
+            class file& file = result.get_value();
+            return file.read_str_all();
+        }
+
+        return result.get_error<filesystem_error>();
+    }
+
+    auto write_file_str(string_view path, string_view str) -> result<void, filesystem_error>
+    {
+        result<file, filesystem_error, invalid_options_error> result =
+            file::open(path, file::open_flags::write | file::open_flags::create);
+
+        contract_asserts(result.is_error<invalid_options_error>());
+
+        if (result.is_value())
+        {
+            class file& file = result.get_value();
+            file.write_str(str);
+
+            return result_void();
+        }
+
+        return result.get_error<filesystem_error>();
+    }
+
+    template <typename... arg_types>
+    auto write_file_fmt(string_view path, format_string<arg_types...> fmt, arg_types&&... args) -> result<void, filesystem_error>
+    {
+        result<file, filesystem_error, invalid_options_error> result =
+            file::open(path, file::open_flags::write | file::open_flags::create);
+
+        contract_asserts(result.is_error<invalid_options_error>());
+
+        if (result.is_value())
+        {
+            class file& file = result.get_value();
+            file.write_fmt(fmt, forward<arg_types>(args)...);
+
+            return result_void();
+        }
+
+        return result.get_error<filesystem_error>();
+    }
 }
