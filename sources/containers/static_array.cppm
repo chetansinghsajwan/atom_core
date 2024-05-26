@@ -11,10 +11,10 @@ namespace atom
     {
     public:
         using value_t = in_elem_t;
-        using iter_t = array_iter<value_t>;
-        using iter_end_t = iter_t;
-        using mut_iter_t = mut_array_iter<value_t>;
-        using mut_iter_end_t = mut_iter_t;
+        using iterator_t = array_iterator<value_t>;
+        using iterator_end_t = iterator_t;
+        using mut_iterator_t = mut_array_iterator<value_t>;
+        using mut_iterator_end_t = mut_iterator_t;
 
     public:
         constexpr static_array() = default;
@@ -48,24 +48,24 @@ namespace atom
             return in_count;
         }
 
-        constexpr auto get_iter() const -> iter_t
+        constexpr auto get_iterator() const -> iterator_t
         {
-            return iter_t(_arr);
+            return iterator_t(_arr);
         }
 
-        constexpr auto get_iter_end() const -> iter_end_t
+        constexpr auto get_iterator_end() const -> iterator_end_t
         {
-            return iter_end_t(_arr + in_count);
+            return iterator_end_t(_arr + in_count);
         }
 
-        constexpr auto get_mut_iter() -> mut_iter_t
+        constexpr auto get_mut_iterator() -> mut_iterator_t
         {
-            return mut_iter_t(_arr);
+            return mut_iterator_t(_arr);
         }
 
-        constexpr auto get_mut_iter_end() -> mut_iter_end_t
+        constexpr auto get_mut_iterator_end() -> mut_iterator_end_t
         {
-            return mut_iter_end_t(_arr + in_count);
+            return mut_iterator_end_t(_arr + in_count);
         }
 
     private:

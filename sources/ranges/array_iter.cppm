@@ -1,24 +1,24 @@
-export module atom.core:ranges.array_iter;
+export module atom.core:ranges.array_iterator;
 
 import std;
 import :core;
 import :types;
-import :ranges.iter_requirements;
+import :ranges.iterator_requirements;
 
 namespace atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// array_iter iterates over raw arr.
+    /// array_iterator iteratorates over raw arr.
     ///
     /// @todo update docs.
     /// --------------------------------------------------------------------------------------------
     export template <typename in_value_t>
-    class array_iter
+    class array_iterator
     {
-        static_assert(typeinfo<in_value_t>::is_pure, "array_iter supports only pure types.");
-        static_assert(not typeinfo<in_value_t>::is_void, "array_iter does not support void.");
+        static_assert(typeinfo<in_value_t>::is_pure, "array_iterator supports only pure types.");
+        static_assert(not typeinfo<in_value_t>::is_void, "array_iterator does not support void.");
 
-        using this_type = array_iter<in_value_t>;
+        using this_type = array_iterator<in_value_t>;
 
     public:
         using value_t = in_value_t;
@@ -34,14 +34,14 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # default constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr array_iter()
+        constexpr array_iterator()
             : _it{ nullptr }
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # value constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr array_iter(const value_t* it)
+        constexpr array_iterator(const value_t* it)
             : _it{ it }
         {}
 
@@ -92,7 +92,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// check if this iter is same as `that`. used to compare wth end.
+        /// check if this iterator is same as `that`. used to compare wth end.
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator==(const this_type& that) const -> bool
         {
@@ -100,7 +100,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// check if this iter is not same as `that`. used to compare wth end.
+        /// check if this iterator is not same as `that`. used to compare wth end.
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator!=(const this_type& that) const -> bool
         {
@@ -108,7 +108,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// check if this iter is same as `that`. used to compare wth end.
+        /// check if this iterator is same as `that`. used to compare wth end.
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator<(const this_type& that) const -> bool
         {
@@ -116,7 +116,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// check if this iter is same as `that`. used to compare wth end.
+        /// check if this iterator is same as `that`. used to compare wth end.
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator<=(const this_type& that) const -> bool
         {
@@ -124,7 +124,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// check if this iter is same as `that`. used to compare wth end.
+        /// check if this iterator is same as `that`. used to compare wth end.
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator>(const this_type& that) const -> bool
         {
@@ -132,7 +132,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// check if this iter is same as `that`. used to compare wth end.
+        /// check if this iterator is same as `that`. used to compare wth end.
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator>=(const this_type& that) const -> bool
         {
@@ -212,25 +212,25 @@ namespace atom
 
     export template <typename value_type>
     constexpr auto operator+(
-        isize steps, const array_iter<value_type>& it) -> array_iter<value_type>
+        isize steps, const array_iterator<value_type>& it) -> array_iterator<value_type>
     {
         return it + steps;
     }
 
     /// --------------------------------------------------------------------------------------------
-    /// mut_array_iter iterates over mut raw arr.
+    /// mut_array_iterator iteratorates over mut raw arr.
     ///
     /// @todo update docs.
     /// --------------------------------------------------------------------------------------------
     export template <typename in_value_t>
-    class mut_array_iter: public array_iter<in_value_t>
+    class mut_array_iterator: public array_iterator<in_value_t>
     {
         static_assert(
-            typeinfo<in_value_t>::is_pure, "mut_array_iter doesn't support non pure types.");
-        static_assert(not typeinfo<in_value_t>::is_void, "mut_array_iter does not support void.");
+            typeinfo<in_value_t>::is_pure, "mut_array_iterator doesn't support non pure types.");
+        static_assert(not typeinfo<in_value_t>::is_void, "mut_array_iterator does not support void.");
 
-        using this_type = mut_array_iter<in_value_t>;
-        using base_t = array_iter<in_value_t>;
+        using this_type = mut_array_iterator<in_value_t>;
+        using base_t = array_iterator<in_value_t>;
 
     public:
         using value_t = in_value_t;
@@ -246,14 +246,14 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # default constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr mut_array_iter()
+        constexpr mut_array_iterator()
             : base_t{}
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # value constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr mut_array_iter(value_t* it)
+        constexpr mut_array_iterator(value_t* it)
             : base_t{ it }
         {}
 
@@ -285,7 +285,7 @@ namespace atom
 
     export template <typename value_type>
     constexpr auto operator+(
-        isize steps, const mut_array_iter<value_type>& it) -> mut_array_iter<value_type>
+        isize steps, const mut_array_iterator<value_type>& it) -> mut_array_iterator<value_type>
     {
         return it + steps;
     }

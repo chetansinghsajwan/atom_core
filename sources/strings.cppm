@@ -6,7 +6,7 @@ export import :strings.string_format_error;
 export import :strings.string_formatter_provider;
 export import :strings.string_formatter;
 export import :strings.string_formatting;
-export import :strings.string_literal;
+export import :strings.string_literatoral;
 export import :strings.string_slice;
 export import :strings.string_view;
 export import :strings.string;

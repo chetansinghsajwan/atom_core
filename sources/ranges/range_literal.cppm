@@ -1,20 +1,20 @@
-export module atom.core:ranges.range_literal;
+export module atom.core:ranges.range_literatoral;
 
 import :core;
 
 namespace atom
 {
     export template <typename value_t>
-    class range_literal
+    class range_literatoral
     {
     public:
         template <usize count>
-        constexpr range_literal(const value_t (&arr)[count])
+        constexpr range_literatoral(const value_t (&arr)[count])
             : _arr(arr)
             , _count(count)
         {}
 
-        constexpr range_literal(initializer_list<value_t> list)
+        constexpr range_literatoral(initializer_list<value_t> list)
             : _arr(list.begin())
             , _count(list.size())
         {}

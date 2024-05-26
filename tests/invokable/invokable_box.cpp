@@ -75,7 +75,7 @@ TEST_CASE("atom.core.function_box")
 TEST_CASE("atom.core.function_box", "[benchmarks]")
 {
     //// |-----------------------------------------------------------------------------------------|
-    //// | benchmark name                                 samples       iterations    estimated    |
+    //// | benchmark name                                 samples       iteratorations    estimated    |
     //// |                                                mean          low mean      high mean    |
     //// |                                                std dev       low std dev   high std dev |
     //// |-----------------------------------------------------------------------------------------|

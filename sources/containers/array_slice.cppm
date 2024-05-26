@@ -19,10 +19,10 @@ namespace atom
 
     public:
         using value_t = in_elem_t;
-        using iter_t = array_iter<value_t>;
-        using iter_end_t = iter_t;
-        using mut_iter_t = mut_array_iter<value_t>;
-        using mut_iter_end_t = mut_iter_t;
+        using iterator_t = array_iterator<value_t>;
+        using iterator_end_t = iterator_t;
+        using mut_iterator_t = mut_array_iterator<value_t>;
+        using mut_iterator_end_t = mut_iterator_t;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -134,33 +134,33 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_iter(this const this_t& self) -> iter_t
+        constexpr auto get_iterator(this const this_t& self) -> iterator_t
         {
-            return iter_t(self._data);
+            return iterator_t(self._data);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_iter_end(this const this_t& self) -> iter_end_t
+        constexpr auto get_iterator_end(this const this_t& self) -> iterator_end_t
         {
-            return iter_end_t(self._data + self._count);
+            return iterator_end_t(self._data + self._count);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_mut_iter(this this_t& self) -> mut_iter_t
+        constexpr auto get_mut_iterator(this this_t& self) -> mut_iterator_t
         {
-            return mut_iter_t(self._data);
+            return mut_iterator_t(self._data);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_mut_iter_end(this this_t& self) -> mut_iter_end_t
+        constexpr auto get_mut_iterator_end(this this_t& self) -> mut_iterator_end_t
         {
-            return mut_iter_end_t(self._data + self._count);
+            return mut_iterator_end_t(self._data + self._count);
         }
 
     private:

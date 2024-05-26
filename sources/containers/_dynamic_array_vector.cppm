@@ -15,10 +15,10 @@ namespace atom
     public:
         using value_t = in_elem_t;
         using allocator_t = in_allocator_t;
-        using iter_t = array_iter<value_t>;
-        using iter_end_t = iter_t;
-        using mut_iter_t = mut_array_iter<value_t>;
-        using mut_iter_end_t = mut_iter_t;
+        using iterator_t = array_iterator<value_t>;
+        using iterator_end_t = iterator_t;
+        using mut_iterator_t = mut_array_iterator<value_t>;
+        using mut_iterator_end_t = mut_iterator_t;
 
     public:
         class copy_tag
@@ -43,8 +43,8 @@ namespace atom
             : _vector{ std::move(that._vector) }
         {}
 
-        template <typename other_iter_t, typename other_iter_end_t>
-        constexpr _dynamic_array_impl_vector(range_tag, other_iter_t it, other_iter_end_t it_end)
+        template <typename other_iterator_t, typename other_iterator_end_t>
+        constexpr _dynamic_array_impl_vector(range_tag, other_iterator_t it, other_iterator_end_t it_end)
             : _vector{ move(it), move(it_end) }
         {}
 
@@ -80,38 +80,38 @@ namespace atom
             return _vector[index];
         }
 
-        constexpr auto get_iter() const -> iter_t
+        constexpr auto get_iterator() const -> iterator_t
         {
-            return iter_t(_vector.data());
+            return iterator_t(_vector.data());
         }
 
-        constexpr auto get_iter_at(usize index) const -> iter_t
+        constexpr auto get_iterator_at(usize index) const -> iterator_t
         {
-            return iter_t(_vector.data() + index);
+            return iterator_t(_vector.data() + index);
         }
 
-        constexpr auto get_iter_end() const -> iter_end_t
+        constexpr auto get_iterator_end() const -> iterator_end_t
         {
-            return iter_end_t(_vector.data() + _vector.size());
+            return iterator_end_t(_vector.data() + _vector.size());
         }
 
-        constexpr auto get_mut_iter() -> mut_iter_t
+        constexpr auto get_mut_iterator() -> mut_iterator_t
         {
-            return mut_iter_t(_vector.data());
+            return mut_iterator_t(_vector.data());
         }
 
-        constexpr auto get_mut_iter_at(usize index) -> mut_iter_t
+        constexpr auto get_mut_iterator_at(usize index) -> mut_iterator_t
         {
-            return mut_iter_t(_vector.data() + index);
+            return mut_iterator_t(_vector.data() + index);
         }
 
-        constexpr auto get_mut_iter_end() -> mut_iter_end_t
+        constexpr auto get_mut_iterator_end() -> mut_iterator_end_t
         {
-            return mut_iter_end_t(_vector.data() + _vector.size());
+            return mut_iterator_end_t(_vector.data() + _vector.size());
         }
 
-        template <typename other_iter_t, typename other_iter_end_t>
-        constexpr auto assign_range(other_iter_t in_it, other_iter_end_t in_it_end)
+        template <typename other_iterator_t, typename other_iterator_end_t>
+        constexpr auto assign_range(other_iterator_t in_it, other_iterator_end_t in_it_end)
         {
             auto it = move(in_it);
             auto it_end = move(in_it_end);
@@ -124,9 +124,9 @@ namespace atom
             _vector.emplace(_vector.begin() + index, forward<arg_ts>(args)...);
         }
 
-        template <typename other_iter_t, typename other_iter_end_t>
+        template <typename other_iterator_t, typename other_iterator_end_t>
         constexpr auto insert_range_at(
-            usize index, other_iter_t it, other_iter_end_t it_end) -> usize
+            usize index, other_iterator_t it, other_iterator_end_t it_end) -> usize
         {
             usize old_size = _vector.size();
             _vector.insert(_vector.begin() + index, move(it), move(it_end));
@@ -140,8 +140,8 @@ namespace atom
             emplace_at(0);
         }
 
-        template <typename other_iter_t, typename other_iter_end_t>
-        constexpr auto insert_range_front(other_iter_t it, other_iter_end_t it_end) -> usize
+        template <typename other_iterator_t, typename other_iterator_end_t>
+        constexpr auto insert_range_front(other_iterator_t it, other_iterator_end_t it_end) -> usize
         {
             return insert_range_at(0, move(it), move(it_end));
         }
@@ -152,8 +152,8 @@ namespace atom
             _vector.emplace_back(forward<arg_ts>(args)...);
         }
 
-        template <typename other_iter_t, typename other_iter_end_t>
-        constexpr auto insert_range_back(other_iter_t it, other_iter_end_t it_end) -> usize
+        template <typename other_iterator_t, typename other_iterator_end_t>
+        constexpr auto insert_range_back(other_iterator_t it, other_iterator_end_t it_end) -> usize
         {
             return insert_range_at(get_count(), move(it), move(it_end));
         }
@@ -233,25 +233,25 @@ namespace atom
             return index <= _vector.size();
         }
 
-        constexpr auto is_iter_valid(iter_t it) const -> bool
+        constexpr auto is_iterator_valid(iterator_t it) const -> bool
         {
             return true;
         }
 
-        constexpr auto get_index_for_iter(iter_t it) const -> usize
+        constexpr auto get_index_for_iterator(iterator_t it) const -> usize
         {
             isize index = it.get_data() - _vector.data();
             return index < 0 ? math::max<usize>() : index;
         }
 
-        constexpr auto is_iter_in_range(iter_t it) const -> bool
+        constexpr auto is_iterator_in_range(iterator_t it) const -> bool
         {
-            return get_index_for_iter(it) < _vector.size();
+            return get_index_for_iterator(it) < _vector.size();
         }
 
-        constexpr auto is_iter_in_range_or_end(iter_t it) const -> bool
+        constexpr auto is_iterator_in_range_or_end(iterator_t it) const -> bool
         {
-            return get_index_for_iter(it) <= _vector.size();
+            return get_index_for_iterator(it) <= _vector.size();
         }
 
     private:

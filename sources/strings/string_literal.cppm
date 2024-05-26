@@ -1,8 +1,8 @@
-export module atom.core:strings.string_literal;
+export module atom.core:strings.string_literatoral;
 
 import :ranges;
 
 namespace atom
 {
-    export using string_literal = range_literal<char>;
+    export using string_literatoral = range_literatoral<char>;
 }

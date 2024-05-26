@@ -45,7 +45,7 @@ namespace atom
         ATOM_PRAGMA_OPTIMIZE_ON
 
         /// ----------------------------------------------------------------------------------------
-        /// copies each byte from mem block `src` to mem block `dest` using fwd iteration.
+        /// copies each byte from mem block `src` to mem block `dest` using fwd iteratoration.
         ///
         /// @param src: mem block to copy from.
         /// @param src_size: size of the mem block pointed by `src`.
@@ -65,7 +65,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// copies each byte from mem block `src` to mem block `dest` using bwd iteration.
+        /// copies each byte from mem block `src` to mem block `dest` using bwd iteratoration.
         ///
         /// @param src: mem block to copy from.
         /// @param src_size: size of the mem block pointed by `src`.
@@ -86,7 +86,7 @@ namespace atom
 
         /// ----------------------------------------------------------------------------------------
         /// copies each byte from mem block `src` to mem block `dest` using appropriate
-        /// iteration. this_t method is safe even if `src` and `dest` overlaps.
+        /// iteratoration. this_t method is safe even if `src` and `dest` overlaps.
         ///
         /// @param src: mem block to copy from.
         /// @param src_size: size of the mem block pointed by `src`.

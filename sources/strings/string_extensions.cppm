@@ -7,8 +7,8 @@ import :strings._string_type_id;
 
 namespace atom
 {
-    export using string_iter = array_iter<char>;
-    export using mut_string_iter = mut_array_iter<char>;
+    export using string_iterator = array_iterator<char>;
+    export using mut_string_iterator = mut_array_iterator<char>;
 
     export template <typename final_t>
     class string_extensions: public _string_type_id

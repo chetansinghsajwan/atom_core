@@ -3,7 +3,7 @@ export module atom.core:ranges.range_extensions_impl;
 import std;
 import :core;
 import :types;
-import :ranges.iter_requirements;
+import :ranges.iterator_requirements;
 import :ranges.range_requirements;
 
 namespace atom
@@ -18,95 +18,95 @@ namespace atom
         template <typename in_range_t>
         struct _mut_aliases_resolver
         {
-            using mut_iter_t = typeutils::empty;
-            using mut_iter_end_t = typeutils::empty;
+            using mut_iterator_t = typeutils::empty;
+            using mut_iterator_end_t = typeutils::empty;
         };
 
         template <typename in_range_t>
             requires is_mut_range<in_range_t>
         struct _mut_aliases_resolver<in_range_t>
         {
-            using mut_iter_t = typename in_range_t::mut_iter_t;
-            using mut_iter_end_t = typename in_range_t::mut_iter_end_t;
+            using mut_iterator_t = typename in_range_t::mut_iterator_t;
+            using mut_iterator_end_t = typename in_range_t::mut_iterator_end_t;
         };
 
     public:
         using value_t = typename _impl_t::value_t;
-        using iter_t = typename _impl_t::iter_t;
-        using iter_end_t = typename _impl_t::iter_end_t;
-        using mut_iter_t = typename _mut_aliases_resolver<_impl_t>::mut_iter_t;
-        using mut_iter_end_t = typename _mut_aliases_resolver<_impl_t>::mut_iter_end_t;
+        using iterator_t = typename _impl_t::iterator_t;
+        using iterator_end_t = typename _impl_t::iterator_end_t;
+        using mut_iterator_t = typename _mut_aliases_resolver<_impl_t>::mut_iterator_t;
+        using mut_iterator_end_t = typename _mut_aliases_resolver<_impl_t>::mut_iterator_end_t;
 
     public:
         template <typename this_range_t>
-        static constexpr auto get_iter(const this_range_t& this_range) -> iter_t
+        static constexpr auto get_iterator(const this_range_t& this_range) -> iterator_t
         {
-            return this_range.get_iter();
+            return this_range.get_iterator();
         }
 
         template <typename this_range_t>
-        static constexpr auto get_iter_end(const this_range_t& this_range) -> iter_end_t
+        static constexpr auto get_iterator_end(const this_range_t& this_range) -> iterator_end_t
         {
-            return this_range.get_iter_end();
+            return this_range.get_iterator_end();
         }
 
         template <typename this_range_t>
-        static constexpr auto get_iter_at(const this_range_t& this_range, usize i) -> iter_t
+        static constexpr auto get_iterator_at(const this_range_t& this_range, usize i) -> iterator_t
         {
-            return this_range.get_iter().next(i);
+            return this_range.get_iterator().next(i);
         }
 
         template <typename this_range_t>
-        static constexpr auto get_mut_iter(this_range_t& this_range) -> mut_iter_t
+        static constexpr auto get_mut_iterator(this_range_t& this_range) -> mut_iterator_t
             requires is_mut_range<this_range_t>
         {
-            return this_range.get_mut_iter();
+            return this_range.get_mut_iterator();
         }
 
         template <typename this_range_t>
-        static constexpr auto get_mut_iter_end(this_range_t& this_range) -> mut_iter_end_t
+        static constexpr auto get_mut_iterator_end(this_range_t& this_range) -> mut_iterator_end_t
             requires is_mut_range<this_range_t>
         {
-            return this_range.get_mut_iter_end();
+            return this_range.get_mut_iterator_end();
         }
 
         template <typename this_range_t>
-        static constexpr auto get_mut_iter_at(this_range_t& this_range, usize i) -> iter_t
+        static constexpr auto get_mut_iterator_at(this_range_t& this_range, usize i) -> iterator_t
             requires is_mut_range<this_range_t>
         {
-            return this_range.get_mut_iter().next(i);
+            return this_range.get_mut_iterator().next(i);
         }
 
         // template <typename this_range_t>
-        // static constexpr auto begin(const this_range_t& this_range) -> std_iter_t
+        // static constexpr auto begin(const this_range_t& this_range) -> std_iterator_t
         // {
-        //     return get_iter(this_range);
+        //     return get_iterator(this_range);
         // }
 
         // template <typename this_range_t>
-        // static constexpr auto end(const this_range_t& this_range) -> std_iter_end_t
+        // static constexpr auto end(const this_range_t& this_range) -> std_iterator_end_t
         // {
-        //     return get_iter_end(this_range);
+        //     return get_iterator_end(this_range);
         // }
 
         template <typename this_range_t>
         static constexpr auto begin(this_range_t& this_range)
-        // -> std_mut_iter_t
+        // -> std_mut_iterator_t
         {
             if constexpr (is_mut_range<this_range_t>)
-                return get_mut_iter(this_range);
+                return get_mut_iterator(this_range);
             else
-                return get_iter(this_range);
+                return get_iterator(this_range);
         }
 
         template <typename this_range_t>
         static constexpr auto end(this_range_t& this_range)
-        // -> std_mut_iter_end_t
+        // -> std_mut_iterator_end_t
         {
             if constexpr (is_mut_range<this_range_t>)
-                return get_mut_iter_end(this_range);
+                return get_mut_iterator_end(this_range);
             else
-                return get_iter_end(this_range);
+                return get_iterator_end(this_range);
         }
 
         template <typename this_range_t>
@@ -171,34 +171,34 @@ namespace atom
 
         template <typename this_range_t, typename that_value_t>
         static constexpr auto find_elem(
-            const this_range_t& this_range, const that_value_t& value) -> iter_t
+            const this_range_t& this_range, const that_value_t& value) -> iterator_t
         {
-            auto begin = get_iter(this_range);
-            auto end = get_iter_end(this_range);
+            auto begin = get_iterator(this_range);
+            auto end = get_iterator_end(this_range);
 
-            return std::find(begin, end, value).iter;
+            return std::find(begin, end, value).iterator;
         }
 
         template <typename this_range_t, typename that_range_type>
         static constexpr auto find_range(
-            const this_range_t& this_range, const that_range_type& that_range) -> iter_t
+            const this_range_t& this_range, const that_range_type& that_range) -> iterator_t
         {
-            auto this_begin = get_iter(this_range);
-            auto this_end = get_iter_end(this_range);
-            auto that_begin = that_range.get_iter();
-            auto that_end = that_range.get_iter_end();
+            auto this_begin = get_iterator(this_range);
+            auto this_end = get_iterator_end(this_range);
+            auto that_begin = that_range.get_iterator();
+            auto that_end = that_range.get_iterator_end();
 
-            return std::search(this_begin, this_end, that_begin, that_end).iter;
+            return std::search(this_begin, this_end, that_begin, that_end).iterator;
         }
 
         template <typename this_range_t, typename that_range_type>
         static constexpr auto compare(
             const this_range_t& this_range, that_range_type& that_range) -> i8
         {
-            auto this_begin = get_iter(this_range);
-            auto this_end = get_iter_end(this_range);
-            auto that_begin = that_range.get_iter();
-            auto that_end = that_range.get_iter_end();
+            auto this_begin = get_iterator(this_range);
+            auto this_end = get_iterator_end(this_range);
+            auto that_begin = that_range.get_iterator();
+            auto that_end = that_range.get_iterator_end();
 
             return std::equal(this_begin, this_end, that_begin, that_end);
         }
@@ -213,13 +213,13 @@ namespace atom
         template <typename this_range_t>
         static constexpr auto count_elems(const this_range_t& this_range) -> usize
         {
-            if constexpr (is_jump_iter_pair<iter_t, iter_end_t>)
+            if constexpr (is_random_access_iterator_pair<iterator_t, iterator_end_t>)
             {
-                return get_iter_end(this_range) - get_iter(this_range);
+                return get_iterator_end(this_range) - get_iterator(this_range);
             }
 
             usize count = 0;
-            for (auto it = get_iter(this_range); it != get_iter_end(this_range); it++)
+            for (auto it = get_iterator(this_range); it != get_iterator_end(this_range); it++)
                 count++;
 
             return count;

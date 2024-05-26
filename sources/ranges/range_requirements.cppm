@@ -1,7 +1,7 @@
 export module atom.core:ranges.range_requirements;
 
 import std;
-import :ranges.iter_requirements;
+import :ranges.iterator_requirements;
 
 // clang-format off
 namespace atom
@@ -13,13 +13,13 @@ namespace atom
     concept _is_range = requires(const range_t& range)
     {
         typename range_t::value_t;
-        typename range_t::iter_t;
-        typename range_t::iter_end_t;
+        typename range_t::iterator_t;
+        typename range_t::iterator_end_t;
 
-        requires std::same_as<typename range_t::value_t, typename range_t::iter_t::value_t>;
+        requires std::same_as<typename range_t::value_t, typename range_t::iterator_t::value_t>;
 
-        { range.get_iter() } -> std::same_as<typename range_t::iter_t>;
-        { range.get_iter_end() } -> std::same_as<typename range_t::iter_end_t>;
+        { range.get_iterator() } -> std::same_as<typename range_t::iterator_t>;
+        { range.get_iterator_end() } -> std::same_as<typename range_t::iterator_end_t>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -40,11 +40,11 @@ namespace atom
     {
         requires _is_range<range_t>;
 
-        typename range_t::mut_iter_t;
-        typename range_t::mut_iter_end_t;
+        typename range_t::mut_iterator_t;
+        typename range_t::mut_iterator_end_t;
 
-        { range.get_mut_iter() } -> std::same_as<typename range_t::mut_iter_t>;
-        { range.get_mut_iter_end() } -> std::same_as<typename range_t::mut_iter_end_t>;
+        { range.get_mut_iterator() } -> std::same_as<typename range_t::mut_iterator_t>;
+        { range.get_mut_iterator_end() } -> std::same_as<typename range_t::mut_iterator_end_t>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -67,7 +67,7 @@ export namespace atom
     concept is_range = requires
     {
         requires _is_range<range_t>;
-        requires is_iter_pair<typename range_t::iter_t, typename range_t::iter_end_t>;
+        requires is_iterator_pair<typename range_t::iterator_t, typename range_t::iterator_end_t>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -77,7 +77,7 @@ export namespace atom
     concept is_range_of = requires
     {
         requires _is_range_of<range_t, value_t>;
-        requires is_iter_pair_of<typename range_t::iter_t, typename range_t::iter_end_t, value_t>;
+        requires is_iterator_pair_of<typename range_t::iterator_t, typename range_t::iterator_end_t, value_t>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -87,8 +87,8 @@ export namespace atom
     concept is_mut_range = requires
     {
         requires _is_mut_range<range_t>;
-        requires is_iter_pair<typename range_t::iter_t, typename range_t::iter_end_t>;
-        requires is_mut_iter_pair<typename range_t::mut_iter_t, typename range_t::mut_iter_end_t>;
+        requires is_iterator_pair<typename range_t::iterator_t, typename range_t::iterator_end_t>;
+        requires is_mut_iterator_pair<typename range_t::mut_iterator_t, typename range_t::mut_iterator_end_t>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -98,8 +98,8 @@ export namespace atom
     concept is_mut_range_of = requires
     {
         requires _is_mut_range_of<range_t, value_t>;
-        requires is_iter_pair_of<typename range_t::iter_t, typename range_t::iter_end_t, value_t>;
-        requires is_mut_iter_pair_of<typename range_t::mut_iter_t, typename range_t::mut_iter_end_t, value_t>;
+        requires is_iterator_pair_of<typename range_t::iterator_t, typename range_t::iterator_end_t, value_t>;
+        requires is_mut_iterator_pair_of<typename range_t::mut_iterator_t, typename range_t::mut_iterator_end_t, value_t>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -109,7 +109,7 @@ export namespace atom
     concept is_fwd_range = requires
     {
         requires _is_range<range_t>;
-        requires is_fwd_iter_pair<typename range_t::iter_t, typename range_t::iter_end_t>;
+        requires is_unidirectional_iterator_pair<typename range_t::iterator_t, typename range_t::iterator_end_t>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -119,7 +119,7 @@ export namespace atom
     concept is_fwd_range_of = requires
     {
         requires _is_range_of<range_t, value_t>;
-        requires is_fwd_iter_pair_of<typename range_t::iter_t, typename range_t::iter_end_t, value_t>;
+        requires is_unidirectional_iterator_pair_of<typename range_t::iterator_t, typename range_t::iterator_end_t, value_t>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -129,8 +129,8 @@ export namespace atom
     concept is_mut_fwd_range = requires
     {
         requires _is_mut_range<range_t>;
-        requires is_fwd_iter_pair<typename range_t::iter_t, typename range_t::iter_end_t>;
-        requires is_mut_fwd_iter_pair<typename range_t::mut_iter_t, typename range_t::mut_iter_end_t>;
+        requires is_unidirectional_iterator_pair<typename range_t::iterator_t, typename range_t::iterator_end_t>;
+        requires is_mut_unidirectional_iterator_pair<typename range_t::mut_iterator_t, typename range_t::mut_iterator_end_t>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -140,8 +140,8 @@ export namespace atom
     concept is_mut_fwd_range_of = requires
     {
         requires _is_mut_range_of<range_t, value_t>;
-        requires is_fwd_iter_pair_of<typename range_t::iter_t, typename range_t::iter_end_t, value_t>;
-        requires is_mut_fwd_iter_pair_of<typename range_t::mut_iter_t, typename range_t::mut_iter_end_t, value_t>;
+        requires is_unidirectional_iterator_pair_of<typename range_t::iterator_t, typename range_t::iterator_end_t, value_t>;
+        requires is_mut_unidirectional_iterator_pair_of<typename range_t::mut_iterator_t, typename range_t::mut_iterator_end_t, value_t>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -151,7 +151,7 @@ export namespace atom
     concept is_bidi_range = requires
     {
         requires _is_range<range_t>;
-        requires is_bidi_iter_pair<typename range_t::iter_t, typename range_t::iter_end_t>;
+        requires is_bidirectional_iterator_pair<typename range_t::iterator_t, typename range_t::iterator_end_t>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -161,7 +161,7 @@ export namespace atom
     concept is_bidi_range_of = requires
     {
         requires _is_range_of<range_t, value_t>;
-        requires is_bidi_iter_pair_of<typename range_t::iter_t, typename range_t::iter_end_t, value_t>;
+        requires is_bidirectional_iterator_pair_of<typename range_t::iterator_t, typename range_t::iterator_end_t, value_t>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -171,8 +171,8 @@ export namespace atom
     concept is_mut_bidi_range = requires
     {
         requires _is_mut_range<range_t>;
-        requires is_bidi_iter_pair<typename range_t::iter_t, typename range_t::iter_end_t>;
-        requires is_mut_bidi_iter_pair<typename range_t::mut_iter_t, typename range_t::mut_iter_end_t>;
+        requires is_bidirectional_iterator_pair<typename range_t::iterator_t, typename range_t::iterator_end_t>;
+        requires is_mut_bidirectional_iterator_pair<typename range_t::mut_iterator_t, typename range_t::mut_iterator_end_t>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -182,8 +182,8 @@ export namespace atom
     concept is_mut_bidi_range_of = requires
     {
         requires _is_mut_range_of<range_t, value_t>;
-        requires is_bidi_iter_pair_of<typename range_t::iter_t, typename range_t::iter_end_t, value_t>;
-        requires is_mut_bidi_iter_pair_of<typename range_t::mut_iter_t, typename range_t::mut_iter_end_t, value_t>;
+        requires is_bidirectional_iterator_pair_of<typename range_t::iterator_t, typename range_t::iterator_end_t, value_t>;
+        requires is_mut_bidirectional_iterator_pair_of<typename range_t::mut_iterator_t, typename range_t::mut_iterator_end_t, value_t>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -193,7 +193,7 @@ export namespace atom
     concept is_jump_range = requires
     {
         requires _is_range<range_t>;
-        requires is_jump_iter_pair<typename range_t::iter_t, typename range_t::iter_end_t>;
+        requires is_random_access_iterator_pair<typename range_t::iterator_t, typename range_t::iterator_end_t>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -203,7 +203,7 @@ export namespace atom
     concept is_jump_range_of = requires
     {
         requires _is_range_of<range_t, value_t>;
-        requires is_jump_iter_pair_of<typename range_t::iter_t, typename range_t::iter_end_t, value_t>;
+        requires is_random_access_iterator_pair_of<typename range_t::iterator_t, typename range_t::iterator_end_t, value_t>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -213,8 +213,8 @@ export namespace atom
     concept is_mut_jump_range = requires
     {
         requires _is_mut_range<range_t>;
-        requires is_jump_iter_pair<typename range_t::iter_t, typename range_t::iter_end_t>;
-        requires is_mut_jump_iter_pair<typename range_t::mut_iter_t, typename range_t::mut_iter_end_t>;
+        requires is_random_access_iterator_pair<typename range_t::iterator_t, typename range_t::iterator_end_t>;
+        requires is_mut_random_access_iterator_pair<typename range_t::mut_iterator_t, typename range_t::mut_iterator_end_t>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -224,8 +224,8 @@ export namespace atom
     concept is_mut_jump_range_of = requires
     {
         requires _is_mut_range_of<range_t, value_t>;
-        requires is_jump_iter_pair_of<typename range_t::iter_t, typename range_t::iter_end_t, value_t>;
-        requires is_mut_jump_iter_pair_of<typename range_t::mut_iter_t, typename range_t::mut_iter_end_t, value_t>;
+        requires is_random_access_iterator_pair_of<typename range_t::iterator_t, typename range_t::iterator_end_t, value_t>;
+        requires is_mut_random_access_iterator_pair_of<typename range_t::mut_iterator_t, typename range_t::mut_iterator_end_t, value_t>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -235,7 +235,7 @@ export namespace atom
     concept is_array_range = requires
     {
         requires _is_range<range_t>;
-        requires is_array_iter_pair<typename range_t::iter_t, typename range_t::iter_end_t>;
+        requires is_array_iterator_pair<typename range_t::iterator_t, typename range_t::iterator_end_t>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -245,7 +245,7 @@ export namespace atom
     concept is_array_range_of = requires
     {
         requires _is_range_of<range_t, value_t>;
-        requires is_array_iter_pair_of<typename range_t::iter_t, typename range_t::iter_end_t, value_t>;
+        requires is_array_iterator_pair_of<typename range_t::iterator_t, typename range_t::iterator_end_t, value_t>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -255,8 +255,8 @@ export namespace atom
     concept is_mut_array_range = requires
     {
         requires _is_mut_range<range_t>;
-        requires is_array_iter_pair<typename range_t::iter_t, typename range_t::iter_end_t>;
-        requires is_mut_array_iter_pair<typename range_t::mut_iter_t, typename range_t::mut_iter_end_t>;
+        requires is_array_iterator_pair<typename range_t::iterator_t, typename range_t::iterator_end_t>;
+        requires is_mut_array_iterator_pair<typename range_t::mut_iterator_t, typename range_t::mut_iterator_end_t>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -266,8 +266,8 @@ export namespace atom
     concept is_mut_array_range_of = requires
     {
         requires _is_mut_range_of<range_t, value_t>;
-        requires is_array_iter_pair_of<typename range_t::iter_t, typename range_t::iter_end_t, value_t>;
-        requires is_mut_array_iter_pair_of<typename range_t::mut_iter_t, typename range_t::mut_iter_end_t, value_t>;
+        requires is_array_iterator_pair_of<typename range_t::iterator_t, typename range_t::iterator_end_t, value_t>;
+        requires is_mut_array_iterator_pair_of<typename range_t::mut_iterator_t, typename range_t::mut_iterator_end_t, value_t>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -313,7 +313,7 @@ export namespace atom
     concept is_common_range = requires
     {
         requires _is_range<range_t>;
-        requires std::same_as<typename range_t::iter_t, typename range_t::iter_end_t>;
+        requires std::same_as<typename range_t::iterator_t, typename range_t::iterator_end_t>;
     };
 
     /// --------------------------------------------------------------------------------------------
@@ -323,6 +323,6 @@ export namespace atom
     concept is_mut_common_range = requires
     {
         requires is_common_range<range_t>;
-        requires std::same_as<typename range_t::mut_iter_t, typename range_t::mut_iter_end_t>;
+        requires std::same_as<typename range_t::mut_iterator_t, typename range_t::mut_iterator_end_t>;
     };
 }

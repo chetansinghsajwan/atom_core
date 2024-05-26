@@ -19,8 +19,8 @@ namespace atom
 
     public:
         using value_t = in_elem_t;
-        using iter_t = array_iter<value_t>;
-        using iter_end_t = iter_t;
+        using iterator_t = array_iterator<value_t>;
+        using iterator_end_t = iterator_t;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -124,17 +124,17 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_iter() const -> iter_t
+        constexpr auto get_iterator() const -> iterator_t
         {
-            return iter_t(_data);
+            return iterator_t(_data);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_iter_end() const -> iter_end_t
+        constexpr auto get_iterator_end() const -> iterator_end_t
         {
-            return iter_end_t(_data + _count);
+            return iterator_end_t(_data + _count);
         }
 
     private:

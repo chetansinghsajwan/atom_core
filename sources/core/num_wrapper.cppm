@@ -80,7 +80,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # value constructor
         ///
-        /// converts `num_t` to `this_t`. this is supposed to accept literals only.
+        /// converts `num_t` to `this_t`. this is supposed to accept literatorals only.
         /// ----------------------------------------------------------------------------------------
         template <typename num_t>
         constexpr num_wrapper(num_t num)
@@ -93,7 +93,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # value operator
         ///
-        /// converts `num_t` to `this_t`. this is supposed to accept literals only.
+        /// converts `num_t` to `this_t`. this is supposed to accept literatorals only.
         /// ----------------------------------------------------------------------------------------
         template <typename num_t>
         constexpr auto operator=(num_t num) -> final_t&
