@@ -27,6 +27,7 @@ export import :unique_ptr;
 export import :default_mem_allocator;
 export import :legacy_mem_allocator;
 export import :function_box;
+export import :dynamic_buffer;
 
 export
 {
