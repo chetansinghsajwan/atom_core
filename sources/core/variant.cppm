@@ -839,7 +839,7 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <usize index>
-        constexpr auto at_check() const -> const type_at<index>&
+        constexpr auto get_at_checked() const -> const type_at<index>&
             requires(has<index>()) and typeinfo<type_at<index>>::is_not_void
         {
             contract_expects(is<index>(), "access to invalid type by index.");
@@ -851,7 +851,7 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <usize index>
-        constexpr auto at_check() -> type_at<index>&
+        constexpr auto get_at_checked() -> type_at<index>&
             requires(has<index>()) and typeinfo<type_at<index>>::is_not_void
         {
             contract_expects(is<index>(), "access to invalid type by index.");

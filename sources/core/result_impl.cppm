@@ -117,15 +117,23 @@ namespace atom
         }
 
         constexpr auto get_value(this const this_t& self) -> const value_t&
-            requires(not typeinfo<value_t>::is_void)
         {
             return self._variant.template get_at<value_index>();
         }
 
         constexpr auto get_value(this this_t& self) -> value_t&
-            requires(not typeinfo<value_t>::is_void)
         {
             return self._variant.template get_at<value_index>();
+        }
+
+        constexpr auto get_value_checked() -> value_t&
+        {
+            return _variant.template get_at_checked<value_index>();
+        }
+
+        constexpr auto get_value_checked() const -> const value_t&
+        {
+            return _variant.template get_at_checked<value_index>();
         }
 
         constexpr auto is_value(this const this_t& self) -> bool

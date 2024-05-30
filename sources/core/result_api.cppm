@@ -495,6 +495,26 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
+        template <typename this_t = this_t>
+        constexpr auto get_value_checked(this this_t& self) -> this_t::value_t&
+            requires(not value_type_info_t::is_void)
+        {
+            return self._impl.get_value_checked();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename this_t = this_t>
+        constexpr auto get_value_checked(this const this_t& self) -> const this_t::value_t&
+            requires(not value_type_info_t::is_void)
+        {
+            return self._impl.get_value_checked();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
         constexpr auto is_value(this const this_t& self) -> bool
         {
             return self._impl.is_value();

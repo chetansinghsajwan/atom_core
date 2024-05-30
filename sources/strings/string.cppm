@@ -2,6 +2,7 @@ export module atom.core:strings.string;
 
 import :core;
 import :default_mem_allocator;
+import :ranges;
 import :strings.buf_string;
 import :strings.format_string;
 import :strings.string_formatting;
@@ -14,6 +15,12 @@ namespace atom
         using base_t = buf_string<40, default_mem_allocator>;
 
     public:
+        constexpr string(create_with_join_tag, const char* str0, const char* str1)
+        {
+            insert_range_back(range_from(str0));
+            insert_range_back(range_from(str1));
+        }
+
         using base_t::base_t;
         using base_t::operator=;
 
