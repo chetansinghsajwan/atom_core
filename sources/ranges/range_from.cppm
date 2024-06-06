@@ -11,7 +11,7 @@ import :ranges.range_extensions;
 namespace atom
 {
     template <typename in_iterator_t, typename in_iterator_end_t>
-    class _range_from_iterator_pair: public range_extensions
+    class _range_from_iterator_pair
     {
     public:
         using value_t = typename in_iterator_t::value_t;
@@ -20,8 +20,8 @@ namespace atom
 
     public:
         constexpr _range_from_iterator_pair(iterator_t it, iterator_end_t it_end)
-            : _it(move(it))
-            , _it_end(move(it_end))
+            : _it{ move(it) }
+            , _it_end{ move(it_end) }
         {}
 
     public:

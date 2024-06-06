@@ -10,7 +10,7 @@ namespace atom
     ///
     /// --------------------------------------------------------------------------------------------
     export template <typename in_elem_t>
-    class array_slice: public range_extensions
+    class array_slice
     {
         static_assert(typeinfo<in_elem_t>::is_pure);
 
@@ -100,6 +100,22 @@ namespace atom
 
     public:
         /// ----------------------------------------------------------------------------------------
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto operator[](usize i) -> value_t&
+        {
+            return _data[i];
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// 
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto operator[](usize i) const -> const value_t&
+        {
+            return _data[i];
+        }
+
+        /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
         constexpr auto get_data(this const this_t& self) -> const value_t*
@@ -161,6 +177,14 @@ namespace atom
         constexpr auto get_mut_iterator_end(this this_t& self) -> mut_iterator_end_t
         {
             return mut_iterator_end_t(self._data + self._count);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto is_empty() const -> bool
+        {
+            return _count == 0;
         }
 
     private:

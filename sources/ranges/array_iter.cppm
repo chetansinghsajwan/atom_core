@@ -84,9 +84,9 @@ namespace atom
         /// move fwd by 1 step.
         /// ----------------------------------------------------------------------------------------
         template <typename self_type>
-        constexpr auto operator++(this const self_type& self, int) -> self_type
+        constexpr auto operator++(this self_type& self, int) -> self_type
         {
-            self_type tmp{ self._it };
+            self_type tmp{ const_cast<self_type::value_type*>(self._it) };
             ++self._it;
             return tmp;
         }
@@ -172,9 +172,9 @@ namespace atom
         /// move bwd by 1 step.
         /// ----------------------------------------------------------------------------------------
         template <typename self_type>
-        constexpr auto operator--(this const self_type& self, int) -> self_type
+        constexpr auto operator--(this self_type& self, int) -> self_type
         {
-            self_type tmp{ self._it };
+            self_type tmp{ const_cast<self_type::value_type*>(self._it) };
             --self._it;
             return tmp;
         }

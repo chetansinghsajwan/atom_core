@@ -272,6 +272,11 @@ namespace atom
             return _allocator;
         }
 
+        constexpr auto is_empty() const -> bool
+        {
+            return _count == 0;
+        }
+
         constexpr auto is_index_in_range(usize index) const -> bool
         {
             return index < _count;

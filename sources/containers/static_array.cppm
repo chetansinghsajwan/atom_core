@@ -7,7 +7,7 @@ import :ranges;
 namespace atom
 {
     export template <typename in_elem_t, usize in_count>
-    class static_array: public range_extensions
+    class static_array
     {
     public:
         using value_t = in_elem_t;
@@ -22,17 +22,32 @@ namespace atom
         template <usize other_count>
         constexpr static_array(const value_t (&arr)[other_count])
             requires(other_count <= in_count)
-            : _arr(arr)
+            : _arr{ arr }
         {}
 
         template <typename... arg_ts>
         constexpr static_array(arg_ts&&... args)
             requires(typelist<arg_ts...>::info_t::template are_convertible_to<value_t>)
                     and (typelist<arg_ts...>::count <= in_count)
-            : _arr(0)
+            : _arr{ 0 }
         {}
 
     public:
+        constexpr auto operator[](usize i) -> value_t&
+        {
+            return _arr[i];
+        }
+
+        constexpr auto operator[](usize i) const -> const value_t&
+        {
+            return _arr[i];
+        }
+
+        constexpr auto get_data() -> value_t*
+        {
+            return _arr;
+        }
+
         constexpr auto get_data() const -> const value_t*
         {
             return _arr;
@@ -50,22 +65,22 @@ namespace atom
 
         constexpr auto get_iterator() const -> iterator_t
         {
-            return iterator_t(_arr);
+            return iterator_t{ _arr };
         }
 
         constexpr auto get_iterator_end() const -> iterator_end_t
         {
-            return iterator_end_t(_arr + in_count);
+            return iterator_end_t{ _arr + in_count };
         }
 
         constexpr auto get_mut_iterator() -> mut_iterator_t
         {
-            return mut_iterator_t(_arr);
+            return mut_iterator_t{ _arr };
         }
 
         constexpr auto get_mut_iterator_end() -> mut_iterator_end_t
         {
-            return mut_iterator_end_t(_arr + in_count);
+            return mut_iterator_end_t{ _arr + in_count };
         }
 
     private:

@@ -15,7 +15,7 @@ namespace atom
     /// - add note for case, where element or elements to be inserted are from this array.
     /// --------------------------------------------------------------------------------------------
     export template <typename in_elem_t, typename in_allocator_t = default_mem_allocator>
-    class dynamic_array: public range_extensions
+    class dynamic_array
     {
         static_assert(typeinfo<in_elem_t>::is_pure, "dynamic_array does not non pure types.");
         static_assert(not typeinfo<in_elem_t>::is_void, "dynamic_array does not support void.");
@@ -37,14 +37,14 @@ namespace atom
         /// # default constructor
         /// ----------------------------------------------------------------------------------------
         constexpr dynamic_array()
-            : _impl()
+            : _impl{}
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # copy constructor
         /// ----------------------------------------------------------------------------------------
         constexpr dynamic_array(const dynamic_array& that)
-            : _impl(typename _impl_t::copy_tag(), that._impl)
+            : _impl{ typename _impl_t::copy_tag{}, that._impl }
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -60,7 +60,7 @@ namespace atom
         /// # move constructor
         /// ----------------------------------------------------------------------------------------
         constexpr dynamic_array(dynamic_array&& that)
-            : _impl(typename _impl_t::move_tag(), that._impl)
+            : _impl{ typename _impl_t::move_tag{}, that._impl }
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -78,7 +78,7 @@ namespace atom
         template <typename range_t>
         constexpr dynamic_array(range_t&& range)
             requires is_range_of<typename typeinfo<range_t>::pure_t::value_t, value_t>
-            : _impl(typename _impl_t::range_tag(), range.get_iterator(), range.get_iterator_end())
+            : _impl{ typename _impl_t::range_tag{}, range.get_iterator(), range.get_iterator_end() }
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -96,7 +96,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <usize count>
         constexpr dynamic_array(const value_t (&array)[count])
-            : _impl(typename _impl_t::range_tag(), iterator_t(array), iterator_t(array + count))
+            : _impl{ typename _impl_t::range_tag{}, iterator_t(array), iterator_t(array + count) }
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -267,8 +267,10 @@ namespace atom
             contract_debug_expects(is_iterator_in_range_or_end(it), "iterator is out of range.");
 
             usize index = get_index_for_iterator(it);
-            usize count = _impl.insert_range_at(index, range.get_iterator(), range.get_iterator_end());
-            return range_from(_impl.get_mut_iterator_at(index), _impl.get_mut_iterator_at(index + count));
+            usize count =
+                _impl.insert_range_at(index, range.get_iterator(), range.get_iterator_end());
+            return range_from(
+                _impl.get_mut_iterator_at(index), _impl.get_mut_iterator_at(index + count));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -698,7 +700,15 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// checks if index `index` is in range [`0`, [`get_count()`]).
         /// ----------------------------------------------------------------------------------------
-        constexpr bool is_index_in_range(usize index) const
+        constexpr auto is_empty() const -> bool
+        {
+            return _impl.is_empty();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// checks if index `index` is in range [`0`, [`get_count()`]).
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto is_index_in_range(usize index) const -> bool
         {
             return _impl.is_index_in_range(index);
         }
@@ -706,7 +716,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// checks if index `index` is in range [`0`, [`get_count()`]].
         /// ----------------------------------------------------------------------------------------
-        constexpr bool is_index_in_range_or_end(usize index) const
+        constexpr auto is_index_in_range_or_end(usize index) const -> bool
         {
             return _impl.is_index_in_range_or_end(index);
         }
@@ -726,7 +736,7 @@ namespace atom
         /// # to do
         /// - implement iterator validation.
         /// ----------------------------------------------------------------------------------------
-        constexpr bool is_iterator_valid(iterator_t it) const
+        constexpr auto is_iterator_valid(iterator_t it) const -> bool
         {
             return _impl.is_iterator_valid(it);
         }
@@ -734,7 +744,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// checks if iterator `pos` is in range [[`get_iterator()`], [`get_iterator_end()`]).
         /// ----------------------------------------------------------------------------------------
-        constexpr bool is_iterator_in_range(iterator_t it) const
+        constexpr auto is_iterator_in_range(iterator_t it) const -> bool
         {
             return _impl.is_iterator_in_range(it);
         }
@@ -742,7 +752,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// checks if iterator `pos` is in range [[`get_iterator()`], [`get_iterator_end()`]].
         /// ----------------------------------------------------------------------------------------
-        constexpr bool is_iterator_in_range_or_end(iterator_t it) const
+        constexpr auto is_iterator_in_range_or_end(iterator_t it) const -> bool
         {
             return _impl.is_iterator_in_range_or_end(it);
         }

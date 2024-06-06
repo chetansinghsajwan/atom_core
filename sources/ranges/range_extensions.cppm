@@ -9,704 +9,730 @@ import :ranges.range_requirements;
 
 #include "atom/core/preprocessors.h"
 
-namespace atom
+export namespace atom::ranges
 {
-    export class range_extensions
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    ////
+    //// aliases
+    ////
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+    template <typename range_type>
+    using _impl_type = _range_extensions_impl<range_type>;
+
+    template <typename range_type>
+    using value_type = typename range_type::value_t;
+
+    template <typename range_type>
+    using iterator_type = typename range_type::iterator_t;
+
+    template <typename range_type>
+    using iterator_end_type = typename range_type::iterator_end_t;
+
+    template <typename range_type>
+    using mut_iterator_type = typename range_type::mut_iterator_t;
+
+    template <typename range_type>
+    using mut_iterator_end_type = typename range_type::mut_iterator_end_t;
+
+    template <typename range_type>
+    using view_type = int;
+
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    ////
+    //// basic functionality
+    ////
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+    /// ----------------------------------------------------------------------------------------
+    /// is range empty.
+    /// ----------------------------------------------------------------------------------------
+    template <typename range_type>
+    constexpr auto is_empty(const range_type& range) -> bool
+        requires is_range<range_type>
     {
-        using this_type = range_extensions;
+        return _impl_type<range_type>::is_empty(range);
+    }
 
-    public:
-        template <typename this_range_type>
-        using get_impl_type = _range_extensions_impl<this_range_type>;
-
+    struct is_empty_closure
+    {
         template <typename range_type>
-        using get_value_type = typename get_impl_type<range_type>::value_t;
-
-        template <typename this_range_type>
-        using get_iterator_type = typename this_range_type::iterator_t;
-
-        template <typename this_range_type>
-        using get_iterator_end_type = typename this_range_type::iterator_end_t;
-
-        template <typename this_range_type>
-        using get_mut_iterator_type = typename this_range_type::mut_iterator_t;
-
-        template <typename this_range_type>
-        using get_mut_iterator_end_type = typename this_range_type::mut_iterator_end_t;
-
-        template <typename this_range_type>
-        using get_view_type = int;
-
-    public:
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        ////
-        //// iteratoration
-        ////
-        ////////////////////////////////////////////////////////////////////////////////////////////
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        // template <typename this_range_type>
-        // constexpr auto get_iterator(
-        //     this const this_range_type& this_range) -> get_iterator_type<this_range_type>
-        //     // requires is_range<this_range_type>
-        // {
-        //     using impl_type = get_impl_type<this_range_type>;
-        //     return impl_type::get_iterator(this_range);
-        // }
-
-        // /// ----------------------------------------------------------------------------------------
-        // ///
-        // /// ----------------------------------------------------------------------------------------
-        // template <typename this_range_type>
-        // constexpr auto get_iterator_end(
-        //     this const this_range_type& this_range) -> get_iterator_end_type<this_range_type>
-        //     // requires is_range<this_range_type>
-        // {
-        //     using impl_type = get_impl_type<this_range_type>;
-        //     return impl_type::get_iterator_end(this_range);
-        // }
-
-        // /// ----------------------------------------------------------------------------------------
-        // /// get iterator to element at index `i`.
-        // ///
-        // /// # parameters
-        // ///
-        // /// - `i`: index of the element to get iterator at.
-        // /// ----------------------------------------------------------------------------------------
-        // template <typename this_range_type>
-        // constexpr auto get_iterator_at(
-        //     this const this_range_type& this_range, usize i) -> get_iterator_type<this_range_type>
-        //     // requires is_array_range<this_range_type>
-        // {
-        //     contract_expects(this_range.this_type::is_index_in_range(i), "index is out of range.");
-
-        //     using impl_type = get_impl_type<this_range_type>;
-        //     return impl_type::get_iterator_at(this_range, i);
-        // }
-
-        // /// ----------------------------------------------------------------------------------------
-        // ///
-        // /// ----------------------------------------------------------------------------------------
-        // template <typename this_range_type>
-        // constexpr auto get_mut_iterator(
-        //     this this_range_type& this_range) -> get_mut_iterator_type<this_range_type>
-        //     // requires is_mut_range<this_range_type>
-        // {
-        //     using impl_type = get_impl_type<this_range_type>;
-        //     return impl_type::get_mut_iterator(this_range);
-        // }
-
-        // /// ----------------------------------------------------------------------------------------
-        // ///
-        // /// ----------------------------------------------------------------------------------------
-        // template <typename this_range_type>
-        // constexpr auto get_mut_iterator_end(
-        //     this this_range_type& this_range) -> get_mut_iterator_end_type<this_range_type>
-        //     // requires is_mut_range<this_range_type>
-        // {
-        //     using impl_type = get_impl_type<this_range_type>;
-        //     return impl_type::get_mut_iterator_end(this_range);
-        // }
-
-        // /// ----------------------------------------------------------------------------------------
-        // /// get iterator to element at index `i`.
-        // ///
-        // /// # parameters
-        // ///
-        // /// - `i`: index of the element to get iterator at.
-        // /// ----------------------------------------------------------------------------------------
-        // template <typename this_range_type>
-        // constexpr auto get_mut_iterator_at(
-        //     this this_range_type& this_range, usize i) -> get_mut_iterator_type<this_range_type>
-        //     // requires is_mut_array_range<this_range_type>
-        // {
-        //     contract_expects(this_range.this_type::is_index_in_range(i), "index is out of range.");
-
-        //     using impl_type = get_impl_type<this_range_type>;
-        //     return impl_type::get_mut_iterator_at(this_range, i);
-        // }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        // template <typename this_range_type>
-        // constexpr auto begin(
-        //     this const this_range_type& this_range) -> get_std_iterator_type<this_range_type>
-        // requires is_range<this_range_type>
-        // {
-        //     using impl_type = get_impl_type<this_range_type>;
-        //     return impl_type::begin(this_range);
-        // }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        // template <typename this_range_type>
-        // constexpr auto end(
-        //     this const this_range_type& this_range) -> get_std_iterator_end_type<this_range_type>
-        // requires is_range<this_range_type>
-        // {
-        //     using impl_type = get_impl_type<this_range_type>;
-        //     return impl_type::end(this_range);
-        // }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename this_range_type>
-        constexpr auto begin(this this_range_type& this_range)
-        //  -> get_std_mut_iterator_type<this_range_type>
-        // requires is_mut_range<this_range_type>
+        constexpr auto operator|(const range_type& range) const -> bool
+            requires is_range<range_type>
         {
-            using impl_type = get_impl_type<this_range_type>;
-            return impl_type::begin(this_range);
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename this_range_type>
-        constexpr auto end(this this_range_type& this_range)
-        //  -> get_std_mut_iterator_end_type<this_range_type>
-        // requires is_mut_range<this_range_type>
-        {
-            using impl_type = get_impl_type<this_range_type>;
-            return impl_type::end(this_range);
-        }
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        ////
-        //// access
-        ////
-        ////////////////////////////////////////////////////////////////////////////////////////////
-
-        /// ----------------------------------------------------------------------------------------
-        /// get ptr to underlying arr.
-        /// ----------------------------------------------------------------------------------------
-        template <typename this_range_type>
-        constexpr auto get_data(
-            this const this_range_type& this_range) -> const get_value_type<this_range_type>*
-            requires is_array_range<this_range_type>
-        {
-            using impl_type = get_impl_type<this_range_type>;
-            return impl_type::get_data(this_range);
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// get ptr to underlying arr.
-        /// ----------------------------------------------------------------------------------------
-        template <typename this_range_type>
-        constexpr auto get_mut_data(
-            this this_range_type& this_range) -> get_value_type<this_range_type>*
-            requires is_mut_array_range<this_range_type>
-        {
-            using impl_type = get_impl_type<this_range_type>;
-            return impl_type::get_mut_data(this_range);
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// access element by index.
-        ///
-        /// # parameters
-        /// - `i`: index of element to access.
-        ///
-        /// # time complexity
-        /// constant.
-        /// ----------------------------------------------------------------------------------------
-        template <typename this_range_type>
-        constexpr auto get_at(this const this_range_type& this_range,
-            usize i) -> const get_value_type<this_range_type>&
-            requires is_array_range<this_range_type>
-        {
-            contract_expects(this_range.this_type::is_index_in_range(i), "index is out of range.");
-
-            using impl_type = get_impl_type<this_range_type>;
-            return impl_type::get_at(this_range, i);
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// access element by index.
-        ///
-        /// # parameters
-        /// - `i`: index of element to access.
-        ///
-        /// # time complexity
-        /// constant.
-        /// ----------------------------------------------------------------------------------------
-        template <typename this_range_type>
-        constexpr auto get_mut_at(
-            this this_range_type& this_range, usize i) -> get_value_type<this_range_type>&
-            requires is_mut_array_range<this_range_type>
-        {
-            contract_expects(this_range.this_type::is_index_in_range(i), "index is out of range.");
-
-            using impl_type = get_impl_type<this_range_type>;
-            return impl_type::get_mut_at(this_range, i);
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// access element by index.
-        ///
-        /// # parameters
-        /// - `i`: index of element to access.
-        ///
-        /// # time complexity
-        /// constant.
-        /// ----------------------------------------------------------------------------------------
-        template <typename this_range_type>
-        constexpr auto operator[](this const this_range_type& this_range,
-            usize i) -> const get_value_type<this_range_type>&
-            requires is_array_range<this_range_type>
-        {
-            contract_debug_expects(
-                this_range.this_type::is_index_in_range(i), "index is out of range.");
-
-            using impl_type = get_impl_type<this_range_type>;
-            return impl_type::get_at(this_range, i);
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// access element by index.
-        ///
-        /// # parameters
-        /// - `i`: index of element to access.
-        ///
-        /// # time complexity
-        /// constant.
-        /// ----------------------------------------------------------------------------------------
-        template <typename this_range_type>
-        constexpr auto operator[](
-            this this_range_type& this_range, usize i) -> get_value_type<this_range_type>&
-            requires is_mut_array_range<this_range_type>
-        {
-            contract_debug_expects(
-                this_range.this_type::is_index_in_range(i), "index is out of range.");
-
-            using impl_type = get_impl_type<this_range_type>;
-            return impl_type::get_mut_at(this_range, i);
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// access first element.
-        ///
-        /// # time complexity
-        /// constant.
-        /// ----------------------------------------------------------------------------------------
-        template <typename this_range_type>
-        constexpr auto get_front(
-            this const this_range_type& this_range) -> const get_value_type<this_range_type>&
-            requires is_array_range<this_range_type>
-        {
-            contract_debug_expects(not this_range.this_type::is_empty(), "range is empty.");
-
-            using impl_type = get_impl_type<this_range_type>;
-            return impl_type::get_front(this_range);
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// access first element.
-        ///
-        /// # time complexity
-        /// constant.
-        /// ----------------------------------------------------------------------------------------
-        template <typename this_range_type>
-        constexpr auto get_mut_front(
-            this this_range_type& this_range) -> get_value_type<this_range_type>&
-            requires is_mut_array_range<this_range_type>
-        {
-            // todo: fix this, this check is giving wrong result in atom.engine.
-            contract_debug_expects(not this_range.this_type::is_empty(), "range is empty.");
-
-            using impl_type = get_impl_type<this_range_type>;
-            return impl_type::get_front_mut(this_range);
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// access first element.
-        ///
-        /// # time complexity
-        /// constant.
-        /// ----------------------------------------------------------------------------------------
-        template <typename this_range_type>
-        constexpr auto get_mut_front(
-            this this_range_type&& this_range) -> get_value_type<this_range_type>&
-            requires is_mut_array_range<this_range_type>
-        {
-            // todo: fix this, this check is giving wrong result in atom.engine.
-            contract_debug_expects(not this_range.this_type::is_empty(), "range is empty.");
-
-            using impl_type = get_impl_type<this_range_type>;
-            return impl_type::get_front_mut(this_range);
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// access last element.
-        ///
-        /// # time complexity
-        /// constant.
-        /// ----------------------------------------------------------------------------------------
-        template <typename this_range_type>
-        constexpr auto get_back(
-            this const this_range_type& this_range) -> const get_value_type<this_range_type>&
-            requires is_array_range<this_range_type>
-        {
-            contract_debug_expects(not this_range.this_type::is_empty(), "range is empty.");
-
-            using impl_type = get_impl_type<this_range_type>;
-            return impl_type::get_back(this_range);
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// access last element.
-        ///
-        /// # time complexity
-        /// constant.
-        /// ----------------------------------------------------------------------------------------
-        template <typename this_range_type>
-        constexpr auto get_mut_back(
-            this this_range_type& this_range) -> get_value_type<this_range_type>&
-            requires is_mut_array_range<this_range_type>
-        {
-            contract_debug_expects(not this_range.this_type::is_empty(), "range is empty.");
-
-            using impl_type = get_impl_type<this_range_type>;
-            return impl_type::get_mut_back(this_range);
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// get count of elements.
-        /// ----------------------------------------------------------------------------------------
-        template <typename this_range_type>
-        constexpr auto get_count(this const this_range_type& this_range) -> usize
-            requires is_array_range<this_range_type>
-        {
-            using impl_type = get_impl_type<this_range_type>;
-            return impl_type::get_count(this_range);
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// is range empty.
-        /// ----------------------------------------------------------------------------------------
-        template <typename this_range_type>
-        constexpr auto is_empty(this const this_range_type& this_range) -> bool
-            requires is_array_range<this_range_type>
-        {
-            using impl_type = get_impl_type<this_range_type>;
-            return impl_type::is_empty(this_range);
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename this_range_type>
-        constexpr auto get_view(this this_range_type& this_range, usize from,
-            usize to) -> get_view_type<this_range_type>
-            requires is_array_range<this_range_type>
-        {
-            using impl_type = get_impl_type<this_range_type>;
-            return impl_type::get_view(this_range, from, to);
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename this_range_type>
-        constexpr auto get_view_from(
-            this this_range_type& this_range, usize from) -> get_view_type<this_range_type>
-            requires is_array_range<this_range_type>
-        {
-            using impl_type = get_impl_type<this_range_type>;
-            return impl_type::get_view_from(this_range, from);
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename this_range_type>
-        constexpr auto get_view_to(
-            this this_range_type& this_range, usize to) -> get_view_type<this_range_type>
-            requires is_array_range<this_range_type>
-        {
-            using impl_type = get_impl_type<this_range_type>;
-            return impl_type::get_view_to(this_range, to);
-        }
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        ////
-        //// validation
-        ////
-        ////////////////////////////////////////////////////////////////////////////////////////////
-
-        template <typename this_range_type>
-        constexpr auto is_index_in_range(this const this_range_type& this_range, usize i) -> bool
-            requires is_array_range<this_range_type>
-        {
-            using impl_type = get_impl_type<this_range_type>;
-            return impl_type::is_index_in_range(this_range, i);
-        }
-
-        ////////////////////////////////////////////////////////////////////////////////////////////////
-        ////
-        //// search
-        ////
-        ////////////////////////////////////////////////////////////////////////////////////////////////
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename this_range_type, typename that_value_type>
-        constexpr auto find(this const this_range_type& this_range,
-            const that_value_type& value) -> get_iterator_type<this_range_type>
-            requires is_range<this_range_type>
-                     and (typeinfo<get_value_type<this_range_type>>::
-                             template is_equality_comparable_with<that_value_type>)
-        {
-            using impl_type = get_impl_type<this_range_type>;
-            return impl_type::find_elem(this_range, value);
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename this_range_type, typename that_range_type>
-        constexpr auto find_range(this const this_range_type& this_range,
-            const that_range_type& that_range) -> get_iterator_type<this_range_type>
-            requires is_range<this_range_type> and is_fwd_range<that_range_type>
-                     and (typeinfo<get_value_type<this_range_type>>::
-                             template is_equality_comparable_with<
-                                 typename that_range_type::value_t>)
-        {
-            using impl_type = get_impl_type<this_range_type>;
-            return impl_type::find_range(this_range, that_range);
-        }
-
-        template <typename this_range_type, typename that_range_type>
-        constexpr auto count_any(
-            this const this_range_type& this_range, const that_range_type& that_range) -> usize
-            requires is_range<this_range_type>
-        {
-            using impl_type = get_impl_type<this_range_type>;
-            return impl_type::count_any(this_range, that_range);
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename this_range_type, typename that_value_type>
-        constexpr auto contains(
-            this const this_range_type& this_range, const that_value_type& value) -> bool
-            requires is_range<this_range_type>
-                     and (typeinfo<get_value_type<this_range_type>>::
-                             template is_equality_comparable_with<that_value_type>)
-        {
-            using impl_type = get_impl_type<this_range_type>;
-            return impl_type::contains(this_range, value);
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename this_range_type, typename that_range_type>
-        constexpr auto contains(
-            this const this_range_type& this_range, const that_range_type& that_range) -> bool
-            requires is_range<this_range_type> and is_fwd_range<that_range_type>
-                     and (typeinfo<get_value_type<this_range_type>>::
-                             template is_equality_comparable_with<
-                                 typename that_range_type::value_t>)
-        {
-            using impl_type = get_impl_type<this_range_type>;
-            return impl_type::contains(this_range, that_range);
-        }
-
-        ////////////////////////////////////////////////////////////////////////////////////////////////
-        ////
-        //// comparision
-        ////
-        ////////////////////////////////////////////////////////////////////////////////////////////////
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename this_range_type, typename that_range_type>
-        constexpr auto compare(
-            this const this_range_type& this_range, const that_range_type& that_range) -> i8
-            requires is_range<this_range_type> and is_range<that_range_type>
-                     and (typeinfo<get_value_type<this_range_type>>::
-                             template is_equality_comparable_with<
-                                 typename that_range_type::value_t>)
-        {
-            using impl_type = get_impl_type<this_range_type>;
-            return impl_type::compare(this_range, that_range);
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename this_range_type, typename that_range_type>
-        constexpr auto operator==(
-            this const this_range_type& this_range, const that_range_type& that_range) -> bool
-            requires is_range<this_range_type> and is_range<that_range_type>
-                     and (typeinfo<get_value_type<this_range_type>>::
-                             template is_equality_comparable_with<
-                                 typename that_range_type::value_t>)
-        {
-            using impl_type = get_impl_type<this_range_type>;
-            return impl_type::is_eq(this_range, that_range);
-        }
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        ////
-        //// manipulations
-        ////
-        ////////////////////////////////////////////////////////////////////////////////////////////
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename this_range_type>
-        constexpr auto can_get_count(this const this_range_type& this_range) -> bool
-            requires is_range<this_range_type>
-        {
-            using impl_type = get_impl_type<this_range_type>;
-            return impl_type::can_get_count(this_range);
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename this_range_type>
-        constexpr auto count_elems(this const this_range_type& this_range) -> usize
-            requires is_range<this_range_type>
-        {
-            using impl_type = get_impl_type<this_range_type>;
-            return impl_type::count_elems(this_range);
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename this_range_type, typename value_type1>
-        constexpr auto write_elems(
-            this this_range_type& this_range, value_type1& val) -> this_range_type&
-            requires is_mut_range<this_range_type>
-                     and (typeinfo<get_value_type<this_range_type>>::template is_assignable_from<
-                         value_type1>)
-        {
-            using impl_type = get_impl_type<this_range_type>;
-            impl_type::write_elems(this_range, val);
-            return this_range;
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        ATOM_PRAGMA_OPTIMIZE_OFF
-
-        template <typename this_range_type, typename value_type1>
-        constexpr auto write_elems_no_optimize(
-            this this_range_type& this_range, value_type1& val) -> this_range_type&
-            requires is_mut_range<this_range_type>
-                     and (typeinfo<get_value_type<this_range_type>>::template is_assignable_from<
-                         value_type1>)
-        {
-            using impl_type = get_impl_type<this_range_type>;
-            impl_type::write_elems_no_optimize(this_range, val);
-            return this_range;
-        }
-
-        ATOM_PRAGMA_OPTIMIZE_ON
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename this_range_type>
-        constexpr auto shift_fwd(this this_range_type& this_range, usize steps) -> this_range_type&
-            requires is_mut_range<this_range_type>
-                     and typeinfo<get_value_type<this_range_type>>::is_move_assignable
-        {
-            using impl_type = get_impl_type<this_range_type>;
-            impl_type::shift_fwd(this_range, steps);
-            return this_range;
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename this_range_type>
-        constexpr auto shift_bwd(this this_range_type& this_range, usize steps) -> this_range_type&
-            requires is_mut_range<this_range_type>
-                     and typeinfo<get_value_type<this_range_type>>::is_move_assignable
-        {
-            using impl_type = get_impl_type<this_range_type>;
-            impl_type::shift_bwd(this_range, steps);
-            return this_range;
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename this_range_type>
-        constexpr auto shift_by(this this_range_type& this_range, isize steps) -> this_range_type&
-            requires is_mut_range<this_range_type>
-                     and typeinfo<get_value_type<this_range_type>>::is_swappable
-        {
-            using impl_type = get_impl_type<this_range_type>;
-            impl_type::shift_by(this_range, steps);
-            return this_range;
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename this_range_type>
-        constexpr auto rotate_fwd(this this_range_type& this_range, usize steps) -> this_range_type&
-            requires is_mut_range<this_range_type>
-                     and typeinfo<get_value_type<this_range_type>>::is_swappable
-        {
-            using impl_type = get_impl_type<this_range_type>;
-            impl_type::rotate_fwd(this_range, steps);
-            return this_range;
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename this_range_type>
-        constexpr auto rotate_bwd(this this_range_type& this_range, usize steps) -> this_range_type&
-            requires is_mut_range<this_range_type>
-                     and typeinfo<get_value_type<this_range_type>>::is_swappable
-        {
-            using impl_type = get_impl_type<this_range_type>;
-            impl_type::rotate_bwd(this_range, steps);
-            return this_range;
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename this_range_type>
-        constexpr auto rotate_by(this this_range_type& this_range, isize steps) -> this_range_type&
-            requires is_mut_range<this_range_type>
-                     and typeinfo<get_value_type<this_range_type>>::is_swappable
-        {
-            using impl_type = get_impl_type<this_range_type>;
-            impl_type::rotate_by(this_range, steps);
-            return this_range;
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        template <typename this_range_type>
-        constexpr auto destroy_elems(this this_range_type& this_range) -> this_range_type&
-            requires is_mut_range<this_range_type>
-                     and typeinfo<get_value_type<this_range_type>>::is_destructible
-        {
-            using impl_type = get_impl_type<this_range_type>;
-            impl_type::destroy_elems(this_range);
-            return this_range;
+            return ranges::is_empty(range);
         }
     };
+
+    /// ----------------------------------------------------------------------------------------
+    /// is range empty.
+    /// ----------------------------------------------------------------------------------------
+    constexpr auto is_empty() -> is_empty_closure
+    {
+        return {};
+    }
+
+    /// ----------------------------------------------------------------------------------------
+    /// is range not empty.
+    /// ----------------------------------------------------------------------------------------
+    template <typename range_type>
+    constexpr auto is_not_empty(const range_type& range) -> bool
+        requires is_range<range_type>
+    {
+        return not _impl_type<range_type>::is_empty(range);
+    }
+
+    struct is_not_empty_closure
+    {
+        template <typename range_type>
+        constexpr auto operator|(const range_type& range) const -> bool
+            requires is_range<range_type>
+        {
+            return ranges::is_not_empty(range);
+        }
+    };
+
+    /// ----------------------------------------------------------------------------------------
+    /// is range not empty.
+    /// ----------------------------------------------------------------------------------------
+    constexpr auto is_not_empty() -> is_not_empty_closure
+    {
+        return is_not_empty_closure{};
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    ////
+    //// iteration
+    ////
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+    /// ----------------------------------------------------------------------------------------
+    ///
+    /// ----------------------------------------------------------------------------------------
+    template <typename range_type>
+    constexpr auto get_iterator(const range_type& range) -> iterator_type<range_type>
+        requires is_range<range_type>
+    {
+        return _impl_type<range_type>::get_iterator(range);
+    }
+
+    /// ----------------------------------------------------------------------------------------
+    ///
+    /// ----------------------------------------------------------------------------------------
+    template <typename range_type>
+    constexpr auto get_iterator_end(const range_type& range) -> iterator_end_type<range_type>
+        requires is_range<range_type>
+    {
+        return _impl_type<range_type>::get_iterator_end(range);
+    }
+
+    /// ----------------------------------------------------------------------------------------
+    /// get iterator to element at index `i`.
+    ///
+    /// # parameters
+    ///
+    /// - `i`: index of the element to get iterator at.
+    /// ----------------------------------------------------------------------------------------
+    template <typename range_type>
+    constexpr auto get_iterator_at(const range_type& range, usize i) -> iterator_type<range_type>
+        requires is_array_range<range_type>
+    {
+        contract_expects(is_index_in_range(range, i), "index is out of range.");
+
+        return _impl_type<range_type>::get_iterator_at(range, i);
+    }
+
+    /// ----------------------------------------------------------------------------------------
+    ///
+    /// ----------------------------------------------------------------------------------------
+    template <typename range_type>
+    constexpr auto get_mut_iterator(range_type& range) -> mut_iterator_type<range_type>
+        requires is_mut_range<range_type>
+    {
+        return _impl_type<range_type>::get_mut_iterator(range);
+    }
+
+    /// ----------------------------------------------------------------------------------------
+    ///
+    /// ----------------------------------------------------------------------------------------
+    template <typename range_type>
+    constexpr auto get_mut_iterator_end(range_type& range) -> mut_iterator_end_type<range_type>
+        requires is_mut_range<range_type>
+    {
+        return _impl_type<range_type>::get_mut_iterator_end(range);
+    }
+
+    /// ----------------------------------------------------------------------------------------
+    /// get iterator to element at index `i`.
+    ///
+    /// # parameters
+    ///
+    /// - `i`: index of the element to get iterator at.
+    /// ----------------------------------------------------------------------------------------
+    template <typename range_type>
+    constexpr auto get_mut_iterator_at(range_type& range, usize i) -> mut_iterator_type<range_type>
+        requires is_mut_array_range<range_type>
+    {
+        contract_expects(is_index_in_range(range, i), "index is out of range.");
+
+        return _impl_type<range_type>::get_mut_iterator_at(range, i);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    ////
+    //// access
+    ////
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+    /// ----------------------------------------------------------------------------------------
+    /// get ptr to underlying arr.
+    /// ----------------------------------------------------------------------------------------
+    template <typename range_type>
+    constexpr auto get_data(range_type& range) -> value_type<range_type>*
+        requires is_mut_array_range<range_type>
+    {
+        return _impl_type<range_type>::get_mut_data(range);
+    }
+
+    /// ----------------------------------------------------------------------------------------
+    /// get ptr to underlying arr.
+    /// ----------------------------------------------------------------------------------------
+    template <typename range_type>
+    constexpr auto get_data(const range_type& range) -> const value_type<range_type>*
+        requires is_array_range<range_type>
+    {
+        return _impl_type<range_type>::get_data(range);
+    }
+
+    /// ----------------------------------------------------------------------------------------
+    /// get ptr to underlying arr.
+    /// ----------------------------------------------------------------------------------------
+    template <typename range_type>
+    constexpr auto get_mut_data(range_type& range) -> value_type<range_type>*
+        requires is_mut_array_range<range_type>
+    {
+        return _impl_type<range_type>::get_mut_data(range);
+    }
+
+    /// ----------------------------------------------------------------------------------------
+    /// access element by index.
+    ///
+    /// # parameters
+    /// - `i`: index of element to access.
+    ///
+    /// # time complexity
+    /// constant.
+    /// ----------------------------------------------------------------------------------------
+    template <typename range_type>
+    constexpr auto get_at(const range_type& range, usize i) -> const value_type<range_type>&
+        requires is_array_range<range_type>
+    {
+        contract_expects(is_index_in_range(range, i), "index is out of range.");
+
+        return _impl_type<range_type>::get_at(range, i);
+    }
+
+    /// ----------------------------------------------------------------------------------------
+    /// access element by index.
+    ///
+    /// # parameters
+    /// - `i`: index of element to access.
+    ///
+    /// # time complexity
+    /// constant.
+    /// ----------------------------------------------------------------------------------------
+    template <typename range_type>
+    constexpr auto get_mut_at(range_type& range, usize i) -> value_type<range_type>&
+        requires is_mut_array_range<range_type>
+    {
+        contract_expects(is_index_in_range(range, i), "index is out of range.");
+
+        return _impl_type<range_type>::get_mut_at(range, i);
+    }
+
+    /// ----------------------------------------------------------------------------------------
+    /// access first element.
+    ///
+    /// # time complexity
+    ///
+    /// constant.
+    /// ----------------------------------------------------------------------------------------
+    template <typename range_type>
+    constexpr auto get_front(range_type& range) -> value_type<range_type>&
+        requires is_mut_array_range<range_type>
+    {
+        contract_debug_expects(not is_empty(range), "range is empty.");
+
+        return _impl_type<range_type>::get_mut_front(range);
+    }
+
+    /// ----------------------------------------------------------------------------------------
+    /// access first element.
+    ///
+    /// # time complexity
+    ///
+    /// constant.
+    /// ----------------------------------------------------------------------------------------
+    template <typename range_type>
+    constexpr auto get_front(const range_type& range) -> const value_type<range_type>&
+        requires is_array_range<range_type>
+    {
+        contract_debug_expects(not is_empty(range), "range is empty.");
+
+        return _impl_type<range_type>::get_front(range);
+    }
+
+    struct get_front_closure
+    {
+        template <typename range_type>
+        constexpr auto operator|(range_type& range) const -> value_type<range_type>&
+            requires is_mut_array_range<range_type>
+        {
+            contract_debug_expects(not is_empty(range), "range is empty.");
+
+            return ranges::get_front(range);
+        }
+
+        template <typename range_type>
+        constexpr auto operator|(const range_type& range) const -> const value_type<range_type>&
+            requires is_array_range<range_type>
+        {
+            contract_debug_expects(not ranges::is_empty(range), "range is empty.");
+
+            return ranges::get_front(range);
+        }
+    };
+
+    /// ----------------------------------------------------------------------------------------
+    /// access first element.
+    ///
+    /// # time complexity
+    ///
+    /// constant.
+    /// ----------------------------------------------------------------------------------------
+    constexpr auto get_front() -> get_front_closure
+    {
+        return get_front_closure{};
+    }
+
+    /// ----------------------------------------------------------------------------------------
+    /// access first element.
+    ///
+    /// # time complexity
+    ///
+    /// constant.
+    /// ----------------------------------------------------------------------------------------
+    template <typename range_type>
+    constexpr auto get_mut_front(range_type& range) -> value_type<range_type>&
+        requires is_mut_array_range<range_type>
+    {
+        // todo: fix this, this check is giving wrong result in atom.engine.
+        contract_debug_expects(not is_empty(range), "range is empty.");
+
+        return _impl_type<range_type>::get_front_mut(range);
+    }
+
+    struct get_mut_front_closure
+    {
+        template <typename range_type>
+        constexpr auto operator|(range_type& range) const -> value_type<range_type>&
+            requires is_mut_array_range<range_type>
+        {
+            contract_debug_expects(not is_empty(range), "range is empty.");
+
+            return ranges::get_mut_front(range);
+        }
+
+        template <typename range_type>
+        constexpr auto operator|(range_type&& range) const -> value_type<range_type>&
+            requires is_mut_array_range<range_type>
+        {
+            contract_debug_expects(not is_empty(range), "range is empty.");
+
+            return ranges::get_mut_front(range);
+        }
+    };
+
+    /// ----------------------------------------------------------------------------------------
+    /// access first element.
+    ///
+    /// # time complexity
+    /// constant.
+    /// ----------------------------------------------------------------------------------------
+    constexpr auto get_mut_front() -> get_mut_front_closure
+    {
+        return get_mut_front_closure{};
+    }
+
+    /// ----------------------------------------------------------------------------------------
+    /// access last element.
+    ///
+    /// # time complexity
+    /// constant.
+    /// ----------------------------------------------------------------------------------------
+    template <typename range_type>
+    constexpr auto get_back(const range_type& range) -> const value_type<range_type>&
+        requires is_array_range<range_type>
+    {
+        contract_debug_expects(not is_empty(range), "range is empty.");
+
+        return _impl_type<range_type>::get_back(range);
+    }
+
+    /// ----------------------------------------------------------------------------------------
+    /// access last element.
+    ///
+    /// # time complexity
+    /// constant.
+    /// ----------------------------------------------------------------------------------------
+    template <typename range_type>
+    constexpr auto get_mut_back(range_type& range) -> value_type<range_type>&
+        requires is_mut_array_range<range_type>
+    {
+        contract_debug_expects(not is_empty(range), "range is empty.");
+
+        return _impl_type<range_type>::get_mut_back(range);
+    }
+
+    /// ----------------------------------------------------------------------------------------
+    /// get count of elements.
+    /// ----------------------------------------------------------------------------------------
+    template <typename range_type>
+    constexpr auto get_count(const range_type& range) -> usize
+        requires is_array_range<range_type>
+    {
+        return _impl_type<range_type>::get_count(range);
+    }
+
+    /// ----------------------------------------------------------------------------------------
+    ///
+    /// ----------------------------------------------------------------------------------------
+    template <typename range_type>
+    constexpr auto get_view(range_type& range, usize from, usize to) -> view_type<range_type>
+        requires is_array_range<range_type>
+    {
+        return _impl_type<range_type>::get_view(range, from, to);
+    }
+
+    /// ----------------------------------------------------------------------------------------
+    ///
+    /// ----------------------------------------------------------------------------------------
+    template <typename range_type>
+    constexpr auto get_view_from(range_type& range, usize from) -> view_type<range_type>
+        requires is_array_range<range_type>
+    {
+        return _impl_type<range_type>::get_view_from(range, from);
+    }
+
+    /// ----------------------------------------------------------------------------------------
+    ///
+    /// ----------------------------------------------------------------------------------------
+    template <typename range_type>
+    constexpr auto get_view_to(range_type& range, usize to) -> view_type<range_type>
+        requires is_array_range<range_type>
+    {
+        return _impl_type<range_type>::get_view_to(range, to);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    ////
+    //// validation
+    ////
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+    template <typename range_type>
+    constexpr auto is_index_in_range(const range_type& range, usize i) -> bool
+        requires is_array_range<range_type>
+    {
+        return _impl_type<range_type>::is_index_in_range(range, i);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////
+    //// search
+    ////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /// ----------------------------------------------------------------------------------------
+    ///
+    /// ----------------------------------------------------------------------------------------
+    template <typename range_type, typename that_value_type>
+    constexpr auto find(
+        const range_type& range, const that_value_type& value) -> iterator_type<range_type>
+        requires is_range<range_type>
+                 and (typeinfo<value_type<range_type>>::template is_equality_comparable_with<
+                     that_value_type>)
+    {
+        return _impl_type<range_type>::find_elem(range, value);
+    }
+
+    /// ----------------------------------------------------------------------------------------
+    ///
+    /// ----------------------------------------------------------------------------------------
+    template <typename range_type, typename that_range_type>
+    constexpr auto find_range(
+        const range_type& range, const that_range_type& that_range) -> iterator_type<range_type>
+        requires is_range<range_type> and is_fwd_range<that_range_type>
+                 and (typeinfo<value_type<range_type>>::template is_equality_comparable_with<
+                     typename that_range_type::value_t>)
+    {
+        return _impl_type<range_type>::find_range(range, that_range);
+    }
+
+    template <typename range_type, typename that_range_type>
+    constexpr auto count_any(const range_type& range, const that_range_type& that_range) -> usize
+        requires is_range<range_type>
+    {
+        return _impl_type<range_type>::count_any(range, that_range);
+    }
+
+    /// ----------------------------------------------------------------------------------------
+    ///
+    /// ----------------------------------------------------------------------------------------
+    template <typename range_type, typename that_value_type>
+    constexpr auto contains(const range_type& range, const that_value_type& value) -> bool
+        requires is_range<range_type>
+                 and (typeinfo<value_type<range_type>>::template is_equality_comparable_with<
+                     that_value_type>)
+    {
+        return _impl_type<range_type>::contains(range, value);
+    }
+
+    /// ----------------------------------------------------------------------------------------
+    ///
+    /// ----------------------------------------------------------------------------------------
+    template <typename range_type, typename that_range_type>
+    constexpr auto contains(const range_type& range, const that_range_type& that_range) -> bool
+        requires is_range<range_type> and is_fwd_range<that_range_type>
+                 and (typeinfo<value_type<range_type>>::template is_equality_comparable_with<
+                     typename that_range_type::value_t>)
+    {
+        return _impl_type<range_type>::contains(range, that_range);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////
+    //// comparision
+    ////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /// ----------------------------------------------------------------------------------------
+    ///
+    /// ----------------------------------------------------------------------------------------
+    template <typename range_type, typename that_range_type>
+    constexpr auto compare(const range_type& range, const that_range_type& that_range) -> i8
+        requires is_range<range_type> and is_range<that_range_type>
+                 and (typeinfo<value_type<range_type>>::template is_equality_comparable_with<
+                     typename that_range_type::value_t>)
+    {
+        return _impl_type<range_type>::compare(range, that_range);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    ////
+    //// manipulations
+    ////
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+    /// ----------------------------------------------------------------------------------------
+    ///
+    /// ----------------------------------------------------------------------------------------
+    template <typename range_type>
+    constexpr auto can_get_count(const range_type& range) -> bool
+        requires is_range<range_type>
+    {
+        return _impl_type<range_type>::can_get_count(range);
+    }
+
+    /// ----------------------------------------------------------------------------------------
+    ///
+    /// ----------------------------------------------------------------------------------------
+    template <typename range_type>
+    constexpr auto count_elems(const range_type& range) -> usize
+        requires is_range<range_type>
+    {
+        return _impl_type<range_type>::count_elems(range);
+    }
+
+    /// ----------------------------------------------------------------------------------------
+    ///
+    /// ----------------------------------------------------------------------------------------
+    template <typename range_type, typename value_type1>
+    constexpr auto write_elems(range_type& range, value_type1& val) -> range_type&
+        requires is_mut_range<range_type>
+                 and (typeinfo<value_type<range_type>>::template is_assignable_from<value_type1>)
+    {
+        _impl_type<range_type>::write_elems(range, val);
+        return range;
+    }
+
+    /// ----------------------------------------------------------------------------------------
+    ///
+    /// ----------------------------------------------------------------------------------------
+    ATOM_PRAGMA_OPTIMIZE_OFF
+
+    template <typename range_type, typename value_type1>
+    constexpr auto write_elems_no_optimize(range_type& range, value_type1& val) -> range_type&
+        requires is_mut_range<range_type>
+                 and (typeinfo<value_type<range_type>>::template is_assignable_from<value_type1>)
+    {
+        _impl_type<range_type>::write_elems_no_optimize(range, val);
+        return range;
+    }
+
+    ATOM_PRAGMA_OPTIMIZE_ON
+
+    /// ----------------------------------------------------------------------------------------
+    ///
+    /// ----------------------------------------------------------------------------------------
+    template <typename range_type>
+    constexpr auto shift_fwd(range_type& range, usize steps) -> range_type&
+        requires is_mut_range<range_type> and typeinfo<value_type<range_type>>::is_move_assignable
+    {
+        _impl_type<range_type>::shift_fwd(range, steps);
+        return range;
+    }
+
+    /// ----------------------------------------------------------------------------------------
+    ///
+    /// ----------------------------------------------------------------------------------------
+    template <typename range_type>
+    constexpr auto shift_bwd(range_type& range, usize steps) -> range_type&
+        requires is_mut_range<range_type> and typeinfo<value_type<range_type>>::is_move_assignable
+    {
+        _impl_type<range_type>::shift_bwd(range, steps);
+        return range;
+    }
+
+    /// ----------------------------------------------------------------------------------------
+    ///
+    /// ----------------------------------------------------------------------------------------
+    template <typename range_type>
+    constexpr auto shift_by(range_type& range, isize steps) -> range_type&
+        requires is_mut_range<range_type> and typeinfo<value_type<range_type>>::is_swappable
+    {
+        _impl_type<range_type>::shift_by(range, steps);
+        return range;
+    }
+
+    /// ----------------------------------------------------------------------------------------
+    ///
+    /// ----------------------------------------------------------------------------------------
+    template <typename range_type>
+    constexpr auto rotate_fwd(range_type& range, usize steps) -> range_type&
+        requires is_mut_range<range_type> and typeinfo<value_type<range_type>>::is_swappable
+    {
+        _impl_type<range_type>::rotate_fwd(range, steps);
+        return range;
+    }
+
+    /// ----------------------------------------------------------------------------------------
+    ///
+    /// ----------------------------------------------------------------------------------------
+    template <typename range_type>
+    constexpr auto rotate_bwd(range_type& range, usize steps) -> range_type&
+        requires is_mut_range<range_type> and typeinfo<value_type<range_type>>::is_swappable
+    {
+        _impl_type<range_type>::rotate_bwd(range, steps);
+        return range;
+    }
+
+    /// ----------------------------------------------------------------------------------------
+    ///
+    /// ----------------------------------------------------------------------------------------
+    template <typename range_type>
+    constexpr auto rotate_by(range_type& range, isize steps) -> range_type&
+        requires is_mut_range<range_type> and typeinfo<value_type<range_type>>::is_swappable
+    {
+        _impl_type<range_type>::rotate_by(range, steps);
+        return range;
+    }
+
+    /// ----------------------------------------------------------------------------------------
+    ///
+    /// ----------------------------------------------------------------------------------------
+    template <typename range_type>
+    constexpr auto destroy_elems(range_type& range) -> range_type&
+        requires is_mut_range<range_type> and typeinfo<value_type<range_type>>::is_destructible
+    {
+        _impl_type<range_type>::destroy_elems(range);
+        return range;
+    }
+}
+
+export namespace atom
+{
+    /// ----------------------------------------------------------------------------------------
+    ///
+    /// ----------------------------------------------------------------------------------------
+    template <typename range_type>
+    constexpr auto begin(const range_type& range) -> ranges::iterator_type<range_type>
+        requires is_range<range_type>
+    {
+        return range.get_iterator();
+    }
+
+    /// ----------------------------------------------------------------------------------------
+    ///
+    /// ----------------------------------------------------------------------------------------
+    template <typename range_type>
+    constexpr auto end(const range_type& range) -> ranges::iterator_end_type<range_type>
+        requires is_range<range_type>
+    {
+        return range.get_iterator_end();
+    }
+
+    /// ----------------------------------------------------------------------------------------
+    ///
+    /// ----------------------------------------------------------------------------------------
+    template <typename range_type>
+    constexpr auto begin(range_type& range) -> ranges::mut_iterator_type<range_type>
+        requires is_mut_range<range_type>
+    {
+        return range.get_mut_iterator();
+    }
+
+    /// ----------------------------------------------------------------------------------------
+    ///
+    /// ----------------------------------------------------------------------------------------
+    template <typename range_type>
+    constexpr auto end(range_type& range) -> ranges::mut_iterator_end_type<range_type>
+        requires is_mut_range<range_type>
+    {
+        return range.get_mut_iterator_end();
+    }
+
+    /// ----------------------------------------------------------------------------------------
+    ///
+    /// ----------------------------------------------------------------------------------------
+    template <typename range_type, typename that_range_type>
+    constexpr auto operator==(const range_type& range, const that_range_type& that_range) -> bool
+        requires is_range<range_type> and is_range<that_range_type>
+                 and (typeinfo<ranges::value_type<range_type>>::
+                         template is_equality_comparable_with<ranges::value_type<that_range_type>>)
+    {
+        return ranges::_impl_type<range_type>::is_eq(range, that_range);
+    }
+
+    template <typename value_type0, typename value_type1>
+    constexpr auto operator|(const value_type1& value1, const value_type0& value0) -> decltype(auto)
+        requires requires(
+            const value_type0& value0, const value_type1& value1) { value0.operator|(value1); }
+    {
+        return value0.operator|(value1);
+    }
+
+    template <typename value_type0, typename value_type1>
+    constexpr auto operator|(value_type1& value1, value_type0& value0) -> decltype(auto)
+        requires requires(value_type0& value0, value_type1& value1) { value0.operator|(value1); }
+    {
+        return value0.operator|(value1);
+    }
+
+    template <typename value_type0, typename value_type1>
+    constexpr auto operator|(value_type1&& value1, value_type0&& value0) -> decltype(auto)
+        requires requires(value_type0&& value0, value_type1&& value1) { value0.operator|(value1); }
+    {
+        return value0.operator|(value1);
+    }
 }

@@ -223,6 +223,11 @@ namespace atom
             return _vector.alloc();
         }
 
+        constexpr auto is_empty() const -> bool
+        {
+            return _vector.count() == 0;
+        }
+
         constexpr auto is_index_in_range(usize index) const -> bool
         {
             return index < _vector.size();
