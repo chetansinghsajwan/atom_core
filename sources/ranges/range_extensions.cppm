@@ -472,7 +472,7 @@ export namespace atom::ranges
     template <typename range_type, typename that_range_type>
     constexpr auto find_range(
         const range_type& range, const that_range_type& that_range) -> iterator_type<range_type>
-        requires is_range<range_type> and is_fwd_range<that_range_type>
+        requires is_range<range_type> and is_unidirectional_range<that_range_type>
                  and (typeinfo<value_type<range_type>>::template is_equality_comparable_with<
                      typename that_range_type::value_t>)
     {
@@ -503,7 +503,7 @@ export namespace atom::ranges
     /// ----------------------------------------------------------------------------------------
     template <typename range_type, typename that_range_type>
     constexpr auto contains(const range_type& range, const that_range_type& that_range) -> bool
-        requires is_range<range_type> and is_fwd_range<that_range_type>
+        requires is_range<range_type> and is_unidirectional_range<that_range_type>
                  and (typeinfo<value_type<range_type>>::template is_equality_comparable_with<
                      typename that_range_type::value_t>)
     {
@@ -667,7 +667,7 @@ export namespace atom
     /// ----------------------------------------------------------------------------------------
     template <typename range_type>
     constexpr auto begin(const range_type& range) -> ranges::iterator_type<range_type>
-        requires is_range<range_type>
+        requires ranges::is_range<range_type>
     {
         return range.get_iterator();
     }
@@ -677,7 +677,7 @@ export namespace atom
     /// ----------------------------------------------------------------------------------------
     template <typename range_type>
     constexpr auto end(const range_type& range) -> ranges::iterator_end_type<range_type>
-        requires is_range<range_type>
+        requires ranges::is_range<range_type>
     {
         return range.get_iterator_end();
     }
@@ -687,7 +687,7 @@ export namespace atom
     /// ----------------------------------------------------------------------------------------
     template <typename range_type>
     constexpr auto begin(range_type& range) -> ranges::mut_iterator_type<range_type>
-        requires is_mut_range<range_type>
+        requires ranges::is_mut_range<range_type>
     {
         return range.get_mut_iterator();
     }
@@ -697,7 +697,7 @@ export namespace atom
     /// ----------------------------------------------------------------------------------------
     template <typename range_type>
     constexpr auto end(range_type& range) -> ranges::mut_iterator_end_type<range_type>
-        requires is_mut_range<range_type>
+        requires ranges::is_mut_range<range_type>
     {
         return range.get_mut_iterator_end();
     }
@@ -707,7 +707,7 @@ export namespace atom
     /// ----------------------------------------------------------------------------------------
     template <typename range_type, typename that_range_type>
     constexpr auto operator==(const range_type& range, const that_range_type& that_range) -> bool
-        requires is_range<range_type> and is_range<that_range_type>
+        requires ranges::is_range<range_type> and ranges::is_range<that_range_type>
                  and (typeinfo<ranges::value_type<range_type>>::
                          template is_equality_comparable_with<ranges::value_type<that_range_type>>)
     {

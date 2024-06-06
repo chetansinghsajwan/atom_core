@@ -77,7 +77,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename range_t>
         constexpr dynamic_array(range_t&& range)
-            requires is_range_of<typename typeinfo<range_t>::pure_t::value_t, value_t>
+            requires ranges::is_range_of<typename typeinfo<range_t>::pure_t::value_t, value_t>
             : _impl{ typename _impl_t::range_tag{}, range.get_iterator(), range.get_iterator_end() }
         {}
 
@@ -86,7 +86,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename range_t>
         constexpr dynamic_array& operator=(range_t&& range)
-            requires is_range_of<range_t, value_t>
+            requires ranges::is_range_of<range_t, value_t>
         {
             _impl.assign_range(range.get_iterator(), range.get_iterator_end());
         }
@@ -229,7 +229,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename range_t>
         constexpr auto insert_range_at(usize index, range_t&& range) -> usize
-            requires is_range_of<range_t, value_t>
+            requires ranges::is_range_of<range_t, value_t>
                      and (typeinfo<value_t>::template is_constructible_from<
                          typename range_t::value_t>)
         {
@@ -259,7 +259,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename range_t>
         constexpr auto insert_range_at(iterator_t it, range_t&& range)
-            requires is_range_of<range_t, value_t>
+            requires ranges::is_range_of<range_t, value_t>
                      and (typeinfo<value_t>::template is_constructible_from<
                          typename range_t::value_t>)
         {
@@ -313,7 +313,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename range_t>
         constexpr auto insert_range_front(range_t&& range) -> mut_iterator_t
-            requires is_range_of<range_t, value_t>
+            requires ranges::is_range_of<range_t, value_t>
                      and (typeinfo<value_t>::template is_constructible_from<
                          typename range_t::value_t>)
         {
@@ -372,7 +372,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename range_t>
         constexpr auto insert_range_back(range_t&& range) -> mut_iterator_t
-            requires is_range_of<typename typeinfo<range_t>::pure_t::value_t, value_t>
+            requires ranges::is_range_of<typename typeinfo<range_t>::pure_t::value_t, value_t>
                      and (typeinfo<value_t>::template is_constructible_from<
                          typename typeinfo<range_t>::pure_t::value_t::value_t>)
         {
@@ -386,7 +386,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename range_t>
         constexpr auto operator+=(range_t&& range)
-            requires is_range_of<typename typeinfo<range_t>::pure_t::value_t, value_t>
+            requires ranges::is_range_of<typename typeinfo<range_t>::pure_t::value_t, value_t>
                      and (typeinfo<value_t>::template is_constructible_from<
                          typename typeinfo<range_t>::pure_t::value_t::value_t>)
         {

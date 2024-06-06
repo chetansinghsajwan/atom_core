@@ -58,7 +58,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename range_t>
         constexpr array_slice(range_t& range)
-            requires is_mut_array_range_of<range_t, value_t>
+            requires ranges::is_mut_array_range_of<range_t, value_t>
             : _data(range.get_mut_data())
             , _count(range.get_count())
         {}
@@ -68,7 +68,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename range_t>
         constexpr array_slice& operator=(range_t& range)
-            requires is_mut_array_range_of<range_t, value_t>
+            requires ranges::is_mut_array_range_of<range_t, value_t>
         {
             _data = range.get_mut_data();
             _count = range.get_count();

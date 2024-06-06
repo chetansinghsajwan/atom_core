@@ -23,7 +23,7 @@ namespace atom
         };
 
         template <typename in_range_t>
-            requires is_mut_range<in_range_t>
+            requires ranges::is_mut_range<in_range_t>
         struct _mut_aliases_resolver<in_range_t>
         {
             using mut_iterator_t = typename in_range_t::mut_iterator_t;
@@ -58,21 +58,21 @@ namespace atom
 
         template <typename this_range_t>
         static constexpr auto get_mut_iterator(this_range_t& this_range) -> mut_iterator_t
-            requires is_mut_range<this_range_t>
+            requires ranges::is_mut_range<this_range_t>
         {
             return this_range.get_mut_iterator();
         }
 
         template <typename this_range_t>
         static constexpr auto get_mut_iterator_end(this_range_t& this_range) -> mut_iterator_end_t
-            requires is_mut_range<this_range_t>
+            requires ranges::is_mut_range<this_range_t>
         {
             return this_range.get_mut_iterator_end();
         }
 
         template <typename this_range_t>
         static constexpr auto get_mut_iterator_at(this_range_t& this_range, usize i) -> iterator_t
-            requires is_mut_range<this_range_t>
+            requires ranges::is_mut_range<this_range_t>
         {
             return this_range.get_mut_iterator().next(i);
         }
@@ -93,7 +93,7 @@ namespace atom
         static constexpr auto begin(this_range_t& this_range)
         // -> std_mut_iterator_t
         {
-            if constexpr (is_mut_range<this_range_t>)
+            if constexpr (ranges::is_mut_range<this_range_t>)
                 return get_mut_iterator(this_range);
             else
                 return get_iterator(this_range);
@@ -103,7 +103,7 @@ namespace atom
         static constexpr auto end(this_range_t& this_range)
         // -> std_mut_iterator_end_t
         {
-            if constexpr (is_mut_range<this_range_t>)
+            if constexpr (ranges::is_mut_range<this_range_t>)
                 return get_mut_iterator_end(this_range);
             else
                 return get_iterator_end(this_range);

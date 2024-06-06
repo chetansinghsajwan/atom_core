@@ -17,6 +17,6 @@ namespace atom::mock
 
         template <typename range_t>
         auto operator+=(const range_t& range)
-            requires is_range_of<range_t, value_t>;
+            requires ranges::is_range_of<range_t, value_t>;
     };
 }

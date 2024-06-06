@@ -111,10 +111,8 @@ namespace atom
         }
 
         template <typename other_iterator_t, typename other_iterator_end_t>
-        constexpr auto assign_range(other_iterator_t in_it, other_iterator_end_t in_it_end)
+        constexpr auto assign_range(other_iterator_t it, other_iterator_end_t it_end)
         {
-            auto it = move(in_it);
-            auto it_end = move(in_it_end);
             _vector.assign(it, it_end);
         }
 

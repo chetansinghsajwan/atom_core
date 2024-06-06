@@ -86,17 +86,17 @@ export namespace atom::mock
     {};
 
     /// --------------------------------------------------------------------------------------------
-    /// `is_jump_range` mock object.
+    /// `is_random_access_range` mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename value_t>
-    class jump_range: public _range<random_access_iterator<value_t>, iterator_end, value_t>
+    class random_access_range: public _range<random_access_iterator<value_t>, iterator_end, value_t>
     {};
 
     /// --------------------------------------------------------------------------------------------
-    /// `is_mut_jump_range` mock object.
+    /// `is_mut_random_access_range` mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename value_t>
-    class mut_jump_range: public _mut_range<mut_random_access_iterator<value_t>, iterator_end, value_t>
+    class mut_random_access_range: public _mut_range<mut_random_access_iterator<value_t>, iterator_end, value_t>
     {};
 
     /// --------------------------------------------------------------------------------------------
