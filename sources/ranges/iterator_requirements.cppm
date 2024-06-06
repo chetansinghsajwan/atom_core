@@ -3,7 +3,7 @@ export module atom.core:ranges.iterator_requirements;
 import std;
 import :core;
 
-namespace atom
+namespace atom::ranges
 {
     template <typename iterator_type, typename value_type>
     concept _is_iterator_of = std::same_as<typename iterator_type::value_type, value_type>;
@@ -18,7 +18,7 @@ namespace atom
         _is_iterator_of<iterator_type, value_type> and _is_mut_iterator<iterator_type>;
 }
 
-export namespace atom
+export namespace atom::ranges
 {
     template <typename iterator_type, typename iterator_end_t>
     concept is_iterator_with_end = requires(iterator_type begin, iterator_end_t end) {

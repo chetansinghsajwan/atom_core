@@ -213,7 +213,7 @@ namespace atom
         template <typename this_range_t>
         static constexpr auto count_elems(const this_range_t& this_range) -> usize
         {
-            if constexpr (is_random_access_iterator_pair<iterator_t, iterator_end_t>)
+            if constexpr (ranges::is_random_access_iterator_pair<iterator_t, iterator_end_t>)
             {
                 return get_iterator_end(this_range) - get_iterator(this_range);
             }

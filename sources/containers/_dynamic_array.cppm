@@ -505,13 +505,13 @@ namespace atom
         template <typename other_iterator_t, typename other_iterator_end_t>
         static constexpr auto _can_get_range_size() -> bool
         {
-            return is_unidirectional_iterator_pair<other_iterator_t, other_iterator_end_t>;
+            return ranges::is_unidirectional_iterator_pair<other_iterator_t, other_iterator_end_t>;
         }
 
         template <typename other_iterator_t, typename other_iterator_end_t>
         static constexpr auto _get_range_size(other_iterator_t it, other_iterator_end_t it_end) -> usize
         {
-            if constexpr (is_random_access_iterator_pair<other_iterator_t, other_iterator_end_t>)
+            if constexpr (ranges::is_random_access_iterator_pair<other_iterator_t, other_iterator_end_t>)
             {
                 return it.compare(it_end).abs().template to<usize>();
             }

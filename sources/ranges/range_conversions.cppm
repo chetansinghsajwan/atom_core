@@ -1,4 +1,4 @@
-export module atom.core:ranges.from;
+export module atom.core:ranges.range_conversions;
 
 import std;
 import :core;
