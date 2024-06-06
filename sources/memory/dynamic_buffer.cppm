@@ -13,52 +13,38 @@ namespace atom
         using this_type = dynamic_buffer;
 
     public:
-        constexpr dynamic_buffer(_with_size_type, usize size)
+        constexpr dynamic_buffer()
             : _data{ nullptr }
-            , _size{ size }
+            , _size{ 0 }
+            , _capacity{ 0 }
             , _allocator{}
-        {
-            _data = _allocator.alloc(size);
-        }
-
-        template <typename value_type>
-        constexpr dynamic_buffer(create_from_std_vector_tag, const std::vector<value_type>& vec)
-            : _data{ nullptr }
-            , _size{ vec.size() * sizeof(value_type) }
-            , _allocator{}
-        {
-            _data = static_cast<byte*>(_allocator.alloc(_size));
-
-            mem_helper::copy_to(vec.data(), _size, _data);
-        }
+        {}
 
         constexpr dynamic_buffer(const this_type& that)
             : _data{ nullptr }
             , _size{ that._size }
+            , _capacity{ that._size }
             , _allocator{ that._allocator }
         {
-            _data = static_cast<byte*>(_allocator.alloc(_size));
+            _data = static_cast<byte*>(_allocator.alloc(_capacity));
+
+            mem_helper::copy_to(that._data, _size, _data);
         }
 
         constexpr dynamic_buffer& operator=(const this_type& that)
         {
-            if (_data != nullptr)
-            {
-                _allocator.dealloc(_data);
-            }
-
-            _allocator = that._allocator;
-            _size = that._size;
-            _data = static_cast<byte*>(_allocator.alloc(_size));
+            _set_data(that._data.that._size);
         }
 
         constexpr dynamic_buffer(this_type&& that)
             : _data{ that._data }
             , _size{ that._size }
+            , _capacity{ that._capacity }
             , _allocator{ move(that._allocator) }
         {
             that._data = nullptr;
             that._size = 0;
+            that._capacity = 0;
         }
 
         constexpr dynamic_buffer& operator=(this_type&& that)
@@ -74,6 +60,28 @@ namespace atom
 
             that._data = nullptr;
             that._size = 0;
+            that._capacity = 0;
+        }
+
+        constexpr dynamic_buffer(_with_size_type, usize size)
+            : _data{ nullptr }
+            , _size{ size }
+            , _capacity{ size }
+            , _allocator{}
+        {
+            _data = _allocator.alloc(size);
+        }
+
+        template <typename value_type>
+        constexpr dynamic_buffer(create_from_std_vector_tag, const std::vector<value_type>& vec)
+            : _data{ nullptr }
+            , _size{ vec.size() * sizeof(value_type) }
+            , _capacity{ vec.size() * sizeof(value_type) }
+            , _allocator{}
+        {
+            _data = static_cast<byte*>(_allocator.alloc(_capacity));
+
+            mem_helper::copy_to(vec.data(), _size, _data);
         }
 
         constexpr ~dynamic_buffer()
@@ -100,6 +108,11 @@ namespace atom
             return _size;
         }
 
+        constexpr auto get_capacity() const -> usize
+        {
+            return _capacity;
+        }
+
         constexpr auto release() -> void
         {
             if (_data != nullptr)
@@ -107,11 +120,17 @@ namespace atom
                 _allocator.dealloc(_data);
                 _data = nullptr;
                 _size = 0;
+                _capacity = 0;
             }
         }
 
         constexpr auto resize(usize size) -> void
         {
+            if (_size == size)
+            {
+                return;
+            }
+
             if (_data != nullptr)
             {
                 _allocator.dealloc(_data);
@@ -119,18 +138,53 @@ namespace atom
 
             if (size == 0)
             {
-                _data = nullptr;
                 _size = 0;
+                _capacity = 0;
+                _data = nullptr;
                 return;
             }
 
-            _data = static_cast<byte*>(_allocator.alloc(size));
             _size = size;
+            _capacity = 0;
+            _data = static_cast<byte*>(_allocator.alloc(_capacity));
+        }
+
+        template <typename value_type>
+        constexpr auto set_to_std_vector(const std::vector<value_type>& vector) -> void
+        {
+            _set_data(vector.data(), vector.size() * sizeof(value_type));
+        }
+
+    private:
+        constexpr auto _set_data(const void* data, usize size) -> void
+        {
+            if (_data == nullptr)
+            {
+                _size = size;
+                _capacity = size;
+                _data = static_cast<byte*>(_allocator.alloc(_capacity));
+
+                mem_helper::copy_to(data, _size, _data);
+                return;
+            }
+
+            // if we don't have enough storage
+            if (_capacity < size)
+            {
+                _allocator.dealloc(_data);
+
+                _capacity = size;
+                _data = static_cast<byte*>(_allocator.alloc(_capacity));
+            }
+
+            _size = size;
+            mem_helper::copy_to(data, _size, _data);
         }
 
     private:
         byte* _data;
         usize _size;
+        usize _capacity;
         allocator_type _allocator;
     };
 }
