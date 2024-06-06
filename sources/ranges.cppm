@@ -5,6 +5,6 @@ export import :ranges.range_literatoral;
 export import :ranges.iterator_requirements;
 export import :ranges.range_requirements;
 export import :ranges.range_extensions;
-export import :ranges.range_from;
+export import :ranges.ranges::from;
 export import :ranges.iterator_mocks;
 export import :ranges.range_mocks;

@@ -17,8 +17,8 @@ namespace atom
     public:
         constexpr string(create_with_join_tag, const char* str0, const char* str1)
         {
-            insert_range_back(range_from(str0));
-            insert_range_back(range_from(str1));
+            insert_range_back(ranges::from(str0));
+            insert_range_back(ranges::from(str1));
         }
 
         using base_t::base_t;

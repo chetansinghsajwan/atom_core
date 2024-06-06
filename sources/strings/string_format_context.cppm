@@ -20,7 +20,7 @@ namespace atom
     public:
         constexpr auto get_range() -> string_view
         {
-            return string_view(range_from(_fmt_ctx.begin(), _fmt_ctx.end()));
+            return string_view(ranges::from(_fmt_ctx.begin(), _fmt_ctx.end()));
         }
 
         constexpr auto advance_to(array_iterator<char> it) -> void

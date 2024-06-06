@@ -24,12 +24,12 @@ namespace atom
 
         static constexpr auto from_std(std::string_view str)
         {
-            return final_t(range_from(str));
+            return final_t(ranges::from(str));
         }
 
         static constexpr auto from_cstr(const char* str)
         {
-            return final_t(range_from(str));
+            return final_t(ranges::from(str));
         }
 
         static constexpr auto from_cstr(const char* str, const usize max_count)
@@ -44,7 +44,7 @@ namespace atom
                 }
             }
 
-            return final_t(range_from(str, count));
+            return final_t(ranges::from(str, count));
         }
 
         template <typename this_string_type>

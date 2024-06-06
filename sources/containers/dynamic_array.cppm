@@ -269,7 +269,7 @@ namespace atom
             usize index = get_index_for_iterator(it);
             usize count =
                 _impl.insert_range_at(index, range.get_iterator(), range.get_iterator_end());
-            return range_from(
+            return ranges::from(
                 _impl.get_mut_iterator_at(index), _impl.get_mut_iterator_at(index + count));
         }
 
