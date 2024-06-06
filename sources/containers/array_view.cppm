@@ -1,5 +1,6 @@
 export module atom.core:containers.array_view;
 
+import std;
 import :core;
 import :ranges;
 import :types;
@@ -27,8 +28,8 @@ namespace atom
         /// # default constructor
         /// ----------------------------------------------------------------------------------------
         constexpr array_view()
-            : _data(nullptr)
-            , _count(0)
+            : _data{ nullptr }
+            , _count{ 0 }
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -54,11 +55,19 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # range constructor
         /// ----------------------------------------------------------------------------------------
+        constexpr array_view(std::initializer_list<value_type> list)
+            : _data{ list.begin() }
+            , _count{ list.size() }
+        {}
+
+        /// ----------------------------------------------------------------------------------------
+        /// # range constructor
+        /// ----------------------------------------------------------------------------------------
         template <typename range_type>
         constexpr array_view(const range_type& range)
             requires ranges::is_array_range_of<range_type, value_type>
-            : _data(range.get_data())
-            , _count(range.get_count())
+            : _data{ range.get_data() }
+            , _count{ range.get_count() }
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -77,8 +86,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <usize count>
         constexpr array_view(const value_type (&arr)[count])
-            : _data(arr)
-            , _count(count)
+            : _data{ arr }
+            , _count{ count }
         {}
 
         /// ----------------------------------------------------------------------------------------
