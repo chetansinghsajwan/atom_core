@@ -8,14 +8,14 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    export template <typename value_t, typename... error_ts>
-    class result: public result_api<result_impl<value_t, error_ts...>>
+    export template <typename value_type, typename... error_types>
+    class result: public result_api<result_impl<value_type, error_types...>>
     {
-        using this_t = result;
-        using base_t = result_api<result_impl<value_t, error_ts...>>;
+        using this_type = result;
+        using base_type = result_api<result_impl<value_type, error_types...>>;
 
     public:
-        using base_t::base_t;
-        using base_t::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 }

@@ -15,78 +15,78 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     /// @todo update docs.
     /// --------------------------------------------------------------------------------------------
-    export template <typename in_impl_t>
+    export template <typename in_impl_type>
     class result_api: public result_tag
     {
-        template <typename that_impl_t>
+        template <typename that_impl_type>
         friend class result_api;
 
     private:
-        template <typename that_t>
+        template <typename that_type>
         struct is_result_api
         {
-            static constexpr bool value = typeinfo<that_t>::template is_derived_from<result_tag>;
+            static constexpr bool value = typeinfo<that_type>::template is_derived_from<result_tag>;
         };
 
     private:
-        using this_t = result_api;
+        using this_type = result_api;
 
     protected:
-        using impl_t = in_impl_t;
+        using impl_type = in_impl_type;
 
     public:
-        using value_t = typename impl_t::out_value_t;
-        using value_type_info_t = typeinfo<value_t>;
-        using error_types_list = typename impl_t::error_types_list;
-        using first_error_t = typename impl_t::first_error_t;
+        using value_type = typename impl_type::out_value_type;
+        using value_type_info_type = typeinfo<value_type>;
+        using error_types_list = typename impl_type::error_types_list;
+        using first_error_type = typename impl_type::first_error_type;
 
     public:
-        static_assert(value_type_info_t::is_pure, "unpure value type are not supported.");
+        static_assert(value_type_info_type::is_pure, "unpure value type are not supported.");
 
-        static_assert(value_type_info_t::is_void or value_type_info_t::is_destructible,
+        static_assert(value_type_info_type::is_void or value_type_info_type::is_destructible,
             "non destructible value type is not supported.");
 
         static_assert(error_types_list::count > 0, "there must be at least 1 error type.");
 
         static_assert(error_types_list::are_unique(), "each error type must be unique.");
 
-        static_assert(error_types_list::info_t::are_pure, "unpure error types are not supported.");
+        static_assert(error_types_list::info_type::are_pure, "unpure error types are not supported.");
 
-        static_assert(error_types_list::info_t::are_destructible,
+        static_assert(error_types_list::info_type::are_destructible,
             "non destructible error types are not supported.");
 
     public:
         static constexpr bool should_enable_copy_constructor = []
         {
-            if (not value_type_info_t::is_copy_constructible)
+            if (not value_type_info_type::is_copy_constructible)
                 return false;
 
-            if (not error_types_list::info_t::are_copy_constructible)
+            if (not error_types_list::info_type::are_copy_constructible)
                 return false;
 
-            if (value_type_info_t::is_copy_constructible
-                and error_types_list::info_t::are_trivially_copy_constructible)
+            if (value_type_info_type::is_copy_constructible
+                and error_types_list::info_type::are_trivially_copy_constructible)
                 return false;
 
             return true;
         };
 
-        template <typename in_that_t>
+        template <typename in_typehat_type>
         static constexpr bool should_enable_universal_copy_constructor = []
         {
-            using that_t = typeinfo<in_that_t>::pure_t::value_t;
+            using that_type = typeinfo<in_typehat_type>::pure_type::value_type;
 
-            if constexpr (not is_result_api<that_t>::value)
+            if constexpr (not is_result_api<that_type>::value)
                 return false;
 
-            else if (not value_type_info_t::template is_constructible_from<
-                         typename that_t::value_t>)
+            else if (not value_type_info_type::template is_constructible_from<
+                         typename that_type::value_type>)
                 return false;
 
-            else if (not error_types_list::has_all(typename that_t::error_types_list()))
+            else if (not error_types_list::has_all(typename that_type::error_types_list()))
                 return false;
 
-            else if (not that_t::error_types_list::info_t::are_copy_constructible)
+            else if (not that_type::error_types_list::info_type::are_copy_constructible)
                 return false;
 
             return true;
@@ -94,36 +94,36 @@ namespace atom
 
         static constexpr bool should_enable_copy_operator = []
         {
-            if (not value_type_info_t::is_copyable)
+            if (not value_type_info_type::is_copyable)
                 return false;
 
-            if (not error_types_list::info_t::are_copyable)
+            if (not error_types_list::info_type::are_copyable)
                 return false;
 
-            if (value_type_info_t::is_trivially_copyable
-                and error_types_list::info_t::are_trivially_copyable)
+            if (value_type_info_type::is_trivially_copyable
+                and error_types_list::info_type::are_trivially_copyable)
                 return false;
 
             return true;
         }();
 
-        template <typename in_that_t>
+        template <typename in_typehat_type>
         static constexpr bool should_enable_universal_copy_operator = []
         {
-            using that_t = typeinfo<in_that_t>::pure_t::value_t;
+            using that_type = typeinfo<in_typehat_type>::pure_type::value_type;
 
-            if constexpr (not is_result_api<that_t>::value)
+            if constexpr (not is_result_api<that_type>::value)
                 return false;
 
-            else if (not value_type_info_t::template is_constructible_from<typename that_t::value_t>
-                     or not value_type_info_t::template is_assignable_from<
-                         typename that_t::value_t>)
+            else if (not value_type_info_type::template is_constructible_from<typename that_type::value_type>
+                     or not value_type_info_type::template is_assignable_from<
+                         typename that_type::value_type>)
                 return false;
 
-            else if (not error_types_list::has_all(typename that_t::error_types_list()))
+            else if (not error_types_list::has_all(typename that_type::error_types_list()))
                 return false;
 
-            else if (not error_types_list::info_t::are_copyable)
+            else if (not error_types_list::info_type::are_copyable)
                 return false;
 
             return true;
@@ -131,35 +131,35 @@ namespace atom
 
         static constexpr bool should_enable_move_constructor = []
         {
-            if (not value_type_info_t::is_move_constructible)
+            if (not value_type_info_type::is_move_constructible)
                 return false;
 
-            if (not error_types_list::info_t::are_move_constructible)
+            if (not error_types_list::info_type::are_move_constructible)
                 return false;
 
-            if (value_type_info_t::is_trivially_move_constructible
-                and error_types_list::info_t::are_trivially_move_constructible)
+            if (value_type_info_type::is_trivially_move_constructible
+                and error_types_list::info_type::are_trivially_move_constructible)
                 return false;
 
             return true;
         }();
 
-        template <typename in_that_t>
+        template <typename in_typehat_type>
         static constexpr bool should_enable_universal_move_constructor = []
         {
-            using that_t = typeinfo<in_that_t>::pure_t::value_t;
+            using that_type = typeinfo<in_typehat_type>::pure_type::value_type;
 
-            if constexpr (not is_result_api<that_t>::value)
+            if constexpr (not is_result_api<that_type>::value)
                 return false;
 
-            else if (not value_type_info_t::template is_constructible_from<
-                         typename that_t::value_t>)
+            else if (not value_type_info_type::template is_constructible_from<
+                         typename that_type::value_type>)
                 return false;
 
-            else if (not error_types_list::has_all(typename that_t::error_types_list()))
+            else if (not error_types_list::has_all(typename that_type::error_types_list()))
                 return false;
 
-            else if (not that_t::error_types_list::info_t::are_move_constructible)
+            else if (not that_type::error_types_list::info_type::are_move_constructible)
                 return false;
 
             return true;
@@ -167,36 +167,36 @@ namespace atom
 
         static constexpr bool should_enable_move_operator = []
         {
-            if (not value_type_info_t::is_moveable)
+            if (not value_type_info_type::is_moveable)
                 return false;
 
-            if (not error_types_list::info_t::are_moveable)
+            if (not error_types_list::info_type::are_moveable)
                 return false;
 
-            if (value_type_info_t::is_trivially_moveable
-                and error_types_list::info_t::are_trivially_moveable)
+            if (value_type_info_type::is_trivially_moveable
+                and error_types_list::info_type::are_trivially_moveable)
                 return false;
 
             return true;
         }();
 
-        template <typename in_that_t>
+        template <typename in_typehat_type>
         static constexpr bool should_enable_universal_move_operator = []
         {
-            using that_t = typeinfo<in_that_t>::pure_t::value_t;
+            using that_type = typeinfo<in_typehat_type>::pure_type::value_type;
 
-            if constexpr (not is_result_api<that_t>::value)
+            if constexpr (not is_result_api<that_type>::value)
                 return false;
 
-            else if (not value_type_info_t::template is_constructible_from<typename that_t::value_t>
-                     or not value_type_info_t::template is_assignable_from<
-                         typename that_t::value_t>)
+            else if (not value_type_info_type::template is_constructible_from<typename that_type::value_type>
+                     or not value_type_info_type::template is_assignable_from<
+                         typename that_type::value_type>)
                 return false;
 
-            else if (not error_types_list::has_all(typename that_t::error_types_list()))
+            else if (not error_types_list::has_all(typename that_type::error_types_list()))
                 return false;
 
-            else if (not that_t::error_types_list::info_t::are_moveable)
+            else if (not that_type::error_types_list::info_type::are_moveable)
                 return false;
 
             return true;
@@ -205,10 +205,10 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename error_t>
+        template <typename error_type>
         static consteval auto has_error() -> bool
         {
-            return impl_t::template has_error<error_t>();
+            return impl_type::template has_error<error_type>();
         }
 
     public:
@@ -220,14 +220,14 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # trivial copy constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr result_api(const this_t& that) = default;
+        constexpr result_api(const this_type& that) = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # copy constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr result_api(const this_t& that)
+        constexpr result_api(const this_type& that)
             requires should_enable_copy_constructor
-            : _impl(typename impl_t::copy_tag(), that._impl)
+            : _impl(typename impl_type::copy_tag(), that._impl)
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -236,83 +236,83 @@ namespace atom
         /// accepts other result types whose value type is convertible to this value type and
         /// whose error types are a subset of this type.
         /// ----------------------------------------------------------------------------------------
-        template <typename that_t>
-        constexpr result_api(const that_t& that)
-            requires should_enable_universal_copy_constructor<that_t>
-            : _impl(typename impl_t::copy_tag(), that._impl)
+        template <typename that_type>
+        constexpr result_api(const that_type& that)
+            requires should_enable_universal_copy_constructor<that_type>
+            : _impl(typename impl_type::copy_tag(), that._impl)
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # trivial copy operator
         /// ----------------------------------------------------------------------------------------
-        constexpr this_t& operator=(const this_t& that) = default;
+        constexpr this_type& operator=(const this_type& that) = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # copy operator
         /// ----------------------------------------------------------------------------------------
-        constexpr this_t& operator=(const this_t& that)
+        constexpr this_type& operator=(const this_type& that)
             requires should_enable_copy_operator
         {
-            _impl.set_that(that._impl);
+            _impl.set_typehat(that._impl);
             return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
         /// # universal copy operator
         /// ----------------------------------------------------------------------------------------
-        template <typename that_t>
-        constexpr this_t& operator=(const that_t& that)
-            requires should_enable_universal_copy_operator<that_t>
+        template <typename that_type>
+        constexpr this_type& operator=(const that_type& that)
+            requires should_enable_universal_copy_operator<that_type>
         {
-            _impl.set_that(that._impl);
+            _impl.set_typehat(that._impl);
             return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
         /// # trivial move constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr result_api(this_t&& that) = default;
+        constexpr result_api(this_type&& that) = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # move constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr result_api(this_t&& that)
+        constexpr result_api(this_type&& that)
             requires should_enable_move_constructor
-            : _impl(typename impl_t::move_tag(), that._impl)
+            : _impl(typename impl_type::move_tag(), that._impl)
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # universal move constructor
         /// ----------------------------------------------------------------------------------------
-        template <typename that_t>
-        constexpr result_api(that_t&& that)
-            requires should_enable_universal_move_constructor<that_t>
-            : _impl(typename impl_t::move_tag(), that._impl)
+        template <typename that_type>
+        constexpr result_api(that_type&& that)
+            requires should_enable_universal_move_constructor<that_type>
+            : _impl(typename impl_type::move_tag(), that._impl)
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # trivial move operator
         /// ----------------------------------------------------------------------------------------
-        constexpr this_t& operator=(this_t&& that) = default;
+        constexpr this_type& operator=(this_type&& that) = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # move operator
         /// ----------------------------------------------------------------------------------------
-        constexpr this_t& operator=(this_t&& that)
+        constexpr this_type& operator=(this_type&& that)
             requires should_enable_move_operator
         {
-            _impl.set_that(move(that._impl));
+            _impl.set_typehat(move(that._impl));
             return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
         /// # universal move operator
         /// ----------------------------------------------------------------------------------------
-        template <typename that_t>
-        constexpr this_t& operator=(that_t&& that)
-            requires should_enable_universal_move_operator<that_t>
+        template <typename that_type>
+        constexpr this_type& operator=(that_type&& that)
+            requires should_enable_universal_move_operator<that_type>
         {
-            _impl.set_that(move(that._impl));
+            _impl.set_typehat(move(that._impl));
             return *this;
         }
 
@@ -320,8 +320,8 @@ namespace atom
         /// # void value constructor
         /// ----------------------------------------------------------------------------------------
         constexpr result_api(result_void)
-            requires value_type_info_t::is_void
-            : _impl(typename impl_t::value_tag(), {})
+            requires value_type_info_type::is_void
+            : _impl(typename impl_type::value_tag(), {})
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -333,10 +333,10 @@ namespace atom
         ///
         ///  - `value`: value to construct with.
         /// ----------------------------------------------------------------------------------------
-        template <typename this_t = this_t>
-        constexpr result_api(const this_t::value_t& value)
-            requires(not value_type_info_t::is_void)
-            : _impl(typename impl_t::value_tag(), value)
+        template <typename this_type = this_type>
+        constexpr result_api(const this_type::value_type& value)
+            requires(not value_type_info_type::is_void)
+            : _impl(typename impl_type::value_tag(), value)
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -348,10 +348,10 @@ namespace atom
         ///
         ///  - `value`: value to construct with.
         /// ----------------------------------------------------------------------------------------
-        template <typename this_t = this_t>
-        constexpr result_api(this_t::value_t&& value)
-            requires(not value_type_info_t::is_void)
-            : _impl(typename impl_t::value_tag(), move(value))
+        template <typename this_type = this_type>
+        constexpr result_api(this_type::value_type&& value)
+            requires(not value_type_info_type::is_void)
+            : _impl(typename impl_type::value_tag(), move(value))
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -363,9 +363,9 @@ namespace atom
         ///
         ///  - `value`: value to set.
         /// ----------------------------------------------------------------------------------------
-        template <typename this_t = this_t>
-        constexpr this_t& operator=(const this_t::value_t& value)
-            requires(not value_type_info_t::is_void)
+        template <typename this_type = this_type>
+        constexpr this_type& operator=(const this_type::value_type& value)
+            requires(not value_type_info_type::is_void)
         {
             _impl.set_value(value);
             return *this;
@@ -380,9 +380,9 @@ namespace atom
         ///
         ///  - `value`: value to set.
         /// ----------------------------------------------------------------------------------------
-        template <typename this_t = this_t>
-        constexpr this_t& operator=(this_t::value_t&& value)
-            requires(not value_type_info_t::is_void)
+        template <typename this_type = this_type>
+        constexpr this_type& operator=(this_type::value_type&& value)
+            requires(not value_type_info_type::is_void)
         {
             _impl.set_value(move(value));
             return *this;
@@ -391,27 +391,27 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # error copy constructor
         /// ----------------------------------------------------------------------------------------
-        template <typename error_t>
-        constexpr result_api(const error_t& error)
-            requires(has_error<typename typeinfo<error_t>::pure_t::value_t>())
-            : _impl(typename impl_t::error_tag(), error)
+        template <typename error_type>
+        constexpr result_api(const error_type& error)
+            requires(has_error<typename typeinfo<error_type>::pure_type::value_type>())
+            : _impl(typename impl_type::error_tag(), error)
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # error move constructor
         /// ----------------------------------------------------------------------------------------
-        template <typename error_t>
-        constexpr result_api(error_t&& error)
-            requires(has_error<typename typeinfo<error_t>::pure_t::value_t>())
-            : _impl(typename impl_t::error_tag(), move(error))
+        template <typename error_type>
+        constexpr result_api(error_type&& error)
+            requires(has_error<typename typeinfo<error_type>::pure_type::value_type>())
+            : _impl(typename impl_type::error_tag(), move(error))
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # error copy operator
         /// ----------------------------------------------------------------------------------------
-        template <typename error_t>
-        constexpr this_t& operator=(const error_t& error)
-            requires(has_error<typename typeinfo<error_t>::pure_t::value_t>())
+        template <typename error_type>
+        constexpr this_type& operator=(const error_type& error)
+            requires(has_error<typename typeinfo<error_type>::pure_type::value_type>())
         {
             _impl.set_error(error);
             return *this;
@@ -420,9 +420,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # error move operator
         /// ----------------------------------------------------------------------------------------
-        template <typename error_t>
-        constexpr this_t& operator=(error_t&& error)
-            requires(has_error<typename typeinfo<error_t>::pure_t::value_t>())
+        template <typename error_type>
+        constexpr this_type& operator=(error_type&& error)
+            requires(has_error<typename typeinfo<error_type>::pure_type::value_type>())
         {
             _impl.set_error(move(error));
             return *this;
@@ -437,18 +437,18 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename... args_t>
-        constexpr auto emplace_value(this this_t& self, args_t&&... args) -> void
+        template <typename... args_type>
+        constexpr auto emplace_value(this this_type& self, args_type&&... args) -> void
         {
-            self._impl.emplace_value(forward<args_t>(args)...);
+            self._impl.emplace_value(forward<args_type>(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename this_t = this_t>
-        constexpr auto set_value(this this_t& self, const this_t::value_t& value) -> void
-            requires(not value_type_info_t::is_void)
+        template <typename this_type = this_type>
+        constexpr auto set_value(this this_type& self, const this_type::value_type& value) -> void
+            requires(not value_type_info_type::is_void)
         {
             self._impl.set_value(value);
         }
@@ -456,9 +456,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename this_t = this_t>
-        constexpr auto set_value(this this_t& self, this_t::value_t&& value) -> void
-            requires(not value_type_info_t::is_void)
+        template <typename this_type = this_type>
+        constexpr auto set_value(this this_type& self, this_type::value_type&& value) -> void
+            requires(not value_type_info_type::is_void)
         {
             self._impl.set_value(move(value));
         }
@@ -466,8 +466,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto set_value(this this_t& self) -> void
-            requires value_type_info_t::is_void
+        constexpr auto set_value(this this_type& self) -> void
+            requires value_type_info_type::is_void
         {
             self._impl.set_value_void();
         }
@@ -475,9 +475,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename this_t = this_t>
-        constexpr auto get_value(this const this_t& self) -> const this_t::value_t&
-            requires(not value_type_info_t::is_void)
+        template <typename this_type = this_type>
+        constexpr auto get_value(this const this_type& self) -> const this_type::value_type&
+            requires(not value_type_info_type::is_void)
         {
             return self._impl.get_value();
         }
@@ -485,9 +485,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename this_t = this_t>
-        constexpr auto get_value(this this_t& self) -> this_t::value_t&
-            requires(not value_type_info_t::is_void)
+        template <typename this_type = this_type>
+        constexpr auto get_value(this this_type& self) -> this_type::value_type&
+            requires(not value_type_info_type::is_void)
         {
             return self._impl.get_value();
         }
@@ -495,9 +495,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename this_t = this_t>
-        constexpr auto get_value_checked(this this_t& self) -> this_t::value_t&
-            requires(not value_type_info_t::is_void)
+        template <typename this_type = this_type>
+        constexpr auto get_value_checked(this this_type& self) -> this_type::value_type&
+            requires(not value_type_info_type::is_void)
         {
             return self._impl.get_value_checked();
         }
@@ -505,9 +505,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename this_t = this_t>
-        constexpr auto get_value_checked(this const this_t& self) -> const this_t::value_t&
-            requires(not value_type_info_t::is_void)
+        template <typename this_type = this_type>
+        constexpr auto get_value_checked(this const this_type& self) -> const this_type::value_type&
+            requires(not value_type_info_type::is_void)
         {
             return self._impl.get_value_checked();
         }
@@ -515,7 +515,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto is_value(this const this_t& self) -> bool
+        constexpr auto is_value(this const this_type& self) -> bool
         {
             return self._impl.is_value();
         }
@@ -523,7 +523,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_error_count(this const this_t& self) -> usize
+        constexpr auto get_error_count(this const this_type& self) -> usize
         {
             return self._impl.get_error_count();
         }
@@ -531,19 +531,19 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename error_t, typename... args_t>
-        constexpr auto emplace_error(this this_t& self, args_t&&... args) -> void
-            requires(has_error<error_t>())
+        template <typename error_type, typename... args_type>
+        constexpr auto emplace_error(this this_type& self, args_type&&... args) -> void
+            requires(has_error<error_type>())
         {
-            self._impl.template emplace_error<error_t>(forward<args_t>(args)...);
+            self._impl.template emplace_error<error_type>(forward<args_type>(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename error_t>
-        constexpr auto set_error(this this_t& self, const error_t& error) -> void
-            requires(has_error<error_t>())
+        template <typename error_type>
+        constexpr auto set_error(this this_type& self, const error_type& error) -> void
+            requires(has_error<error_type>())
         {
             self._impl.set_error(error);
         }
@@ -551,9 +551,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename error_t>
-        constexpr auto set_error(this this_t& self, error_t&& error) -> void
-            requires(has_error<error_t>())
+        template <typename error_type>
+        constexpr auto set_error(this this_type& self, error_type&& error) -> void
+            requires(has_error<error_type>())
         {
             self._impl.set_error(move(error));
         }
@@ -561,27 +561,27 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename error_t>
-        constexpr auto get_error(this const this_t& self) -> const error_t&
-            requires(has_error<error_t>())
+        template <typename error_type>
+        constexpr auto get_error(this const this_type& self) -> const error_type&
+            requires(has_error<error_type>())
         {
-            return self._impl.template get_error<error_t>();
+            return self._impl.template get_error<error_type>();
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename error_t>
-        constexpr auto get_error(this this_t& self) -> error_t&
-            requires(has_error<error_t>())
+        template <typename error_type>
+        constexpr auto get_error(this this_type& self) -> error_type&
+            requires(has_error<error_type>())
         {
-            return self._impl.template get_error<error_t>();
+            return self._impl.template get_error<error_type>();
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_error(this const this_t& self) -> const first_error_t&
+        constexpr auto get_error(this const this_type& self) -> const first_error_type&
             requires(get_error_count() == 1)
         {
             return self._impl.get_first_error();
@@ -590,7 +590,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_error(this this_t& self) -> first_error_t&
+        constexpr auto get_error(this this_type& self) -> first_error_type&
             requires(get_error_count() == 1)
         {
             return self._impl.get_first_error();
@@ -599,7 +599,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto is_error(this const this_t& self) -> bool
+        constexpr auto is_error(this const this_type& self) -> bool
         {
             return self._impl.is_error();
         }
@@ -607,17 +607,17 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename error_t>
-        constexpr auto is_error(this const this_t& self) -> bool
-            requires(has_error<error_t>())
+        template <typename error_type>
+        constexpr auto is_error(this const this_type& self) -> bool
+            requires(has_error<error_type>())
         {
-            return self._impl.template is_error<error_t>();
+            return self._impl.template is_error<error_type>();
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto panic_on_error(this const this_t& self) -> void
+        constexpr auto panic_on_error(this const this_type& self) -> void
         {
             self._impl.panic_on_error();
         }
@@ -625,7 +625,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto to_option(this auto&& self) -> option<value_t>
+        constexpr auto to_option(this auto&& self) -> option<value_type>
         {
             return self._impl.to_option();
         }
@@ -633,29 +633,29 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename error_t>
-        constexpr auto to_option_error(this auto&& self) -> option<error_t>
-            requires(has_error<error_t>())
+        template <typename error_type>
+        constexpr auto to_option_error(this auto&& self) -> option<error_type>
+            requires(has_error<error_type>())
         {
-            return self._impl.template to_option_error<error_t>();
+            return self._impl.template to_option_error<error_type>();
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename this_final_qualified_t, typename function_qualified_t>
+        template <typename this_final_qualified_type, typename function_qualified_type>
         static constexpr bool should_enable_on_value_function = []
         {
-            using this_t = typeinfo<this_final_qualified_t>::pure_t::value_t;
+            using this_type = typeinfo<this_final_qualified_type>::pure_type::value_type;
 
-            if constexpr (is_result_api<this_t>::value)
+            if constexpr (is_result_api<this_type>::value)
             {
-                using value_qualified_t =
-                    typeinfo<typename this_t::value_t>::template unpure_like_t<
-                        this_final_qualified_t>::value_t;
-                using signature_t = void(value_qualified_t);
+                using value_qualified_type =
+                    typeinfo<typename this_type::value_type>::template unpure_like_type<
+                        this_final_qualified_type>::value_type;
+                using signature_type = void(value_qualified_type);
 
-                if (not typeinfo<function_qualified_t>::template is_function<signature_t>)
+                if (not typeinfo<function_qualified_type>::template is_function<signature_type>)
                     return false;
 
                 return true;
@@ -677,24 +677,24 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename this_final_qualified_t, typename function_qualified_t, typename error_t>
+        template <typename this_final_qualified_type, typename function_qualified_type, typename error_type>
         static constexpr bool should_enable_on_error_function = []
         {
-            using this_t = typeinfo<this_final_qualified_t>::pure_t::value_t;
+            using this_type = typeinfo<this_final_qualified_type>::pure_type::value_type;
 
-            if constexpr (is_result_api<this_t>::value)
+            if constexpr (is_result_api<this_type>::value)
             {
-                if (not typeinfo<error_t>::is_pure)
+                if (not typeinfo<error_type>::is_pure)
                     return false;
 
-                if (not has_error<error_t>())
+                if (not has_error<error_type>())
                     return false;
 
-                using error_qualified_t =
-                    typeinfo<error_t>::template unpure_like_t<this_final_qualified_t>::value_t;
-                using signature_t = void(error_qualified_t);
+                using error_qualified_type =
+                    typeinfo<error_type>::template unpure_like_type<this_final_qualified_type>::value_type;
+                using signature_type = void(error_qualified_type);
 
-                if (not typeinfo<function_qualified_t>::template is_function<signature_t>)
+                if (not typeinfo<function_qualified_type>::template is_function<signature_type>)
                     return false;
 
                 return true;
@@ -706,34 +706,34 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename error_t>
+        template <typename error_type>
         constexpr auto on_error(this auto&& self, auto&& action) -> decltype(self)
-            requires should_enable_on_error_function<decltype(self), decltype(action), error_t>
+            requires should_enable_on_error_function<decltype(self), decltype(action), error_type>
         {
-            self._impl.template on_error<error_t>(forward<decltype(action)>(action));
+            self._impl.template on_error<error_type>(forward<decltype(action)>(action));
             return self;
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename this_final_qualified_t, typename function_qualified_t>
+        template <typename this_final_qualified_type, typename function_qualified_type>
         static constexpr bool should_enable_on_universal_error_function = []
         {
-            using this_t = typeinfo<this_final_qualified_t>::pure_t::value_t;
+            using this_type = typeinfo<this_final_qualified_type>::pure_type::value_type;
 
-            if constexpr (is_result_api<this_t>::value)
+            if constexpr (is_result_api<this_type>::value)
             {
-                if (not this_t::error_types_list::are_all(
+                if (not this_type::error_types_list::are_all(
                         [](auto info)
                         {
-                            using error_qualified_t =
-                                typeinfo<typename decltype(info)::value_t>::template unpure_like_t<
-                                    this_final_qualified_t>::value_t;
-                            using signature_t = void(error_qualified_t);
+                            using error_qualified_type =
+                                typeinfo<typename decltype(info)::value_type>::template unpure_like_type<
+                                    this_final_qualified_type>::value_type;
+                            using signature_type = void(error_qualified_type);
 
-                            return typeinfo<function_qualified_t>::template is_function<
-                                signature_t>;
+                            return typeinfo<function_qualified_type>::template is_function<
+                                signature_type>;
                         }))
                     return false;
 
@@ -754,6 +754,6 @@ namespace atom
         }
 
     protected:
-        impl_t _impl;
+        impl_type _impl;
     };
 }

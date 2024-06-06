@@ -8,10 +8,10 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     /// implmentation for `bitset`.
     /// --------------------------------------------------------------------------------------------
-    template <typename storage_t>
+    template <typename storage_type>
     class _bitset_impl
     {
-        using this_t = _bitset_impl<storage_t>;
+        using this_type = _bitset_impl<storage_type>;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -72,7 +72,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// returns the count of continuous bits set to `0` from the right.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto count_trailing_ones() const -> usize
+        constexpr auto count_typerailing_ones() const -> usize
         {
             return 0;
         }
@@ -80,7 +80,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// returns the count of continuous bits set to `0` from the right.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto count_trailing_zeros() const -> usize
+        constexpr auto count_typerailing_zeros() const -> usize
         {
             return 0;
         }
@@ -104,7 +104,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// returns the position of first bit set to `1` from the right.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto find_trailing_one() const -> usize
+        constexpr auto find_typerailing_one() const -> usize
         {
             return 0;
         }
@@ -112,7 +112,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// returns the position of first bit set to `0` from the right.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto find_trailing_zero() const -> usize
+        constexpr auto find_typerailing_zero() const -> usize
         {
             return 0;
         }
@@ -198,13 +198,13 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// returns `true` if values of all bits matches value of `that` bits.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator==(const this_t& that) const -> bool
+        constexpr auto operator==(const this_type& that) const -> bool
         {
             return true;
         }
 
     public:
-        storage_t _storage;
+        storage_type _storage;
     };
 }
 
@@ -213,11 +213,11 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     /// type to hold and manage a number of bits.
     /// --------------------------------------------------------------------------------------------
-    export template <typename storage_t>
+    export template <typename storage_type>
     class bitset
     {
-        using this_t = bitset<storage_t>;
-        using _impl_t = _bitset_impl<storage_t>;
+        using this_type = bitset<storage_type>;
+        using _impl_type = _bitset_impl<storage_type>;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -228,27 +228,27 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # copy constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr bitset(const this_t& that) = default;
+        constexpr bitset(const this_type& that) = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # copy operator
         /// ----------------------------------------------------------------------------------------
-        constexpr bitset& operator=(const this_t& that) = default;
+        constexpr bitset& operator=(const this_type& that) = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # move constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr bitset(this_t&& that) = default;
+        constexpr bitset(this_type&& that) = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # move operator
         /// ----------------------------------------------------------------------------------------
-        constexpr bitset& operator=(this_t&& that) = default;
+        constexpr bitset& operator=(this_type&& that) = default;
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr bitset(storage_t value)
+        constexpr bitset(storage_type value)
             : _impl{ value }
         {}
 
@@ -325,17 +325,17 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// returns the count of continuous bits set to `0` from the right.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto count_trailing_ones() const -> usize
+        constexpr auto count_typerailing_ones() const -> usize
         {
-            return _impl.count_trailing_ones();
+            return _impl.count_typerailing_ones();
         }
 
         /// ----------------------------------------------------------------------------------------
         /// returns the count of continuous bits set to `0` from the right.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto count_trailing_zeros() const -> usize
+        constexpr auto count_typerailing_zeros() const -> usize
         {
-            return _impl.count_trailing_zeros();
+            return _impl.count_typerailing_zeros();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -357,17 +357,17 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// returns the position of first bit set to `1` from the right.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto find_trailing_one() const -> usize
+        constexpr auto find_typerailing_one() const -> usize
         {
-            return _impl.find_trailing_one();
+            return _impl.find_typerailing_one();
         }
 
         /// ----------------------------------------------------------------------------------------
         /// returns the position of first bit set to `0` from the right.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto find_trailing_zero() const -> usize
+        constexpr auto find_typerailing_zero() const -> usize
         {
-            return _impl.find_trailing_zero();
+            return _impl.find_typerailing_zero();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -421,7 +421,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// retuns result after shifting bits left by `shifts`.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto shift_left(usize shifts) -> this_t&
+        constexpr auto shift_left(usize shifts) -> this_type&
         {
             _impl.shift_left(shifts);
             return *this;
@@ -430,7 +430,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// retuns result after shifting bits right by `shifts`.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto shift_right(usize shifts) -> this_t&
+        constexpr auto shift_right(usize shifts) -> this_type&
         {
             _impl.shift_right(shifts);
             return *this;
@@ -439,7 +439,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// retuns result after shifting bits by `shifts`.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto shift_by(isize shifts) -> this_t&
+        constexpr auto shift_by(isize shifts) -> this_type&
         {
             _impl.shift_by(shifts);
             return *this;
@@ -448,7 +448,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// returns result after rotating bits left by `shifts`.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto rotate_left(usize shifts) -> this_t&
+        constexpr auto rotate_left(usize shifts) -> this_type&
         {
             _impl.rotate_left(shifts);
             return *this;
@@ -457,7 +457,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// returns result after rotating bits right by `shifts`.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto rotate_right(usize shifts) -> this_t&
+        constexpr auto rotate_right(usize shifts) -> this_type&
         {
             _impl.rotate_right(shifts);
             return *this;
@@ -466,7 +466,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// returns result after rotating bits by `shifts`.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto rotate_by(isize shifts) -> this_t&
+        constexpr auto rotate_by(isize shifts) -> this_type&
         {
             _impl.rotate_by(shifts);
             return *this;
@@ -475,13 +475,13 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// returns `true` if values of all bits matches value of `that` bits.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator==(const this_t& that) const -> bool
+        constexpr auto operator==(const this_type& that) const -> bool
         {
             return _impl == that._impl;
         }
 
     public:
-        _impl_t _impl;
+        _impl_type _impl;
     };
 
     export using bitset8 = bitset<std::uint8_t>;

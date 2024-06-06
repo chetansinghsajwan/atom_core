@@ -5,18 +5,18 @@ import :ranges;
 
 namespace atom::mock
 {
-    export template <typename value_t>
+    export template <typename value_type>
     class output
     {
-        static_assert(typeinfo<value_t>::is_pure);
+        static_assert(typeinfo<value_type>::is_pure);
 
     public:
-        auto operator+=(const value_t& el);
+        auto operator+=(const value_type& el);
 
-        auto operator+=(value_t&& el);
+        auto operator+=(value_type&& el);
 
-        template <typename range_t>
-        auto operator+=(const range_t& range)
-            requires ranges::is_range_of<range_t, value_t>;
+        template <typename range_type>
+        auto operator+=(const range_type& range)
+            requires ranges::is_range_of<range_type, value_type>;
     };
 }

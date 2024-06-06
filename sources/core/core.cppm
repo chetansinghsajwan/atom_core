@@ -25,33 +25,33 @@ export namespace atom
     constexpr auto create_with_join = create_with_join_tag{};
     constexpr auto create_from_std_vector = create_from_std_vector_tag{};
 
-    template <typename value_t>
-    constexpr auto move(value_t&& val) -> typename std::remove_reference_t<value_t>&&
+    template <typename value_type>
+    constexpr auto move(value_type&& val) -> typename std::remove_reference_t<value_type>&&
     {
-        return static_cast<typename std::remove_reference_t<value_t>&&>(val);
+        return static_cast<typename std::remove_reference_t<value_type>&&>(val);
     }
 
-    template <typename value_t>
-    constexpr auto forward(typename std::remove_reference_t<value_t>& val) -> value_t&&
+    template <typename value_type>
+    constexpr auto forward(typename std::remove_reference_t<value_type>& val) -> value_type&&
     {
-        return static_cast<value_t&&>(val);
+        return static_cast<value_type&&>(val);
     }
 
-    template <typename value_t>
-    constexpr auto forward(typename std::remove_reference_t<value_t>&& val) -> value_t&&
+    template <typename value_type>
+    constexpr auto forward(typename std::remove_reference_t<value_type>&& val) -> value_type&&
     {
         static_assert(
-            !std::is_lvalue_reference_v<value_t>, "can not forward an rvalue as an lvalue.");
+            !std::is_lvalue_reference_v<value_type>, "can not forward an rvalue as an lvalue.");
 
-        return static_cast<value_t&&>(val);
+        return static_cast<value_type&&>(val);
     }
 
     using nullptr_t = std::nullptr_t;
 
-    template <typename... arg_ts>
+    template <typename... arg_types>
     class type_holder
     {};
 
-    template <typename value_t>
-    using initializer_list = std::initializer_list<value_t>;
+    template <typename value_type>
+    using initializer_list = std::initializer_list<value_type>;
 }

@@ -10,16 +10,16 @@ namespace atom
         class empty
         {};
 
-        template <bool condition, typename true_t, typename false_t>
-        using conditional_t = std::conditional_t<condition, true_t, false_t>;
+        template <bool condition, typename true_type, typename false_type>
+        using conditional_type = std::conditional_t<condition, true_type, false_type>;
 
-        template <bool condition, typename true_t, typename false_t = empty>
-        using conditional_field_t = conditional_t<condition, true_t, empty>;
+        template <bool condition, typename true_type, typename false_type = empty>
+        using conditional_field_type = conditional_type<condition, true_type, empty>;
 
-        template <bool requirements, typename value_t = void>
-        using enable_if_t = std::enable_if_t<requirements, value_t>;
+        template <bool requirements, typename value_type = void>
+        using enable_if_type = std::enable_if_t<requirements, value_type>;
 
-        template <typename value_t>
-        using identity_t = std::type_identity_t<value_t>;
+        template <typename value_type>
+        using identity_type = std::type_identity_t<value_type>;
     };
 }

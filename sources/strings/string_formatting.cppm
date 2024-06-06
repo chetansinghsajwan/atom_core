@@ -20,20 +20,20 @@ namespace atom
                                    "is not implemented yet.");
     }
 
-    template <typename... arg_ts>
-    constexpr auto _convert_format_string_atom_to_fmt(format_string<arg_ts...> fmt)
+    template <typename... arg_types>
+    constexpr auto _convert_format_string_atom_to_fmt(format_string<arg_types...> fmt)
     {
         return fmt::runtime(fmt.str.to_std());
     }
 
-    template <typename output_t>
-    constexpr auto _wrap_output_t_atom_to_fmt(output_t* out)
+    template <typename output_type>
+    constexpr auto _wrap_output_type_atom_to_fmt(output_type* out)
     {
         class _wrapper
         {
         public:
-            using valueue_t = char;
-            using difference_t = std::ptrdiff_t;
+            using valueue_type = char;
+            using difference_type = std::ptrdiff_t;
             using pointer = char*;
             using reference = char&;
             using iterator_category = std::output_iterator_tag;
@@ -61,20 +61,20 @@ namespace atom
             }
 
         public:
-            typeinfo<output_t>::pure_t::value_t* out;
+            typeinfo<output_type>::pure_type::value_type* out;
         };
 
         return _wrapper(out);
     }
 
-    template <typename output_t, typename... arg_ts>
-    constexpr auto _format_to(output_t&& out, format_string<arg_ts...> fmt, arg_ts&&... args)
+    template <typename output_type, typename... arg_types>
+    constexpr auto _format_to(output_type&& out, format_string<arg_types...> fmt, arg_types&&... args)
     {
         try
         {
-            fmt::format_to(_wrap_output_t_atom_to_fmt(&out),
-                _convert_format_string_atom_to_fmt<arg_ts...>(fmt),
-                _format_arg_wrapper(atom::forward<arg_ts>(args))...);
+            fmt::format_to(_wrap_output_type_atom_to_fmt(&out),
+                _convert_format_string_atom_to_fmt<arg_types...>(fmt),
+                _format_arg_wrapper(atom::forward<arg_types>(args))...);
         }
         catch (const fmt::format_error& err)
         {

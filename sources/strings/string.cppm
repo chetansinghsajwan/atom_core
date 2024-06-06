@@ -12,7 +12,7 @@ namespace atom
 {
     export class string: public buf_string<40, default_mem_allocator>
     {
-        using base_t = buf_string<40, default_mem_allocator>;
+        using base_type = buf_string<40, default_mem_allocator>;
 
     public:
         constexpr string(create_with_join_tag, const char* str0, const char* str1)
@@ -21,8 +21,8 @@ namespace atom
             insert_range_back(ranges::from(str1));
         }
 
-        using base_t::base_t;
-        using base_t::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -38,24 +38,24 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename output_t, typename... arg_ts>
+        template <typename output_type, typename... arg_types>
         static constexpr auto format_to(
-            output_t&& out, format_string<arg_ts...> fmt, arg_ts&&... args)
-            requires(string_formatter_provider<arg_ts>::has() and ...)
-        // requires is_output<output_t, char>
+            output_type&& out, format_string<arg_types...> fmt, arg_types&&... args)
+            requires(string_formatter_provider<arg_types>::has() and ...)
+        // requires is_output<output_type, char>
         {
-            _format_to(out, fmt, atom::forward<arg_ts>(args)...);
+            _format_to(out, fmt, atom::forward<arg_types>(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename... arg_ts>
-        static constexpr auto format(format_string<arg_ts...> fmt, arg_ts&&... args) -> string
-            requires(string_formatter_provider<arg_ts>::has() and ...)
+        template <typename... arg_types>
+        static constexpr auto format(format_string<arg_types...> fmt, arg_types&&... args) -> string
+            requires(string_formatter_provider<arg_types>::has() and ...)
         {
             string out;
-            format_to(out, fmt, atom::forward<arg_ts>(args)...);
+            format_to(out, fmt, atom::forward<arg_types>(args)...);
 
             return out;
         }

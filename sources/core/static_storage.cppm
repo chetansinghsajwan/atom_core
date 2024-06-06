@@ -8,11 +8,11 @@ import :core.int_wrapper;
 
 namespace atom
 {
-    export template <typename... values_t>
+    export template <typename... values_type>
     class static_storage_for
     {
     private:
-        using value_types_list = typelist<values_t...>;
+        using value_types_list = typelist<values_type...>;
 
     public:
         alignas(value_types_list::max_align) byte storage[value_types_list::max_size];

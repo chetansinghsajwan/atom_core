@@ -21,19 +21,19 @@ export namespace atom::ranges
     using _impl_type = _range_extensions_impl<range_type>;
 
     template <typename range_type>
-    using value_type = typename range_type::value_t;
+    using value_type = typename range_type::value_type;
 
     template <typename range_type>
-    using iterator_type = typename range_type::iterator_t;
+    using iterator_type = typename range_type::iterator_type;
 
     template <typename range_type>
-    using iterator_end_type = typename range_type::iterator_end_t;
+    using iterator_end_type = typename range_type::iterator_end_type;
 
     template <typename range_type>
-    using mut_iterator_type = typename range_type::mut_iterator_t;
+    using mut_iterator_type = typename range_type::mut_iterator_type;
 
     template <typename range_type>
-    using mut_iterator_end_type = typename range_type::mut_iterator_end_t;
+    using mut_iterator_end_type = typename range_type::mut_iterator_end_type;
 
     template <typename range_type>
     using view_type = int;
@@ -474,7 +474,7 @@ export namespace atom::ranges
         const range_type& range, const that_range_type& that_range) -> iterator_type<range_type>
         requires is_range<range_type> and is_unidirectional_range<that_range_type>
                  and (typeinfo<value_type<range_type>>::template is_equality_comparable_with<
-                     typename that_range_type::value_t>)
+                     typename that_range_type::value_type>)
     {
         return _impl_type<range_type>::find_range(range, that_range);
     }
@@ -505,7 +505,7 @@ export namespace atom::ranges
     constexpr auto contains(const range_type& range, const that_range_type& that_range) -> bool
         requires is_range<range_type> and is_unidirectional_range<that_range_type>
                  and (typeinfo<value_type<range_type>>::template is_equality_comparable_with<
-                     typename that_range_type::value_t>)
+                     typename that_range_type::value_type>)
     {
         return _impl_type<range_type>::contains(range, that_range);
     }
@@ -523,7 +523,7 @@ export namespace atom::ranges
     constexpr auto compare(const range_type& range, const that_range_type& that_range) -> i8
         requires is_range<range_type> and is_range<that_range_type>
                  and (typeinfo<value_type<range_type>>::template is_equality_comparable_with<
-                     typename that_range_type::value_t>)
+                     typename that_range_type::value_type>)
     {
         return _impl_type<range_type>::compare(range, that_range);
     }

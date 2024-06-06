@@ -5,15 +5,15 @@ import :strings.string_extensions;
 
 namespace atom
 {
-    export template <typename allocator_t>
+    export template <typename allocator_type>
     class dynamic_string
-        : public dynamic_array<char, allocator_t>
-        , public string_extensions<dynamic_string<allocator_t>>
+        : public dynamic_array<char, allocator_type>
+        , public string_extensions<dynamic_string<allocator_type>>
     {
-        using base_t = dynamic_array<char, allocator_t>;
+        using base_type = dynamic_array<char, allocator_type>;
 
     public:
-        using base_t::base_t;
-        using base_t::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 }

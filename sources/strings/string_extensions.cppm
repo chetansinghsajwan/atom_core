@@ -10,26 +10,26 @@ namespace atom
     export using string_iterator = array_iterator<char>;
     export using mut_string_iterator = mut_array_iterator<char>;
 
-    export template <typename final_t>
+    export template <typename final_type>
     class string_extensions: public _string_type_id
     {
     private:
-        using this_t = string_extensions;
+        using this_type = string_extensions;
 
     public:
         static constexpr auto from_empty()
         {
-            return final_t();
+            return final_type();
         }
 
         static constexpr auto from_std(std::string_view str)
         {
-            return final_t(ranges::from(str));
+            return final_type(ranges::from(str));
         }
 
         static constexpr auto from_cstr(const char* str)
         {
-            return final_t(ranges::from(str));
+            return final_type(ranges::from(str));
         }
 
         static constexpr auto from_cstr(const char* str, const usize max_count)
@@ -44,7 +44,7 @@ namespace atom
                 }
             }
 
-            return final_t(ranges::from(str, count));
+            return final_type(ranges::from(str, count));
         }
 
         template <typename this_string_type>

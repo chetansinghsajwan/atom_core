@@ -7,18 +7,18 @@ import :math;
 
 namespace atom
 {
-    template <typename in_elem_t, typename in_allocator_t>
+    template <typename in_elem_type, typename in_allocator_type>
     class _dynamic_array_impl_vector
     {
-        using this_t = _dynamic_array_impl_vector;
+        using this_type = _dynamic_array_impl_vector;
 
     public:
-        using value_t = in_elem_t;
-        using allocator_t = in_allocator_t;
-        using iterator_t = array_iterator<value_t>;
-        using iterator_end_t = iterator_t;
-        using mut_iterator_t = mut_array_iterator<value_t>;
-        using mut_iterator_end_t = mut_iterator_t;
+        using value_type = in_elem_type;
+        using allocator_type = in_allocator_type;
+        using iterator_type = array_iterator<value_type>;
+        using iterator_end_type = iterator_type;
+        using mut_iterator_type = mut_array_iterator<value_type>;
+        using mut_iterator_end_type = mut_iterator_type;
 
     public:
         class copy_tag
@@ -43,8 +43,8 @@ namespace atom
             : _vector{ std::move(that._vector) }
         {}
 
-        template <typename other_iterator_t, typename other_iterator_end_t>
-        constexpr _dynamic_array_impl_vector(range_tag, other_iterator_t it, other_iterator_end_t it_end)
+        template <typename other_iterator_type, typename other_iterator_end_type>
+        constexpr _dynamic_array_impl_vector(range_tag, other_iterator_type it, other_iterator_end_type it_end)
             : _vector{ move(it), move(it_end) }
         {}
 
@@ -52,7 +52,7 @@ namespace atom
             : _vector(count)
         {}
 
-        constexpr _dynamic_array_impl_vector(_with_count_type, usize count, const value_t& value)
+        constexpr _dynamic_array_impl_vector(_with_count_type, usize count, const value_type& value)
             : _vector{ count, value }
         {}
 
@@ -65,66 +65,66 @@ namespace atom
         constexpr ~_dynamic_array_impl_vector() {}
 
     public:
-        constexpr auto move_this(this_t& that) -> void
+        constexpr auto move_typehis(this_type& that) -> void
         {
             _vector = std::move(that._vector);
         }
 
-        constexpr auto get_at(usize index) const -> const value_t&
+        constexpr auto get_at(usize index) const -> const value_type&
         {
             return _vector[index];
         }
 
-        constexpr auto get_mut_at(usize index) -> value_t&
+        constexpr auto get_mut_at(usize index) -> value_type&
         {
             return _vector[index];
         }
 
-        constexpr auto get_iterator() const -> iterator_t
+        constexpr auto get_iterator() const -> iterator_type
         {
-            return iterator_t(_vector.data());
+            return iterator_type(_vector.data());
         }
 
-        constexpr auto get_iterator_at(usize index) const -> iterator_t
+        constexpr auto get_iterator_at(usize index) const -> iterator_type
         {
-            return iterator_t(_vector.data() + index);
+            return iterator_type(_vector.data() + index);
         }
 
-        constexpr auto get_iterator_end() const -> iterator_end_t
+        constexpr auto get_iterator_end() const -> iterator_end_type
         {
-            return iterator_end_t(_vector.data() + _vector.size());
+            return iterator_end_type(_vector.data() + _vector.size());
         }
 
-        constexpr auto get_mut_iterator() -> mut_iterator_t
+        constexpr auto get_mut_iterator() -> mut_iterator_type
         {
-            return mut_iterator_t(_vector.data());
+            return mut_iterator_type(_vector.data());
         }
 
-        constexpr auto get_mut_iterator_at(usize index) -> mut_iterator_t
+        constexpr auto get_mut_iterator_at(usize index) -> mut_iterator_type
         {
-            return mut_iterator_t(_vector.data() + index);
+            return mut_iterator_type(_vector.data() + index);
         }
 
-        constexpr auto get_mut_iterator_end() -> mut_iterator_end_t
+        constexpr auto get_mut_iterator_end() -> mut_iterator_end_type
         {
-            return mut_iterator_end_t(_vector.data() + _vector.size());
+            return mut_iterator_end_type(_vector.data() + _vector.size());
         }
 
-        template <typename other_iterator_t, typename other_iterator_end_t>
-        constexpr auto assign_range(other_iterator_t it, other_iterator_end_t it_end)
+        template <typename other_iterator_type, typename other_iterator_end_type>
+        constexpr auto assign_range(other_iterator_type it, other_iterator_end_type it_end)
         {
             _vector.assign(it, it_end);
         }
 
-        template <typename... arg_ts>
-        constexpr auto emplace_at(usize index, arg_ts&&... args)
+        template <typename... arg_types>
+        constexpr auto emplace_at(usize index, arg_types&&... args)
         {
-            _vector.emplace(_vector.begin() + index, forward<arg_ts>(args)...);
+            _vector.emplace(_vector.begin() + index, forward<arg_types>(args)...);
         }
 
-        template <typename other_iterator_t, typename other_iterator_end_t>
+        template <typename other_iterator_type, typename other_iterator_end_type>
         constexpr auto insert_range_at(
-            usize index, other_iterator_t it, other_iterator_end_t it_end) -> usize
+            usize index, other_iterator_type it, other_iterator_end_type it_end) -> usize
         {
             usize old_size = _vector.size();
             _vector.insert(_vector.begin() + index, move(it), move(it_end));
@@ -132,26 +132,26 @@ namespace atom
             return _vector.size() - old_size;
         }
 
-        template <typename... arg_ts>
-        constexpr auto emplace_front(arg_ts&&... args)
+        template <typename... arg_types>
+        constexpr auto emplace_front(arg_types&&... args)
         {
             emplace_at(0);
         }
 
-        template <typename other_iterator_t, typename other_iterator_end_t>
-        constexpr auto insert_range_front(other_iterator_t it, other_iterator_end_t it_end) -> usize
+        template <typename other_iterator_type, typename other_iterator_end_type>
+        constexpr auto insert_range_front(other_iterator_type it, other_iterator_end_type it_end) -> usize
         {
             return insert_range_at(0, move(it), move(it_end));
         }
 
-        template <typename... arg_ts>
-        constexpr auto emplace_back(arg_ts&&... args)
+        template <typename... arg_types>
+        constexpr auto emplace_back(arg_types&&... args)
         {
-            _vector.emplace_back(forward<arg_ts>(args)...);
+            _vector.emplace_back(forward<arg_types>(args)...);
         }
 
-        template <typename other_iterator_t, typename other_iterator_end_t>
-        constexpr auto insert_range_back(other_iterator_t it, other_iterator_end_t it_end) -> usize
+        template <typename other_iterator_type, typename other_iterator_end_type>
+        constexpr auto insert_range_back(other_iterator_type it, other_iterator_end_type it_end) -> usize
         {
             return insert_range_at(get_count(), move(it), move(it_end));
         }
@@ -206,17 +206,17 @@ namespace atom
             return _vector.size();
         }
 
-        constexpr auto get_data() const -> const value_t*
+        constexpr auto get_data() const -> const value_type*
         {
             return _vector.data();
         }
 
-        constexpr auto get_mut_data() -> value_t*
+        constexpr auto get_mut_data() -> value_type*
         {
             return _vector.data();
         }
 
-        constexpr auto get_allocator() const -> const allocator_t&
+        constexpr auto get_allocator() const -> const allocator_type&
         {
             return _vector.alloc();
         }
@@ -236,28 +236,28 @@ namespace atom
             return index <= _vector.size();
         }
 
-        constexpr auto is_iterator_valid(iterator_t it) const -> bool
+        constexpr auto is_iterator_valid(iterator_type it) const -> bool
         {
             return true;
         }
 
-        constexpr auto get_index_for_iterator(iterator_t it) const -> usize
+        constexpr auto get_index_for_iterator(iterator_type it) const -> usize
         {
             isize index = it.get_data() - _vector.data();
             return index < 0 ? math::max<usize>() : index;
         }
 
-        constexpr auto is_iterator_in_range(iterator_t it) const -> bool
+        constexpr auto is_iterator_in_range(iterator_type it) const -> bool
         {
             return get_index_for_iterator(it) < _vector.size();
         }
 
-        constexpr auto is_iterator_in_range_or_end(iterator_t it) const -> bool
+        constexpr auto is_iterator_in_range_or_end(iterator_type it) const -> bool
         {
             return get_index_for_iterator(it) <= _vector.size();
         }
 
     private:
-        std::vector<value_t> _vector;
+        std::vector<value_type> _vector;
     };
 }

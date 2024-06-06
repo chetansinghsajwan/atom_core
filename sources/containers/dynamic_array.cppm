@@ -14,23 +14,23 @@ namespace atom
     /// - write time complexities after writing implementation.
     /// - add note for case, where element or elements to be inserted are from this array.
     /// --------------------------------------------------------------------------------------------
-    export template <typename in_elem_t, typename in_allocator_t = default_mem_allocator>
+    export template <typename in_elem_type, typename in_allocator_type = default_mem_allocator>
     class dynamic_array
     {
-        static_assert(typeinfo<in_elem_t>::is_pure, "dynamic_array does not non pure types.");
-        static_assert(not typeinfo<in_elem_t>::is_void, "dynamic_array does not support void.");
+        static_assert(typeinfo<in_elem_type>::is_pure, "dynamic_array does not non pure types.");
+        static_assert(not typeinfo<in_elem_type>::is_void, "dynamic_array does not support void.");
 
     private:
-        using this_t = dynamic_array<in_elem_t, in_allocator_t>;
-        using _impl_t = _dynamic_array_impl_vector<in_elem_t, in_allocator_t>;
+        using this_type = dynamic_array<in_elem_type, in_allocator_type>;
+        using _impl_type = _dynamic_array_impl_vector<in_elem_type, in_allocator_type>;
 
     public:
-        using value_t = in_elem_t;
-        using allocator_t = in_allocator_t;
-        using iterator_t = array_iterator<value_t>;
-        using iterator_end_t = iterator_t;
-        using mut_iterator_t = mut_array_iterator<value_t>;
-        using mut_iterator_end_t = mut_iterator_t;
+        using value_type = in_elem_type;
+        using allocator_type = in_allocator_type;
+        using iterator_type = array_iterator<value_type>;
+        using iterator_end_type = iterator_type;
+        using mut_iterator_type = mut_array_iterator<value_type>;
+        using mut_iterator_end_type = mut_iterator_type;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -44,7 +44,7 @@ namespace atom
         /// # copy constructor
         /// ----------------------------------------------------------------------------------------
         constexpr dynamic_array(const dynamic_array& that)
-            : _impl{ typename _impl_t::copy_tag{}, that._impl }
+            : _impl{ typename _impl_type::copy_tag{}, that._impl }
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -60,7 +60,7 @@ namespace atom
         /// # move constructor
         /// ----------------------------------------------------------------------------------------
         constexpr dynamic_array(dynamic_array&& that)
-            : _impl{ typename _impl_t::move_tag{}, that._impl }
+            : _impl{ typename _impl_type::move_tag{}, that._impl }
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -68,25 +68,25 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator=(dynamic_array&& that) -> dynamic_array&
         {
-            _impl.move_this(that._impl);
+            _impl.move_typehis(that._impl);
             return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
         /// # range constructor
         /// ----------------------------------------------------------------------------------------
-        template <typename range_t>
-        constexpr dynamic_array(range_t&& range)
-            requires ranges::is_range_of<typename typeinfo<range_t>::pure_t::value_t, value_t>
-            : _impl{ typename _impl_t::range_tag{}, range.get_iterator(), range.get_iterator_end() }
+        template <typename range_type>
+        constexpr dynamic_array(range_type&& range)
+            requires ranges::is_range_of<typename typeinfo<range_type>::pure_type::value_type, value_type>
+            : _impl{ typename _impl_type::range_tag{}, range.get_iterator(), range.get_iterator_end() }
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # range operator
         /// ----------------------------------------------------------------------------------------
-        template <typename range_t>
-        constexpr dynamic_array& operator=(range_t&& range)
-            requires ranges::is_range_of<range_t, value_t>
+        template <typename range_type>
+        constexpr dynamic_array& operator=(range_type&& range)
+            requires ranges::is_range_of<range_type, value_type>
         {
             _impl.assign_range(range.get_iterator(), range.get_iterator_end());
         }
@@ -95,17 +95,17 @@ namespace atom
         /// # array constructor
         /// ----------------------------------------------------------------------------------------
         template <usize count>
-        constexpr dynamic_array(const value_t (&array)[count])
-            : _impl{ typename _impl_t::range_tag{}, iterator_t(array), iterator_t(array + count) }
+        constexpr dynamic_array(const value_type (&array)[count])
+            : _impl{ typename _impl_type::range_tag{}, iterator_type(array), iterator_type(array + count) }
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # array operator
         /// ----------------------------------------------------------------------------------------
         template <usize count>
-        constexpr dynamic_array& operator=(const value_t (&array)[count])
+        constexpr dynamic_array& operator=(const value_type (&array)[count])
         {
-            _impl.assign_range(iterator_t(array), iterator_t(array + count));
+            _impl.assign_range(iterator_type(array), iterator_type(array + count));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -118,7 +118,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # named constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr dynamic_array(_with_count_type, usize count, const value_t& value)
+        constexpr dynamic_array(_with_count_type, usize count, const value_type& value)
             : _impl{ _with_count, count, value }
         {}
 
@@ -138,7 +138,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_at(usize index) const -> const value_t&
+        constexpr auto get_at(usize index) const -> const value_type&
         {
             contract_debug_expects(is_index_in_range(index));
 
@@ -148,7 +148,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_mut_at(usize index) -> value_t&
+        constexpr auto get_mut_at(usize index) -> value_type&
         {
             contract_debug_expects(is_index_in_range(index));
 
@@ -169,13 +169,13 @@ namespace atom
         ///
         /// all iterators are invalidated.
         /// ----------------------------------------------------------------------------------------
-        template <typename... arg_ts>
-        constexpr auto emplace_at(usize index, arg_ts&&... args)
-            requires(typeinfo<value_t>::template is_constructible_from<arg_ts...>)
+        template <typename... arg_types>
+        constexpr auto emplace_at(usize index, arg_types&&... args)
+            requires(typeinfo<value_type>::template is_constructible_from<arg_types...>)
         {
             contract_debug_expects(is_index_in_range_or_end(index), "index is out of range.");
 
-            _impl.emplace_at(index, forward<arg_ts>(args)...);
+            _impl.emplace_at(index, forward<arg_types>(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -188,7 +188,7 @@ namespace atom
         ///
         /// # returns
         ///
-        /// [`mut_iterator_t`] to element inserted.
+        /// [`mut_iterator_type`] to element inserted.
         ///
         /// # time complexity
         ///
@@ -196,15 +196,15 @@ namespace atom
         ///
         /// all iterators are invalidated.
         /// ----------------------------------------------------------------------------------------
-        template <typename... arg_ts>
-        constexpr auto emplace_at(iterator_t it, arg_ts&&... args) -> mut_iterator_t
-            requires(typeinfo<value_t>::template is_constructible_from<arg_ts...>)
+        template <typename... arg_types>
+        constexpr auto emplace_at(iterator_type it, arg_types&&... args) -> mut_iterator_type
+            requires(typeinfo<value_type>::template is_constructible_from<arg_types...>)
         {
             contract_debug_expects(is_iterator_valid(it), "invalid iterator.");
             contract_debug_expects(is_iterator_in_range_or_end(it), "iterator is out of range.");
 
             usize index = get_index_for_iterator(it);
-            _impl.emplace_at(index, forward<arg_ts>(args)...);
+            _impl.emplace_at(index, forward<arg_types>(args)...);
             return _impl.get_mut_iterator_at(index);
         }
 
@@ -227,11 +227,11 @@ namespace atom
         ///
         /// all iterators are invalidated.
         /// ----------------------------------------------------------------------------------------
-        template <typename range_t>
-        constexpr auto insert_range_at(usize index, range_t&& range) -> usize
-            requires ranges::is_range_of<range_t, value_t>
-                     and (typeinfo<value_t>::template is_constructible_from<
-                         typename range_t::value_t>)
+        template <typename range_type>
+        constexpr auto insert_range_at(usize index, range_type&& range) -> usize
+            requires ranges::is_range_of<range_type, value_type>
+                     and (typeinfo<value_type>::template is_constructible_from<
+                         typename range_type::value_type>)
         {
             contract_debug_expects(is_index_in_range_or_end(index), "index is out of range.");
 
@@ -257,11 +257,11 @@ namespace atom
         ///
         /// all iterators are invalidated.
         /// ----------------------------------------------------------------------------------------
-        template <typename range_t>
-        constexpr auto insert_range_at(iterator_t it, range_t&& range)
-            requires ranges::is_range_of<range_t, value_t>
-                     and (typeinfo<value_t>::template is_constructible_from<
-                         typename range_t::value_t>)
+        template <typename range_type>
+        constexpr auto insert_range_at(iterator_type it, range_type&& range)
+            requires ranges::is_range_of<range_type, value_type>
+                     and (typeinfo<value_type>::template is_constructible_from<
+                         typename range_type::value_type>)
         {
             contract_debug_expects(is_iterator_valid(it), "invalid iterator.");
             contract_debug_expects(is_iterator_in_range_or_end(it), "iterator is out of range.");
@@ -286,11 +286,11 @@ namespace atom
         ///
         /// all iterators are invalidated.
         /// ----------------------------------------------------------------------------------------
-        template <typename... arg_ts>
-        constexpr auto emplace_front(arg_ts&&... args)
-            requires(typeinfo<value_t>::template is_constructible_from<arg_ts...>)
+        template <typename... arg_types>
+        constexpr auto emplace_front(arg_types&&... args)
+            requires(typeinfo<value_type>::template is_constructible_from<arg_types...>)
         {
-            _impl.emplace_front(forward<arg_ts>(args)...);
+            _impl.emplace_front(forward<arg_types>(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -303,7 +303,7 @@ namespace atom
         ///
         /// # returns
         ///
-        /// [`mut_iterator_t`] to past the last inserted element.
+        /// [`mut_iterator_type`] to past the last inserted element.
         ///
         /// # time complexity
         ///
@@ -311,13 +311,13 @@ namespace atom
         ///
         /// all iterators are invalidated.
         /// ----------------------------------------------------------------------------------------
-        template <typename range_t>
-        constexpr auto insert_range_front(range_t&& range) -> mut_iterator_t
-            requires ranges::is_range_of<range_t, value_t>
-                     and (typeinfo<value_t>::template is_constructible_from<
-                         typename range_t::value_t>)
+        template <typename range_type>
+        constexpr auto insert_range_front(range_type&& range) -> mut_iterator_type
+            requires ranges::is_range_of<range_type, value_type>
+                     and (typeinfo<value_type>::template is_constructible_from<
+                         typename range_type::value_type>)
         {
-            usize count = _impl.insert_range_front(forward<range_t&&>(range));
+            usize count = _impl.insert_range_front(forward<range_type&&>(range));
             return _impl.get_mut_iterator(count);
         }
 
@@ -334,22 +334,22 @@ namespace atom
         ///
         /// all iterators are invalidated.
         /// ----------------------------------------------------------------------------------------
-        template <typename... arg_ts>
-        constexpr auto emplace_back(arg_ts&&... args)
-            requires(typeinfo<value_t>::template is_constructible_from<arg_ts...>)
+        template <typename... arg_types>
+        constexpr auto emplace_back(arg_types&&... args)
+            requires(typeinfo<value_type>::template is_constructible_from<arg_types...>)
         {
-            _impl.emplace_back(forward<arg_ts>(args)...);
+            _impl.emplace_back(forward<arg_types>(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename arg_t>
-        constexpr auto operator+=(arg_t&& el)
-            requires typeinfo<value_t>::template
-        is_constructible_from<arg_t>
+        template <typename arg_type>
+        constexpr auto operator+=(arg_type&& el)
+            requires typeinfo<value_type>::template
+        is_constructible_from<arg_type>
         {
-            _impl.emplace_back(forward<arg_t>(el));
+            _impl.emplace_back(forward<arg_type>(el));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -362,7 +362,7 @@ namespace atom
         ///
         /// # returns
         ///
-        /// [`mut_iterator_t`] to the first inserted element.
+        /// [`mut_iterator_type`] to the first inserted element.
         ///
         /// # time complexity
         ///
@@ -370,11 +370,11 @@ namespace atom
         ///
         /// all iterators are invalidated.
         /// ----------------------------------------------------------------------------------------
-        template <typename range_t>
-        constexpr auto insert_range_back(range_t&& range) -> mut_iterator_t
-            requires ranges::is_range_of<typename typeinfo<range_t>::pure_t::value_t, value_t>
-                     and (typeinfo<value_t>::template is_constructible_from<
-                         typename typeinfo<range_t>::pure_t::value_t::value_t>)
+        template <typename range_type>
+        constexpr auto insert_range_back(range_type&& range) -> mut_iterator_type
+            requires ranges::is_range_of<typename typeinfo<range_type>::pure_type::value_type, value_type>
+                     and (typeinfo<value_type>::template is_constructible_from<
+                         typename typeinfo<range_type>::pure_type::value_type::value_type>)
         {
             usize count = _impl.insert_range_back(range.get_iterator(), range.get_iterator_end());
             return _impl.get_mut_iterator_at(_impl.get_count() - count);
@@ -384,11 +384,11 @@ namespace atom
         /// # to do:
         /// - what happens when the elem type accepts range as parameter?
         /// ----------------------------------------------------------------------------------------
-        template <typename range_t>
-        constexpr auto operator+=(range_t&& range)
-            requires ranges::is_range_of<typename typeinfo<range_t>::pure_t::value_t, value_t>
-                     and (typeinfo<value_t>::template is_constructible_from<
-                         typename typeinfo<range_t>::pure_t::value_t::value_t>)
+        template <typename range_type>
+        constexpr auto operator+=(range_type&& range)
+            requires ranges::is_range_of<typename typeinfo<range_type>::pure_type::value_type, value_type>
+                     and (typeinfo<value_type>::template is_constructible_from<
+                         typename typeinfo<range_type>::pure_type::value_type::value_type>)
         {
             _impl.insert_range_back(move(range.get_iterator()), move(range.get_iterator_end()));
         }
@@ -416,10 +416,10 @@ namespace atom
         ///
         /// # returns
         ///
-        /// [mut_iterator_t] to next element. if `it` was pointing to the last element, returns
+        /// [mut_iterator_type] to next element. if `it` was pointing to the last element, returns
         /// [`get_iterator_end()`].
         /// ----------------------------------------------------------------------------------------
-        constexpr auto remove_at(iterator_t it) -> mut_iterator_t
+        constexpr auto remove_at(iterator_type it) -> mut_iterator_type
         {
             contract_debug_expects(is_iterator_valid(it), "invalid iterator.");
             contract_debug_expects(is_iterator_in_range(it), "iterator is out of range.");
@@ -466,10 +466,10 @@ namespace atom
         ///
         /// # returns
         ///
-        /// [`mut_iterator_t`] to next element of the last removed element. if the last removed element
+        /// [`mut_iterator_type`] to next element of the last removed element. if the last removed element
         /// was also the last element of the arr, returns [`get_iterator_end()`].
         /// ----------------------------------------------------------------------------------------
-        constexpr auto remove_range(iterator_t it, iterator_t it_end) -> mut_iterator_t
+        constexpr auto remove_range(iterator_type it, iterator_type it_end) -> mut_iterator_type
         {
             contract_debug_expects(is_iterator_valid(it), "invalid iterator.");
             contract_debug_expects(is_iterator_valid(it_end), "invalid iterator.");
@@ -506,7 +506,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto remove_one_find(const value_t& elem) -> bool
+        constexpr auto remove_one_find(const value_type& elem) -> bool
         {
             for (usize i = 0; i < _impl.get_count(); i++)
             {
@@ -523,7 +523,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto remove_all_find(const value_t& elem) -> usize
+        constexpr auto remove_all_find(const value_type& elem) -> usize
         {
             usize removed_count = 0;
             for (usize i = 0; i < _impl.get_count(); i++)
@@ -542,10 +542,10 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename predicate_t>
-        constexpr auto remove_one_if(predicate_t&& pred) -> bool
-            requires typeinfo<predicate_t>::template
-        is_function<bool(const value_t&)>
+        template <typename predicate_type>
+        constexpr auto remove_one_if(predicate_type&& pred) -> bool
+            requires typeinfo<predicate_type>::template
+        is_function<bool(const value_type&)>
         {
             for (usize i = 0; i < _impl.get_count(); i++)
             {
@@ -562,10 +562,10 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename predicate_t>
-        constexpr auto remove_all_if(predicate_t&& pred) -> usize
-            requires typeinfo<predicate_t>::template
-        is_function<bool(const value_t&)>
+        template <typename predicate_type>
+        constexpr auto remove_all_if(predicate_type&& pred) -> usize
+            requires typeinfo<predicate_type>::template
+        is_function<bool(const value_type&)>
         {
             usize removed_count = 0;
             for (usize i = 0; i < _impl.get_count(); i++)
@@ -595,7 +595,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_data() const -> const value_t*
+        constexpr auto get_data() const -> const value_type*
         {
             return _impl.get_data();
         }
@@ -603,7 +603,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_mut_data() -> value_t*
+        constexpr auto get_mut_data() -> value_type*
         {
             return _impl.get_mut_data();
         }
@@ -619,7 +619,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_iterator() const -> iterator_t
+        constexpr auto get_iterator() const -> iterator_type
         {
             return _impl.get_iterator();
         }
@@ -627,7 +627,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_iterator_end() const -> iterator_end_t
+        constexpr auto get_iterator_end() const -> iterator_end_type
         {
             return _impl.get_iterator_end();
         }
@@ -635,7 +635,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_mut_iterator() -> mut_iterator_t
+        constexpr auto get_mut_iterator() -> mut_iterator_type
         {
             return _impl.get_mut_iterator();
         }
@@ -643,7 +643,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_mut_iterator_end() -> mut_iterator_end_t
+        constexpr auto get_mut_iterator_end() -> mut_iterator_end_type
         {
             return _impl.get_mut_iterator_end();
         }
@@ -692,7 +692,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_allocator() const -> const allocator_t&
+        constexpr auto get_allocator() const -> const allocator_type&
         {
             return _impl.get_allocator();
         }
@@ -724,19 +724,19 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// get index for iterator `it`.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_index_for_iterator(iterator_t it) const -> usize
+        constexpr auto get_index_for_iterator(iterator_type it) const -> usize
         {
             return _impl.get_index_for_iterator(it);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// checks for iterator has been invalidated. this_t is done through a value which is changed
+        /// checks for iterator has been invalidated. this_type is done through a value which is changed
         /// for the container every time iterators are invalidated.
         ///
         /// # to do
         /// - implement iterator validation.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto is_iterator_valid(iterator_t it) const -> bool
+        constexpr auto is_iterator_valid(iterator_type it) const -> bool
         {
             return _impl.is_iterator_valid(it);
         }
@@ -744,7 +744,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// checks if iterator `pos` is in range [[`get_iterator()`], [`get_iterator_end()`]).
         /// ----------------------------------------------------------------------------------------
-        constexpr auto is_iterator_in_range(iterator_t it) const -> bool
+        constexpr auto is_iterator_in_range(iterator_type it) const -> bool
         {
             return _impl.is_iterator_in_range(it);
         }
@@ -752,12 +752,12 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// checks if iterator `pos` is in range [[`get_iterator()`], [`get_iterator_end()`]].
         /// ----------------------------------------------------------------------------------------
-        constexpr auto is_iterator_in_range_or_end(iterator_t it) const -> bool
+        constexpr auto is_iterator_in_range_or_end(iterator_type it) const -> bool
         {
             return _impl.is_iterator_in_range_or_end(it);
         }
 
     private:
-        _impl_t _impl;
+        _impl_type _impl;
     };
 }

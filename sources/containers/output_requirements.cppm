@@ -7,8 +7,8 @@ import :ranges;
 
 namespace atom
 {
-    template <typename output_t, typename value_t>
-    concept is_output = requires(output_t out, value_t value, mock::range<value_t> range)
+    template <typename output_type, typename value_type>
+    concept is_output = requires(output_type out, value_type value, mock::range<value_type> range)
     {
         { out += value };
         { out += move(value) };

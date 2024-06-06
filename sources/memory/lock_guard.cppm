@@ -5,13 +5,13 @@ import :lockable;
 namespace atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// locks the lock on construction and unlocks at destruction. this_t is done to guarantee
+    /// locks the lock on construction and unlocks at destruction. this_type is done to guarantee
     /// exception safety.
     /// --------------------------------------------------------------------------------------------
-    export template <typename lockable_t>
+    export template <typename lockable_type>
     class lock_guard
     {
-        static_assert(is_lockable<lockable_t>);
+        static_assert(is_lockable<lockable_type>);
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -21,7 +21,7 @@ namespace atom
         ///
         /// @throws unkown_exception exception thrown by {lock.lock()}.
         /// ----------------------------------------------------------------------------------------
-        lock_guard(lockable_t& lock)
+        lock_guard(lockable_type& lock)
             : _lock(lock)
         {
             _lock.lock();
@@ -41,6 +41,6 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// lockable object.
         /// ----------------------------------------------------------------------------------------
-        lockable_t& _lock;
+        lockable_type& _lock;
     };
 }

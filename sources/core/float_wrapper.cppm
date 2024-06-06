@@ -10,89 +10,89 @@ import :core.num_wrapper;
 /// ------------------------------------------------------------------------------------------------
 namespace atom
 {
-    template <typename in_final_t, typename in_unwrapped_t>
+    template <typename in_final_type, typename in_unwrapped_type>
     class _float_wrapper_impl
     {
     public:
-        using final_t = in_final_t;
-        using unwrapped_t = in_unwrapped_t;
+        using final_type = in_final_type;
+        using unwrapped_type = in_unwrapped_type;
 
     public:
-        static consteval auto min() -> unwrapped_t
+        static consteval auto min() -> unwrapped_type
         {
-            return unwrapped_t(std::numeric_limits<unwrapped_t>::min());
+            return unwrapped_type(std::numeric_limits<unwrapped_type>::min());
         }
 
-        static consteval auto max() -> unwrapped_t
+        static consteval auto max() -> unwrapped_type
         {
-            return unwrapped_t(std::numeric_limits<unwrapped_t>::max());
+            return unwrapped_type(std::numeric_limits<unwrapped_type>::max());
         }
 
-        static consteval auto bits() -> unwrapped_t
+        static consteval auto bits() -> unwrapped_type
         {
-            return unwrapped_t(sizeof(unwrapped_t) * 8);
+            return unwrapped_type(sizeof(unwrapped_type) * 8);
         }
 
-        static consteval auto nan() -> unwrapped_t
+        static consteval auto nan() -> unwrapped_type
         {
-            return unwrapped_t();
+            return unwrapped_type();
         }
 
-        static constexpr auto floor(unwrapped_t val) -> unwrapped_t
+        static constexpr auto floor(unwrapped_type val) -> unwrapped_type
         {
             return std::floor(val);
         }
 
-        static constexpr auto ceil(unwrapped_t val) -> unwrapped_t
+        static constexpr auto ceil(unwrapped_type val) -> unwrapped_type
         {
             return std::ceil(val);
         }
 
-        static constexpr auto round(unwrapped_t val) -> unwrapped_t
+        static constexpr auto round(unwrapped_type val) -> unwrapped_type
         {
             return std::round(val);
         }
 
-        static constexpr auto is_add_safe(unwrapped_t lhs, unwrapped_t rhs) -> bool
+        static constexpr auto is_add_safe(unwrapped_type lhs, unwrapped_type rhs) -> bool
         {
             return true;
         }
 
-        static constexpr auto is_sub_safe(unwrapped_t lhs, unwrapped_t rhs) -> bool
+        static constexpr auto is_sub_safe(unwrapped_type lhs, unwrapped_type rhs) -> bool
         {
             return true;
         }
 
-        static constexpr auto is_mul_safe(unwrapped_t lhs, unwrapped_t rhs) -> bool
+        static constexpr auto is_mul_safe(unwrapped_type lhs, unwrapped_type rhs) -> bool
         {
             return true;
         }
 
-        static constexpr auto is_div_safe(unwrapped_t lhs, unwrapped_t rhs) -> bool
+        static constexpr auto is_div_safe(unwrapped_type lhs, unwrapped_type rhs) -> bool
         {
             return true;
         }
 
-        template <typename num_t>
-        static constexpr auto is_conversion_safe_from(num_t num) -> bool
+        template <typename num_type>
+        static constexpr auto is_conversion_safe_from(num_type num) -> bool
         {
-            return is_conversion_safe_from_unwrapped<typename num_t::unwrapped_t>(num);
+            return is_conversion_safe_from_unwrapped<typename num_type::unwrapped_type>(num);
         }
 
-        template <typename num_t>
-        static constexpr auto is_conversion_safe_from_unwrapped(num_t num) -> bool
-        {
-            return true;
-        }
-
-        template <typename num_t>
-        static constexpr auto is_conversion_safe_to(num_t num) -> bool
+        template <typename num_type>
+        static constexpr auto is_conversion_safe_from_unwrapped(num_type num) -> bool
         {
             return true;
         }
 
-        template <typename num_t>
-        static constexpr auto is_conversion_safe_to_unwrapped(num_t num) -> bool
+        template <typename num_type>
+        static constexpr auto is_conversion_safe_to(num_type num) -> bool
+        {
+            return true;
+        }
+
+        template <typename num_type>
+        static constexpr auto is_conversion_safe_to_unwrapped(num_type num) -> bool
         {
             return true;
         }

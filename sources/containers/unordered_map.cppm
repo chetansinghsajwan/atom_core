@@ -4,6 +4,6 @@ import std;
 
 namespace atom
 {
-    export template <typename key_t, typename value_t>
-    using unordered_map = std::unordered_map<key_t, value_t>;
+    export template <typename key_type, typename value_type>
+    using unordered_map = std::unordered_map<key_type, value_type>;
 }

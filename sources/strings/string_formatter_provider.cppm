@@ -11,17 +11,17 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     /// finds and provides `string_formatter` implementation to use.
     /// --------------------------------------------------------------------------------------------
-    export template <typename in_value_t>
+    export template <typename in_value_type>
     class string_formatter_provider
     {
-        using value_t = typeinfo<in_value_t>::pure_t::value_t;
+        using value_type = typeinfo<in_value_type>::pure_type::value_type;
 
     private:
         static consteval auto _get_type() -> decltype(auto)
         {
-            using _formatter_atom = string_formatter<value_t, string_formatter_level::atom>;
-            using _formatter_fmt = string_formatter<value_t, string_formatter_level::fmt>;
-            using _formatter_user = string_formatter<value_t, string_formatter_level::user>;
+            using _formatter_atom = string_formatter<value_type, string_formatter_level::atom>;
+            using _formatter_fmt = string_formatter<value_type, string_formatter_level::fmt>;
+            using _formatter_user = string_formatter<value_type, string_formatter_level::user>;
 
             using _formatter_atom_typeinfo = typeinfo<_formatter_atom>;
             using _formatter_fmt_typeinfo = typeinfo<_formatter_fmt>;
@@ -49,14 +49,14 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// type of formatter specialization.
         /// ----------------------------------------------------------------------------------------
-        using formatter_t = decltype(_get_type())::value_t;
+        using formatter_type = decltype(_get_type())::value_type;
 
         /// ----------------------------------------------------------------------------------------
         /// returns `true` if an implementation exists.
         /// ----------------------------------------------------------------------------------------
         static consteval auto has() -> bool
         {
-            if constexpr (typeinfo<formatter_t>::is_void)
+            if constexpr (typeinfo<formatter_type>::is_void)
                 return false;
 
             return true;
@@ -68,7 +68,7 @@ namespace atom
         static constexpr auto get() -> decltype(auto)
             requires(has())
         {
-            return formatter_t();
+            return formatter_type();
         }
     };
 }
@@ -77,10 +77,10 @@ namespace fmt
 {
     /// --------------------------------------------------------------------------------------------
     /// this `fmt::formatter` speicialization connects `fmt` with `atom::formatter` implementations.
-    /// calls `atom::formatter` implementation for `value_t`.
+    /// calls `atom::formatter` implementation for `value_type`.
     /// --------------------------------------------------------------------------------------------
-    export template <typename value_t>
-    class formatter<atom::_format_arg_wrapper<value_t>>
+    export template <typename value_type>
+    class formatter<atom::_format_arg_wrapper<value_type>>
     {
     public:
         constexpr auto parse(fmt::format_parse_context& fmt_ctx) ->
@@ -91,7 +91,7 @@ namespace fmt
             return fmt_ctx.begin();
         }
 
-        constexpr auto format(atom::_format_arg_wrapper<value_t>& value,
+        constexpr auto format(atom::_format_arg_wrapper<value_type>& value,
             fmt::format_context& fmt_ctx) const -> typename fmt::format_context::iterator
         {
             atom::string_format_context ctx(fmt_ctx);
@@ -100,6 +100,6 @@ namespace fmt
         }
 
     private:
-        atom::string_formatter_provider<value_t>::formatter_t _formatter;
+        atom::string_formatter_provider<value_type>::formatter_type _formatter;
     };
 }

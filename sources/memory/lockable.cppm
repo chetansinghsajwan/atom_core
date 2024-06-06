@@ -9,8 +9,8 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     /// requirements for lockable type.
     /// --------------------------------------------------------------------------------------------
-    export template <typename lockable_t>
-    concept is_lockable = requires(lockable_t lock)
+    export template <typename lockable_type>
+    concept is_lockable = requires(lockable_type lock)
     {
         { lock.lock() } -> std::same_as<void>;
         { lock.try_lock() } -> std::same_as<bool>;

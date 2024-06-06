@@ -12,19 +12,17 @@ namespace atom
     ///
     /// @todo update docs.
     /// --------------------------------------------------------------------------------------------
-    export template <typename in_value_t>
+    export template <typename in_value_type>
     class array_iterator
     {
-        static_assert(typeinfo<in_value_t>::is_pure, "array_iterator supports only pure types.");
-        static_assert(not typeinfo<in_value_t>::is_void, "array_iterator does not support void.");
+        static_assert(typeinfo<in_value_type>::is_pure, "array_iterator supports only pure types.");
+        static_assert(not typeinfo<in_value_type>::is_void, "array_iterator does not support void.");
 
-        using this_type = array_iterator<in_value_t>;
+        using this_type = array_iterator<in_value_type>;
 
     public:
-        using value_t = in_value_t;
-
-        using value_type = in_value_t;
-        using size_type = std::size_t;
+        using value_type = in_value_type;
+        using size_t = std::size_t;
         using difference_type = std::ptrdiff_t;
         using iterator_category = std::contiguous_iterator_tag;
         using pointer = const value_type*;
@@ -41,7 +39,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # value constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr array_iterator(const value_t* it)
+        constexpr array_iterator(const value_type* it)
             : _it{ it }
         {}
 
@@ -49,7 +47,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// access value by ref.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator*() const -> const value_t&
+        constexpr auto operator*() const -> const value_type&
         {
             return *_it;
         }
@@ -57,7 +55,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// access value by ref.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator->() const -> const value_t*
+        constexpr auto operator->() const -> const value_type*
         {
             return _it;
         }
@@ -65,7 +63,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// access value by index.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator[](isize i) const -> const value_t&
+        constexpr auto operator[](isize i) const -> const value_type&
         {
             return _it[i];
         }
@@ -207,7 +205,7 @@ namespace atom
         }
 
     protected:
-        const value_t* _it;
+        const value_type* _it;
     };
 
     export template <typename value_type>
@@ -222,21 +220,19 @@ namespace atom
     ///
     /// @todo update docs.
     /// --------------------------------------------------------------------------------------------
-    export template <typename in_value_t>
-    class mut_array_iterator: public array_iterator<in_value_t>
+    export template <typename in_value_type>
+    class mut_array_iterator: public array_iterator<in_value_type>
     {
         static_assert(
-            typeinfo<in_value_t>::is_pure, "mut_array_iterator doesn't support non pure types.");
-        static_assert(not typeinfo<in_value_t>::is_void, "mut_array_iterator does not support void.");
+            typeinfo<in_value_type>::is_pure, "mut_array_iterator doesn't support non pure types.");
+        static_assert(not typeinfo<in_value_type>::is_void, "mut_array_iterator does not support void.");
 
-        using this_type = mut_array_iterator<in_value_t>;
-        using base_t = array_iterator<in_value_t>;
+        using this_type = mut_array_iterator<in_value_type>;
+        using base_type = array_iterator<in_value_type>;
 
     public:
-        using value_t = in_value_t;
-
-        using value_type = value_t;
-        using size_type = std::size_t;
+        using value_type = in_value_type;
+        using size_t = std::size_t;
         using difference_type = std::ptrdiff_t;
         using iterator_category = std::contiguous_iterator_tag;
         using pointer = value_type*;
@@ -247,39 +243,39 @@ namespace atom
         /// # default constructor
         /// ----------------------------------------------------------------------------------------
         constexpr mut_array_iterator()
-            : base_t{}
+            : base_type{}
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # value constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr mut_array_iterator(value_t* it)
-            : base_t{ it }
+        constexpr mut_array_iterator(value_type* it)
+            : base_type{ it }
         {}
 
     public:
         /// ----------------------------------------------------------------------------------------
         /// access value by mut ref.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator*() const -> value_t&
+        constexpr auto operator*() const -> value_type&
         {
-            return const_cast<value_t&>(*this->_it);
+            return const_cast<value_type&>(*this->_it);
         }
 
         /// ----------------------------------------------------------------------------------------
         /// access value by mut ref.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator->() const -> value_t*
+        constexpr auto operator->() const -> value_type*
         {
-            return const_cast<value_t*>(this->_it);
+            return const_cast<value_type*>(this->_it);
         }
 
         /// ----------------------------------------------------------------------------------------
         /// access value by index.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator[](isize i) const -> value_t&
+        constexpr auto operator[](isize i) const -> value_type&
         {
-            return const_cast<value_t&>(this->_it[i]);
+            return const_cast<value_type&>(this->_it[i]);
         }
     };
 

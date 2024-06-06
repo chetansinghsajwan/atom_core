@@ -10,10 +10,10 @@ namespace atom
         : public static_array<char, size>
         , public string_extensions<static_string<size>>
     {
-        using base_t = static_array<char, size>;
+        using base_type = static_array<char, size>;
 
     public:
-        using base_t::base_t;
-        using base_t::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 }

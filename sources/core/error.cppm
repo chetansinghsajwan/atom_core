@@ -19,8 +19,8 @@ namespace atom
             : msg{ msg, count }
         {}
 
-        template <typename string_view_t>
-        constexpr error(string_view_t msg)
+        template <typename string_view_type>
+        constexpr error(string_view_type msg)
             : msg{ msg.get_data(), msg.get_count() }
         {}
 

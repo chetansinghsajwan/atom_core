@@ -5,15 +5,15 @@ import :types.typelist;
 
 namespace atom
 {
-    export template <typename... values_t>
-    class typeinfo_list: public typeinfo_list<typelist<values_t...>>
+    export template <typename... values_type>
+    class typeinfo_list: public typeinfo_list<typelist<values_type...>>
     {};
 
-    export template <typename... values_t>
-    class typeinfo_list<typelist<values_t...>>
+    export template <typename... values_type>
+    class typeinfo_list<typelist<values_type...>>
     {
     public:
-        using value_types_list = typelist<values_t...>;
+        using value_types_list = typelist<values_type...>;
 
     public:
         static constexpr bool are_pure =
@@ -74,8 +74,8 @@ namespace atom
         static constexpr bool are_trivially_destructible =
             value_types_list::are_all([](auto info) { return info.is_trivially_destructible; });
 
-        template <typename other_t>
+        template <typename other_type>
         static constexpr bool are_convertible_to = value_types_list::are_all(
-            [](auto info) { return info.template is_convertible_to<other_t>; });
+            [](auto info) { return info.template is_convertible_to<other_type>; });
     };
 }

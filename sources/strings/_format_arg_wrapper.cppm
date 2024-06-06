@@ -11,17 +11,17 @@ namespace atom
     /// this is done to take control of the specializations and prevent ambiguity and hide
     /// implementation details.
     /// --------------------------------------------------------------------------------------------
-    template <typename value_t>
+    template <typename value_type>
     class _format_arg_wrapper
     {
-        static_assert(typeinfo<value_t>::is_pure);
+        static_assert(typeinfo<value_type>::is_pure);
 
     public:
-        _format_arg_wrapper(const value_t& value)
+        _format_arg_wrapper(const value_type& value)
             : value(value)
         {}
 
     public:
-        const value_t& value;
+        const value_type& value;
     };
 }

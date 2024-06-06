@@ -13,11 +13,11 @@ export namespace atom::mock
     /// --------------------------------------------------------------------------------------------
     /// `is_iterator` mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename in_value_t>
+    template <typename in_value_type>
     class iterator
     {
     public:
-        using value_t = in_value_t;
+        using value_type = in_value_type;
 
     public:
         iterator() = delete;
@@ -29,7 +29,7 @@ export namespace atom::mock
         ~iterator() = default;
 
     public:
-        auto value() const -> const value_t&;
+        auto value() const -> const value_type&;
         auto operator==(iterator_end end) const -> bool;
         auto next() -> iterator&;
     };
@@ -37,11 +37,11 @@ export namespace atom::mock
     /// --------------------------------------------------------------------------------------------
     /// `is_mut_iterator` mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename in_value_t>
+    template <typename in_value_type>
     class mut_iterator
     {
     public:
-        using value_t = in_value_t;
+        using value_type = in_value_type;
 
     public:
         mut_iterator() = delete;
@@ -53,8 +53,8 @@ export namespace atom::mock
         ~mut_iterator() = default;
 
     public:
-        auto value() const -> const value_t&;
-        auto mut_value() -> value_t&;
+        auto value() const -> const value_type&;
+        auto mut_value() -> value_type&;
         auto operator==(iterator_end end) const -> bool;
         auto next() -> mut_iterator&;
     };
@@ -62,15 +62,15 @@ export namespace atom::mock
     /// --------------------------------------------------------------------------------------------
     /// `is_unidirectional_iterator` mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename in_value_t>
+    template <typename in_value_type>
     class unidirectional_iterator
     {
     public:
-        using value_t = in_value_t;
+        using value_type = in_value_type;
 
     public:
-        auto value() const -> const value_t&;
-        auto mut_value() -> value_t&;
+        auto value() const -> const value_type&;
+        auto mut_value() -> value_type&;
         auto next() -> unidirectional_iterator&;
         auto operator==(iterator_end end) const -> bool;
     };
@@ -78,15 +78,15 @@ export namespace atom::mock
     /// --------------------------------------------------------------------------------------------
     /// `is_mut_unidirectional_iterator` mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename in_value_t>
+    template <typename in_value_type>
     class mut_unidirectional_iterator
     {
     public:
-        using value_t = in_value_t;
+        using value_type = in_value_type;
 
     public:
-        auto value() const -> const value_t&;
-        auto mut_value() -> value_t&;
+        auto value() const -> const value_type&;
+        auto mut_value() -> value_type&;
         auto next() -> mut_unidirectional_iterator&;
         auto operator==(iterator_end end) const -> bool;
     };
@@ -94,14 +94,14 @@ export namespace atom::mock
     /// --------------------------------------------------------------------------------------------
     /// `is_bidirectional_iterator` mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename in_value_t>
+    template <typename in_value_type>
     class bidirectional_iterator
     {
     public:
-        using value_t = in_value_t;
+        using value_type = in_value_type;
 
     public:
-        auto value() const -> const value_t&;
+        auto value() const -> const value_type&;
         auto next() -> bidirectional_iterator&;
         auto prev() -> bidirectional_iterator&;
         auto operator==(iterator_end end) const -> bool;
@@ -110,15 +110,15 @@ export namespace atom::mock
     /// --------------------------------------------------------------------------------------------
     /// `is_mut_bidirectional_iterator` mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename in_value_t>
+    template <typename in_value_type>
     class mut_bidirectional_iterator
     {
     public:
-        using value_t = in_value_t;
+        using value_type = in_value_type;
 
     public:
-        auto value() const -> const value_t&;
-        auto mut_value() -> value_t&;
+        auto value() const -> const value_type&;
+        auto mut_value() -> value_type&;
         auto next() -> mut_bidirectional_iterator&;
         auto prev() -> mut_bidirectional_iterator&;
         auto operator==(iterator_end end) const -> bool;
@@ -127,14 +127,14 @@ export namespace atom::mock
     /// --------------------------------------------------------------------------------------------
     /// `is_random_access_iterator` mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename in_value_t>
+    template <typename in_value_type>
     class random_access_iterator
     {
     public:
-        using value_t = in_value_t;
+        using value_type = in_value_type;
 
     public:
-        auto value() const -> const value_t&;
+        auto value() const -> const value_type&;
         auto next(usize steps = 1) -> random_access_iterator&;
         auto prev(usize steps = 1) -> random_access_iterator&;
         auto operator==(iterator_end end) const -> bool;
@@ -144,15 +144,15 @@ export namespace atom::mock
     /// --------------------------------------------------------------------------------------------
     /// `is_mut_random_access_iterator` mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename in_value_t>
+    template <typename in_value_type>
     class mut_random_access_iterator
     {
     public:
-        using value_t = in_value_t;
+        using value_type = in_value_type;
 
     public:
-        auto value() const -> const value_t&;
-        auto mut_value() -> value_t&;
+        auto value() const -> const value_type&;
+        auto mut_value() -> value_type&;
         auto next(usize steps = 1) -> mut_random_access_iterator&;
         auto prev(usize steps = 1) -> mut_random_access_iterator&;
         auto operator==(iterator_end end) const -> bool;
@@ -162,15 +162,15 @@ export namespace atom::mock
     /// --------------------------------------------------------------------------------------------
     /// `is_array_iterator` mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename in_value_t>
+    template <typename in_value_type>
     class array_iterator
     {
     public:
-        using value_t = in_value_t;
+        using value_type = in_value_type;
 
     public:
-        auto value() const -> const value_t&;
-        auto get_data() const -> const in_value_t*;
+        auto value() const -> const value_type&;
+        auto get_data() const -> const in_value_type*;
         auto next(usize steps = 1) -> array_iterator&;
         auto prev(usize steps = 1) -> array_iterator&;
         auto operator==(array_iterator end) const -> bool;
@@ -180,17 +180,17 @@ export namespace atom::mock
     /// --------------------------------------------------------------------------------------------
     /// `is_mut_array_iterator` mock object.
     /// --------------------------------------------------------------------------------------------
-    template <typename in_value_t>
+    template <typename in_value_type>
     class mut_array_iterator
     {
     public:
-        using value_t = in_value_t;
+        using value_type = in_value_type;
 
     public:
-        auto value() const -> const value_t&;
-        auto mut_value() -> value_t&;
-        auto get_data() const -> const in_value_t*;
-        auto get_mut_data() -> in_value_t*;
+        auto value() const -> const value_type&;
+        auto mut_value() -> value_type&;
+        auto get_data() const -> const in_value_type*;
+        auto get_mut_data() -> in_value_type*;
         auto next(usize steps = 1) -> mut_array_iterator&;
         auto prev(usize steps = 1) -> mut_array_iterator&;
         auto operator==(mut_array_iterator end) const -> bool;

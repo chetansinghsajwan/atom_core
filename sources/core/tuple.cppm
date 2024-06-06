@@ -4,9 +4,9 @@ import std;
 
 namespace atom
 {
-    export template <typename... value_ts>
-    using tuple = std::tuple<value_ts...>;
+    export template <typename... value_types>
+    using tuple = std::tuple<value_types...>;
 
-    export template <typename... value_ts>
-    using pair = std::pair<value_ts...>;
+    export template <typename... value_types>
+    using pair = std::pair<value_types...>;
 }

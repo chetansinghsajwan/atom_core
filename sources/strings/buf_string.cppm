@@ -5,15 +5,15 @@ import :strings.string_extensions;
 
 namespace atom
 {
-    export template <usize buf_size, typename allocator_t>
+    export template <usize buf_size, typename allocator_type>
     class buf_string
-        : public buf_array<char, buf_size, allocator_t>
-        , public string_extensions<buf_string<buf_size, allocator_t>>
+        : public buf_array<char, buf_size, allocator_type>
+        , public string_extensions<buf_string<buf_size, allocator_type>>
     {
-        using base_t = buf_array<char, buf_size, allocator_t>;
+        using base_type = buf_array<char, buf_size, allocator_type>;
 
     public:
-        using base_t::base_t;
-        using base_t::operator=;
+        using base_type::base_type;
+        using base_type::operator=;
     };
 }

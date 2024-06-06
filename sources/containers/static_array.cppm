@@ -6,54 +6,54 @@ import :ranges;
 
 namespace atom
 {
-    export template <typename in_elem_t, usize in_count>
+    export template <typename in_elem_type, usize in_count>
     class static_array
     {
     public:
-        using value_t = in_elem_t;
-        using iterator_t = array_iterator<value_t>;
-        using iterator_end_t = iterator_t;
-        using mut_iterator_t = mut_array_iterator<value_t>;
-        using mut_iterator_end_t = mut_iterator_t;
+        using value_type = in_elem_type;
+        using iterator_type = array_iterator<value_type>;
+        using iterator_end_type = iterator_type;
+        using mut_iterator_type = mut_array_iterator<value_type>;
+        using mut_iterator_end_type = mut_iterator_type;
 
     public:
         constexpr static_array() = default;
 
         template <usize other_count>
-        constexpr static_array(const value_t (&arr)[other_count])
+        constexpr static_array(const value_type (&arr)[other_count])
             requires(other_count <= in_count)
             : _arr{ arr }
         {}
 
-        template <typename... arg_ts>
-        constexpr static_array(arg_ts&&... args)
-            requires(typelist<arg_ts...>::info_t::template are_convertible_to<value_t>)
-                    and (typelist<arg_ts...>::count <= in_count)
+        template <typename... arg_types>
+        constexpr static_array(arg_types&&... args)
+            requires(typelist<arg_types...>::info_type::template are_convertible_to<value_type>)
+                    and (typelist<arg_types...>::count <= in_count)
             : _arr{ 0 }
         {}
 
     public:
-        constexpr auto operator[](usize i) -> value_t&
+        constexpr auto operator[](usize i) -> value_type&
         {
             return _arr[i];
         }
 
-        constexpr auto operator[](usize i) const -> const value_t&
+        constexpr auto operator[](usize i) const -> const value_type&
         {
             return _arr[i];
         }
 
-        constexpr auto get_data() -> value_t*
+        constexpr auto get_data() -> value_type*
         {
             return _arr;
         }
 
-        constexpr auto get_data() const -> const value_t*
+        constexpr auto get_data() const -> const value_type*
         {
             return _arr;
         }
 
-        constexpr auto get_mut_data() -> value_t*
+        constexpr auto get_mut_data() -> value_type*
         {
             return _arr;
         }
@@ -63,27 +63,27 @@ namespace atom
             return in_count;
         }
 
-        constexpr auto get_iterator() const -> iterator_t
+        constexpr auto get_iterator() const -> iterator_type
         {
-            return iterator_t{ _arr };
+            return iterator_type{ _arr };
         }
 
-        constexpr auto get_iterator_end() const -> iterator_end_t
+        constexpr auto get_iterator_end() const -> iterator_end_type
         {
-            return iterator_end_t{ _arr + in_count };
+            return iterator_end_type{ _arr + in_count };
         }
 
-        constexpr auto get_mut_iterator() -> mut_iterator_t
+        constexpr auto get_mut_iterator() -> mut_iterator_type
         {
-            return mut_iterator_t{ _arr };
+            return mut_iterator_type{ _arr };
         }
 
-        constexpr auto get_mut_iterator_end() -> mut_iterator_end_t
+        constexpr auto get_mut_iterator_end() -> mut_iterator_end_type
         {
-            return mut_iterator_end_t{ _arr + in_count };
+            return mut_iterator_end_type{ _arr + in_count };
         }
 
     private:
-        value_t _arr[in_count];
+        value_type _arr[in_count];
     };
 }

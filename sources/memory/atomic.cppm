@@ -4,6 +4,6 @@ import std;
 
 namespace atom
 {
-    export template <typename value_t>
-    using atomic = std::atomic<value_t>;
+    export template <typename value_type>
+    using atomic = std::atomic<value_type>;
 }
