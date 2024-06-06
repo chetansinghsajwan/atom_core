@@ -244,7 +244,8 @@ namespace atom::filesystem
         {
             contract_debug_expects(not is_closed(), "the file is closed.");
 
-            fmt::print(_file, _convert_format_string_atom_to_fmt(fmt), fowrard<arg_types>(args)...);
+            fmt::print(_file, _convert_format_string_atom_to_fmt<arg_types...>(fmt),
+                _format_arg_wrapper(forward<arg_types>(args))...);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -255,8 +256,8 @@ namespace atom::filesystem
         {
             contract_debug_expects(not is_closed(), "the file is closed.");
 
-            fmt::println(
-                _file, _convert_format_string_atom_to_fmt(fmt), fowrard<arg_types>(args)...);
+            fmt::println(_file, _convert_format_string_atom_to_fmt<arg_types...>(fmt),
+                _format_arg_wrapper(forward<arg_types>(args))...);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -452,12 +453,12 @@ namespace atom::filesystem
         open_flags _flags;
     };
 
-    auto read_file_str(string_view path) -> result<string, filesystem_error>
+    export auto read_file_str(string_view path) -> result<string, filesystem_error>
     {
         result<file, filesystem_error, invalid_options_error> result =
             file::open(path, file::open_flags::read);
 
-        contract_asserts(result.is_error<invalid_options_error>());
+        contract_asserts(not result.is_error<invalid_options_error>());
 
         if (result.is_value())
         {
@@ -468,12 +469,12 @@ namespace atom::filesystem
         return result.get_error<filesystem_error>();
     }
 
-    auto write_file_str(string_view path, string_view str) -> result<void, filesystem_error>
+    export auto write_file_str(string_view path, string_view str) -> result<void, filesystem_error>
     {
         result<file, filesystem_error, invalid_options_error> result =
             file::open(path, file::open_flags::write | file::open_flags::create);
 
-        contract_asserts(result.is_error<invalid_options_error>());
+        contract_asserts(not result.is_error<invalid_options_error>());
 
         if (result.is_value())
         {
@@ -486,13 +487,14 @@ namespace atom::filesystem
         return result.get_error<filesystem_error>();
     }
 
-    template <typename... arg_types>
-    auto write_file_fmt(string_view path, format_string<arg_types...> fmt, arg_types&&... args) -> result<void, filesystem_error>
+    export template <typename... arg_types>
+    auto write_file_fmt(string_view path, format_string<arg_types...> fmt,
+        arg_types&&... args) -> result<void, filesystem_error>
     {
         result<file, filesystem_error, invalid_options_error> result =
             file::open(path, file::open_flags::write | file::open_flags::create);
 
-        contract_asserts(result.is_error<invalid_options_error>());
+        contract_asserts(not result.is_error<invalid_options_error>());
 
         if (result.is_value())
         {
