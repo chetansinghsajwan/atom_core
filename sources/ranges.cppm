@@ -1,7 +1,6 @@
 export module atom.core:ranges;
 
 export import :ranges.array_iterator;
-export import :ranges.range_literatoral;
 export import :ranges.iterator_requirements;
 export import :ranges.range_requirements;
 export import :ranges.range_extensions;
