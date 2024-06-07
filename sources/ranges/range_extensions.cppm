@@ -371,12 +371,53 @@ export namespace atom::ranges
     /// constant.
     /// ----------------------------------------------------------------------------------------
     template <typename range_type>
+    constexpr auto get_back(range_type& range) -> value_type<range_type>&
+        requires is_mut_array_range<range_type>
+    {
+        contract_debug_expects(not is_empty(range), "range is empty.");
+
+        return _impl_type<range_type>::get_back_mut(range);
+    }
+
+    /// ----------------------------------------------------------------------------------------
+    /// access last element.
+    ///
+    /// # time complexity
+    /// constant.
+    /// ----------------------------------------------------------------------------------------
+    template <typename range_type>
     constexpr auto get_back(const range_type& range) -> const value_type<range_type>&
         requires is_array_range<range_type>
     {
         contract_debug_expects(not is_empty(range), "range is empty.");
 
         return _impl_type<range_type>::get_back(range);
+    }
+
+    struct get_back_closure
+    {
+        template <typename range_type>
+        constexpr auto operator|(range_type& range) const -> value_type<range_type>&
+            requires is_mut_array_range<range_type>
+        {
+            contract_debug_expects(not is_empty(range), "range is empty.");
+
+            return ranges::get_back(range);
+        }
+
+        template <typename range_type>
+        constexpr auto operator|(const range_type& range) const -> const value_type<range_type>&
+            requires is_array_range<range_type>
+        {
+            contract_debug_expects(not ranges::is_empty(range), "range is empty.");
+
+            return ranges::get_back(range);
+        }
+    };
+
+    constexpr auto get_back() -> get_back_closure
+    {
+        return {};
     }
 
     /// ----------------------------------------------------------------------------------------

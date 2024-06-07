@@ -154,7 +154,7 @@ namespace atom
         template <typename this_range_type>
         static constexpr auto get_back_mut(this_range_type& this_range) -> value_type&
         {
-            return get_data(this_range)[get_count(this_range) - 1];
+            return get_mut_data(this_range)[get_count(this_range) - 1];
         }
 
         template <typename this_range_type>
