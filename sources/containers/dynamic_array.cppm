@@ -126,7 +126,7 @@ namespace atom
         /// # named constructor
         /// ----------------------------------------------------------------------------------------
         constexpr dynamic_array(_with_capacity_type, usize capacity)
-            : _impl{ _with_count, capacity }
+            : _impl{ _with_capacity, capacity }
         {}
 
         /// ----------------------------------------------------------------------------------------
