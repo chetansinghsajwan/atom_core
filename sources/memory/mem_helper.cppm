@@ -78,7 +78,7 @@ namespace atom
             contract_debug_expects(src != nullptr);
             contract_debug_expects(dest != nullptr);
             contract_debug_expects(((byte*)dest + src_size) <= src
-                                   and ((byte*)dest + src_size) > ((byte*)src + src_size),
+                                       and ((byte*)dest + src_size) > ((byte*)src + src_size),
                 "dest mem block overlaps src mem block.");
 
             _bwd_copy(src, src_size, dest);
@@ -280,7 +280,7 @@ namespace atom
 
         static constexpr auto _bwd_copy(const void* src, usize count, void* dest) -> void
         {
-            std::copy_backward((byte*)src, (byte*)src + count, (byte*)dest);
+            std::copy_backward((byte*)src, (byte*)src + count, (byte*)dest + count);
         }
 
         static constexpr auto _shift_fwd(void* mem, usize mem_size, usize steps) -> void
