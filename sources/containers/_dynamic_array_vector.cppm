@@ -48,6 +48,10 @@ namespace atom
             : _vector{ move(it), move(it_end) }
         {}
 
+        constexpr _dynamic_array_impl_vector(create_from_raw_tag, const value_type* arr, usize count)
+            : _vector{ arr, arr + count }
+        {}
+
         constexpr _dynamic_array_impl_vector(_with_count_type, usize count)
             : _vector(count)
         {}

@@ -14,18 +14,18 @@ namespace atom
     /// - write time complexities after writing implementation.
     /// - add note for case, where element or elements to be inserted are from this array.
     /// --------------------------------------------------------------------------------------------
-    export template <typename in_elem_type, typename in_allocator_type = default_mem_allocator>
+    export template <typename in_value_type, typename in_allocator_type = default_mem_allocator>
     class dynamic_array
     {
-        static_assert(typeinfo<in_elem_type>::is_pure, "dynamic_array does not non pure types.");
-        static_assert(not typeinfo<in_elem_type>::is_void, "dynamic_array does not support void.");
+        static_assert(typeinfo<in_value_type>::is_pure, "dynamic_array does not non pure types.");
+        static_assert(not typeinfo<in_value_type>::is_void, "dynamic_array does not support void.");
 
     private:
-        using this_type = dynamic_array<in_elem_type, in_allocator_type>;
-        using _impl_type = _dynamic_array_impl_vector<in_elem_type, in_allocator_type>;
+        using this_type = dynamic_array<in_value_type, in_allocator_type>;
+        using _impl_type = _dynamic_array_impl_vector<in_value_type, in_allocator_type>;
 
     public:
-        using value_type = in_elem_type;
+        using value_type = in_value_type;
         using allocator_type = in_allocator_type;
         using iterator_type = array_iterator<value_type>;
         using iterator_end_type = iterator_type;
@@ -127,6 +127,13 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr dynamic_array(_with_capacity_type, usize capacity)
             : _impl{ _with_capacity, capacity }
+        {}
+
+        /// ----------------------------------------------------------------------------------------
+        /// # named constructor
+        /// ----------------------------------------------------------------------------------------
+        constexpr dynamic_array(create_from_raw_tag, const value_type* arr, usize count)
+            : _impl{ create_from_raw, arr, count }
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -506,11 +513,11 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto remove_one_find(const value_type& elem) -> bool
+        constexpr auto remove_one_find(const value_type& value) -> bool
         {
             for (usize i = 0; i < _impl.get_count(); i++)
             {
-                if (_impl.get_data()[i] == elem)
+                if (_impl.get_data()[i] == value)
                 {
                     _impl.remove_at(i);
                     return true;
@@ -523,12 +530,12 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto remove_all_find(const value_type& elem) -> usize
+        constexpr auto remove_all_find(const value_type& value) -> usize
         {
             usize removed_count = 0;
             for (usize i = 0; i < _impl.get_count(); i++)
             {
-                if (_impl.get_data()[i] == elem)
+                if (_impl.get_data()[i] == value)
                 {
                     _impl.remove_at(i);
                     i--;
