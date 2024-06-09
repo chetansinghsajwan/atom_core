@@ -49,6 +49,27 @@ namespace atom::filesystem
         {}
     };
 
+    /// --------------------------------------------------------------------------------------------
+    /// error representing no entry.
+    /// --------------------------------------------------------------------------------------------
+    export class noentry_error: public error
+    {
+    public:
+        static constexpr string_view error_msg = "no such file or directory.";
+
+    public:
+        noentry_error(string path)
+            : error{ error_msg }
+            , path{ move(path) }
+        {}
+
+    public:
+        string path;
+    };
+
+    /// --------------------------------------------------------------------------------------------
+    ///
+    /// --------------------------------------------------------------------------------------------
     export class file
     {
     public:
@@ -64,6 +85,12 @@ namespace atom::filesystem
             append = 1 << 4,    // write to the file from the last
             binary = 1 << 5,    // open file in binary mode.
         };
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        using open_error = result<file, filesystem_error, noentry_error, invalid_options_error>;
+        using reopen_error = result<void, filesystem_error, noentry_error, invalid_options_error>;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -99,8 +126,7 @@ namespace atom::filesystem
         ///
         /// @feature add more error types, like `file_already_exists`.
         /// ----------------------------------------------------------------------------------------
-        static auto open(string_view path,
-            open_flags flags) -> result<file, filesystem_error, invalid_options_error>
+        static auto open(string_view path, open_flags flags) -> open_error
         {
             errno = 0;
 
@@ -114,6 +140,11 @@ namespace atom::filesystem
 
             if (c_file == nullptr)
             {
+                if (errno == ENOENT)
+                {
+                    return noentry_error{ path };
+                }
+
                 return filesystem_error{ errno };
             }
 
@@ -124,7 +155,7 @@ namespace atom::filesystem
         /// ----------------------------------------------------------------------------------------
         /// reopens the file with new flags.
         /// ----------------------------------------------------------------------------------------
-        auto reopen(open_flags flags) -> result<void, filesystem_error, invalid_options_error>
+        auto reopen(open_flags flags) -> reopen_error
         {
             contract_expects(not is_closed(), "the file is closed.");
 
@@ -141,6 +172,11 @@ namespace atom::filesystem
 
             if (_file == nullptr)
             {
+                if (errno == ENOENT)
+                {
+                    return noentry_error{ "" };
+                }
+
                 return filesystem_error{ errno };
             }
 
@@ -453,10 +489,9 @@ namespace atom::filesystem
         open_flags _flags;
     };
 
-    export auto read_file_str(string_view path) -> result<string, filesystem_error>
+    export auto read_file_str(string_view path) -> result<string, filesystem_error, noentry_error>
     {
-        result<file, filesystem_error, invalid_options_error> result =
-            file::open(path, file::open_flags::read);
+        file::open_error result = file::open(path, file::open_flags::read);
 
         contract_asserts(not result.is_error<invalid_options_error>());
 
@@ -466,12 +501,16 @@ namespace atom::filesystem
             return file.read_str_all();
         }
 
+        if (result.is_error<noentry_error>())
+            return result.get_error<noentry_error>();
+
         return result.get_error<filesystem_error>();
     }
 
-    export auto write_file_str(string_view path, string_view str) -> result<void, filesystem_error>
+    export auto write_file_str(
+        string_view path, string_view str) -> result<void, filesystem_error, noentry_error>
     {
-        result<file, filesystem_error, invalid_options_error> result =
+        file::open_error result =
             file::open(path, file::open_flags::write | file::open_flags::create);
 
         contract_asserts(not result.is_error<invalid_options_error>());
@@ -484,14 +523,17 @@ namespace atom::filesystem
             return result_void();
         }
 
+        if (result.is_error<noentry_error>())
+            return result.get_error<noentry_error>();
+
         return result.get_error<filesystem_error>();
     }
 
     export template <typename... arg_types>
     auto write_file_fmt(string_view path, format_string<arg_types...> fmt,
-        arg_types&&... args) -> result<void, filesystem_error>
+        arg_types&&... args) -> result<void, filesystem_error, noentry_error>
     {
-        result<file, filesystem_error, invalid_options_error> result =
+        file::open_error result =
             file::open(path, file::open_flags::write | file::open_flags::create);
 
         contract_asserts(not result.is_error<invalid_options_error>());
@@ -503,6 +545,9 @@ namespace atom::filesystem
 
             return result_void();
         }
+
+        if (result.is_error<noentry_error>())
+            return result.get_error<noentry_error>();
 
         return result.get_error<filesystem_error>();
     }
