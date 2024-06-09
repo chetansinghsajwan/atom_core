@@ -3,7 +3,6 @@ export module atom.core:types.typelist;
 import std;
 import :types.typeutils;
 import :types.typeinfo;
-import :math;
 
 namespace atom
 {
@@ -225,7 +224,7 @@ namespace atom
         class index_of<to_get_type, index>
         {
         public:
-            static constexpr usize value = math::max<usize>();
+            static constexpr usize value = std::numeric_limits<usize>::max();
         };
 
         ////////////////////////////////////////////////////////////////////////////////////////////
@@ -238,7 +237,8 @@ namespace atom
         class has
         {
         public:
-            static constexpr bool value = index_of<in_type, 0, types...>::value != math::max<usize>();
+            static constexpr bool value =
+                index_of<in_type, 0, types...>::value != std::numeric_limits<usize>::max();
         };
 
         ////////////////////////////////////////////////////////////////////////////////////////////
@@ -289,12 +289,14 @@ namespace atom
             using value_type = typelist<>;
         };
 
-        template <template <typename in_type> typename predicate_type, typename in_type, typename... types>
+        template <template <typename in_type> typename predicate_type, typename in_type,
+            typename... types>
         class remove_if<predicate_type, in_type, types...>
         {
         public:
             using value_type = typeutils::conditional_type<predicate_type<in_type>::value,
-                typename add_first<in_type, typename remove_if<predicate_type, types...>::in_type>::value_type,
+                typename add_first<in_type,
+                    typename remove_if<predicate_type, types...>::in_type>::value_type,
                 typename remove_if<predicate_type, types...>::value_type>;
         };
 
@@ -399,8 +401,9 @@ namespace atom
         template <typename replace_type, typename with_type, typename in_type, typename... types>
         class replace_all<replace_type, with_type, in_type, types...>
         {
-            using final_type = typeutils::conditional_type<typeinfo<replace_type>::template is_same_as<in_type>,
-                with_type, in_type>;
+            using final_type =
+                typeutils::conditional_type<typeinfo<replace_type>::template is_same_as<in_type>,
+                    with_type, in_type>;
 
         public:
             using value_type = typename add_first<final_type,
@@ -549,8 +552,8 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename to_replace_type, typename with_type>
-        using replace_all =
-            typename _list_ops_type::template replace_all<to_replace_type, with_type, types...>::value_type;
+        using replace_all = typename _list_ops_type::template replace_all<to_replace_type,
+            with_type, types...>::value_type;
 
         /// ----------------------------------------------------------------------------------------
         /// # to do
@@ -558,7 +561,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename in_type>
             requires(has<in_type>)
-        static constexpr usize index_of = _list_ops_type::template index_of<in_type, 0, types...>::value;
+        static constexpr usize index_of =
+            _list_ops_type::template index_of<in_type, 0, types...>::value;
 
         template <typename function_type>
         static consteval auto for_each(function_type&& func) -> void

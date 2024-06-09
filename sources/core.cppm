@@ -1,6 +1,7 @@
 export module atom.core:core;
 
 export import :core.core;
+export import :core.nums;
 export import :core.bitset;
 export import :core.build_config;
 export import :core.byte;

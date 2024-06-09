@@ -11,7 +11,6 @@ export import :containers;
 export import :strings;
 export import :time;
 export import :hash;
-export import :math;
 export import :filesystem;
 export import :io;
 

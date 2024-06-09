@@ -2,12 +2,12 @@ export module atom.core:core.enums_impl;
 
 import std;
 import magic_enum;
+import :core.nums;
 import :core.tuple;
 import :core.option;
 import :strings.string_view.decl;
 import :containers.array_view.decl;
 import :types;
-import :math;
 
 namespace atom
 {
@@ -122,7 +122,7 @@ namespace atom
 
         static constexpr auto to_index(enum_type value) -> usize
         {
-            return magic_enum::enum_index(value).value_or(math::max<usize>());
+            return magic_enum::enum_index(value).value_or(nums::get_max<usize>());
         }
 
         static constexpr auto to_underlying(enum_type value) -> underlying_type
@@ -141,7 +141,7 @@ namespace atom
         /// @todo implement this. this is just a workaround.
         static consteval auto get_all_flags() -> enum_type
         {
-            return enum_type(math::max<underlying_type>());
+            return enum_type(nums::get_max<underlying_type>());
         }
 
         static constexpr auto add_flags(enum_type lhs, enum_type rhs) -> enum_type

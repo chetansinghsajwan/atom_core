@@ -2,9 +2,9 @@ export module atom.core:core.variant;
 
 import :contracts;
 import :types;
-import :math;
 import :obj_helper;
 import :core.core;
+import :core.nums;
 import :core.static_storage;
 
 /// ------------------------------------------------------------------------------------------------
@@ -70,7 +70,7 @@ namespace atom
 
         static consteval auto get_null_type_index() -> usize
         {
-            return math::max<usize>();
+            return nums::get_max<usize>();
         }
 
         template <usize i>

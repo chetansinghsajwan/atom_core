@@ -2,8 +2,8 @@ export module atom.core:mem_helper;
 
 import std;
 import :core.byte;
+import :core.nums;
 import :core.int_wrapper;
-import :math;
 import :contracts;
 
 #include "atom/core/preprocessors.h"
@@ -53,7 +53,7 @@ namespace atom
         /// @param dest_size: size of the mem block pointed by `dest`.
         /// ----------------------------------------------------------------------------------------
         static constexpr auto fwd_copy_to(const void* src, usize src_size, void* dest,
-            usize dest_size = math::max<usize>()) -> void
+            usize dest_size = nums::get_max<usize>()) -> void
         {
             contract_debug_expects(src != nullptr);
             contract_debug_expects(dest != nullptr);
@@ -73,7 +73,7 @@ namespace atom
         /// @param dest_size: size of the mem block pointed by `dest`.
         /// ----------------------------------------------------------------------------------------
         static constexpr auto bwd_copy_to(const void* src, usize src_size, void* dest,
-            usize dest_size = math::max<usize>()) -> void
+            usize dest_size = nums::get_max<usize>()) -> void
         {
             contract_debug_expects(src != nullptr);
             contract_debug_expects(dest != nullptr);
@@ -94,7 +94,7 @@ namespace atom
         /// @param dest_size: size of the mem block pointed by `dest`.
         /// ----------------------------------------------------------------------------------------
         static constexpr auto copy_to(const void* src, usize src_size, void* dest,
-            usize dest_size = math::max<usize>()) -> void
+            usize dest_size = nums::get_max<usize>()) -> void
         {
             contract_debug_expects(src != nullptr);
             contract_debug_expects(dest != nullptr);
@@ -211,7 +211,7 @@ namespace atom
             }
             else
             {
-                _shift_bwd(mem, mem_size, math::abs(steps));
+                _shift_bwd(mem, mem_size, nums::get_abs(steps));
             }
         }
 
@@ -263,7 +263,7 @@ namespace atom
             }
             else
             {
-                _shift_bwd(mem, mem_size, math::abs(steps));
+                _shift_bwd(mem, mem_size, nums::get_abs(steps));
             }
         }
 
