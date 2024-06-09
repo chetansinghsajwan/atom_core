@@ -457,28 +457,31 @@ namespace atom::filesystem
         /// ----------------------------------------------------------------------------------------
         static constexpr auto _get_mode(open_flags flags) -> const char*
         {
-            switch (flags)
+            switch (usize(flags))
             {
-                case open_flags::read:                                               return "r";
-                case open_flags::write:
-                case open_flags::write | open_flags::create:
-                case open_flags::write | open_flags::overwrite:                      return "w";
-                case open_flags::append:                                             return "a";
-                case open_flags::read | open_flags::binary:                          return "rb";
-                case open_flags::write | open_flags::binary:
-                case open_flags::write | open_flags::create | open_flags::binary:
-                case open_flags::write | open_flags::overwrite | open_flags::binary: return "wb";
-                case open_flags::append | open_flags::binary:                        return "ab";
-                case open_flags::read | open_flags::write:                           return "r+";
-                case open_flags::read | open_flags::write | open_flags::binary:      return "r+b";
-                case open_flags::read | open_flags::write | open_flags::overwrite:
-                case open_flags::read | open_flags::write | open_flags::create:      return "w+";
-                case open_flags::read | open_flags::write | open_flags::overwrite
-                    | open_flags::binary:
-                case open_flags::read | open_flags::write | open_flags::create | open_flags::binary:
+                case usize(open_flags::read):                          return "r";
+                case usize(open_flags::write):
+                case usize(open_flags::write | open_flags::create):
+                case usize(open_flags::write | open_flags::overwrite): return "w";
+                case usize(open_flags::append):                        return "a";
+                case usize(open_flags::read | open_flags::binary):     return "rb";
+                case usize(open_flags::write | open_flags::binary):
+                case usize(open_flags::write | open_flags::create | open_flags::binary):
+                case usize(open_flags::write | open_flags::overwrite | open_flags::binary):
+                    return "wb";
+                case usize(open_flags::append | open_flags::binary):                      return "ab";
+                case usize(open_flags::read | open_flags::write):                         return "r+";
+                case usize(open_flags::read | open_flags::write | open_flags::binary):    return "r+b";
+                case usize(open_flags::read | open_flags::write | open_flags::overwrite):
+                case usize(open_flags::read | open_flags::write | open_flags::create):    return "w+";
+                case usize(open_flags::read | open_flags::write | open_flags::overwrite
+                           | open_flags::binary):
+                case usize(
+                    open_flags::read | open_flags::write | open_flags::create | open_flags::binary):
                     return "w+b";
-                case open_flags::read | open_flags::write | open_flags::append: return "a+";
-                case open_flags::read | open_flags::write | open_flags::append | open_flags::binary:
+                case usize(open_flags::read | open_flags::write | open_flags::append): return "a+";
+                case usize(
+                    open_flags::read | open_flags::write | open_flags::append | open_flags::binary):
                     return "a+b";
                 default: return nullptr;
             }
