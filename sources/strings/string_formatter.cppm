@@ -1,6 +1,7 @@
 export module atom.core:strings.string_formatter;
 
 import fmt;
+import :core;
 import :types;
 import :strings.string_view;
 import :strings.string_format_context;
@@ -84,7 +85,7 @@ namespace atom
     public:
         constexpr auto format(enum_type value, string_format_context& ctx) const -> void
         {
-            // base_type::format(enums::to_string_view(value), ctx);
+            base_type::format(enums::to_string_view(value), ctx);
         }
     };
 }

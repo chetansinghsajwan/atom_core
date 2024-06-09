@@ -5,6 +5,7 @@ export import std;
 export import :types;
 export import :contracts;
 export import :core;
+export import :core.enums.final;
 export import :ranges;
 export import :containers;
 export import :strings;
