@@ -12,7 +12,11 @@ import :types;
 namespace atom
 {
     template <typename enum_type>
-    constexpr auto _enum_impl_is_flags() -> bool;
+    class _enum_impl_is_flags
+    {
+    public:
+        static constexpr bool value = false;
+    };
 
     template <typename enum_type, bool in_is_flags>
     class _enums_impl
@@ -184,7 +188,7 @@ namespace atom
 }
 
 template <typename enum_type>
-    requires(atom::_enums_impl<enum_type, true>::is_enum())
+    requires(atom::_enum_impl_is_flags<enum_type>::value)
 struct magic_enum::customize::enum_range<enum_type>
 {
     static constexpr bool is_flags = true;

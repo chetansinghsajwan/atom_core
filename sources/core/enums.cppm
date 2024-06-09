@@ -246,7 +246,7 @@ export namespace atom::enums
     /// --------------------------------------------------------------------------------------------
     template <typename enum_type>
     constexpr auto add_flags(enum_type lhs, enum_type rhs) -> enum_type
-        requires is_enum<enum_type> and is_flags<enum_type>
+        requires is_enum<enum_type>
     {
         return _enums_impl<enum_type, is_flags<enum_type>>::add_flags(lhs, rhs);
     }
@@ -256,7 +256,7 @@ export namespace atom::enums
     /// --------------------------------------------------------------------------------------------
     template <typename enum_type>
     constexpr auto remove_flags(enum_type lhs, enum_type rhs) -> enum_type
-        requires is_enum<enum_type> and is_flags<enum_type>
+        requires is_enum<enum_type>
     {
         return _enums_impl<enum_type, is_flags<enum_type>>::remove_flags(lhs, rhs);
     }
@@ -266,7 +266,7 @@ export namespace atom::enums
     /// --------------------------------------------------------------------------------------------
     template <typename enum_type>
     constexpr auto get_common_flags(enum_type lhs, enum_type rhs) -> enum_type
-        requires is_enum<enum_type> and is_flags<enum_type>
+        requires is_enum<enum_type>
     {
         return _enums_impl<enum_type, is_flags<enum_type>>::get_common_flags(lhs, rhs);
     }
@@ -276,7 +276,7 @@ export namespace atom::enums
     /// --------------------------------------------------------------------------------------------
     template <typename enum_type>
     constexpr auto get_uncommon_flags(enum_type lhs, enum_type rhs) -> enum_type
-        requires is_enum<enum_type> and is_flags<enum_type>
+        requires is_enum<enum_type>
     {
         return _enums_impl<enum_type, is_flags<enum_type>>::get_uncommon_flags(lhs, rhs);
     }
@@ -286,7 +286,7 @@ export namespace atom::enums
     /// --------------------------------------------------------------------------------------------
     template <typename enum_type>
     constexpr auto get_reverse_flags(enum_type flags) -> enum_type
-        requires is_enum<enum_type> and is_flags<enum_type>
+        requires is_enum<enum_type>
     {
         return _enums_impl<enum_type, is_flags<enum_type>>::get_reverse_flags(flags);
     }
@@ -296,7 +296,7 @@ export namespace atom::enums
     /// --------------------------------------------------------------------------------------------
     template <typename enum_type>
     constexpr auto has_all_flags(enum_type lhs, enum_type rhs) -> bool
-        requires is_enum<enum_type> and is_flags<enum_type>
+        requires is_enum<enum_type>
     {
         return _enums_impl<enum_type, is_flags<enum_type>>::has_all_flags(lhs, rhs);
     }
@@ -306,7 +306,7 @@ export namespace atom::enums
     /// --------------------------------------------------------------------------------------------
     template <typename enum_type>
     constexpr auto has_any_flags(enum_type lhs, enum_type rhs) -> bool
-        requires is_enum<enum_type> and is_flags<enum_type>
+        requires is_enum<enum_type>
     {
         return _enums_impl<enum_type, is_flags<enum_type>>::has_any_flags(lhs, rhs);
     }
@@ -319,7 +319,7 @@ export namespace atom
     /// --------------------------------------------------------------------------------------------
     template <typename enum_type>
     constexpr auto operator~(enum_type flags) -> enum_type
-        requires enums::is_enum<enum_type> and enums::is_flags<enum_type>
+        requires enums::is_enum<enum_type>
     {
         return enums::get_reverse_flags(flags);
     }
@@ -329,7 +329,7 @@ export namespace atom
     /// --------------------------------------------------------------------------------------------
     template <typename enum_type>
     constexpr auto operator|(enum_type lhs, enum_type rhs) -> enum_type
-        requires enums::is_enum<enum_type> and enums::is_flags<enum_type>
+        requires enums::is_enum<enum_type>
     {
         return enums::add_flags(lhs, rhs);
     }
@@ -339,7 +339,7 @@ export namespace atom
     /// --------------------------------------------------------------------------------------------
     template <typename enum_type>
     constexpr auto operator|=(enum_type& lhs, enum_type rhs) -> enum_type&
-        requires enums::is_enum<enum_type> and enums::is_flags<enum_type>
+        requires enums::is_enum<enum_type>
     {
         return lhs = lhs | rhs;
     }
@@ -349,7 +349,7 @@ export namespace atom
     /// --------------------------------------------------------------------------------------------
     template <typename enum_type>
     constexpr auto operator&(enum_type lhs, enum_type rhs) -> enum_type
-        requires enums::is_enum<enum_type> and enums::is_flags<enum_type>
+        requires enums::is_enum<enum_type>
     {
         return enums::get_common_flags(lhs, rhs);
     }
@@ -359,7 +359,7 @@ export namespace atom
     /// --------------------------------------------------------------------------------------------
     template <typename enum_type>
     constexpr auto operator&=(enum_type& lhs, enum_type rhs) -> enum_type&
-        requires enums::is_enum<enum_type> and enums::is_flags<enum_type>
+        requires enums::is_enum<enum_type>
     {
         return lhs = lhs & rhs;
     }
@@ -369,7 +369,7 @@ export namespace atom
     /// --------------------------------------------------------------------------------------------
     template <typename enum_type>
     constexpr auto operator^(enum_type lhs, enum_type rhs) -> enum_type
-        requires enums::is_enum<enum_type> and enums::is_flags<enum_type>
+        requires enums::is_enum<enum_type>
     {
         return enums::get_uncommon_flags(lhs, rhs);
     }
@@ -379,19 +379,30 @@ export namespace atom
     /// --------------------------------------------------------------------------------------------
     template <typename enum_type>
     constexpr auto operator^=(enum_type& lhs, enum_type rhs) -> enum_type&
-        requires enums::is_enum<enum_type> and enums::is_flags<enum_type>
+        requires enums::is_enum<enum_type>
     {
         return lhs = lhs ^ rhs;
     }
 }
 
-export namespace atom
+namespace atom
 {
-    using magic_enum::bitwise_operators::operator~;
-    using magic_enum::bitwise_operators::operator|;
-    using magic_enum::bitwise_operators::operator|=;
-    using magic_enum::bitwise_operators::operator&;
-    using magic_enum::bitwise_operators::operator&=;
-    using magic_enum::bitwise_operators::operator^;
-    using magic_enum::bitwise_operators::operator^=;
+    template <typename enum_type>
+        requires enums::is_flags<enum_type>
+    class _enum_impl_is_flags<enum_type>
+    {
+    public:
+        static constexpr bool value = true;
+    };
 }
+
+// export namespace atom
+// {
+//     using magic_enum::bitwise_operators::operator~;
+//     using magic_enum::bitwise_operators::operator|;
+//     using magic_enum::bitwise_operators::operator|=;
+//     using magic_enum::bitwise_operators::operator&;
+//     using magic_enum::bitwise_operators::operator&=;
+//     using magic_enum::bitwise_operators::operator^;
+//     using magic_enum::bitwise_operators::operator^=;
+// }
