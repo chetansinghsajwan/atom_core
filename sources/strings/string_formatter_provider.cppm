@@ -56,10 +56,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         static consteval auto has() -> bool
         {
-            if constexpr (typeinfo<formatter_type>::is_void)
-                return false;
-
-            return true;
+            return not typeinfo<formatter_type>::is_void;
         }
 
         /// ----------------------------------------------------------------------------------------

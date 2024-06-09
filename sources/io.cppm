@@ -22,18 +22,4 @@ export namespace atom::io
     {
         stdout.write_line_fmt(fmt, forward<arg_types>(args)...);
     }
-
-    template <typename value_type>
-    auto print(const value_type& value)
-        requires(string_formatter_provider<value_type>::has())
-    {
-        stdout.write_str("{}", value);
-    }
-
-    template <typename value_type>
-    auto println(const value_type& value)
-        requires(string_formatter_provider<value_type>::has())
-    {
-        stdout.write_line("{}", value);
-    }
 }
