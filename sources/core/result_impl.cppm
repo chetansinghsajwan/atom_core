@@ -63,12 +63,12 @@ namespace atom
         constexpr result_impl(this_type&& that) = default;
 
         constexpr result_impl(move_tag, this_type&& that)
-            : _variant(move(that))
+            : _variant(move(that._variant))
         {}
 
         template <typename that_type>
         constexpr result_impl(move_tag, that_type&& that)
-            : _variant(move(that))
+            : _variant(move(that._variant))
         {}
 
         constexpr result_impl(value_tag, const value_type& value)
@@ -162,15 +162,15 @@ namespace atom
         }
 
         template <typename error_type>
-        constexpr auto set_error(this this_type& self, const error_type& error) -> void
+        constexpr auto set_error(const error_type& error) -> void
         {
-            self._variant.template emplace<error_type>(error);
+            _variant.template emplace<error_type>(error);
         }
 
         template <typename error_type>
-        constexpr auto set_error(this this_type& self, error_type&& error) -> void
+        constexpr auto set_error(error_type&& error) -> void
         {
-            self._variant.template emplace<error_type>(move(error));
+            _variant.template emplace<error_type>(move(error));
         }
 
         template <typename error_type>
