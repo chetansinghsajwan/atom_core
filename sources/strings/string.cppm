@@ -15,6 +15,13 @@ namespace atom
         using base_type = buf_string<40, default_mem_allocator>;
 
     public:
+        /// ----------------------------------------------------------------------------------------
+        /// # named constructor
+        /// ----------------------------------------------------------------------------------------
+        constexpr string(create_from_raw_tag, const char* str)
+            : base_type{ create_from_raw, str, _find_str_len(str) }
+        {}
+
         constexpr string(create_with_join_tag, const char* str0, const char* str1)
         {
             insert_range_back(ranges::from(str0));
@@ -58,6 +65,24 @@ namespace atom
             format_to(out, fmt, atom::forward<arg_types>(args)...);
 
             return out;
+        }
+
+    private:
+        /// --------------------------------------------------------------------------------------------
+        /// # to do
+        ///
+        /// - review this implementation after implementing character encoding.
+        /// --------------------------------------------------------------------------------------------
+        static constexpr auto _find_str_len(const char* str) -> usize
+        {
+            usize len = 0;
+            while (*str != '\0')
+            {
+                str++;
+                len++;
+            }
+
+            return len;
         }
     };
 }
