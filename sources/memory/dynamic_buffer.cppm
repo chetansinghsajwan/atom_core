@@ -7,10 +7,10 @@ import :mem_helper;
 
 namespace atom
 {
-    export template <typename allocator_type = default_mem_allocator>
-    class dynamic_buffer
+    export class dynamic_buffer
     {
         using this_type = dynamic_buffer;
+        using allocator_type = default_mem_allocator;
 
     public:
         constexpr dynamic_buffer()
@@ -33,7 +33,8 @@ namespace atom
 
         constexpr dynamic_buffer& operator=(const this_type& that)
         {
-            _set_data(that._data.that._size);
+            _set_data(that._data, that._size);
+            return *this;
         }
 
         constexpr dynamic_buffer(this_type&& that)
@@ -61,6 +62,8 @@ namespace atom
             that._data = nullptr;
             that._size = 0;
             that._capacity = 0;
+
+            return *this;
         }
 
         constexpr dynamic_buffer(_with_size_type, usize size)
@@ -69,7 +72,7 @@ namespace atom
             , _capacity{ size }
             , _allocator{}
         {
-            _data = _allocator.alloc(size);
+            _data = static_cast<byte*>(_allocator.alloc(_capacity));
         }
 
         template <typename value_type>
