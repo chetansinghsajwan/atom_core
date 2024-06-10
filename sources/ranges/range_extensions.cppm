@@ -6,6 +6,7 @@ import :contracts;
 import :ranges.range_extensions_impl;
 import :ranges.iterator_requirements;
 import :ranges.range_requirements;
+import :ranges.range_conversions;
 
 #include "atom/core/preprocessors.h"
 
@@ -753,6 +754,44 @@ export namespace atom
                          template is_equality_comparable_with<ranges::value_type<that_range_type>>)
     {
         return ranges::_impl_type<range_type>::is_eq(range, that_range);
+    }
+
+    /// ----------------------------------------------------------------------------------------
+    ///
+    /// ----------------------------------------------------------------------------------------
+    template <typename range_type, typename that_range_type>
+    constexpr auto operator!=(const range_type& range, const that_range_type& that_range) -> bool
+        requires ranges::is_range<range_type> and ranges::is_range<that_range_type>
+                 and (typeinfo<ranges::value_type<range_type>>::
+                         template is_equality_comparable_with<ranges::value_type<that_range_type>>)
+    {
+        return not ranges::_impl_type<range_type>::is_eq(range, that_range);
+    }
+
+    /// ----------------------------------------------------------------------------------------
+    ///
+    /// ----------------------------------------------------------------------------------------
+    template <typename range_type, typename that_value_type, usize that_count>
+    constexpr auto operator==(
+        const range_type& range, const that_value_type (&that_arr)[that_count]) -> bool
+        requires ranges::is_range<range_type>
+                 and (typeinfo<ranges::value_type<range_type>>::
+                         template is_equality_comparable_with<that_value_type>)
+    {
+        return ranges::_impl_type<range_type>::is_eq(range, ranges::from(that_arr));
+    }
+
+    /// ----------------------------------------------------------------------------------------
+    ///
+    /// ----------------------------------------------------------------------------------------
+    template <typename range_type, typename that_value_type, usize that_count>
+    constexpr auto operator!=(
+        const range_type& range, const that_value_type (&that_arr)[that_count]) -> bool
+        requires ranges::is_range<range_type>
+                 and (typeinfo<ranges::value_type<range_type>>::
+                         template is_equality_comparable_with<that_value_type>)
+    {
+        return not ranges::_impl_type<range_type>::is_eq(range, ranges::from(that_arr));
     }
 
     template <typename value_type0, typename value_type1>

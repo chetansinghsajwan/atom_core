@@ -5,7 +5,6 @@ import :core;
 import :ranges.array_iterator;
 import :ranges.iterator_requirements;
 import :ranges.range_requirements;
-import :ranges.range_extensions;
 
 namespace atom::ranges
 {
@@ -94,7 +93,7 @@ namespace atom::ranges
                 len++;
             }
 
-            return len;
+            return len + 1;
         }
 
         return std::strlen(str);
@@ -145,7 +144,8 @@ export namespace atom::ranges
     template <typename value_type>
     constexpr auto from(value_type* begin, usize count)
     {
-        return _mut_range_from_iterator_pair(mut_array_iterator(begin), mut_array_iterator(begin + count));
+        return _mut_range_from_iterator_pair(
+            mut_array_iterator(begin), mut_array_iterator(begin + count));
     }
 
     /// --------------------------------------------------------------------------------------------
@@ -154,7 +154,8 @@ export namespace atom::ranges
     template <typename value_type, usize count>
     constexpr auto from(const value_type (&arr)[count])
     {
-        return _range_from_iterator_pair(array_iterator(ptr(arr)), array_iterator(ptr(arr) + count));
+        return _range_from_iterator_pair(
+            array_iterator(ptr(arr)), array_iterator(ptr(arr) + count));
     }
 
     /// --------------------------------------------------------------------------------------------
@@ -172,7 +173,8 @@ export namespace atom::ranges
     /// --------------------------------------------------------------------------------------------
     constexpr auto from(const char* str)
     {
-        return _range_from_iterator_pair(array_iterator(str), array_iterator(str + _range_find_str_len(str)));
+        return _range_from_iterator_pair(
+            array_iterator(str), array_iterator(str + _range_find_str_len(str) + 1));
     }
 
     /// --------------------------------------------------------------------------------------------
@@ -181,7 +183,7 @@ export namespace atom::ranges
     constexpr auto from(char* str)
     {
         return _mut_range_from_iterator_pair(
-            mut_array_iterator(str), mut_array_iterator(str + _range_find_str_len(str)));
+            mut_array_iterator(str), mut_array_iterator(str + _range_find_str_len(str) + 1));
     }
 
     /// --------------------------------------------------------------------------------------------

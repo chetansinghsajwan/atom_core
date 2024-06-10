@@ -200,7 +200,7 @@ namespace atom
             auto that_begin = that_range.get_iterator();
             auto that_end = that_range.get_iterator_end();
 
-            return std::equal(this_begin, this_end, that_begin, that_end);
+            return not std::equal(this_begin, this_end, that_begin, that_end);
         }
 
         template <typename this_range_type, typename that_range_type>
