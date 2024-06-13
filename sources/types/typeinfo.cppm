@@ -5,6 +5,8 @@ import :types.typeinfo_impl;
 
 namespace atom
 {
+    export using type_id = std::size_t;
+
     export template <typename in_value_type>
     class typeinfo
     {
@@ -31,8 +33,8 @@ namespace atom
         using pure_type = typeinfo<std::remove_cvref_t<value_type>>;
 
         template <typename like_type>
-        using unpure_like_type =
-            typeinfo<typename typeinfo_impl::unpure_like_type<in_value_type, like_type>::value_type>;
+        using unpure_like_type = typeinfo<
+            typename typeinfo_impl::unpure_like_type<in_value_type, like_type>::value_type>;
 
         template <typename other_type>
         static constexpr bool is_same_as = std::is_same_v<value_type, other_type>;
@@ -84,7 +86,8 @@ namespace atom
             typeinfo_impl::template is_function<value_type, signature>::value;
 
         template <typename... args_type>
-        static constexpr bool is_constructible_from = std::is_constructible_v<value_type, args_type...>;
+        static constexpr bool is_constructible_from =
+            std::is_constructible_v<value_type, args_type...>;
 
         template <typename... args_type>
         static constexpr bool is_trivially_constructible_from =
@@ -102,7 +105,8 @@ namespace atom
         static constexpr bool is_trivially_asignable_from =
             std::is_trivially_assignable_v<value_type, args_type...>;
 
-        static constexpr bool is_default_constructible = std::is_default_constructible_v<value_type>;
+        static constexpr bool is_default_constructible =
+            std::is_default_constructible_v<value_type>;
         static constexpr bool is_not_default_constructible = not is_default_constructible;
         static constexpr bool is_trivially_default_constructible =
             std::is_trivially_default_constructible_v<value_type>;
@@ -149,7 +153,8 @@ namespace atom
 
         static constexpr bool is_destructible = std::is_destructible_v<value_type>;
         static constexpr bool is_not_destructible = not is_destructible;
-        static constexpr bool is_trivially_destructible = std::is_trivially_destructible_v<value_type>;
+        static constexpr bool is_trivially_destructible =
+            std::is_trivially_destructible_v<value_type>;
         static constexpr bool is_not_trivially_destructible = not is_trivially_destructible;
 
         template <typename other_type>
@@ -177,6 +182,11 @@ namespace atom
         constexpr auto operator!=(this const this_type& self, const other_type& other) -> bool
         {
             return not self == other;
+        }
+
+        static auto get_id() -> type_id
+        {
+            return typeid(value_type).hash_code();
         }
     };
 }

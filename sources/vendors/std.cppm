@@ -198,6 +198,8 @@ export namespace std
     using std::equal;
     using std::fill;
     using std::find;
+    using std::find_if;
+    using std::find_if_not;
     using std::forward;
     using std::max;
     using std::min;
@@ -208,6 +210,11 @@ export namespace std
     using std::shift_left;
     using std::shift_right;
     using std::strlen;
+
+    namespace ranges
+    {
+        using ranges::contains;
+    }
 
     using std::atomic;
     using std::free;

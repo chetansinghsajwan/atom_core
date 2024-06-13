@@ -511,6 +511,32 @@ export namespace atom::ranges
     /// ----------------------------------------------------------------------------------------
     ///
     /// ----------------------------------------------------------------------------------------
+    template <typename function_type>
+    struct find_if_closure
+    {
+        template <typename range_type>
+        constexpr auto operator|(const range_type& range) -> iterator_type<range_type>
+            requires is_range<range_type>
+        //  and (typeinfo<function_type>::is_function<bool(const value_type<range_type>&)>)
+        {
+            return _impl_type<range_type>::find_if(range, pred);
+        }
+
+        const function_type& pred;
+    };
+
+    /// ----------------------------------------------------------------------------------------
+    ///
+    /// ----------------------------------------------------------------------------------------
+    template <typename function_type>
+    constexpr auto find_if(const function_type& pred) -> find_if_closure<function_type>
+    {
+        return find_if_closure{ pred };
+    }
+
+    /// ----------------------------------------------------------------------------------------
+    ///
+    /// ----------------------------------------------------------------------------------------
     template <typename range_type, typename that_range_type>
     constexpr auto find_range(
         const range_type& range, const that_range_type& that_range) -> iterator_type<range_type>
@@ -543,8 +569,62 @@ export namespace atom::ranges
     /// ----------------------------------------------------------------------------------------
     ///
     /// ----------------------------------------------------------------------------------------
+    template <typename that_value_type>
+    struct contains_closure
+    {
+        template <typename range_type>
+        constexpr auto operator|(const range_type& range) -> bool
+            requires is_range<range_type>
+                     and (typeinfo<value_type<range_type>>::template is_equality_comparable_with<
+                         that_value_type>)
+        {
+            return _impl_type<range_type>::contains(range, value);
+        }
+
+        const that_value_type& value;
+    };
+
+    /// ----------------------------------------------------------------------------------------
+    ///
+    /// ----------------------------------------------------------------------------------------
+    template <typename that_value_type>
+    constexpr auto contains(const that_value_type& value) -> contains_closure<that_value_type>
+    {
+        return contains_closure{ value };
+    }
+
+    /// ----------------------------------------------------------------------------------------
+    ///
+    /// ----------------------------------------------------------------------------------------
+    template <typename function_type>
+    struct contains_if_closure
+    {
+        template <typename range_type>
+        constexpr auto operator|(const range_type& range) -> bool
+            requires is_range<range_type>
+        //  and (typeinfo<function_type>::is_function<bool(const value_type<range_type>&)>)
+        {
+            return _impl_type<range_type>::contains_if(range, pred);
+        }
+
+        const function_type& pred;
+    };
+
+    /// ----------------------------------------------------------------------------------------
+    ///
+    /// ----------------------------------------------------------------------------------------
+    template <typename function_type>
+    constexpr auto contains_if(const function_type& pred) -> contains_if_closure<function_type>
+    {
+        return contains_if_closure{ pred };
+    }
+
+    /// ----------------------------------------------------------------------------------------
+    ///
+    /// ----------------------------------------------------------------------------------------
     template <typename range_type, typename that_range_type>
-    constexpr auto contains(const range_type& range, const that_range_type& that_range) -> bool
+    constexpr auto contains_range(
+        const range_type& range, const that_range_type& that_range) -> bool
         requires is_range<range_type> and is_unidirectional_range<that_range_type>
                  and (typeinfo<value_type<range_type>>::template is_equality_comparable_with<
                      typename that_range_type::value_type>)
