@@ -50,7 +50,8 @@ namespace atom
 
         static_assert(error_types_list::are_unique(), "each error type must be unique.");
 
-        static_assert(error_types_list::info_type::are_pure, "unpure error types are not supported.");
+        static_assert(
+            error_types_list::info_type::are_pure, "unpure error types are not supported.");
 
         static_assert(error_types_list::info_type::are_destructible,
             "non destructible error types are not supported.");
@@ -71,10 +72,10 @@ namespace atom
             return true;
         };
 
-        template <typename in_typehat_type>
+        template <typename in_that_type>
         static constexpr bool should_enable_universal_copy_constructor = []
         {
-            using that_type = typeinfo<in_typehat_type>::pure_type::value_type;
+            using that_type = typeinfo<in_that_type>::pure_type::value_type;
 
             if constexpr (not is_result_api<that_type>::value)
                 return false;
@@ -107,15 +108,16 @@ namespace atom
             return true;
         }();
 
-        template <typename in_typehat_type>
+        template <typename in_that_type>
         static constexpr bool should_enable_universal_copy_operator = []
         {
-            using that_type = typeinfo<in_typehat_type>::pure_type::value_type;
+            using that_type = typeinfo<in_that_type>::pure_type::value_type;
 
             if constexpr (not is_result_api<that_type>::value)
                 return false;
 
-            else if (not value_type_info_type::template is_constructible_from<typename that_type::value_type>
+            else if (not value_type_info_type::template is_constructible_from<
+                         typename that_type::value_type>
                      or not value_type_info_type::template is_assignable_from<
                          typename that_type::value_type>)
                 return false;
@@ -144,10 +146,10 @@ namespace atom
             return true;
         }();
 
-        template <typename in_typehat_type>
+        template <typename in_that_type>
         static constexpr bool should_enable_universal_move_constructor = []
         {
-            using that_type = typeinfo<in_typehat_type>::pure_type::value_type;
+            using that_type = typeinfo<in_that_type>::pure_type::value_type;
 
             if constexpr (not is_result_api<that_type>::value)
                 return false;
@@ -180,15 +182,16 @@ namespace atom
             return true;
         }();
 
-        template <typename in_typehat_type>
+        template <typename in_that_type>
         static constexpr bool should_enable_universal_move_operator = []
         {
-            using that_type = typeinfo<in_typehat_type>::pure_type::value_type;
+            using that_type = typeinfo<in_that_type>::pure_type::value_type;
 
             if constexpr (not is_result_api<that_type>::value)
                 return false;
 
-            else if (not value_type_info_type::template is_constructible_from<typename that_type::value_type>
+            else if (not value_type_info_type::template is_constructible_from<
+                         typename that_type::value_type>
                      or not value_type_info_type::template is_assignable_from<
                          typename that_type::value_type>)
                 return false;
@@ -253,7 +256,7 @@ namespace atom
         constexpr this_type& operator=(const this_type& that)
             requires should_enable_copy_operator
         {
-            _impl.set_typehat(that._impl);
+            _impl.set_that(that._impl);
             return *this;
         }
 
@@ -264,7 +267,7 @@ namespace atom
         constexpr this_type& operator=(const that_type& that)
             requires should_enable_universal_copy_operator<that_type>
         {
-            _impl.set_typehat(that._impl);
+            _impl.set_that(that._impl);
             return *this;
         }
 
@@ -301,7 +304,7 @@ namespace atom
         constexpr this_type& operator=(this_type&& that)
             requires should_enable_move_operator
         {
-            _impl.set_typehat(move(that._impl));
+            _impl.set_that(move(that._impl));
             return *this;
         }
 
@@ -312,7 +315,7 @@ namespace atom
         constexpr this_type& operator=(that_type&& that)
             requires should_enable_universal_move_operator<that_type>
         {
-            _impl.set_typehat(move(that._impl));
+            _impl.set_that(move(that._impl));
             return *this;
         }
 
@@ -643,16 +646,16 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename this_final_qualified_type, typename function_qualified_type>
+        template <typename final_qualified_type, typename function_qualified_type>
         static constexpr bool should_enable_on_value_function = []
         {
-            using this_type = typeinfo<this_final_qualified_type>::pure_type::value_type;
+            using this_type = typeinfo<final_qualified_type>::pure_type::value_type;
 
             if constexpr (is_result_api<this_type>::value)
             {
                 using value_qualified_type =
                     typeinfo<typename this_type::value_type>::template unpure_like_type<
-                        this_final_qualified_type>::value_type;
+                        final_qualified_type>::value_type;
                 using signature_type = void(value_qualified_type);
 
                 if (not typeinfo<function_qualified_type>::template is_function<signature_type>)
@@ -677,10 +680,11 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename this_final_qualified_type, typename function_qualified_type, typename error_type>
+        template <typename final_qualified_type, typename function_qualified_type,
+            typename error_type>
         static constexpr bool should_enable_on_error_function = []
         {
-            using this_type = typeinfo<this_final_qualified_type>::pure_type::value_type;
+            using this_type = typeinfo<final_qualified_type>::pure_type::value_type;
 
             if constexpr (is_result_api<this_type>::value)
             {
@@ -690,8 +694,8 @@ namespace atom
                 if (not has_error<error_type>())
                     return false;
 
-                using error_qualified_type =
-                    typeinfo<error_type>::template unpure_like_type<this_final_qualified_type>::value_type;
+                using error_qualified_type = typeinfo<error_type>::template unpure_like_type<
+                    final_qualified_type>::value_type;
                 using signature_type = void(error_qualified_type);
 
                 if (not typeinfo<function_qualified_type>::template is_function<signature_type>)
@@ -717,10 +721,10 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename this_final_qualified_type, typename function_qualified_type>
+        template <typename final_qualified_type, typename function_qualified_type>
         static constexpr bool should_enable_on_universal_error_function = []
         {
-            using this_type = typeinfo<this_final_qualified_type>::pure_type::value_type;
+            using this_type = typeinfo<final_qualified_type>::pure_type::value_type;
 
             if constexpr (is_result_api<this_type>::value)
             {
@@ -728,8 +732,8 @@ namespace atom
                         [](auto info)
                         {
                             using error_qualified_type =
-                                typeinfo<typename decltype(info)::value_type>::template unpure_like_type<
-                                    this_final_qualified_type>::value_type;
+                                typeinfo<typename decltype(info)::value_type>::
+                                    template unpure_like_type<final_qualified_type>::value_type;
                             using signature_type = void(error_qualified_type);
 
                             return typeinfo<function_qualified_type>::template is_function<

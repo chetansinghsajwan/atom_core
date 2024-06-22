@@ -79,7 +79,7 @@ namespace atom
             : _box(that._box)
         {}
 
-        auto copy_typehat(const this_type& that)
+        auto copy_that(const this_type& that)
         {
             _box = that._box;
         }
@@ -88,7 +88,7 @@ namespace atom
             : _box(atom::move(that._box))
         {}
 
-        auto move_typehat(this_type& that)
+        auto move_that(this_type& that)
         {
             _box = atom::move(that._box);
         }
@@ -204,7 +204,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         auto operator=(const function_box& that) -> function_box&
         {
-            _impl.copy_typehat(that._impl);
+            _impl.copy_that(that._impl);
             return *this;
         }
 
@@ -220,7 +220,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         auto operator=(function_box&& that) -> function_box&
         {
-            _impl.move_typehat(that._impl);
+            _impl.move_that(that._impl);
             return *this;
         }
 
