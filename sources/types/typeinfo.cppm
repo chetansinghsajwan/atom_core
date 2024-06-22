@@ -167,21 +167,21 @@ namespace atom
 
         static constexpr bool is_comparable = true;
 
-        constexpr auto operator==(this const this_type& self, const this_type& other) -> bool
+        constexpr auto operator==(const this_type& other) -> bool
         {
             return true;
         }
 
         template <typename other_type>
-        constexpr auto operator==(this const this_type& self, const other_type& other) -> bool
+        constexpr auto operator==(const other_type& other) -> bool
         {
             return false;
         }
 
         template <typename other_type>
-        constexpr auto operator!=(this const this_type& self, const other_type& other) -> bool
+        constexpr auto operator!=(const other_type& other) -> bool
         {
-            return not self == other;
+            return not *this == other;
         }
 
         static auto get_id() -> type_id

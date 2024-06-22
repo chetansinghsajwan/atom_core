@@ -100,7 +100,7 @@ namespace atom
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator[](usize i) -> value_type&
         {
@@ -108,7 +108,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// 
+        ///
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator[](usize i) const -> const value_type&
         {
@@ -118,65 +118,65 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_data(this const this_type& self) -> const value_type*
+        constexpr auto get_data() const -> const value_type*
         {
-            return self._data;
+            return _data;
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_data(this this_type& self) -> value_type*
+        constexpr auto get_data() -> value_type*
         {
-            return self._data;
+            return _data;
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_mut_data(this this_type& self) -> value_type*
+        constexpr auto get_mut_data() -> value_type*
         {
-            return self._data;
+            return _data;
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_count(this const this_type& self) -> usize
+        constexpr auto get_count() const -> usize
         {
-            return self._count;
+            return _count;
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_iterator(this const this_type& self) -> iterator_type
+        constexpr auto get_iterator() const -> iterator_type
         {
-            return iterator_type(self._data);
+            return iterator_type(_data);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_iterator_end(this const this_type& self) -> iterator_end_type
+        constexpr auto get_iterator_end() const -> iterator_end_type
         {
-            return iterator_end_type(self._data + self._count);
+            return iterator_end_type(_data + _count);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_mut_iterator(this this_type& self) -> mut_iterator_type
+        constexpr auto get_mut_iterator() -> mut_iterator_type
         {
-            return mut_iterator_type(self._data);
+            return mut_iterator_type(_data);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_mut_iterator_end(this this_type& self) -> mut_iterator_end_type
+        constexpr auto get_mut_iterator_end() -> mut_iterator_end_type
         {
-            return mut_iterator_end_type(self._data + self._count);
+            return mut_iterator_end_type(_data + _count);
         }
 
         /// ----------------------------------------------------------------------------------------

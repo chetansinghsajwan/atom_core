@@ -93,37 +93,37 @@ namespace atom
 
     public:
         template <typename... args_type>
-        constexpr auto emplace_value(this this_type& self, args_type&&... args) -> void
+        constexpr auto emplace_value(args_type&&... args) -> void
         {
-            self._variant.template emplace_value_by_index<value_index>(forward<args_type>(args)...);
+            _variant.template emplace_value_by_index<value_index>(forward<args_type>(args)...);
         }
 
-        constexpr auto set_value(this this_type& self, const value_type& value) -> void
+        constexpr auto set_value(const value_type& value) -> void
             requires(not typeinfo<value_type>::is_void)
         {
-            self._variant.template emplace_value_by_index<value_index>(value);
+            _variant.template emplace_value_by_index<value_index>(value);
         }
 
-        constexpr auto set_value(this this_type& self, value_type&& value) -> void
+        constexpr auto set_value(value_type&& value) -> void
             requires(not typeinfo<value_type>::is_void)
         {
-            self._variant.template emplace_value_by_index<value_index>(move(value));
+            _variant.template emplace_value_by_index<value_index>(move(value));
         }
 
-        constexpr auto set_value_void(this this_type& self) -> void
+        constexpr auto set_value_void() -> void
             requires(not typeinfo<value_type>::is_void)
         {
-            self._variant.template emplace_value_by_index<value_index>();
+            _variant.template emplace_value_by_index<value_index>();
         }
 
-        constexpr auto get_value(this const this_type& self) -> const value_type&
+        constexpr auto get_value() const -> const value_type&
         {
-            return self._variant.template get_at<value_index>();
+            return _variant.template get_at<value_index>();
         }
 
-        constexpr auto get_value(this this_type& self) -> value_type&
+        constexpr auto get_value() -> value_type&
         {
-            return self._variant.template get_at<value_index>();
+            return _variant.template get_at<value_index>();
         }
 
         constexpr auto get_value_checked() -> value_type&
@@ -136,9 +136,9 @@ namespace atom
             return _variant.template get_at_checked<value_index>();
         }
 
-        constexpr auto is_value(this const this_type& self) -> bool
+        constexpr auto is_value() const -> bool
         {
-            return self._variant.template is<value_type>();
+            return _variant.template is<value_type>();
         }
 
         consteval auto get_error_count() -> usize
@@ -156,9 +156,9 @@ namespace atom
         }
 
         template <typename error_type, typename... args_type>
-        constexpr auto emplace_error(this this_type& self, args_type&&... args) -> void
+        constexpr auto emplace_error(args_type&&... args) -> void
         {
-            self._variant.template emplace<error_type>(forward<args_type>(args)...);
+            _variant.template emplace<error_type>(forward<args_type>(args)...);
         }
 
         template <typename error_type>
@@ -174,49 +174,49 @@ namespace atom
         }
 
         template <typename error_type>
-        constexpr auto get_error(this const this_type& self) -> const error_type&
+        constexpr auto get_error() const -> const error_type&
         {
-            return self._variant.template get<error_type>();
+            return _variant.template get<error_type>();
         }
 
         template <typename error_type>
-        constexpr auto get_error(this this_type& self) -> error_type&
+        constexpr auto get_error() -> error_type&
         {
-            return self._variant.template as<error_type>();
+            return _variant.template as<error_type>();
         }
 
-        constexpr auto get_first_error(this const this_type& self) -> const first_error_type&
+        constexpr auto get_first_error() const -> const first_error_type&
         {
-            return self._variant.template get<first_error_type>();
+            return _variant.template get<first_error_type>();
         }
 
-        constexpr auto get_first_error(this this_type& self) -> first_error_type&
+        constexpr auto get_first_error() -> first_error_type&
         {
-            return self._variant.template get_mut<first_error_type>();
+            return _variant.template get_mut<first_error_type>();
         }
 
-        constexpr auto is_error(this const this_type& self) -> bool
+        constexpr auto is_error() const -> bool
         {
-            return not self._variant.template is<value_type>();
+            return not _variant.template is<value_type>();
         }
 
         template <typename error_type>
-        constexpr auto is_error(this const this_type& self) -> bool
+        constexpr auto is_error() const -> bool
         {
-            return self._variant.template is<error_type>();
+            return _variant.template is<error_type>();
         }
 
-        constexpr auto panic_on_error(this const this_type& self) -> void
+        constexpr auto panic_on_error() const -> void
         {
-            if (self.is_error())
+            if (is_error())
                 contract_panic();
         }
 
-        constexpr auto on_value(this auto& self, auto&& action) -> void
+        constexpr auto on_value(auto&& action) -> void
         {
-            if (self.is_value())
+            if (is_value())
             {
-                // action(self.get_value());
+                // action(get_value());
             }
         }
 
@@ -238,21 +238,21 @@ namespace atom
             }
         }
 
-        constexpr auto to_option(this auto&& self) -> option<value_type>
+        constexpr auto to_option() -> option<value_type>
         {
-            if (self.is_error())
+            if (is_error())
                 return nullopt();
 
-            return option(self.get_value());
+            return option(get_value());
         }
 
         template <typename error_type>
-        constexpr auto to_option_error(this auto&& self) -> option<error_type>
+        constexpr auto to_option_error() -> option<error_type>
         {
-            if (self.template is_error<error_type>())
+            if (is_error<error_type>())
                 return nullopt();
 
-            return option(self.template get_error<error_type>());
+            return option(get_error<error_type>());
         }
 
     protected:

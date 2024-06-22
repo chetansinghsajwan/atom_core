@@ -22,12 +22,16 @@ export namespace atom
     struct create_from_std_vector_tag
     {};
 
+    struct create_from_result_tag
+    {};
+
     constexpr auto _with_count = _with_count_type{};
     constexpr auto _with_capacity = _with_capacity_type{};
     constexpr auto _with_size = _with_size_type{};
     constexpr auto create_from_raw = create_from_raw_tag{};
     constexpr auto create_with_join = create_with_join_tag{};
     constexpr auto create_from_std_vector = create_from_std_vector_tag{};
+    constexpr auto create_from_result = create_from_result_tag{};
 
     template <typename value_type>
     constexpr auto move(value_type&& val) -> typename std::remove_reference_t<value_type>&&
