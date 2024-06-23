@@ -68,7 +68,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator=(dynamic_array&& that) -> dynamic_array&
         {
-            _impl.move_typehis(that._impl);
+            _impl.move_this(that._impl);
             return *this;
         }
 

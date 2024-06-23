@@ -98,7 +98,7 @@ namespace atom
         }
 
     public:
-        constexpr auto move_typehis(this_type& that) -> void
+        constexpr auto move_this(this_type& that) -> void
         {
             if (_count != 0)
             {

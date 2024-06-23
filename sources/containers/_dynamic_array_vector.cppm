@@ -68,7 +68,7 @@ namespace atom
         constexpr ~_dynamic_array_impl_vector() {}
 
     public:
-        constexpr auto move_typehis(this_type& that) -> void
+        constexpr auto move_this(this_type& that) -> void
         {
             _vector = std::move(that._vector);
         }

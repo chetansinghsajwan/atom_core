@@ -102,7 +102,7 @@ namespace atom
             contract_debug_expects(is_conversion_safe_from_unwrapped(num));
 
             _value = num;
-            return _typehis_final();
+            return _this_final();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -276,7 +276,7 @@ namespace atom
         constexpr auto to() const -> num_type
             requires is_num<num_type>
         {
-            return num_type::from(_typehis_final());
+            return num_type::from(_this_final());
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -286,7 +286,7 @@ namespace atom
         constexpr auto to_checked() const -> num_type
             requires is_num<num_type>
         {
-            return num_type::from_checked(_typehis_final());
+            return num_type::from_checked(_this_final());
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -296,7 +296,7 @@ namespace atom
         constexpr auto to_unchecked() const -> num_type
             requires is_num<num_type>
         {
-            return num_type::from_unchecked(_typehis_final());
+            return num_type::from_unchecked(_this_final());
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -307,7 +307,7 @@ namespace atom
         constexpr auto is_conversion_safe_to() -> bool
             requires is_num<num_type>
         {
-            return num_type::template is_conversion_safe_from<this_type>(_typehis_final());
+            return num_type::template is_conversion_safe_from<this_type>(_this_final());
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -407,7 +407,7 @@ namespace atom
             contract_debug_expects(is_add_safe(num));
 
             _value += num._value;
-            return _typehis_final();
+            return _this_final();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -418,7 +418,7 @@ namespace atom
             contract_expects(is_add_safe(num));
 
             _value += num._value;
-            return _typehis_final();
+            return _this_final();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -427,7 +427,7 @@ namespace atom
         constexpr auto add_assign_unchecked(final_type num) -> final_type&
         {
             _value += num._value;
-            return _typehis_final();
+            return _this_final();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -500,7 +500,7 @@ namespace atom
             contract_debug_expects(is_sub_safe(num));
 
             _value -= num._value;
-            return _typehis_final();
+            return _this_final();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -511,7 +511,7 @@ namespace atom
             contract_expects(is_sub_safe(num));
 
             _value -= num._value;
-            return _typehis_final();
+            return _this_final();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -520,7 +520,7 @@ namespace atom
         constexpr auto sub_assign_unchecked(final_type num) -> final_type&
         {
             _value -= num._value;
-            return _typehis_final();
+            return _this_final();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -591,7 +591,7 @@ namespace atom
             contract_debug_expects(is_mul_safe(num));
 
             _value *= num._value;
-            return _typehis_final();
+            return _this_final();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -602,7 +602,7 @@ namespace atom
             contract_expects(is_mul_safe(num));
 
             _value *= num._value;
-            return _typehis_final();
+            return _this_final();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -611,7 +611,7 @@ namespace atom
         constexpr auto mul_assign_unchecked(final_type num) -> final_type&
         {
             _value *= num._value;
-            return _typehis_final();
+            return _this_final();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -674,7 +674,7 @@ namespace atom
             contract_debug_expects(is_div_safe(num));
 
             _value /= num._value;
-            return _typehis_final();
+            return _this_final();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -685,7 +685,7 @@ namespace atom
             contract_expects(is_div_safe(num));
 
             _value /= num._value;
-            return _typehis_final();
+            return _this_final();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -694,7 +694,7 @@ namespace atom
         constexpr auto div_assign_unchecked(final_type num) -> final_type&
         {
             _value /= num._value;
-            return _typehis_final();
+            return _this_final();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -749,7 +749,7 @@ namespace atom
             contract_debug_expects(is_div_safe(num));
 
             _value %= num._value;
-            return _typehis_final();
+            return _this_final();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -760,7 +760,7 @@ namespace atom
             contract_expects(is_div_safe(num));
 
             _value %= num._value;
-            return _typehis_final();
+            return _this_final();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -769,7 +769,7 @@ namespace atom
         constexpr auto rem_assign_unchecked(final_type num) -> final_type&
         {
             _value %= num._value;
-            return _typehis_final();
+            return _this_final();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -1014,12 +1014,12 @@ namespace atom
         }
 
     protected:
-        constexpr auto _typehis_final() const -> const final_type&
+        constexpr auto _this_final() const -> const final_type&
         {
             return static_cast<const final_type&>(*this);
         }
 
-        constexpr auto _typehis_final() -> final_type&
+        constexpr auto _this_final() -> final_type&
         {
             return static_cast<final_type&>(*this);
         }

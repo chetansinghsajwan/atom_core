@@ -291,10 +291,10 @@ namespace atom
             }
 
             // index for this variant of type same as that `variant` current type.
-            usize index_for_typehis = get_index_for_type<other_type>();
+            usize index_for_this = get_index_for_type<other_type>();
 
             // we already have this value_type, so we don'type construct it but assign it.
-            if (_index == index_for_typehis)
+            if (_index == index_for_this)
             {
                 if constexpr (mov)
                 {
@@ -318,7 +318,7 @@ namespace atom
                     _construct_value_as<other_type>(that.template _get_value_as<other_type>());
                 }
 
-                _index = index_for_typehis;
+                _index = index_for_this;
             }
         }
 

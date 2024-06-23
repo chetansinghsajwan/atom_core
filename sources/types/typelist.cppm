@@ -71,21 +71,21 @@ namespace atom
         class max_size<max, in_type, types...>
         {
         private:
-            static constexpr usize _typehis_size = _sizeof<in_type>();
+            static constexpr usize _this_size = _sizeof<in_type>();
 
         public:
             static constexpr usize value =
-                max_size<(_typehis_size > max ? _typehis_size : max), types...>::value;
+                max_size<(_this_size > max ? _this_size : max), types...>::value;
         };
 
         template <usize max>
         class max_size<max>
         {
         private:
-            static constexpr usize _typehis_size = 0;
+            static constexpr usize _this_size = 0;
 
         public:
-            static constexpr usize value = _typehis_size > max ? _typehis_size : max;
+            static constexpr usize value = _this_size > max ? _this_size : max;
         };
 
         ////////////////////////////////////////////////////////////////////////////////////////////
@@ -101,21 +101,21 @@ namespace atom
         class min_size<min, in_type, types...>
         {
         private:
-            static constexpr usize _typehis_size = _get_alignof<in_type>();
+            static constexpr usize _this_size = _get_alignof<in_type>();
 
         public:
             static constexpr usize value =
-                min_size<(_typehis_size < min ? _typehis_size : min), types...>::value;
+                min_size<(_this_size < min ? _this_size : min), types...>::value;
         };
 
         template <usize min>
         class min_size<min>
         {
         private:
-            static constexpr usize _typehis_size = 0;
+            static constexpr usize _this_size = 0;
 
         public:
-            static constexpr usize value = _typehis_size < min ? _typehis_size : min;
+            static constexpr usize value = _this_size < min ? _this_size : min;
         };
 
         ////////////////////////////////////////////////////////////////////////////////////////////
@@ -131,21 +131,21 @@ namespace atom
         class max_align<max, in_type, types...>
         {
         private:
-            static constexpr usize _typehis_align = _get_alignof<in_type>();
+            static constexpr usize _this_align = _get_alignof<in_type>();
 
         public:
             static constexpr usize value =
-                max_align<(_typehis_align > max ? _typehis_align : max), types...>::value;
+                max_align<(_this_align > max ? _this_align : max), types...>::value;
         };
 
         template <usize max>
         class max_align<max>
         {
         private:
-            static constexpr usize _typehis_align = 0;
+            static constexpr usize _this_align = 0;
 
         public:
-            static constexpr usize value = _typehis_align > max ? _typehis_align : max;
+            static constexpr usize value = _this_align > max ? _this_align : max;
         };
 
         ////////////////////////////////////////////////////////////////////////////////////////////
@@ -161,21 +161,21 @@ namespace atom
         class min_align<min, in_type, types...>
         {
         private:
-            static constexpr usize _typehis_align = _sizeof<in_type>();
+            static constexpr usize _this_align = _sizeof<in_type>();
 
         public:
             static constexpr usize value =
-                min_align<(_typehis_align < min ? _typehis_align : min), types...>::value;
+                min_align<(_this_align < min ? _this_align : min), types...>::value;
         };
 
         template <usize min>
         class min_align<min>
         {
         private:
-            static constexpr usize _typehis_align = 0;
+            static constexpr usize _this_align = 0;
 
         public:
-            static constexpr usize value = _typehis_align < min ? _typehis_align : min;
+            static constexpr usize value = _this_align < min ? _this_align : min;
         };
 
         ////////////////////////////////////////////////////////////////////////////////////////////
