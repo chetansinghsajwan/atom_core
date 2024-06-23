@@ -1,5 +1,6 @@
 export module atom.core:strings.buf_string;
 
+import :core;
 import :containers;
 import :strings.string_extensions;
 

@@ -1,5 +1,6 @@
 export module atom.core:strings.static_string;
 
+import :core;
 import :containers;
 import :strings.string_extensions;
 

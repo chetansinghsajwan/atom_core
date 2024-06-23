@@ -2,6 +2,7 @@ export module atom.core:core.result_api;
 
 import :types;
 import :core.core;
+import :core.nums;
 import :core.option;
 
 namespace atom
@@ -37,8 +38,7 @@ namespace atom
     public:
         using value_type = typename impl_type::out_value_type;
         using value_type_info_type = typeinfo<value_type>;
-        using error_types_list = typename impl_type::error_types_list;
-        using first_error_type = typename impl_type::first_error_type;
+        using error_type_list = typename impl_type::error_type_list;
 
     public:
         static_assert(value_type_info_type::is_pure, "unpure value type are not supported.");
@@ -46,14 +46,14 @@ namespace atom
         static_assert(value_type_info_type::is_void or value_type_info_type::is_destructible,
             "non destructible value type is not supported.");
 
-        static_assert(error_types_list::count > 0, "there must be at least 1 error type.");
+        static_assert(error_type_list::get_count() > 0, "there must be at least 1 error type.");
 
-        static_assert(error_types_list::are_unique(), "each error type must be unique.");
+        static_assert(error_type_list::are_unique(), "each error type must be unique.");
 
         static_assert(
-            error_types_list::info_type::are_pure, "unpure error types are not supported.");
+            error_type_list::info_type::are_pure, "unpure error types are not supported.");
 
-        static_assert(error_types_list::info_type::are_destructible,
+        static_assert(error_type_list::info_type::are_destructible,
             "non destructible error types are not supported.");
 
     public:
@@ -62,11 +62,11 @@ namespace atom
             if (not value_type_info_type::is_copy_constructible)
                 return false;
 
-            if (not error_types_list::info_type::are_copy_constructible)
+            if (not error_type_list::info_type::are_copy_constructible)
                 return false;
 
             if (value_type_info_type::is_copy_constructible
-                and error_types_list::info_type::are_trivially_copy_constructible)
+                and error_type_list::info_type::are_trivially_copy_constructible)
                 return false;
 
             return true;
@@ -84,10 +84,10 @@ namespace atom
                          typename that_type::value_type>)
                 return false;
 
-            else if (not error_types_list::has_all(typename that_type::error_types_list()))
+            else if (not error_type_list::has_all(typename that_type::error_type_list()))
                 return false;
 
-            else if (not that_type::error_types_list::info_type::are_copy_constructible)
+            else if (not that_type::error_type_list::info_type::are_copy_constructible)
                 return false;
 
             return true;
@@ -98,11 +98,11 @@ namespace atom
             if (not value_type_info_type::is_copyable)
                 return false;
 
-            if (not error_types_list::info_type::are_copyable)
+            if (not error_type_list::info_type::are_copyable)
                 return false;
 
             if (value_type_info_type::is_trivially_copyable
-                and error_types_list::info_type::are_trivially_copyable)
+                and error_type_list::info_type::are_trivially_copyable)
                 return false;
 
             return true;
@@ -122,10 +122,10 @@ namespace atom
                          typename that_type::value_type>)
                 return false;
 
-            else if (not error_types_list::has_all(typename that_type::error_types_list()))
+            else if (not error_type_list::has_all(typename that_type::error_type_list()))
                 return false;
 
-            else if (not error_types_list::info_type::are_copyable)
+            else if (not error_type_list::info_type::are_copyable)
                 return false;
 
             return true;
@@ -136,11 +136,11 @@ namespace atom
             if (not value_type_info_type::is_move_constructible)
                 return false;
 
-            if (not error_types_list::info_type::are_move_constructible)
+            if (not error_type_list::info_type::are_move_constructible)
                 return false;
 
             if (value_type_info_type::is_trivially_move_constructible
-                and error_types_list::info_type::are_trivially_move_constructible)
+                and error_type_list::info_type::are_trivially_move_constructible)
                 return false;
 
             return true;
@@ -158,10 +158,10 @@ namespace atom
                          typename that_type::value_type>)
                 return false;
 
-            else if (not error_types_list::has_all(typename that_type::error_types_list()))
+            else if (not error_type_list::has_all(typename that_type::error_type_list()))
                 return false;
 
-            else if (not that_type::error_types_list::info_type::are_move_constructible)
+            else if (not that_type::error_type_list::info_type::are_move_constructible)
                 return false;
 
             return true;
@@ -172,11 +172,11 @@ namespace atom
             if (not value_type_info_type::is_moveable)
                 return false;
 
-            if (not error_types_list::info_type::are_moveable)
+            if (not error_type_list::info_type::are_moveable)
                 return false;
 
             if (value_type_info_type::is_trivially_moveable
-                and error_types_list::info_type::are_trivially_moveable)
+                and error_type_list::info_type::are_trivially_moveable)
                 return false;
 
             return true;
@@ -196,10 +196,10 @@ namespace atom
                          typename that_type::value_type>)
                 return false;
 
-            else if (not error_types_list::has_all(typename that_type::error_types_list()))
+            else if (not error_type_list::has_all(typename that_type::error_type_list()))
                 return false;
 
-            else if (not that_type::error_types_list::info_type::are_moveable)
+            else if (not that_type::error_type_list::info_type::are_moveable)
                 return false;
 
             return true;
@@ -596,24 +596,6 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_error() const -> const first_error_type&
-            requires(get_error_count() == 1)
-        {
-            return _impl.get_first_error();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto get_error() -> first_error_type&
-            requires(get_error_count() == 1)
-        {
-            return _impl.get_first_error();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
         constexpr auto is_error() const -> bool
         {
             return _impl.is_error();
@@ -741,7 +723,7 @@ namespace atom
 
             if constexpr (is_result_api<this_type>::value)
             {
-                if (not this_type::error_types_list::are_all(
+                if (not this_type::error_type_list::are_all(
                         [](auto info)
                         {
                             using error_qualified_type =

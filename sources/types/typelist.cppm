@@ -3,483 +3,10 @@ export module atom.core:types.typelist;
 import std;
 import :types.typeutils;
 import :types.typeinfo;
+import :types.type_list_impl;
 
 namespace atom
 {
-    using usize = std::size_t;
-
-    /// --------------------------------------------------------------------------------------------
-    ///
-    /// --------------------------------------------------------------------------------------------
-    export template <typename... types>
-    class typelist;
-
-    /// --------------------------------------------------------------------------------------------
-    ///
-    /// --------------------------------------------------------------------------------------------
-    namespace _list_ops_type
-    {
-        template <typename value_type>
-        consteval auto _sizeof() -> usize
-        {
-            if constexpr (typeinfo<value_type>::is_void)
-            {
-                return 0;
-            }
-            else
-            {
-                return sizeof(value_type);
-            }
-        }
-
-        template <typename value_type>
-        consteval auto _get_alignof() -> usize
-        {
-            if constexpr (typeinfo<value_type>::is_void)
-            {
-                return 0;
-            }
-            else
-            {
-                return alignof(value_type);
-            }
-        }
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        ////
-        //// count
-        ////
-        ////////////////////////////////////////////////////////////////////////////////////////////
-
-        template <typename... ts>
-        class count
-        {
-        public:
-            static constexpr usize value = sizeof...(types);
-        };
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        ////
-        //// max_size
-        ////
-        ////////////////////////////////////////////////////////////////////////////////////////////
-
-        template <usize max, typename... ts>
-        class max_size;
-
-        template <usize max, typename in_type, typename... types>
-        class max_size<max, in_type, types...>
-        {
-        private:
-            static constexpr usize _this_size = _sizeof<in_type>();
-
-        public:
-            static constexpr usize value =
-                max_size<(_this_size > max ? _this_size : max), types...>::value;
-        };
-
-        template <usize max>
-        class max_size<max>
-        {
-        private:
-            static constexpr usize _this_size = 0;
-
-        public:
-            static constexpr usize value = _this_size > max ? _this_size : max;
-        };
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        ////
-        //// min_size
-        ////
-        ////////////////////////////////////////////////////////////////////////////////////////////
-
-        template <usize min, typename... ts>
-        class min_size;
-
-        template <usize min, typename in_type, typename... types>
-        class min_size<min, in_type, types...>
-        {
-        private:
-            static constexpr usize _this_size = _get_alignof<in_type>();
-
-        public:
-            static constexpr usize value =
-                min_size<(_this_size < min ? _this_size : min), types...>::value;
-        };
-
-        template <usize min>
-        class min_size<min>
-        {
-        private:
-            static constexpr usize _this_size = 0;
-
-        public:
-            static constexpr usize value = _this_size < min ? _this_size : min;
-        };
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        ////
-        //// max_align
-        ////
-        ////////////////////////////////////////////////////////////////////////////////////////////
-
-        template <usize max, typename... ts>
-        class max_align;
-
-        template <usize max, typename in_type, typename... types>
-        class max_align<max, in_type, types...>
-        {
-        private:
-            static constexpr usize _this_align = _get_alignof<in_type>();
-
-        public:
-            static constexpr usize value =
-                max_align<(_this_align > max ? _this_align : max), types...>::value;
-        };
-
-        template <usize max>
-        class max_align<max>
-        {
-        private:
-            static constexpr usize _this_align = 0;
-
-        public:
-            static constexpr usize value = _this_align > max ? _this_align : max;
-        };
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        ////
-        //// min_align
-        ////
-        ////////////////////////////////////////////////////////////////////////////////////////////
-
-        template <usize min, typename... ts>
-        class min_align;
-
-        template <usize min, typename in_type, typename... types>
-        class min_align<min, in_type, types...>
-        {
-        private:
-            static constexpr usize _this_align = _sizeof<in_type>();
-
-        public:
-            static constexpr usize value =
-                min_align<(_this_align < min ? _this_align : min), types...>::value;
-        };
-
-        template <usize min>
-        class min_align<min>
-        {
-        private:
-            static constexpr usize _this_align = 0;
-
-        public:
-            static constexpr usize value = _this_align < min ? _this_align : min;
-        };
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        ////
-        //// at
-        ////
-        ////////////////////////////////////////////////////////////////////////////////////////////
-
-        template <usize index_to_get, usize index, typename... ts>
-        class at;
-
-        template <usize index_to_get, usize index, typename in_type, typename... types>
-        class at<index_to_get, index, in_type, types...>
-        {
-        public:
-            using value_type = typeutils::conditional_type<index_to_get == index, in_type,
-                typename at<index_to_get, index + 1, types...>::value_type>;
-        };
-
-        template <usize index_to_get, usize index>
-        class at<index_to_get, index>
-        {
-        public:
-            using value_type = void;
-        };
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        ////
-        //// index_of
-        ////
-        ////////////////////////////////////////////////////////////////////////////////////////////
-
-        template <typename to_get_type, usize index, typename... types>
-        class index_of;
-
-        template <typename to_get_type, usize index, typename in_type, typename... types>
-        class index_of<to_get_type, index, in_type, types...>
-        {
-        public:
-            static constexpr usize value = typeinfo<to_get_type>::template is_same_as<in_type>
-                                               ? index
-                                               : index_of<to_get_type, index + 1, types...>::value;
-        };
-
-        template <typename to_get_type, usize index>
-        class index_of<to_get_type, index>
-        {
-        public:
-            static constexpr usize value = std::numeric_limits<usize>::max();
-        };
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        ////
-        //// has
-        ////
-        ////////////////////////////////////////////////////////////////////////////////////////////
-
-        template <typename in_type, typename... types>
-        class has
-        {
-        public:
-            static constexpr bool value =
-                index_of<in_type, 0, types...>::value != std::numeric_limits<usize>::max();
-        };
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        ////
-        //// add_first
-        ////
-        ////////////////////////////////////////////////////////////////////////////////////////////
-
-        template <typename in_type, typename list_type>
-        class add_first;
-
-        template <typename in_type, typename... types>
-        class add_first<in_type, typelist<types...>>
-        {
-        public:
-            using value_type = typelist<in_type, types...>;
-        };
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        ////
-        //// add_last
-        ////
-        ////////////////////////////////////////////////////////////////////////////////////////////
-
-        template <typename in_type, typename list_type>
-        class add_last;
-
-        template <typename in_type, typename... types>
-        class add_last<in_type, typelist<types...>>
-        {
-        public:
-            using value_type = typelist<types..., in_type>;
-        };
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        ////
-        //// remove_if
-        ////
-        ////////////////////////////////////////////////////////////////////////////////////////////
-
-        template <template <typename in_type> typename predicate_type, typename... types>
-        class remove_if;
-
-        template <template <typename in_type> typename predicate_type>
-        class remove_if<predicate_type>
-        {
-        public:
-            using value_type = typelist<>;
-        };
-
-        template <template <typename in_type> typename predicate_type, typename in_type,
-            typename... types>
-        class remove_if<predicate_type, in_type, types...>
-        {
-        public:
-            using value_type = typeutils::conditional_type<predicate_type<in_type>::value,
-                typename add_first<in_type,
-                    typename remove_if<predicate_type, types...>::in_type>::value_type,
-                typename remove_if<predicate_type, types...>::value_type>;
-        };
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        ////
-        //// remove
-        ////
-        ////////////////////////////////////////////////////////////////////////////////////////////
-
-        template <typename in_type, typename... types>
-        class remove
-        {
-            template <typename check_type>
-            class _pred
-            {
-                static constexpr bool value = typeinfo<in_type>::template is_same_as<check_type>;
-            };
-
-        public:
-            using value_type = typename remove_if<_pred, types...>::value_type;
-        };
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        ////
-        //// remove_first
-        ////
-        ////////////////////////////////////////////////////////////////////////////////////////////
-
-        template <typename... ts>
-        class remove_first;
-
-        template <typename in_type, typename... types>
-        class remove_first<in_type, types...>
-        {
-        public:
-            using value_type = typelist<types...>;
-        };
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        ////
-        //// remove_last
-        ////
-        ////////////////////////////////////////////////////////////////////////////////////////////
-
-        template <typename... ts>
-        class remove_last;
-
-        template <typename in_type, typename... types>
-        class remove_last<in_type, types...>
-        {
-        public:
-            using value_type = typename add_first<in_type, remove_last<types...>>::value_type;
-        };
-
-        template <typename in_type>
-        class remove_last<in_type>
-        {
-        public:
-            using value_type = typelist<>;
-        };
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        ////
-        //// are_unique
-        ////
-        ////////////////////////////////////////////////////////////////////////////////////////////
-
-        template <typename... ts>
-        class are_unique;
-
-        template <>
-        class are_unique<>
-        {
-        public:
-            static constexpr bool value = true;
-        };
-
-        template <typename in_type, typename... types>
-        class are_unique<in_type, types...>
-        {
-        public:
-            static constexpr bool value =
-                not has<in_type, types...>::value and are_unique<types...>::value;
-        };
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        ////
-        //// replace
-        ////
-        ////////////////////////////////////////////////////////////////////////////////////////////
-
-        template <typename replace_type, typename with_type, typename... types>
-        class replace_all;
-
-        template <typename replace_type, typename with_type>
-        class replace_all<replace_type, with_type>
-        {
-        public:
-            using value_type = typelist<>;
-        };
-
-        template <typename replace_type, typename with_type, typename in_type, typename... types>
-        class replace_all<replace_type, with_type, in_type, types...>
-        {
-            using final_type =
-                typeutils::conditional_type<typeinfo<replace_type>::template is_same_as<in_type>,
-                    with_type, in_type>;
-
-        public:
-            using value_type = typename add_first<final_type,
-                typename replace_all<replace_type, with_type, types...>::in_type>::value_type;
-        };
-    };
-
-    template <typename... types>
-    class typelist_impl;
-
-    template <typename type0, typename... types>
-    class typelist_impl<type0, types...>
-    {
-        using this_type = typelist_impl;
-
-    public:
-        template <typename function_type>
-        static consteval auto for_each(function_type&& func) -> void
-        {
-            func(typeinfo<type0>());
-
-            typelist_impl<types...>::for_each(forward<function_type>(func));
-        }
-
-        template <typename predicate_type>
-        static consteval auto are_all(predicate_type&& pred) -> bool
-        {
-            if (not pred(typeinfo<type0>()))
-                return false;
-
-            return typelist_impl<types...>::are_all(forward<predicate_type>(pred));
-        }
-
-        template <typename typeinfo_type>
-        static consteval auto has(typeinfo_type info) -> bool
-        {
-            if (typeinfo<type0>::template is_same_as<typename typeinfo_type::value_type>)
-                return true;
-
-            return typelist_impl<types...>::has(info);
-        }
-
-        template <typename other_type0, typename... other_types>
-        static consteval auto has_all(typelist_impl<other_type0, other_types...> list) -> bool
-        {
-            if (not has(typeinfo<other_type0>()))
-                return false;
-
-            if constexpr (sizeof...(other_types) == 0)
-                return true;
-            else
-                return this_type::has_all(typelist_impl<other_types...>());
-        }
-    };
-
-    template <>
-    class typelist_impl<>
-    {
-    public:
-        template <typename function_type>
-        static consteval auto for_each(function_type&& func) -> void
-        {}
-
-        template <typename predicate_type>
-        static consteval auto are_all(predicate_type&& pred) -> bool
-        {
-            return true;
-        }
-
-        template <typename typeinfo_type>
-        static consteval auto has(typeinfo_type info) -> bool
-        {
-            return false;
-        }
-    };
-
     export template <typename...>
     class typeinfo_list;
 
@@ -489,102 +16,242 @@ namespace atom
     export template <typename... types>
     class typelist
     {
-        using this_type = typelist;
-        using impl_type = typelist_impl<types...>;
+        using usize = std::size_t;
+        using impl_type = type_list_impl<types...>;
 
     public:
-        using info_type = typeinfo_list<this_type>;
+        using info_type = typeinfo_list<typelist<types...>>;
+
+    private:
+        template <typename... other_types>
+        static consteval auto _create_from_impl(type_list_impl<other_types...>) -> decltype(auto)
+        {
+            return typelist<other_types...>{};
+        }
 
     public:
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// returns the count of types present. it also counts duplicate types.
         /// ----------------------------------------------------------------------------------------
-        static constexpr usize count = _list_ops_type::template count<types...>::value;
+        static consteval auto get_count() -> usize
+        {
+            return impl_type::get_count();
+        }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// returns `true` if count of entries is `0`.
         /// ----------------------------------------------------------------------------------------
-        static constexpr usize max_size = _list_ops_type::template max_size<0, types...>::value;
+        static consteval auto is_empty() -> bool
+        {
+            return impl_type::get_count() == 0;
+        }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// returns the size of the type with max size.
         /// ----------------------------------------------------------------------------------------
-        static constexpr usize min_size = _list_ops_type::template max_size<0, types...>::value;
+        static consteval auto get_max_size() -> usize
+        {
+            return impl_type::get_max_size();
+        }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// returns the size of the type with min size.
         /// ----------------------------------------------------------------------------------------
-        static constexpr usize max_align = _list_ops_type::template max_align<0, types...>::value;
+        static consteval auto get_min_size() -> usize
+        {
+            return impl_type::get_min_size();
+        }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// returns the alignment of the type with max alignment.
         /// ----------------------------------------------------------------------------------------
-        static constexpr usize min_align = _list_ops_type::template max_align<0, types...>::value;
+        static consteval auto get_max_align() -> usize
+        {
+            return impl_type::get_max_align();
+        }
 
         /// ----------------------------------------------------------------------------------------
-        /// # to do
-        /// - try to remove the explicit 0 index.
+        /// returns the alignment of the type with min alignment.
+        /// ----------------------------------------------------------------------------------------
+        static consteval auto get_min_align() -> usize
+        {
+            return impl_type::get_min_align();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns the `typeinfo` of type at index `i`.
+        /// ----------------------------------------------------------------------------------------
+        static consteval auto get_at(usize i) -> decltype(auto)
+            requires(i < get_count())
+        {
+            return impl_type::get_at(i);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns the `typeinfo` of type at index `i`, or `void` if index is out of bounds.
+        /// ----------------------------------------------------------------------------------------
+        static consteval auto get_at_try(usize i) -> decltype(auto)
+        {
+            return impl_type::get_at_try(i);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns the `typeinfo` of type at index `i`.
         /// ----------------------------------------------------------------------------------------
         template <usize i>
-            requires(i < count)
-        using at = typename _list_ops_type::template at<i, 0, types...>::value_type;
+            requires(i < get_count())
+        using at_type = typename impl_type::template at_type<i>;
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// returns the `typeinfo` of type at the front.
         /// ----------------------------------------------------------------------------------------
-        using front_type = typeutils::conditional_type<count == 0, void,
-            typename _list_ops_type::template at<0, 0, types...>::value_type>;
+        static consteval auto get_front() -> decltype(auto)
+            requires(not is_empty())
+        {
+            return impl_type::get_front();
+        }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// returns the `typeinfo` of type at the front, or `void` if list is empty.
         /// ----------------------------------------------------------------------------------------
-        using back_type = typeutils::conditional_type<count == 0, void,
-            typename _list_ops_type::template at<count - 1, 0, types...>::value_type>;
+        static consteval auto get_front_try() -> decltype(auto)
+        {
+            return impl_type::get_front_try();
+        }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// returns the `typeinfo` of type at the back.
         /// ----------------------------------------------------------------------------------------
-        template <typename... types_to_check>
-        static constexpr bool has =
-            (_list_ops_type::template has<types_to_check, types...>::value and ...);
+        static consteval auto get_back() -> decltype(auto)
+            requires(not is_empty())
+        {
+            return impl_type::get_back();
+        }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// returns the `typeinfo` of type at the back, or `void` if list is empty.
         /// ----------------------------------------------------------------------------------------
-        template <typename to_replace_type, typename with_type>
-        using replace_all = typename _list_ops_type::template replace_all<to_replace_type,
-            with_type, types...>::value_type;
+        static consteval auto get_back_try() -> decltype(auto)
+        {
+            return impl_type::get_back_try();
+        }
 
         /// ----------------------------------------------------------------------------------------
-        /// # to do
-        /// - try to remove the explicit 0 index.
+        /// returns `true` if this contains `other_type`.
         /// ----------------------------------------------------------------------------------------
-        template <typename in_type>
-            requires(has<in_type>)
-        static constexpr usize index_of =
-            _list_ops_type::template index_of<in_type, 0, types...>::value;
+        template <typename other_type>
+        static consteval auto has() -> bool
+        {
+            return impl_type::template has<other_type>();
+        }
 
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` if this contains all of `other_types`.
+        /// ----------------------------------------------------------------------------------------
+        template <typename... other_types>
+        static consteval auto has_all() -> bool
+        {
+            return impl_type::template has_all<other_types...>();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` if this contains all of `other_types`.
+        /// ----------------------------------------------------------------------------------------
+        template <typename... other_types>
+        static consteval auto has_all(typelist<other_types...>) -> bool
+        {
+            return impl_type::template has_all(type_list_impl<other_types...>{});
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` if this contains any of `other_types`.
+        /// ----------------------------------------------------------------------------------------
+        template <typename... other_types>
+        static consteval auto has_any() -> bool
+        {
+            return impl_type::template has_any(type_list_impl<other_types...>{});
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns new list after replacing all entries of type `replace_type` with `new_type>`.
+        /// ----------------------------------------------------------------------------------------
+        template <typename replace_type, typename new_type>
+        static consteval auto replace_all() -> decltype(auto)
+        {
+            auto result = typename impl_type::template replace_all<replace_type, new_type>();
+            return _create_from_impl(result);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns new list after replacing first entry of type `replace_type` with `new_type>`.
+        /// ----------------------------------------------------------------------------------------
+        template <typename replace_type, typename with_type>
+        static consteval auto replace_first() -> decltype(auto)
+        {
+            auto result = typename impl_type::template replace_first<replace_type, with_type>();
+            return _create_from_impl(result);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns new list after replacing last entry of type `replace_type` with `new_type>`.
+        /// ----------------------------------------------------------------------------------------
+        template <typename replace_type, typename with_type>
+        static consteval auto replace_last() -> decltype(auto)
+        {
+            auto result = typename impl_type::template replace_last<replace_type, with_type>();
+            return _create_from_impl(result);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns hte index of type `other_type`.
+        /// ----------------------------------------------------------------------------------------
+        template <typename other_type>
+        static consteval auto get_index() -> usize
+        {
+            return impl_type::template get_index<other_type>();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// invokes `func` for each type with their `typeinfo`.
+        /// ----------------------------------------------------------------------------------------
         template <typename function_type>
         static consteval auto for_each(function_type&& func) -> void
         {
             impl_type::for_each(func);
         }
 
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` if predicate `pred` returns `true` for all types.
+        /// ----------------------------------------------------------------------------------------
         template <typename predicate_type>
         static consteval auto are_all(predicate_type&& pred) -> bool
         {
             return impl_type::are_all(pred);
         }
 
-        static consteval auto are_unique() -> bool
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` if predicate `pred` returns `true` for any type.
+        /// ----------------------------------------------------------------------------------------
+        template <typename predicate_type>
+        static consteval auto is_any(predicate_type&& pred) -> bool
         {
-            return _list_ops_type::template are_unique<types...>::value;
+            return impl_type::is_any(pred);
         }
 
-        template <typename typelist_type>
-        static consteval auto has_all(const typelist_type& list) -> bool
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` if each type is present only once.
+        /// ----------------------------------------------------------------------------------------
+        static consteval auto are_unique() -> bool
         {
-            return impl_type::has_all(typename typelist_type::impl_type());
+            return impl_type::are_unique();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns new list after removing duplicate entries.
+        /// ----------------------------------------------------------------------------------------
+        static consteval auto remove_duplicates() -> decltype(auto)
+        {
+            return _create_from_impl(impl_type::remove_duplicates());
         }
     };
 }

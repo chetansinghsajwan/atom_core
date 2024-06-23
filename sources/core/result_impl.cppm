@@ -3,6 +3,7 @@ export module atom.core:core.result_impl;
 import :types;
 import :contracts;
 import :core.core;
+import :core.nums;
 import :core.option;
 import :core.variant;
 
@@ -27,10 +28,9 @@ namespace atom
         using out_value_type =
             typeutils::conditional_type<typeinfo<value_type>::template is_same_as<_result_void>, void,
                 value_type>;
-        using error_types_list = typelist<error_types...>;
-        using first_error_type = typename error_types_list::front_type;
+        using error_type_list = typelist<error_types...>;
 
-        static_assert(error_types_list::count != 0);
+        static_assert(not error_type_list::is_empty());
 
         class copy_tag
         {};
@@ -183,16 +183,6 @@ namespace atom
         constexpr auto get_error() -> error_type&
         {
             return _variant.template as<error_type>();
-        }
-
-        constexpr auto get_first_error() const -> const first_error_type&
-        {
-            return _variant.template get<first_error_type>();
-        }
-
-        constexpr auto get_first_error() -> first_error_type&
-        {
-            return _variant.template get_mut<first_error_type>();
         }
 
         constexpr auto is_error() const -> bool

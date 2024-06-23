@@ -4,6 +4,7 @@ import :contracts;
 import :types;
 import :obj_helper;
 import :core.core;
+import :core.int_wrapper;
 import :core.nums;
 import :core.static_storage;
 
@@ -47,25 +48,25 @@ namespace atom
     public:
         static constexpr auto get_type_count() -> usize
         {
-            return _list_type::count;
+            return _list_type::get_count();
         }
 
         template <typename value_type>
         static consteval auto has_type() -> bool
         {
-            return _list_type::template has<value_type>;
+            return _list_type::template has<value_type>();
         }
 
         template <usize i>
         static consteval auto has_index() -> bool
         {
-            return i < _list_type::count;
+            return i < _list_type::get_count();
         }
 
         template <typename value_type>
         static consteval auto get_index_for_type() -> usize
         {
-            return _list_type::template index_of<value_type>;
+            return _list_type::template get_index<value_type>();
         }
 
         static consteval auto get_null_type_index() -> usize
@@ -74,7 +75,7 @@ namespace atom
         }
 
         template <usize i>
-        using type_at_index = typename _list_type::template at<i>;
+        using type_at_index = typename _list_type::template at_type<i>;
 
         using first_type = type_at_index<0>;
 
@@ -248,7 +249,7 @@ namespace atom
 
             if (index != that_index)
             {
-                if constexpr (that_types::count == 0)
+                if constexpr (that_types::get_count() == 0)
                 {
                     contract_panic("there is no type for current index.");
                 }
@@ -279,7 +280,7 @@ namespace atom
 
             if (index != that_index)
             {
-                if constexpr (that_types::count == 0)
+                if constexpr (that_types::get_count() == 0)
                 {
                     contract_panic("there is no type for current index.");
                 }
@@ -329,7 +330,7 @@ namespace atom
 
             if (i != index)
             {
-                if constexpr (_list_type::count == 0)
+                if constexpr (_list_type::get_count() == 0)
                 {
                     contract_panic("there is no type for current index.");
                 }
@@ -409,7 +410,7 @@ namespace atom
         static_assert(
             typelist<value_types...>::are_unique(), "every type in value_types... should be unique.");
         static_assert(
-            typelist<value_types...>::count > 0, "at least one type needs to be specified.");
+            typelist<value_types...>::get_count() > 0, "at least one type needs to be specified.");
 
     private:
         using this_type = variant<value_types...>;
@@ -511,7 +512,7 @@ namespace atom
         template <typename... others_type>
         constexpr variant(const variant<others_type...>& that)
             requires typelist<others_type...>::info_type::are_copy_constructible
-                     and (value_types_list::template has<others_type...>)
+                     and (value_types_list::template has<others_type...>())
         {
             _impl.construct_value_from_variant(that._impl);
         }
@@ -538,7 +539,7 @@ namespace atom
         template <typename... others_type>
         constexpr variant& operator=(const variant<others_type...>& that)
             requires value_types_list::are_copyable
-                     and (value_types_list::template has<others_type...>)
+                     and (value_types_list::template has<others_type...>())
         {
             _impl.set_value_from_variant(that._impl);
             return *this;
@@ -565,7 +566,7 @@ namespace atom
         template <typename... others_type>
         constexpr variant(variant<others_type...>&& that)
             requires typelist<others_type...>::info_type::are_move_constructible
-                     and (value_types_list::template has<others_type...>)
+                     and (value_types_list::template has<others_type...>())
         {
             _impl.construct_value_from_variant(move(that._impl));
         }
@@ -592,7 +593,7 @@ namespace atom
         template <typename... others_type>
         constexpr variant& operator=(variant<others_type...>&& that)
             requires value_types_list::info_type::are_moveable
-                     and (value_types_list::template has<others_type...>)
+                     and (value_types_list::template has<others_type...>())
         {
             _impl.set_value_from_variant(move(that._impl));
             return *this;

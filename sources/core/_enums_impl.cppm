@@ -3,6 +3,7 @@ export module atom.core:core.enums_impl;
 import std;
 import magic_enum;
 import :core.nums;
+import :core.int_wrapper;
 import :core.tuple;
 import :core.option;
 import :strings.string_view.decl;

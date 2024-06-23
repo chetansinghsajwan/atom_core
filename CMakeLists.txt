@@ -30,7 +30,8 @@ target_compile_options(
     PUBLIC # some warning in libcxx
            "-Wno-deprecated-declarations"
            # to declare std module
-           "-Wno-reserved-module-identifier")
+           "-Wno-reserved-module-identifier"
+           "-ferror-limit=1000")
 
 # --------------------------------------------------------------------------------------------------
 # atom.core.sandbox

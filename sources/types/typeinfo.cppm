@@ -11,6 +11,34 @@ namespace atom
     class typeinfo
     {
         using this_type = typeinfo;
+        using usize = std::size_t;
+
+    private:
+        template <typename value_type>
+        static consteval auto _get_sizeof() -> usize
+        {
+            if constexpr (std::is_void_v<value_type>)
+            {
+                return 0;
+            }
+            else
+            {
+                return sizeof(value_type);
+            }
+        }
+
+        template <typename value_type>
+        static consteval auto get_alignof() -> usize
+        {
+            if constexpr (std::is_void_v<value_type>)
+            {
+                return 0;
+            }
+            else
+            {
+                return alignof(value_type);
+            }
+        }
 
     public:
         using value_type = in_value_type;
@@ -35,6 +63,9 @@ namespace atom
         template <typename like_type>
         using unpure_like_type = typeinfo<
             typename typeinfo_impl::unpure_like_type<in_value_type, like_type>::value_type>;
+
+        static constexpr bool size = _get_sizeof<value_type>();
+        static constexpr bool align = _get_alignof<value_type>();
 
         template <typename other_type>
         static constexpr bool is_same_as = std::is_same_v<value_type, other_type>;

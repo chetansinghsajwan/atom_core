@@ -2,6 +2,7 @@ export module atom.core:core.enums;
 
 import magic_enum;
 import :core.enums_impl;
+import :core.nums;
 import :core.option;
 import :core.tuple;
 import :strings.string_view.decl;

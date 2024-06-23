@@ -1,6 +1,8 @@
 export module atom.core:core.nums;
 
 import std;
+export import :core.int_wrapper;
+export import :core.float_wrapper;
 
 export namespace atom::nums
 {

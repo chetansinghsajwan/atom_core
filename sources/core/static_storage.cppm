@@ -15,7 +15,7 @@ namespace atom
         using value_types_list = typelist<values_type...>;
 
     public:
-        alignas(value_types_list::max_align) byte storage[value_types_list::max_size];
+        alignas(value_types_list::get_max_align()) byte storage[value_types_list::get_max_size()];
     };
 
     export template <usize in_size>
