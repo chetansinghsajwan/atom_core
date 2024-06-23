@@ -15,8 +15,8 @@ namespace atom
     export template <typename in_value_type>
     class array_iterator
     {
-        static_assert(typeinfo<in_value_type>::is_pure, "array_iterator supports only pure types.");
-        static_assert(not typeinfo<in_value_type>::is_void, "array_iterator does not support void.");
+        static_assert(type_info<in_value_type>::is_pure, "array_iterator supports only pure types.");
+        static_assert(not type_info<in_value_type>::is_void, "array_iterator does not support void.");
 
         using this_type = array_iterator<in_value_type>;
 
@@ -224,8 +224,8 @@ namespace atom
     class mut_array_iterator: public array_iterator<in_value_type>
     {
         static_assert(
-            typeinfo<in_value_type>::is_pure, "mut_array_iterator doesn't support non pure types.");
-        static_assert(not typeinfo<in_value_type>::is_void, "mut_array_iterator does not support void.");
+            type_info<in_value_type>::is_pure, "mut_array_iterator doesn't support non pure types.");
+        static_assert(not type_info<in_value_type>::is_void, "mut_array_iterator does not support void.");
 
         using this_type = mut_array_iterator<in_value_type>;
         using base_type = array_iterator<in_value_type>;

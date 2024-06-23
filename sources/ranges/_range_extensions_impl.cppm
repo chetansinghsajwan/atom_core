@@ -18,8 +18,8 @@ namespace atom
         template <typename in_range_type>
         struct _mut_aliases_resolver
         {
-            using mut_iterator_type = typeutils::empty;
-            using mut_iterator_end_type = typeutils::empty;
+            using mut_iterator_type = type_utils::empty;
+            using mut_iterator_end_type = type_utils::empty;
         };
 
         template <typename in_range_type>

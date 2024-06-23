@@ -13,7 +13,7 @@ TEST_CASE("atom.core.option")
     {
         // default constructor doesn't constructs the object, so it's not affected by the object's
         // default constructor.
-        STATIC_REQUIRE(typeinfo<option<non_default_constructible_mock>>::is_default_constructible);
+        STATIC_REQUIRE(type_info<option<non_default_constructible_mock>>::is_default_constructible);
 
         option<tracked_type> opt;
 
@@ -86,8 +86,8 @@ TEST_CASE("atom.core.option")
     SECTION("copy constructor")
     {
         STATIC_REQUIRE(
-            typeinfo<option<trivially_copy_constructible_mock>>::is_trivially_copy_constructible);
-        STATIC_REQUIRE(typeinfo<option<copy_constructible_mock>>::is_copy_constructible);
+            type_info<option<trivially_copy_constructible_mock>>::is_trivially_copy_constructible);
+        STATIC_REQUIRE(type_info<option<copy_constructible_mock>>::is_copy_constructible);
 
         const option<tracked_type> opt0 = tracked_type();
         option<tracked_type> opt1 = opt0;
@@ -101,8 +101,8 @@ TEST_CASE("atom.core.option")
 
     SECTION("copy operator")
     {
-        STATIC_REQUIRE(typeinfo<option<trivially_copyable_mock>>::is_trivially_copy_assignable);
-        STATIC_REQUIRE(typeinfo<option<copyable_mock>>::is_copy_assignable);
+        STATIC_REQUIRE(type_info<option<trivially_copyable_mock>>::is_trivially_copy_assignable);
+        STATIC_REQUIRE(type_info<option<copyable_mock>>::is_copy_assignable);
 
         const option<tracked_type> opt0 = tracked_type();
         option<tracked_type> opt1 = tracked_type();
@@ -123,8 +123,8 @@ TEST_CASE("atom.core.option")
     SECTION("move constructor")
     {
         STATIC_REQUIRE(
-            typeinfo<option<trivially_move_constructible_mock>>::is_trivially_move_constructible);
-        STATIC_REQUIRE(typeinfo<option<move_constructible_mock>>::is_move_constructible);
+            type_info<option<trivially_move_constructible_mock>>::is_trivially_move_constructible);
+        STATIC_REQUIRE(type_info<option<move_constructible_mock>>::is_move_constructible);
 
         option<tracked_type> opt0 = tracked_type();
         option<tracked_type> opt1 = move(opt0);
@@ -138,8 +138,8 @@ TEST_CASE("atom.core.option")
 
     SECTION("move operator")
     {
-        STATIC_REQUIRE(typeinfo<option<trivially_moveable_mock>>::is_trivially_move_assignable);
-        STATIC_REQUIRE(typeinfo<option<moveable_mock>>::is_move_assignable);
+        STATIC_REQUIRE(type_info<option<trivially_moveable_mock>>::is_trivially_move_assignable);
+        STATIC_REQUIRE(type_info<option<moveable_mock>>::is_move_assignable);
 
         option<tracked_type> opt0 = tracked_type();
         option<tracked_type> opt1 = tracked_type();
@@ -159,8 +159,8 @@ TEST_CASE("atom.core.option")
 
     SECTION("destructor")
     {
-        STATIC_REQUIRE(typeinfo<option<trivially_destructible_mock>>::is_trivially_destructible);
-        STATIC_REQUIRE(typeinfo<option<destructible_mock>>::is_destructible);
+        STATIC_REQUIRE(type_info<option<trivially_destructible_mock>>::is_trivially_destructible);
+        STATIC_REQUIRE(type_info<option<destructible_mock>>::is_destructible);
 
         tracked_type::operation* last_op;
 
@@ -239,8 +239,8 @@ TEST_CASE("atom.core.option")
 
     SECTION("comparision")
     {
-        STATIC_REQUIRE(typeinfo<option<equality_comparable_mock>>::is_equality_comparable);
-        STATIC_REQUIRE(typeinfo<option<comparable_mock>>::is_comparable);
+        STATIC_REQUIRE(type_info<option<equality_comparable_mock>>::is_equality_comparable);
+        STATIC_REQUIRE(type_info<option<comparable_mock>>::is_comparable);
 
         option<tracked_type> opt0;
         option<tracked_type> opt1;

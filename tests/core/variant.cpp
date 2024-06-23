@@ -29,9 +29,9 @@ TEST_CASE("atom.core.variant")
         REQUIRE(var::index_of<tracked_type1>() == 1);
         REQUIRE(var::index_of<tracked_type2>() == 2);
 
-        REQUIRE(typeinfo<var::type_at<0>>::template is_same_as<tracked_i32>);
-        REQUIRE(typeinfo<var::type_at<1>>::template is_same_as<tracked_f32>);
-        REQUIRE(typeinfo<var::type_at<2>>::template is_same_as<tracked_uchar>);
+        REQUIRE(type_info<var::type_at<0>>::template is_same_as<tracked_i32>);
+        REQUIRE(type_info<var::type_at<1>>::template is_same_as<tracked_f32>);
+        REQUIRE(type_info<var::type_at<2>>::template is_same_as<tracked_uchar>);
     }
 
     SECTION("count")
@@ -74,7 +74,7 @@ TEST_CASE("atom.core.variant")
 
     SECTION("trivial copy constructor")
     {
-        STATIC_REQUIRE(typeinfo<variant<i32, char, f32>>::is_trivially_copy_constructible);
+        STATIC_REQUIRE(type_info<variant<i32, char, f32>>::is_trivially_copy_constructible);
     }
 
     SECTION("copy constructor")
@@ -107,7 +107,7 @@ TEST_CASE("atom.core.variant")
 
     SECTION("trivial copy assignment operator")
     {
-        STATIC_REQUIRE(typeinfo<variant<i32, char, f32>>::is_trivially_copy_assignable);
+        STATIC_REQUIRE(type_info<variant<i32, char, f32>>::is_trivially_copy_assignable);
     }
 
     SECTION("copy assignment operator")
@@ -168,7 +168,7 @@ TEST_CASE("atom.core.variant")
 
     SECTION("trivial move constructor")
     {
-        STATIC_REQUIRE(typeinfo<variant<i32, char, f32>>::is_trivially_move_constructible);
+        STATIC_REQUIRE(type_info<variant<i32, char, f32>>::is_trivially_move_constructible);
     }
 
     SECTION("move constructor")
@@ -201,7 +201,7 @@ TEST_CASE("atom.core.variant")
 
     SECTION("trivial move assignment operator")
     {
-        STATIC_REQUIRE(typeinfo<variant<i32, char, f32>>::is_trivially_move_assignable);
+        STATIC_REQUIRE(type_info<variant<i32, char, f32>>::is_trivially_move_assignable);
     }
 
     SECTION("move assignment operator")

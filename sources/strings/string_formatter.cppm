@@ -31,7 +31,7 @@ namespace atom
     /// specialization.
     /// --------------------------------------------------------------------------------------------
     export template <typename value_type>
-        requires typeinfo<fmt::formatter<value_type>>::is_default_constructible
+        requires type_info<fmt::formatter<value_type>>::is_default_constructible
     class string_formatter<value_type, string_formatter_level::fmt>
     {
     public:
@@ -58,7 +58,7 @@ namespace atom
     /// range of `char`.
     /// --------------------------------------------------------------------------------------------
     export template <typename string_type>
-        requires typeinfo<string_type>::template is_derived_from<_string_type_id>
+        requires type_info<string_type>::template is_derived_from<_string_type_id>
     class string_formatter<string_type, string_formatter_level::atom>
         : public string_formatter<fmt::string_view, string_formatter_level::fmt>
     {
@@ -76,7 +76,7 @@ namespace atom
     /// `string_formatter` specialization for all enum types.
     /// --------------------------------------------------------------------------------------------
     export template <typename enum_type>
-        requires typeinfo<enum_type>::is_enum
+        requires type_info<enum_type>::is_enum
     class string_formatter<enum_type, string_formatter_level::atom>
         : public string_formatter<string_view, string_formatter_level::atom>
     {

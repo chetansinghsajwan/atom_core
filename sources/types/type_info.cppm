@@ -1,16 +1,16 @@
-export module atom.core:types.typeinfo;
+export module atom.core:types.type_info;
 
 import std;
-import :types.typeinfo_impl;
+import :types.type_info_impl;
 
 namespace atom
 {
     export using type_id = std::size_t;
 
     export template <typename in_value_type>
-    class typeinfo
+    class type_info
     {
-        using this_type = typeinfo;
+        using this_type = type_info;
         using usize = std::size_t;
 
     private:
@@ -43,26 +43,26 @@ namespace atom
     public:
         using value_type = in_value_type;
 
-        using add_const_type = typeinfo<std::add_const_t<value_type>>;
-        using remove_const_type = typeinfo<std::remove_const_t<value_type>>;
+        using add_const_type = type_info<std::add_const_t<value_type>>;
+        using remove_const_type = type_info<std::remove_const_t<value_type>>;
 
-        using add_volatile_type = typeinfo<std::add_volatile_t<value_type>>;
-        using remove_volatile_type = typeinfo<std::remove_volatile_t<value_type>>;
+        using add_volatile_type = type_info<std::add_volatile_t<value_type>>;
+        using remove_volatile_type = type_info<std::remove_volatile_t<value_type>>;
 
-        using unqualified_type = typeinfo<std::remove_cv_t<value_type>>;
+        using unqualified_type = type_info<std::remove_cv_t<value_type>>;
 
-        using add_lvalue_ref_type = typeinfo<std::add_lvalue_reference_t<value_type>>;
-        using add_rvalue_ref_type = typeinfo<std::add_rvalue_reference_t<value_type>>;
-        using remove_ref_type = typeinfo<std::remove_reference_t<value_type>>;
+        using add_lvalue_ref_type = type_info<std::add_lvalue_reference_t<value_type>>;
+        using add_rvalue_ref_type = type_info<std::add_rvalue_reference_t<value_type>>;
+        using remove_ref_type = type_info<std::remove_reference_t<value_type>>;
 
-        using add_ptr_type = typeinfo<std::add_pointer_t<value_type>>;
-        using remove_ptr_type = typeinfo<std::remove_pointer_t<value_type>>;
+        using add_ptr_type = type_info<std::add_pointer_t<value_type>>;
+        using remove_ptr_type = type_info<std::remove_pointer_t<value_type>>;
 
-        using pure_type = typeinfo<std::remove_cvref_t<value_type>>;
+        using pure_type = type_info<std::remove_cvref_t<value_type>>;
 
         template <typename like_type>
-        using unpure_like_type = typeinfo<
-            typename typeinfo_impl::unpure_like_type<in_value_type, like_type>::value_type>;
+        using unpure_like_type = type_info<
+            typename type_info_impl::unpure_like_type<in_value_type, like_type>::value_type>;
 
         static constexpr bool size = _get_sizeof<value_type>();
         static constexpr bool align = _get_alignof<value_type>();
@@ -80,7 +80,7 @@ namespace atom
         static constexpr bool is_same_or_derived_from =
             is_same_as<other_type> or is_derived_from<other_type>;
 
-        static constexpr bool is_complete = typeinfo_impl::is_complete<value_type>::value;
+        static constexpr bool is_complete = type_info_impl::is_complete<value_type>::value;
 
         static constexpr bool is_void = std::is_void_v<value_type>;
         static constexpr bool is_not_void = not is_void;
@@ -114,7 +114,7 @@ namespace atom
 
         template <typename signature>
         static constexpr bool is_function =
-            typeinfo_impl::template is_function<value_type, signature>::value;
+            type_info_impl::template is_function<value_type, signature>::value;
 
         template <typename... args_type>
         static constexpr bool is_constructible_from =

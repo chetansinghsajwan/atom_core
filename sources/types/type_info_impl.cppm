@@ -1,10 +1,10 @@
-export module atom.core:types.typeinfo_impl;
+export module atom.core:types.type_info_impl;
 
 import std;
 
 namespace atom
 {
-    namespace typeinfo_impl
+    namespace type_info_impl
     {
         /// ----------------------------------------------------------------------------------------
         ///

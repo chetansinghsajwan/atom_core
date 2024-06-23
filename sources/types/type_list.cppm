@@ -1,32 +1,32 @@
-export module atom.core:types.typelist;
+export module atom.core:types.type_list;
 
 import std;
-import :types.typeutils;
-import :types.typeinfo;
+import :types.type_utils;
+import :types.type_info;
 import :types.type_list_impl;
 
 namespace atom
 {
     export template <typename...>
-    class typeinfo_list;
+    class type_info_list;
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
     export template <typename... types>
-    class typelist
+    class type_list
     {
         using usize = std::size_t;
         using impl_type = type_list_impl<types...>;
 
     public:
-        using info_type = typeinfo_list<typelist<types...>>;
+        using info_type = type_info_list<type_list<types...>>;
 
     private:
         template <typename... other_types>
         static consteval auto _create_from_impl(type_list_impl<other_types...>) -> decltype(auto)
         {
-            return typelist<other_types...>{};
+            return type_list<other_types...>{};
         }
 
     public:
@@ -79,7 +79,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns the `typeinfo` of type at index `i`.
+        /// returns the `type_info` of type at index `i`.
         /// ----------------------------------------------------------------------------------------
         static consteval auto get_at(usize i) -> decltype(auto)
             requires(i < get_count())
@@ -88,7 +88,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns the `typeinfo` of type at index `i`, or `void` if index is out of bounds.
+        /// returns the `type_info` of type at index `i`, or `void` if index is out of bounds.
         /// ----------------------------------------------------------------------------------------
         static consteval auto get_at_try(usize i) -> decltype(auto)
         {
@@ -96,14 +96,14 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns the `typeinfo` of type at index `i`.
+        /// returns the `type_info` of type at index `i`.
         /// ----------------------------------------------------------------------------------------
         template <usize i>
             requires(i < get_count())
         using at_type = typename impl_type::template at_type<i>;
 
         /// ----------------------------------------------------------------------------------------
-        /// returns the `typeinfo` of type at the front.
+        /// returns the `type_info` of type at the front.
         /// ----------------------------------------------------------------------------------------
         static consteval auto get_front() -> decltype(auto)
             requires(not is_empty())
@@ -112,7 +112,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns the `typeinfo` of type at the front, or `void` if list is empty.
+        /// returns the `type_info` of type at the front, or `void` if list is empty.
         /// ----------------------------------------------------------------------------------------
         static consteval auto get_front_try() -> decltype(auto)
         {
@@ -120,7 +120,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns the `typeinfo` of type at the back.
+        /// returns the `type_info` of type at the back.
         /// ----------------------------------------------------------------------------------------
         static consteval auto get_back() -> decltype(auto)
             requires(not is_empty())
@@ -129,7 +129,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns the `typeinfo` of type at the back, or `void` if list is empty.
+        /// returns the `type_info` of type at the back, or `void` if list is empty.
         /// ----------------------------------------------------------------------------------------
         static consteval auto get_back_try() -> decltype(auto)
         {
@@ -158,7 +158,7 @@ namespace atom
         /// returns `true` if this contains all of `other_types`.
         /// ----------------------------------------------------------------------------------------
         template <typename... other_types>
-        static consteval auto has_all(typelist<other_types...>) -> bool
+        static consteval auto has_all(type_list<other_types...>) -> bool
         {
             return impl_type::template has_all(type_list_impl<other_types...>{});
         }
@@ -212,7 +212,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// invokes `func` for each type with their `typeinfo`.
+        /// invokes `func` for each type with their `type_info`.
         /// ----------------------------------------------------------------------------------------
         template <typename function_type>
         static consteval auto for_each(function_type&& func) -> void

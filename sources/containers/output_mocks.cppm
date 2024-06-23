@@ -8,7 +8,7 @@ namespace atom::mock
     export template <typename value_type>
     class output
     {
-        static_assert(typeinfo<value_type>::is_pure);
+        static_assert(type_info<value_type>::is_pure);
 
     public:
         auto operator+=(const value_type& el);

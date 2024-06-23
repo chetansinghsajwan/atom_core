@@ -32,7 +32,7 @@ namespace atom
     public:
         virtual auto invoke(arg_types... args) -> result_type override final
         {
-            if constexpr (typeinfo<result_type>::is_void)
+            if constexpr (type_info<result_type>::is_void)
             {
                 _function(forward<arg_types>(args)...);
             }
@@ -245,8 +245,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename function_type>
         function_box(function_type&& function)
-            requires(typeinfo<function_type>::template is_function<result_type(arg_types...)>)
-                    and (typeinfo<function_type>::template is_not_derived_from<function_box_tag>)
+            requires(type_info<function_type>::template is_function<result_type(arg_types...)>)
+                    and (type_info<function_type>::template is_not_derived_from<function_box_tag>)
             : _impl(typename _impl_type::value_tag(), forward<function_type>(function))
         {}
 
@@ -255,9 +255,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename function_type>
         function_box& operator=(function_type&& function)
-            requires typeinfo<function_type>::template
+            requires type_info<function_type>::template
         is_function<result_type(arg_types...)>
-            and (typeinfo<function_type>::template is_not_derived_from<function_box_tag>)
+            and (type_info<function_type>::template is_not_derived_from<function_box_tag>)
         {
             _impl.set_function(forward<function_type>(function));
             return *this;

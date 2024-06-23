@@ -17,8 +17,8 @@ namespace atom
     export template <typename in_value_type, typename in_allocator_type = default_mem_allocator>
     class dynamic_array
     {
-        static_assert(typeinfo<in_value_type>::is_pure, "dynamic_array does not non pure types.");
-        static_assert(not typeinfo<in_value_type>::is_void, "dynamic_array does not support void.");
+        static_assert(type_info<in_value_type>::is_pure, "dynamic_array does not non pure types.");
+        static_assert(not type_info<in_value_type>::is_void, "dynamic_array does not support void.");
 
     private:
         using this_type = dynamic_array<in_value_type, in_allocator_type>;
@@ -77,7 +77,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename range_type>
         constexpr dynamic_array(range_type&& range)
-            requires ranges::is_range_of<typename typeinfo<range_type>::pure_type::value_type, value_type>
+            requires ranges::is_range_of<typename type_info<range_type>::pure_type::value_type, value_type>
             : _impl{ typename _impl_type::range_tag{}, range.get_iterator(), range.get_iterator_end() }
         {}
 
@@ -178,7 +178,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename... arg_types>
         constexpr auto emplace_at(usize index, arg_types&&... args)
-            requires(typeinfo<value_type>::template is_constructible_from<arg_types...>)
+            requires(type_info<value_type>::template is_constructible_from<arg_types...>)
         {
             contract_debug_expects(is_index_in_range_or_end(index), "index is out of range.");
 
@@ -205,7 +205,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename... arg_types>
         constexpr auto emplace_at(iterator_type it, arg_types&&... args) -> mut_iterator_type
-            requires(typeinfo<value_type>::template is_constructible_from<arg_types...>)
+            requires(type_info<value_type>::template is_constructible_from<arg_types...>)
         {
             contract_debug_expects(is_iterator_valid(it), "invalid iterator.");
             contract_debug_expects(is_iterator_in_range_or_end(it), "iterator is out of range.");
@@ -237,7 +237,7 @@ namespace atom
         template <typename range_type>
         constexpr auto insert_range_at(usize index, range_type&& range) -> usize
             requires ranges::is_range_of<range_type, value_type>
-                     and (typeinfo<value_type>::template is_constructible_from<
+                     and (type_info<value_type>::template is_constructible_from<
                          typename range_type::value_type>)
         {
             contract_debug_expects(is_index_in_range_or_end(index), "index is out of range.");
@@ -267,7 +267,7 @@ namespace atom
         template <typename range_type>
         constexpr auto insert_range_at(iterator_type it, range_type&& range)
             requires ranges::is_range_of<range_type, value_type>
-                     and (typeinfo<value_type>::template is_constructible_from<
+                     and (type_info<value_type>::template is_constructible_from<
                          typename range_type::value_type>)
         {
             contract_debug_expects(is_iterator_valid(it), "invalid iterator.");
@@ -295,7 +295,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename... arg_types>
         constexpr auto emplace_front(arg_types&&... args)
-            requires(typeinfo<value_type>::template is_constructible_from<arg_types...>)
+            requires(type_info<value_type>::template is_constructible_from<arg_types...>)
         {
             _impl.emplace_front(forward<arg_types>(args)...);
         }
@@ -321,7 +321,7 @@ namespace atom
         template <typename range_type>
         constexpr auto insert_range_front(range_type&& range) -> mut_iterator_type
             requires ranges::is_range_of<range_type, value_type>
-                     and (typeinfo<value_type>::template is_constructible_from<
+                     and (type_info<value_type>::template is_constructible_from<
                          typename range_type::value_type>)
         {
             usize count = _impl.insert_range_front(forward<range_type&&>(range));
@@ -343,7 +343,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename... arg_types>
         constexpr auto emplace_back(arg_types&&... args)
-            requires(typeinfo<value_type>::template is_constructible_from<arg_types...>)
+            requires(type_info<value_type>::template is_constructible_from<arg_types...>)
         {
             _impl.emplace_back(forward<arg_types>(args)...);
         }
@@ -353,7 +353,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename arg_type>
         constexpr auto operator+=(arg_type&& el)
-            requires typeinfo<value_type>::template
+            requires type_info<value_type>::template
         is_constructible_from<arg_type>
         {
             _impl.emplace_back(forward<arg_type>(el));
@@ -379,9 +379,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename range_type>
         constexpr auto insert_range_back(range_type&& range) -> mut_iterator_type
-            requires ranges::is_range_of<typename typeinfo<range_type>::pure_type::value_type, value_type>
-                     and (typeinfo<value_type>::template is_constructible_from<
-                         typename typeinfo<range_type>::pure_type::value_type::value_type>)
+            requires ranges::is_range_of<typename type_info<range_type>::pure_type::value_type, value_type>
+                     and (type_info<value_type>::template is_constructible_from<
+                         typename type_info<range_type>::pure_type::value_type::value_type>)
         {
             usize count = _impl.insert_range_back(range.get_iterator(), range.get_iterator_end());
             return _impl.get_mut_iterator_at(_impl.get_count() - count);
@@ -393,9 +393,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename range_type>
         constexpr auto operator+=(range_type&& range)
-            requires ranges::is_range_of<typename typeinfo<range_type>::pure_type::value_type, value_type>
-                     and (typeinfo<value_type>::template is_constructible_from<
-                         typename typeinfo<range_type>::pure_type::value_type::value_type>)
+            requires ranges::is_range_of<typename type_info<range_type>::pure_type::value_type, value_type>
+                     and (type_info<value_type>::template is_constructible_from<
+                         typename type_info<range_type>::pure_type::value_type::value_type>)
         {
             _impl.insert_range_back(move(range.get_iterator()), move(range.get_iterator_end()));
         }
@@ -551,7 +551,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename predicate_type>
         constexpr auto remove_one_if(predicate_type&& pred) -> bool
-            requires typeinfo<predicate_type>::template
+            requires type_info<predicate_type>::template
         is_function<bool(const value_type&)>
         {
             for (usize i = 0; i < _impl.get_count(); i++)
@@ -571,7 +571,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename predicate_type>
         constexpr auto remove_all_if(predicate_type&& pred) -> usize
-            requires typeinfo<predicate_type>::template
+            requires type_info<predicate_type>::template
         is_function<bool(const value_type&)>
         {
             usize removed_count = 0;

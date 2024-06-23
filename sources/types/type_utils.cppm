@@ -1,10 +1,10 @@
-export module atom.core:types.typeutils;
+export module atom.core:types.type_utils;
 
 import std;
 
 namespace atom
 {
-    export class typeutils
+    export class type_utils
     {
     public:
         class empty

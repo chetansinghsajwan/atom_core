@@ -1,8 +1,8 @@
 export module atom.core:types.type_list_impl;
 
 import std;
-import :types.typeutils;
-import :types.typeinfo;
+import :types.type_utils;
+import :types.type_info;
 
 namespace atom
 {
@@ -79,7 +79,7 @@ namespace atom
             if (get_count() == 0)
                 return 0;
 
-            usize this_size = typeinfo<type0>::size;
+            usize this_size = type_info<type0>::size;
             usize other_size = next_types_list::get_max_size();
 
             return this_size > other_size ? this_size : other_size;
@@ -93,7 +93,7 @@ namespace atom
             if (get_count() == 0)
                 return 0;
 
-            usize this_size = typeinfo<type0>::size;
+            usize this_size = type_info<type0>::size;
             usize other_size = next_types_list::get_min_size();
 
             return this_size < other_size ? this_size : other_size;
@@ -107,7 +107,7 @@ namespace atom
             if (get_count() == 0)
                 return 0;
 
-            usize this_size = typeinfo<type0>::size;
+            usize this_size = type_info<type0>::size;
             usize other_size = next_types_list::get_max_align();
 
             return this_size > other_size ? this_size : other_size;
@@ -121,7 +121,7 @@ namespace atom
             if (get_count() == 0)
                 return 0;
 
-            usize this_size = typeinfo<type0>::size;
+            usize this_size = type_info<type0>::size;
             usize other_size = next_types_list::get_min_align();
 
             return this_size < other_size ? this_size : other_size;
@@ -134,7 +134,7 @@ namespace atom
         static consteval auto get_at() -> decltype(auto)
         {
             if constexpr (i == 0)
-                return typeinfo<type0>{};
+                return type_info<type0>{};
             else
                 return next_types_list::template get_at<i - 1>();
         }
@@ -149,7 +149,7 @@ namespace atom
             if (get_count() == 0)
                 return 1;
 
-            if (typeinfo<type0>::template is_same_as<value_type>)
+            if (type_info<type0>::template is_same_as<value_type>)
                 return 0;
 
             return 1 + next_types_list::template get_index<value_type>();
@@ -170,7 +170,7 @@ namespace atom
             if (get_count() == 0)
                 return;
 
-            func(typeinfo<type0>());
+            func(type_info<type0>());
 
             next_types_list::for_each(forward<function_type>(func));
         }
@@ -198,7 +198,7 @@ namespace atom
             if (get_count() == 0)
                 return true;
 
-            if (not pred(typeinfo<type0>{}))
+            if (not pred(type_info<type0>{}))
                 return false;
 
             return next_types_list::are_all(forward<predicate_type>(pred));
@@ -210,7 +210,7 @@ namespace atom
             if (get_count() == 0)
                 return false;
 
-            if (typeinfo<type0>::template is_same_as<value_type>)
+            if (type_info<type0>::template is_same_as<value_type>)
                 return true;
 
             return next_types_list::template has<value_type>();
@@ -251,7 +251,7 @@ namespace atom
             if (get_count() == 0)
                 return false;
 
-            if (func(typeinfo<type0>{}))
+            if (func(type_info<type0>{}))
                 return true;
 
             return next_types_list::has_if(forward<function_type>(func));
@@ -267,7 +267,7 @@ namespace atom
         // class at<index_to_get, index, in_type, types...>
         // {
         // public:
-        //     using value_type = typeutils::conditional_type<index_to_get == index, in_type,
+        //     using value_type = type_utils::conditional_type<index_to_get == index, in_type,
         //         typename at<index_to_get, index + 1, types...>::value_type>;
         // };
 
@@ -288,7 +288,7 @@ namespace atom
         // class index_of<type, index, in_type, types...>
         // {
         // public:
-        //     static constexpr usize value = typeinfo<type>::template is_same_as<in_type>
+        //     static constexpr usize value = type_info<type>::template is_same_as<in_type>
         //                                        ? index
         //                                        : index_of<type, index + 1, types...>::value;
         // };
@@ -324,10 +324,10 @@ namespace atom
         // class add_first;
 
         // template <typename in_type, typename... types>
-        // class add_first<in_type, typelist<types...>>
+        // class add_first<in_type, type_list<types...>>
         // {
         // public:
-        //     using value_type = typelist<in_type, types...>;
+        //     using value_type = type_list<in_type, types...>;
         // };
 
         // ////////////////////////////////////////////////////////////////////////////////////////////
@@ -340,10 +340,10 @@ namespace atom
         // class add_last;
 
         // template <typename in_type, typename... types>
-        // class add_last<in_type, typelist<types...>>
+        // class add_last<in_type, type_list<types...>>
         // {
         // public:
-        //     using value_type = typelist<types..., in_type>;
+        //     using value_type = type_list<types..., in_type>;
         // };
 
         // ////////////////////////////////////////////////////////////////////////////////////////////
@@ -359,7 +359,7 @@ namespace atom
         // class remove_if<predicate_type>
         // {
         // public:
-        //     using value_type = typelist<>;
+        //     using value_type = type_list<>;
         // };
 
         // template <template <typename in_type> typename predicate_type, typename in_type,
@@ -367,7 +367,7 @@ namespace atom
         // class remove_if<predicate_type, in_type, types...>
         // {
         // public:
-        //     using value_type = typeutils::conditional_type<predicate_type<in_type>::value,
+        //     using value_type = type_utils::conditional_type<predicate_type<in_type>::value,
         //         typename add_first<in_type,
         //             typename remove_if<predicate_type, types...>::in_type>::value_type,
         //         typename remove_if<predicate_type, types...>::value_type>;
@@ -385,7 +385,7 @@ namespace atom
         //     template <typename check_type>
         //     class _pred
         //     {
-        //         static constexpr bool value = typeinfo<in_type>::template is_same_as<check_type>;
+        //         static constexpr bool value = type_info<in_type>::template is_same_as<check_type>;
         //     };
 
         // public:
@@ -405,7 +405,7 @@ namespace atom
         // class remove_first<in_type, types...>
         // {
         // public:
-        //     using value_type = typelist<types...>;
+        //     using value_type = type_list<types...>;
         // };
 
         // ////////////////////////////////////////////////////////////////////////////////////////////
@@ -428,7 +428,7 @@ namespace atom
         // class remove_last<in_type>
         // {
         // public:
-        //     using value_type = typelist<>;
+        //     using value_type = type_list<>;
         // };
 
         // ////////////////////////////////////////////////////////////////////////////////////////////
@@ -444,14 +444,14 @@ namespace atom
         // class replace_all<replace_type, with_type>
         // {
         // public:
-        //     using value_type = typelist<>;
+        //     using value_type = type_list<>;
         // };
 
         // template <typename replace_type, typename with_type, typename in_type, typename... types>
         // class replace_all<replace_type, with_type, in_type, types...>
         // {
         //     using final_type =
-        //         typeutils::conditional_type<typeinfo<replace_type>::template is_same_as<in_type>,
+        //         type_utils::conditional_type<type_info<replace_type>::template is_same_as<in_type>,
         //             with_type, in_type>;
 
         // public:

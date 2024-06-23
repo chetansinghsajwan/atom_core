@@ -274,7 +274,7 @@ export namespace atom::ranges
     /// --------------------------------------------------------------------------------------------
     template <typename range_type>
     concept is_common_range = _is_range<range_type>
-                              and typeinfo<typename range_type::iterator_type>::template is_same_as<
+                              and type_info<typename range_type::iterator_type>::template is_same_as<
                                   typename range_type::iterator_end_type>;
 
     /// --------------------------------------------------------------------------------------------
@@ -283,6 +283,6 @@ export namespace atom::ranges
     template <typename range_type>
     concept is_mut_common_range =
         is_common_range<range_type>
-        and typeinfo<typename range_type::mut_iterator_type>::template is_same_as<
+        and type_info<typename range_type::mut_iterator_type>::template is_same_as<
             typename range_type::mut_iterator_end_type>;
 }

@@ -14,7 +14,7 @@ namespace atom
     export template <typename in_value_type>
     class string_formatter_provider
     {
-        using value_type = typeinfo<in_value_type>::pure_type::value_type;
+        using value_type = type_info<in_value_type>::pure_type::value_type;
 
     private:
         static consteval auto _get_type() -> decltype(auto)
@@ -23,25 +23,25 @@ namespace atom
             using _formatter_fmt = string_formatter<value_type, string_formatter_level::fmt>;
             using _formatter_user = string_formatter<value_type, string_formatter_level::user>;
 
-            using _formatter_atom_typeinfo = typeinfo<_formatter_atom>;
-            using _formatter_fmt_typeinfo = typeinfo<_formatter_fmt>;
-            using _formatter_user_typeinfo = typeinfo<_formatter_user>;
+            using _formatter_atom_type_info = type_info<_formatter_atom>;
+            using _formatter_fmt_type_info = type_info<_formatter_fmt>;
+            using _formatter_user_type_info = type_info<_formatter_user>;
 
-            if constexpr (_formatter_atom_typeinfo::is_complete)
+            if constexpr (_formatter_atom_type_info::is_complete)
             {
-                return _formatter_atom_typeinfo();
+                return _formatter_atom_type_info();
             }
-            else if constexpr (_formatter_fmt_typeinfo::is_complete)
+            else if constexpr (_formatter_fmt_type_info::is_complete)
             {
-                return _formatter_fmt_typeinfo();
+                return _formatter_fmt_type_info();
             }
-            else if constexpr (_formatter_user_typeinfo::is_complete)
+            else if constexpr (_formatter_user_type_info::is_complete)
             {
-                return _formatter_user_typeinfo();
+                return _formatter_user_type_info();
             }
             else
             {
-                return typeinfo<void>();
+                return type_info<void>();
             }
         }
 
@@ -56,7 +56,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         static consteval auto has() -> bool
         {
-            return not typeinfo<formatter_type>::is_void;
+            return not type_info<formatter_type>::is_void;
         }
 
         /// ----------------------------------------------------------------------------------------

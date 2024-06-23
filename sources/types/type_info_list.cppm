@@ -1,19 +1,19 @@
-export module atom.core:types.typeinfo_list;
+export module atom.core:types.type_info_list;
 
-import :types.typeinfo;
-import :types.typelist;
+import :types.type_info;
+import :types.type_list;
 
 namespace atom
 {
     export template <typename... values_type>
-    class typeinfo_list: public typeinfo_list<typelist<values_type...>>
+    class type_info_list: public type_info_list<type_list<values_type...>>
     {};
 
     export template <typename... values_type>
-    class typeinfo_list<typelist<values_type...>>
+    class type_info_list<type_list<values_type...>>
     {
     public:
-        using value_types_list = typelist<values_type...>;
+        using value_types_list = type_list<values_type...>;
 
     public:
         static constexpr bool are_pure =

@@ -26,7 +26,7 @@ namespace atom
         template <typename that_type>
         struct is_result_api
         {
-            static constexpr bool value = typeinfo<that_type>::template is_derived_from<result_tag>;
+            static constexpr bool value = type_info<that_type>::template is_derived_from<result_tag>;
         };
 
     private:
@@ -37,7 +37,7 @@ namespace atom
 
     public:
         using value_type = typename impl_type::out_value_type;
-        using value_type_info_type = typeinfo<value_type>;
+        using value_type_info_type = type_info<value_type>;
         using error_type_list = typename impl_type::error_type_list;
 
     public:
@@ -75,7 +75,7 @@ namespace atom
         template <typename in_that_type>
         static constexpr bool should_enable_universal_copy_constructor = []
         {
-            using that_type = typeinfo<in_that_type>::pure_type::value_type;
+            using that_type = type_info<in_that_type>::pure_type::value_type;
 
             if constexpr (not is_result_api<that_type>::value)
                 return false;
@@ -111,7 +111,7 @@ namespace atom
         template <typename in_that_type>
         static constexpr bool should_enable_universal_copy_operator = []
         {
-            using that_type = typeinfo<in_that_type>::pure_type::value_type;
+            using that_type = type_info<in_that_type>::pure_type::value_type;
 
             if constexpr (not is_result_api<that_type>::value)
                 return false;
@@ -149,7 +149,7 @@ namespace atom
         template <typename in_that_type>
         static constexpr bool should_enable_universal_move_constructor = []
         {
-            using that_type = typeinfo<in_that_type>::pure_type::value_type;
+            using that_type = type_info<in_that_type>::pure_type::value_type;
 
             if constexpr (not is_result_api<that_type>::value)
                 return false;
@@ -185,7 +185,7 @@ namespace atom
         template <typename in_that_type>
         static constexpr bool should_enable_universal_move_operator = []
         {
-            using that_type = typeinfo<in_that_type>::pure_type::value_type;
+            using that_type = type_info<in_that_type>::pure_type::value_type;
 
             if constexpr (not is_result_api<that_type>::value)
                 return false;
@@ -396,7 +396,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename error_type>
         constexpr result_api(const error_type& error)
-            requires(has_error<typename typeinfo<error_type>::pure_type::value_type>())
+            requires(has_error<typename type_info<error_type>::pure_type::value_type>())
             : _impl(typename impl_type::error_tag(), error)
         {}
 
@@ -405,7 +405,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename error_type>
         constexpr result_api(error_type&& error)
-            requires(has_error<typename typeinfo<error_type>::pure_type::value_type>())
+            requires(has_error<typename type_info<error_type>::pure_type::value_type>())
             : _impl(typename impl_type::error_tag(), move(error))
         {}
 
@@ -414,7 +414,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename error_type>
         constexpr this_type& operator=(const error_type& error)
-            requires(has_error<typename typeinfo<error_type>::pure_type::value_type>())
+            requires(has_error<typename type_info<error_type>::pure_type::value_type>())
         {
             _impl.set_error(error);
             return *this;
@@ -425,7 +425,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename error_type>
         constexpr this_type& operator=(error_type&& error)
-            requires(has_error<typename typeinfo<error_type>::pure_type::value_type>())
+            requires(has_error<typename type_info<error_type>::pure_type::value_type>())
         {
             _impl.set_error(move(error));
             return *this;
@@ -643,16 +643,16 @@ namespace atom
         template <typename final_qualified_type, typename function_qualified_type>
         static constexpr bool should_enable_on_value_function = []
         {
-            using this_type = typeinfo<final_qualified_type>::pure_type::value_type;
+            using this_type = type_info<final_qualified_type>::pure_type::value_type;
 
             if constexpr (is_result_api<this_type>::value)
             {
                 using value_qualified_type =
-                    typeinfo<typename this_type::value_type>::template unpure_like_type<
+                    type_info<typename this_type::value_type>::template unpure_like_type<
                         final_qualified_type>::value_type;
                 using signature_type = void(value_qualified_type);
 
-                if (not typeinfo<function_qualified_type>::template is_function<signature_type>)
+                if (not type_info<function_qualified_type>::template is_function<signature_type>)
                     return false;
 
                 return true;
@@ -679,21 +679,21 @@ namespace atom
             typename error_type>
         static constexpr bool should_enable_on_error_function = []
         {
-            using this_type = typeinfo<final_qualified_type>::pure_type::value_type;
+            using this_type = type_info<final_qualified_type>::pure_type::value_type;
 
             if constexpr (is_result_api<this_type>::value)
             {
-                if (not typeinfo<error_type>::is_pure)
+                if (not type_info<error_type>::is_pure)
                     return false;
 
                 if (not has_error<error_type>())
                     return false;
 
-                using error_qualified_type = typeinfo<error_type>::template unpure_like_type<
+                using error_qualified_type = type_info<error_type>::template unpure_like_type<
                     final_qualified_type>::value_type;
                 using signature_type = void(error_qualified_type);
 
-                if (not typeinfo<function_qualified_type>::template is_function<signature_type>)
+                if (not type_info<function_qualified_type>::template is_function<signature_type>)
                     return false;
 
                 return true;
@@ -719,7 +719,7 @@ namespace atom
         template <typename final_qualified_type, typename function_qualified_type>
         static constexpr bool should_enable_on_universal_error_function = []
         {
-            using this_type = typeinfo<final_qualified_type>::pure_type::value_type;
+            using this_type = type_info<final_qualified_type>::pure_type::value_type;
 
             if constexpr (is_result_api<this_type>::value)
             {
@@ -727,11 +727,11 @@ namespace atom
                         [](auto info)
                         {
                             using error_qualified_type =
-                                typeinfo<typename decltype(info)::value_type>::
+                                type_info<typename decltype(info)::value_type>::
                                     template unpure_like_type<final_qualified_type>::value_type;
                             using signature_type = void(error_qualified_type);
 
-                            return typeinfo<function_qualified_type>::template is_function<
+                            return type_info<function_qualified_type>::template is_function<
                                 signature_type>;
                         }))
                     return false;

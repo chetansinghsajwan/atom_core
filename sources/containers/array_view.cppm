@@ -13,7 +13,7 @@ namespace atom
     export template <typename in_elem_type>
     class array_view
     {
-        static_assert(typeinfo<in_elem_type>::is_pure);
+        static_assert(type_info<in_elem_type>::is_pure);
 
     private:
         using this_type = array_view;

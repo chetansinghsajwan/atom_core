@@ -14,7 +14,7 @@ namespace atom
     template <typename value_type>
     class _format_arg_wrapper
     {
-        static_assert(typeinfo<value_type>::is_pure);
+        static_assert(type_info<value_type>::is_pure);
 
     public:
         _format_arg_wrapper(const value_type& value)

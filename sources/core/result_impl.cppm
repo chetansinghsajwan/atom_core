@@ -26,9 +26,9 @@ namespace atom
     public:
         using value_type = in_value_type;
         using out_value_type =
-            typeutils::conditional_type<typeinfo<value_type>::template is_same_as<_result_void>, void,
+            type_utils::conditional_type<type_info<value_type>::template is_same_as<_result_void>, void,
                 value_type>;
-        using error_type_list = typelist<error_types...>;
+        using error_type_list = type_list<error_types...>;
 
         static_assert(not error_type_list::is_empty());
 
@@ -99,19 +99,19 @@ namespace atom
         }
 
         constexpr auto set_value(const value_type& value) -> void
-            requires(not typeinfo<value_type>::is_void)
+            requires(not type_info<value_type>::is_void)
         {
             _variant.template emplace_value_by_index<value_index>(value);
         }
 
         constexpr auto set_value(value_type&& value) -> void
-            requires(not typeinfo<value_type>::is_void)
+            requires(not type_info<value_type>::is_void)
         {
             _variant.template emplace_value_by_index<value_index>(move(value));
         }
 
         constexpr auto set_value_void() -> void
-            requires(not typeinfo<value_type>::is_void)
+            requires(not type_info<value_type>::is_void)
         {
             _variant.template emplace_value_by_index<value_index>();
         }
@@ -149,7 +149,7 @@ namespace atom
         template <typename error_type>
         static consteval auto has_error() -> bool
         {
-            if (typeinfo<error_type>::template is_same_as<value_type>)
+            if (type_info<error_type>::template is_same_as<value_type>)
                 return false;
 
             return _variant_type::template has<error_type>();

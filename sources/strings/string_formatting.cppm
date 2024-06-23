@@ -61,7 +61,7 @@ namespace atom
             }
 
         public:
-            typeinfo<output_type>::pure_type::value_type* out;
+            type_info<output_type>::pure_type::value_type* out;
         };
 
         return _wrapper(out);

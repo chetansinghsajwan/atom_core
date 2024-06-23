@@ -12,7 +12,7 @@ namespace atom
     class static_storage_for
     {
     private:
-        using value_types_list = typelist<values_type...>;
+        using value_types_list = type_list<values_type...>;
 
     public:
         alignas(value_types_list::get_max_align()) byte storage[value_types_list::get_max_size()];

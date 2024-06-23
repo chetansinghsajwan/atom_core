@@ -14,9 +14,9 @@ export namespace atom
     class unique_ptr_default_destroyer
     {
         static_assert(
-            typeinfo<value_type>::is_pure, "unique_ptr_default_destroyer only supports pure types.");
+            type_info<value_type>::is_pure, "unique_ptr_default_destroyer only supports pure types.");
         static_assert(
-            not typeinfo<value_type>::is_void, "unique_ptr_default_destroyer does not support void.");
+            not type_info<value_type>::is_void, "unique_ptr_default_destroyer does not support void.");
 
     public:
         constexpr auto operator()(value_type* val)
@@ -30,10 +30,10 @@ export namespace atom
         typename in_destroyer_type = unique_ptr_default_destroyer<in_value_type>>
     class unique_ptr
     {
-        static_assert(typeinfo<in_value_type>::is_pure, "unique_ptr only supports pure types.");
-        static_assert(not typeinfo<in_value_type>::is_void, "unique_ptr does not support void.");
-        static_assert(typeinfo<in_destroyer_type>::is_pure);
-        static_assert(not typeinfo<in_destroyer_type>::is_void);
+        static_assert(type_info<in_value_type>::is_pure, "unique_ptr only supports pure types.");
+        static_assert(not type_info<in_value_type>::is_void, "unique_ptr does not support void.");
+        static_assert(type_info<in_destroyer_type>::is_pure);
+        static_assert(not type_info<in_destroyer_type>::is_void);
 
     private:
         template <typename other_value_type, typename other_destroyer_type>
@@ -93,7 +93,7 @@ export namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename other_value_type>
         constexpr unique_ptr(unique_ptr<other_value_type, destroyer_type>&& that)
-            requires(typeinfo<other_value_type>::template is_same_or_derived_from<value_type>)
+            requires(type_info<other_value_type>::template is_same_or_derived_from<value_type>)
             : _ptr(that._ptr)
             , _destroyer(move(that._destroyer))
         {
@@ -105,7 +105,7 @@ export namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename other_value_type>
         constexpr unique_ptr& operator=(unique_ptr<other_value_type, destroyer_type>&& that)
-            requires(typeinfo<other_value_type>::template is_same_or_derived_from<value_type>)
+            requires(type_info<other_value_type>::template is_same_or_derived_from<value_type>)
         {
             _move(move(that));
         }
@@ -192,7 +192,7 @@ export namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename new_value_type = value_type>
         constexpr auto to_shared() -> shared_ptr<new_value_type>
-            requires(typeinfo<new_value_type>::template is_same_or_derived_from<value_type>)
+            requires(type_info<new_value_type>::template is_same_or_derived_from<value_type>)
         {
             return _to_shared();
         }
@@ -203,7 +203,7 @@ export namespace atom
         template <typename allocator_type, typename new_value_type = value_type>
         constexpr auto to_shared_with_alloc(
             allocator_type allocator = allocator_type()) -> shared_ptr<new_value_type>
-            requires(typeinfo<new_value_type>::template is_same_or_derived_from<value_type>)
+            requires(type_info<new_value_type>::template is_same_or_derived_from<value_type>)
         {
             return _to_shared();
         }
