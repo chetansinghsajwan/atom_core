@@ -7,9 +7,6 @@ import :types.type_list_impl;
 
 namespace atom
 {
-    export template <typename...>
-    class type_info_list;
-
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
@@ -18,16 +15,6 @@ namespace atom
     {
         using usize = std::size_t;
         using impl_type = type_list_impl<types...>;
-
-    public:
-        using info_type = type_info_list<type_list<types...>>;
-
-    private:
-        template <typename... other_types>
-        static consteval auto _create_from_impl(type_list_impl<other_types...>) -> decltype(auto)
-        {
-            return type_list<other_types...>{};
-        }
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -252,6 +239,182 @@ namespace atom
         static consteval auto remove_duplicates() -> decltype(auto)
         {
             return _create_from_impl(impl_type::remove_duplicates());
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` if all types are pure.
+        /// ----------------------------------------------------------------------------------------
+        static constexpr auto are_pure() -> bool
+        {
+            return are_all([](auto info) { return info.is_pure; });
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` if all types are default constructible.
+        /// ----------------------------------------------------------------------------------------
+        static constexpr auto are_default_constructible() -> bool
+        {
+            return are_all([](auto info) { return info.is_default_constructible; });
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` if all types are copy constructible.
+        /// ----------------------------------------------------------------------------------------
+        static constexpr auto are_copy_constructible() -> bool
+        {
+            return are_all([](auto info) { return info.is_copy_constructible; });
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` if all types are copy assignable.
+        /// ----------------------------------------------------------------------------------------
+        static constexpr auto are_copy_assignable() -> bool
+        {
+            return are_all([](auto info) { return info.is_copy_assignable; });
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` if all types are copyable.
+        /// ----------------------------------------------------------------------------------------
+        static constexpr auto are_copyable() -> bool
+        {
+            return are_all([](auto info) { return info.is_copyable; });
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` if all types are move constructible.
+        /// ----------------------------------------------------------------------------------------
+        static constexpr auto are_move_constructible() -> bool
+        {
+            return are_all([](auto info) { return info.is_move_constructible; });
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` if all types are move assignable.
+        /// ----------------------------------------------------------------------------------------
+        static constexpr auto are_move_assignable() -> bool
+        {
+            return are_all([](auto info) { return info.is_move_assignable; });
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` if all types are moveable.
+        /// ----------------------------------------------------------------------------------------
+        static constexpr auto are_moveable() -> bool
+        {
+            return are_all([](auto info) { return info.is_moveable; });
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` if all types are destructible.
+        /// ----------------------------------------------------------------------------------------
+        static constexpr auto are_destructible() -> bool
+        {
+            return are_all([](auto info) { return info.is_destructible; });
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` if all types are trivially default constructible.
+        /// ----------------------------------------------------------------------------------------
+        static constexpr auto are_trivially_default_constructible() -> bool
+        {
+            return are_all([](auto info) { return info.is_trivially_default_constructible; });
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` if all types are trivially copy constructible.
+        /// ----------------------------------------------------------------------------------------
+        static constexpr auto are_trivially_copy_constructible() -> bool
+        {
+            return are_all([](auto info) { return info.is_trivially_copy_constructible; });
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` if all types are triviallycopy assignable.
+        /// ----------------------------------------------------------------------------------------
+        static constexpr auto are_trivially_copy_assignable() -> bool
+        {
+            return are_all([](auto info) { return info.is_trivially_copy_assignable; });
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` if all types are not trivially copy assignable.
+        /// ----------------------------------------------------------------------------------------
+        static constexpr auto are_not_trivially_copy_assignable() -> bool
+        {
+            return not are_trivially_copy_assignable();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` if all types are trivially copyable.
+        /// ----------------------------------------------------------------------------------------
+        static constexpr auto are_trivially_copyable() -> bool
+        {
+            return are_all([](auto info) { return info.is_trivially_copyable; });
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` if all types are trivially move constructible.
+        /// ----------------------------------------------------------------------------------------
+        static constexpr auto are_trivially_move_constructible() -> bool
+        {
+            return are_all([](auto info) { return info.is_trivially_move_constructible; });
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` if all types are not trivially move constructible.
+        /// ----------------------------------------------------------------------------------------
+        static constexpr auto are_not_trivially_move_constructible() -> bool
+        {
+            return not are_trivially_move_constructible();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` if all types are trivially move assignable.
+        /// ----------------------------------------------------------------------------------------
+        static constexpr auto are_trivially_move_assignable() -> bool
+        {
+            return are_all([](auto info) { return info.is_trivially_move_assignable; });
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` if all types are not trivially move assignable.
+        /// ----------------------------------------------------------------------------------------
+        static constexpr auto are_not_trivially_move_assignable() -> bool
+        {
+            return not are_trivially_move_assignable();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` if all types are trivially moveable.
+        /// ----------------------------------------------------------------------------------------
+        static constexpr auto are_trivially_moveable() -> bool
+        {
+            return are_all([](auto info) { return info.is_trivially_moveable; });
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` if all types are trivially destructible.
+        /// ----------------------------------------------------------------------------------------
+        static constexpr auto are_trivially_destructible() -> bool
+        {
+            return are_all([](auto info) { return info.is_trivially_destructible; });
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` if all types are typename .
+        /// ----------------------------------------------------------------------------------------
+        template <typename other_type>
+        static constexpr auto are_convertible_to() -> bool
+        {
+            return are_all([](auto info) { return info.template is_convertible_to<other_type>; });
+        }
+
+    private:
+        template <typename... other_types>
+        static consteval auto _create_from_impl(type_list_impl<other_types...>) -> decltype(auto)
+        {
+            return type_list<other_types...>{};
         }
     };
 }
