@@ -79,7 +79,7 @@ namespace atom
             if (get_count() == 0)
                 return 0;
 
-            usize this_size = type_info<type0>::size;
+            usize this_size = type_info<type0>::get_size();
             usize other_size = next_types_list::get_max_size();
 
             return this_size > other_size ? this_size : other_size;
@@ -93,7 +93,7 @@ namespace atom
             if (get_count() == 0)
                 return 0;
 
-            usize this_size = type_info<type0>::size;
+            usize this_size = type_info<type0>::get_size();
             usize other_size = next_types_list::get_min_size();
 
             return this_size < other_size ? this_size : other_size;
@@ -107,7 +107,7 @@ namespace atom
             if (get_count() == 0)
                 return 0;
 
-            usize this_size = type_info<type0>::size;
+            usize this_size = type_info<type0>::get_align();
             usize other_size = next_types_list::get_max_align();
 
             return this_size > other_size ? this_size : other_size;
@@ -121,7 +121,7 @@ namespace atom
             if (get_count() == 0)
                 return 0;
 
-            usize this_size = type_info<type0>::size;
+            usize this_size = type_info<type0>::get_align();
             usize other_size = next_types_list::get_min_align();
 
             return this_size < other_size ? this_size : other_size;
@@ -149,7 +149,7 @@ namespace atom
             if (get_count() == 0)
                 return 1;
 
-            if (type_info<type0>::template is_same_as<value_type>)
+            if (type_info<type0>::template is_same_as<value_type>())
                 return 0;
 
             return 1 + next_types_list::template get_index<value_type>();
@@ -210,7 +210,7 @@ namespace atom
             if (get_count() == 0)
                 return false;
 
-            if (type_info<type0>::template is_same_as<value_type>)
+            if (type_info<type0>::template is_same_as<value_type>())
                 return true;
 
             return next_types_list::template has<value_type>();

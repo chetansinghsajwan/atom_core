@@ -27,15 +27,15 @@ namespace atom
             using _formatter_fmt_type_info = type_info<_formatter_fmt>;
             using _formatter_user_type_info = type_info<_formatter_user>;
 
-            if constexpr (_formatter_atom_type_info::is_complete)
+            if constexpr (_formatter_atom_type_info::is_complete())
             {
                 return _formatter_atom_type_info();
             }
-            else if constexpr (_formatter_fmt_type_info::is_complete)
+            else if constexpr (_formatter_fmt_type_info::is_complete())
             {
                 return _formatter_fmt_type_info();
             }
-            else if constexpr (_formatter_user_type_info::is_complete)
+            else if constexpr (_formatter_user_type_info::is_complete())
             {
                 return _formatter_user_type_info();
             }
@@ -56,7 +56,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         static consteval auto has() -> bool
         {
-            return not type_info<formatter_type>::is_void;
+            return not type_info<formatter_type>::is_void();
         }
 
         /// ----------------------------------------------------------------------------------------

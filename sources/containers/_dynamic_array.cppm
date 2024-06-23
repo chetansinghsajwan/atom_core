@@ -55,7 +55,8 @@ namespace atom
         }
 
         template <typename other_iterator_type, typename other_iterator_end_type>
-        constexpr _dynamic_array_impl(range_tag, other_iterator_type it, other_iterator_end_type it_end)
+        constexpr _dynamic_array_impl(
+            range_tag, other_iterator_type it, other_iterator_end_type it_end)
             : _dynamic_array_impl{}
         {
             insert_range_back(move(it), move(it_end));
@@ -186,7 +187,8 @@ namespace atom
         }
 
         template <typename other_iterator_type, typename other_iterator_end_type>
-        constexpr auto insert_range_front(other_iterator_type it, other_iterator_end_type it_end) -> usize
+        constexpr auto insert_range_front(
+            other_iterator_type it, other_iterator_end_type it_end) -> usize
         {
             return insert_range_at(0, move(it), move(it_end));
         }
@@ -198,7 +200,8 @@ namespace atom
         }
 
         template <typename other_iterator_type, typename other_iterator_end_type>
-        constexpr auto insert_range_back(other_iterator_type it, other_iterator_end_type it_end) -> usize
+        constexpr auto insert_range_back(
+            other_iterator_type it, other_iterator_end_type it_end) -> usize
         {
             if constexpr (_can_get_range_size<other_iterator_type, other_iterator_end_type>())
             {
@@ -324,7 +327,8 @@ namespace atom
         }
 
         template <typename other_iterator_type>
-        constexpr auto _insert_range_at_counted(usize index, other_iterator_type it, usize count) -> usize
+        constexpr auto _insert_range_at_counted(
+            usize index, other_iterator_type it, usize count) -> usize
         {
             if (count == 0)
                 return index;
@@ -504,15 +508,18 @@ namespace atom
         template <typename other_iterator_type, typename other_iterator_end_type>
         static constexpr auto _can_get_range_size() -> bool
         {
-            return ranges::is_unidirectional_iterator_pair<other_iterator_type, other_iterator_end_type>;
+            return ranges::is_unidirectional_iterator_pair<other_iterator_type,
+                other_iterator_end_type>;
         }
 
         template <typename other_iterator_type, typename other_iterator_end_type>
-        static constexpr auto _get_range_size(other_iterator_type it, other_iterator_end_type it_end) -> usize
+        static constexpr auto _get_range_size(
+            other_iterator_type it, other_iterator_end_type it_end) -> usize
         {
-            if constexpr (ranges::is_random_access_iterator_pair<other_iterator_type, other_iterator_end_type>)
+            if constexpr (ranges::is_random_access_iterator_pair<other_iterator_type,
+                              other_iterator_end_type>)
             {
-                return it.compare(it_end).abs().template to<usize>();
+                return it - it_end;
             }
 
             usize count = 0;

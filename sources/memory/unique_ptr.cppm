@@ -14,9 +14,9 @@ export namespace atom
     class unique_ptr_default_destroyer
     {
         static_assert(
-            type_info<value_type>::is_pure, "unique_ptr_default_destroyer only supports pure types.");
+            type_info<value_type>::is_pure(), "unique_ptr_default_destroyer only supports pure types.");
         static_assert(
-            not type_info<value_type>::is_void, "unique_ptr_default_destroyer does not support void.");
+            not type_info<value_type>::is_void(), "unique_ptr_default_destroyer does not support void.");
 
     public:
         constexpr auto operator()(value_type* val)
@@ -30,8 +30,8 @@ export namespace atom
         typename in_destroyer_type = unique_ptr_default_destroyer<in_value_type>>
     class unique_ptr
     {
-        static_assert(type_info<in_value_type>::is_pure, "unique_ptr only supports pure types.");
-        static_assert(not type_info<in_value_type>::is_void, "unique_ptr does not support void.");
+        static_assert(type_info<in_value_type>::is_pure(), "unique_ptr only supports pure types.");
+        static_assert(not type_info<in_value_type>::is_void(), "unique_ptr does not support void.");
         static_assert(type_info<in_destroyer_type>::is_pure);
         static_assert(not type_info<in_destroyer_type>::is_void);
 

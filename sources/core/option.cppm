@@ -37,7 +37,7 @@ namespace atom
         = default;
 
         constexpr ~_option_storage()
-            requires type_info<value_type>::is_not_trivially_destructible
+            requires(not type_info<value_type>::is_trivially_destructible())
         {}
 
     public:
@@ -452,8 +452,9 @@ namespace atom
     export template <typename in_value_type>
     class option
     {
-        static_assert(type_info<in_value_type>::is_pure, "option supports only pure types");
-        static_assert(not type_info<in_value_type>::is_void, "option does not support void type.");
+        static_assert(type_info<in_value_type>::is_pure(), "option supports only pure types");
+        static_assert(
+            not type_info<in_value_type>::is_void(), "option does not support void type.");
 
     private:
         using this_type = option<in_value_type>;
@@ -489,8 +490,8 @@ namespace atom
         /// else constructs wih no value.
         /// ----------------------------------------------------------------------------------------
         constexpr option(const option& that)
-            requires type_info<value_type>::is_not_trivially_copy_constructible
-                     and type_info<value_type>::is_copy_constructible
+            requires(not type_info<value_type>::is_trivially_copy_constructible())
+                    and type_info<value_type>::is_copy_constructible
             : _impl(typename impl_type::ctor_copy(), that._impl)
         {}
 
@@ -512,8 +513,8 @@ namespace atom
         ///     else, does nothing.
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator=(const option& that) -> option&
-            requires type_info<value_type>::is_not_trivially_copy_assignable
-                     and type_info<value_type>::is_copyable
+            requires(not type_info<value_type>::is_trivially_copy_assignable())
+                    and type_info<value_type>::is_copyable
         {
             _impl.copy(that._impl);
             return *this;
@@ -533,8 +534,8 @@ namespace atom
         /// else constructs wih no value.
         /// ----------------------------------------------------------------------------------------
         constexpr option(option&& that)
-            requires type_info<value_type>::is_not_trivially_move_constructible
-                     and type_info<value_type>::is_move_constructible
+            requires(not type_info<value_type>::is_trivially_move_constructible())
+                    and type_info<value_type>::is_move_constructible
             : _impl(typename impl_type::ctor_move(), move(that._impl))
         {}
 
@@ -556,8 +557,8 @@ namespace atom
         ///     else, does nothing.
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator=(option&& that) -> option&
-            requires type_info<value_type>::is_not_trivially_move_assignable
-                     and type_info<value_type>::is_moveable
+            requires(not type_info<value_type>::is_trivially_move_assignable())
+                    and type_info<value_type>::is_moveable
         {
             _impl.mov(move(that._impl));
             return *this;
@@ -654,8 +655,8 @@ namespace atom
         /// destroys value if stored.
         /// ----------------------------------------------------------------------------------------
         constexpr ~option()
-            requires type_info<value_type>::is_not_trivially_destructible
-                     and type_info<value_type>::is_destructible
+            requires(not type_info<value_type>::is_trivially_destructible())
+                    and type_info<value_type>::is_destructible
         {
             _impl.destroy();
         }

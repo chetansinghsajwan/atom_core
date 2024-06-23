@@ -6,6 +6,40 @@ namespace atom
 {
     namespace type_info_impl
     {
+        using usize = std::size_t;
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename value_type>
+        consteval auto get_sizeof() -> usize
+        {
+            if constexpr (std::is_void_v<value_type>)
+            {
+                return 0;
+            }
+            else
+            {
+                return sizeof(value_type);
+            }
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename value_type>
+        consteval auto get_alignof() -> usize
+        {
+            if constexpr (std::is_void_v<value_type>)
+            {
+                return 0;
+            }
+            else
+            {
+                return alignof(value_type);
+            }
+        }
+
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
@@ -111,13 +145,15 @@ namespace atom
         template <typename value_type, typename return_type, typename... args_type>
         struct is_function<value_type, return_type(args_type...)>
         {
-            static constexpr bool value = std::is_invocable_r_v<return_type, value_type, args_type...>;
+            static constexpr bool value =
+                std::is_invocable_r_v<return_type, value_type, args_type...>;
         };
 
         template <typename value_type, typename return_type, typename... args_type>
         struct is_function<value_type, return_type(args_type...) const>
         {
-            static constexpr bool value = std::is_invocable_r_v<return_type, const value_type, args_type...>;
+            static constexpr bool value =
+                std::is_invocable_r_v<return_type, const value_type, args_type...>;
         };
 
         template <typename value_type, typename return_type, typename... args_type>

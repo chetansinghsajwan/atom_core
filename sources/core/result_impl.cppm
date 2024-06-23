@@ -26,7 +26,7 @@ namespace atom
     public:
         using value_type = in_value_type;
         using out_value_type =
-            type_utils::conditional_type<type_info<value_type>::template is_same_as<_result_void>, void,
+            type_utils::conditional_type<type_info<value_type>::template is_same_as<_result_void>(), void,
                 value_type>;
         using error_type_list = type_list<error_types...>;
 
@@ -149,7 +149,7 @@ namespace atom
         template <typename error_type>
         static consteval auto has_error() -> bool
         {
-            if (type_info<error_type>::template is_same_as<value_type>)
+            if (type_info<error_type>::template is_same_as<value_type>())
                 return false;
 
             return _variant_type::template has<error_type>();

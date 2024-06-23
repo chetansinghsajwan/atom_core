@@ -89,8 +89,8 @@ namespace atom::filesystem
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        using open_error = result<file, filesystem_error, noentry_error, invalid_options_error>;
-        using reopen_error = result<void, filesystem_error, noentry_error, invalid_options_error>;
+        using open_result = result<file, filesystem_error, noentry_error, invalid_options_error>;
+        using reopen_result = result<void, filesystem_error, noentry_error, invalid_options_error>;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -126,7 +126,7 @@ namespace atom::filesystem
         ///
         /// @feature add more error types, like `file_already_exists`.
         /// ----------------------------------------------------------------------------------------
-        static auto open(string_view path, open_flags flags) -> open_error
+        static auto open(string_view path, open_flags flags) -> open_result
         {
             errno = 0;
 
@@ -155,7 +155,7 @@ namespace atom::filesystem
         /// ----------------------------------------------------------------------------------------
         /// reopens the file with new flags.
         /// ----------------------------------------------------------------------------------------
-        auto reopen(open_flags flags) -> reopen_error
+        auto reopen(open_flags flags) -> reopen_result
         {
             contract_expects(not is_closed(), "the file is closed.");
 
@@ -494,7 +494,7 @@ namespace atom::filesystem
 
     export auto read_file_str(string_view path) -> result<string, filesystem_error, noentry_error>
     {
-        file::open_error result = file::open(path, file::open_flags::read);
+        file::open_result result = file::open(path, file::open_flags::read);
 
         contract_asserts(not result.is_error<invalid_options_error>());
 
@@ -513,7 +513,7 @@ namespace atom::filesystem
     export auto write_file_str(
         string_view path, string_view str) -> result<void, filesystem_error, noentry_error>
     {
-        file::open_error result =
+        file::open_result result =
             file::open(path, file::open_flags::write | file::open_flags::create);
 
         contract_asserts(not result.is_error<invalid_options_error>());
@@ -536,7 +536,7 @@ namespace atom::filesystem
     auto write_file_fmt(string_view path, format_string<arg_types...> fmt,
         arg_types&&... args) -> result<void, filesystem_error, noentry_error>
     {
-        file::open_error result =
+        file::open_result result =
             file::open(path, file::open_flags::write | file::open_flags::create);
 
         contract_asserts(not result.is_error<invalid_options_error>());

@@ -91,13 +91,15 @@ namespace atom
         template <typename... others_type>
         constexpr auto construct_value_from_variant(const _variant_impl<others_type...>& that)
         {
-            _construct_value_from_variant_impl<false, 0, others_type...>(that, that.get_type_index());
+            _construct_value_from_variant_impl<false, 0, others_type...>(
+                that, that.get_type_index());
         }
 
         template <typename... others_type>
         constexpr auto construct_value_from_variant(_variant_impl<others_type...>&& that)
         {
-            _construct_value_from_variant_impl<true, 0, others_type...>(that, that.get_type_index());
+            _construct_value_from_variant_impl<true, 0, others_type...>(
+                that, that.get_type_index());
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -312,7 +314,8 @@ namespace atom
 
                 if constexpr (mov)
                 {
-                    _construct_value_as<other_type>(move(that.template _get_value_as<other_type>()));
+                    _construct_value_as<other_type>(
+                        move(that.template _get_value_as<other_type>()));
                 }
                 else
                 {
@@ -360,7 +363,7 @@ namespace atom
         template <typename value_type>
         constexpr auto _destruct_value_as()
         {
-            if constexpr (type_info<value_type>::is_not_void)
+            if constexpr (not type_info<value_type>::is_void())
                 obj_helper().destruct(_get_data_as<value_type>());
         }
 
@@ -407,8 +410,8 @@ namespace atom
     export template <typename... value_types>
     class variant
     {
-        static_assert(
-            type_list<value_types...>::are_unique(), "every type in value_types... should be unique.");
+        static_assert(type_list<value_types...>::are_unique(),
+            "every type in value_types... should be unique.");
         static_assert(
             type_list<value_types...>::get_count() > 0, "at least one type needs to be specified.");
 
@@ -486,7 +489,8 @@ namespace atom
         /// # default constructor
         /// ----------------------------------------------------------------------------------------
         constexpr variant()
-            requires type_info<first_type>::is_default_constructible or type_info<first_type>::is_void
+            requires(type_info<first_type>::is_default_constructible()
+                     or type_info<first_type>::is_void())
         {
             _impl.template construct_value_by_index<0>();
         }
@@ -500,8 +504,8 @@ namespace atom
         /// # copy constructor
         /// ----------------------------------------------------------------------------------------
         constexpr variant(const variant& that)
-            requires (value_types_list::info_list::are_copy_constructible())
-            and (value_types_list::info_list::are_not_trivially_copy_constructible())
+            requires(value_types_list::info_list::are_copy_constructible())
+                    and (value_types_list::info_list::are_not_trivially_copy_constructible())
         {
             _impl.construct_value_from_variant(that._impl);
         }
@@ -511,8 +515,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename... others_type>
         constexpr variant(const variant<others_type...>& that)
-            requires (type_list<others_type...>::are_copy_constructible())
-                     and (value_types_list::template has<others_type...>())
+            requires(type_list<others_type...>::are_copy_constructible())
+                    and (value_types_list::template has<others_type...>())
         {
             _impl.construct_value_from_variant(that._impl);
         }
@@ -526,8 +530,8 @@ namespace atom
         /// # copy assignment operator
         /// ----------------------------------------------------------------------------------------
         constexpr variant& operator=(const variant& that)
-            requires (value_types_list::are_copyable())
-            and (value_types_list::are_not_trivially_copy_assignable())
+            requires(value_types_list::are_copyable())
+                    and (value_types_list::are_not_trivially_copy_assignable())
         {
             _impl.set_value_from_variant(that._impl);
             return *this;
@@ -538,8 +542,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename... others_type>
         constexpr variant& operator=(const variant<others_type...>& that)
-            requires (value_types_list::are_copyable())
-                     and (value_types_list::template has<others_type...>())
+            requires(value_types_list::are_copyable())
+                    and (value_types_list::template has<others_type...>())
         {
             _impl.set_value_from_variant(that._impl);
             return *this;
@@ -554,8 +558,8 @@ namespace atom
         /// # move constructor
         /// ----------------------------------------------------------------------------------------
         constexpr variant(variant&& that)
-            requires (value_types_list::are_move_constructible())
-            and (value_types_list::are_not_trivially_move_constructible())
+            requires(value_types_list::are_move_constructible())
+                    and (value_types_list::are_not_trivially_move_constructible())
         {
             _impl.construct_value_from_variant(move(that._impl));
         }
@@ -565,8 +569,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename... others_type>
         constexpr variant(variant<others_type...>&& that)
-            requires (type_list<others_type...>::are_move_constructible())
-                     and (value_types_list::template has<others_type...>())
+            requires(type_list<others_type...>::are_move_constructible())
+                    and (value_types_list::template has<others_type...>())
         {
             _impl.construct_value_from_variant(move(that._impl));
         }
@@ -580,8 +584,8 @@ namespace atom
         /// # move assignment operator
         /// ----------------------------------------------------------------------------------------
         constexpr variant& operator=(variant&& that)
-            requires (value_types_list::are_moveable())
-            and (value_types_list::are_not_trivially_move_assignable())
+            requires(value_types_list::are_moveable())
+                    and (value_types_list::are_not_trivially_move_assignable())
         {
             _impl.set_value_from_variant(move(that._impl));
             return *this;
@@ -592,8 +596,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename... others_type>
         constexpr variant& operator=(variant<others_type...>&& that)
-            requires (value_types_list::are_moveable())
-                     and (value_types_list::template has<others_type...>())
+            requires(value_types_list::are_moveable())
+                    and (value_types_list::template has<others_type...>())
         {
             _impl.set_value_from_variant(move(that._impl));
             return *this;
@@ -676,7 +680,7 @@ namespace atom
         /// destructs value.
         /// ----------------------------------------------------------------------------------------
         constexpr ~variant()
-            requires (value_types_list::into_type::are_trivially_destructible())
+            requires(value_types_list::into_type::are_trivially_destructible())
         {
             _impl.destroy_value();
         }
@@ -692,7 +696,7 @@ namespace atom
         template <typename value_type, typename... arg_types>
         constexpr auto emplace(arg_types&&... args)
             requires(has<value_type>())
-                    and (type_info<value_type>::template is_constructible_from<arg_types...>)
+                    and (type_info<value_type>::template is_constructible_from<arg_types...>())
         {
             _impl.template emplace_value_by_type<value_type>(forward<arg_types>(args)...);
         }
@@ -707,7 +711,7 @@ namespace atom
         template <usize index, typename... arg_types>
         constexpr auto emplace(arg_types&&... args)
             requires(has<index>())
-                    and (type_info<type_at<index>>::template is_constructible_from<arg_types...>)
+                    and (type_info<type_at<index>>::template is_constructible_from<arg_types...>())
         {
             _impl.template emplace_value_by_index<index>(forward<arg_types>(args)...);
         }
@@ -749,7 +753,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename value_type>
         constexpr auto as() const -> const value_type&
-            requires(has<value_type>()) and type_info<value_type>::is_not_void
+            requires(has<value_type>()) and (not type_info<value_type>::is_void())
         {
             contract_expects(is<value_type>(), "access to invalid type.");
 
@@ -765,7 +769,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename value_type>
         constexpr auto as() -> value_type&
-            requires(has<value_type>()) and type_info<value_type>::is_not_void
+            requires(has<value_type>()) and (not type_info<value_type>::is_void())
         {
             contract_debug_expects(is<value_type>(), "access to invalid type.");
 
@@ -777,7 +781,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename value_type>
         constexpr auto as_check() const -> const value_type&
-            requires(has<value_type>()) and type_info<value_type>::is_not_void
+            requires(has<value_type>()) and (not type_info<value_type>::is_void())
         {
             contract_expects(is<value_type>(), "access to invalid type.");
 
@@ -789,7 +793,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename value_type>
         constexpr auto as_check() -> value_type&
-            requires(has<value_type>()) and type_info<value_type>::is_not_void
+            requires(has<value_type>()) and (not type_info<value_type>::is_void())
         {
             contract_expects(is<value_type>(), "access to invalid type.");
 
@@ -809,7 +813,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <usize index>
         constexpr auto get_at() const -> const type_at<index>&
-            requires(has<index>()) and type_info<type_at<index>>::is_not_void
+            requires(has<index>()) and (not type_info<type_at<index>>::is_void())
         {
             contract_expects(is<index>(), "access to invalid type by index.");
 
@@ -829,7 +833,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <usize index>
         constexpr auto get_at() -> type_at<index>&
-            requires(has<index>()) and type_info<type_at<index>>::is_not_void
+            requires(has<index>()) and (not type_info<type_at<index>>::is_void())
         {
             contract_debug_expects(is<index>(), "access to invalid type by index.");
 
@@ -841,7 +845,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <usize index>
         constexpr auto get_at_checked() const -> const type_at<index>&
-            requires(has<index>()) and type_info<type_at<index>>::is_not_void
+            requires(has<index>()) and (not type_info<type_at<index>>::is_void())
         {
             contract_expects(is<index>(), "access to invalid type by index.");
 
@@ -853,7 +857,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <usize index>
         constexpr auto get_at_checked() -> type_at<index>&
-            requires(has<index>()) and type_info<type_at<index>>::is_not_void
+            requires(has<index>()) and (not type_info<type_at<index>>::is_void())
         {
             contract_expects(is<index>(), "access to invalid type by index.");
 

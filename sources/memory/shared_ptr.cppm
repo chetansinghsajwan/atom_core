@@ -125,9 +125,9 @@ export namespace atom
     class shared_ptr_default_destroyer
     {
         static_assert(
-            type_info<value_type>::is_pure, "shared_ptr_default_destroyer only supports pure types.");
+            type_info<value_type>::is_pure(), "shared_ptr_default_destroyer only supports pure types.");
         static_assert(
-            not type_info<value_type>::is_void, "shared_ptr_default_destroyer does not support void.");
+            not type_info<value_type>::is_void(), "shared_ptr_default_destroyer does not support void.");
 
     public:
         constexpr auto operator()(value_type* val)
@@ -140,8 +140,8 @@ export namespace atom
     template <typename in_value_type>
     class shared_ptr
     {
-        static_assert(type_info<in_value_type>::is_pure, "shared_ptr only supports pure types.");
-        static_assert(not type_info<in_value_type>::is_void, "shared_ptr does not support void.");
+        static_assert(type_info<in_value_type>::is_pure(), "shared_ptr only supports pure types.");
+        static_assert(not type_info<in_value_type>::is_void(), "shared_ptr does not support void.");
 
     private:
         using this_type = shared_ptr;

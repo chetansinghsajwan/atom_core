@@ -31,7 +31,7 @@ TEST_CASE("atom.core.unique_ptr")
 
     SECTION("copy constructor")
     {
-        STATIC_REQUIRE(type_info<unique_ptr<tracked_type>>::is_not_copy_constructible);
+        STATIC_REQUIRE(not type_info<unique_ptr<tracked_type>>::is_copy_constructible());
     }
 
     SECTION("move constructor")
@@ -57,7 +57,7 @@ TEST_CASE("atom.core.unique_ptr")
 
     SECTION("copy operator")
     {
-        STATIC_REQUIRE(type_info<unique_ptr<tracked_type>>::is_not_copy_assignable);
+        STATIC_REQUIRE(not type_info<unique_ptr<tracked_type>>::is_copy_assignable());
     }
 
     SECTION("move operator")

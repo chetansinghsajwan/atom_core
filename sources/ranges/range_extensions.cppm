@@ -503,7 +503,7 @@ export namespace atom::ranges
         const range_type& range, const that_value_type& value) -> iterator_type<range_type>
         requires is_range<range_type>
                  and (type_info<value_type<range_type>>::template is_equality_comparable_with<
-                     that_value_type>)
+                     that_value_type>())
     {
         return _impl_type<range_type>::find_elem(range, value);
     }
@@ -542,7 +542,7 @@ export namespace atom::ranges
         const range_type& range, const that_range_type& that_range) -> iterator_type<range_type>
         requires is_range<range_type> and is_unidirectional_range<that_range_type>
                  and (type_info<value_type<range_type>>::template is_equality_comparable_with<
-                     typename that_range_type::value_type>)
+                     typename that_range_type::value_type>())
     {
         return _impl_type<range_type>::find_range(range, that_range);
     }
@@ -561,7 +561,7 @@ export namespace atom::ranges
     constexpr auto contains(const range_type& range, const that_value_type& value) -> bool
         requires is_range<range_type>
                  and (type_info<value_type<range_type>>::template is_equality_comparable_with<
-                     that_value_type>)
+                     that_value_type>())
     {
         return _impl_type<range_type>::contains(range, value);
     }
@@ -576,7 +576,7 @@ export namespace atom::ranges
         constexpr auto operator|(const range_type& range) -> bool
             requires is_range<range_type>
                      and (type_info<value_type<range_type>>::template is_equality_comparable_with<
-                         that_value_type>)
+                         that_value_type>())
         {
             return _impl_type<range_type>::contains(range, value);
         }
@@ -627,7 +627,7 @@ export namespace atom::ranges
         const range_type& range, const that_range_type& that_range) -> bool
         requires is_range<range_type> and is_unidirectional_range<that_range_type>
                  and (type_info<value_type<range_type>>::template is_equality_comparable_with<
-                     typename that_range_type::value_type>)
+                     typename that_range_type::value_type>())
     {
         return _impl_type<range_type>::contains(range, that_range);
     }
@@ -645,7 +645,7 @@ export namespace atom::ranges
     constexpr auto compare(const range_type& range, const that_range_type& that_range) -> i8
         requires is_range<range_type> and is_range<that_range_type>
                  and (type_info<value_type<range_type>>::template is_equality_comparable_with<
-                     typename that_range_type::value_type>)
+                     typename that_range_type::value_type>())
     {
         return _impl_type<range_type>::compare(range, that_range);
     }
@@ -682,7 +682,7 @@ export namespace atom::ranges
     template <typename range_type, typename value_type1>
     constexpr auto write_elems(range_type& range, value_type1& val) -> range_type&
         requires is_mut_range<range_type>
-                 and (type_info<value_type<range_type>>::template is_assignable_from<value_type1>)
+                 and (type_info<value_type<range_type>>::template is_assignable_from<value_type1>())
     {
         _impl_type<range_type>::write_elems(range, val);
         return range;
@@ -696,7 +696,7 @@ export namespace atom::ranges
     template <typename range_type, typename value_type1>
     constexpr auto write_elems_no_optimize(range_type& range, value_type1& val) -> range_type&
         requires is_mut_range<range_type>
-                 and (type_info<value_type<range_type>>::template is_assignable_from<value_type1>)
+                 and (type_info<value_type<range_type>>::template is_assignable_from<value_type1>())
     {
         _impl_type<range_type>::write_elems_no_optimize(range, val);
         return range;
@@ -831,7 +831,8 @@ export namespace atom
     constexpr auto operator==(const range_type& range, const that_range_type& that_range) -> bool
         requires ranges::is_range<range_type> and ranges::is_range<that_range_type>
                  and (type_info<ranges::value_type<range_type>>::
-                         template is_equality_comparable_with<ranges::value_type<that_range_type>>)
+                         template is_equality_comparable_with<
+                             ranges::value_type<that_range_type>>())
     {
         return ranges::_impl_type<range_type>::is_eq(range, that_range);
     }
@@ -843,7 +844,8 @@ export namespace atom
     constexpr auto operator!=(const range_type& range, const that_range_type& that_range) -> bool
         requires ranges::is_range<range_type> and ranges::is_range<that_range_type>
                  and (type_info<ranges::value_type<range_type>>::
-                         template is_equality_comparable_with<ranges::value_type<that_range_type>>)
+                         template is_equality_comparable_with<
+                             ranges::value_type<that_range_type>>())
     {
         return not ranges::_impl_type<range_type>::is_eq(range, that_range);
     }
@@ -856,7 +858,7 @@ export namespace atom
         const range_type& range, const that_value_type (&that_arr)[that_count]) -> bool
         requires ranges::is_range<range_type>
                  and (type_info<ranges::value_type<range_type>>::
-                         template is_equality_comparable_with<that_value_type>)
+                         template is_equality_comparable_with<that_value_type>())
     {
         return ranges::_impl_type<range_type>::is_eq(range, ranges::from(that_arr));
     }
@@ -869,7 +871,7 @@ export namespace atom
         const range_type& range, const that_value_type (&that_arr)[that_count]) -> bool
         requires ranges::is_range<range_type>
                  and (type_info<ranges::value_type<range_type>>::
-                         template is_equality_comparable_with<that_value_type>)
+                         template is_equality_comparable_with<that_value_type>())
     {
         return not ranges::_impl_type<range_type>::is_eq(range, ranges::from(that_arr));
     }

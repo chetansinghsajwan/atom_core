@@ -137,6 +137,8 @@ export namespace std
     using std::is_trivially_move_constructible_v;
     using std::is_void_v;
     using std::is_volatile_v;
+    using std::equality_comparable;
+    using std::equality_comparable_with;
     using std::remove_const_t;
     using std::remove_cv_t;
     using std::remove_cvref_t;

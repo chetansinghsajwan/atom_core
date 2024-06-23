@@ -44,7 +44,7 @@ namespace atom
 
         static consteval auto is_enum() -> bool
         {
-            return type_info<enum_type>::is_enum;
+            return type_info<enum_type>::is_enum();
         }
 
         static consteval auto is_scoped() -> bool

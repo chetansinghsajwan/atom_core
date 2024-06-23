@@ -246,7 +246,7 @@ namespace atom
         template <typename function_type>
         function_box(function_type&& function)
             requires(type_info<function_type>::template is_function<result_type(arg_types...)>)
-                    and (type_info<function_type>::template is_not_derived_from<function_box_tag>)
+                    and (not type_info<function_type>::template is_derived_from<function_box_tag>())
             : _impl(typename _impl_type::value_tag(), forward<function_type>(function))
         {}
 
@@ -257,7 +257,7 @@ namespace atom
         function_box& operator=(function_type&& function)
             requires type_info<function_type>::template
         is_function<result_type(arg_types...)>
-            and (type_info<function_type>::template is_not_derived_from<function_box_tag>)
+            and (not type_info<function_type>::template is_derived_from<function_box_tag>())
         {
             _impl.set_function(forward<function_type>(function));
             return *this;

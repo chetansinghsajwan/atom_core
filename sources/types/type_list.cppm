@@ -246,7 +246,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         static constexpr auto are_pure() -> bool
         {
-            return are_all([](auto info) { return info.is_pure; });
+            return are_all([](auto info) { return info.is_pure(); });
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -254,7 +254,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         static constexpr auto are_default_constructible() -> bool
         {
-            return are_all([](auto info) { return info.is_default_constructible; });
+            return are_all([](auto info) { return info.is_default_constructible(); });
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -262,7 +262,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         static constexpr auto are_copy_constructible() -> bool
         {
-            return are_all([](auto info) { return info.is_copy_constructible; });
+            return are_all([](auto info) { return info.is_copy_constructible(); });
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -270,7 +270,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         static constexpr auto are_copy_assignable() -> bool
         {
-            return are_all([](auto info) { return info.is_copy_assignable; });
+            return are_all([](auto info) { return info.is_copy_assignable(); });
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -278,7 +278,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         static constexpr auto are_copyable() -> bool
         {
-            return are_all([](auto info) { return info.is_copyable; });
+            return are_all([](auto info) { return info.is_copyable(); });
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -286,7 +286,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         static constexpr auto are_move_constructible() -> bool
         {
-            return are_all([](auto info) { return info.is_move_constructible; });
+            return are_all([](auto info) { return info.is_move_constructible(); });
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -294,7 +294,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         static constexpr auto are_move_assignable() -> bool
         {
-            return are_all([](auto info) { return info.is_move_assignable; });
+            return are_all([](auto info) { return info.is_move_assignable(); });
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -302,7 +302,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         static constexpr auto are_moveable() -> bool
         {
-            return are_all([](auto info) { return info.is_moveable; });
+            return are_all([](auto info) { return info.is_moveable(); });
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -310,7 +310,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         static constexpr auto are_destructible() -> bool
         {
-            return are_all([](auto info) { return info.is_destructible; });
+            return are_all([](auto info) { return info.is_destructible(); });
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -318,7 +318,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         static constexpr auto are_trivially_default_constructible() -> bool
         {
-            return are_all([](auto info) { return info.is_trivially_default_constructible; });
+            return are_all([](auto info) { return info.is_trivially_default_constructible(); });
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -326,7 +326,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         static constexpr auto are_trivially_copy_constructible() -> bool
         {
-            return are_all([](auto info) { return info.is_trivially_copy_constructible; });
+            return are_all([](auto info) { return info.is_trivially_copy_constructible(); });
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -334,7 +334,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         static constexpr auto are_trivially_copy_assignable() -> bool
         {
-            return are_all([](auto info) { return info.is_trivially_copy_assignable; });
+            return are_all([](auto info) { return info.is_trivially_copy_assignable(); });
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -350,7 +350,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         static constexpr auto are_trivially_copyable() -> bool
         {
-            return are_all([](auto info) { return info.is_trivially_copyable; });
+            return are_all([](auto info) { return info.is_trivially_copyable(); });
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -358,7 +358,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         static constexpr auto are_trivially_move_constructible() -> bool
         {
-            return are_all([](auto info) { return info.is_trivially_move_constructible; });
+            return are_all([](auto info) { return info.is_trivially_move_constructible(); });
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -374,7 +374,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         static constexpr auto are_trivially_move_assignable() -> bool
         {
-            return are_all([](auto info) { return info.is_trivially_move_assignable; });
+            return are_all([](auto info) { return info.is_trivially_move_assignable(); });
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -390,7 +390,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         static constexpr auto are_trivially_moveable() -> bool
         {
-            return are_all([](auto info) { return info.is_trivially_moveable; });
+            return are_all([](auto info) { return info.is_trivially_moveable(); });
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -398,7 +398,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         static constexpr auto are_trivially_destructible() -> bool
         {
-            return are_all([](auto info) { return info.is_trivially_destructible; });
+            return are_all([](auto info) { return info.is_trivially_destructible(); });
         }
 
         /// ----------------------------------------------------------------------------------------
