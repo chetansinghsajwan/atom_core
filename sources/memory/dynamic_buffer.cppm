@@ -66,7 +66,7 @@ namespace atom
             return *this;
         }
 
-        constexpr dynamic_buffer(_with_size_type, usize size)
+        constexpr dynamic_buffer(create_with_size_type, usize size)
             : _data{ nullptr }
             , _size{ size }
             , _capacity{ size }

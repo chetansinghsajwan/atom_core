@@ -53,15 +53,15 @@ namespace atom
             : _vector{ arr, arr + count }
         {}
 
-        constexpr _dynamic_array_impl_vector(_with_count_type, usize count)
+        constexpr _dynamic_array_impl_vector(create_with_count_type, usize count)
             : _vector(count)
         {}
 
-        constexpr _dynamic_array_impl_vector(_with_count_type, usize count, const value_type& value)
+        constexpr _dynamic_array_impl_vector(create_with_count_type, usize count, const value_type& value)
             : _vector{ count, value }
         {}
 
-        constexpr _dynamic_array_impl_vector(_with_capacity_type, usize capacity)
+        constexpr _dynamic_array_impl_vector(create_with_capacity_type, usize capacity)
             : _vector{}
         {
             _vector.reserve(capacity);

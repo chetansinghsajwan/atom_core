@@ -62,7 +62,7 @@ namespace atom
             insert_range_back(move(it), move(it_end));
         }
 
-        constexpr _dynamic_array_impl(_with_count_type, usize count)
+        constexpr _dynamic_array_impl(create_with_count_type, usize count)
             : _count{ count }
             , _capacity{ count }
             , _allocator{}
@@ -70,7 +70,7 @@ namespace atom
             _data = (value_type*)_allocator.alloc(count);
         }
 
-        constexpr _dynamic_array_impl(_with_count_type, usize count, const value_type& value)
+        constexpr _dynamic_array_impl(create_with_count_type, usize count, const value_type& value)
             : _count{ count }
             , _capacity{ count }
             , _allocator{}
@@ -81,7 +81,7 @@ namespace atom
                 _data[i] = value;
         }
 
-        constexpr _dynamic_array_impl(_with_capacity_type, usize capacity)
+        constexpr _dynamic_array_impl(create_with_capacity_type, usize capacity)
             : _count{ 0 }
             , _capacity{ capacity }
             , _allocator{}

@@ -116,22 +116,22 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # named constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr dynamic_array(_with_count_type, usize count)
-            : _impl{ _with_count, count }
+        constexpr dynamic_array(create_with_count_type, usize count)
+            : _impl{ create_with_count, count }
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # named constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr dynamic_array(_with_count_type, usize count, const value_type& value)
-            : _impl{ _with_count, count, value }
+        constexpr dynamic_array(create_with_count_type, usize count, const value_type& value)
+            : _impl{ create_with_count, count, value }
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # named constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr dynamic_array(_with_capacity_type, usize capacity)
-            : _impl{ _with_capacity, capacity }
+        constexpr dynamic_array(create_with_capacity_type, usize capacity)
+            : _impl{ create_with_capacity, capacity }
         {}
 
         /// ----------------------------------------------------------------------------------------
