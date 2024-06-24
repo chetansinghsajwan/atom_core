@@ -193,7 +193,7 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename predicate_type>
-        static consteval auto are_all(predicate_type&& pred) -> bool
+        static constexpr auto are_all(predicate_type&& pred) -> bool
         {
             if (get_count() == 0)
                 return true;
@@ -202,6 +202,21 @@ namespace atom
                 return false;
 
             return next_types_list::are_all(forward<predicate_type>(pred));
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename predicate_type>
+        static constexpr auto is_any(predicate_type&& pred) -> bool
+        {
+            if (get_count() == 0)
+                return false;
+
+            if (pred(type_info<type0>{}))
+                return true;
+
+            return next_types_list::is_any(forward<predicate_type>(pred));
         }
 
         template <typename value_type>

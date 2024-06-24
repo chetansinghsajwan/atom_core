@@ -196,6 +196,12 @@ namespace atom
             return _variant.template is<error_type>();
         }
 
+        template <typename... other_error_types>
+        constexpr auto is_error_any() const -> bool
+        {
+            return _variant.template is_any<other_error_types...>();
+        }
+
         constexpr auto panic_on_error() const -> void
         {
             if (is_error())

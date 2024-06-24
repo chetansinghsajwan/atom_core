@@ -498,6 +498,16 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
+        /// returns `true` if the stored value is of any of the types `value_types`.
+        /// ----------------------------------------------------------------------------------------
+        template <typename... other_value_types>
+        constexpr auto is_any() const -> bool
+            requires(value_types_list::template has_all<other_value_types...>())
+        {
+            return _impl.template is_any_type<other_value_types...>();
+        }
+
+        /// ----------------------------------------------------------------------------------------
         /// get the index to current type.
         /// ----------------------------------------------------------------------------------------
         constexpr auto index() const -> usize

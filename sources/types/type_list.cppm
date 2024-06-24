@@ -138,7 +138,7 @@ namespace atom
         template <typename... other_types>
         static consteval auto has_all() -> bool
         {
-            return impl_type::template has_all<other_types...>();
+            return impl_type::template has_all(type_list_impl<other_types...>{});
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -202,7 +202,7 @@ namespace atom
         /// invokes `func` for each type with their `type_info`.
         /// ----------------------------------------------------------------------------------------
         template <typename function_type>
-        static consteval auto for_each(function_type&& func) -> void
+        static constexpr auto for_each(function_type&& func) -> void
         {
             impl_type::for_each(func);
         }
@@ -211,7 +211,7 @@ namespace atom
         /// returns `true` if predicate `pred` returns `true` for all types.
         /// ----------------------------------------------------------------------------------------
         template <typename predicate_type>
-        static consteval auto are_all(predicate_type&& pred) -> bool
+        static constexpr auto are_all(predicate_type&& pred) -> bool
         {
             return impl_type::are_all(pred);
         }
@@ -220,7 +220,7 @@ namespace atom
         /// returns `true` if predicate `pred` returns `true` for any type.
         /// ----------------------------------------------------------------------------------------
         template <typename predicate_type>
-        static consteval auto is_any(predicate_type&& pred) -> bool
+        static constexpr auto is_any(predicate_type&& pred) -> bool
         {
             return impl_type::is_any(pred);
         }

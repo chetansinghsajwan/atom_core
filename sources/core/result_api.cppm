@@ -613,6 +613,16 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
+        template <typename... other_error_types>
+        constexpr auto is_error_any() const -> bool
+            requires(error_type_list::template has_all<other_error_types...>())
+        {
+            return _impl.template is_error_any<other_error_types...>();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
         constexpr auto panic_on_error() const -> void
         {
             _impl.panic_on_error();
