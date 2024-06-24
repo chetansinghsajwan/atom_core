@@ -43,11 +43,13 @@ namespace atom
         {}
 
         template <typename other_iterator_type, typename other_iterator_end_type>
-        constexpr _dynamic_array_impl_vector(range_tag, other_iterator_type it, other_iterator_end_type it_end)
+        constexpr _dynamic_array_impl_vector(
+            range_tag, other_iterator_type it, other_iterator_end_type it_end)
             : _vector{ move(it), move(it_end) }
         {}
 
-        constexpr _dynamic_array_impl_vector(create_from_raw_tag, const value_type* arr, usize count)
+        constexpr _dynamic_array_impl_vector(
+            create_from_raw_tag, const value_type* arr, usize count)
             : _vector{ arr, arr + count }
         {}
 
@@ -142,7 +144,8 @@ namespace atom
         }
 
         template <typename other_iterator_type, typename other_iterator_end_type>
-        constexpr auto insert_range_front(other_iterator_type it, other_iterator_end_type it_end) -> usize
+        constexpr auto insert_range_front(
+            other_iterator_type it, other_iterator_end_type it_end) -> usize
         {
             return insert_range_at(0, move(it), move(it_end));
         }
@@ -154,7 +157,8 @@ namespace atom
         }
 
         template <typename other_iterator_type, typename other_iterator_end_type>
-        constexpr auto insert_range_back(other_iterator_type it, other_iterator_end_type it_end) -> usize
+        constexpr auto insert_range_back(
+            other_iterator_type it, other_iterator_end_type it_end) -> usize
         {
             return insert_range_at(get_count(), move(it), move(it_end));
         }

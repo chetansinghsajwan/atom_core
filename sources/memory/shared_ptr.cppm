@@ -124,10 +124,10 @@ export namespace atom
     template <typename value_type>
     class shared_ptr_default_destroyer
     {
-        static_assert(
-            type_info<value_type>::is_pure(), "shared_ptr_default_destroyer only supports pure types.");
-        static_assert(
-            not type_info<value_type>::is_void(), "shared_ptr_default_destroyer does not support void.");
+        static_assert(type_info<value_type>::is_pure(),
+            "shared_ptr_default_destroyer only supports pure types.");
+        static_assert(not type_info<value_type>::is_void(),
+            "shared_ptr_default_destroyer does not support void.");
 
     public:
         constexpr auto operator()(value_type* val)
@@ -277,7 +277,8 @@ export namespace atom
         {
             if (ptr != nullptr)
             {
-                _state = _create_state<destroyer_type, allocator_type>(move(destroyer), move(allocator));
+                _state =
+                    _create_state<destroyer_type, allocator_type>(move(destroyer), move(allocator));
             }
         }
 
@@ -307,7 +308,8 @@ export namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        template <typename value_type, typename destroyer_type = shared_ptr_default_destroyer<value_type>,
+        template <typename value_type,
+            typename destroyer_type = shared_ptr_default_destroyer<value_type>,
             typename allocator_type = shared_ptr_default_allocator>
         constexpr auto set(value_type* ptr, destroyer_type destroyer = destroyer_type(),
             allocator_type allocator = allocator_type())
@@ -411,7 +413,8 @@ export namespace atom
         constexpr auto _create_state(
             destroyer_type destroyer, allocator_type allocator) -> _shared_ptr_state*
         {
-            using state_type = _default_shared_ptr_state<value_type, destroyer_type, allocator_type>;
+            using state_type =
+                _default_shared_ptr_state<value_type, destroyer_type, allocator_type>;
 
             state_type* state = static_cast<state_type*>(allocator.alloc(sizeof(state_type)));
             obj_helper().construct_as<state_type>(state, move(destroyer), move(allocator));
@@ -445,10 +448,11 @@ export namespace atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename value_type, typename allocator_type, typename... arg_types>
-    auto make_shared_with_alloc(allocator_type allocator, arg_types&&... args) -> shared_ptr<value_type>
+    auto make_shared_with_alloc(
+        allocator_type allocator, arg_types&&... args) -> shared_ptr<value_type>
     {
-        using state_type = _default_shared_ptr_state<value_type, shared_ptr_default_destroyer<value_type>,
-            shared_ptr_default_allocator>;
+        using state_type = _default_shared_ptr_state<value_type,
+            shared_ptr_default_destroyer<value_type>, shared_ptr_default_allocator>;
 
         void* mem = allocator.alloc(sizeof(state_type) + sizeof(value_type));
         state_type* state = mem;

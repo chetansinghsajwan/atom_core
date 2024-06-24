@@ -72,7 +72,7 @@ namespace atom
         template <typename num_type>
         explicit constexpr num_wrapper(num_type num)
             requires is_num<num_type>
-            : _value(num._value)
+            : _value{ num._value }
         {
             contract_debug_expects(is_conversion_safe_from(num));
         }
@@ -85,7 +85,7 @@ namespace atom
         template <typename num_type>
         constexpr num_wrapper(num_type num)
             requires _is_num<num_type>
-            : _value(num)
+            : _value{ num }
         {
             contract_debug_expects(is_conversion_safe_from_unwrapped(num));
         }

@@ -68,7 +68,8 @@ export namespace atom::mock
     /// `is_mut_fwd_range` mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename value_type>
-    class mut_fwd_range: public _mut_range<mut_unidirectional_iterator<value_type>, iterator_end, value_type>
+    class mut_fwd_range
+        : public _mut_range<mut_unidirectional_iterator<value_type>, iterator_end, value_type>
     {};
 
     /// --------------------------------------------------------------------------------------------
@@ -82,28 +83,32 @@ export namespace atom::mock
     /// `is_mut_bidi_range` mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename value_type>
-    class mut_bidi_range: public _mut_range<mut_bidirectional_iterator<value_type>, iterator_end, value_type>
+    class mut_bidi_range
+        : public _mut_range<mut_bidirectional_iterator<value_type>, iterator_end, value_type>
     {};
 
     /// --------------------------------------------------------------------------------------------
     /// `is_random_access_range` mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename value_type>
-    class random_access_range: public _range<random_access_iterator<value_type>, iterator_end, value_type>
+    class random_access_range
+        : public _range<random_access_iterator<value_type>, iterator_end, value_type>
     {};
 
     /// --------------------------------------------------------------------------------------------
     /// `is_mut_random_access_range` mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename value_type>
-    class mut_random_access_range: public _mut_range<mut_random_access_iterator<value_type>, iterator_end, value_type>
+    class mut_random_access_range
+        : public _mut_range<mut_random_access_iterator<value_type>, iterator_end, value_type>
     {};
 
     /// --------------------------------------------------------------------------------------------
     /// `is_array_range` mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename value_type>
-    class array_range: public _range<array_iterator<value_type>, array_iterator<value_type>, value_type>
+    class array_range
+        : public _range<array_iterator<value_type>, array_iterator<value_type>, value_type>
     {};
 
     /// --------------------------------------------------------------------------------------------
@@ -111,7 +116,8 @@ export namespace atom::mock
     /// --------------------------------------------------------------------------------------------
     template <typename value_type>
     class mut_array_range
-        : public _mut_range<mut_array_iterator<value_type>, mut_array_iterator<value_type>, value_type>
+        : public _mut_range<mut_array_iterator<value_type>, mut_array_iterator<value_type>,
+              value_type>
     {};
 
     /// --------------------------------------------------------------------------------------------
@@ -125,6 +131,8 @@ export namespace atom::mock
     /// `is_mut_common_range` mock object.
     /// --------------------------------------------------------------------------------------------
     template <typename value_type>
-    class mut_common_range: public _mut_range<mut_unidirectional_iterator<value_type>, mut_unidirectional_iterator<value_type>, value_type>
+    class mut_common_range
+        : public _mut_range<mut_unidirectional_iterator<value_type>,
+              mut_unidirectional_iterator<value_type>, value_type>
     {};
 }

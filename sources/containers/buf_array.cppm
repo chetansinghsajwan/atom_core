@@ -11,7 +11,8 @@ namespace atom
     class _buf_array_alloc_wrap: public allocator_type
     {};
 
-    export template <typename value_type, usize buf_size, typename allocator_type = default_mem_allocator>
+    export template <typename value_type, usize buf_size,
+        typename allocator_type = default_mem_allocator>
     class buf_array: public dynamic_array<value_type, _buf_array_alloc_wrap<allocator_type>>
     {
         using base_type = dynamic_array<value_type, _buf_array_alloc_wrap<allocator_type>>;

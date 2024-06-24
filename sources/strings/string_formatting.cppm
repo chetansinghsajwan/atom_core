@@ -13,8 +13,8 @@ import :strings._format_arg_wrapper;
 
 namespace atom
 {
-    constexpr auto _fmt_error_to_string_format_error(const fmt::format_error& err)
-        -> string_format_error
+    constexpr auto _fmt_error_to_string_format_error(
+        const fmt::format_error& err) -> string_format_error
     {
         return string_format_error("conversion from fmt::format_error to atom::string_format_error "
                                    "is not implemented yet.");
@@ -68,7 +68,8 @@ namespace atom
     }
 
     template <typename output_type, typename... arg_types>
-    constexpr auto _format_to(output_type&& out, format_string<arg_types...> fmt, arg_types&&... args)
+    constexpr auto _format_to(
+        output_type&& out, format_string<arg_types...> fmt, arg_types&&... args)
     {
         try
         {

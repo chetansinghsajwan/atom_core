@@ -15,7 +15,8 @@ namespace atom::ranges
         typename range_type::iterator_type;
         typename range_type::iterator_end_type;
 
-        requires std::same_as<typename range_type::value_type, typename range_type::iterator_type::value_type>;
+        requires std::same_as<typename range_type::value_type,
+            typename range_type::iterator_type::value_type>;
 
         { range.get_iterator() } -> std::same_as<typename range_type::iterator_type>;
         { range.get_iterator_end() } -> std::same_as<typename range_type::iterator_end_type>;
@@ -39,15 +40,17 @@ namespace atom::ranges
         typename range_type::mut_iterator_end_type;
 
         { range.get_mut_iterator() } -> std::same_as<typename range_type::mut_iterator_type>;
-        { range.get_mut_iterator_end() } -> std::same_as<typename range_type::mut_iterator_end_type>;
+        {
+            range.get_mut_iterator_end()
+        } -> std::same_as<typename range_type::mut_iterator_end_type>;
     };
 
     /// --------------------------------------------------------------------------------------------
     /// basic mut range requirements.
     /// --------------------------------------------------------------------------------------------
     template <typename range_type, typename value_type>
-    concept _is_mut_range_of =
-        _is_mut_range<range_type> and std::convertible_to<typename range_type::value_type, value_type>;
+    concept _is_mut_range_of = _is_mut_range<range_type>
+                               and std::convertible_to<typename range_type::value_type, value_type>;
 }
 
 export namespace atom::ranges
@@ -56,9 +59,9 @@ export namespace atom::ranges
     /// ensures `range_type` is `range`.
     /// --------------------------------------------------------------------------------------------
     template <typename range_type>
-    concept is_range =
-        _is_range<range_type>
-        and is_iterator_pair<typename range_type::iterator_type, typename range_type::iterator_end_type>;
+    concept is_range = _is_range<range_type>
+                       and is_iterator_pair<typename range_type::iterator_type,
+                           typename range_type::iterator_end_type>;
 
     /// --------------------------------------------------------------------------------------------
     /// ensures `range_type` is `range` of type `value_type`.
@@ -72,11 +75,11 @@ export namespace atom::ranges
     /// ensures `range_type` is `mut_range`.
     /// --------------------------------------------------------------------------------------------
     template <typename range_type>
-    concept is_mut_range =
-        _is_mut_range<range_type>
-        and is_iterator_pair<typename range_type::iterator_type, typename range_type::iterator_end_type>
-        and is_mut_iterator_pair<typename range_type::mut_iterator_type,
-            typename range_type::mut_iterator_end_type>;
+    concept is_mut_range = _is_mut_range<range_type>
+                           and is_iterator_pair<typename range_type::iterator_type,
+                               typename range_type::iterator_end_type>
+                           and is_mut_iterator_pair<typename range_type::mut_iterator_type,
+                               typename range_type::mut_iterator_end_type>;
 
     /// --------------------------------------------------------------------------------------------
     /// ensures `range_type` is `mut_range` of type `value_type`.
@@ -212,9 +215,9 @@ export namespace atom::ranges
     /// ensures `range_type` is `array_range`.
     /// --------------------------------------------------------------------------------------------
     template <typename range_type>
-    concept is_array_range =
-        _is_range<range_type>
-        and is_array_iterator_pair<typename range_type::iterator_type, typename range_type::iterator_end_type>;
+    concept is_array_range = _is_range<range_type>
+                             and is_array_iterator_pair<typename range_type::iterator_type,
+                                 typename range_type::iterator_end_type>;
 
     /// --------------------------------------------------------------------------------------------
     /// ensures `range_type` is `array_range` of type `value_type`.
@@ -230,7 +233,8 @@ export namespace atom::ranges
     template <typename range_type>
     concept is_mut_array_range =
         _is_mut_range<range_type>
-        and is_array_iterator_pair<typename range_type::iterator_type, typename range_type::iterator_end_type>
+        and is_array_iterator_pair<typename range_type::iterator_type,
+            typename range_type::iterator_end_type>
         and is_mut_array_iterator_pair<typename range_type::mut_iterator_type,
             typename range_type::mut_iterator_end_type>;
 
@@ -255,7 +259,8 @@ export namespace atom::ranges
     /// ensures `range_type` is `rev_range` of type `value_type`.
     /// --------------------------------------------------------------------------------------------
     template <typename range_type, typename value_type>
-    concept is_rev_range_of = requires { requires is_bidirectional_range_of<range_type, value_type>; };
+    concept is_rev_range_of =
+        requires { requires is_bidirectional_range_of<range_type, value_type>; };
 
     /// --------------------------------------------------------------------------------------------
     /// ensures `range_type` is `mut_rev_range`.
@@ -273,9 +278,10 @@ export namespace atom::ranges
     /// ensures `range_type` is `common_range`.
     /// --------------------------------------------------------------------------------------------
     template <typename range_type>
-    concept is_common_range = _is_range<range_type>
-                              and type_info<typename range_type::iterator_type>::template is_same_as<
-                                  typename range_type::iterator_end_type>;
+    concept is_common_range =
+        _is_range<range_type>
+        and type_info<typename range_type::iterator_type>::template is_same_as<
+            typename range_type::iterator_end_type>;
 
     /// --------------------------------------------------------------------------------------------
     /// ensures `range_type` is `mut_common_range`.

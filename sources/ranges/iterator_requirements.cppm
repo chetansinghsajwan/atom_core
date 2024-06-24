@@ -197,7 +197,8 @@ export namespace atom::ranges
                                         and is_iterator_with_end<iterator_type, iterator_end_type>;
 
     template <typename iterator_type, typename iterator_end_type, typename value_type>
-    concept is_mut_array_iterator_pair_of = is_mut_array_iterator_of<iterator_type, value_type>
-                                            and is_mut_array_iterator_of<iterator_end_type, value_type>
-                                            and is_iterator_with_end<iterator_type, iterator_end_type>;
+    concept is_mut_array_iterator_pair_of =
+        is_mut_array_iterator_of<iterator_type, value_type>
+        and is_mut_array_iterator_of<iterator_end_type, value_type>
+        and is_iterator_with_end<iterator_type, iterator_end_type>;
 }

@@ -229,8 +229,11 @@ namespace atom
         template <typename... other_value_types>
         constexpr auto is_any_type() const -> bool
         {
-            return type_list<other_value_types...>::is_any([&](auto info)
-                { return get_index_for_type<typename decltype(info)::value_type>() == get_type_index(); });
+            return type_list<other_value_types...>::is_any(
+                [&](auto info) {
+                    return get_index_for_type<typename decltype(info)::value_type>()
+                           == get_type_index();
+                });
         }
 
         template <usize i>

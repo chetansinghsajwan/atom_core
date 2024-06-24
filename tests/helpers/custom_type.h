@@ -30,14 +30,14 @@ namespace atom::tests
         greater_than_or_equal_to_operator = 1 << 17,
     };
 
-    constexpr auto operator|(const ecustom_t_flags& flags,
-        const ecustom_t_flags& flags_to_add) -> ecustom_t_flags
+    constexpr auto operator|(
+        const ecustom_t_flags& flags, const ecustom_t_flags& flags_to_add) -> ecustom_t_flags
     {
         return (ecustom_t_flags)((u64)flags | (u64)flags_to_add);
     }
 
-    constexpr auto operator&(const ecustom_t_flags& flags,
-        const ecustom_t_flags& flags_to_add) -> ecustom_t_flags
+    constexpr auto operator&(
+        const ecustom_t_flags& flags, const ecustom_t_flags& flags_to_add) -> ecustom_t_flags
     {
         return (ecustom_t_flags)((u64)flags & (u64)flags_to_add);
     }
@@ -63,8 +63,7 @@ namespace atom::tests
         /// # trivial default constructor
         /// ----------------------------------------------------------------------------------------
         constexpr custom_type()
-            requires(enum_flag_utils::has_flag(
-                        flags, ecustom_t_flags::trivial_default_constructor))
+            requires(enum_flag_utils::has_flag(flags, ecustom_t_flags::trivial_default_constructor))
         = default;
 
         /// ----------------------------------------------------------------------------------------
@@ -95,15 +94,18 @@ namespace atom::tests
         /// ----------------------------------------------------------------------------------------
         /// # trivial copy operator
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator=(const custom_type& that) -> custom_type& requires(
-            enum_flag_utils::has_flag(flags, ecustom_t_flags::trivial_copy_operator)) = default;
+        constexpr auto operator=(
+            const custom_type& that) -> custom_type& requires(enum_flag_utils::has_flag(flags,
+                                            ecustom_t_flags::trivial_copy_operator)) = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # copy operator
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator=(const custom_type& that) -> custom_type& requires(
-            enum_flag_utils::has_flag(flags, ecustom_t_flags::copy_operator))
-            and (not enum_flag_utils::has_flag(flags, ecustom_t_flags::trivial_copy_operator))
+        constexpr auto operator=(
+            const custom_type& that) -> custom_type& requires(enum_flag_utils::has_flag(flags,
+                                            ecustom_t_flags::copy_operator))
+                                            and (not enum_flag_utils::has_flag(
+                                                flags, ecustom_t_flags::trivial_copy_operator))
         {
             return *this;
         }
@@ -127,15 +129,18 @@ namespace atom::tests
         /// ----------------------------------------------------------------------------------------
         /// # trivial move operator
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator=(custom_type&& that) -> custom_type& requires(
-            enum_flag_utils::has_flag(flags, ecustom_t_flags::trivial_move_operator)) = default;
+        constexpr auto operator=(
+            custom_type&& that) -> custom_type& requires(enum_flag_utils::has_flag(flags,
+                                       ecustom_t_flags::trivial_move_operator)) = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # move operator
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator=(custom_type&& that) -> custom_type& requires(
-            enum_flag_utils::has_flag(flags, ecustom_t_flags::move_operator))
-            and (not enum_flag_utils::has_flag(flags, ecustom_t_flags::trivial_move_operator))
+        constexpr auto operator=(
+            custom_type&& that) -> custom_type& requires(enum_flag_utils::has_flag(flags,
+                                       ecustom_t_flags::move_operator))
+                                       and (not enum_flag_utils::has_flag(
+                                           flags, ecustom_t_flags::trivial_move_operator))
         {
             return *this;
         }
@@ -152,8 +157,7 @@ namespace atom::tests
         /// ----------------------------------------------------------------------------------------
         constexpr custom_type(custom_type&& that)
             requires(enum_flag_utils::has_flag(flags, ecustom_t_flags::destructor))
-                    and (not enum_flag_utils::has_flag(
-                        flags, ecustom_t_flags::trivial_destructor))
+                    and (not enum_flag_utils::has_flag(flags, ecustom_t_flags::trivial_destructor))
         {}
 
     public:
@@ -188,8 +192,8 @@ namespace atom::tests
         /// # less than or equal to opeartor
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator<=(const custom_type& that) const -> bool
-            requires(enum_flag_utils::has_flag(
-                flags, ecustom_t_flags::less_than_or_equal_to_operator))
+            requires(
+                enum_flag_utils::has_flag(flags, ecustom_t_flags::less_than_or_equal_to_operator))
         {
             return true;
         }
@@ -249,9 +253,9 @@ namespace atom::tests
 
     using equality_comparable_mock = custom_type<ecustom_t_flags::equal_to_operator>;
 
-    using comparable_mock = custom_type<ecustom_t_flags::equal_to_operator
-                                        | ecustom_t_flags::less_than_to_operator
-                                        | ecustom_t_flags::greater_than_to_operator
-                                        | ecustom_t_flags::less_than_or_equal_to_operator
-                                        | ecustom_t_flags::greater_than_or_equal_to_operator>;
+    using comparable_mock =
+        custom_type<ecustom_t_flags::equal_to_operator | ecustom_t_flags::less_than_to_operator
+                    | ecustom_t_flags::greater_than_to_operator
+                    | ecustom_t_flags::less_than_or_equal_to_operator
+                    | ecustom_t_flags::greater_than_or_equal_to_operator>;
 }

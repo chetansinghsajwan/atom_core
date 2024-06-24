@@ -29,8 +29,8 @@ namespace atom
         /// # default constructor
         /// ----------------------------------------------------------------------------------------
         constexpr array_slice()
-            : _data(nullptr)
-            , _count(0)
+            : _data{ nullptr }
+            , _count{ 0 }
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -59,8 +59,8 @@ namespace atom
         template <typename range_type>
         constexpr array_slice(range_type& range)
             requires ranges::is_mut_array_range_of<range_type, value_type>
-            : _data(range.get_mut_data())
-            , _count(range.get_count())
+            : _data{ range.get_mut_data() }
+            , _count{ range.get_count() }
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -79,8 +79,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <usize count>
         constexpr array_slice(const value_type (&arr)[count])
-            : _data(arr)
-            , _count(count)
+            : _data{ arr }
+            , _count{ count }
         {}
 
         /// ----------------------------------------------------------------------------------------

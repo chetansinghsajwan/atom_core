@@ -13,10 +13,10 @@ export namespace atom
     template <typename value_type>
     class unique_ptr_default_destroyer
     {
-        static_assert(
-            type_info<value_type>::is_pure(), "unique_ptr_default_destroyer only supports pure types.");
-        static_assert(
-            not type_info<value_type>::is_void(), "unique_ptr_default_destroyer does not support void.");
+        static_assert(type_info<value_type>::is_pure(),
+            "unique_ptr_default_destroyer only supports pure types.");
+        static_assert(not type_info<value_type>::is_void(),
+            "unique_ptr_default_destroyer does not support void.");
 
     public:
         constexpr auto operator()(value_type* val)
@@ -277,7 +277,8 @@ export namespace atom
     /// # todo: fix this implementation, maybe store allocator in destroyer.
     /// --------------------------------------------------------------------------------------------
     template <typename value_type, typename allocator_type, typename... arg_types>
-    auto make_unique_with_alloc(allocator_type allocator, arg_types&&... args) -> unique_ptr<value_type>
+    auto make_unique_with_alloc(
+        allocator_type allocator, arg_types&&... args) -> unique_ptr<value_type>
     {
         value_type* mem = (value_type*)allocator.alloc(sizeof(value_type));
         obj_helper().construct_as<value_type>(mem, forward<arg_types>(args)...);

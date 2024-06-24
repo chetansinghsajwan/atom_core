@@ -55,7 +55,8 @@ namespace atom
         static constexpr auto from_string(string_view str) -> option<enum_type>;
 
         template <typename comparer_type>
-        static constexpr auto from_string(string_view str, comparer_type&& comparer) -> option<enum_type>;
+        static constexpr auto from_string(
+            string_view str, comparer_type&& comparer) -> option<enum_type>;
 
         static constexpr auto from_underlying_unchecked(underlying_type value) -> enum_type
         {

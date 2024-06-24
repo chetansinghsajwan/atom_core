@@ -23,7 +23,8 @@ namespace atom
     /// parses and writes string representation for types according to the specified format
     /// specifiers.
     /// --------------------------------------------------------------------------------------------
-    export template <typename value_type, string_formatter_level level = string_formatter_level::user>
+    export template <typename value_type,
+        string_formatter_level level = string_formatter_level::user>
     class string_formatter;
 
     /// --------------------------------------------------------------------------------------------
@@ -31,7 +32,7 @@ namespace atom
     /// specialization.
     /// --------------------------------------------------------------------------------------------
     export template <typename value_type>
-        requires (type_info<fmt::formatter<value_type>>::is_default_constructible())
+        requires(type_info<fmt::formatter<value_type>>::is_default_constructible())
     class string_formatter<value_type, string_formatter_level::fmt>
     {
     public:
@@ -58,7 +59,7 @@ namespace atom
     /// range of `char`.
     /// --------------------------------------------------------------------------------------------
     export template <typename string_type>
-        requires (type_info<string_type>::template is_derived_from<_string_type_id>())
+        requires(type_info<string_type>::template is_derived_from<_string_type_id>())
     class string_formatter<string_type, string_formatter_level::atom>
         : public string_formatter<fmt::string_view, string_formatter_level::fmt>
     {

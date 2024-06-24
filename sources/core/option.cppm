@@ -18,7 +18,7 @@ namespace atom
 
     public:
         constexpr _option_storage()
-            : _dummy()
+            : _dummy{}
         {}
 
         constexpr _option_storage(const _option_storage&) = default;
@@ -29,7 +29,7 @@ namespace atom
 
         template <typename... arg_types>
         constexpr _option_storage(arg_types&&... args)
-            : _value(forward<arg_types>(args)...)
+            : _value{ forward<arg_types>(args)... }
         {}
 
         constexpr ~_option_storage()
@@ -99,8 +99,8 @@ namespace atom
         /// # default constructor
         /// ----------------------------------------------------------------------------------------
         constexpr _option_impl(ctor_default)
-            : _is_value(false)
-            , _storage()
+            : _is_value{ false }
+            , _storage{}
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -112,7 +112,7 @@ namespace atom
         /// # copy constructor
         /// ----------------------------------------------------------------------------------------
         constexpr _option_impl(ctor_copy, const this_type& that)
-            : this_type(ctor_default())
+            : this_type{ ctor_default() }
         {
             if (that._is_value)
             {
@@ -135,7 +135,7 @@ namespace atom
         /// # mov constructor
         /// ----------------------------------------------------------------------------------------
         constexpr _option_impl(ctor_move, this_type&& that)
-            : this_type()
+            : this_type{}
         {
             if (that._is_value)
             {
@@ -155,7 +155,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr _option_impl(arg_types&&... args)
             : _storage(forward<arg_types>(args)...)
-            , _is_value(true)
+            , _is_value{ true }
         {}
 
         /// ----------------------------------------------------------------------------------------

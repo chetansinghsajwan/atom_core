@@ -26,7 +26,7 @@ namespace atom
     {
     public:
         _function_box_wrapper(function_type&& function)
-            : _function(function)
+            : _function{ function }
         {}
 
     public:
@@ -72,11 +72,11 @@ namespace atom
 
     public:
         _function_box_impl()
-            : _box()
+            : _box{}
         {}
 
         _function_box_impl(copy_tag, const this_type& that)
-            : _box(that._box)
+            : _box{ that._box }
         {}
 
         auto copy_that(const this_type& that)
@@ -85,7 +85,7 @@ namespace atom
         }
 
         _function_box_impl(move_tag, this_type& that)
-            : _box(atom::move(that._box))
+            : _box{ atom::move(that._box) }
         {}
 
         auto move_that(this_type& that)
@@ -95,7 +95,7 @@ namespace atom
 
         template <typename function_type>
         _function_box_impl(value_tag, function_type&& function)
-            : _box(forward<function_type>(function))
+            : _box{ forward<function_type>(function) }
         {}
 
         ~_function_box_impl() {}
@@ -189,14 +189,14 @@ namespace atom
         /// # default constructor.
         /// ----------------------------------------------------------------------------------------
         constexpr function_box()
-            : _impl()
+            : _impl{}
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # copy constructor
         /// ----------------------------------------------------------------------------------------
         function_box(const function_box& that)
-            : _impl(typename _impl_type::copy_tag(), that._impl)
+            : _impl{ typename _impl_type::copy_tag(), that._impl }
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -212,7 +212,7 @@ namespace atom
         /// # move constructor
         /// ----------------------------------------------------------------------------------------
         function_box(function_box&& that)
-            : _impl(typename _impl_type::move_tag(), that._impl)
+            : _impl{ typename _impl_type::move_tag(), that._impl }
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -228,7 +228,7 @@ namespace atom
         /// # null constructor.
         /// ----------------------------------------------------------------------------------------
         function_box(nullptr_t null)
-            : _impl()
+            : _impl{}
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -247,7 +247,7 @@ namespace atom
         function_box(function_type&& function)
             requires(type_info<function_type>::template is_function<result_type(arg_types...)>)
                     and (not type_info<function_type>::template is_derived_from<function_box_tag>())
-            : _impl(typename _impl_type::value_tag(), forward<function_type>(function))
+            : _impl{ typename _impl_type::value_tag(), forward<function_type>(function) }
         {}
 
         /// ----------------------------------------------------------------------------------------
