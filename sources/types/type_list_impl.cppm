@@ -1,6 +1,7 @@
 export module atom.core:types.type_list_impl;
 
 import std;
+import :core.core;
 import :types.type_utils;
 import :types.type_info;
 
@@ -170,7 +171,10 @@ namespace atom
             if (get_count() == 0)
                 return;
 
-            func(type_info<type0>());
+            loop_command command = loop_command::continue_;
+            func(&command, type_info<type0>());
+            if (command == loop_command::break_)
+                return;
 
             next_types_list::for_each(forward<function_type>(func));
         }

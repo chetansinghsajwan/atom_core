@@ -66,4 +66,10 @@ export namespace atom
 
     template <typename value_type>
     using initializer_list = std::initializer_list<value_type>;
+
+    enum class loop_command
+    {
+        continue_,
+        break_,
+    };
 }

@@ -60,7 +60,7 @@ namespace atom
             usize that_current_index = that.get_type_index();
 
             common_types_list.for_each(
-                [&](auto type)
+                [&](loop_command* command, auto type)
                 {
                     using value_type = typename decltype(type)::value_type;
                     constexpr usize this_index = this_types_list.get_index(type);
@@ -72,7 +72,7 @@ namespace atom
                         this->construct_value_by_index<this_index>(
                             move(that.template get_value<that_index>()));
 
-                        // command = loop_command::break_;
+                        *command = loop_command::break_;
                     }
                 });
         }
