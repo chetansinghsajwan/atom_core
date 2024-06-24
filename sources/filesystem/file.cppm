@@ -9,6 +9,7 @@ import fmt;
 import :core;
 import :contracts;
 import :strings;
+import :dynamic_buffer;
 
 namespace atom::filesystem
 {
@@ -203,6 +204,34 @@ namespace atom::filesystem
         }
 
         /// ----------------------------------------------------------------------------------------
+        /// reads the file contents from begining to end as bytes.
+        /// ----------------------------------------------------------------------------------------
+        auto read_bytes_all() -> dynamic_buffer
+        {
+            contract_debug_expects(not is_closed(), "the file is closed.");
+
+            std::fseek(_file, 0, SEEK_END);
+            usize size = std::ftell(_file);
+            dynamic_buffer content{ _with_size, size };
+
+            std::fseek(_file, 0, SEEK_SET);
+            usize read_count = std::fread(content.get_data(), sizeof(byte), size, _file);
+
+            contract_asserts(read_count == size);
+            return content;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// writes bytes to the file.
+        /// ----------------------------------------------------------------------------------------
+        auto write_bytes(memory_view bytes) -> void
+        {
+            contract_debug_expects(not is_closed(), "the file is closed.");
+
+            std::fwrite(bytes.get_data(), sizeof(byte), bytes.get_size(), _file);
+        }
+
+        /// ----------------------------------------------------------------------------------------
         /// reads the file contents from begining to end as string.
         /// ----------------------------------------------------------------------------------------
         auto read_str_all() -> string
@@ -211,7 +240,7 @@ namespace atom::filesystem
 
             std::fseek(_file, 0, SEEK_END);
             usize size = std::ftell(_file);
-            string content = string{ _with_count, size };
+            string content{ _with_count, size };
 
             std::fseek(_file, 0, SEEK_SET);
             usize read_count = std::fread(content.get_mut_data(), sizeof(char), size, _file);
@@ -230,23 +259,13 @@ namespace atom::filesystem
             usize current_pos = std::ftell(_file);
             std::fseek(_file, 0, SEEK_END);
             usize size = std::ftell(_file) - current_pos;
-            string content = string{ _with_count, size };
+            string content{ _with_count, size };
 
             std::fseek(_file, current_pos, SEEK_SET);
             usize read_count = std::fread(content.get_mut_data(), sizeof(char), size, _file);
 
             contract_asserts(read_count == size);
             return content;
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// writes bytes to the file.
-        /// ----------------------------------------------------------------------------------------
-        auto write_bytes(const void* data, usize count) -> void
-        {
-            contract_debug_expects(not is_closed(), "the file is closed.");
-
-            std::fwrite(data, sizeof(byte), count, _file);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -495,7 +514,6 @@ namespace atom::filesystem
     export auto read_file_str(string_view path) -> result<string, filesystem_error, noentry_error>
     {
         file::open_result result = file::open(path, file::open_flags::read);
-
         contract_asserts(not result.is_error<invalid_options_error>());
 
         if (result.is_value())
@@ -545,6 +563,47 @@ namespace atom::filesystem
         {
             class file& file = result.get_value();
             file.write_fmt(fmt, forward<arg_types>(args)...);
+
+            return result_void();
+        }
+
+        if (result.is_error<noentry_error>())
+            return result.get_error<noentry_error>();
+
+        return result.get_error<filesystem_error>();
+    }
+
+    export auto read_file_bytes(
+        string_view path) -> result<dynamic_buffer, filesystem_error, noentry_error>
+    {
+        file::open_result result =
+            file::open(path, file::open_flags::read | file::open_flags::binary);
+        contract_asserts(not result.is_error<invalid_options_error>());
+
+        if (result.is_value())
+        {
+            class file& file = result.get_value();
+            return file.read_bytes_all();
+        }
+
+        if (result.is_error<noentry_error>())
+            return result.get_error<noentry_error>();
+
+        return result.get_error<filesystem_error>();
+    }
+
+    export auto write_file_bytes(
+        string_view path, memory_view bytes) -> result<void, filesystem_error, noentry_error>
+    {
+        file::open_result result = file::open(
+            path, file::open_flags::write | file::open_flags::create | file::open_flags::binary);
+
+        contract_asserts(not result.is_error<invalid_options_error>());
+
+        if (result.is_value())
+        {
+            class file& file = result.get_value();
+            file.write_bytes(bytes);
 
             return result_void();
         }

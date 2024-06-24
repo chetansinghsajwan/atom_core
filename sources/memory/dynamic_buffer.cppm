@@ -190,4 +190,33 @@ namespace atom
         usize _capacity;
         allocator_type _allocator;
     };
+
+    export class memory_view
+    {
+    public:
+        constexpr memory_view()
+            : _data{ nullptr }
+            , _size{ 0 }
+        {}
+
+        constexpr memory_view(const void* data, usize size)
+            : _data{ static_cast<const byte*>(data) }
+            , _size{ size }
+        {}
+
+    public:
+        constexpr auto get_data() const -> const byte*
+        {
+            return _data;
+        }
+
+        constexpr auto get_size() const -> usize
+        {
+            return _size;
+        }
+
+    private:
+        const byte* _data;
+        usize _size;
+    };
 }
