@@ -22,6 +22,9 @@ export namespace atom
     struct create_from_std_vector_tag
     {};
 
+    struct create_from_variant_tag
+    {};
+
     struct create_from_result_tag
     {};
 
@@ -31,6 +34,7 @@ export namespace atom
     constexpr auto create_from_raw = create_from_raw_tag{};
     constexpr auto create_with_join = create_with_join_tag{};
     constexpr auto create_from_std_vector = create_from_std_vector_tag{};
+    constexpr auto create_from_variant = create_from_variant_tag{};
     constexpr auto create_from_result = create_from_result_tag{};
 
     template <typename value_type>

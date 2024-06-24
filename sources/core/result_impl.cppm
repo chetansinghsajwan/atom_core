@@ -52,41 +52,51 @@ namespace atom
         constexpr result_impl(const this_type& that) = default;
 
         constexpr result_impl(copy_tag, const this_type& that)
-            : _variant(that._variant)
+            : _variant{ that._variant }
         {}
 
         template <typename that_type>
         constexpr result_impl(copy_tag, const that_type& that)
-            : _variant(that._variant)
+            : _variant{ that._variant }
         {}
 
         constexpr result_impl(this_type&& that) = default;
 
         constexpr result_impl(move_tag, this_type&& that)
-            : _variant(move(that._variant))
+            : _variant{ move(that._variant) }
         {}
 
         template <typename that_type>
         constexpr result_impl(move_tag, that_type&& that)
-            : _variant(move(that._variant))
+            : _variant{ move(that._variant) }
         {}
 
         constexpr result_impl(value_tag, const value_type& value)
-            : _variant(value)
+            : _variant{ value }
         {}
 
         constexpr result_impl(value_tag, value_type&& value)
-            : _variant(move(value))
+            : _variant{ move(value) }
         {}
 
         template <typename error_type>
         constexpr result_impl(error_tag, const error_type& error)
-            : _variant(error)
+            : _variant{ error }
         {}
 
         template <typename error_type>
         constexpr result_impl(error_tag, error_type&& error)
-            : _variant(move(error))
+            : _variant{ move(error) }
+        {}
+
+        template <typename that_result_type>
+        constexpr result_impl(create_from_result_tag, const that_result_type& that)
+            : _variant{ create_from_variant, that._variant }
+        {}
+
+        template <typename that_result_type>
+        constexpr result_impl(create_from_result_tag, that_result_type&& that)
+            : _variant{ create_from_variant, move(that._variant) }
         {}
 
         constexpr ~result_impl() = default;

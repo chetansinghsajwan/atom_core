@@ -12,6 +12,12 @@ import :core.variant_impl;
 namespace atom
 {
     /// --------------------------------------------------------------------------------------------
+    ///
+    /// --------------------------------------------------------------------------------------------
+    class variant_tag
+    {};
+
+    /// --------------------------------------------------------------------------------------------
     /// # to do
     /// - check requirements for assignments.
     /// - check if requirements using type_list functionality can be made concepts.
@@ -276,6 +282,46 @@ namespace atom
         {
             _impl.set_value(move(value));
             return *this;
+        }
+
+        template <typename that_type>
+        static consteval auto is_variant_type() -> bool
+        {
+            return type_info<that_type>::template is_derived_from<variant_tag>();
+        }
+
+        template <typename that_type>
+        static consteval auto should_enable_variant_constructor() -> bool
+        {
+            if constexpr (not is_variant_type<that_type>())
+                return false;
+
+            else if (type_info<this_type>::template is_same_as<that_type>())
+                return false;
+
+            return true;
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// # named constructor
+        /// ----------------------------------------------------------------------------------------
+        template <typename that_type>
+        constexpr variant(create_from_variant_tag, const that_type& that)
+            requires(should_enable_variant_constructor<that_type>())
+            : _impl{ create_from_variant, that }
+        {
+            contract_asserts(index() != nums::get_max<usize>());
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// # named constructor
+        /// ----------------------------------------------------------------------------------------
+        template <typename that_type>
+        constexpr variant(create_from_variant_tag, that_type&& that)
+            requires(should_enable_variant_constructor<that_type>())
+            : _impl{ create_from_variant, move(that) }
+        {
+            contract_asserts(index() != nums::get_max<usize>());
         }
 
         /// ----------------------------------------------------------------------------------------

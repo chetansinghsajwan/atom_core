@@ -45,6 +45,39 @@ namespace atom
         using _storage_type = _variant_storage<value_types...>;
 
     public:
+        constexpr _variant_impl()
+            : _index{ get_null_type_index() }
+        {}
+
+        template <typename that_type>
+        constexpr _variant_impl(create_from_variant_tag, that_type&& that)
+            : _index{ get_null_type_index() }
+        {
+            constexpr auto this_types_list = _list_type{};
+            constexpr auto that_types_list = typename that_type::_list_type{};
+            constexpr auto common_types_list = _list_type::select(typename that_type::_list_type{});
+
+            usize that_current_index = that.get_type_index();
+
+            common_types_list.for_each(
+                [&](auto type)
+                {
+                    using value_type = typename decltype(type)::value_type;
+                    constexpr usize this_index = this_types_list.get_index(type);
+                    constexpr usize that_index = that_types_list.get_index(type);
+
+                    if (that_index == that_current_index)
+                    {
+                        this->_index = this_index;
+                        this->construct_value_by_index<this_index>(
+                            move(that.template get_value<that_index>()));
+
+                        // command = loop_command::break_;
+                    }
+                });
+        }
+
+    public:
         static constexpr auto get_type_count() -> usize
         {
             return _list_type::get_count();

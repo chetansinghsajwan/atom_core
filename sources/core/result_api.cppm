@@ -204,6 +204,25 @@ namespace atom
             return true;
         }();
 
+        template <typename that_result_type>
+        static consteval auto should_enable_result_constructor() -> bool
+        {
+            if constexpr (not is_result_api<that_result_type>())
+                return false;
+
+            else if (type_info<this_type>::template is_same_as<that_result_type>())
+                return false;
+
+            else if (type_info<value_type>::template is_same_as<
+                         typename that_result_type::value_type>())
+                return true;
+
+            else if (error_type_list::has_any(typename that_result_type::error_type_list{}))
+                return true;
+
+            return false;
+        }
+
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
@@ -439,7 +458,17 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename that_result_type>
         constexpr result_api(create_from_result_tag, const that_result_type& that)
-            : _impl{}
+            requires(should_enable_result_constructor<that_result_type>())
+            : _impl{ create_from_result, that._impl }
+        {}
+
+        /// ----------------------------------------------------------------------------------------
+        /// -- use above doc
+        /// ----------------------------------------------------------------------------------------
+        template <typename that_result_type>
+        constexpr result_api(create_from_result_tag, that_result_type&& that)
+            requires(should_enable_result_constructor<that_result_type>())
+            : _impl{ create_from_result, move(that._impl) }
         {}
 
         /// ----------------------------------------------------------------------------------------

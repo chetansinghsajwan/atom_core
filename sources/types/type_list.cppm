@@ -199,6 +199,15 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
+        /// returns hte index of type `other_type`.
+        /// ----------------------------------------------------------------------------------------
+        template <typename other_type>
+        static consteval auto get_index(type_info<other_type>) -> usize
+        {
+            return impl_type::template get_index<other_type>();
+        }
+
+        /// ----------------------------------------------------------------------------------------
         /// invokes `func` for each type with their `type_info`.
         /// ----------------------------------------------------------------------------------------
         template <typename function_type>
