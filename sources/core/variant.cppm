@@ -23,7 +23,7 @@ namespace atom
     /// - check if requirements using type_list functionality can be made concepts.
     /// --------------------------------------------------------------------------------------------
     export template <typename... value_types>
-    class variant
+    class variant: public variant_tag
     {
         static_assert(type_list<value_types...>::are_unique(),
             "every type in value_types... should be unique.");
@@ -308,7 +308,7 @@ namespace atom
         template <typename that_type>
         constexpr variant(create_from_variant_tag, const that_type& that)
             requires(should_enable_variant_constructor<that_type>())
-            : _impl{ create_from_variant, that }
+            : _impl{ create_from_variant, that._impl }
         {
             contract_asserts(index() != nums::get_max<usize>());
         }
@@ -319,7 +319,7 @@ namespace atom
         template <typename that_type>
         constexpr variant(create_from_variant_tag, that_type&& that)
             requires(should_enable_variant_constructor<that_type>())
-            : _impl{ create_from_variant, move(that) }
+            : _impl{ create_from_variant, move(that._impl) }
         {
             contract_asserts(index() != nums::get_max<usize>());
         }

@@ -1,6 +1,7 @@
 export module atom.core:types.type_list;
 
 import std;
+import :core.core;
 import :types.type_utils;
 import :types.type_info;
 import :types.type_list_impl;
@@ -14,6 +15,7 @@ namespace atom
     class type_list
     {
         using usize = std::size_t;
+        using this_type = type_list<types...>;
         using impl_type = type_list_impl<types...>;
 
     public:
@@ -160,6 +162,15 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
+        /// returns `true` if this contains any of `other_types`.
+        /// ----------------------------------------------------------------------------------------
+        template <typename... other_types>
+        static consteval auto has_any(type_list<other_types...>) -> bool
+        {
+            return impl_type::template has_any(type_list_impl<other_types...>{});
+        }
+
+        /// ----------------------------------------------------------------------------------------
         /// returns new list after replacing all entries of type `replace_type` with `new_type>`.
         /// ----------------------------------------------------------------------------------------
         template <typename replace_type, typename new_type>
@@ -243,11 +254,131 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
+        /// returns new list with `other_type` inserted at index `i`.
+        /// ----------------------------------------------------------------------------------------
+        template <usize i, typename other_type>
+        static consteval auto insert_at() -> decltype(auto)
+        {
+            auto result = impl_type::template insert_at<i, other_type>();
+            return _create_from_impl(result);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns new list with `other_type` inserted at index `i`.
+        /// ----------------------------------------------------------------------------------------
+        template <usize i, typename other_type>
+        static consteval auto insert_at(type_info<other_type>) -> decltype(auto)
+        {
+            auto result = impl_type::template insert_at<i, other_type>();
+            return _create_from_impl(result);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns new list with `other_type` inserted at first position.
+        /// ----------------------------------------------------------------------------------------
+        template <typename other_type>
+        static consteval auto insert_first() -> type_list<other_type, types...>
+        {
+            auto result = impl_type::template insert_first<other_type>();
+            return _create_from_impl(result);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns new list with `other_type` inserted at first position.
+        /// ----------------------------------------------------------------------------------------
+        template <typename other_type>
+        static consteval auto insert_first(type_info<other_type>) -> type_list<other_type, types...>
+        {
+            auto result = impl_type::template insert_first<other_type>();
+            return _create_from_impl(result);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns new list with `other_type` inserted at last position.
+        /// ----------------------------------------------------------------------------------------
+        template <typename other_type>
+        static consteval auto insert_last() -> type_list<other_type, types...>
+        {
+            auto result = impl_type::template insert_last<other_type>();
+            return _create_from_impl(result);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns new list with `other_type` inserted at first position.
+        /// ----------------------------------------------------------------------------------------
+        template <typename other_type>
+        static consteval auto insert_last(type_info<other_type>) -> type_list<other_type, types...>
+        {
+            auto result = impl_type::template insert_last<other_type>();
+            return _create_from_impl(result);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns new list after remove all entries for which `pred` returns `true`.
+        /// ----------------------------------------------------------------------------------------
+        template <typename predicate_type>
+        static consteval auto remove_all_if(predicate_type&& pred) -> decltype(auto)
+        {
+            auto result = impl_type::remove_all_if(pred);
+            return _create_from_impl(result);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns new list after remove entry at index `i`. if `i` is out of bounds, compiler
+        /// error is generated.
+        /// ----------------------------------------------------------------------------------------
+        template <usize i>
+        static consteval auto remove_at() -> decltype(auto)
+        {
+            auto result = impl_type::template remove_at<i>();
+            return _create_from_impl(result);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns new list after removing first entry.
+        /// ----------------------------------------------------------------------------------------
+        static consteval auto remove_first() -> decltype(auto)
+        {
+            auto result = impl_type::remove_first();
+            return _create_from_impl(result);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns new list after removing last entry.
+        /// ----------------------------------------------------------------------------------------
+        static consteval auto remove_last() -> decltype(auto)
+        {
+            auto result = impl_type::remove_last();
+            return _create_from_impl(result);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns new list after removing types other than `other_types`.
+        /// ----------------------------------------------------------------------------------------
+        template <typename... other_types>
+        static consteval auto remove_others() -> decltype(auto)
+        {
+            auto result = impl_type::template remove_others<other_types...>();
+            return _create_from_impl(result);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns new list after removing types other than `other_types`.
+        /// ----------------------------------------------------------------------------------------
+        template <typename... other_types>
+        static consteval auto remove_others(type_list<other_types...>) -> decltype(auto)
+        {
+            auto result = impl_type::template remove_others<other_types...>();
+            return _create_from_impl(result);
+        }
+
+        /// ----------------------------------------------------------------------------------------
         /// returns new list after removing duplicate entries.
         /// ----------------------------------------------------------------------------------------
         static consteval auto remove_duplicates() -> decltype(auto)
         {
-            return _create_from_impl(impl_type::remove_duplicates());
+            auto result = impl_type::remove_duplicates();
+            return _create_from_impl(result);
         }
 
         /// ----------------------------------------------------------------------------------------

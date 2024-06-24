@@ -72,4 +72,19 @@ export namespace atom
         continue_,
         break_,
     };
+
+    template <typename function_type>
+    struct consteval_function
+    {
+        consteval consteval_function(const function_type& func)
+            : _func{ func }
+        {}
+
+        consteval auto operator()(auto&&... args) -> decltype(auto)
+        {
+            return _func(forward<decltype(args)>(args)...);
+        }
+
+        function_type _func;
+    };
 }

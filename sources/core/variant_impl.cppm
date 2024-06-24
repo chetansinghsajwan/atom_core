@@ -41,21 +41,26 @@ namespace atom
         friend class _variant_impl;
 
     private:
-        using _list_type = type_list<value_types...>;
         using _storage_type = _variant_storage<value_types...>;
+
+    public:
+        using value_types_list = type_list<value_types...>;
 
     public:
         constexpr _variant_impl()
             : _index{ get_null_type_index() }
         {}
 
-        template <typename that_type>
-        constexpr _variant_impl(create_from_variant_tag, that_type&& that)
+        template <typename that_unpure_type>
+        constexpr _variant_impl(create_from_variant_tag, that_unpure_type&& that)
             : _index{ get_null_type_index() }
         {
-            constexpr auto this_types_list = _list_type{};
-            constexpr auto that_types_list = typename that_type::_list_type{};
-            constexpr auto common_types_list = _list_type::select(typename that_type::_list_type{});
+            using that_type = typename type_info<that_unpure_type>::pure_type::value_type;
+
+            constexpr auto this_types_list = value_types_list{};
+            constexpr auto that_types_list = typename that_type::value_types_list{};
+            constexpr auto common_types_list =
+                value_types_list::remove_others(typename that_type::value_types_list{});
 
             usize that_current_index = that.get_type_index();
 
@@ -70,7 +75,7 @@ namespace atom
                     {
                         this->_index = this_index;
                         this->construct_value_by_index<this_index>(
-                            move(that.template get_value<that_index>()));
+                            move(that.template get_value_by_index<that_index>()));
 
                         *command = loop_command::break_;
                     }
@@ -80,25 +85,25 @@ namespace atom
     public:
         static constexpr auto get_type_count() -> usize
         {
-            return _list_type::get_count();
+            return value_types_list::get_count();
         }
 
         template <typename value_type>
         static consteval auto has_type() -> bool
         {
-            return _list_type::template has<value_type>();
+            return value_types_list::template has<value_type>();
         }
 
         template <usize i>
         static consteval auto has_index() -> bool
         {
-            return i < _list_type::get_count();
+            return i < value_types_list::get_count();
         }
 
         template <typename value_type>
         static consteval auto get_index_for_type() -> usize
         {
-            return _list_type::template get_index<value_type>();
+            return value_types_list::template get_index<value_type>();
         }
 
         static consteval auto get_null_type_index() -> usize
@@ -107,7 +112,7 @@ namespace atom
         }
 
         template <usize i>
-        using type_at_index = typename _list_type::template at_type<i>;
+        using type_at_index = typename value_types_list::template at_type<i>;
 
         using first_type = type_at_index<0>;
 
@@ -371,11 +376,11 @@ namespace atom
         template <usize index, typename value_type, typename... others_type>
         constexpr auto _destroy_value_impl(usize i)
         {
-            using _list_type = type_list<others_type...>;
+            using value_types_list = type_list<others_type...>;
 
             if (i != index)
             {
-                if constexpr (_list_type::get_count() == 0)
+                if constexpr (value_types_list::get_count() == 0)
                 {
                     contract_panic("there is no type for current index.");
                 }

@@ -59,8 +59,9 @@ namespace atom
         friend class type_list_impl;
 
     private:
+        using this_type = type_list_impl<types...>;
         using usize = std::size_t;
-        using type0 = _type0_helper<types...>::value_type;
+        using type0 = typename _type0_helper<types...>::value_type;
         using next_types_list = typename _remaining_types_helper<types...>::value_type;
 
     public:
@@ -168,15 +169,17 @@ namespace atom
         template <typename function_type>
         static consteval auto for_each(function_type&& func) -> void
         {
-            if (get_count() == 0)
+            if constexpr (get_count() == 0)
                 return;
+            else
+            {
+                loop_command command = loop_command::continue_;
+                func(&command, type_info<type0>());
+                if (command == loop_command::break_)
+                    return;
 
-            loop_command command = loop_command::continue_;
-            func(&command, type_info<type0>());
-            if (command == loop_command::break_)
-                return;
-
-            next_types_list::for_each(forward<function_type>(func));
+                next_types_list::for_each(forward<function_type>(func));
+            }
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -252,16 +255,21 @@ namespace atom
             return has_all(typename list_type::next_types_list{});
         }
 
-        template <typename other_type0, typename... other_types>
-        static consteval auto has_any(type_list_impl<other_type0, other_types...> list) -> bool
+        template <typename... other_types>
+        static consteval auto has_any(type_list_impl<other_types...> list) -> bool
         {
+            using that_list_type = decltype(list);
+
+            if (that_list_type::get_count() == 0)
+                return true;
+
             if (get_count() == 0)
                 return false;
 
-            if (has<other_type0>())
+            if (has<typename that_list_type::type0>())
                 return true;
 
-            return has_any(type_list_impl<other_types...>{});
+            return has_any(typename that_list_type::next_types_list{});
         }
 
         template <typename function_type>
@@ -276,206 +284,102 @@ namespace atom
             return next_types_list::has_if(forward<function_type>(func));
         }
 
-        // /// ----------------------------------------------------------------------------------------
-        // ///
-        // /// ----------------------------------------------------------------------------------------
-        // template <usize index_to_get, usize index>
-        // class at;
+        template <usize i, typename other_type>
+        static consteval auto insert_at() -> decltype(auto)
+        {
+            constexpr auto inserter = [&]<usize current_index = 0>(
+                                          this auto self, auto current_list, auto result_list)
+            {
+                using result_list_type = decltype(result_list);
+                using current_list_type = decltype(current_list);
+                using next_list_type = typename current_list_type::next_types_list;
+                using current_type = typename current_list_type::type0;
 
-        // template <usize index_to_get, usize index, typename in_type>
-        // class at<index_to_get, index, in_type, types...>
-        // {
-        // public:
-        //     using value_type = type_utils::conditional_type<index_to_get == index, in_type,
-        //         typename at<index_to_get, index + 1, types...>::value_type>;
-        // };
+                if constexpr (current_list_type::get_count() == 0)
+                    return result_list;
+                else if constexpr (current_index == i)
+                {
+                    return self.template operator()<current_index + 1>(
+                        next_list_type{}, result_list.template insert_last<other_type>()
+                                              .template insert_last<current_type>());
+                }
+                else
+                {
+                    return self.template operator()<current_index + 1>(
+                        next_list_type{}, result_list.template insert_last<current_type>());
+                }
+            };
 
-        // template <usize index_to_get, usize index>
-        // class at<index_to_get, index>
-        // {
-        // public:
-        //     using value_type = void;
-        // };
+            return inserter(this_type{}, type_list_impl<>{});
+        }
 
-        // /// ----------------------------------------------------------------------------------------
-        // ///
-        // /// ----------------------------------------------------------------------------------------
-        // template <typename type, usize index, typename... types>
-        // class index_of;
+        template <typename other_type>
+        static consteval auto insert_first() -> type_list_impl<other_type, types...>
+        {
+            return {};
+        }
 
-        // template <typename type, usize index, typename in_type, typename... types>
-        // class index_of<type, index, in_type, types...>
-        // {
-        // public:
-        //     static constexpr usize value = type_info<type>::template is_same_as<in_type>
-        //                                        ? index
-        //                                        : index_of<type, index + 1, types...>::value;
-        // };
+        template <typename other_type>
+        static consteval auto insert_last() -> type_list_impl<types..., other_type>
+        {
+            return {};
+        }
 
-        // template <typename type, usize index>
-        // class index_of<type, index>
-        // {
-        // public:
-        //     static constexpr usize value = std::numeric_limits<usize>::max();
-        // };
+        template <typename predicate_type>
+        static consteval auto remove_all_if(predicate_type&& pred) -> decltype(auto)
+        {
+            consteval_function consteval_pred{ pred };
 
-        // ////////////////////////////////////////////////////////////////////////////////////////////
-        // ////
-        // //// has
-        // ////
-        // ////////////////////////////////////////////////////////////////////////////////////////////
+            // we remove entries by iterating the original list and adding only those entries to
+            // a new list which should not be removed.
+            auto remover = [&](this auto self, auto current_list, auto result_list)
+            {
+                using result_list_type = decltype(result_list);
+                using current_list_type = decltype(current_list);
+                using next_list_type = typename current_list_type::next_types_list;
+                using current_type = typename current_list_type::type0;
 
-        // template <typename in_type, typename... types>
-        // class has
-        // {
-        // public:
-        //     static constexpr bool value =
-        //         index_of<in_type, 0, types...>::value != std::numeric_limits<usize>::max();
-        // };
+                if constexpr (current_list_type::get_count() == 0)
+                    return result_list;
+                else if constexpr (consteval_pred(type_info<current_type>{}))
+                    return self(next_list_type{}, result_list);
+                else
+                    return self(
+                        next_list_type{}, result_list_type::template insert_last<current_type>());
+            };
 
-        // ////////////////////////////////////////////////////////////////////////////////////////////
-        // ////
-        // //// add_first
-        // ////
-        // ////////////////////////////////////////////////////////////////////////////////////////////
+            return remover(this_type{}, type_list_impl<>{});
+        }
 
-        // template <typename in_type, typename list_type>
-        // class add_first;
+        template <usize i>
+        static consteval auto remove_at() -> decltype(auto)
+        {
+            // constexpr usize index = 0;
+            constexpr auto pred = [j = 0](auto type) mutable { return i == j++; };
 
-        // template <typename in_type, typename... types>
-        // class add_first<in_type, type_list<types...>>
-        // {
-        // public:
-        //     using value_type = type_list<in_type, types...>;
-        // };
+            return remove_all_if<pred>();
+        }
 
-        // ////////////////////////////////////////////////////////////////////////////////////////////
-        // ////
-        // //// add_last
-        // ////
-        // ////////////////////////////////////////////////////////////////////////////////////////////
+        static consteval auto remove_first() -> decltype(auto)
+        {
+            return remove_at<0>();
+        }
 
-        // template <typename in_type, typename list_type>
-        // class add_last;
+        static consteval auto remove_last() -> decltype(auto)
+        {
+            return remove_at<get_count() - 1>();
+        }
 
-        // template <typename in_type, typename... types>
-        // class add_last<in_type, type_list<types...>>
-        // {
-        // public:
-        //     using value_type = type_list<types..., in_type>;
-        // };
+        template <typename... other_types>
+        static consteval auto remove_others() -> decltype(auto)
+        {
+            auto pred = [](auto info)
+            {
+                using value_type = typename decltype(info)::value_type;
+                return not type_list_impl<other_types...>::template has<value_type>();
+            };
 
-        // ////////////////////////////////////////////////////////////////////////////////////////////
-        // ////
-        // //// remove_if
-        // ////
-        // ////////////////////////////////////////////////////////////////////////////////////////////
-
-        // template <template <typename in_type> typename predicate_type, typename... types>
-        // class remove_if;
-
-        // template <template <typename in_type> typename predicate_type>
-        // class remove_if<predicate_type>
-        // {
-        // public:
-        //     using value_type = type_list<>;
-        // };
-
-        // template <template <typename in_type> typename predicate_type, typename in_type,
-        //     typename... types>
-        // class remove_if<predicate_type, in_type, types...>
-        // {
-        // public:
-        //     using value_type = type_utils::conditional_type<predicate_type<in_type>::value,
-        //         typename add_first<in_type,
-        //             typename remove_if<predicate_type, types...>::in_type>::value_type,
-        //         typename remove_if<predicate_type, types...>::value_type>;
-        // };
-
-        // ////////////////////////////////////////////////////////////////////////////////////////////
-        // ////
-        // //// remove
-        // ////
-        // ////////////////////////////////////////////////////////////////////////////////////////////
-
-        // template <typename in_type, typename... types>
-        // class remove
-        // {
-        //     template <typename check_type>
-        //     class _pred
-        //     {
-        //         static constexpr bool value = type_info<in_type>::template is_same_as<check_type>;
-        //     };
-
-        // public:
-        //     using value_type = typename remove_if<_pred, types...>::value_type;
-        // };
-
-        // ////////////////////////////////////////////////////////////////////////////////////////////
-        // ////
-        // //// remove_first
-        // ////
-        // ////////////////////////////////////////////////////////////////////////////////////////////
-
-        // template <typename... types>
-        // class remove_first;
-
-        // template <typename in_type, typename... types>
-        // class remove_first<in_type, types...>
-        // {
-        // public:
-        //     using value_type = type_list<types...>;
-        // };
-
-        // ////////////////////////////////////////////////////////////////////////////////////////////
-        // ////
-        // //// remove_last
-        // ////
-        // ////////////////////////////////////////////////////////////////////////////////////////////
-
-        // template <typename... types>
-        // class remove_last;
-
-        // template <typename in_type, typename... types>
-        // class remove_last<in_type, types...>
-        // {
-        // public:
-        //     using value_type = typename add_first<in_type, remove_last<types...>>::value_type;
-        // };
-
-        // template <typename in_type>
-        // class remove_last<in_type>
-        // {
-        // public:
-        //     using value_type = type_list<>;
-        // };
-
-        // ////////////////////////////////////////////////////////////////////////////////////////////
-        // ////
-        // //// replace
-        // ////
-        // ////////////////////////////////////////////////////////////////////////////////////////////
-
-        // template <typename replace_type, typename with_type, typename... types>
-        // class replace_all;
-
-        // template <typename replace_type, typename with_type>
-        // class replace_all<replace_type, with_type>
-        // {
-        // public:
-        //     using value_type = type_list<>;
-        // };
-
-        // template <typename replace_type, typename with_type, typename in_type, typename... types>
-        // class replace_all<replace_type, with_type, in_type, types...>
-        // {
-        //     using final_type =
-        //         type_utils::conditional_type<type_info<replace_type>::template is_same_as<in_type>,
-        //             with_type, in_type>;
-
-        // public:
-        //     using value_type = typename add_first<final_type,
-        //         typename replace_all<replace_type, with_type, types...>::in_type>::value_type;
-        // };
+            return remove_all_if(pred);
+        }
     };
 }
