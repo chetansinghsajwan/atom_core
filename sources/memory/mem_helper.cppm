@@ -53,7 +53,7 @@ namespace atom
         /// @param dest_size: size of the mem block pointed by `dest`.
         /// ----------------------------------------------------------------------------------------
         static constexpr auto fwd_copy_to(const void* src, usize src_size, void* dest,
-            usize dest_size = nums::get_max<usize>()) -> void
+            usize dest_size = nums::get_max_usize()) -> void
         {
             contract_debug_expects(src != nullptr);
             contract_debug_expects(dest != nullptr);
@@ -73,7 +73,7 @@ namespace atom
         /// @param dest_size: size of the mem block pointed by `dest`.
         /// ----------------------------------------------------------------------------------------
         static constexpr auto bwd_copy_to(const void* src, usize src_size, void* dest,
-            usize dest_size = nums::get_max<usize>()) -> void
+            usize dest_size = nums::get_max_usize()) -> void
         {
             contract_debug_expects(src != nullptr);
             contract_debug_expects(dest != nullptr);
@@ -94,7 +94,7 @@ namespace atom
         /// @param dest_size: size of the mem block pointed by `dest`.
         /// ----------------------------------------------------------------------------------------
         static constexpr auto copy_to(const void* src, usize src_size, void* dest,
-            usize dest_size = nums::get_max<usize>()) -> void
+            usize dest_size = nums::get_max_usize()) -> void
         {
             contract_debug_expects(src != nullptr);
             contract_debug_expects(dest != nullptr);

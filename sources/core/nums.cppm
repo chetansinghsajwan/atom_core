@@ -18,6 +18,16 @@ export namespace atom::nums
         return std::numeric_limits<num_type>::max();
     }
 
+    constexpr auto get_max_isize() -> isize
+    {
+        return get_max<isize>();
+    }
+
+    constexpr auto get_max_usize() -> usize
+    {
+        return get_max<usize>();
+    }
+
     template <typename num_type>
     constexpr auto get_min(num_type num0, num_type num1) -> num_type
     {

@@ -297,7 +297,7 @@ namespace atom
         constexpr auto get_index_for_iterator(iterator_type it) const -> usize
         {
             isize index = it.get_data() - _data;
-            return index < 0 ? nums::get_max<usize>() : index;
+            return index < 0 ? nums::get_max_usize() : index;
         }
 
         constexpr auto is_iterator_in_range(iterator_type it) const -> bool
@@ -418,7 +418,7 @@ namespace atom
 
         constexpr auto _calc_cap_growth(usize required) const -> usize
         {
-            const usize max = _count < nums::get_max<usize>() / 2 ? _count : nums::get_max<usize>();
+            const usize max = _count < nums::get_max_usize() / 2 ? _count : nums::get_max_usize();
             return std::max(max, required);
         }
 

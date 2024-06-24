@@ -251,7 +251,7 @@ namespace atom
         constexpr auto get_index_for_iterator(iterator_type it) const -> usize
         {
             isize index = it.get_data() - _vector.data();
-            return index < 0 ? nums::get_max<usize>() : index;
+            return index < 0 ? nums::get_max_usize() : index;
         }
 
         constexpr auto is_iterator_in_range(iterator_type it) const -> bool

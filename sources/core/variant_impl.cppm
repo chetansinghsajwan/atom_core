@@ -108,7 +108,7 @@ namespace atom
 
         static consteval auto get_null_type_index() -> usize
         {
-            return nums::get_max<usize>();
+            return nums::get_max_usize();
         }
 
         template <usize i>

@@ -128,7 +128,7 @@ namespace atom
 
         static constexpr auto to_index(enum_type value) -> usize
         {
-            return magic_enum::enum_index(value).value_or(nums::get_max<usize>());
+            return magic_enum::enum_index(value).value_or(nums::get_max_usize());
         }
 
         static constexpr auto to_underlying(enum_type value) -> underlying_type
