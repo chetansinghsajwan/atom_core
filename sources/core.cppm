@@ -9,7 +9,6 @@ export import :core.error;
 export import :core.int_wrapper;
 export import :core.float_wrapper;
 export import :core.result_impl;
-export import :core.result_api;
 export import :core.result;
 export import :core.option;
 export import :core.variant;
