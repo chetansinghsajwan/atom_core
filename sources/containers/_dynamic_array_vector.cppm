@@ -57,7 +57,8 @@ namespace atom
             : _vector(count)
         {}
 
-        constexpr _dynamic_array_impl_vector(create_with_count_type, usize count, const value_type& value)
+        constexpr _dynamic_array_impl_vector(
+            create_with_count_type, usize count, const value_type& value)
             : _vector{ count, value }
         {}
 
