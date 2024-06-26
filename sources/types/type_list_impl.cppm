@@ -232,6 +232,17 @@ namespace atom
             return next_types_list::is_any(forward<predicate_type>(pred));
         }
 
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        static constexpr auto is_index_in_range(usize i) -> bool
+        {
+            return i < get_count();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
         template <typename value_type>
         static consteval auto has() -> bool
         {
@@ -244,6 +255,9 @@ namespace atom
             return next_types_list::template has<value_type>();
         }
 
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
         template <typename... other_types>
         static consteval auto has_all(type_list_impl<other_types...> list) -> bool
         {

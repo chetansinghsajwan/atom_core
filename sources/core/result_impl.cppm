@@ -162,7 +162,7 @@ namespace atom
             if (type_info<error_type>::template is_same_as<value_type>())
                 return false;
 
-            return _variant_type::template has<error_type>();
+            return _variant_type::value_types_list::template has<error_type>();
         }
 
         template <typename error_type, typename... args_type>
@@ -192,7 +192,7 @@ namespace atom
         template <typename error_type>
         constexpr auto get_error() -> error_type&
         {
-            return _variant.template as<error_type>();
+            return _variant.template get<error_type>();
         }
 
         constexpr auto is_error() const -> bool

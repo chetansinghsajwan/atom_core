@@ -85,11 +85,18 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns the `type_info` of type at index `i`.
+        ///
         /// ----------------------------------------------------------------------------------------
         template <usize i>
             requires(i < get_count())
         using at_type = typename impl_type::template at_type<i>;
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <usize i>
+            requires(i < get_count())
+        using at_type_info = type_info<typename impl_type::template at_type<i>>;
 
         /// ----------------------------------------------------------------------------------------
         /// returns the `type_info` of type at the front.
@@ -123,6 +130,14 @@ namespace atom
         static consteval auto get_back_try() -> decltype(auto)
         {
             return impl_type::get_back_try();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` if `i < get_count()`.
+        /// ----------------------------------------------------------------------------------------
+        static constexpr auto is_index_in_range(usize i) -> bool
+        {
+            return impl_type::is_index_in_range(i);
         }
 
         /// ----------------------------------------------------------------------------------------
