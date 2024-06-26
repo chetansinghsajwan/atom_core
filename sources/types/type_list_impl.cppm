@@ -98,6 +98,9 @@ namespace atom
             usize this_size = type_info<type0>::get_size();
             usize other_size = next_types_list::get_min_size();
 
+            if (next_types_list::get_count() == 0)
+                return this_size;
+
             return this_size < other_size ? this_size : other_size;
         }
 
@@ -111,6 +114,9 @@ namespace atom
 
             usize this_size = type_info<type0>::get_align();
             usize other_size = next_types_list::get_max_align();
+
+            if (next_types_list::get_count() == 0)
+                return this_size;
 
             return this_size > other_size ? this_size : other_size;
         }

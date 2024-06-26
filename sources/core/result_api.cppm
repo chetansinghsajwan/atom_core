@@ -529,10 +529,20 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename this_type = this_type>
-        constexpr auto get_value() -> this_type::value_type&
+        constexpr auto get_value() & -> this_type::value_type&
             requires(not value_type_info_type::is_void())
         {
             return _impl.get_value();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename this_type = this_type>
+        constexpr auto get_value() && -> this_type::value_type&&
+            requires(not value_type_info_type::is_void())
+        {
+            return move(_impl.get_value());
         }
 
         /// ----------------------------------------------------------------------------------------

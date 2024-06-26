@@ -37,12 +37,12 @@ namespace atom
         using unpure_like_type = type_info<
             typename type_info_impl::unpure_like_type<in_value_type, like_type>::value_type>;
 
-        static consteval auto get_size() -> bool
+        static consteval auto get_size() -> usize
         {
             return type_info_impl::get_sizeof<value_type>();
         }
 
-        static consteval auto get_align() -> bool
+        static consteval auto get_align() -> usize
         {
             return type_info_impl::get_alignof<value_type>();
         }
