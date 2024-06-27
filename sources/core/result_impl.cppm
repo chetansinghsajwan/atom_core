@@ -8,9 +8,6 @@ import :core.variant_impl;
 
 namespace atom
 {
-    class _result_void
-    {};
-
     template <typename in_value_type, typename... error_types>
     class result_impl
     {
@@ -20,12 +17,10 @@ namespace atom
     private:
         using this_type = result_impl;
         using impl_type = variant_impl<in_value_type, error_types...>;
+        using value_type_info = type_info<in_value_type>;
 
     public:
         using value_type = in_value_type;
-        using out_value_type =
-            type_utils::conditional_type<type_info<value_type>::template is_same_as<_result_void>(),
-                void, value_type>;
         using error_types_list = type_list<error_types...>;
 
     public:
@@ -65,11 +60,15 @@ namespace atom
             : _impl{ typename impl_type::template emplace_tag<void>{} }
         {}
 
+        template <typename value_type = value_type>
         constexpr result_impl(emplace_tag<value_type>, const value_type& value)
+            requires(not value_type_info::is_void())
             : _impl{ typename impl_type::template emplace_tag<value_type>{}, value }
         {}
 
+        template <typename value_type = value_type>
         constexpr result_impl(emplace_tag<value_type>, value_type&& value)
+            requires(not value_type_info::is_void())
             : _impl{ typename impl_type::template emplace_tag<value_type>{}, move(value) }
         {}
 
@@ -92,12 +91,14 @@ namespace atom
             _impl.template emplace_value<value_type>(forward<arg_types>(args)...);
         }
 
+        template <typename value_type = value_type>
         constexpr auto set_value(const value_type& value) -> void
             requires(not type_info<value_type>::is_void())
         {
             _impl.template emplace_value<value_type>(value);
         }
 
+        template <typename value_type = value_type>
         constexpr auto set_value(value_type&& value) -> void
             requires(not type_info<value_type>::is_void())
         {
@@ -110,11 +111,13 @@ namespace atom
             _impl.template emplace_value<value_type>();
         }
 
+        template <typename value_type = value_type>
         constexpr auto get_value() -> value_type&
         {
             return _impl.template get_value<value_type>();
         }
 
+        template <typename value_type = value_type>
         constexpr auto get_value() const -> const value_type&
         {
             return _impl.template get_value<value_type>();
@@ -197,15 +200,5 @@ namespace atom
 
     private:
         impl_type _impl;
-    };
-
-    template <typename... error_types>
-    class result_impl<void, error_types...>: public result_impl<_result_void, error_types...>
-    {
-        using base_type = result_impl<_result_void, error_types...>;
-
-    public:
-        using base_type::base_type;
-        using base_type::operator=;
     };
 }
