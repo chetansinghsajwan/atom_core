@@ -142,32 +142,32 @@ namespace atom
             static constexpr bool value = false;
         };
 
-        template <typename value_type, typename return_type, typename... args_type>
-        struct is_function<value_type, return_type(args_type...)>
+        template <typename value_type, typename return_type, typename... arg_types>
+        struct is_function<value_type, return_type(arg_types...)>
         {
             static constexpr bool value =
-                std::is_invocable_r_v<return_type, value_type, args_type...>;
+                std::is_invocable_r_v<return_type, value_type, arg_types...>;
         };
 
-        template <typename value_type, typename return_type, typename... args_type>
-        struct is_function<value_type, return_type(args_type...) const>
+        template <typename value_type, typename return_type, typename... arg_types>
+        struct is_function<value_type, return_type(arg_types...) const>
         {
             static constexpr bool value =
-                std::is_invocable_r_v<return_type, const value_type, args_type...>;
+                std::is_invocable_r_v<return_type, const value_type, arg_types...>;
         };
 
-        template <typename value_type, typename return_type, typename... args_type>
-        struct is_function<value_type, return_type(args_type...) volatile>
+        template <typename value_type, typename return_type, typename... arg_types>
+        struct is_function<value_type, return_type(arg_types...) volatile>
         {
             static constexpr bool value =
-                std::is_invocable_r_v<return_type, volatile value_type, args_type...>;
+                std::is_invocable_r_v<return_type, volatile value_type, arg_types...>;
         };
 
-        template <typename value_type, typename return_type, typename... args_type>
-        struct is_function<value_type, return_type(args_type...) const volatile>
+        template <typename value_type, typename return_type, typename... arg_types>
+        struct is_function<value_type, return_type(arg_types...) const volatile>
         {
             static constexpr bool value =
-                std::is_invocable_r_v<return_type, const volatile value_type, args_type...>;
+                std::is_invocable_r_v<return_type, const volatile value_type, arg_types...>;
         };
     };
 }

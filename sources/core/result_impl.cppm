@@ -86,10 +86,10 @@ namespace atom
         constexpr ~result_impl() = default;
 
     public:
-        template <typename... args_type>
-        constexpr auto emplace_value(args_type&&... args) -> void
+        template <typename... arg_types>
+        constexpr auto emplace_value(arg_types&&... args) -> void
         {
-            _impl.template emplace_value<value_type>(forward<args_type>(args)...);
+            _impl.template emplace_value<value_type>(forward<arg_types>(args)...);
         }
 
         constexpr auto set_value(const value_type& value) -> void
@@ -125,10 +125,10 @@ namespace atom
             return _impl.template is_type<value_type>();
         }
 
-        template <typename error_type, typename... args_type>
-        constexpr auto emplace_error(args_type&&... args) -> void
+        template <typename error_type, typename... arg_types>
+        constexpr auto emplace_error(arg_types&&... args) -> void
         {
-            _impl.template emplace_value<error_type>(forward<args_type>(args)...);
+            _impl.template emplace_value<error_type>(forward<arg_types>(args)...);
         }
 
         template <typename error_type>

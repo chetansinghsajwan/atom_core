@@ -126,22 +126,22 @@ namespace atom
             return type_info_impl::template is_function<value_type, signature>::value;
         }
 
-        template <typename... args_type>
+        template <typename... arg_types>
         static consteval auto is_constructible_from() -> bool
         {
-            return std::is_constructible_v<value_type, args_type...>;
+            return std::is_constructible_v<value_type, arg_types...>;
         }
 
-        template <typename... args_type>
+        template <typename... arg_types>
         static consteval auto is_trivially_constructible_from() -> bool
         {
-            return std::is_trivially_constructible_v<value_type, args_type...>;
+            return std::is_trivially_constructible_v<value_type, arg_types...>;
         }
 
-        template <typename... args_type>
+        template <typename... arg_types>
         static consteval auto is_assignable_from() -> bool
         {
-            return std::is_assignable_v<value_type, args_type...>;
+            return std::is_assignable_v<value_type, arg_types...>;
         }
 
         static consteval auto is_swappable() -> bool
@@ -155,10 +155,10 @@ namespace atom
             return std::is_convertible_v<value_type, other_type>;
         }
 
-        template <typename... args_type>
+        template <typename... arg_types>
         static consteval auto is_trivially_asignable_from() -> bool
         {
-            return std::is_trivially_assignable_v<value_type, args_type...>;
+            return std::is_trivially_assignable_v<value_type, arg_types...>;
         }
 
         static consteval auto is_default_constructible() -> bool
