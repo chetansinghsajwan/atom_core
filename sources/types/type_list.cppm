@@ -413,7 +413,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns `true` if all types are pure.
+        /// returns `true` if each type is pure.
         /// ----------------------------------------------------------------------------------------
         static constexpr auto are_pure() -> bool
         {
@@ -421,7 +421,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns `true` if all types are default constructible.
+        /// returns `true` if each type is default constructible.
         /// ----------------------------------------------------------------------------------------
         static constexpr auto are_default_constructible() -> bool
         {
@@ -429,7 +429,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns `true` if all types are copy constructible.
+        /// returns `true` if each type is copy constructible.
         /// ----------------------------------------------------------------------------------------
         static constexpr auto are_copy_constructible() -> bool
         {
@@ -437,7 +437,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns `true` if all types are copy assignable.
+        /// returns `true` if each type is copy assignable.
         /// ----------------------------------------------------------------------------------------
         static constexpr auto are_copy_assignable() -> bool
         {
@@ -445,7 +445,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns `true` if all types are copyable.
+        /// returns `true` if each type is copyable.
         /// ----------------------------------------------------------------------------------------
         static constexpr auto are_copyable() -> bool
         {
@@ -453,7 +453,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns `true` if all types are move constructible.
+        /// returns `true` if each type is move constructible.
         /// ----------------------------------------------------------------------------------------
         static constexpr auto are_move_constructible() -> bool
         {
@@ -461,7 +461,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns `true` if all types are move assignable.
+        /// returns `true` if each type is move assignable.
         /// ----------------------------------------------------------------------------------------
         static constexpr auto are_move_assignable() -> bool
         {
@@ -469,7 +469,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns `true` if all types are moveable.
+        /// returns `true` if each type is moveable.
         /// ----------------------------------------------------------------------------------------
         static constexpr auto are_moveable() -> bool
         {
@@ -477,7 +477,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns `true` if all types are destructible.
+        /// returns `true` if each type is destructible.
         /// ----------------------------------------------------------------------------------------
         static constexpr auto are_destructible() -> bool
         {
@@ -485,7 +485,15 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns `true` if all types are trivially default constructible.
+        /// returns `true` if each type is destructible or void.
+        /// ----------------------------------------------------------------------------------------
+        static constexpr auto are_destructible_or_void() -> bool
+        {
+            return are_all([](auto info) { return info.is_destructible() or info.is_void(); });
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` if each type is trivially default constructible.
         /// ----------------------------------------------------------------------------------------
         static constexpr auto are_trivially_default_constructible() -> bool
         {
@@ -493,7 +501,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns `true` if all types are trivially copy constructible.
+        /// returns `true` if each type is trivially copy constructible.
         /// ----------------------------------------------------------------------------------------
         static constexpr auto are_trivially_copy_constructible() -> bool
         {
@@ -501,7 +509,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns `true` if all types are triviallycopy assignable.
+        /// returns `true` if each type is triviallycopy assignable.
         /// ----------------------------------------------------------------------------------------
         static constexpr auto are_trivially_copy_assignable() -> bool
         {
@@ -509,7 +517,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns `true` if all types are trivially copyable.
+        /// returns `true` if each type is trivially copyable.
         /// ----------------------------------------------------------------------------------------
         static constexpr auto are_trivially_copyable() -> bool
         {
@@ -517,7 +525,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns `true` if all types are trivially move constructible.
+        /// returns `true` if each type is trivially move constructible.
         /// ----------------------------------------------------------------------------------------
         static constexpr auto are_trivially_move_constructible() -> bool
         {
@@ -525,7 +533,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns `true` if all types are trivially move assignable.
+        /// returns `true` if each type is trivially move assignable.
         /// ----------------------------------------------------------------------------------------
         static constexpr auto are_trivially_move_assignable() -> bool
         {
@@ -533,7 +541,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns `true` if all types are trivially moveable.
+        /// returns `true` if each type is trivially moveable.
         /// ----------------------------------------------------------------------------------------
         static constexpr auto are_trivially_moveable() -> bool
         {
@@ -541,7 +549,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns `true` if all types are trivially destructible.
+        /// returns `true` if each type is trivially destructible.
         /// ----------------------------------------------------------------------------------------
         static constexpr auto are_trivially_destructible() -> bool
         {
@@ -549,7 +557,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns `true` if all types are convertible to `other_type`.
+        /// returns `true` if each type is convertible to `other_type`.
         /// ----------------------------------------------------------------------------------------
         template <typename other_type>
         static constexpr auto are_convertible_to() -> bool
@@ -558,7 +566,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns `true` if all types are equality comparable.
+        /// returns `true` if each type is equality comparable.
         /// ----------------------------------------------------------------------------------------
         template <typename other_type>
         static constexpr auto are_equality_comparable() -> bool
@@ -567,7 +575,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns `true` if all types are comparable.
+        /// returns `true` if each type is comparable.
         /// ----------------------------------------------------------------------------------------
         template <typename other_type>
         static constexpr auto are_comparable() -> bool

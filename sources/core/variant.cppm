@@ -37,7 +37,8 @@ namespace atom
         static_assert(value_types_list::get_count() > 1, "at least two type must to be specified.");
         static_assert(value_types_list::are_pure(), "every type should be pure.");
         static_assert(value_types_list::are_unique(), "every type should be unique.");
-        // static_assert(value_types_list::are_destructible(), "every type should be destructible.");
+        static_assert(value_types_list::are_destructible_or_void(),
+            "every type should be destructible or void.");
 
     public:
         /// ----------------------------------------------------------------------------------------
