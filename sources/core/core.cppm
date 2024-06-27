@@ -28,6 +28,10 @@ export namespace atom
     struct create_from_result_tag
     {};
 
+    template <typename value_type>
+    struct create_by_emplace_tag
+    {};
+
     constexpr auto create_with_count = create_with_count_type{};
     constexpr auto create_with_capacity = create_with_capacity_type{};
     constexpr auto create_with_size = create_with_size_type{};
@@ -36,6 +40,9 @@ export namespace atom
     constexpr auto create_from_std_vector = create_from_std_vector_tag{};
     constexpr auto create_from_variant = create_from_variant_tag{};
     constexpr auto create_from_result = create_from_result_tag{};
+
+    template <typename value_type>
+    constexpr auto create_by_emplace = create_by_emplace_tag<value_type>{};
 
     template <typename value_type>
     constexpr auto move(value_type&& val) -> typename std::remove_reference_t<value_type>&&

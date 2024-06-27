@@ -150,6 +150,17 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
+        static constexpr auto get_id_at(usize i) -> type_id
+        {
+            if (i == 0)
+                return type_info<type0>::get_id();
+
+            return next_types_list::template get_at(i - 1);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
         template <typename value_type>
         static consteval auto get_index() -> usize
         {
@@ -173,7 +184,7 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename function_type>
-        static consteval auto for_each(function_type&& func) -> void
+        static constexpr auto for_each(function_type&& func) -> void
         {
             if constexpr (get_count() == 0)
                 return;
@@ -293,7 +304,7 @@ namespace atom
         }
 
         template <typename function_type>
-        static consteval auto has_if(function_type&& func) -> bool
+        static constexpr auto has_if(function_type&& func) -> bool
         {
             if (get_count() == 0)
                 return false;
@@ -400,6 +411,13 @@ namespace atom
             };
 
             return remove_all_if(pred);
+        }
+
+        template <typename... other_types>
+        static consteval auto is_eq() -> bool
+        {
+            using that_list = type_list_impl<other_types...>;
+            return type_info<this_type>::template is_same_as<that_list>();
         }
     };
 }

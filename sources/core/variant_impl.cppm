@@ -7,62 +7,83 @@ import :core.core;
 import :core.nums;
 import :core.static_storage;
 
-/// ------------------------------------------------------------------------------------------------
-/// implementations
-/// ------------------------------------------------------------------------------------------------
 namespace atom
 {
-    template <typename... value_types>
-    class _variant_storage
-    {
-    public:
-        constexpr auto get_data() -> void*
-        {
-            return &_storage.storage;
-        }
-
-        constexpr auto get_data() const -> const void*
-        {
-            return &_storage.storage;
-        }
-
-    private:
-        static_storage_for<value_types...> _storage;
-    };
-
     /// --------------------------------------------------------------------------------------------
-    /// implementatiion of [`variant`].
+    /// implementation of [`variant`].
     /// --------------------------------------------------------------------------------------------
     template <typename... value_types>
-    class _variant_impl
+    class variant_impl
     {
-    private:
-        template <typename... others_type>
-        friend class _variant_impl;
+        template <typename... that_value_types>
+        friend class variant_impl;
 
     private:
-        using _storage_type = _variant_storage<value_types...>;
+        using this_type = variant_impl;
+        using storage_type = union_storage<value_types...>;
 
     public:
         using value_types_list = type_list<value_types...>;
 
+        struct that_tag
+        {};
+
+        template <typename value_type>
+        struct emplace_tag
+        {};
+
     public:
-        constexpr _variant_impl()
-            : _index{ get_null_type_index() }
-        {}
+        constexpr variant_impl() = delete;
+
+        constexpr variant_impl(const this_type& that) = default;
+
+        constexpr variant_impl(this_type&& that) = default;
+
+        constexpr variant_impl(that_tag, const this_type& that)
+            : _index{ that._index }
+        {
+            value_types_list::for_each(
+                [&](loop_command* command, auto info)
+                {
+                    using value_type = typename decltype(info)::value_type;
+
+                    if (value_types_list::get_index(info) != _index)
+                        return;
+
+                    _construct_value_as<value_type>(that._get_value_as<value_type>());
+                    *command = loop_command::break_;
+                });
+        }
+
+        constexpr variant_impl(that_tag, this_type&& that)
+            : _index{ that._index }
+        {
+            value_types_list::for_each(
+                [&](loop_command* command, auto info)
+                {
+                    using value_type = typename decltype(info)::value_type;
+
+                    if (value_types_list::get_index(info) != _index)
+                        return;
+
+                    _construct_value_as<value_type>(move(that._get_value_as<value_type>()));
+                    *command = loop_command::break_;
+                });
+        }
 
         template <typename that_unpure_type>
-        constexpr _variant_impl(create_from_variant_tag, that_unpure_type&& that)
-            : _index{ get_null_type_index() }
+        constexpr variant_impl(that_tag, that_unpure_type&& that)
+            : _index{ nums::get_max_usize() }
         {
             using that_type = typename type_info<that_unpure_type>::pure_type::value_type;
 
             constexpr auto this_types_list = value_types_list{};
             constexpr auto that_types_list = typename that_type::value_types_list{};
-            constexpr auto common_types_list =
-                value_types_list::remove_others(typename that_type::value_types_list{});
+            constexpr auto common_types_list = value_types_list::remove_others(that_types_list);
 
-            usize that_current_index = that.get_type_index();
+            constexpr bool should_move = type_info<decltype(that)>::is_rvalue_ref();
+
+            usize that_current_index = that._index;
 
             common_types_list.for_each(
                 [&](loop_command* command, auto type)
@@ -71,90 +92,104 @@ namespace atom
                     constexpr usize this_index = this_types_list.get_index(type);
                     constexpr usize that_index = that_types_list.get_index(type);
 
-                    if (that_index == that_current_index)
-                    {
-                        this->_index = this_index;
-                        this->construct_value_by_index<this_index>(
-                            move(that.template get_value_by_index<that_index>()));
+                    if (that_index != that_current_index)
+                        return;
 
-                        *command = loop_command::break_;
+                    _index = this_index;
+
+                    if (should_move)
+                    {
+                        _construct_value_as<value_type>(
+                            move(that.template get_value<value_type>()));
                     }
+                    else
+                    {
+                        _construct_value_as<value_type>(that.template get_value<value_type>());
+                    }
+
+                    *command = loop_command::break_;
+                });
+
+            if constexpr (this_types_list != common_types_list)
+            {
+                contract_asserts(_index != nums::get_max_usize());
+            }
+        }
+
+        template <typename value_type, typename... arg_types>
+        constexpr variant_impl(emplace_tag<value_type>, arg_types&&... args)
+            : _index{ value_types_list::template get_index<value_type>() }
+        {
+            _construct_value_as<value_type>(forward<arg_types>(args)...);
+        }
+
+        constexpr ~variant_impl() = default;
+
+        constexpr ~variant_impl()
+            requires(not value_types_list::are_trivially_destructible())
+        {
+            _destroy_value();
+        }
+
+    public:
+        /// ----------------------------------------------------------------------------------------
+        /// constructs or assigns value from `that`, assigns if `that` holds the same type else
+        /// constructs.
+        /// ----------------------------------------------------------------------------------------
+        template <typename that_unpure_type>
+        constexpr auto set_value_that(that_unpure_type&& that)
+        {
+            using that_type = typename type_info<that_unpure_type>::pure_type::value_type;
+            using that_types_list = typename that_type::value_types_list;
+
+            constexpr bool should_move = type_info<decltype(that)>::is_rvalue_ref();
+            usize that_index = that._index;
+
+            that_types_list::for_each(
+                [&](loop_command* command, auto info)
+                {
+                    using value_type = typename decltype(info)::value_type;
+                    if (that_types_list::get_index(info) != that_index)
+                        return;
+
+                    // index for this variant of type same as that `variant` current type.
+                    constexpr usize this_index = value_types_list::get_index(info);
+
+                    // we already have this value_type, so we don'type construct it but assign it.
+                    if (_index == this_index)
+                    {
+                        if constexpr (should_move)
+                        {
+                            _assign_value_as<value_type>(
+                                move(that.template _get_value_as<value_type>()));
+                        }
+                        else
+                        {
+                            _assign_value_as<value_type>(that.template _get_value_as<value_type>());
+                        }
+                    }
+                    else
+                    {
+                        _destroy_value();
+
+                        if constexpr (should_move)
+                        {
+                            _construct_value_as<value_type>(
+                                move(that.template _get_value_as<value_type>()));
+                        }
+                        else
+                        {
+                            _construct_value_as<value_type>(
+                                that.template _get_value_as<value_type>());
+                        }
+
+                        _index = this_index;
+                    }
+
+                    *command = loop_command::break_;
                 });
         }
 
-    public:
-        static constexpr auto get_type_count() -> usize
-        {
-            return value_types_list::get_count();
-        }
-
-        template <typename value_type>
-        static consteval auto has_type() -> bool
-        {
-            return value_types_list::template has<value_type>();
-        }
-
-        template <usize i>
-        static consteval auto has_index() -> bool
-        {
-            return i < value_types_list::get_count();
-        }
-
-        template <typename value_type>
-        static consteval auto get_index_for_type() -> usize
-        {
-            return value_types_list::template get_index<value_type>();
-        }
-
-        static consteval auto get_null_type_index() -> usize
-        {
-            return nums::get_max_usize();
-        }
-
-        template <usize i>
-        using type_at_index = typename value_types_list::template at_type<i>;
-
-        using first_type = type_at_index<0>;
-
-        using last_type = type_at_index<get_type_count() - 1>;
-
-    public:
-        /// ----------------------------------------------------------------------------------------
-        /// copy or mov constructs value hold by variant `that`.
-        ///
-        /// # expects
-        /// - current value is null.
-        /// ----------------------------------------------------------------------------------------
-        template <typename... others_type>
-        constexpr auto construct_value_from_variant(const _variant_impl<others_type...>& that)
-        {
-            _construct_value_from_variant_impl<false, 0, others_type...>(
-                that, that.get_type_index());
-        }
-
-        template <typename... others_type>
-        constexpr auto construct_value_from_variant(_variant_impl<others_type...>&& that)
-        {
-            _construct_value_from_variant_impl<true, 0, others_type...>(
-                that, that.get_type_index());
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// constructs or assigns value from `that` variant.
-        /// assigns if `that` variant holds the same type else constructs.
-        /// ----------------------------------------------------------------------------------------
-        template <typename... others_type>
-        constexpr auto set_value_from_variant(const _variant_impl<others_type...>& that)
-        {
-            _set_value_from_variant_impl<false, 0, others_type...>(that, that.get_type_index());
-        }
-
-        template <typename... others_type>
-        constexpr auto set_value_from_variant(_variant_impl<others_type...>&& that)
-        {
-            _set_value_from_variant_impl<true, 0, others_type...>(that, that.get_type_index());
-        }
-
         /// ----------------------------------------------------------------------------------------
         /// constructs value of type `type` with args `args`.
         ///
@@ -162,238 +197,106 @@ namespace atom
         /// - current value is null.
         /// ----------------------------------------------------------------------------------------
         template <typename value_type, typename... arg_types>
-        constexpr auto construct_value_by_type(arg_types&&... args)
+        constexpr auto emplace_value(arg_types&&... args) -> value_type&
         {
+            _destroy_value();
+
+            _index = value_types_list::template get_index<value_type>();
             _construct_value_as<value_type>(forward<arg_types>(args)...);
-            _index = get_index_for_type<value_type>();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// constructs value of type at index `i` with args `args`.
-        ///
-        /// # expects
-        /// - current value is null.
-        /// ----------------------------------------------------------------------------------------
-        template <usize i, typename... arg_types>
-        constexpr auto construct_value_by_index(arg_types&&... args)
-        {
-            construct_value_by_type<type_at_index<i>>(forward<arg_types>(args)...);
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// constructs value of type `type` with args `args`.
-        ///
-        /// # expects
-        /// - current value is null.
-        /// ----------------------------------------------------------------------------------------
-        template <typename value_type, typename... arg_types>
-        constexpr auto emplace_value_by_type(arg_types&&... args) -> value_type&
-        {
-            destroy_value();
-
-            _construct_value_as<value_type>(forward<arg_types>(args)...);
-            _index = get_index_for_type<value_type>();
             return _get_value_as<value_type>();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// constructs value of type at index `i` with args `args`.
-        ///
-        /// # expects
-        /// - current value is null.
-        /// ----------------------------------------------------------------------------------------
-        template <usize i, typename... arg_types>
-        constexpr auto emplace_value_by_index(arg_types&&... args)
-        {
-            return emplace_value_by_type<type_at_index<i>>(forward<arg_types>(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
         /// constructs or assigns value of type deduced by `value` with `value`.
         /// ----------------------------------------------------------------------------------------
-        template <typename in_value_type>
-        constexpr auto set_value(in_value_type&& value)
+        template <typename other_value_type>
+        constexpr auto set_value(other_value_type&& value)
         {
-            using type = type_info<in_value_type>::pure_type::value_type;
-            usize index_to_set = get_index_for_type<in_value_type>();
+            usize other_index = value_types_list::template get_index<other_value_type>();
 
-            // the new type to set is same as current.
-            if (index_to_set == _index)
+            // the new type to set is same as the current.
+            if (_index == other_index)
             {
-                _assign_value_as<in_value_type>(forward<in_value_type>(value));
+                _assign_value_as<other_value_type>(forward<other_value_type>(value));
             }
             else
             {
-                destroy_value();
-                construct_value_by_type<in_value_type>(forward<in_value_type>(value));
+                _destroy_value();
+
+                _index = other_index;
+                _construct_value_as<other_value_type>(forward<other_value_type>(value));
             }
         }
 
         template <typename value_type>
-        constexpr auto get_value_by_type() const -> const value_type&
+        constexpr auto get_value() const -> const value_type&
         {
-            contract_debug_expects(get_index_for_type<value_type>() == get_type_index(),
-                "current type is not same as requested type.");
-
             return _get_value_as<value_type>();
         }
 
         template <typename value_type>
-        constexpr auto get_value_by_type() -> value_type&
+        constexpr auto get_value() -> value_type&
         {
-            contract_debug_expects(get_index_for_type<value_type>() == get_type_index(),
-                "current type is not same as requested type.");
-
             return _get_value_as<value_type>();
-        }
-
-        template <usize i>
-        constexpr auto get_value_by_index() const -> const type_at_index<i>&
-        {
-            return get_value_by_type<type_at_index<i>>();
-        }
-
-        template <usize i>
-        constexpr auto get_value_by_index() -> type_at_index<i>&
-        {
-            return get_value_by_type<type_at_index<i>>();
         }
 
         template <typename value_type>
         constexpr auto is_type() const -> bool
         {
-            return get_index_for_type<value_type>() == get_type_index();
+            return _index == value_types_list::template get_index<value_type>();
         }
 
         template <typename... other_value_types>
         constexpr auto is_any_type() const -> bool
         {
             return type_list<other_value_types...>::is_any(
-                [&](auto info) {
-                    return get_index_for_type<typename decltype(info)::value_type>()
-                           == get_type_index();
-                });
+                [&](auto info) { return _index == value_types_list::get_index(info); });
         }
 
-        template <usize i>
-        constexpr auto is_index() const -> bool
-        {
-            return i == get_type_index();
-        }
-
-        constexpr auto get_type_index() const -> usize
+        constexpr auto get_index() const -> usize
         {
             return _index;
         }
 
-        constexpr auto destroy_value()
+        template <typename... that_value_types>
+        constexpr auto is_eq(const variant_impl<that_value_types...>& that) const -> bool
         {
-            _destroy_value_impl<0, value_types...>(get_type_index());
+            using that_types_list = type_list<that_value_types...>;
+
+            // they don't have the same type.
+            if (value_types_list::get_id_at(_index) != that_types_list::get_id(that._index))
+                return false;
+
+            bool result;
+            value_types_list::for_each(
+                [&](loop_command* command, auto info)
+                {
+                    using value_type = typename decltype(info)::value_type;
+
+                    if constexpr (value_types_list::get_index(info) != _index)
+                        return;
+
+                    result =
+                        _get_value_as<value_type>() == that.template _get_value_as<value_type>();
+                    *command = loop_command::break_;
+                });
+
+            return result;
         }
 
     private:
-        template <bool mov, usize index, typename other_type, typename... others_type>
-        constexpr auto _construct_value_from_variant_impl(auto& that, usize that_index)
+        constexpr auto _destroy_value()
         {
-            using that_types = type_list<others_type...>;
-
-            if (index != that_index)
-            {
-                if constexpr (that_types::get_count() == 0)
+            value_types_list::for_each(
+                [&](loop_command* command, auto info)
                 {
-                    contract_panic("there is no type for current index.");
-                }
-                else
-                {
-                    _construct_value_from_variant_impl<mov, index + 1, others_type...>(
-                        that, that_index);
-                    return;
-                }
-            }
+                    if (value_types_list::get_index(info) != get_index())
+                        return;
 
-            if constexpr (mov)
-            {
-                _construct_value_as<other_type>(move(that.template _get_value_as<other_type>()));
-            }
-            else
-            {
-                _construct_value_as<other_type>(that.template _get_value_as<other_type>());
-            }
-
-            _index = get_index_for_type<other_type>();
-        }
-
-        template <bool mov, usize index, typename other_type, typename... others_type>
-        constexpr auto _set_value_from_variant_impl(auto&& that, usize that_index)
-        {
-            using that_types = type_list<others_type...>;
-
-            if (index != that_index)
-            {
-                if constexpr (that_types::get_count() == 0)
-                {
-                    contract_panic("there is no type for current index.");
-                }
-                else
-                {
-                    _set_value_from_variant_impl<mov, index + 1, others_type...>(that, that_index);
-                    return;
-                }
-            }
-
-            // index for this variant of type same as that `variant` current type.
-            usize index_for_this = get_index_for_type<other_type>();
-
-            // we already have this value_type, so we don'type construct it but assign it.
-            if (_index == index_for_this)
-            {
-                if constexpr (mov)
-                {
-                    _assign_value_as<other_type>(move(that.template _get_value_as<other_type>()));
-                }
-                else
-                {
-                    _assign_value_as<other_type>(that.template _get_value_as<other_type>());
-                }
-            }
-            else
-            {
-                destroy_value();
-
-                if constexpr (mov)
-                {
-                    _construct_value_as<other_type>(
-                        move(that.template _get_value_as<other_type>()));
-                }
-                else
-                {
-                    _construct_value_as<other_type>(that.template _get_value_as<other_type>());
-                }
-
-                _index = index_for_this;
-            }
-        }
-
-        template <usize index, typename value_type, typename... others_type>
-        constexpr auto _destroy_value_impl(usize i)
-        {
-            using value_types_list = type_list<others_type...>;
-
-            if (i != index)
-            {
-                if constexpr (value_types_list::get_count() == 0)
-                {
-                    contract_panic("there is no type for current index.");
-                }
-                else
-                {
-                    // recursion to find type at index i.
-                    _destroy_value_impl<index + 1, others_type...>(i);
-                    return;
-                }
-            }
-
-            _destruct_value_as<value_type>();
+                    using value_type = typename decltype(info)::value_type;
+                    _destruct_value_as<value_type>();
+                    *command = loop_command::break_;
+                });
         }
 
         template <typename value_type, typename... arg_types>
@@ -412,7 +315,9 @@ namespace atom
         constexpr auto _destruct_value_as()
         {
             if constexpr (not type_info<value_type>::is_void())
+            {
                 obj_helper().destruct(_get_data_as<value_type>());
+            }
         }
 
         template <typename value_type>
@@ -430,17 +335,17 @@ namespace atom
         template <typename value_type>
         constexpr auto _get_data_as() -> value_type*
         {
-            return (value_type*)_storage.get_data();
+            return _storage.template get_data_as<value_type>();
         }
 
         template <typename value_type>
         constexpr auto _get_data_as() const -> const value_type*
         {
-            return (const value_type*)_storage.get_data();
+            return _storage.template get_data_as<value_type>();
         }
 
     private:
-        _storage_type _storage;
-        usize _index = 0;
+        storage_type _storage;
+        usize _index;
     };
 }

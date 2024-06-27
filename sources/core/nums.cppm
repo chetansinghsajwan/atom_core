@@ -7,23 +7,23 @@ export import :core.float_wrapper;
 export namespace atom::nums
 {
     template <typename num_type>
-    constexpr auto get_min() -> num_type
+    consteval auto get_min() -> num_type
     {
         return std::numeric_limits<num_type>::min();
     }
 
     template <typename num_type>
-    constexpr auto get_max() -> num_type
+    consteval auto get_max() -> num_type
     {
         return std::numeric_limits<num_type>::max();
     }
 
-    constexpr auto get_max_isize() -> isize
+    consteval auto get_max_isize() -> isize
     {
         return get_max<isize>();
     }
 
-    constexpr auto get_max_usize() -> usize
+    consteval auto get_max_usize() -> usize
     {
         return get_max<usize>();
     }

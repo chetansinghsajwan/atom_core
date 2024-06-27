@@ -8,14 +8,99 @@ import :core.int_wrapper;
 
 namespace atom
 {
-    export template <typename... values_type>
+    export template <typename... value_types>
+    union union_storage;
+
+    template <typename this_value_type, typename... other_value_types>
+    union union_storage<this_value_type, other_value_types...>
+    {
+        using this_type = union_storage;
+        using next_type = union_storage<other_value_types...>;
+
+    public:
+        constexpr union_storage()
+            : _next{}
+        {}
+
+        constexpr union_storage(const this_type& that) = default;
+        constexpr union_storage& operator=(const this_type& that) = default;
+        constexpr union_storage(this_type&& that) = default;
+        constexpr union_storage& operator=(this_type&& that) = default;
+
+        constexpr ~union_storage() {}
+
+    public:
+        template <typename value_type>
+        constexpr auto get_data_as() const -> const value_type*
+        {
+            if constexpr (type_info<value_type>::template is_same_as<this_value_type>())
+                return &_value;
+            else
+                return _next.template get_data_as<value_type>();
+        }
+
+        template <typename value_type>
+        constexpr auto get_data_as() -> value_type*
+        {
+            if constexpr (type_info<value_type>::template is_same_as<this_value_type>())
+                return &_value;
+            else
+                return _next.template get_data_as<value_type>();
+        }
+
+    public:
+        this_value_type _value;
+        next_type _next;
+    };
+
+    template <>
+    union union_storage<>
+    {
+        using this_type = union_storage;
+
+        struct _dummy_type
+        {};
+
+    public:
+        constexpr union_storage()
+            : _value{}
+        {}
+
+        constexpr union_storage(const this_type& that) = default;
+        constexpr union_storage& operator=(const this_type& that) = default;
+        constexpr union_storage(this_type&& that) = default;
+        constexpr union_storage& operator=(this_type&& that) = default;
+
+        constexpr ~union_storage() {}
+
+    public:
+        _dummy_type _value;
+    };
+
+    export template <typename... value_types>
     class static_storage_for
     {
     private:
-        using value_types_list = type_list<values_type...>;
+        using value_types_list = type_list<value_types...>;
 
     public:
-        alignas(value_types_list::get_max_align()) byte storage[value_types_list::get_max_size()];
+        constexpr auto get_data() -> void*
+        {
+            return _storage;
+        }
+
+        constexpr auto get_data() const -> const void*
+        {
+            return _storage;
+        }
+
+        constexpr auto get_size() const -> usize
+        {
+            return value_types_list::get_max_size();
+        }
+
+    public:
+        alignas(value_types_list::get_max_align()) byte _storage[value_types_list::get_max_size()];
     };
 
     export template <usize in_size>

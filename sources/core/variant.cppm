@@ -25,7 +25,7 @@ namespace atom
 
     private:
         using this_type = variant<value_types...>;
-        using impl_type = _variant_impl<value_types...>;
+        using impl_type = variant_impl<value_types...>;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -34,7 +34,7 @@ namespace atom
         using value_types_list = type_list<value_types...>;
 
     public:
-        static_assert(not value_types_list::is_empty(), "at least one type needs to be specified.");
+        static_assert(value_types_list::get_count() > 2, "at least two type must to be specified.");
         static_assert(value_types_list::are_pure(), "every type should be pure.");
         static_assert(value_types_list::are_unique(), "every type should be unique.");
         static_assert(value_types_list::are_destructible(), "every type should be destructible.");
@@ -43,12 +43,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # default constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr variant()
-            requires(typename value_types_list::first_type_info::is_default_constructible() or
-                     typename value_types_list::first_type_info::is_void())
-        {
-            _impl.template construct_value_by_index<0>();
-        }
+        constexpr variant() = delete;
 
         /// ----------------------------------------------------------------------------------------
         /// # trivial copy constructor
@@ -61,9 +56,8 @@ namespace atom
         constexpr variant(const variant& that)
             requires(value_types_list::info_list::are_copy_constructible()
                      and not value_types_list::info_list::are_not_trivially_copy_constructible())
-        {
-            _impl.construct_value_from_variant(that._impl);
-        }
+            : _impl{ typename impl_type::that_tag{}, that._impl }
+        {}
 
         /// ----------------------------------------------------------------------------------------
         /// # copy constructor template
@@ -72,9 +66,8 @@ namespace atom
         constexpr variant(const variant<that_value_types...>& that)
             requires(type_list<that_value_types...>::are_copy_constructible()
                      and value_types_list::template has_all<that_value_types...>())
-        {
-            _impl.construct_value_from_variant(that._impl);
-        }
+            : _impl{ typename impl_type::that_tag{}, that._impl }
+        {}
 
         /// ----------------------------------------------------------------------------------------
         /// # trivial copy assignment operator
@@ -88,7 +81,7 @@ namespace atom
             requires(value_types_list::are_copyable()
                      and not value_types_list::are_not_trivially_copy_assignable())
         {
-            _impl.set_value_from_variant(that._impl);
+            _impl.set_value_that(that._impl);
             return *this;
         }
 
@@ -100,7 +93,7 @@ namespace atom
             requires(value_types_list::are_copyable()
                      and value_types_list::template has_all<that_value_types...>())
         {
-            _impl.set_value_from_variant(that._impl);
+            _impl.set_value_that(that._impl);
             return *this;
         }
 
@@ -115,9 +108,8 @@ namespace atom
         constexpr variant(variant&& that)
             requires(value_types_list::are_move_constructible()
                      and value_types_list::are_not_trivially_move_constructible())
-        {
-            _impl.construct_value_from_variant(move(that._impl));
-        }
+            : _impl{ typename impl_type::that_tag{}, move(that._impl) }
+        {}
 
         /// ----------------------------------------------------------------------------------------
         /// # move constructor template
@@ -126,9 +118,8 @@ namespace atom
         constexpr variant(variant<that_value_types...>&& that)
             requires(type_list<that_value_types...>::are_move_constructible()
                      and value_types_list::template has_all<that_value_types...>())
-        {
-            _impl.construct_value_from_variant(move(that._impl));
-        }
+            : _impl{ typename impl_type::that_tag{}, move(that._impl) }
+        {}
 
         /// ----------------------------------------------------------------------------------------
         /// # trivial move assignment operator
@@ -142,7 +133,7 @@ namespace atom
             requires(value_types_list::are_moveable()
                      and value_types_list::are_not_trivially_move_assignable())
         {
-            _impl.set_value_from_variant(move(that._impl));
+            _impl.set_value_that(move(that._impl));
             return *this;
         }
 
@@ -154,50 +145,64 @@ namespace atom
             requires(value_types_list::are_moveable()
                      and value_types_list::template has_all<that_value_types...>())
         {
-            _impl.set_value_from_variant(move(that._impl));
+            _impl.set_value_that(move(that._impl));
             return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
+        /// # named constructor
+        /// ----------------------------------------------------------------------------------------
+        template <typename... that_value_types>
+        constexpr variant(create_from_variant_tag, const variant<that_value_types...>& that)
+            requires(value_types_list::template has_any<that_value_types...>())
+            : _impl{ typename impl_type::that_tag{}, that._impl }
+        {}
+
+        /// ----------------------------------------------------------------------------------------
+        /// # named constructor
+        /// ----------------------------------------------------------------------------------------
+        template <typename... that_value_types>
+        constexpr variant(create_from_variant_tag, variant<that_value_types...>&& that)
+            requires(value_types_list::template has_any<that_value_types...>())
+            : _impl{ typename impl_type::that_tag{}, move(that._impl) }
+        {}
+
+        /// ----------------------------------------------------------------------------------------
+        /// # named constructor
+        /// ----------------------------------------------------------------------------------------
+        template <typename value_type, typename... arg_types>
+        constexpr variant(create_by_emplace_tag<value_type>, arg_types&&... args)
+            requires(value_types_list::template has<value_type>()
+                     and type_info<value_type>::template is_constructible_from<arg_types...>())
+            : _impl{ create_by_emplace<value_type>, forward<arg_types>(args)... }
+        {}
+
+        /// ----------------------------------------------------------------------------------------
         /// # value copy constructor
         ///
-        /// copy constructs variant with value of type type.
-        ///
-        /// # parameters
-        ///
-        ///  - `value`: value to construct with.
+        /// copy constructs variant with `value`.
         /// ----------------------------------------------------------------------------------------
         template <typename value_type>
         constexpr variant(const value_type& value)
             requires(value_types_list::template has<value_type>())
-        {
-            _impl.template construct_value_by_type<value_type>(value);
-        }
+            : _impl{ typename impl_type::template emplace_tag<value_type>{}, value }
+        {}
 
         /// ----------------------------------------------------------------------------------------
         /// # value move constructor
         ///
-        /// move constructs variant with value of type type.
-        ///
-        /// # parameters
-        ///
-        ///  - `value`: value to construct with.
+        /// move constructs variant with `value`.
         /// ----------------------------------------------------------------------------------------
         template <typename value_type>
         constexpr variant(value_type&& value)
             requires(value_types_list::template has<value_type>())
-        {
-            _impl.template construct_value_by_type<value_type>(move(value));
-        }
+            : _impl{ typename impl_type::template emplace_tag<value_type>{}, move(value) }
+        {}
 
         /// ----------------------------------------------------------------------------------------
         /// # value copy operator
         ///
-        /// destroys previous value assigns new value.
-        ///
-        /// # parameters
-        ///
-        ///  - `value`: value to assign.
+        /// destroys previous value and assigns new value.
         /// ----------------------------------------------------------------------------------------
         template <typename value_type>
         constexpr variant& operator=(const value_type& value)
@@ -210,11 +215,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # value move operator
         ///
-        /// destroys previous value assigns new value.
-        ///
-        /// # parameters
-        ///
-        ///  - `value`: value to assign.
+        /// destroys previous value and assigns new value.
         /// ----------------------------------------------------------------------------------------
         template <typename value_type>
         constexpr variant& operator=(value_type&& value)
@@ -224,53 +225,10 @@ namespace atom
             return *this;
         }
 
-        template <typename that_type>
-        static consteval auto has_variant_constructor() -> bool
-        {
-            if constexpr (not type_info<that_type>::template is_derived_from<variant_tag>())
-                return false;
-
-            else if (type_info<this_type>::template is_same_as<that_type>())
-                return false;
-
-            return true;
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// # named constructor
-        /// ----------------------------------------------------------------------------------------
-        template <typename that_type>
-        constexpr variant(create_from_variant_tag, const that_type& that)
-            requires(has_variant_constructor<that_type>())
-            : _impl{ create_from_variant, that._impl }
-        {
-            contract_asserts(get_index() != nums::get_max_usize());
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// # named constructor
-        /// ----------------------------------------------------------------------------------------
-        template <typename that_type>
-        constexpr variant(create_from_variant_tag, that_type&& that)
-            requires(has_variant_constructor<that_type>())
-            : _impl{ create_from_variant, move(that._impl) }
-        {
-            contract_asserts(get_index() != nums::get_max_usize());
-        }
-
         /// ----------------------------------------------------------------------------------------
         /// # trivial destructor
         /// ----------------------------------------------------------------------------------------
         constexpr ~variant() = default;
-
-        /// ----------------------------------------------------------------------------------------
-        /// # destructor
-        /// ----------------------------------------------------------------------------------------
-        constexpr ~variant()
-            requires(not value_types_list::are_trivially_destructible())
-        {
-            _impl.destroy_value();
-        }
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -281,19 +239,7 @@ namespace atom
             requires(value_types_list::template has<value_type>()
                      and type_info<value_type>::template is_constructible_from<arg_types...>())
         {
-            return _impl.template emplace_value_by_type<value_type>(forward<arg_types>(args)...);
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// emplaces the type for index `index` and returns it.
-        /// ----------------------------------------------------------------------------------------
-        template <usize index, typename... arg_types>
-        constexpr auto emplace_at(arg_types&&... args)
-            -> value_types_list::template at_type<index>& requires(
-                value_types_list::is_index_in_range(index)
-                and value_types_list::template at_type<index>::template is_constructible_from<
-                    arg_types...>()) {
-            _impl.template emplace_value_by_index<index>(forward<arg_types>(args)...);
+            return _impl.template emplace_value<value_type>(forward<arg_types>(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -328,7 +274,7 @@ namespace atom
         {
             contract_debug_expects(is<value_type>(), "access to invalid type.");
 
-            return _impl.template get_value_by_type<value_type>();
+            return _impl.template get_value<value_type>();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -341,7 +287,7 @@ namespace atom
         {
             contract_debug_expects(is<value_type>(), "access to invalid type.");
 
-            return move(_impl.template get_value_by_type<value_type>());
+            return move(_impl.template get_value<value_type>());
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -354,7 +300,7 @@ namespace atom
         {
             contract_expects(is<value_type>(), "access to invalid type.");
 
-            return _impl.template get_value_by_type<value_type>();
+            return _impl.template get_value<value_type>();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -367,7 +313,7 @@ namespace atom
         {
             contract_expects(is<value_type>(), "access to invalid type.");
 
-            return _impl.template get_value_by_type<value_type>();
+            return _impl.template get_value<value_type>();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -380,7 +326,7 @@ namespace atom
         {
             contract_expects(is<value_type>(), "access to invalid type.");
 
-            return move(_impl.template get_value_by_type<value_type>());
+            return move(_impl.template get_value<value_type>());
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -393,7 +339,7 @@ namespace atom
         {
             contract_expects(is<value_type>(), "access to invalid type.");
 
-            return _impl.template get_value_by_type<value_type>();
+            return _impl.template get_value<value_type>();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -404,7 +350,7 @@ namespace atom
             requires(value_types_list::template has<value_type>()
                      and not type_info<value_type>::is_void())
         {
-            return _impl.template get_value_by_type<value_type>();
+            return _impl.template get_value<value_type>();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -415,7 +361,7 @@ namespace atom
             requires(value_types_list::template has<value_type>()
                      and not type_info<value_type>::is_void())
         {
-            return move(_impl.template get_value_by_type<value_type>());
+            return move(_impl.template get_value<value_type>());
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -426,126 +372,7 @@ namespace atom
             requires(value_types_list::template has<value_type>()
                      and not type_info<value_type>::is_void())
         {
-            return _impl.template get_value_by_type<value_type>();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// returns the value accessed by index `index`.
-        /// ----------------------------------------------------------------------------------------
-        template <usize index>
-        constexpr auto get_at() & -> value_types_list::template at_type<index>& requires(
-                                      value_types_list::is_index_in_range(index)
-                                      and not value_types_list::template at_type_info<
-                                          index>::is_void()) {
-            contract_debug_expects(is_index<index>(), "access to invalid type by index.");
-
-            return _impl.template get_value_by_index<i>();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// returns the value accessed by index `index`.
-        /// ----------------------------------------------------------------------------------------
-        template <usize index>
-        constexpr auto get_at() && -> value_types_list::template at_type<index>&& requires(
-                                       value_types_list::is_index_in_range(index)
-                                       and not value_types_list::template at_type_info<
-                                           index>::is_void()) {
-            contract_debug_expects(is_index<index>(), "access to invalid type by index.");
-
-            return move(_impl.template get_value_by_index<index>());
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// returns the value accessed by index `index`.
-        /// ----------------------------------------------------------------------------------------
-        template <usize index>
-        constexpr auto get_at() const
-            -> type_utils::identity_type<const typename value_types_list::template at_type<index>&>
-            requires(value_types_list::is_index_in_range(index)
-                     and not value_types_list::template at_type_info<index>::is_void())
-        {
-            contract_expects(is_index<index>(), "access to invalid type by index.");
-
-            return _impl.template get_value_by_index<index>();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// returns the value accessed by index `index`.
-        /// ----------------------------------------------------------------------------------------
-        template <usize index>
-        constexpr auto get_at_checked() & -> type_utils::identity_type<
-                                              typename value_types_list::template at_type<index>&>
-            requires(value_types_list::is_index_in_range(index)
-                     and not value_types_list::template at_type_info<index>::is_void())
-        {
-            contract_expects(is_index<index>(), "access to invalid type by index.");
-
-            return _impl.template get_value_by_index<index>();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// returns the value accessed by index `index`.
-        /// ----------------------------------------------------------------------------------------
-        template <usize index>
-        constexpr auto get_at_checked() && -> type_utils::identity_type<
-                                               typename value_types_list::template at_type<index>&&>
-            requires(value_types_list::is_index_in_range(index)
-                     and not value_types_list::template at_type_info<index>::is_void())
-        {
-            contract_expects(is_index<index>(), "access to invalid type by index.");
-
-            return move(_impl.template get_value_by_index<index>());
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// returns the value accessed by index `index`.
-        /// ----------------------------------------------------------------------------------------
-        template <usize index>
-        constexpr auto get_at_checked() const
-            -> type_utils::identity_type<const typename value_types_list::template at_type<index>&>
-            requires(value_types_list::is_index_in_range(index)
-                     and not value_types_list::template at_type_info<index>::is_void())
-        {
-            contract_expects(is_index<index>(), "access to invalid type by index.");
-
-            return _impl.template get_value_by_index<index>();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// returns the value accessed by index `index`.
-        /// ----------------------------------------------------------------------------------------
-        template <usize index>
-        constexpr auto get_at_unchecked() & -> type_utils::identity_type<
-                                                typename value_types_list::template at_type<index>&>
-            requires(value_types_list::is_index_in_range(index)
-                     and not value_types_list::template at_type_info<index>::is_void())
-        {
-            return _impl.template get_value_by_index<index>();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// returns the value accessed by index `index`.
-        /// ----------------------------------------------------------------------------------------
-        template <usize index>
-        constexpr auto get_at_unchecked() && -> type_utils::identity_type<
-                                                 typename value_types_list::template at_type<
-                                                     index>&&>
-            requires(value_types_list::is_index_in_range(index)
-                     and not value_types_list::template at_type_info<index>::is_void())
-        {
-            return move(_impl.template get_value_by_index<index>());
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// returns the value accessed by index `index`.
-        /// ----------------------------------------------------------------------------------------
-        template <usize index>
-        constexpr auto get_at_unchecked() const
-            -> type_utils::identity_type<const typename value_types_list::template at_type<index>&>
-            requires(value_types_list::is_index_in_range(index)
-                     and not value_types_list::template at_type_info<index>::is_void())
-        {
-            return _impl.template get_value_by_index<index>();
+            return _impl.template get_value<value_type>();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -556,16 +383,6 @@ namespace atom
             requires(value_types_list::template has<value_type>())
         {
             return _impl.template is_type<value_type>();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// returns `true` if the index of the current type is same as `index`.
-        /// ----------------------------------------------------------------------------------------
-        template <usize index>
-        constexpr auto is_index() const -> bool
-            requires(value_types_list::is_index_in_range(index))
-        {
-            return _impl.template is_index<i>();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -584,6 +401,18 @@ namespace atom
         constexpr auto get_index() const -> usize
         {
             return _impl.get_type_index();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` if `that` holds the same type as `this` does and both values are equal
+        /// as well.
+        /// ----------------------------------------------------------------------------------------
+        template <typename... that_value_types>
+        constexpr auto operator==(const variant<that_value_types...>& that) const -> bool
+            requires(value_types_list::are_equality_comparable()
+                     and value_types_list::template has_any<that_value_types...>())
+        {
+            return _impl.is_eq(that._impl);
         }
 
     private:

@@ -85,6 +85,22 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
+        /// returns the `type_id` of type at index `i`.
+        /// ----------------------------------------------------------------------------------------
+        static constexpr auto get_id_at(usize i) -> type_id
+        {
+            return impl_type::get_id_at(i);
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns the `type_id` of type at index `i`, or null_id if index is out of bounds..
+        /// ----------------------------------------------------------------------------------------
+        static constexpr auto get_id_at_try(usize i) -> type_id
+        {
+            return impl_type::get_id_at(i);
+        }
+
+        /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
         template <usize i>
@@ -493,14 +509,6 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns `true` if all types are not trivially copy assignable.
-        /// ----------------------------------------------------------------------------------------
-        static constexpr auto are_not_trivially_copy_assignable() -> bool
-        {
-            return not are_trivially_copy_assignable();
-        }
-
-        /// ----------------------------------------------------------------------------------------
         /// returns `true` if all types are trivially copyable.
         /// ----------------------------------------------------------------------------------------
         static constexpr auto are_trivially_copyable() -> bool
@@ -517,27 +525,11 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns `true` if all types are not trivially move constructible.
-        /// ----------------------------------------------------------------------------------------
-        static constexpr auto are_not_trivially_move_constructible() -> bool
-        {
-            return not are_trivially_move_constructible();
-        }
-
-        /// ----------------------------------------------------------------------------------------
         /// returns `true` if all types are trivially move assignable.
         /// ----------------------------------------------------------------------------------------
         static constexpr auto are_trivially_move_assignable() -> bool
         {
             return are_all([](auto info) { return info.is_trivially_move_assignable(); });
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// returns `true` if all types are not trivially move assignable.
-        /// ----------------------------------------------------------------------------------------
-        static constexpr auto are_not_trivially_move_assignable() -> bool
-        {
-            return not are_trivially_move_assignable();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -557,12 +549,48 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns `true` if all types are typename .
+        /// returns `true` if all types are convertible to `other_type`.
         /// ----------------------------------------------------------------------------------------
         template <typename other_type>
         static constexpr auto are_convertible_to() -> bool
         {
-            return are_all([](auto info) { return info.template is_convertible_to<other_type>; });
+            return are_all([](auto info) { return info.template is_convertible_to<other_type>(); });
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` if all types are equality comparable.
+        /// ----------------------------------------------------------------------------------------
+        template <typename other_type>
+        static constexpr auto are_equality_comparable() -> bool
+        {
+            return are_all([](auto info) { return info.is_equality_comparable(); });
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` if all types are comparable.
+        /// ----------------------------------------------------------------------------------------
+        template <typename other_type>
+        static constexpr auto are_comparable() -> bool
+        {
+            return are_all([](auto info) { return info.is_comparable(); });
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns `true` if all types in this list matches exactly `other_types`.
+        /// ----------------------------------------------------------------------------------------
+        template <typename... other_types>
+        static consteval auto is_eq(type_list<other_types...>) -> bool
+        {
+            return impl_type::template is_eq<other_types...>();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns result of `is_eq(list)`.
+        /// ----------------------------------------------------------------------------------------
+        template <typename... other_types>
+        constexpr auto operator==(type_list<other_types...> list) const -> bool
+        {
+            return is_eq(list);
         }
 
     private:
