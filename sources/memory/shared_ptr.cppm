@@ -132,7 +132,7 @@ export namespace atom
     public:
         constexpr auto operator()(value_type* val)
         {
-            obj_helper().destruct_as<value_type>(val);
+            obj_helper::destruct_as<value_type>(val);
             default_mem_allocator().dealloc(val);
         }
     };
@@ -417,7 +417,7 @@ export namespace atom
                 _default_shared_ptr_state<value_type, destroyer_type, allocator_type>;
 
             state_type* state = static_cast<state_type*>(allocator.alloc(sizeof(state_type)));
-            obj_helper().construct_as<state_type>(state, move(destroyer), move(allocator));
+            obj_helper::construct_as<state_type>(state, move(destroyer), move(allocator));
             return state;
         }
 
@@ -458,7 +458,7 @@ export namespace atom
         state_type* state = mem;
         value_type* value_ptr = static_cast<value_type*>(state + 1);
 
-        obj_helper().construct(value_ptr, forward<arg_types>(args)...);
+        obj_helper::construct(value_ptr, forward<arg_types>(args)...);
         return shared_ptr<value_type>(_shared_ptr_private_ctor(), state, value_ptr);
     }
 }

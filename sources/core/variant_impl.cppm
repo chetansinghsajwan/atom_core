@@ -306,13 +306,13 @@ namespace atom
         template <typename value_type, typename... arg_types>
         constexpr auto _construct_value_as(arg_types&&... args)
         {
-            obj_helper().construct(_get_data_as<value_type>(), forward<arg_types>(args)...);
+            obj_helper::construct(_get_data_as<value_type>(), forward<arg_types>(args)...);
         }
 
         template <typename value_type, typename other_type>
         constexpr auto _assign_value_as(other_type&& val)
         {
-            obj_helper().assign(_get_data_as<value_type>(), forward<other_type>(val));
+            obj_helper::assign(_get_data_as<value_type>(), forward<other_type>(val));
         }
 
         template <typename value_type>
@@ -320,7 +320,7 @@ namespace atom
         {
             if constexpr (not type_info<value_type>::is_void())
             {
-                obj_helper().destruct(_get_data_as<value_type>());
+                obj_helper::destruct(_get_data_as<value_type>());
             }
         }
 

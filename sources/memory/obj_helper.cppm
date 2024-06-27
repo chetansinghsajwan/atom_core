@@ -10,7 +10,7 @@ namespace atom
     {
     public:
         template <typename value_type, typename... arg_types>
-        constexpr auto construct_as(void* mem, arg_types&&... args) const
+        static constexpr auto construct_as(void* mem, arg_types&&... args) -> void
         {
             contract_debug_expects(mem != nullptr);
 
@@ -18,7 +18,7 @@ namespace atom
         }
 
         template <typename value_type, typename... arg_types>
-        constexpr auto construct(value_type* mem, arg_types&&... args) const
+        static constexpr auto construct(value_type* mem, arg_types&&... args) -> void
         {
             contract_debug_expects(mem != nullptr);
 
@@ -26,7 +26,7 @@ namespace atom
         }
 
         template <typename value_type, typename arg_type>
-        constexpr auto assign_as(value_type* mem, arg_type&& arg) const
+        static constexpr auto assign_as(value_type* mem, arg_type&& arg) -> void
         {
             contract_debug_expects(mem != nullptr);
 
@@ -34,7 +34,7 @@ namespace atom
         }
 
         template <typename value_type, typename arg_type>
-        constexpr auto assign(value_type* mem, arg_type&& arg) const
+        static constexpr auto assign(value_type* mem, arg_type&& arg) -> void
         {
             contract_debug_expects(mem != nullptr);
 
@@ -42,7 +42,7 @@ namespace atom
         }
 
         template <typename value_type>
-        constexpr auto swap(value_type& type1, value_type& t2) const
+        static constexpr auto swap(value_type& type1, value_type& t2) -> void
         {
             value_type tmp = move(type1);
             type1 = move(t2);
@@ -50,7 +50,7 @@ namespace atom
         }
 
         template <typename value_type>
-        constexpr auto destruct_as(value_type* mem) const
+        static constexpr auto destruct_as(value_type* mem) -> void
         {
             contract_debug_expects(mem != nullptr);
 
@@ -58,7 +58,7 @@ namespace atom
         }
 
         template <typename value_type>
-        constexpr auto destruct(value_type* mem) const
+        static constexpr auto destruct(value_type* mem) -> void
         {
             contract_debug_expects(mem != nullptr);
 

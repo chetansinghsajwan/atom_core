@@ -21,7 +21,7 @@ export namespace atom
     public:
         constexpr auto operator()(value_type* val)
         {
-            obj_helper().destruct_as<value_type>(val);
+            obj_helper::destruct_as<value_type>(val);
             default_mem_allocator().dealloc(val);
         }
     };
@@ -281,7 +281,7 @@ export namespace atom
         allocator_type allocator, arg_types&&... args) -> unique_ptr<value_type>
     {
         value_type* mem = (value_type*)allocator.alloc(sizeof(value_type));
-        obj_helper().construct_as<value_type>(mem, forward<arg_types>(args)...);
+        obj_helper::construct_as<value_type>(mem, forward<arg_types>(args)...);
         return unique_ptr<value_type>(mem);
     }
 }

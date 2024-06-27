@@ -392,18 +392,18 @@ namespace atom
         template <typename... arg_types>
         constexpr auto _create_value(arg_types&&... args)
         {
-            obj_helper().construct_as<value_type>(_storage.get_data(), forward<arg_types>(args)...);
+            obj_helper::construct_as<value_type>(_storage.get_data(), forward<arg_types>(args)...);
         }
 
         template <typename arg_type>
         constexpr auto _set_value(arg_type&& val)
         {
-            obj_helper().assign_as<value_type>(_storage.get_data(), forward<arg_type>(val));
+            obj_helper::assign_as<value_type>(_storage.get_data(), forward<arg_type>(val));
         }
 
         constexpr auto _swap_value(value_type& that)
         {
-            obj_helper().swap(_get_mut_value(), that);
+            obj_helper::swap(_get_mut_value(), that);
         }
 
         constexpr auto _get_value() const -> const value_type&
@@ -418,7 +418,7 @@ namespace atom
 
         constexpr auto _destroy_value()
         {
-            obj_helper().destruct_as<value_type>(_storage.get_data());
+            obj_helper::destruct_as<value_type>(_storage.get_data());
         }
 
     private:
