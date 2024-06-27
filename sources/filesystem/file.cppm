@@ -181,7 +181,7 @@ namespace atom::filesystem
                 return filesystem_error{ errno };
             }
 
-            return result_void();
+            return { create_from_void };
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -541,7 +541,7 @@ namespace atom::filesystem
             class file& file = result.get_value();
             file.write_str(str);
 
-            return result_void();
+            return { create_from_void };
         }
 
         if (result.is_error<noentry_error>())
@@ -564,7 +564,7 @@ namespace atom::filesystem
             class file& file = result.get_value();
             file.write_fmt(fmt, forward<arg_types>(args)...);
 
-            return result_void();
+            return { create_from_void };
         }
 
         if (result.is_error<noentry_error>())
@@ -605,7 +605,7 @@ namespace atom::filesystem
             class file& file = result.get_value();
             file.write_bytes(bytes);
 
-            return result_void();
+            return { create_from_void };
         }
 
         if (result.is_error<noentry_error>())
