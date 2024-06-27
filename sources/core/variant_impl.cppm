@@ -116,16 +116,16 @@ namespace atom
             }
         }
 
-        constexpr variant_impl(emplace_tag<void>)
-            : _index{ value_types_list::template get_index<void>() }
-        {}
-
         template <typename value_type, typename... arg_types>
         constexpr variant_impl(emplace_tag<value_type>, arg_types&&... args)
             : _index{ value_types_list::template get_index<value_type>() }
         {
             _construct_value_as<value_type>(forward<arg_types>(args)...);
         }
+
+        constexpr variant_impl(emplace_tag<void>)
+            : _index{ value_types_list::template get_index<void>() }
+        {}
 
         constexpr ~variant_impl() = default;
 

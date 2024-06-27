@@ -34,10 +34,10 @@ namespace atom
         using value_types_list = type_list<value_types...>;
 
     public:
-        static_assert(value_types_list::get_count() > 2, "at least two type must to be specified.");
+        static_assert(value_types_list::get_count() > 1, "at least two type must to be specified.");
         static_assert(value_types_list::are_pure(), "every type should be pure.");
         static_assert(value_types_list::are_unique(), "every type should be unique.");
-        static_assert(value_types_list::are_destructible(), "every type should be destructible.");
+        // static_assert(value_types_list::are_destructible(), "every type should be destructible.");
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -174,7 +174,24 @@ namespace atom
         constexpr variant(create_by_emplace_tag<value_type>, arg_types&&... args)
             requires(value_types_list::template has<value_type>()
                      and type_info<value_type>::template is_constructible_from<arg_types...>())
-            : _impl{ create_by_emplace<value_type>, forward<arg_types>(args)... }
+            : _impl{ typename impl_type::template emplace_tag<value_type>{},
+                forward<arg_types>(args)... }
+        {}
+
+        /// ----------------------------------------------------------------------------------------
+        /// # named constructor
+        /// ----------------------------------------------------------------------------------------
+        constexpr variant(create_by_emplace_tag<void>)
+            requires(value_types_list::template has<void>())
+            : _impl{ typename impl_type::template emplace_tag<void>{} }
+        {}
+
+        /// ----------------------------------------------------------------------------------------
+        /// # named constructor
+        /// ----------------------------------------------------------------------------------------
+        constexpr variant(create_from_void_tag)
+            requires(value_types_list::template has<void>())
+            : _impl{ typename impl_type::template emplace_tag<void>{} }
         {}
 
         /// ----------------------------------------------------------------------------------------

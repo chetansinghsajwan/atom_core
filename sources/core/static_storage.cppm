@@ -49,7 +49,9 @@ namespace atom
         }
 
     public:
-        this_value_type _value;
+        type_utils::conditional_type<not type_info<this_value_type>::is_void(), this_value_type>
+            _value;
+
         next_type _next;
     };
 
