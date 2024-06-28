@@ -5,7 +5,7 @@ import :types;
 import :obj_helper;
 import :core.core;
 import :core.nums;
-import :core.static_storage;
+import :core.union_storage;
 
 namespace atom
 {

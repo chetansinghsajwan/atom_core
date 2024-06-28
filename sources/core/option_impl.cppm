@@ -3,7 +3,7 @@ export module atom.core:core.option_impl;
 import :types;
 import :obj_helper;
 import :core.core;
-import :core.static_storage;
+import :core.union_storage;
 
 namespace atom
 {
