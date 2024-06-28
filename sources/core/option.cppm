@@ -8,12 +8,6 @@ import :core.option_impl;
 namespace atom
 {
     /// --------------------------------------------------------------------------------------------
-    /// type used to initialize option with no value.
-    /// --------------------------------------------------------------------------------------------
-    export class nullopt
-    {};
-
-    /// --------------------------------------------------------------------------------------------
     /// the option class is used to wrap the object of type `value_type`. this_type class contain either the
     /// value or can be empty representing no value.
     ///
@@ -27,8 +21,11 @@ namespace atom
     export template <typename in_value_type>
     class option
     {
+        template <typename that_value_type>
+        friend class option;
+
     private:
-        using this_type = option<in_value_type>;
+        using this_type = option;
         using impl_type = option_impl<in_value_type>;
         using value_type_info = type_info<in_value_type>;
 
@@ -50,15 +47,13 @@ namespace atom
         /// constructs with no value.
         /// ----------------------------------------------------------------------------------------
         constexpr option()
-            : _impl{ typename impl_type::ctor_default() }
+            : _impl{ typename impl_type::null_tag{} }
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # trivial copy constructor.
         /// ----------------------------------------------------------------------------------------
-        constexpr option(const option& that)
-            requires(value_type_info::is_trivially_copy_constructible())
-        = default;
+        constexpr option(const this_type& that) = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # copy constructor
@@ -66,18 +61,16 @@ namespace atom
         /// if `that` contains value, copy constructs `this` value with `that` value.
         /// else constructs wih no value.
         /// ----------------------------------------------------------------------------------------
-        constexpr option(const option& that)
-            requires(not value_type_info::is_trivially_copy_constructible()
-                     and value_type_info::is_copy_constructible())
+        constexpr option(const this_type& that)
+            requires(value_type_info::is_copy_constructible()
+                     and not value_type_info::is_trivially_copy_constructible())
             : _impl{ typename impl_type::that_tag{}, that._impl }
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # trivial copy operator
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator=(const option& that) -> option&
-            requires(value_type_info::is_trivially_copy_assignable())
-        = default;
+        constexpr auto operator=(const this_type& that) -> this_type& = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # copy operator
@@ -89,20 +82,18 @@ namespace atom
         ///     if `this` contains value, destroys `this` value.
         ///     else, does nothing.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator=(const option& that) -> option&
-            requires(not value_type_info::is_trivially_copy_assignable()
-                     and value_type_info::is_copyable())
+        constexpr auto operator=(const this_type& that) -> this_type&
+            requires(value_type_info::is_copyable()
+                     and not value_type_info::is_trivially_copy_assignable())
         {
-            _impl.copy(that._impl);
+            _impl.set_value_that(that._impl);
             return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
         /// # trivial move constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr option(option&& that)
-            requires(value_type_info::is_trivially_move_constructible())
-        = default;
+        constexpr option(this_type&& that) = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # move constructor
@@ -110,18 +101,16 @@ namespace atom
         /// if `that` contains value, move constructs `this` value with `that` value.
         /// else constructs wih no value.
         /// ----------------------------------------------------------------------------------------
-        constexpr option(option&& that)
-            requires(not value_type_info::is_trivially_move_constructible()
-                     and value_type_info::is_move_constructible())
+        constexpr option(this_type&& that)
+            requires(value_type_info::is_move_constructible()
+                     and not value_type_info::is_trivially_move_constructible())
             : _impl{ typename impl_type::that_tag{}, move(that._impl) }
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # trivial move operator
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator=(option&& that) -> option&
-            requires(value_type_info::is_trivially_move_assignable())
-        = default;
+        constexpr auto operator=(this_type&& that) -> this_type& = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # move operator
@@ -133,11 +122,11 @@ namespace atom
         ///     if `this` contains value, destroys `this` value.
         ///     else, does nothing.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator=(option&& that) -> option&
-            requires(not value_type_info::is_trivially_move_assignable()
-                     and value_type_info::is_moveable())
+        constexpr auto operator=(this_type&& that) -> this_type&
+            requires(value_type_info::is_moveable()
+                     and not value_type_info::is_trivially_move_assignable())
         {
-            _impl.mov(move(that._impl));
+            _impl.set_value_that(move(that._impl));
             return *this;
         }
 
@@ -146,47 +135,36 @@ namespace atom
         ///
         /// constructs with no value.
         /// ----------------------------------------------------------------------------------------
-        constexpr option(nullopt)
-            : _impl{ typename impl_type::ctor_default() }
+        constexpr option(create_from_null_tag)
+            : _impl{ typename impl_type::null_tag{} }
         {}
-
-        /// ----------------------------------------------------------------------------------------
-        /// # null operator
-        ///
-        /// destroys current value if any.
-        /// ----------------------------------------------------------------------------------------
-        constexpr option& operator=(nullopt)
-        {
-            _impl.destroy_value();
-            return *this;
-        }
 
         /// ----------------------------------------------------------------------------------------
         /// # value copy constructor
         ///
-        /// copy constructs `this` value with `val`.
+        /// copy constructs `this` value with `value`.
         ///
         /// # parameters
         ///
-        /// - `val`: value to construct with.
+        /// - `value`: value to construct with.
         /// ----------------------------------------------------------------------------------------
-        constexpr option(const value_type& val)
-            : _impl{ val }
+        constexpr option(const value_type& value)
+            : _impl{ typename impl_type::emplace_tag{}, value }
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # value copy operator
         ///
-        /// if `this` contains value, copy assigns `this` value with `val`.
-        /// else, copy constructs `this` value with `val`.
+        /// if `this` contains value, copy assigns `this` value with `value`.
+        /// else, copy constructs `this` value with `value`.
         ///
         /// # parameters
         ///
-        /// - `val`: value to assign or construct with.
+        /// - `value`: value to assign or construct with.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator=(const value_type& val) -> option&
+        constexpr auto operator=(const value_type& value) -> this_type&
         {
-            _impl.set_value(val);
+            _impl.set_value(value);
             return *this;
         }
 
@@ -197,46 +175,32 @@ namespace atom
         ///
         /// # parameters
         ///
-        /// - `val`: value to construct with.
+        /// - `value`: value to construct with.
         /// ----------------------------------------------------------------------------------------
-        constexpr option(value_type&& val)
-            : _impl{ move(val) }
+        constexpr option(value_type&& value)
+            : _impl{ typename impl_type::emplace_tag{}, move(value) }
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # value move operator
         ///
-        /// if `this` contains value, move assigns `this` value with `val`.
-        /// else, move constructs `this` value with `val`.
+        /// if `this` contains value, move assigns `this` value with `value`.
+        /// else, move constructs `this` value with `value`.
         ///
         /// # parameters
         ///
-        /// - `val`: value to assign or construct with.
+        /// - `value`: value to assign or construct with.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator=(value_type&& val) -> option&
+        constexpr auto operator=(value_type&& value) -> this_type&
         {
-            _impl.set_value(move(val));
+            _impl.set_value(move(value));
             return *this;
         }
 
         /// ----------------------------------------------------------------------------------------
         /// # trivial destructor
         /// ----------------------------------------------------------------------------------------
-        constexpr ~option()
-            requires(value_type_info::is_trivially_destructible())
-        = default;
-
-        /// ----------------------------------------------------------------------------------------
-        /// # destructor
-        ///
-        /// destroys value if stored.
-        /// ----------------------------------------------------------------------------------------
-        constexpr ~option()
-            requires(not value_type_info::is_trivially_destructible()
-                     and value_type_info::is_destructible())
-        {
-            _impl.destroy();
-        }
+        constexpr ~option() = default;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -255,219 +219,129 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// destroys current value if any.
+        /// returns the stored value.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto reset()
+        constexpr auto get() & -> value_type&
         {
-            return _impl.destroy_value();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// access the value by ref.
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto get() const& -> const value_type&
-        {
-            contract_expects(is_value(), "does not contain value.");
+            contract_debug_expects(is_value(), "option does not contain value.");
 
             return _impl.get_value();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// access the value by ref.
+        /// returns the stored value.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get() & -> value_type&
+        constexpr auto get() && -> value_type&&
         {
-            contract_expects(is_value(), "does not contain value.");
+            contract_debug_expects(is_value(), "option does not contain value.");
 
-            return _impl.get_mut_value();
+            return move(_impl.get_value());
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// access the value by ref.
+        /// returns the stored value.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_mut() & -> value_type&
+        constexpr auto get() const -> const value_type&
         {
-            contract_expects(is_value(), "does not contain value.");
+            contract_debug_expects(is_value(), "option does not contain value.");
 
-            return _impl.get_mut_value();
+            return _impl.get_value();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// access the value by ptr.
+        /// returns the stored value.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator->() const -> const value_type*
+        constexpr auto get_checked() & -> value_type&
         {
-            contract_debug_expects(is_value(), "does not contain value.");
+            contract_expects(is_value(), "option does not contain value.");
+
+            return _impl.get_value();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns the stored value.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto get_checked() && -> value_type&&
+        {
+            contract_expects(is_value(), "option does not contain value.");
+
+            return move(_impl.get_value());
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns the stored value.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto get_checked() const -> const value_type&
+        {
+            contract_expects(is_value(), "option does not contain value.");
+
+            return _impl.get_value();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns the stored value.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto operator*() & -> value_type&
+        {
+            contract_debug_expects(is_value(), "option does not contain value.");
+
+            return _impl.get_value();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns the stored value.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto operator*() && -> value_type&&
+        {
+            contract_debug_expects(is_value(), "option does not contain value.");
+
+            return move(_impl.get_value());
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns the stored value.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto operator*() const -> const value_type&
+        {
+            contract_debug_expects(is_value(), "option does not contain value.");
+
+            return _impl.get_value();
+        }
+
+        /// ----------------------------------------------------------------------------------------
+        /// returns the stored value.
+        /// ----------------------------------------------------------------------------------------
+        constexpr auto operator->() -> value_type*
+        {
+            contract_debug_expects(is_value(), "option does not contain value.");
 
             return &_impl.get_value();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// access the value by ptr.
+        /// returns the stored value.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator->() -> value_type*
+        constexpr auto operator->() const -> const value_type*
         {
-            contract_debug_expects(is_value(), "does not contain value.");
+            contract_debug_expects(is_value(), "option does not contain value.");
 
-            return &_impl.get_mut_value();
+            return &_impl.get_value();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// get `this` value or `or_val`.
-        ///
-        /// if `this` contains value, get `this` value.
-        /// else, get value `or_val`.
-        ///
-        /// # parameters
-        ///
-        /// - `or_val`: other value to return.
-        ///
-        /// # returns
-        ///
-        /// const ref to `this` value or `or_val`.
+        /// destroys current value if any.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_or(const value_type& or_val) const -> const value_type&
+        constexpr auto reset()
         {
-            if (_impl.is_null())
-            {
-                return or_val;
-            }
-
-            return _impl.get_value();
+            return _impl.reset_value();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// get `this` value or `or_val`.
-        ///
-        /// if `this` contains value, get `this` value.
-        /// else, get value `or_val`.
-        ///
-        /// # parameters
-        ///
-        /// - `or_val`: other value to return.
-        ///
-        /// # returns
-        ///
-        /// ref to `this` value or `or_val`.
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto get_mut_or(value_type& or_val) -> value_type&
-        {
-            if (_impl.is_null())
-            {
-                return or_val;
-            }
-
-            return _impl.get_mut_value();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// get `this` value or.
-        ///
-        /// if `this` contains value, get `this` value.
-        /// else, get value returned by invoking `or_invoke`.
-        ///
-        /// # parameters
-        ///
-        /// - `or_invoke`: function to return or_invoke value.
-        ///
-        /// # returns
-        ///
-        /// const ref to `this` value or or_invoke value returned by invoking `or_invoke`.
-        /// ----------------------------------------------------------------------------------------
-        template <typename function_type>
-        constexpr auto get_or_invoke(function_type&& or_invoke) const -> value_type
-            requires(type_info<function_type>::template is_function<value_type()>())
-        {
-            if (_impl.is_null())
-            {
-                return or_invoke();
-            }
-
-            return _impl.get_value();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// get `this` value or.
-        ///
-        /// if `this` contains value, get `this` value.
-        /// else, get value returned by invoking `or_invoke`.
-        ///
-        /// # parameters
-        ///
-        /// - `or_invoke`: function to return or_invoke value.
-        ///
-        /// # returns
-        ///
-        /// ref to `this` value or or_invoke value returned by invoking `or_invoke`.
-        /// ----------------------------------------------------------------------------------------
-        template <typename function_type>
-        constexpr auto get_mut_or_invoke(function_type&& or_invoke) -> value_type&
-            requires(type_info<function_type>::template is_function<value_type&()>())
-        {
-            if (_impl.is_null())
-            {
-                return or_invoke();
-            }
-
-            return _impl.get_mut_value();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// get `this` value or default.
-        ///
-        /// if `this` contains value, get `this` value.
-        /// else, get default constructed value.
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto get_or_default() const& -> value_type
-            requires(value_type_info::is_default_constructible())
-        {
-            if (_impl.is_null())
-            {
-                return impl_type::get_default();
-            }
-
-            return _impl.get_value();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// is `this` contains value or not.
+        /// return `true` if `this` contains value.
         /// ----------------------------------------------------------------------------------------
         constexpr auto is_value() const -> bool
         {
             return _impl.is_value();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// is `this` contains value or not.
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto is_null() const -> bool
-        {
-            return not _impl.is_value();
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// swap values and state with `that`.
-        ///
-        /// if `that` contains value
-        ///     if `this` contains value, swaps `this` value with `that` value.
-        ///     else, move constructs `this` value with `that` value.
-        /// else
-        ///     if `this` contains value, move constructs `that` value with `this` value.
-        ///     else, does nothing.
-        /// ----------------------------------------------------------------------------------------
-        constexpr auto swap(option& that)
-        {
-            return _impl.swap(that._impl);
-        }
-
-        /// --------------------------------------------------------------------------------------------
-        /// # equality comparision
-        ///
-        /// `true` if this contains value, else `false`.
-        /// --------------------------------------------------------------------------------------------
-        constexpr auto operator==(nullopt) const -> bool
-        {
-            return is_null();
         }
 
         /// --------------------------------------------------------------------------------------------
@@ -481,15 +355,7 @@ namespace atom
         constexpr auto operator==(const option<that_value_type>& that) const -> bool
             requires(value_type_info::template is_equality_comparable_with<that_value_type>())
         {
-            if (is_value() != that.is_value())
-                // one is null and one has value.
-                return false;
-
-            if (is_null())
-                // both are null.
-                return true;
-
-            return get() == that.get();
+            return _impl.is_eq(that._impl);
         }
 
         /// --------------------------------------------------------------------------------------------
@@ -502,10 +368,7 @@ namespace atom
         constexpr auto operator<(const option<that_value_type>& that) const -> bool
             requires(value_type_info::template is_comparable_with<that_value_type>())
         {
-            if (is_null() or that.is_null())
-                return false;
-
-            return get() < that.get();
+            return _impl.is_lt(that._impl);
         }
 
         /// --------------------------------------------------------------------------------------------
@@ -518,10 +381,7 @@ namespace atom
         constexpr auto operator>(const option<that_value_type>& that) const -> bool
             requires(value_type_info::template is_comparable_with<that_value_type>())
         {
-            if (is_null() or that.is_null())
-                return false;
-
-            return get() > that.get();
+            return _impl.is_gt(that._impl);
         }
 
         /// --------------------------------------------------------------------------------------------
@@ -534,10 +394,7 @@ namespace atom
         constexpr auto operator<=(const option<that_value_type>& that) const -> bool
             requires(value_type_info::template is_comparable_with<that_value_type>())
         {
-            if (is_null() or that.is_null())
-                return false;
-
-            return get() <= that.get();
+            return _impl.is_le(that._impl);
         }
 
         /// --------------------------------------------------------------------------------------------
@@ -550,10 +407,7 @@ namespace atom
         constexpr auto operator>=(const option<that_value_type>& that) const -> bool
             requires(value_type_info::template is_comparable_with<that_value_type>())
         {
-            if (is_null() or that.is_null())
-                return false;
-
-            return get() >= that.get();
+            return _impl.is_ge(that._impl);
         }
 
     private:

@@ -31,6 +31,9 @@ export namespace atom
     struct create_from_void_tag
     {};
 
+    struct create_from_null_tag
+    {};
+
     template <typename value_type>
     struct create_by_emplace_tag
     {};
@@ -44,6 +47,7 @@ export namespace atom
     constexpr auto create_from_variant = create_from_variant_tag{};
     constexpr auto create_from_result = create_from_result_tag{};
     constexpr auto create_from_void = create_from_void_tag{};
+    constexpr auto create_from_null = create_from_null_tag{};
 
     template <typename value_type>
     constexpr auto create_by_emplace = create_by_emplace_tag<value_type>{};

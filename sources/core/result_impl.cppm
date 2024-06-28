@@ -178,7 +178,7 @@ namespace atom
         constexpr auto to_option() -> option<value_type>
         {
             if (is_error())
-                return nullopt();
+                return { create_from_null };
 
             return option{ create_by_emplace<value_type>, get_value() };
         }
@@ -187,7 +187,7 @@ namespace atom
         constexpr auto to_option_error() -> option<error_type>
         {
             if (is_error<error_type>())
-                return nullopt();
+                return { create_from_null };
 
             return option{ create_by_emplace<error_type>, get_error<error_type>() };
         }

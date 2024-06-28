@@ -2,6 +2,7 @@ export module atom.core:core.enums_impl;
 
 import std;
 import magic_enum;
+import :core.core;
 import :core.nums;
 import :core.int_wrapper;
 import :core.tuple;
@@ -74,7 +75,7 @@ namespace atom
             }();
 
             if (not value_opt.has_value())
-                return nullopt();
+                return { create_from_null };
 
             return value_opt.value();
         }
@@ -87,7 +88,7 @@ namespace atom
         static constexpr auto from_index_typery(usize index) -> option<enum_type>
         {
             if (index >= get_count())
-                return nullopt();
+                return { create_from_null };
 
             return magic_enum::enum_value<enum_type>(index);
         }

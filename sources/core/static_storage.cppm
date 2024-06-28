@@ -16,6 +16,9 @@ namespace atom
     {
         using this_type = union_storage;
         using next_type = union_storage<other_value_types...>;
+        using this_field_value_type =
+            type_utils::conditional_type<not type_info<this_value_type>::is_void(),
+                this_value_type>;
 
     public:
         constexpr union_storage()
@@ -26,6 +29,16 @@ namespace atom
         constexpr union_storage& operator=(const this_type& that) = default;
         constexpr union_storage(this_type&& that) = default;
         constexpr union_storage& operator=(this_type&& that) = default;
+
+        template <typename value_type, typename... arg_types>
+        constexpr union_storage(create_by_emplace_tag<value_type> tag, arg_types&&... args)
+            : _next{ tag, forward<arg_types>(args)... }
+        {}
+
+        template <typename... arg_types>
+        constexpr union_storage(create_by_emplace_tag<this_value_type> tag, arg_types&&... args)
+            : _value{ forward<arg_types>(args)... }
+        {}
 
         constexpr ~union_storage() {}
 
@@ -49,9 +62,7 @@ namespace atom
         }
 
     public:
-        type_utils::conditional_type<not type_info<this_value_type>::is_void(), this_value_type>
-            _value;
-
+        this_field_value_type _value;
         next_type _next;
     };
 
