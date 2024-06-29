@@ -8,9 +8,9 @@ using namespace atom;
 using namespace atom::tests;
 using namespace Catch;
 
-using tracked_i32 = tracked_t_of<i32>;
-using tracked_f32 = tracked_t_of<f32>;
-using tracked_uchar = tracked_t_of<char>;
+using tracked_i32 = tracked_type_of<i32>;
+using tracked_f32 = tracked_type_of<f32>;
+using tracked_uchar = tracked_type_of<char>;
 
 TEST_CASE("atom.core.variant")
 {
