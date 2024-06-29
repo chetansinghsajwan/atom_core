@@ -267,14 +267,27 @@ TEST_CASE("atom.core.variant")
 
     SECTION("destructor")
     {
-        tracked_type::operation* last_op_ptr;
+        bool is_destroyed = false;
+
+        struct scope_type
+        {
+            scope_type(bool* flag)
+                : _flag{ flag }
+            {}
+
+            ~scope_type()
+            {
+                *_flag = true;
+            }
+
+            bool* _flag;
+        };
 
         {
-            variant<tracked_i32, tracked_f32, tracked_uchar> v0 = tracked_f32{};
-            last_op_ptr = &v0.get<tracked_f32>().last_op;
+            variant<scope_type, i8> v0 = scope_type{ &is_destroyed };
         }
 
-        REQUIRE(*last_op_ptr == tracked_type::operation::destructor);
+        REQUIRE(is_destroyed);
     }
 
     SECTION("value write")

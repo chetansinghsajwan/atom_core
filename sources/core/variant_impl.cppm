@@ -301,7 +301,7 @@ namespace atom
             value_types_list::for_each(
                 [&](loop_command* command, auto info)
                 {
-                    if (value_types_list::get_index(info) != get_index())
+                    if (_index != value_types_list::get_index(info))
                         return;
 
                     using value_type = typename decltype(info)::value_type;
