@@ -41,10 +41,11 @@ namespace atom
         /// # copy constructor
         /// ----------------------------------------------------------------------------------------
         constexpr option_impl(that_tag, const this_type& that)
+            : _storage{ create_by_emplace<type_utils::empty_type> }
+            , _is_value{ that._is_value }
         {
             if (that._is_value)
             {
-                _is_value = true;
                 _construct_value(that._get_value());
             }
         }
@@ -63,10 +64,11 @@ namespace atom
         /// # move constructor
         /// ----------------------------------------------------------------------------------------
         constexpr option_impl(that_tag, this_type&& that)
+            : _storage{ create_by_emplace<type_utils::empty_type> }
+            , _is_value{ that._is_value }
         {
             if (that._is_value)
             {
-                _is_value = true;
                 _construct_value(move(that._get_value()));
             }
         }
@@ -80,8 +82,8 @@ namespace atom
         /// # null constructor
         /// ----------------------------------------------------------------------------------------
         constexpr option_impl(null_tag)
-            : _is_value{ false }
-            , _storage{ create_by_emplace<type_utils::empty_type> }
+            : _storage{ create_by_emplace<type_utils::empty_type> }
+            , _is_value{ false }
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -89,8 +91,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename... arg_types>
         constexpr option_impl(emplace_tag, arg_types&&... args)
-            : _is_value{ true }
-            , _storage{ create_by_emplace<value_type>, forward<arg_types>(args)... }
+            : _storage{ create_by_emplace<value_type>, forward<arg_types>(args)... }
+            , _is_value{ true }
         {}
 
         /// ----------------------------------------------------------------------------------------

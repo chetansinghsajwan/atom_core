@@ -164,7 +164,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator=(const value_type& value) -> this_type&
         {
-            _impl.set_value(value);
+            _impl.emplace_value(value);
             return *this;
         }
 
@@ -193,7 +193,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator=(value_type&& value) -> this_type&
         {
-            _impl.set_value(move(value));
+            _impl.emplace_value(move(value));
             return *this;
         }
 

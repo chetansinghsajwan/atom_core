@@ -35,7 +35,7 @@ namespace atom
     };
 
     template <typename value_type>
-        requires type_info<value_type>::is_empty
+        requires(type_info<value_type>::is_empty())
     class ebo_helper<value_type>: private value_type
     {
     public:
@@ -179,7 +179,7 @@ export namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename that_type>
         constexpr shared_ptr(const shared_ptr<that_type>& that)
-            requires(type_info<that_type>::template is_same_or_derived_from<value_type>)
+            requires(type_info<that_type>::template is_same_or_derived_from<value_type>())
             : _ptr(that._ptr)
             , _state(that._state)
         {
@@ -196,7 +196,7 @@ export namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename other_value_type>
         constexpr shared_ptr& operator=(const shared_ptr<other_value_type>& that)
-            requires(type_info<other_value_type>::template is_same_or_derived_from<value_type>)
+            requires(type_info<other_value_type>::template is_same_or_derived_from<value_type>())
         {
             _check_and_release();
 
@@ -223,7 +223,7 @@ export namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename that_type>
         constexpr shared_ptr(shared_ptr<that_type>&& that)
-            requires(type_info<that_type>::template is_same_or_derived_from<value_type>)
+            requires(type_info<that_type>::template is_same_or_derived_from<value_type>())
             : _ptr(that._ptr)
             , _state(that._state)
         {
@@ -236,7 +236,7 @@ export namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename that_type>
         constexpr shared_ptr& operator=(shared_ptr<that_type>&& that)
-            requires(type_info<that_type>::template is_same_or_derived_from<value_type>)
+            requires(type_info<that_type>::template is_same_or_derived_from<value_type>())
         {
             _check_and_release();
 
@@ -313,7 +313,7 @@ export namespace atom
             typename allocator_type = shared_ptr_default_allocator>
         constexpr auto set(value_type* ptr, destroyer_type destroyer = destroyer_type(),
             allocator_type allocator = allocator_type())
-            requires(type_info<value_type>::template is_same_or_derived_from<value_type>)
+            requires(type_info<value_type>::template is_same_or_derived_from<value_type>())
         {
             if (_ptr != nullptr)
             {

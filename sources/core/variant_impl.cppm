@@ -20,7 +20,7 @@ namespace atom
 
     private:
         using this_type = variant_impl;
-        using storage_type = union_storage<value_types...>;
+        using storage_type = union_storage<type_utils::empty_type, value_types...>;
 
     public:
         using value_types_list = type_list<value_types...>;
@@ -36,11 +36,14 @@ namespace atom
         constexpr variant_impl() = delete;
 
         constexpr variant_impl(const this_type& that) = default;
+        constexpr variant_impl& operator=(const this_type& that) = default;
 
         constexpr variant_impl(this_type&& that) = default;
+        constexpr variant_impl& operator=(this_type&& that) = default;
 
         constexpr variant_impl(that_tag, const this_type& that)
-            : _index{ that._index }
+            : _storage{ create_by_emplace<type_utils::empty_type> }
+            , _index{ that._index }
         {
             value_types_list::for_each(
                 [&](loop_command* command, auto info)
@@ -56,7 +59,8 @@ namespace atom
         }
 
         constexpr variant_impl(that_tag, this_type&& that)
-            : _index{ that._index }
+            : _storage{ create_by_emplace<type_utils::empty_type> }
+            , _index{ that._index }
         {
             value_types_list::for_each(
                 [&](loop_command* command, auto info)
@@ -73,7 +77,8 @@ namespace atom
 
         template <typename that_unpure_type>
         constexpr variant_impl(that_tag, that_unpure_type&& that)
-            : _index{ nums::get_max_usize() }
+            : _storage{ create_by_emplace<type_utils::empty_type> }
+            , _index{ nums::get_max_usize() }
         {
             using that_type = typename type_info<that_unpure_type>::pure_type::value_type;
 
@@ -118,13 +123,15 @@ namespace atom
 
         template <typename value_type, typename... arg_types>
         constexpr variant_impl(emplace_tag<value_type>, arg_types&&... args)
-            : _index{ value_types_list::template get_index<value_type>() }
+            : _storage{ create_by_emplace<type_utils::empty_type> }
+            , _index{ value_types_list::template get_index<value_type>() }
         {
             _construct_value_as<value_type>(forward<arg_types>(args)...);
         }
 
         constexpr variant_impl(emplace_tag<void>)
-            : _index{ value_types_list::template get_index<void>() }
+            : _storage{ create_by_emplace<type_utils::empty_type> }
+            , _index{ value_types_list::template get_index<void>() }
         {}
 
         constexpr ~variant_impl() = default;

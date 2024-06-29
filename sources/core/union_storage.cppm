@@ -8,6 +8,10 @@ namespace atom
     export template <typename... value_types>
     union union_storage;
 
+    template <>
+    union union_storage<>
+    {};
+
     template <typename this_value_type, typename... other_value_types>
     union union_storage<this_value_type, other_value_types...>
     {
@@ -18,10 +22,7 @@ namespace atom
                 this_value_type>;
 
     public:
-        constexpr union_storage()
-            : _next{}
-        {}
-
+        constexpr union_storage() = default;
         constexpr union_storage(const this_type& that) = default;
         constexpr union_storage& operator=(const this_type& that) = default;
         constexpr union_storage(this_type&& that) = default;
@@ -37,7 +38,12 @@ namespace atom
             : _value{ forward<arg_types>(args)... }
         {}
 
-        constexpr ~union_storage() {}
+        constexpr ~union_storage() = default;
+
+        constexpr ~union_storage()
+            requires(not type_info<this_value_type>::is_trivially_destructible()
+                     or not type_info<next_type>::is_trivially_destructible())
+        {}
 
     public:
         template <typename value_type>
@@ -58,32 +64,8 @@ namespace atom
                 return _next.template get_data_as<value_type>();
         }
 
-    public:
+    private:
         this_field_value_type _value;
         next_type _next;
-    };
-
-    template <>
-    union union_storage<>
-    {
-        using this_type = union_storage;
-
-        struct _dummy_type
-        {};
-
-    public:
-        constexpr union_storage()
-            : _value{}
-        {}
-
-        constexpr union_storage(const this_type& that) = default;
-        constexpr union_storage& operator=(const this_type& that) = default;
-        constexpr union_storage(this_type&& that) = default;
-        constexpr union_storage& operator=(this_type&& that) = default;
-
-        constexpr ~union_storage() {}
-
-    public:
-        _dummy_type _value;
     };
 }

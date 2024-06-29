@@ -49,14 +49,14 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # trivial copy constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr variant(const variant& that) = default;
+        constexpr variant(const this_type& that) = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # copy constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr variant(const variant& that)
-            requires(value_types_list::info_list::are_copy_constructible()
-                     and not value_types_list::info_list::are_not_trivially_copy_constructible())
+        constexpr variant(const this_type& that)
+            requires(value_types_list::are_copy_constructible()
+                     and not value_types_list::are_trivially_copy_constructible())
             : _impl{ typename impl_type::that_tag{}, that._impl }
         {}
 
@@ -73,14 +73,14 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # trivial copy assignment operator
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator=(const variant& that) -> variant& = default;
+        constexpr this_type& operator=(const this_type& that) = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # copy assignment operator
         /// ----------------------------------------------------------------------------------------
-        constexpr variant& operator=(const variant& that)
+        constexpr this_type& operator=(const this_type& that)
             requires(value_types_list::are_copyable()
-                     and not value_types_list::are_not_trivially_copy_assignable())
+                     and not value_types_list::are_trivially_copy_assignable())
         {
             _impl.set_value_that(that._impl);
             return *this;
@@ -90,7 +90,7 @@ namespace atom
         /// # copy assignment operator template
         /// ----------------------------------------------------------------------------------------
         template <typename... that_value_types>
-        constexpr variant& operator=(const variant<that_value_types...>& that)
+        constexpr this_type& operator=(const variant<that_value_types...>& that)
             requires(value_types_list::are_copyable()
                      and value_types_list::template has_all<that_value_types...>())
         {
@@ -101,14 +101,14 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # trivial move constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr variant(variant&& that) = default;
+        constexpr variant(this_type&& that) = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # move constructor
         /// ----------------------------------------------------------------------------------------
-        constexpr variant(variant&& that)
+        constexpr variant(this_type&& that)
             requires(value_types_list::are_move_constructible()
-                     and value_types_list::are_not_trivially_move_constructible())
+                     and not value_types_list::are_trivially_move_constructible())
             : _impl{ typename impl_type::that_tag{}, move(that._impl) }
         {}
 
@@ -125,14 +125,14 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # trivial move assignment operator
         /// ----------------------------------------------------------------------------------------
-        constexpr auto operator=(variant&& that) -> variant& = default;
+        constexpr this_type& operator=(this_type&& that) = default;
 
         /// ----------------------------------------------------------------------------------------
         /// # move assignment operator
         /// ----------------------------------------------------------------------------------------
-        constexpr variant& operator=(variant&& that)
+        constexpr this_type& operator=(this_type&& that)
             requires(value_types_list::are_moveable()
-                     and value_types_list::are_not_trivially_move_assignable())
+                     and not value_types_list::are_trivially_move_assignable())
         {
             _impl.set_value_that(move(that._impl));
             return *this;
@@ -142,7 +142,7 @@ namespace atom
         /// # move assignment operator template
         /// ----------------------------------------------------------------------------------------
         template <typename... that_value_types>
-        constexpr variant& operator=(variant<that_value_types...>&& that)
+        constexpr this_type& operator=(variant<that_value_types...>&& that)
             requires(value_types_list::are_moveable()
                      and value_types_list::template has_all<that_value_types...>())
         {
@@ -223,7 +223,7 @@ namespace atom
         /// destroys previous value and assigns new value.
         /// ----------------------------------------------------------------------------------------
         template <typename value_type>
-        constexpr variant& operator=(const value_type& value)
+        constexpr this_type& operator=(const value_type& value)
             requires(value_types_list::template has<value_type>())
         {
             _impl.set_value(value);
@@ -236,7 +236,7 @@ namespace atom
         /// destroys previous value and assigns new value.
         /// ----------------------------------------------------------------------------------------
         template <typename value_type>
-        constexpr variant& operator=(value_type&& value)
+        constexpr this_type& operator=(value_type&& value)
             requires(value_types_list::template has<value_type>())
         {
             _impl.set_value(move(value));
@@ -418,7 +418,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto get_index() const -> usize
         {
-            return _impl.get_type_index();
+            return _impl.get_index();
         }
 
         /// ----------------------------------------------------------------------------------------
