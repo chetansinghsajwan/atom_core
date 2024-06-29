@@ -166,6 +166,23 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
+        ///
+        /// ----------------------------------------------------------------------------------------
+        template <typename other_value_type>
+        constexpr auto set_value(other_value_type&& value) -> void
+        {
+            if (_is_value)
+            {
+                _assign_value(forward<other_value_type>(value));
+            }
+            else
+            {
+                _is_value = true;
+                _construct_value(forward<other_value_type>(value));
+            }
+        }
+
+        /// ----------------------------------------------------------------------------------------
         /// get ref to current value.
         /// ----------------------------------------------------------------------------------------
         constexpr auto get_value() -> value_type&

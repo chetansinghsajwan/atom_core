@@ -14,9 +14,10 @@ TEST_CASE("atom.core.option")
 {
     SECTION("default constructor")
     {
-        // default constructor doesn't constructs the object, so it's not affected by the object's
+        // default constructor doesn't constructs the valueect, so it's not affected by the valueect's
         // default constructor.
-        STATIC_REQUIRE(type_info<option<non_default_constructible_mock>>::is_default_constructible());
+        STATIC_REQUIRE(
+            type_info<option<non_default_constructible_mock>>::is_default_constructible());
 
         option<tracked_type> opt;
 
@@ -40,8 +41,8 @@ TEST_CASE("atom.core.option")
 
     SECTION("value copy constructor")
     {
-        tracked_type obj = tracked_type();
-        option<tracked_type> opt = obj;
+        tracked_type value = tracked_type{};
+        option<tracked_type> opt = value;
 
         REQUIRE(opt.is_value());
         REQUIRE(opt.get().last_op == tracked_type::operation::copy_constructor);
@@ -49,14 +50,14 @@ TEST_CASE("atom.core.option")
 
     SECTION("value copy operator")
     {
-        tracked_type obj = tracked_type();
+        tracked_type value = tracked_type{};
         option<tracked_type> opt;
-        opt = obj;
+        opt = value;
 
         REQUIRE(opt.is_value());
         REQUIRE(opt.get().last_op == tracked_type::operation::copy_constructor);
 
-        opt = obj;
+        opt = value;
 
         REQUIRE(opt.is_value());
         REQUIRE(opt.get().last_op == tracked_type::operation::copy_operator);
@@ -64,8 +65,8 @@ TEST_CASE("atom.core.option")
 
     SECTION("value move constructor")
     {
-        tracked_type obj = tracked_type();
-        option<tracked_type> opt = move(obj);
+        tracked_type value = tracked_type{};
+        option<tracked_type> opt = move(value);
 
         REQUIRE(opt.is_value());
         REQUIRE(opt.get().last_op == tracked_type::operation::move_constructor);
@@ -73,14 +74,14 @@ TEST_CASE("atom.core.option")
 
     SECTION("value move operator")
     {
-        tracked_type obj = tracked_type();
+        tracked_type value = tracked_type{};
         option<tracked_type> opt;
-        opt = move(obj);
+        opt = move(value);
 
         REQUIRE(opt.is_value());
         REQUIRE(opt.get().last_op == tracked_type::operation::move_constructor);
 
-        opt = move(obj);
+        opt = move(value);
 
         REQUIRE(opt.is_value());
         REQUIRE(opt.get().last_op == tracked_type::operation::move_operator);
@@ -88,11 +89,11 @@ TEST_CASE("atom.core.option")
 
     SECTION("copy constructor")
     {
-        STATIC_REQUIRE(
-            type_info<option<trivially_copy_constructible_mock>>::is_trivially_copy_constructible());
+        STATIC_REQUIRE(type_info<
+            option<trivially_copy_constructible_mock>>::is_trivially_copy_constructible());
         STATIC_REQUIRE(type_info<option<copy_constructible_mock>>::is_copy_constructible());
 
-        const option<tracked_type> opt0 = tracked_type();
+        const option<tracked_type> opt0 = tracked_type{};
         option<tracked_type> opt1 = opt0;
 
         REQUIRE(opt0.is_value());
@@ -107,8 +108,8 @@ TEST_CASE("atom.core.option")
         STATIC_REQUIRE(type_info<option<trivially_copyable_mock>>::is_trivially_copy_assignable());
         STATIC_REQUIRE(type_info<option<copyable_mock>>::is_copy_assignable());
 
-        const option<tracked_type> opt0 = tracked_type();
-        option<tracked_type> opt1 = tracked_type();
+        const option<tracked_type> opt0 = tracked_type{};
+        option<tracked_type> opt1 = tracked_type{};
         opt1 = opt0;
 
         REQUIRE(opt0.is_value());
@@ -125,11 +126,11 @@ TEST_CASE("atom.core.option")
 
     SECTION("move constructor")
     {
-        STATIC_REQUIRE(
-            type_info<option<trivially_move_constructible_mock>>::is_trivially_move_constructible());
+        STATIC_REQUIRE(type_info<
+            option<trivially_move_constructible_mock>>::is_trivially_move_constructible());
         STATIC_REQUIRE(type_info<option<move_constructible_mock>>::is_move_constructible());
 
-        option<tracked_type> opt0 = tracked_type();
+        option<tracked_type> opt0 = tracked_type{};
         option<tracked_type> opt1 = move(opt0);
 
         REQUIRE(opt0.is_value());
@@ -144,8 +145,8 @@ TEST_CASE("atom.core.option")
         STATIC_REQUIRE(type_info<option<trivially_moveable_mock>>::is_trivially_move_assignable());
         STATIC_REQUIRE(type_info<option<moveable_mock>>::is_move_assignable());
 
-        option<tracked_type> opt0 = tracked_type();
-        option<tracked_type> opt1 = tracked_type();
+        option<tracked_type> opt0 = tracked_type{};
+        option<tracked_type> opt1 = tracked_type{};
         opt1 = move(opt0);
 
         REQUIRE(opt0.is_value());
@@ -162,17 +163,27 @@ TEST_CASE("atom.core.option")
 
     SECTION("destructor")
     {
-        STATIC_REQUIRE(type_info<option<trivially_destructible_mock>>::is_trivially_destructible());
-        STATIC_REQUIRE(type_info<option<destructible_mock>>::is_destructible());
+        bool is_destroyed = false;
 
-        tracked_type::operation* last_op;
+        struct scope_type
+        {
+            scope_type(bool* flag)
+                : _flag{ flag }
+            {}
+
+            ~scope_type()
+            {
+                *_flag = true;
+            }
+
+            bool* _flag;
+        };
 
         {
-            option<tracked_type> opt = tracked_type();
-            last_op = &opt.get().last_op;
+            option<scope_type> opt = scope_type{ &is_destroyed };
         }
 
-        REQUIRE(*last_op == tracked_type::operation::destructor);
+        REQUIRE(is_destroyed);
     }
 
     SECTION("emplace")
@@ -220,32 +231,32 @@ TEST_CASE("atom.core.option")
         REQUIRE(opt0 == opt1);
 
         // both have null state, they will not be compared.
-        REQUIRE(not (opt0 < opt1));
-        REQUIRE(not (opt0 > opt1));
-        REQUIRE(not (opt0 <= opt1));
-        REQUIRE(not (opt0 >= opt1));
+        REQUIRE(not(opt0 < opt1));
+        REQUIRE(not(opt0 > opt1));
+        REQUIRE(not(opt0 <= opt1));
+        REQUIRE(not(opt0 >= opt1));
 
         // if either have them null state, still they will not be compared.
-        opt0 = tracked_type();
+        opt0 = tracked_type{};
         opt0->last_op = tracked_type::operation::none;
 
-        REQUIRE(not (opt0 == opt1));
+        REQUIRE(not(opt0 == opt1));
         REQUIRE(opt0.get().last_op == tracked_type::operation::none);
 
-        REQUIRE(not (opt0 < opt1));
+        REQUIRE(not(opt0 < opt1));
         REQUIRE(opt0.get().last_op == tracked_type::operation::none);
 
-        REQUIRE(not (opt0 > opt1));
+        REQUIRE(not(opt0 > opt1));
         REQUIRE(opt0.get().last_op == tracked_type::operation::none);
 
-        REQUIRE(not (opt0 <= opt1));
+        REQUIRE(not(opt0 <= opt1));
         REQUIRE(opt0.get().last_op == tracked_type::operation::none);
 
-        REQUIRE(not (opt0 >= opt1));
+        REQUIRE(not(opt0 >= opt1));
         REQUIRE(opt0.get().last_op == tracked_type::operation::none);
 
         // they will be compared if they both have value state.
-        opt1 = tracked_type();
+        opt1 = tracked_type{};
         opt1->last_op = tracked_type::operation::none;
 
         REQUIRE(opt0 == opt1);
@@ -272,7 +283,7 @@ TEST_CASE("atom.core.option")
     SECTION("reset")
     {
         tracked_type::operation* last_op;
-        option<tracked_type> opt = tracked_type();
+        option<tracked_type> opt = tracked_type{};
         last_op = &opt.get().last_op;
 
         opt.reset();
