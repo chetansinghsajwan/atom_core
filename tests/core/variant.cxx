@@ -1,8 +1,11 @@
-import atom.core;
-
-#include "helpers/tracked_type.h"
+module;
 #include "catch2/catch_test_macros.hpp"
 #include "catch2/matchers/catch_matchers_floating_point.hpp"
+
+module atom.core.tests:variant;
+
+import atom.core;
+import :tracked_type;
 
 using namespace atom;
 using namespace atom::tests;
@@ -24,30 +27,14 @@ TEST_CASE("atom.core.variant")
     SECTION("type list")
     {
         using var = variant<tracked_i32, tracked_f32, tracked_uchar>;
+
         REQUIRE(typename var::value_types_list{}
-                == type_list<tracked_i32, tracked_f32, tracked_uchar>{})
-    }
-
-    SECTION("trivial default constructor")
-    {
-        // # to do: fix this. check variant_impl default value for _index.
-        //
-        // STATIC_REQUIRE(is_trivially_default_constructible<
-        //     variant<i32, char, f32>>);
-    }
-
-    SECTION("default constructor")
-    {
-        variant<tracked_type0, tracked_type1, tracked_type2> v;
-
-        REQUIRE(v.get_index() == 0);
-        REQUIRE(v.is<tracked_i32>());
-        REQUIRE(v.get<tracked_i32>().last_op == tracked_type::operation::default_constructor);
+                == type_list<tracked_i32, tracked_f32, tracked_uchar>{});
     }
 
     SECTION("trivial copy constructor")
     {
-        STATIC_REQUIRE(type_info<variant<i32, char, f32>>::is_trivially_copy_constructible);
+        STATIC_REQUIRE(type_info<variant<i32, char, f32>>::is_trivially_copy_constructible());
     }
 
     SECTION("copy constructor")
@@ -80,15 +67,15 @@ TEST_CASE("atom.core.variant")
 
     SECTION("trivial copy assignment operator")
     {
-        STATIC_REQUIRE(type_info<variant<i32, char, f32>>::is_trivially_copy_assignable);
+        STATIC_REQUIRE(type_info<variant<i32, char, f32>>::is_trivially_copy_assignable());
     }
 
     SECTION("copy assignment operator")
     {
         variant<tracked_type0, tracked_type1, tracked_type2> v0 = tracked_type1{};
 
-        // v1 holds tracked_type0, so it will construct tracked_type1 when assigned
-        variant<tracked_type0, tracked_type1, tracked_type2> v1;
+        // v1 holds tracked_i32, so it will construct tracked_f32 when assigned
+        variant<tracked_i32, tracked_f32, tracked_uchar> v1 = tracked_i32{ 0 };
         v1 = v0;
 
         REQUIRE(v0.get_index() == 1);
@@ -115,8 +102,8 @@ TEST_CASE("atom.core.variant")
     {
         variant<tracked_type1, tracked_type2> v0 = tracked_type1{};
 
-        // v1 holds tracked_type0, so it will construct tracked_type1 when assigned
-        variant<tracked_type0, tracked_type1, tracked_type2> v1;
+        // v1 holds tracked_i32, so it will construct tracked_f32 when assigned
+        variant<tracked_i32, tracked_f32, tracked_uchar> v1 = tracked_i32{ 0 };
         v1 = v0;
 
         REQUIRE(v0.get_index() == 0);
@@ -141,7 +128,7 @@ TEST_CASE("atom.core.variant")
 
     SECTION("trivial move constructor")
     {
-        STATIC_REQUIRE(type_info<variant<i32, char, f32>>::is_trivially_move_constructible);
+        STATIC_REQUIRE(type_info<variant<i32, char, f32>>::is_trivially_move_constructible());
     }
 
     SECTION("move constructor")
@@ -174,7 +161,7 @@ TEST_CASE("atom.core.variant")
 
     SECTION("trivial move assignment operator")
     {
-        STATIC_REQUIRE(type_info<variant<i32, char, f32>>::is_trivially_move_assignable);
+        STATIC_REQUIRE(type_info<variant<i32, char, f32>>::is_trivially_move_assignable());
     }
 
     SECTION("move assignment operator")
@@ -182,7 +169,7 @@ TEST_CASE("atom.core.variant")
         variant<tracked_type0, tracked_type1, tracked_type2> v0 = tracked_type1{};
 
         // v1 holds tracked_i32, so it will construct tracked_f32 when assigned
-        variant<tracked_i32, tracked_f32, tracked_uchar> v1;
+        variant<tracked_i32, tracked_f32, tracked_uchar> v1 = tracked_i32{ 0 };
         v1 = move(v0);
 
         REQUIRE(v0.get_index() == 1);
@@ -210,7 +197,7 @@ TEST_CASE("atom.core.variant")
         variant<tracked_type1, tracked_type2> v0 = tracked_type1{};
 
         // v1 holds tracked_i32, so it will construct tracked_f32 when assigned
-        variant<tracked_i32, tracked_f32, tracked_uchar> v1;
+        variant<tracked_i32, tracked_f32, tracked_uchar> v1 = tracked_i32{ 0 };
         v1 = move(v0);
 
         REQUIRE(v0.get_index() == 0);
@@ -247,7 +234,7 @@ TEST_CASE("atom.core.variant")
         // compilation error.
         // 99 is an i32. use type explicitly.
         // variant<usize> v = 99;
-        variant<usize> v = usize(99);
+        variant<usize, char> v = usize{ 99 };
 
         REQUIRE(v.get_index() == 0);
         REQUIRE(v.is<usize>());
@@ -256,7 +243,7 @@ TEST_CASE("atom.core.variant")
 
     SECTION("param operator")
     {
-        variant<i32, f64, char> v;
+        variant<i32, f64, char> v = i32{ 0 };
         v = char('c');
 
         REQUIRE(v.get_index() == 2);
@@ -266,12 +253,12 @@ TEST_CASE("atom.core.variant")
 
     SECTION("param operator: non deducible type.")
     {
-        variant<usize> v;
+        variant<usize, char> v = usize{ 0 };
 
         // compilation error.
         // 99 is an i32. use type explicitly.
         // v = 99;
-        v = usize(99);
+        v = usize{ 99 };
 
         REQUIRE(v.get_index() == 0);
         REQUIRE(v.is<usize>());
@@ -292,7 +279,7 @@ TEST_CASE("atom.core.variant")
 
     SECTION("value write")
     {
-        variant<i32, f64, char> v;
+        variant<i32, f64, char> v = i32{ 0 };
 
         v.emplace<char>('h');
 
@@ -313,8 +300,5 @@ TEST_CASE("atom.core.variant")
 
         REQUIRE(v.is<char>());
         REQUIRE(v.get<char>() == char('h'));
-
-        REQUIRE(v.is<2>());
-        REQUIRE(v.get_at<2>() == char('h'));
     }
 }

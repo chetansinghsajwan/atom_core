@@ -50,8 +50,8 @@ if(ATOM_CORE_BUILD_TESTS)
 
     add_executable(atom.core.tests)
 
-    file(GLOB_RECURSE test_sources "tests/**.cpp")
-    target_sources(atom.core.tests PRIVATE "${test_sources}")
+    file(GLOB_RECURSE test_modules "tests/**.cppm" "tests/**.cxx")
+    target_sources(atom.core.tests PRIVATE FILE_SET CXX_MODULES FILES "${test_modules}")
 
     target_include_directories(atom.core.tests PRIVATE "tests/")
     target_link_libraries(atom.core.tests PRIVATE atom.core Catch2::Catch2WithMain)

@@ -1,8 +1,11 @@
-import std;
-import atom.core;
-
+module;
 #include "catch2/catch_test_macros.hpp"
 #include "catch2/benchmark/catch_benchmark.hpp"
+
+module atom.core.tests:invokable_box;
+
+import std;
+import atom.core;
 
 using namespace atom;
 
@@ -22,9 +25,8 @@ TEST_CASE("atom.core.function_box")
             auto operator=(not_move_assignable&& other) -> not_move_assignable& = delete;
         };
 
-        function_box<not_move_assignable(i32)> function = [](i32 value) {
-            return not_move_assignable();
-        };
+        function_box<not_move_assignable(i32)> function = [](i32 value)
+        { return not_move_assignable(); };
     }
 
     SECTION("invocation")
@@ -112,7 +114,7 @@ TEST_CASE("atom.core.function_box", "[benchmarks]")
 
     function_box<bool(i32)> function = [](i32 value) { return value == 1; };
 
-    std::function<bool(i32)> function = [](i32 value) { return value == 1; };
+    std::function<bool(i32)> std_function = [](i32 value) { return value == 1; };
 
     BENCHMARK("atom::function_box [invocation]")
     {
@@ -121,6 +123,6 @@ TEST_CASE("atom.core.function_box", "[benchmarks]")
 
     BENCHMARK("std::function [invocation]")
     {
-        return function(0);
+        return std_function(0);
     };
 }

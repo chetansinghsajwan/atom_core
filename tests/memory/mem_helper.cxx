@@ -1,5 +1,9 @@
-import atom.core;
+module;
 #include "catch2/catch_test_macros.hpp"
+
+module atom.core.tests:mem_helper;
+
+import atom.core;
 
 using namespace atom;
 

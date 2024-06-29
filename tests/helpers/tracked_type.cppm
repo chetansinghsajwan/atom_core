@@ -1,12 +1,16 @@
-#pragma once
+module;
 #include "catch2/catch_tostring.hpp"
+
+export module atom.core.tests:tracked_type;
+
+import atom.core;
 
 namespace atom::tests
 {
     /// --------------------------------------------------------------------------------------------
     /// type used to track object state.
     /// --------------------------------------------------------------------------------------------
-    class tracked_type
+    export class tracked_type
     {
     public:
         /// ----------------------------------------------------------------------------------------
@@ -151,7 +155,7 @@ namespace atom::tests
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    template <typename value_t>
+    export template <typename value_t>
     class tracked_type_of: public tracked_type
     {
         using base_t = tracked_type;
@@ -191,7 +195,7 @@ namespace atom::tests
 
 namespace Catch
 {
-    template <>
+    export template <>
     class StringMaker<atom::tests::tracked_type::operation>
     {
     public:

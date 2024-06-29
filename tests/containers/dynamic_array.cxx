@@ -1,12 +1,16 @@
-// import atom.core;
-// #include "helpers/tracked_type.h"
-// #include "catch2/catch_test_macros.hpp"
+module;
+#include "catch2/catch_test_macros.hpp"
 
-// using namespace atom;
-// using namespace atom::tests;
+module atom.core.tests:dynamic_array;
 
-// TEST_CASE("atom.core.dynamic_array")
-// {
+import atom.core;
+import :tracked_type;
+
+using namespace atom;
+using namespace atom::tests;
+
+TEST_CASE("atom.core.dynamic_array")
+{
 //     using tracked_i32 = tracked_type_of<i32>;
 //     using dynamic_array_tracked_i32 = dynamic_array<tracked_i32, default_mem_allocator>;
 
@@ -98,4 +102,4 @@
 //     SECTION("move operator") {}
 
 //     SECTION("range operator") {}
-// }
+}

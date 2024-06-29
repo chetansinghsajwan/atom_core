@@ -1,6 +1,10 @@
-import atom.core;
-#include "helpers/tracked_type.h"
+module;
 #include "catch2/catch_test_macros.hpp"
+
+module atom.core.tests:unique_ptr;
+
+import atom.core;
+import :tracked_type;
 
 using namespace atom;
 using namespace atom::tests;
