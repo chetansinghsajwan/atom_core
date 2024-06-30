@@ -8,15 +8,19 @@ import :core.option_impl;
 namespace atom
 {
     /// --------------------------------------------------------------------------------------------
+    /// `option` template type is derived from `this` type, this helps to identify if a type is
+    /// `option` template type.
+    /// --------------------------------------------------------------------------------------------
+    class option_tag
+    {};
+
+    /// --------------------------------------------------------------------------------------------
     /// the option class is used to wrap the object of type `value_type`. this_type class contain either the
     /// value or can be empty representing no value.
     ///
     /// this_type is useful when we want to return a value that may or may not exist, without
     /// using null pointers or exceptions. or just want to add the ability of being null to a type
     /// like `i32`.
-    ///
-    /// # template parameters
-    /// - `type`: type of value to store.
     /// --------------------------------------------------------------------------------------------
     export template <typename in_value_type>
     class option
@@ -36,7 +40,7 @@ namespace atom
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// type of value this option holds.
+        /// type of the value `this` holds.
         /// ----------------------------------------------------------------------------------------
         using value_type = in_value_type;
 
@@ -121,6 +125,10 @@ namespace atom
         /// else
         ///     if `this` contains value, destroys `this` value.
         ///     else, does nothing.
+        ///
+        /// # note
+        ///
+        /// - after this operation, the value flag of `that` is still true.
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator=(this_type&& that) -> this_type&
             requires(value_type_info::is_moveable()
@@ -140,27 +148,23 @@ namespace atom
         {}
 
         /// ----------------------------------------------------------------------------------------
-        /// # value copy constructor
+        /// # value constructor
         ///
         /// copy constructs `this` value with `value`.
-        ///
-        /// # parameters
-        ///
-        /// - `value`: value to construct with.
         /// ----------------------------------------------------------------------------------------
         constexpr option(const value_type& value)
             : _impl{ typename impl_type::emplace_tag{}, value }
         {}
 
+        constexpr option(value_type&& value)
+            : _impl{ typename impl_type::emplace_tag{}, move(value) }
+        {}
+
         /// ----------------------------------------------------------------------------------------
-        /// # value copy operator
+        /// # value operator
         ///
         /// if `this` contains value, copy assigns `this` value with `value`.
         /// else, copy constructs `this` value with `value`.
-        ///
-        /// # parameters
-        ///
-        /// - `value`: value to assign or construct with.
         /// ----------------------------------------------------------------------------------------
         constexpr auto operator=(const value_type& value) -> this_type&
         {
@@ -168,29 +172,6 @@ namespace atom
             return *this;
         }
 
-        /// ----------------------------------------------------------------------------------------
-        /// # value move constructor
-        ///
-        /// move constructs `this` value with `value`.
-        ///
-        /// # parameters
-        ///
-        /// - `value`: value to construct with.
-        /// ----------------------------------------------------------------------------------------
-        constexpr option(value_type&& value)
-            : _impl{ typename impl_type::emplace_tag{}, move(value) }
-        {}
-
-        /// ----------------------------------------------------------------------------------------
-        /// # value move operator
-        ///
-        /// if `this` contains value, move assigns `this` value with `value`.
-        /// else, move constructs `this` value with `value`.
-        ///
-        /// # parameters
-        ///
-        /// - `value`: value to assign or construct with.
-        /// ----------------------------------------------------------------------------------------
         constexpr auto operator=(value_type&& value) -> this_type&
         {
             _impl.set_value(move(value));
@@ -204,12 +185,8 @@ namespace atom
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// construct value with `args`. if a value already exists, destroys that value and
+        /// construct stored value with `args`. if the value already exists, destroys that value and
         /// contructs and new one.
-        ///
-        /// # parameters
-        ///
-        /// - `args`: arguments to construct the new value with.
         /// ----------------------------------------------------------------------------------------
         template <typename... arg_types>
         constexpr auto emplace(arg_types&&... args)
@@ -228,9 +205,6 @@ namespace atom
             return _impl.get_value();
         }
 
-        /// ----------------------------------------------------------------------------------------
-        /// returns the stored value.
-        /// ----------------------------------------------------------------------------------------
         constexpr auto get() && -> value_type&&
         {
             contract_debug_expects(is_value(), "option does not contain value.");
@@ -238,9 +212,6 @@ namespace atom
             return move(_impl.get_value());
         }
 
-        /// ----------------------------------------------------------------------------------------
-        /// returns the stored value.
-        /// ----------------------------------------------------------------------------------------
         constexpr auto get() const -> const value_type&
         {
             contract_debug_expects(is_value(), "option does not contain value.");
@@ -258,9 +229,6 @@ namespace atom
             return _impl.get_value();
         }
 
-        /// ----------------------------------------------------------------------------------------
-        /// returns the stored value.
-        /// ----------------------------------------------------------------------------------------
         constexpr auto get_checked() && -> value_type&&
         {
             contract_expects(is_value(), "option does not contain value.");
@@ -268,9 +236,6 @@ namespace atom
             return move(_impl.get_value());
         }
 
-        /// ----------------------------------------------------------------------------------------
-        /// returns the stored value.
-        /// ----------------------------------------------------------------------------------------
         constexpr auto get_checked() const -> const value_type&
         {
             contract_expects(is_value(), "option does not contain value.");
@@ -288,9 +253,6 @@ namespace atom
             return _impl.get_value();
         }
 
-        /// ----------------------------------------------------------------------------------------
-        /// returns the stored value.
-        /// ----------------------------------------------------------------------------------------
         constexpr auto operator*() && -> value_type&&
         {
             contract_debug_expects(is_value(), "option does not contain value.");
@@ -298,9 +260,6 @@ namespace atom
             return move(_impl.get_value());
         }
 
-        /// ----------------------------------------------------------------------------------------
-        /// returns the stored value.
-        /// ----------------------------------------------------------------------------------------
         constexpr auto operator*() const -> const value_type&
         {
             contract_debug_expects(is_value(), "option does not contain value.");
@@ -318,9 +277,6 @@ namespace atom
             return &_impl.get_value();
         }
 
-        /// ----------------------------------------------------------------------------------------
-        /// returns the stored value.
-        /// ----------------------------------------------------------------------------------------
         constexpr auto operator->() const -> const value_type*
         {
             contract_debug_expects(is_value(), "option does not contain value.");
@@ -329,7 +285,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// destroys current value if any.
+        /// destroys current value if any and sets the has value flag to `false`.
         /// ----------------------------------------------------------------------------------------
         constexpr auto reset()
         {
@@ -347,9 +303,9 @@ namespace atom
         /// --------------------------------------------------------------------------------------------
         /// # equality comparision
         ///
-        /// if `this` and `that` are null, returns `true`.
-        /// if `this` is null and `that` is not null or vice versa, returns `false`.
-        /// if `this` and `that` are not null, returns `this.get() == that.get()`.
+        /// if both are null, returns `true`.
+        /// else if one is null, returns `false`.
+        /// else compares the values and returns the result.
         /// --------------------------------------------------------------------------------------------
         template <typename that_value_type>
         constexpr auto operator==(const option<that_value_type>& that) const -> bool
@@ -361,8 +317,8 @@ namespace atom
         /// --------------------------------------------------------------------------------------------
         /// # less than comparision
         ///
-        /// if `this` or `that` is null, returns false.
-        /// else, returns `this.get() < that.get()`.
+        /// if any of `this` and `that` is null, returns false.
+        /// else compares the values and returns the result.
         /// --------------------------------------------------------------------------------------------
         template <typename that_value_type>
         constexpr auto operator<(const option<that_value_type>& that) const -> bool
@@ -374,8 +330,8 @@ namespace atom
         /// --------------------------------------------------------------------------------------------
         /// # greater than comparision
         ///
-        /// if `opt0` or `that` is null, returns false.
-        /// else, returns `this.get() > that.get()`.
+        /// if any of `this` and `that` is null, returns false.
+        /// else compares the values and returns the result.
         /// --------------------------------------------------------------------------------------------
         template <typename that_value_type>
         constexpr auto operator>(const option<that_value_type>& that) const -> bool
@@ -387,8 +343,8 @@ namespace atom
         /// --------------------------------------------------------------------------------------------
         /// # less than or equal to comparision
         ///
-        /// if `opt0` or `that` is null, returns false.
-        /// else, returns `this.get() <= that.get()`.
+        /// if any of `this` and `that` is null, returns false.
+        /// else compares the values and returns the result.
         /// --------------------------------------------------------------------------------------------
         template <typename that_value_type>
         constexpr auto operator<=(const option<that_value_type>& that) const -> bool
@@ -400,8 +356,8 @@ namespace atom
         /// --------------------------------------------------------------------------------------------
         /// # greater than or equal to comparision
         ///
-        /// if `opt0` or `that` is null, returns false.
-        /// else, returns `this.get() >= that.get()`.
+        /// if any of `this` and `that` is null, returns false.
+        /// else compares the values and returns the result.
         /// --------------------------------------------------------------------------------------------
         template <typename that_value_type>
         constexpr auto operator>=(const option<that_value_type>& that) const -> bool
