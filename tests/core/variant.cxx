@@ -26,9 +26,9 @@ TEST_CASE("atom.core.variant")
 
     SECTION("type list")
     {
-        using var = variant<tracked_i32, tracked_f32, tracked_uchar>;
+        using variant_type = variant<tracked_i32, tracked_f32, tracked_uchar>;
 
-        REQUIRE(typename var::value_types_list{}
+        REQUIRE(typename variant_type::value_types_list{}
                 == type_list<tracked_i32, tracked_f32, tracked_uchar>{});
     }
 

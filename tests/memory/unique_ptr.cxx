@@ -20,7 +20,7 @@ TEST_CASE("atom.core.unique_ptr")
 
     SECTION("null constructor")
     {
-        unique_ptr<tracked_type> ptr(nullptr);
+        unique_ptr<tracked_type> ptr{ nullptr };
 
         // REQUIRE(ptr == nullptr);
     }
@@ -28,7 +28,7 @@ TEST_CASE("atom.core.unique_ptr")
     SECTION("value constructor")
     {
         tracked_type val;
-        unique_ptr<tracked_type> ptr(&val);
+        unique_ptr<tracked_type> ptr{ &val };
 
         // REQUIRE(ptr == &val);
     }
@@ -41,7 +41,7 @@ TEST_CASE("atom.core.unique_ptr")
     SECTION("move constructor")
     {
         tracked_type val;
-        unique_ptr<tracked_type> ptr1(&val);
+        unique_ptr<tracked_type> ptr1{ &val };
         unique_ptr<tracked_type> ptr2(move(ptr1));
 
         // REQUIRE(ptr1 == nullptr);
@@ -53,7 +53,7 @@ TEST_CASE("atom.core.unique_ptr")
         tracked_type val;
 
         {
-            unique_ptr<tracked_type> ptr(&val);
+            unique_ptr<tracked_type> ptr{ &val };
         }
 
         REQUIRE(val.last_op == tracked_type::operation::destructor);
@@ -68,7 +68,7 @@ TEST_CASE("atom.core.unique_ptr")
     {
         tracked_type val1;
         tracked_type val2;
-        unique_ptr<tracked_type> ptr1(&val1);
+        unique_ptr<tracked_type> ptr1{ &val1 };
         unique_ptr<tracked_type> ptr2(&val2);
 
         ptr2 = move(ptr1);
@@ -82,7 +82,7 @@ TEST_CASE("atom.core.unique_ptr")
     SECTION("null operator")
     {
         tracked_type val;
-        unique_ptr<tracked_type> ptr(&val);
+        unique_ptr<tracked_type> ptr{ &val };
 
         // ptr = nullptr;
 
@@ -92,7 +92,7 @@ TEST_CASE("atom.core.unique_ptr")
     SECTION("release()")
     {
         tracked_type val;
-        unique_ptr<tracked_type> ptr(&val);
+        unique_ptr<tracked_type> ptr{ &val };
 
         ptr.release();
 
@@ -103,7 +103,7 @@ TEST_CASE("atom.core.unique_ptr")
     SECTION("destroy()")
     {
         tracked_type val;
-        unique_ptr<tracked_type> ptr(&val);
+        unique_ptr<tracked_type> ptr{ &val };
 
         ptr.destroy();
 

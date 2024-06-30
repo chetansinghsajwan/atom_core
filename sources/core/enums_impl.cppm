@@ -134,7 +134,7 @@ namespace atom
 
         static constexpr auto to_underlying(enum_type value) -> underlying_type
         {
-            return underlying_type(value);
+            return (underlying_type)value;
         }
 
         static constexpr auto to_string_view(enum_type value) -> string_view;
@@ -153,39 +153,39 @@ namespace atom
 
         static constexpr auto add_flags(enum_type lhs, enum_type rhs) -> enum_type
         {
-            return enum_type(underlying_type(lhs) | underlying_type(rhs));
+            return enum_type((underlying_type)lhs | (underlying_type)rhs);
         }
 
         static constexpr auto remove_flags(enum_type lhs, enum_type rhs) -> enum_type
         {
-            return enum_type(underlying_type(lhs) & ~underlying_type(rhs));
+            return enum_type((underlying_type)lhs & (underlying_type)~rhs);
         }
 
         static constexpr auto get_common_flags(enum_type lhs, enum_type rhs) -> enum_type
         {
-            return enum_type(underlying_type(lhs) & underlying_type(rhs));
+            return enum_type((underlying_type)lhs & (underlying_type)rhs);
         }
 
         static constexpr auto get_uncommon_flags(enum_type lhs, enum_type rhs) -> enum_type
         {
-            underlying_type union_flags = underlying_type(lhs) | underlying_type(rhs);
-            underlying_type intersection_flags = underlying_type(lhs) & underlying_type(rhs);
+            underlying_type union_flags = (underlying_type)lhs | (underlying_type)rhs;
+            underlying_type intersection_flags = (underlying_type)lhs & (underlying_type)rhs;
             return enum_type(union_flags & intersection_flags);
         }
 
         static constexpr auto get_reverse_flags(enum_type flags) -> enum_type
         {
-            return enum_type(underlying_type(get_all_flags()) & ~underlying_type(flags));
+            return enum_type((underlying_type)get_all_flags() & (underlying_type)~flags);
         }
 
         static constexpr auto has_all_flags(enum_type lhs, enum_type rhs) -> bool
         {
-            return (underlying_type(lhs) & underlying_type(rhs)) == underlying_type(lhs);
+            return ((underlying_type)lhs & (underlying_type)rhs) == (underlying_type)rhs;
         }
 
         static constexpr auto has_any_flags(enum_type lhs, enum_type rhs) -> bool
         {
-            return (underlying_type(lhs) & underlying_type(rhs)) != 0;
+            return ((underlying_type)lhs & (underlying_type)rhs) != 0;
         }
     };
 }

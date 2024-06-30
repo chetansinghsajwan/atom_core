@@ -28,6 +28,11 @@ export namespace atom::nums
         return get_max<usize>();
     }
 
+    consteval auto get_max_u64() -> u64
+    {
+        return get_max<u64>();
+    }
+
     template <typename num_type>
     constexpr auto get_min(num_type num0, num_type num1) -> num_type
     {

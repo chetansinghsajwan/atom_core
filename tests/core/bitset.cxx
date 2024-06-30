@@ -1,5 +1,5 @@
 module;
-#include "catch2/catch_test_macros.hpp"
+// #include "catch2/catch_test_macros.hpp"
 
 module atom.core.tests:bitset;
 
@@ -7,8 +7,8 @@ import atom.core;
 
 using namespace atom;
 
-TEST_CASE("atom.core.bitset")
-{
+// TEST_CASE("atom.core.bitset")
+// {
     // bitset8 bits = u8(0b10101010);
     // bitset8 bits0 = u8(0b00000000);
     // bitset8 bits1 = u8(0b11111111);
@@ -56,4 +56,4 @@ TEST_CASE("atom.core.bitset")
     // REQUIRE(bits.rotate_by(1) == u8(0b10101000));
 
     // REQUIRE(bits == bits);
-}
+// }
