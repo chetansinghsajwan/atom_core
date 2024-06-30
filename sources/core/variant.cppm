@@ -412,8 +412,8 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns `true` if `that` holds the same type as `this` does and then equality compares
-        /// them.
+        /// returns `true` if `that` holds the same type as `this` does and then compares those
+        /// values.
         /// ----------------------------------------------------------------------------------------
         template <typename... that_value_types>
         constexpr auto operator==(const variant<that_value_types...>& that) const -> bool

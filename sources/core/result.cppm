@@ -10,13 +10,15 @@ import :core.result_impl;
 namespace atom
 {
     /// --------------------------------------------------------------------------------------------
-    ///
+    /// `result` template type is derived from `this` type, this helps to identify if a type is
+    /// `result` template type.
     /// --------------------------------------------------------------------------------------------
     export class result_tag
     {};
 
     /// --------------------------------------------------------------------------------------------
-    /// @todo update docs.
+    /// this type is used to represent the result of an operation. it can either store the value of
+    /// `value_type` or an error of one of the `error_types`.
     /// --------------------------------------------------------------------------------------------
     export template <typename in_value_type, typename... error_types>
     class result: public result_tag
@@ -30,7 +32,14 @@ namespace atom
         using value_type_info = type_info<in_value_type>;
 
     public:
+        /// ----------------------------------------------------------------------------------------
+        /// type of value `this` supports.
+        /// ----------------------------------------------------------------------------------------
         using value_type = in_value_type;
+
+        /// ----------------------------------------------------------------------------------------
+        /// `type_list` of error types `this` supports.
+        /// ----------------------------------------------------------------------------------------
         using error_types_list = typename impl_type::error_types_list;
 
     public:
@@ -44,7 +53,10 @@ namespace atom
             error_types_list::are_destructible(), "each error type must be destructible.");
 
     public:
-        static consteval auto should_enable_copy_constructor() -> bool
+        /// ----------------------------------------------------------------------------------------
+        /// -- include definition.
+        /// ----------------------------------------------------------------------------------------
+        static consteval auto is_copy_constructor_enabled() -> bool
         {
             if (not value_type_info::is_copy_constructible())
                 return false;
@@ -59,8 +71,14 @@ namespace atom
             return true;
         };
 
+        /// ----------------------------------------------------------------------------------------
+        /// -- include definition.
+        ///
+        /// accepts other result types whose value type is convertible to this value type and
+        /// whose error types are a subset of this type.
+        /// ----------------------------------------------------------------------------------------
         template <typename that_unpure_type>
-        static consteval auto should_enable_universal_copy_constructor() -> bool
+        static consteval auto is_universal_copy_constructor_enabled() -> bool
         {
             using that_type = type_info<that_unpure_type>::pure_type::value_type;
 
@@ -80,7 +98,10 @@ namespace atom
             return true;
         }
 
-        static consteval auto should_enable_copy_operator() -> bool
+        /// ----------------------------------------------------------------------------------------
+        /// -- include definition.
+        /// ----------------------------------------------------------------------------------------
+        static consteval auto is_copy_operator_enabled() -> bool
         {
             if (not value_type_info::is_copyable())
                 return false;
@@ -95,8 +116,14 @@ namespace atom
             return true;
         }
 
+        /// ----------------------------------------------------------------------------------------
+        /// -- include definition.
+        ///
+        /// accepts other result types whose value type is convertible to this value type and
+        /// whose error types are a subset of this type.
+        /// ----------------------------------------------------------------------------------------
         template <typename that_unpure_type>
-        static consteval auto should_enable_universal_copy_operator() -> bool
+        static consteval auto is_universal_copy_operator_enabled() -> bool
         {
             using that_type = type_info<that_unpure_type>::pure_type::value_type;
 
@@ -118,7 +145,10 @@ namespace atom
             return true;
         }
 
-        static consteval auto should_enable_move_constructor() -> bool
+        /// ----------------------------------------------------------------------------------------
+        /// -- include definition.
+        /// ----------------------------------------------------------------------------------------
+        static consteval auto is_move_constructor_enabled() -> bool
         {
             if (not value_type_info::is_move_constructible())
                 return false;
@@ -133,8 +163,14 @@ namespace atom
             return true;
         }
 
+        /// ----------------------------------------------------------------------------------------
+        /// -- include definition.
+        ///
+        /// accepts other result types whose value type is convertible to this value type and
+        /// whose error types are a subset of this type.
+        /// ----------------------------------------------------------------------------------------
         template <typename that_unpure_type>
-        static consteval auto should_enable_universal_move_constructor() -> bool
+        static consteval auto is_universal_move_constructor_enabled() -> bool
         {
             using that_type = type_info<that_unpure_type>::pure_type::value_type;
 
@@ -154,7 +190,10 @@ namespace atom
             return true;
         }
 
-        static consteval auto should_enable_move_operator() -> bool
+        /// ----------------------------------------------------------------------------------------
+        /// -- include definition.
+        /// ----------------------------------------------------------------------------------------
+        static consteval auto is_move_operator_enabled() -> bool
         {
             if (not value_type_info::is_moveable())
                 return false;
@@ -169,8 +208,14 @@ namespace atom
             return true;
         }
 
+        /// ----------------------------------------------------------------------------------------
+        /// -- include definition.
+        ///
+        /// accepts other result types whose value type is convertible to this value type and
+        /// whose error types are a subset of this type.
+        /// ----------------------------------------------------------------------------------------
         template <typename that_unpure_type>
-        static consteval auto should_enable_universal_move_operator() -> bool
+        static consteval auto is_universal_move_operator_enabled() -> bool
         {
             using that_type = type_info<that_unpure_type>::pure_type::value_type;
 
@@ -192,8 +237,11 @@ namespace atom
             return true;
         }
 
+        /// ----------------------------------------------------------------------------------------
+        /// -- include definition.
+        /// ----------------------------------------------------------------------------------------
         template <typename that_type>
-        static consteval auto should_enable_result_constructor() -> bool
+        static consteval auto is_result_constructor_enabled() -> bool
         {
             if constexpr (not type_info<that_type>::template is_derived_from<result_tag>())
                 return false;
@@ -225,19 +273,16 @@ namespace atom
         /// # copy constructor
         /// ----------------------------------------------------------------------------------------
         constexpr result(const this_type& that)
-            requires(should_enable_copy_constructor())
+            requires(is_copy_constructor_enabled())
             : _impl{ typename impl_type::that_tag{}, that._impl }
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # universal copy constructor
-        ///
-        /// accepts other result types whose value type is convertible to this value type and
-        /// whose error types are a subset of this type.
         /// ----------------------------------------------------------------------------------------
         template <typename that_type>
         constexpr result(const that_type& that)
-            requires(should_enable_universal_copy_constructor<that_type>())
+            requires(is_universal_copy_constructor_enabled<that_type>())
             : _impl{ typename impl_type::that_tag{}, that._impl }
         {}
 
@@ -250,7 +295,7 @@ namespace atom
         /// # copy operator
         /// ----------------------------------------------------------------------------------------
         constexpr this_type& operator=(const this_type& that)
-            requires(should_enable_copy_operator())
+            requires(is_copy_operator_enabled())
         {
             _impl.set_that(that._impl);
             return *this;
@@ -261,7 +306,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename that_type>
         constexpr this_type& operator=(const that_type& that)
-            requires(should_enable_universal_copy_operator<that_type>())
+            requires(is_universal_copy_operator_enabled<that_type>())
         {
             _impl.set_that(that._impl);
             return *this;
@@ -276,7 +321,7 @@ namespace atom
         /// # move constructor
         /// ----------------------------------------------------------------------------------------
         constexpr result(this_type&& that)
-            requires(should_enable_move_constructor())
+            requires(is_move_constructor_enabled())
             : _impl{ typename impl_type::that_tag{}, that._impl }
         {}
 
@@ -285,7 +330,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename that_type>
         constexpr result(that_type&& that)
-            requires(should_enable_universal_move_constructor<that_type>())
+            requires(is_universal_move_constructor_enabled<that_type>())
             : _impl{ typename impl_type::that_tag{}, that._impl }
         {}
 
@@ -298,7 +343,7 @@ namespace atom
         /// # move operator
         /// ----------------------------------------------------------------------------------------
         constexpr this_type& operator=(this_type&& that)
-            requires(should_enable_move_operator())
+            requires(is_move_operator_enabled())
         {
             _impl.set_that(move(that._impl));
             return *this;
@@ -309,7 +354,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename that_type>
         constexpr this_type& operator=(that_type&& that)
-            requires(should_enable_universal_move_operator<that_type>())
+            requires(is_universal_move_operator_enabled<that_type>())
         {
             _impl.set_that(move(that._impl));
             return *this;
@@ -317,6 +362,8 @@ namespace atom
 
         /// ----------------------------------------------------------------------------------------
         /// # void value constructor
+        ///
+        /// if value type is void, constructs with nothing and sets the value flag to `true`.
         /// ----------------------------------------------------------------------------------------
         constexpr result(create_from_void_tag)
             requires(value_type_info::is_void())
@@ -324,13 +371,9 @@ namespace atom
         {}
 
         /// ----------------------------------------------------------------------------------------
-        /// # value copy constructor
+        /// # value constructor
         ///
-        /// copy constructs result with value of type type.
-        ///
-        /// # parameters
-        ///
-        ///  - `value`: value to construct with.
+        /// constructs `this` with `value`.
         /// ----------------------------------------------------------------------------------------
         template <typename this_type = this_type>
         constexpr result(const this_type::value_type& value)
@@ -338,15 +381,6 @@ namespace atom
             : _impl{ typename impl_type::template emplace_tag<value_type>{}, value }
         {}
 
-        /// ----------------------------------------------------------------------------------------
-        /// # value move constructor
-        ///
-        /// move constructs result with value of type type.
-        ///
-        /// # parameters
-        ///
-        ///  - `value`: value to construct with.
-        /// ----------------------------------------------------------------------------------------
         template <typename this_type = this_type>
         constexpr result(this_type::value_type&& value)
             requires(not value_type_info::is_void())
@@ -354,13 +388,9 @@ namespace atom
         {}
 
         /// ----------------------------------------------------------------------------------------
-        /// # value copy operator
+        /// # value operator
         ///
-        /// destroys previous value sets new value.
-        ///
-        /// # parameters
-        ///
-        ///  - `value`: value to set.
+        /// constructs or assigns the new value.
         /// ----------------------------------------------------------------------------------------
         template <typename this_type = this_type>
         constexpr this_type& operator=(const this_type::value_type& value)
@@ -370,15 +400,6 @@ namespace atom
             return *this;
         }
 
-        /// ----------------------------------------------------------------------------------------
-        /// # value move operator
-        ///
-        /// destroys previous value sets new value.
-        ///
-        /// # parameters
-        ///
-        ///  - `value`: value to set.
-        /// ----------------------------------------------------------------------------------------
         template <typename this_type = this_type>
         constexpr this_type& operator=(this_type::value_type&& value)
             requires(not value_type_info::is_void())
@@ -388,7 +409,9 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// # error copy constructor
+        /// # error constructor
+        ///
+        /// constructs `this` with error of type `error_type`.
         /// ----------------------------------------------------------------------------------------
         template <typename error_type>
         constexpr result(const error_type& error)
@@ -396,9 +419,6 @@ namespace atom
             : _impl{ typename impl_type::template emplace_tag<error_type>{}, error }
         {}
 
-        /// ----------------------------------------------------------------------------------------
-        /// # error move constructor
-        /// ----------------------------------------------------------------------------------------
         template <typename error_type>
         constexpr result(error_type&& error)
             requires(error_types_list::template has<error_type>())
@@ -406,7 +426,9 @@ namespace atom
         {}
 
         /// ----------------------------------------------------------------------------------------
-        /// # error copy operator
+        /// # error operator
+        ///
+        /// constructs or assigns error of type `error_type`.
         /// ----------------------------------------------------------------------------------------
         template <typename error_type>
         constexpr this_type& operator=(const error_type& error)
@@ -416,9 +438,6 @@ namespace atom
             return *this;
         }
 
-        /// ----------------------------------------------------------------------------------------
-        /// # error move operator
-        /// ----------------------------------------------------------------------------------------
         template <typename error_type>
         constexpr this_type& operator=(error_type&& error)
             requires(error_types_list::template has<error_type>())
@@ -429,10 +448,14 @@ namespace atom
 
         /// ----------------------------------------------------------------------------------------
         /// # named constructor
+        ///
+        /// this constructor is used when this doesn't support `value_type` or all of the
+        /// `error_types` of `that` but some of them. if the value or error is of some type that
+        /// `this` supports, it constructs `this` with that value, else panics.
         /// ----------------------------------------------------------------------------------------
         template <typename that_type>
         constexpr result(create_from_result_tag, const that_type& that)
-            requires(should_enable_result_constructor<that_type>())
+            requires(is_result_constructor_enabled<that_type>())
             : _impl{ typename impl_type::that_tag{}, that._impl }
         {}
 
@@ -441,16 +464,18 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename that_type>
         constexpr result(create_from_result_tag, that_type&& that)
-            requires(should_enable_result_constructor<that_type>())
+            requires(is_result_constructor_enabled<that_type>())
             : _impl{ typename impl_type::that_tag{}, move(that._impl) }
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// # named constructor
+        ///
+        /// constructs `this` by emplacing value or error of type `value_type` with `args`.
         /// ----------------------------------------------------------------------------------------
         template <typename value_type, typename... arg_types>
         constexpr result(create_by_emplace_tag<value_type>, arg_types&&... args)
-            requires(should_enable_emplace_constructor<value_type, arg_types...>())
+            requires(is_emplace_constructor_enabled<value_type, arg_types...>())
             : _impl{ typename impl_type::template emplace_tag<value_type>{},
                 forward<arg_types>(args)... }
         {}
@@ -462,7 +487,7 @@ namespace atom
 
     public:
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// destroys stored value or error and constructs new value with `args`.
         /// ----------------------------------------------------------------------------------------
         template <typename... arg_types>
         constexpr auto emplace_value(arg_types&&... args) -> void
@@ -471,7 +496,8 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// if value is stored then assign `value` to it, else destroys the error and constructs
+        /// value with `value`.
         /// ----------------------------------------------------------------------------------------
         template <typename this_type = this_type>
         constexpr auto set_value(const this_type::value_type& value) -> void
@@ -480,9 +506,6 @@ namespace atom
             _impl.set_value(value);
         }
 
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
         template <typename this_type = this_type>
         constexpr auto set_value(this_type::value_type&& value) -> void
             requires(not value_type_info::is_void())
@@ -491,7 +514,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// if `value_type` is `void`, destroys stored error if any, and sets value flag to `true`.
         /// ----------------------------------------------------------------------------------------
         constexpr auto set_value() -> void
             requires(value_type_info::is_void())
@@ -500,7 +523,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// returns the stored value.
         /// ----------------------------------------------------------------------------------------
         template <typename this_type = this_type>
         constexpr auto get_value() & -> this_type::value_type&
@@ -511,9 +534,6 @@ namespace atom
             return _impl.get_value();
         }
 
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
         template <typename this_type = this_type>
         constexpr auto get_value() && -> this_type::value_type&&
             requires(not value_type_info::is_void())
@@ -523,9 +543,6 @@ namespace atom
             return move(_impl.get_value());
         }
 
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
         template <typename this_type = this_type>
         constexpr auto get_value() const -> const this_type::value_type&
             requires(not value_type_info::is_void())
@@ -536,7 +553,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// returns the stored value.
         /// ----------------------------------------------------------------------------------------
         template <typename this_type = this_type>
         constexpr auto get_value_checked() & -> this_type::value_type&
@@ -547,9 +564,6 @@ namespace atom
             return _impl.get_value();
         }
 
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
         template <typename this_type = this_type>
         constexpr auto get_value_checked() && -> this_type::value_type&&
             requires(not value_type_info::is_void())
@@ -559,9 +573,6 @@ namespace atom
             return move(_impl.get_value());
         }
 
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
         template <typename this_type = this_type>
         constexpr auto get_value_checked() const -> const this_type::value_type&
             requires(not value_type_info::is_void())
@@ -572,7 +583,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        ///returns the stored value.
         /// ----------------------------------------------------------------------------------------
         template <typename this_type = this_type>
         constexpr auto get_value_unchecked() & -> this_type::value_type&
@@ -581,9 +592,6 @@ namespace atom
             return _impl.get_value();
         }
 
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
         template <typename this_type = this_type>
         constexpr auto get_value_unchecked() && -> this_type::value_type&&
             requires(not value_type_info::is_void())
@@ -591,9 +599,6 @@ namespace atom
             return move(_impl.get_value());
         }
 
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
         template <typename this_type = this_type>
         constexpr auto get_value_unchecked() const -> const this_type::value_type&
             requires(not value_type_info::is_void())
@@ -602,7 +607,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// returns `true` if value is stored.
         /// ----------------------------------------------------------------------------------------
         constexpr auto is_value() const -> bool
         {
@@ -610,7 +615,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// destorys current value or error, and constructs new error of `error_type` with `args`.
         /// ----------------------------------------------------------------------------------------
         template <typename error_type, typename... arg_types>
         constexpr auto emplace_error(arg_types&&... args) -> void
@@ -620,7 +625,8 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// if error of type `error_type` is stored, assigns `error` to it, else destroys current
+        /// value or error and constructs a new error with `error`.
         /// ----------------------------------------------------------------------------------------
         template <typename error_type>
         constexpr auto set_error(const error_type& error) -> void
@@ -629,9 +635,6 @@ namespace atom
             _impl.set_error(error);
         }
 
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
         template <typename error_type>
         constexpr auto set_error(error_type&& error) -> void
             requires(error_types_list::template has<error_type>())
@@ -640,7 +643,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// returns error of as `error_type`.
         /// ----------------------------------------------------------------------------------------
         template <typename error_type>
         constexpr auto get_error() & -> error_type&
@@ -651,9 +654,6 @@ namespace atom
             return _impl.template get_error<error_type>();
         }
 
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
         template <typename error_type>
         constexpr auto get_error() && -> error_type&&
             requires(error_types_list::template has<error_type>())
@@ -663,9 +663,6 @@ namespace atom
             return move(_impl.template get_error<error_type>());
         }
 
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
         template <typename error_type>
         constexpr auto get_error() const -> const error_type&
             requires(error_types_list::template has<error_type>())
@@ -676,7 +673,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// returns error of as `error_type`.
         /// ----------------------------------------------------------------------------------------
         template <typename error_type>
         constexpr auto get_error_checked() & -> error_type&
@@ -687,9 +684,6 @@ namespace atom
             return _impl.template get_error<error_type>();
         }
 
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
         template <typename error_type>
         constexpr auto get_error_checked() && -> error_type&&
             requires(error_types_list::template has<error_type>())
@@ -699,9 +693,6 @@ namespace atom
             return move(_impl.template get_error<error_type>());
         }
 
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
         template <typename error_type>
         constexpr auto get_error_checked() const -> const error_type&
             requires(error_types_list::template has<error_type>())
@@ -712,7 +703,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// returns error of as `error_type`.
         /// ----------------------------------------------------------------------------------------
         template <typename error_type>
         constexpr auto get_error_unchecked() & -> error_type&
@@ -721,9 +712,6 @@ namespace atom
             return _impl.template get_error<error_type>();
         }
 
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
         template <typename error_type>
         constexpr auto get_error_unchecked() && -> error_type&&
             requires(error_types_list::template has<error_type>())
@@ -731,9 +719,6 @@ namespace atom
             return move(_impl.template get_error<error_type>());
         }
 
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
         template <typename error_type>
         constexpr auto get_error_unchecked() const -> const error_type&
             requires(error_types_list::template has<error_type>())
@@ -742,7 +727,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// return `true` if error of any type is stored.
         /// ----------------------------------------------------------------------------------------
         constexpr auto is_error() const -> bool
         {
@@ -750,7 +735,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// returns `true` if error of `error_type` is stored.
         /// ----------------------------------------------------------------------------------------
         template <typename error_type>
         constexpr auto is_error() const -> bool
@@ -760,7 +745,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// returns `true` if error of any of `other_error_types` is stored.
         /// ----------------------------------------------------------------------------------------
         template <typename... other_error_types>
         constexpr auto is_error_any() const -> bool
@@ -770,7 +755,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// returns an `option` with stored value. if no value was stored, return null option.
         /// ----------------------------------------------------------------------------------------
         constexpr auto to_option() -> option<value_type>
         {
@@ -778,7 +763,8 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        ///
+        /// return an `option` with stored error of type `error_type`. if error of that type wasn't
+        /// stored return null option.
         /// ----------------------------------------------------------------------------------------
         template <typename error_type>
         constexpr auto to_option_error() -> option<error_type>
@@ -788,10 +774,12 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
+        /// -- include definition.
         ///
+        /// returns `true` if equality comparition function is present.
         /// ----------------------------------------------------------------------------------------
         template <typename that_type>
-        static consteval auto should_enable_equality_conversion() -> bool
+        static consteval auto is_equality_conversion_enabled() -> bool
         {
             if constexpr (not type_info<that_type>::template is_derived_from<result_tag>())
                 return false;
@@ -812,11 +800,14 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
+        /// # equality comparision operator
         ///
+        /// returns `true` if `that` holds the value or same error type as `this` does and then
+        /// compares those value or error.
         /// ----------------------------------------------------------------------------------------
         template <typename that_type>
         constexpr auto operator==(const that_type& that) const -> bool
-            requires(should_enable_equality_conversion<that_type>())
+            requires(is_equality_conversion_enabled<that_type>())
         {
             return _impl.is_eq(that._impl);
         }

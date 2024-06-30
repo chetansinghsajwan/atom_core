@@ -208,7 +208,7 @@ namespace atom
         /// - current value is null.
         /// ----------------------------------------------------------------------------------------
         template <typename value_type, typename... arg_types>
-        constexpr auto emplace_value(arg_types&&... args) -> void;
+        constexpr auto emplace_value(arg_types&&... args) -> void
         {
             _destroy_value();
 
