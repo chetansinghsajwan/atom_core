@@ -208,13 +208,12 @@ namespace atom
         /// - current value is null.
         /// ----------------------------------------------------------------------------------------
         template <typename value_type, typename... arg_types>
-        constexpr auto emplace_value(arg_types&&... args) -> value_type&
+        constexpr auto emplace_value(arg_types&&... args) -> void;
         {
             _destroy_value();
 
             _index = value_types_list::template get_index<value_type>();
             _construct_value_as<value_type>(forward<arg_types>(args)...);
-            return _get_value_as<value_type>();
         }
 
         /// ----------------------------------------------------------------------------------------

@@ -9,13 +9,15 @@ import :core.variant_impl;
 namespace atom
 {
     /// --------------------------------------------------------------------------------------------
-    ///
+    /// `variant` template type is derived from `this` type, this helps to identify if a type is
+    /// `variant` template type.
     /// --------------------------------------------------------------------------------------------
     class variant_tag
     {};
 
     /// --------------------------------------------------------------------------------------------
-    ///
+    /// this type is used to represent a type safe union. it stores a value of one of the
+    /// `value_types` at any given moment.
     /// --------------------------------------------------------------------------------------------
     export template <typename... value_types>
     class variant: public variant_tag
@@ -29,7 +31,7 @@ namespace atom
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// type_list of this variant.
+        /// `type_list` of value types of `this` variant.
         /// ----------------------------------------------------------------------------------------
         using value_types_list = type_list<value_types...>;
 
@@ -152,6 +154,10 @@ namespace atom
 
         /// ----------------------------------------------------------------------------------------
         /// # named constructor
+        ///
+        /// this constructor is used when this doesn't support all of `that_value_types` but some
+        /// of them. if the value is of some type that `this` supports, it constructs `this` with
+        /// that value, else panics.
         /// ----------------------------------------------------------------------------------------
         template <typename... that_value_types>
         constexpr variant(create_from_variant_tag, const variant<that_value_types...>& that)
@@ -161,6 +167,8 @@ namespace atom
 
         /// ----------------------------------------------------------------------------------------
         /// # named constructor
+        ///
+        /// -- use above docs.
         /// ----------------------------------------------------------------------------------------
         template <typename... that_value_types>
         constexpr variant(create_from_variant_tag, variant<that_value_types...>&& that)
@@ -170,6 +178,8 @@ namespace atom
 
         /// ----------------------------------------------------------------------------------------
         /// # named constructor
+        ///
+        /// creates value in place with `args`.
         /// ----------------------------------------------------------------------------------------
         template <typename value_type, typename... arg_types>
         constexpr variant(create_by_emplace_tag<value_type>, arg_types&&... args)
@@ -181,6 +191,8 @@ namespace atom
 
         /// ----------------------------------------------------------------------------------------
         /// # named constructor
+        ///
+        /// if this supports void type, then sets stored type to void.
         /// ----------------------------------------------------------------------------------------
         constexpr variant(create_by_emplace_tag<void>)
             requires(value_types_list::template has<void>())
@@ -189,6 +201,8 @@ namespace atom
 
         /// ----------------------------------------------------------------------------------------
         /// # named constructor
+        ///
+        /// -- use above docs.
         /// ----------------------------------------------------------------------------------------
         constexpr variant(create_from_void_tag)
             requires(value_types_list::template has<void>())
@@ -198,7 +212,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # value copy constructor
         ///
-        /// copy constructs variant with `value`.
+        /// constructs `this` by copying `value` into `this`.
         /// ----------------------------------------------------------------------------------------
         template <typename value_type>
         constexpr variant(const value_type& value)
@@ -209,7 +223,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # value move constructor
         ///
-        /// move constructs variant with `value`.
+        /// constructs `this` by moving `value` into `this`.
         /// ----------------------------------------------------------------------------------------
         template <typename value_type>
         constexpr variant(value_type&& value)
@@ -220,7 +234,8 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # value copy operator
         ///
-        /// destroys previous value and assigns new value.
+        /// if the stored value is of type `value_type` then assigns it, else destroys stored value
+        /// and constructs new value with `value`.
         /// ----------------------------------------------------------------------------------------
         template <typename value_type>
         constexpr this_type& operator=(const value_type& value)
@@ -233,7 +248,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// # value move operator
         ///
-        /// destroys previous value and assigns new value.
+        /// -- use above docs.
         /// ----------------------------------------------------------------------------------------
         template <typename value_type>
         constexpr this_type& operator=(value_type&& value)
@@ -250,18 +265,20 @@ namespace atom
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// emplaces the type `type` and returns it.
+        /// destroys stored value if any, even if the value if of same type as `value_type`
+        /// and creates a new value in place of type `value_type` with `args`.
         /// ----------------------------------------------------------------------------------------
         template <typename value_type, typename... arg_types>
-        constexpr auto emplace(arg_types&&... args) -> value_type&
+        constexpr auto emplace(arg_types&&... args) -> void
             requires(value_types_list::template has<value_type>()
                      and type_info<value_type>::template is_constructible_from<arg_types...>())
         {
-            return _impl.template emplace_value<value_type>(forward<arg_types>(args)...);
+            _impl.template emplace_value<value_type>(forward<arg_types>(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// sets the value to `value`.
+        /// if the stored value is of same type as `value_type`, assigns `value` to it, else
+        /// destroys stored value and constructs a new value of type `value_type` with `value`.
         /// ----------------------------------------------------------------------------------------
         template <typename value_type>
         constexpr auto set(const value_type& value) -> void
@@ -272,7 +289,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// sets the value to `value`.
+        /// -- use above docs.
         /// ----------------------------------------------------------------------------------------
         template <typename value_type>
         constexpr auto set(value_type&& value) -> void
@@ -283,7 +300,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns the value as `value_type`.
+        /// returns the stored value as `value_type`.
         /// ----------------------------------------------------------------------------------------
         template <typename value_type>
         constexpr auto get() & -> value_type&
@@ -296,7 +313,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns the value as `value_type`.
+        /// -- use above docs.
         /// ----------------------------------------------------------------------------------------
         template <typename value_type>
         constexpr auto get() && -> value_type&&
@@ -309,7 +326,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns the value as `value_type`.
+        /// -- use above docs.
         /// ----------------------------------------------------------------------------------------
         template <typename value_type>
         constexpr auto get() const -> const value_type&
@@ -322,7 +339,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns the value as `value_type`.
+        /// -- use above docs.
         /// ----------------------------------------------------------------------------------------
         template <typename value_type>
         constexpr auto get_checked() & -> value_type&
@@ -335,7 +352,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns the value as `value_type`.
+        /// -- use above docs.
         /// ----------------------------------------------------------------------------------------
         template <typename value_type>
         constexpr auto get_checked() && -> value_type&&
@@ -348,7 +365,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns the value as `value_type`.
+        /// -- use above docs.
         /// ----------------------------------------------------------------------------------------
         template <typename value_type>
         constexpr auto get_checked() const -> const value_type&
@@ -361,7 +378,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns the value as `value_type`.
+        /// -- use above docs.
         /// ----------------------------------------------------------------------------------------
         template <typename value_type>
         constexpr auto get_unchecked() & -> value_type&
@@ -372,7 +389,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns the value as `value_type`.
+        /// -- use above docs.
         /// ----------------------------------------------------------------------------------------
         template <typename value_type>
         constexpr auto get_unchecked() && -> value_type&&
@@ -383,7 +400,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns the value as `value_type`.
+        /// -- use above docs.
         /// ----------------------------------------------------------------------------------------
         template <typename value_type>
         constexpr auto get_unchecked() const -> const value_type&
@@ -394,7 +411,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns `true` if the current value is of type `type`.
+        /// returns `true` if the stored value is of type `value_type`.
         /// ----------------------------------------------------------------------------------------
         template <typename value_type>
         constexpr auto is() const -> bool
@@ -404,7 +421,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns `true` if the stored value is of any of the `that_value_types`.
+        /// returns `true` if the stored value is of any of the types `that_value_types`.
         /// ----------------------------------------------------------------------------------------
         template <typename... that_value_types>
         constexpr auto is_any() const -> bool
@@ -422,8 +439,8 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns `true` if `that` holds the same type as `this` does and both values are equal
-        /// as well.
+        /// returns `true` if `that` holds the same type as `this` does and then equality compares
+        /// them.
         /// ----------------------------------------------------------------------------------------
         template <typename... that_value_types>
         constexpr auto operator==(const variant<that_value_types...>& that) const -> bool
