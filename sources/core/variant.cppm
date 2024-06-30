@@ -167,8 +167,6 @@ namespace atom
 
         /// ----------------------------------------------------------------------------------------
         /// # named constructor
-        ///
-        /// -- use above docs.
         /// ----------------------------------------------------------------------------------------
         template <typename... that_value_types>
         constexpr variant(create_from_variant_tag, variant<that_value_types...>&& that)
@@ -201,8 +199,6 @@ namespace atom
 
         /// ----------------------------------------------------------------------------------------
         /// # named constructor
-        ///
-        /// -- use above docs.
         /// ----------------------------------------------------------------------------------------
         constexpr variant(create_from_void_tag)
             requires(value_types_list::template has<void>())
@@ -247,8 +243,6 @@ namespace atom
 
         /// ----------------------------------------------------------------------------------------
         /// # value move operator
-        ///
-        /// -- use above docs.
         /// ----------------------------------------------------------------------------------------
         template <typename value_type>
         constexpr this_type& operator=(value_type&& value)
@@ -288,9 +282,6 @@ namespace atom
             _impl.set_value(value);
         }
 
-        /// ----------------------------------------------------------------------------------------
-        /// -- use above docs.
-        /// ----------------------------------------------------------------------------------------
         template <typename value_type>
         constexpr auto set(value_type&& value) -> void
             requires(value_types_list::template has<value_type>()
@@ -312,9 +303,6 @@ namespace atom
             return _impl.template get_value<value_type>();
         }
 
-        /// ----------------------------------------------------------------------------------------
-        /// -- use above docs.
-        /// ----------------------------------------------------------------------------------------
         template <typename value_type>
         constexpr auto get() && -> value_type&&
             requires(value_types_list::template has<value_type>()
@@ -325,9 +313,6 @@ namespace atom
             return move(_impl.template get_value<value_type>());
         }
 
-        /// ----------------------------------------------------------------------------------------
-        /// -- use above docs.
-        /// ----------------------------------------------------------------------------------------
         template <typename value_type>
         constexpr auto get() const -> const value_type&
             requires(value_types_list::template has<value_type>()
@@ -339,7 +324,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// -- use above docs.
+        /// returns the stored value as `value_type`.
         /// ----------------------------------------------------------------------------------------
         template <typename value_type>
         constexpr auto get_checked() & -> value_type&
@@ -351,9 +336,6 @@ namespace atom
             return _impl.template get_value<value_type>();
         }
 
-        /// ----------------------------------------------------------------------------------------
-        /// -- use above docs.
-        /// ----------------------------------------------------------------------------------------
         template <typename value_type>
         constexpr auto get_checked() && -> value_type&&
             requires(value_types_list::template has<value_type>()
@@ -364,9 +346,6 @@ namespace atom
             return move(_impl.template get_value<value_type>());
         }
 
-        /// ----------------------------------------------------------------------------------------
-        /// -- use above docs.
-        /// ----------------------------------------------------------------------------------------
         template <typename value_type>
         constexpr auto get_checked() const -> const value_type&
             requires(value_types_list::template has<value_type>()
@@ -378,7 +357,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// -- use above docs.
+        /// returns the stored value as `value_type`.
         /// ----------------------------------------------------------------------------------------
         template <typename value_type>
         constexpr auto get_unchecked() & -> value_type&
@@ -388,9 +367,6 @@ namespace atom
             return _impl.template get_value<value_type>();
         }
 
-        /// ----------------------------------------------------------------------------------------
-        /// -- use above docs.
-        /// ----------------------------------------------------------------------------------------
         template <typename value_type>
         constexpr auto get_unchecked() && -> value_type&&
             requires(value_types_list::template has<value_type>()
@@ -399,9 +375,6 @@ namespace atom
             return move(_impl.template get_value<value_type>());
         }
 
-        /// ----------------------------------------------------------------------------------------
-        /// -- use above docs.
-        /// ----------------------------------------------------------------------------------------
         template <typename value_type>
         constexpr auto get_unchecked() const -> const value_type&
             requires(value_types_list::template has<value_type>()
