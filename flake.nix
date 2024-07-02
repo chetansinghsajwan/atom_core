@@ -9,6 +9,11 @@
             inputs.nixpkgs.follows = "nixpkgs";
         };
 
+        fmt = {
+            url = "github:fmtlib/fmt";
+            flake = false;
+        };
+
         cpptrace = {
             url = "github:jeremy-rifkin/cpptrace";
             flake = false;
@@ -33,11 +38,28 @@
         llvmPackages = pkgs.llvmPackages_18;
         stdenv = llvmPackages.libcxxStdenv;
 
+        magic_enum_pkg = pkgs.magic-enum;
         atom_doc_pkg = inputs.atom_doc.packages.${system}.default;
         catch2_pkg = pkgs.catch2_3.override { stdenv = stdenv; };
 
-        cpptrace_pkg = stdenv.mkDerivation {
+        fmt_pkg = stdenv.mkDerivation {
+            name = "fmt";
+            src = inputs.fmt;
 
+            nativeBuildInputs = with pkgs; [
+                cmake
+                ninja
+            ];
+
+            configurePhase = ''
+                cmake -S . -B . -G Ninja \
+                    -D FMT_DOC=OFF \
+                    -D FMT_TEST=OFF \
+                    -D CMAKE_INSTALL_PREFIX=$out;
+            '';
+        };
+
+        cpptrace_pkg = stdenv.mkDerivation {
             name = "cpptrace";
             src = inputs.cpptrace;
 
@@ -64,14 +86,12 @@
     in rec
     {
         env.${system}.default = rec {
-
             name = "atom_core";
-
             src = ./.;
 
             propagatedBuildInputs = with pkgs; [
-                fmt
-                magic-enum
+                fmt_pkg
+                magic_enum_pkg
                 cpptrace_pkg
             ];
 
@@ -87,9 +107,11 @@
 
             configurePhase = ''
                 cmake -S . -B build \
-                    -D fmt_DIR:PATH=${pkgs.fmt} \
+                    -D fmt_DIR:PATH=${fmt_pkg} \
+                    -D magic_enum_DIR:PATH=${fmt_pkg} \
+                    -D cpptrace_DIR:PATH=${cpptrace_pkg} \
                     -D Catch2_DIR:PATH=${catch2_pkg} \
-                    -D cpptrace_DIR:PATH=${cpptrace_pkg};
+                    -D CMAKE_INSTALL_PREFIX=$out;
             '';
 
             buildPhase = ''
@@ -97,19 +119,20 @@
             '';
 
             installPhase = ''
-                cmake --install build --prefix $out;
+                cmake --install build;
             '';
 
             clang_scan_deps_include_paths = [
-                "/nix/store/csml9b5w7z51yc7hxgd2ax4m6vj36iyq-libcxx-18.1.5-dev/include"
-                "/nix/store/2sf9x4kf8lihldhnhp2b8q3ybas3p83l-compiler-rt-libc-18.1.5-dev/include"
-                "/nix/store/hrssqr2jypca2qcqyy1xmfdw71nv6n14-catch2-3.5.2/include"
-                "/nix/store/zc8xnz48ca61zjplxc3zz1ha3zss046p-fmt-10.2.1-dev/include"
-                "/nix/store/2j35qpxbprdgcixyg70lyy6m0yay9352-magic-enum-0.9.5/include"
-                "/nix/store/k3701zl6gmx3la7y4dnflcvf3xfy88kh-python3-3.11.9/include"
-                "/nix/store/csml9b5w7z51yc7hxgd2ax4m6vj36iyq-libcxx-18.1.5-dev/include/c++/v1"
-                "/nix/store/fymdqlxx6zsqvlmfwls3h2fly9kz0vcf-clang-wrapper-18.1.5/resource-root/include"
-                "/nix/store/s3pvsv4as7mc8i2nwnk2hnsyi2qdj4bq-glibc-2.39-31-dev/include"
+                /nix/store/fsb7lmhyy01flrnviwjfz3fgm53w990v-libcxx-18.1.7-dev/include/c++/v1
+                /nix/store/fsb7lmhyy01flrnviwjfz3fgm53w990v-libcxx-18.1.7-dev/include
+                /nix/store/il0vjm4nf1yv4swn0pi5rimh64hf3jrz-compiler-rt-libc-18.1.7-dev/include
+                /nix/store/ip5wiylb41wli3yy33sqibqcj6l1yawl-clang-wrapper-18.1.7/resource-root/include
+                /nix/store/4vgk1rlzdqjnpjicb5qcxjcd4spi7wyw-glibc-2.39-52-dev/include
+
+                "${fmt_pkg}/include"
+                "${magic_enum_pkg}/include"
+                "${cpptrace_pkg}/include"
+                "${catch2_pkg}/include"
             ];
 
             envVars = {
