@@ -9,6 +9,7 @@ cmake_policy(SET CMP0155 NEW)
 # options
 # --------------------------------------------------------------------------------------------------
 
+option(atom_core_build_docs "Enable this to build docs." OFF)
 option(atom_core_build_tests "Enable this to build tests." OFF)
 
 # --------------------------------------------------------------------------------------------------
@@ -46,6 +47,19 @@ target_compile_options(
 add_executable(atom_core_sandbox)
 target_sources(atom_core_sandbox PRIVATE "sandbox/sandbox.cpp")
 target_link_libraries(atom_core_sandbox PRIVATE atom_core)
+
+# --------------------------------------------------------------------------------------------------
+# docs
+# --------------------------------------------------------------------------------------------------
+
+if(atom_core_build_docs)
+    find_package("Doxygen" REQUIRED)
+
+    doxygen_add_docs(atom_core_docs
+        "${atom_core_modules}"
+        CONFIG_FILE "${CMAKE_CURRENT_LIST_DIR}/Doxyfile"
+        USE_STAMP_FILE)
+endif()
 
 # --------------------------------------------------------------------------------------------------
 # tests
