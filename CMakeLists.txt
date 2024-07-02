@@ -40,7 +40,7 @@ target_compile_options(
            "-ferror-limit=1000")
 
 # --------------------------------------------------------------------------------------------------
-# atom_core_sandbox
+# sandbox
 # --------------------------------------------------------------------------------------------------
 
 add_executable(atom_core_sandbox)
@@ -48,11 +48,11 @@ target_sources(atom_core_sandbox PRIVATE "sandbox/sandbox.cpp")
 target_link_libraries(atom_core_sandbox PRIVATE atom_core)
 
 # --------------------------------------------------------------------------------------------------
-# testing
+# tests
 # --------------------------------------------------------------------------------------------------
 
 if(atom_core_build_tests)
-    find_package(Catch2 REQUIRED)
+    find_package("Catch2" REQUIRED)
 
     add_executable(atom_core_tests)
 

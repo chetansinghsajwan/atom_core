@@ -15,12 +15,12 @@
         };
 
         libdwarf-lite = {
-            url = "github:jeremy-rifkin/libdwarf-lite/v0.9.2";
+            url = "github:jeremy-rifkin/libdwarf-lite";
             flake = false;
         };
 
         zstd = {
-            url = "github:facebook/zstd/v1.5.5";
+            url = "github:facebook/zstd";
             flake = false;
         };
     };

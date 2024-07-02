@@ -23,11 +23,11 @@
     "cpptrace": {
       "flake": false,
       "locked": {
-        "lastModified": 1716352602,
-        "narHash": "sha256-DljRNYnf90qbFRhQPA8ZXrw7VipWLUlshr8Jmuq7mXg=",
+        "lastModified": 1718847694,
+        "narHash": "sha256-zjPxPtq+OQ104sJoeBD3jpMV9gV57FSHEJS4W6SF8GM=",
         "owner": "jeremy-rifkin",
         "repo": "cpptrace",
-        "rev": "040d131cefa96c2c5f77f51be37e8b4481bc4b82",
+        "rev": "ea566778fcb2f96074a717e5f2f010d82177accd",
         "type": "github"
       },
       "original": {
@@ -48,18 +48,17 @@
       },
       "original": {
         "owner": "jeremy-rifkin",
-        "ref": "v0.9.2",
         "repo": "libdwarf-lite",
         "type": "github"
       }
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1716293225,
-        "narHash": "sha256-pU9ViBVE3XYb70xZx+jK6SEVphvt7xMTbm6yDIF4xPs=",
+        "lastModified": 1719848872,
+        "narHash": "sha256-H3+EC5cYuq+gQW8y0lSrrDZfH71LB4DAf+TDFyvwCNA=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "3eaeaeb6b1e08a016380c279f8846e0bd8808916",
+        "rev": "00d80d13810dbfea8ab4ed1009b09100cca86ba8",
         "type": "github"
       },
       "original": {
@@ -81,16 +80,15 @@
     "zstd": {
       "flake": false,
       "locked": {
-        "lastModified": 1680639232,
-        "narHash": "sha256-tHHHIsQU7vJySrVhJuMKUSq11MzkmC+Pcsj00uFJdnQ=",
+        "lastModified": 1719789423,
+        "narHash": "sha256-hP2wdFLXIgP8Gj8jQnMy5FdiL/pblJQbwFxw3TOuDzs=",
         "owner": "facebook",
         "repo": "zstd",
-        "rev": "63779c798237346c2b245c546c40b72a5a5913fe",
+        "rev": "3de0541aef8da51f144ef47fb86dcc38b21afb00",
         "type": "github"
       },
       "original": {
         "owner": "facebook",
-        "ref": "v1.5.5",
         "repo": "zstd",
         "type": "github"
       }
