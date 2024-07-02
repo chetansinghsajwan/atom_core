@@ -30,14 +30,15 @@
         system = "x86_64-linux";
         pkgs = inputs.nixpkgs.legacyPackages.${system};
         lib = pkgs.lib;
-        stdenv = pkgs.llvmPackages_18.libcxxStdenv;
+        llvmPackages = pkgs.llvmPackages_18;
+        stdenv = llvmPackages.libcxxStdenv;
 
         atom_doc_pkg = inputs.atom_doc.packages.${system}.default;
+        catch2_pkg = pkgs.catch2_3.override { stdenv = stdenv; };
 
         cpptrace_pkg = stdenv.mkDerivation {
 
             name = "cpptrace";
-
             src = inputs.cpptrace;
 
             nativeBuildInputs = with pkgs; [
@@ -76,7 +77,7 @@
 
             nativeBuildInputs = with pkgs; [
                 atom_doc_pkg
-                catch2_3
+                catch2_pkg
 
                 cmake
                 cmake-format
@@ -87,7 +88,7 @@
             configurePhase = ''
                 cmake -S . -B build \
                     -D fmt_DIR:PATH=${pkgs.fmt} \
-                    -D Catch2_DIR:PATH=${pkgs.catch2_3} \
+                    -D Catch2_DIR:PATH=${catch2_pkg} \
                     -D cpptrace_DIR:PATH=${cpptrace_pkg};
             '';
 
