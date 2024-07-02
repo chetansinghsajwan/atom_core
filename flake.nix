@@ -4,6 +4,11 @@
     inputs = {
         nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
+        atom_doc = {
+            url = "github:shifu-dev/atom-doc";
+            inputs.nixpkgs.follows = "nixpkgs";
+        };
+
         cpptrace = {
             url = "github:jeremy-rifkin/cpptrace";
             flake = false;
@@ -26,6 +31,8 @@
         pkgs = inputs.nixpkgs.legacyPackages.${system};
         lib = pkgs.lib;
         stdenv = pkgs.llvmPackages_18.libcxxStdenv;
+
+        atom_doc_pkg = inputs.atom_doc.packages.${system}.default;
 
         cpptrace_pkg = stdenv.mkDerivation {
 
@@ -68,6 +75,7 @@
             ];
 
             nativeBuildInputs = with pkgs; [
+                atom_doc_pkg
                 catch2_3
 
                 cmake
@@ -108,6 +116,7 @@
                 CMAKE_GENERATOR = "Ninja";
                 CMAKE_BUILD_TYPE = "Debug";
                 CMAKE_EXPORT_COMPILE_COMMANDS = "true";
+                ATOM_DOC_DOXYFILE_DIR = atom_doc_pkg;
             };
         };
 
