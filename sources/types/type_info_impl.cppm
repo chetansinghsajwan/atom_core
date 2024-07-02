@@ -1,4 +1,4 @@
-export module atom.core:types.type_info_impl;
+export module atom_core:types.type_info_impl;
 
 import std;
 

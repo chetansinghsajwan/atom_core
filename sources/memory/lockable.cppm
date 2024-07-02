@@ -1,4 +1,4 @@
-export module atom.core:lockable;
+export module atom_core:lockable;
 
 import std;
 

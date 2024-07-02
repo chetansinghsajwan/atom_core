@@ -1,4 +1,4 @@
-export module atom.core:strings.string_formatter_provider;
+export module atom_core:strings.string_formatter_provider;
 
 import fmt;
 import :types;

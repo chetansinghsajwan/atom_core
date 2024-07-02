@@ -1,4 +1,4 @@
-export module atom.core:obj_helper;
+export module atom_core:obj_helper;
 
 import std;
 import :mem_helper;

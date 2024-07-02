@@ -1,4 +1,4 @@
-export module atom.core:strings.string_format_context;
+export module atom_core:strings.string_format_context;
 
 import fmt;
 import :core;

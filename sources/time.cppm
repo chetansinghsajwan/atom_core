@@ -1,4 +1,4 @@
-export module atom.core:time;
+export module atom_core:time;
 
 import std;
 

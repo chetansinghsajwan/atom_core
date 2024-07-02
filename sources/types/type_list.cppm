@@ -1,4 +1,4 @@
-export module atom.core:types.type_list;
+export module atom_core:types.type_list;
 
 import std;
 import :core.core;

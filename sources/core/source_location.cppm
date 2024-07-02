@@ -1,4 +1,4 @@
-export module atom.core:core.source_location;
+export module atom_core:core.source_location;
 
 import std;
 

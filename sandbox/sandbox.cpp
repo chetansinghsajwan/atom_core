@@ -1,5 +1,5 @@
 import std;
-import atom.core;
+import atom_core;
 
 using namespace atom;
 

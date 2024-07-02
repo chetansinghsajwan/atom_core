@@ -1,4 +1,4 @@
-export module atom.core:strings.string_slice;
+export module atom_core:strings.string_slice;
 
 import :containers;
 import :strings.string_extensions;

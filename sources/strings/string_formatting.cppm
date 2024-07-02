@@ -1,4 +1,4 @@
-export module atom.core:strings.string_formatting;
+export module atom_core:strings.string_formatting;
 
 import std;
 import fmt;

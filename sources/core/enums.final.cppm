@@ -1,4 +1,4 @@
-export module atom.core:core.enums.final;
+export module atom_core:core.enums.final;
 
 import :core.enums_impl;
 import :core.enums_impl.final;

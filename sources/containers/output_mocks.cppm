@@ -1,4 +1,4 @@
-export module atom.core:containers.output_mocks;
+export module atom_core:containers.output_mocks;
 
 import :types;
 import :ranges;

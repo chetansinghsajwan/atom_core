@@ -1,4 +1,4 @@
-export module atom.core:core.option;
+export module atom_core:core.option;
 
 import :types;
 import :contracts;

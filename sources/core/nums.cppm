@@ -1,4 +1,4 @@
-export module atom.core:core.nums;
+export module atom_core:core.nums;
 
 import std;
 export import :core.int_wrapper;

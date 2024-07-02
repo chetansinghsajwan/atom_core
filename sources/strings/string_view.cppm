@@ -1,4 +1,4 @@
-export module atom.core:strings.string_view;
+export module atom_core:strings.string_view;
 
 import :containers;
 import :strings.string_extensions;

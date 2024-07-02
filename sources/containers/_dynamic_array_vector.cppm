@@ -1,4 +1,4 @@
-export module atom.core:containers.dynamic_array_impl_vector;
+export module atom_core:containers.dynamic_array_impl_vector;
 
 import std;
 import :core;

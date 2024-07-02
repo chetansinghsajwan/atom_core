@@ -1,4 +1,4 @@
-export module atom.core:core.bitset;
+export module atom_core:core.bitset;
 
 import std;
 import :core.int_wrapper;

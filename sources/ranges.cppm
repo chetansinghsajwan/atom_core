@@ -1,4 +1,4 @@
-export module atom.core:ranges;
+export module atom_core:ranges;
 
 export import :ranges.array_iterator;
 export import :ranges.iterator_requirements;

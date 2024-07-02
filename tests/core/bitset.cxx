@@ -1,13 +1,13 @@
 module;
 // #include "catch2/catch_test_macros.hpp"
 
-module atom.core.tests:bitset;
+module atom_core.tests:bitset;
 
-import atom.core;
+import atom_core;
 
 using namespace atom;
 
-// TEST_CASE("atom.core.bitset")
+// TEST_CASE("atom_core.bitset")
 // {
     // bitset8 bits = u8(0b10101010);
     // bitset8 bits0 = u8(0b00000000);

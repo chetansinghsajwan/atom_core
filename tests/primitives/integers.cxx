@@ -2,9 +2,9 @@ module;
 #include "catch2/catch_test_macros.hpp"
 #include "catch2/catch_template_test_macros.hpp"
 
-module atom.core.tests:integers;
+module atom_core.tests:integers;
 
-import atom.core;
+import atom_core;
 
 using namespace atom;
 
@@ -34,7 +34,7 @@ struct u32_test_data
     static constexpr u64 small_int_max = 65'535;
 };
 
-TEMPLATE_TEST_CASE("atom.core.integers", "", i32_test_data, u32_test_data)
+TEMPLATE_TEST_CASE("atom_core.integers", "", i32_test_data, u32_test_data)
 {
     //     using int_t = TestType::int_t;
     //     using small_int_t = TestType::small_int_t;

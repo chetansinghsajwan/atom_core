@@ -1,4 +1,4 @@
-export module atom.core:strings;
+export module atom_core:strings;
 
 export import :strings.string_extensions;
 export import :strings.string_format_context;

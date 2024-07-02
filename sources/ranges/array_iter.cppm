@@ -1,4 +1,4 @@
-export module atom.core:ranges.array_iterator;
+export module atom_core:ranges.array_iterator;
 
 import std;
 import :core;

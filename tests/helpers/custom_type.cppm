@@ -1,6 +1,6 @@
-export module atom.core.tests:custom_type;
+export module atom_core.tests:custom_type;
 
-import atom.core;
+import atom_core;
 
 namespace atom::tests
 {

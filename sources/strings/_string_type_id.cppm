@@ -1,4 +1,4 @@
-export module atom.core:strings._string_type_id;
+export module atom_core:strings._string_type_id;
 
 namespace atom
 {

@@ -1,4 +1,4 @@
-export module atom.core:core.result;
+export module atom_core:core.result;
 
 import :types;
 import :contracts;

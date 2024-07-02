@@ -1,4 +1,4 @@
-export module atom.core:strings.string;
+export module atom_core:strings.string;
 
 import :core;
 import :default_mem_allocator;

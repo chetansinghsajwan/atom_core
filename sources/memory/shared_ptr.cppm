@@ -1,4 +1,4 @@
-export module atom.core:shared_ptr;
+export module atom_core:shared_ptr;
 
 import :core;
 import :types;

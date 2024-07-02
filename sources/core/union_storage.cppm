@@ -1,4 +1,4 @@
-export module atom.core:core.union_storage;
+export module atom_core:core.union_storage;
 
 import :types;
 import :core.core;

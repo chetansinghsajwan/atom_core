@@ -2,7 +2,7 @@ module;
 #include <cerrno>
 #include <cstdio>
 
-export module atom.core:filesystem.file;
+export module atom_core:filesystem.file;
 
 import std;
 import fmt;

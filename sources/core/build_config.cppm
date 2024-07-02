@@ -1,4 +1,4 @@
-export module atom.core:core.build_config;
+export module atom_core:core.build_config;
 
 #include "atom/core/preprocessors.h"
 

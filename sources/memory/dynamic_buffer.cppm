@@ -1,4 +1,4 @@
-export module atom.core:dynamic_buffer;
+export module atom_core:dynamic_buffer;
 
 import std;
 import :core;

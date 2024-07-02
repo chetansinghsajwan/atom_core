@@ -1,4 +1,4 @@
-export module atom.core:strings._format_arg_wrapper;
+export module atom_core:strings._format_arg_wrapper;
 
 import :types;
 

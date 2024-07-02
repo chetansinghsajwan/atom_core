@@ -1,4 +1,4 @@
-export module atom.core:mutex;
+export module atom_core:mutex;
 
 import std;
 

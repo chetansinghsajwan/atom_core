@@ -1,4 +1,4 @@
-export module atom.core:strings.static_string;
+export module atom_core:strings.static_string;
 
 import :core;
 import :containers;

@@ -1,16 +1,16 @@
 module;
 #include "catch2/catch_test_macros.hpp"
 
-module atom.core.tests:option;
+module atom_core.tests:option;
 
-import atom.core;
+import atom_core;
 import :tracked_type;
 import :custom_type;
 
 using namespace atom;
 using namespace atom::tests;
 
-TEST_CASE("atom.core.option")
+TEST_CASE("atom_core.option")
 {
     SECTION("default constructor")
     {

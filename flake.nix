@@ -1,5 +1,5 @@
 {
-    description = "atom.core";
+    description = "atom_core";
 
     inputs = {
         nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -64,7 +64,7 @@
     {
         env.${system}.default = rec {
 
-            name = "atom-core";
+            name = "atom_core";
 
             src = ./.;
 
@@ -92,7 +92,7 @@
             '';
 
             buildPhase = ''
-                cmake --build build --target atom.core;
+                cmake --build build --target atom_core;
             '';
 
             installPhase = ''

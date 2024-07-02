@@ -1,4 +1,4 @@
-export module atom.core:core.enums_impl.final;
+export module atom_core:core.enums_impl.final;
 
 import std;
 import magic_enum;

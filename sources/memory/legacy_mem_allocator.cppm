@@ -1,4 +1,4 @@
-export module atom.core:legacy_mem_allocator;
+export module atom_core:legacy_mem_allocator;
 
 import std;
 import :core;

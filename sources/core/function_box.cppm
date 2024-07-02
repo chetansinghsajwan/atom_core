@@ -1,4 +1,4 @@
-export module atom.core:function_box;
+export module atom_core:function_box;
 
 import std;
 import :core;

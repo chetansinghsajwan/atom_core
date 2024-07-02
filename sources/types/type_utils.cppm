@@ -1,4 +1,4 @@
-export module atom.core:types.type_utils;
+export module atom_core:types.type_utils;
 
 import std;
 

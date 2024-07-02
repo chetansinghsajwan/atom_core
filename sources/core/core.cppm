@@ -1,4 +1,4 @@
-export module atom.core:core.core;
+export module atom_core:core.core;
 
 import std;
 

@@ -1,4 +1,4 @@
-export module atom.core:core.enums;
+export module atom_core:core.enums;
 
 import magic_enum;
 import :core.enums_impl;

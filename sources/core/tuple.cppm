@@ -1,4 +1,4 @@
-export module atom.core:core.tuple;
+export module atom_core:core.tuple;
 
 import std;
 

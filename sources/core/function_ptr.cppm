@@ -1,4 +1,4 @@
-export module atom.core:core.function_ptr;
+export module atom_core:core.function_ptr;
 
 namespace atom
 {

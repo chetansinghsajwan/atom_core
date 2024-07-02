@@ -1,4 +1,4 @@
-export module atom.core:strings.string_format_error;
+export module atom_core:strings.string_format_error;
 
 import :core;
 import :strings.string_view;

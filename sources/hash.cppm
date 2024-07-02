@@ -1,4 +1,4 @@
-export module atom.core:hash;
+export module atom_core:hash;
 
 import std;
 import :strings;

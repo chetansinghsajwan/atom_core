@@ -1,9 +1,9 @@
 module;
 #include "catch2/catch_tostring.hpp"
 
-export module atom.core.tests:tracked_type;
+export module atom_core.tests:tracked_type;
 
-import atom.core;
+import atom_core;
 
 namespace atom::tests
 {

@@ -1,4 +1,4 @@
-export module atom.core:ranges.range_extensions_impl;
+export module atom_core:ranges.range_extensions_impl;
 
 import std;
 import :core;

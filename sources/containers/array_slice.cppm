@@ -1,4 +1,4 @@
-export module atom.core:containers.array_slice;
+export module atom_core:containers.array_slice;
 
 import :core;
 import :ranges;

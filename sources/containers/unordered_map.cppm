@@ -1,4 +1,4 @@
-export module atom.core:containers.unordered_map;
+export module atom_core:containers.unordered_map;
 
 import std;
 

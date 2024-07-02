@@ -1,4 +1,4 @@
-export module atom.core:core.float_wrapper;
+export module atom_core:core.float_wrapper;
 
 import std;
 import :core.num_wrapper;

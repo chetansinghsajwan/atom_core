@@ -1,4 +1,4 @@
-export module atom.core:containers.output_requirements;
+export module atom_core:containers.output_requirements;
 
 import :core;
 import :ranges;

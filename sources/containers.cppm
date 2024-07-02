@@ -1,4 +1,4 @@
-export module atom.core:containers;
+export module atom_core:containers;
 
 export import :containers.static_array;
 export import :containers.dynamic_array;

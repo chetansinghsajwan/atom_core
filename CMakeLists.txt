@@ -1,32 +1,38 @@
 cmake_minimum_required(VERSION 3.28 FATAL_ERROR)
-project(atom.core VERSION 0.1.0)
+project(atom_core VERSION 0.1.0)
 enable_language(CXX)
 
 cmake_policy(SET CMP0076 NEW)
 cmake_policy(SET CMP0155 NEW)
 
-option(ATOM_CORE_BUILD_TESTS "Enable this to build tests." OFF)
+# --------------------------------------------------------------------------------------------------
+# options
+# --------------------------------------------------------------------------------------------------
+
+option(atom_core_build_tests "Enable this to build tests." OFF)
+
+# --------------------------------------------------------------------------------------------------
+# atom_core
+# --------------------------------------------------------------------------------------------------
 
 find_package(fmt REQUIRED)
 find_package(cpptrace REQUIRED)
 find_package(magic_enum REQUIRED)
 
-# --------------------------------------------------------------------------------------------------
-# atom.core
-# --------------------------------------------------------------------------------------------------
+add_library(atom_core STATIC)
 
-add_library(atom.core STATIC)
-add_library(atom::atom.core ALIAS atom.core)
+file(GLOB_RECURSE atom_core_modules "sources/**.cppm")
+target_sources(atom_core PUBLIC FILE_SET CXX_MODULES FILES ${atom_core_modules})
 
-file(GLOB_RECURSE modules "sources/**.cppm")
-target_sources(atom.core PUBLIC FILE_SET CXX_MODULES FILES ${modules})
+target_include_directories(atom_core PRIVATE "include")
+target_link_libraries(atom_core PRIVATE
+    "fmt::fmt-header-only"
+    "magic_enum::magic_enum"
+    "cpptrace::cpptrace")
 
-target_include_directories(atom.core PRIVATE "include")
-target_link_libraries(atom.core PRIVATE "fmt::fmt-header-only" "magic_enum::magic_enum"
-                                        "cpptrace::cpptrace")
-target_compile_features(atom.core PUBLIC "cxx_std_23")
+target_compile_features(atom_core PUBLIC "cxx_std_23")
 target_compile_options(
-    atom.core
+    atom_core
     PUBLIC # some warning in libcxx
            "-Wno-deprecated-declarations"
            # to declare std module
@@ -34,29 +40,29 @@ target_compile_options(
            "-ferror-limit=1000")
 
 # --------------------------------------------------------------------------------------------------
-# atom.core.sandbox
+# atom_core_sandbox
 # --------------------------------------------------------------------------------------------------
 
-add_executable(atom.core.sandbox)
-target_sources(atom.core.sandbox PRIVATE "sandbox/sandbox.cpp")
-target_link_libraries(atom.core.sandbox PRIVATE atom.core)
+add_executable(atom_core_sandbox)
+target_sources(atom_core_sandbox PRIVATE "sandbox/sandbox.cpp")
+target_link_libraries(atom_core_sandbox PRIVATE atom_core)
 
 # --------------------------------------------------------------------------------------------------
-# atom.core.tests
+# testing
 # --------------------------------------------------------------------------------------------------
 
-if(ATOM_CORE_BUILD_TESTS)
+if(atom_core_build_tests)
     find_package(Catch2 REQUIRED)
 
-    add_executable(atom.core.tests)
+    add_executable(atom_core_tests)
 
-    file(GLOB_RECURSE test_modules "tests/**.cppm" "tests/**.cxx")
-    target_sources(atom.core.tests PRIVATE FILE_SET CXX_MODULES FILES "${test_modules}")
+    file(GLOB_RECURSE atom_core_tests_modules "tests/**.cppm" "tests/**.cxx")
+    target_sources(atom_core_tests PRIVATE FILE_SET CXX_MODULES FILES "${atom_core_tests_modules}")
 
-    target_include_directories(atom.core.tests PRIVATE "tests/")
-    target_link_libraries(atom.core.tests PRIVATE atom.core Catch2::Catch2WithMain)
+    target_include_directories(atom_core_tests PRIVATE "tests/")
+    target_link_libraries(atom_core_tests PRIVATE atom_core Catch2::Catch2WithMain)
 
-    add_test(atom.core.tests atom.core.tests)
+    add_test(atom_core_tests atom_core_tests)
 endif()
 
 # --------------------------------------------------------------------------------------------------
@@ -71,18 +77,17 @@ write_basic_package_version_file(
     COMPATIBILITY AnyNewerVersion)
 
 install(
-    TARGETS atom.core
-    EXPORT atom_core-targets
+    TARGETS atom_core
+    EXPORT atom_core_targets
     FILE_SET CXX_MODULES
     DESTINATION "lib"
     INCLUDES
     DESTINATION "include")
 
 install(
-    EXPORT atom_core-targets
+    EXPORT atom_core_targets
     FILE "atom_core-targets.cmake"
-    DESTINATION "cmake/"
-    NAMESPACE "atom::")
+    DESTINATION "cmake/")
 
 install(DIRECTORY "include/" DESTINATION "include/")
 

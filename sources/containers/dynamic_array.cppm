@@ -1,4 +1,4 @@
-export module atom.core:containers.dynamic_array;
+export module atom_core:containers.dynamic_array;
 
 import :core;
 import :ranges;

@@ -1,4 +1,4 @@
-export module atom.core:strings.dynamic_string;
+export module atom_core:strings.dynamic_string;
 
 import :containers;
 import :strings.string_extensions;

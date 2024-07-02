@@ -1,4 +1,4 @@
-export module atom.core:core.option_impl;
+export module atom_core:core.option_impl;
 
 import :types;
 import :obj_helper;

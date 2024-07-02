@@ -1,4 +1,4 @@
-export module atom.core:core.error;
+export module atom_core:core.error;
 
 import std;
 

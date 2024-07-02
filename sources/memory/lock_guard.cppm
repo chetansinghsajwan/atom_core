@@ -1,4 +1,4 @@
-export module atom.core:lock_guard;
+export module atom_core:lock_guard;
 
 import :lockable;
 

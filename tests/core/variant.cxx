@@ -2,9 +2,9 @@ module;
 #include "catch2/catch_test_macros.hpp"
 #include "catch2/matchers/catch_matchers_floating_point.hpp"
 
-module atom.core.tests:variant;
+module atom_core.tests:variant;
 
-import atom.core;
+import atom_core;
 import :tracked_type;
 
 using namespace atom;
@@ -15,7 +15,7 @@ using tracked_i32 = tracked_type_of<i32>;
 using tracked_f32 = tracked_type_of<f32>;
 using tracked_uchar = tracked_type_of<char>;
 
-TEST_CASE("atom.core.variant")
+TEST_CASE("atom_core.variant")
 {
     SECTION("unique types")
     {

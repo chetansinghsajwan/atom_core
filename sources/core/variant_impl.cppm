@@ -1,4 +1,4 @@
-export module atom.core:core.variant_impl;
+export module atom_core:core.variant_impl;
 
 import :contracts;
 import :types;

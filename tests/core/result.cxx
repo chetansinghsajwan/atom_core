@@ -1,12 +1,12 @@
 module;
 // #include "catch2/catch_all.hpp"
 
-module atom.core.tests:result;
+module atom_core.tests:result;
 
-import atom.core;
+import atom_core;
 
 using namespace atom;
 
-// TEST_CASE("atom.core.result")
+// TEST_CASE("atom_core.result")
 // {
 // }

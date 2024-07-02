@@ -1,4 +1,4 @@
-export module atom.core:strings.string_extensions;
+export module atom_core:strings.string_extensions;
 
 import std;
 import :core;

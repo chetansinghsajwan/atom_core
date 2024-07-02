@@ -2,14 +2,14 @@ module;
 #include "catch2/catch_test_macros.hpp"
 #include "catch2/benchmark/catch_benchmark.hpp"
 
-module atom.core.tests:invokable_box;
+module atom_core.tests:invokable_box;
 
 import std;
-import atom.core;
+import atom_core;
 
 using namespace atom;
 
-TEST_CASE("atom.core.function_box")
+TEST_CASE("atom_core.function_box")
 {
     SECTION("not_move_assignable result")
     {
@@ -74,7 +74,7 @@ TEST_CASE("atom.core.function_box")
     }
 }
 
-TEST_CASE("atom.core.function_box", "[benchmarks]")
+TEST_CASE("atom_core.function_box", "[benchmarks]")
 {
     //// |-----------------------------------------------------------------------------------------|
     //// | benchmark name                                 samples       iteratorations    estimated    |

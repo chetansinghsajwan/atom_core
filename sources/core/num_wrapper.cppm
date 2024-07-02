@@ -1,4 +1,4 @@
-export module atom.core:core.num_wrapper;
+export module atom_core:core.num_wrapper;
 
 import std;
 import :contracts;

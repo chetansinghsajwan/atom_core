@@ -1,4 +1,4 @@
-export module atom.core:containers.static_array;
+export module atom_core:containers.static_array;
 
 import :core;
 import :types;

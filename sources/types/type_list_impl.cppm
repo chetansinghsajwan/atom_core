@@ -1,4 +1,4 @@
-export module atom.core:types.type_list_impl;
+export module atom_core:types.type_list_impl;
 
 import std;
 import :core.core;

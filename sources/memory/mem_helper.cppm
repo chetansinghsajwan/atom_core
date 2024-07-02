@@ -1,4 +1,4 @@
-export module atom.core:mem_helper;
+export module atom_core:mem_helper;
 
 import std;
 import :core.byte;

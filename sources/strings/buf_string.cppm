@@ -1,4 +1,4 @@
-export module atom.core:strings.buf_string;
+export module atom_core:strings.buf_string;
 
 import :core;
 import :containers;

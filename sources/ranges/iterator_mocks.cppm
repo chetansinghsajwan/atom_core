@@ -1,4 +1,4 @@
-export module atom.core:ranges.iterator_mocks;
+export module atom_core:ranges.iterator_mocks;
 
 import :core;
 

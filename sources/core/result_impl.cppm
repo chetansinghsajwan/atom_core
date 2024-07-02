@@ -1,4 +1,4 @@
-export module atom.core:core.result_impl;
+export module atom_core:core.result_impl;
 
 import :types;
 import :core.core;

@@ -1,4 +1,4 @@
-export module atom.core:containers.buf_array;
+export module atom_core:containers.buf_array;
 
 import :core;
 import :ranges;

@@ -1,15 +1,15 @@
 module;
 #include "catch2/catch_test_macros.hpp"
 
-module atom.core.tests:shared_ptr;
+module atom_core.tests:shared_ptr;
 
-import atom.core;
+import atom_core;
 import :tracked_type;
 
 using namespace atom;
 using namespace atom::tests;
 
-TEST_CASE("atom.core.shared_ptr")
+TEST_CASE("atom_core.shared_ptr")
 {
     SECTION("default constructor")
     {

@@ -1,13 +1,13 @@
 module;
 #include "catch2/catch_test_macros.hpp"
 
-module atom.core.tests:string;
+module atom_core.tests:string;
 
-import atom.core;
+import atom_core;
 
 using namespace atom;
 
-TEST_CASE("atom.core.string")
+TEST_CASE("atom_core.string")
 {
     string str;
 

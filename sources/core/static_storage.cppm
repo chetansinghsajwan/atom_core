@@ -1,4 +1,4 @@
-export module atom.core:core.static_storage;
+export module atom_core:core.static_storage;
 
 import :contracts;
 import :types;

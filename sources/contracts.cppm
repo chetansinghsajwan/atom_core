@@ -1,7 +1,7 @@
 module;
 #include "cpptrace.hpp"
 
-export module atom.core:contracts;
+export module atom_core:contracts;
 
 import std;
 import fmt;

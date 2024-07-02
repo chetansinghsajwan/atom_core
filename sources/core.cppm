@@ -1,4 +1,4 @@
-export module atom.core:core;
+export module atom_core:core;
 
 export import :core.core;
 export import :core.nums;

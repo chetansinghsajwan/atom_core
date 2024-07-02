@@ -1,4 +1,4 @@
-export module atom.core:containers.array_view;
+export module atom_core:containers.array_view;
 
 import std;
 import :core;

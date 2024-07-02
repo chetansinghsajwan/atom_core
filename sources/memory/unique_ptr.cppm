@@ -1,4 +1,4 @@
-export module atom.core:unique_ptr;
+export module atom_core:unique_ptr;
 
 import std;
 import :types;

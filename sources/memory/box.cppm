@@ -1,4 +1,4 @@
-export module atom.core:box;
+export module atom_core:box;
 
 import std;
 import :types;

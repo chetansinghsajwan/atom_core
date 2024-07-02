@@ -1,4 +1,4 @@
-export module atom.core:ranges.range_requirements;
+export module atom_core:ranges.range_requirements;
 
 import std;
 import :types;
