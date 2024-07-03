@@ -123,11 +123,12 @@
             '';
 
             clang_scan_deps_include_paths = [
-                /nix/store/fsb7lmhyy01flrnviwjfz3fgm53w990v-libcxx-18.1.7-dev/include/c++/v1
-                /nix/store/fsb7lmhyy01flrnviwjfz3fgm53w990v-libcxx-18.1.7-dev/include
-                /nix/store/il0vjm4nf1yv4swn0pi5rimh64hf3jrz-compiler-rt-libc-18.1.7-dev/include
-                /nix/store/ip5wiylb41wli3yy33sqibqcj6l1yawl-clang-wrapper-18.1.7/resource-root/include
-                /nix/store/4vgk1rlzdqjnpjicb5qcxjcd4spi7wyw-glibc-2.39-52-dev/include
+                "/nix/store/2ykf9vnwl6s3nvisgd9vpzm74wxabysd-clang-18.1.7-lib/lib/clang/18/include"
+                "/nix/store/fsb7lmhyy01flrnviwjfz3fgm53w990v-libcxx-18.1.7-dev/include/c++/v1"
+                "/nix/store/fsb7lmhyy01flrnviwjfz3fgm53w990v-libcxx-18.1.7-dev/include"
+                "/nix/store/il0vjm4nf1yv4swn0pi5rimh64hf3jrz-compiler-rt-libc-18.1.7-dev/include"
+                "/nix/store/ip5wiylb41wli3yy33sqibqcj6l1yawl-clang-wrapper-18.1.7/resource-root/include"
+                "/nix/store/4vgk1rlzdqjnpjicb5qcxjcd4spi7wyw-glibc-2.39-52-dev/include"
 
                 "${fmt_pkg}/include"
                 "${magic_enum_pkg}/include"
