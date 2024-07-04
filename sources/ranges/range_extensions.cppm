@@ -327,7 +327,7 @@ export namespace atom::ranges
     constexpr auto get_mut_front(range_type& range) -> value_type<range_type>&
         requires is_mut_array_range<range_type>
     {
-        // todo: fix this, this check is giving wrong result in atom.engine.
+        // todo: fix this, this check is giving wrong result in atom_engine.
         contract_debug_expects(not is_empty(range), "range is empty.");
 
         return _impl_type<range_type>::get_front_mut(range);
