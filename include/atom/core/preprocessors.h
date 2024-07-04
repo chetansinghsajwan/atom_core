@@ -144,20 +144,3 @@
 #else
 #    define ATOM_ATTR_NO_UNIQUE_ADDRESS [[no_unique_address]]
 #endif
-
-/// ------------------------------------------------------------------------------------------------
-/// ATOM_CONDITIONAL_FIELD
-/// ------------------------------------------------------------------------------------------------
-#define ATOM_CONDITIONAL_FIELD(...)                                                                \
-    ATOM_ATTR_NO_UNIQUE_ADDRESS                                                                    \
-    std::conditional_t<__VA_ARGS__, bool>
-//     _atom::conditional_field<(Condition), type>
-
-// namespace _atom
-// {
-//     class _empty
-//     {};
-
-//     template <bool cond, typename value_t>
-//     using conditional_field = std::conditional_t<cond, type, _empty>;
-// }

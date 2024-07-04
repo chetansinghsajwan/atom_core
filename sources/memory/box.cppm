@@ -616,8 +616,9 @@ namespace atom
             const std::type_info* type;
             function_ptr<void(void*)> dtor;
 
-            ATOM_CONDITIONAL_FIELD(is_copyable(), function_ptr<void(void*, const void*)>) copy;
-            ATOM_CONDITIONAL_FIELD(is_movable(), function_ptr<void(void*, void*)>) move;
+            type_utils::conditional_type<is_copyable(), function_ptr<void(void*, const void*)>>
+                copy;
+            type_utils::conditional_type<is_movable(), function_ptr<void(void*, void*)>> move;
         };
 
     private:
