@@ -300,7 +300,7 @@ namespace atom::filesystem
             contract_debug_expects(not is_closed(), "the file is closed.");
 
             fmt::print(_file, _convert_format_string_atom_to_fmt<arg_types...>(fmt),
-                _format_arg_wrapper(forward<arg_types>(args))...);
+                format_arg_wrapper(forward<arg_types>(args))...);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -312,7 +312,7 @@ namespace atom::filesystem
             contract_debug_expects(not is_closed(), "the file is closed.");
 
             fmt::println(_file, _convert_format_string_atom_to_fmt<arg_types...>(fmt),
-                _format_arg_wrapper(forward<arg_types>(args))...);
+                format_arg_wrapper(forward<arg_types>(args))...);
         }
 
         /// ----------------------------------------------------------------------------------------

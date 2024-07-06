@@ -19,7 +19,7 @@ export namespace atom::ranges
     ////////////////////////////////////////////////////////////////////////////////////////////
 
     template <typename range_type>
-    using _impl_type = _range_extensions_impl<range_type>;
+    using impl_type = range_extensions_impl<range_type>;
 
     template <typename range_type>
     using value_type = typename range_type::value_type;
@@ -52,7 +52,7 @@ export namespace atom::ranges
     constexpr auto is_empty(const range_type& range) -> bool
         requires is_range<range_type>
     {
-        return _impl_type<range_type>::is_empty(range);
+        return impl_type<range_type>::is_empty(range);
     }
 
     struct is_empty_closure
@@ -80,7 +80,7 @@ export namespace atom::ranges
     constexpr auto is_not_empty(const range_type& range) -> bool
         requires is_range<range_type>
     {
-        return not _impl_type<range_type>::is_empty(range);
+        return not impl_type<range_type>::is_empty(range);
     }
 
     struct is_not_empty_closure
@@ -114,7 +114,7 @@ export namespace atom::ranges
     constexpr auto get_iterator(const range_type& range) -> iterator_type<range_type>
         requires is_range<range_type>
     {
-        return _impl_type<range_type>::get_iterator(range);
+        return impl_type<range_type>::get_iterator(range);
     }
 
     /// ----------------------------------------------------------------------------------------
@@ -124,7 +124,7 @@ export namespace atom::ranges
     constexpr auto get_iterator_end(const range_type& range) -> iterator_end_type<range_type>
         requires is_range<range_type>
     {
-        return _impl_type<range_type>::get_iterator_end(range);
+        return impl_type<range_type>::get_iterator_end(range);
     }
 
     /// ----------------------------------------------------------------------------------------
@@ -140,7 +140,7 @@ export namespace atom::ranges
     {
         contract_expects(is_index_in_range(range, i), "index is out of range.");
 
-        return _impl_type<range_type>::get_iterator_at(range, i);
+        return impl_type<range_type>::get_iterator_at(range, i);
     }
 
     /// ----------------------------------------------------------------------------------------
@@ -150,7 +150,7 @@ export namespace atom::ranges
     constexpr auto get_iterator(range_type& range) -> mut_iterator_type<range_type>
         requires is_mut_range<range_type>
     {
-        return _impl_type<range_type>::get_iterator(range);
+        return impl_type<range_type>::get_iterator(range);
     }
 
     /// ----------------------------------------------------------------------------------------
@@ -160,7 +160,7 @@ export namespace atom::ranges
     constexpr auto get_iterator_end(range_type& range) -> mut_iterator_end_type<range_type>
         requires is_mut_range<range_type>
     {
-        return _impl_type<range_type>::get_iterator_end(range);
+        return impl_type<range_type>::get_iterator_end(range);
     }
 
     /// ----------------------------------------------------------------------------------------
@@ -176,7 +176,7 @@ export namespace atom::ranges
     {
         contract_expects(is_index_in_range(range, i), "index is out of range.");
 
-        return _impl_type<range_type>::get_iterator_at(range, i);
+        return impl_type<range_type>::get_iterator_at(range, i);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////
@@ -192,7 +192,7 @@ export namespace atom::ranges
     constexpr auto get_data(range_type& range) -> value_type<range_type>*
         requires is_mut_array_range<range_type>
     {
-        return _impl_type<range_type>::get_data(range);
+        return impl_type<range_type>::get_data(range);
     }
 
     /// ----------------------------------------------------------------------------------------
@@ -202,7 +202,7 @@ export namespace atom::ranges
     constexpr auto get_data(const range_type& range) -> const value_type<range_type>*
         requires is_array_range<range_type>
     {
-        return _impl_type<range_type>::get_data(range);
+        return impl_type<range_type>::get_data(range);
     }
 
     /// ----------------------------------------------------------------------------------------
@@ -220,7 +220,7 @@ export namespace atom::ranges
     {
         contract_expects(is_index_in_range(range, i), "index is out of range.");
 
-        return _impl_type<range_type>::get_at(range, i);
+        return impl_type<range_type>::get_at(range, i);
     }
 
     /// ----------------------------------------------------------------------------------------
@@ -238,7 +238,7 @@ export namespace atom::ranges
     {
         contract_expects(is_index_in_range(range, i), "index is out of range.");
 
-        return _impl_type<range_type>::get_at(range, i);
+        return impl_type<range_type>::get_at(range, i);
     }
 
     /// ----------------------------------------------------------------------------------------
@@ -254,7 +254,7 @@ export namespace atom::ranges
     {
         contract_debug_expects(not is_empty(range), "range is empty.");
 
-        return _impl_type<range_type>::get_first(range);
+        return impl_type<range_type>::get_first(range);
     }
 
     /// ----------------------------------------------------------------------------------------
@@ -270,7 +270,7 @@ export namespace atom::ranges
     {
         contract_debug_expects(not is_empty(range), "range is empty.");
 
-        return _impl_type<range_type>::get_first(range);
+        return impl_type<range_type>::get_first(range);
     }
 
     struct get_first_closure
@@ -327,7 +327,7 @@ export namespace atom::ranges
     {
         contract_debug_expects(not is_empty(range), "range is empty.");
 
-        return _impl_type<range_type>::get_last(range);
+        return impl_type<range_type>::get_last(range);
     }
 
     /// ----------------------------------------------------------------------------------------
@@ -342,7 +342,7 @@ export namespace atom::ranges
     {
         contract_debug_expects(not is_empty(range), "range is empty.");
 
-        return _impl_type<range_type>::get_last(range);
+        return impl_type<range_type>::get_last(range);
     }
 
     struct get_last_closure
@@ -378,7 +378,7 @@ export namespace atom::ranges
     constexpr auto get_count(const range_type& range) -> usize
         requires is_array_range<range_type>
     {
-        return _impl_type<range_type>::get_count(range);
+        return impl_type<range_type>::get_count(range);
     }
 
     /// ----------------------------------------------------------------------------------------
@@ -388,7 +388,7 @@ export namespace atom::ranges
     constexpr auto get_view(range_type& range, usize from, usize to) -> view_type<range_type>
         requires is_array_range<range_type>
     {
-        return _impl_type<range_type>::get_view(range, from, to);
+        return impl_type<range_type>::get_view(range, from, to);
     }
 
     /// ----------------------------------------------------------------------------------------
@@ -398,7 +398,7 @@ export namespace atom::ranges
     constexpr auto get_view_from(range_type& range, usize from) -> view_type<range_type>
         requires is_array_range<range_type>
     {
-        return _impl_type<range_type>::get_view_from(range, from);
+        return impl_type<range_type>::get_view_from(range, from);
     }
 
     /// ----------------------------------------------------------------------------------------
@@ -408,7 +408,7 @@ export namespace atom::ranges
     constexpr auto get_view_to(range_type& range, usize to) -> view_type<range_type>
         requires is_array_range<range_type>
     {
-        return _impl_type<range_type>::get_view_to(range, to);
+        return impl_type<range_type>::get_view_to(range, to);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////
@@ -421,7 +421,7 @@ export namespace atom::ranges
     constexpr auto is_index_in_range(const range_type& range, usize i) -> bool
         requires is_array_range<range_type>
     {
-        return _impl_type<range_type>::is_index_in_range(range, i);
+        return impl_type<range_type>::is_index_in_range(range, i);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -440,7 +440,7 @@ export namespace atom::ranges
                  and (type_info<value_type<range_type>>::template is_equality_comparable_with<
                      that_value_type>())
     {
-        return _impl_type<range_type>::find_elem(range, value);
+        return impl_type<range_type>::find_elem(range, value);
     }
 
     /// ----------------------------------------------------------------------------------------
@@ -454,7 +454,7 @@ export namespace atom::ranges
             requires is_range<range_type>
         //  and (type_info<function_type>::is_function<bool(const value_type<range_type>&)>)
         {
-            return _impl_type<range_type>::find_if(range, pred);
+            return impl_type<range_type>::find_if(range, pred);
         }
 
         const function_type& pred;
@@ -479,14 +479,14 @@ export namespace atom::ranges
                  and (type_info<value_type<range_type>>::template is_equality_comparable_with<
                      typename that_range_type::value_type>())
     {
-        return _impl_type<range_type>::find_range(range, that_range);
+        return impl_type<range_type>::find_range(range, that_range);
     }
 
     template <typename range_type, typename that_range_type>
     constexpr auto count_any(const range_type& range, const that_range_type& that_range) -> usize
         requires is_range<range_type>
     {
-        return _impl_type<range_type>::count_any(range, that_range);
+        return impl_type<range_type>::count_any(range, that_range);
     }
 
     /// ----------------------------------------------------------------------------------------
@@ -498,7 +498,7 @@ export namespace atom::ranges
                  and (type_info<value_type<range_type>>::template is_equality_comparable_with<
                      that_value_type>())
     {
-        return _impl_type<range_type>::contains(range, value);
+        return impl_type<range_type>::contains(range, value);
     }
 
     /// ----------------------------------------------------------------------------------------
@@ -513,7 +513,7 @@ export namespace atom::ranges
                      and (type_info<value_type<range_type>>::template is_equality_comparable_with<
                          that_value_type>())
         {
-            return _impl_type<range_type>::contains(range, value);
+            return impl_type<range_type>::contains(range, value);
         }
 
         const that_value_type& value;
@@ -539,7 +539,7 @@ export namespace atom::ranges
             requires is_range<range_type>
         //  and (type_info<function_type>::is_function<bool(const value_type<range_type>&)>)
         {
-            return _impl_type<range_type>::contains_if(range, pred);
+            return impl_type<range_type>::contains_if(range, pred);
         }
 
         const function_type& pred;
@@ -564,7 +564,7 @@ export namespace atom::ranges
                  and (type_info<value_type<range_type>>::template is_equality_comparable_with<
                      typename that_range_type::value_type>())
     {
-        return _impl_type<range_type>::contains(range, that_range);
+        return impl_type<range_type>::contains(range, that_range);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -582,7 +582,7 @@ export namespace atom::ranges
                  and (type_info<value_type<range_type>>::template is_equality_comparable_with<
                      typename that_range_type::value_type>())
     {
-        return _impl_type<range_type>::compare(range, that_range);
+        return impl_type<range_type>::compare(range, that_range);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////
@@ -598,7 +598,7 @@ export namespace atom::ranges
     constexpr auto can_get_count(const range_type& range) -> bool
         requires is_range<range_type>
     {
-        return _impl_type<range_type>::can_get_count(range);
+        return impl_type<range_type>::can_get_count(range);
     }
 
     /// ----------------------------------------------------------------------------------------
@@ -608,7 +608,7 @@ export namespace atom::ranges
     constexpr auto count_elems(const range_type& range) -> usize
         requires is_range<range_type>
     {
-        return _impl_type<range_type>::count_elems(range);
+        return impl_type<range_type>::count_elems(range);
     }
 
     /// ----------------------------------------------------------------------------------------
@@ -619,7 +619,7 @@ export namespace atom::ranges
         requires is_mut_range<range_type>
                  and (type_info<value_type<range_type>>::template is_assignable_from<value_type1>())
     {
-        _impl_type<range_type>::write_elems(range, val);
+        impl_type<range_type>::write_elems(range, val);
         return range;
     }
 
@@ -633,7 +633,7 @@ export namespace atom::ranges
         requires is_mut_range<range_type>
                  and (type_info<value_type<range_type>>::template is_assignable_from<value_type1>())
     {
-        _impl_type<range_type>::write_elems_no_optimize(range, val);
+        impl_type<range_type>::write_elems_no_optimize(range, val);
         return range;
     }
 
@@ -646,7 +646,7 @@ export namespace atom::ranges
     constexpr auto shift_fwd(range_type& range, usize steps) -> range_type&
         requires is_mut_range<range_type> and type_info<value_type<range_type>>::is_move_assignable
     {
-        _impl_type<range_type>::shift_fwd(range, steps);
+        impl_type<range_type>::shift_fwd(range, steps);
         return range;
     }
 
@@ -657,7 +657,7 @@ export namespace atom::ranges
     constexpr auto shift_bwd(range_type& range, usize steps) -> range_type&
         requires is_mut_range<range_type> and type_info<value_type<range_type>>::is_move_assignable
     {
-        _impl_type<range_type>::shift_bwd(range, steps);
+        impl_type<range_type>::shift_bwd(range, steps);
         return range;
     }
 
@@ -668,7 +668,7 @@ export namespace atom::ranges
     constexpr auto shift_by(range_type& range, isize steps) -> range_type&
         requires is_mut_range<range_type> and type_info<value_type<range_type>>::is_swappable
     {
-        _impl_type<range_type>::shift_by(range, steps);
+        impl_type<range_type>::shift_by(range, steps);
         return range;
     }
 
@@ -679,7 +679,7 @@ export namespace atom::ranges
     constexpr auto rotate_fwd(range_type& range, usize steps) -> range_type&
         requires is_mut_range<range_type> and type_info<value_type<range_type>>::is_swappable
     {
-        _impl_type<range_type>::rotate_fwd(range, steps);
+        impl_type<range_type>::rotate_fwd(range, steps);
         return range;
     }
 
@@ -690,7 +690,7 @@ export namespace atom::ranges
     constexpr auto rotate_bwd(range_type& range, usize steps) -> range_type&
         requires is_mut_range<range_type> and type_info<value_type<range_type>>::is_swappable
     {
-        _impl_type<range_type>::rotate_bwd(range, steps);
+        impl_type<range_type>::rotate_bwd(range, steps);
         return range;
     }
 
@@ -701,7 +701,7 @@ export namespace atom::ranges
     constexpr auto rotate_by(range_type& range, isize steps) -> range_type&
         requires is_mut_range<range_type> and type_info<value_type<range_type>>::is_swappable
     {
-        _impl_type<range_type>::rotate_by(range, steps);
+        impl_type<range_type>::rotate_by(range, steps);
         return range;
     }
 
@@ -712,7 +712,7 @@ export namespace atom::ranges
     constexpr auto destroy_elems(range_type& range) -> range_type&
         requires is_mut_range<range_type> and type_info<value_type<range_type>>::is_destructible
     {
-        _impl_type<range_type>::destroy_elems(range);
+        impl_type<range_type>::destroy_elems(range);
         return range;
     }
 }
@@ -769,7 +769,7 @@ export namespace atom
                          template is_equality_comparable_with<
                              ranges::value_type<that_range_type>>())
     {
-        return ranges::_impl_type<range_type>::is_eq(range, that_range);
+        return ranges::impl_type<range_type>::is_eq(range, that_range);
     }
 
     /// ----------------------------------------------------------------------------------------
@@ -782,7 +782,7 @@ export namespace atom
                          template is_equality_comparable_with<
                              ranges::value_type<that_range_type>>())
     {
-        return not ranges::_impl_type<range_type>::is_eq(range, that_range);
+        return not ranges::impl_type<range_type>::is_eq(range, that_range);
     }
 
     /// ----------------------------------------------------------------------------------------
@@ -795,7 +795,7 @@ export namespace atom
                  and (type_info<ranges::value_type<range_type>>::
                          template is_equality_comparable_with<that_value_type>())
     {
-        return ranges::_impl_type<range_type>::is_eq(range, ranges::from(that_arr));
+        return ranges::impl_type<range_type>::is_eq(range, ranges::from(that_arr));
     }
 
     /// ----------------------------------------------------------------------------------------
@@ -808,7 +808,7 @@ export namespace atom
                  and (type_info<ranges::value_type<range_type>>::
                          template is_equality_comparable_with<that_value_type>())
     {
-        return not ranges::_impl_type<range_type>::is_eq(range, ranges::from(that_arr));
+        return not ranges::impl_type<range_type>::is_eq(range, ranges::from(that_arr));
     }
 
     template <typename value_type0, typename value_type1>

@@ -5,7 +5,7 @@ import :core;
 import :types;
 import :strings.string_view;
 import :strings.string_format_context;
-import :strings._string_type_id;
+import :strings.string_tag;
 
 namespace atom
 {
@@ -59,7 +59,7 @@ namespace atom
     /// range of `char`.
     /// --------------------------------------------------------------------------------------------
     export template <typename string_type>
-        requires(type_info<string_type>::template is_derived_from<_string_type_id>())
+        requires(type_info<string_type>::template is_derived_from<string_tag>())
     class string_formatter<string_type, string_formatter_level::atom>
         : public string_formatter<fmt::string_view, string_formatter_level::fmt>
     {

@@ -1,4 +1,4 @@
-export module atom_core:strings._format_arg_wrapper;
+export module atom_core:strings.format_arg_wrapper;
 
 import :types;
 
@@ -12,12 +12,12 @@ namespace atom
     /// implementation details.
     /// --------------------------------------------------------------------------------------------
     template <typename value_type>
-    class _format_arg_wrapper
+    class format_arg_wrapper
     {
         static_assert(type_info<value_type>::is_pure());
 
     public:
-        _format_arg_wrapper(const value_type& value)
+        format_arg_wrapper(const value_type& value)
             : value(value)
         {}
 

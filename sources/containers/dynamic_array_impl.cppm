@@ -8,9 +8,9 @@ import :contracts;
 namespace atom
 {
     template <typename in_elem_type, typename in_allocator_type>
-    class _dynamic_array_impl
+    class dynamic_array_impl
     {
-        using this_type = _dynamic_array_impl;
+        using this_type = dynamic_array_impl;
 
     public:
         using value_type = in_elem_type;
@@ -31,18 +31,18 @@ namespace atom
         {};
 
     public:
-        constexpr _dynamic_array_impl()
+        constexpr dynamic_array_impl()
             : _data{ nullptr }
             , _count{ 0 }
             , _capacity{ 0 }
             , _allocator{}
         {}
 
-        constexpr _dynamic_array_impl(copy_tag, const _dynamic_array_impl& that)
+        constexpr dynamic_array_impl(copy_tag, const dynamic_array_impl& that)
             : this_type{ range_tag(), that.get_iterator(), that.get_iterator_end() }
         {}
 
-        constexpr _dynamic_array_impl(move_tag, _dynamic_array_impl& that)
+        constexpr dynamic_array_impl(move_tag, dynamic_array_impl& that)
             : _data{ that._data }
             , _count{ that._count }
             , _capacity{ that._capacity }
@@ -55,14 +55,14 @@ namespace atom
         }
 
         template <typename other_iterator_type, typename other_iterator_end_type>
-        constexpr _dynamic_array_impl(
+        constexpr dynamic_array_impl(
             range_tag, other_iterator_type it, other_iterator_end_type it_end)
-            : _dynamic_array_impl{}
+            : dynamic_array_impl{}
         {
             insert_range_last(move(it), move(it_end));
         }
 
-        constexpr _dynamic_array_impl(create_with_count_type, usize count)
+        constexpr dynamic_array_impl(create_with_count_type, usize count)
             : _count{ count }
             , _capacity{ count }
             , _allocator{}
@@ -70,7 +70,7 @@ namespace atom
             _data = (value_type*)_allocator.alloc(count);
         }
 
-        constexpr _dynamic_array_impl(create_with_count_type, usize count, const value_type& value)
+        constexpr dynamic_array_impl(create_with_count_type, usize count, const value_type& value)
             : _count{ count }
             , _capacity{ count }
             , _allocator{}
@@ -81,7 +81,7 @@ namespace atom
                 _data[i] = value;
         }
 
-        constexpr _dynamic_array_impl(create_with_capacity_type, usize capacity)
+        constexpr dynamic_array_impl(create_with_capacity_type, usize capacity)
             : _count{ 0 }
             , _capacity{ capacity }
             , _allocator{}
@@ -89,7 +89,7 @@ namespace atom
             _data = (value_type*)_allocator.alloc(capacity);
         }
 
-        constexpr ~_dynamic_array_impl()
+        constexpr ~dynamic_array_impl()
         {
             if (_count != 0)
             {

@@ -3,7 +3,7 @@ export module atom_core:strings.string_extensions;
 import std;
 import :core;
 import :ranges;
-import :strings._string_type_id;
+import :strings.string_tag;
 
 namespace atom
 {
@@ -11,7 +11,7 @@ namespace atom
     export using mut_string_iterator = mut_array_iterator<char>;
 
     export template <typename final_type>
-    class string_extensions: public _string_type_id
+    class string_extensions: public string_tag
     {
     private:
         using this_type = string_extensions;

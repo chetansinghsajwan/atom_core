@@ -9,7 +9,7 @@ import :strings.string_format_context;
 import :strings.string_formatter_provider;
 import :strings.string_format_error;
 import :strings.format_string;
-import :strings._format_arg_wrapper;
+import :strings.format_arg_wrapper;
 
 namespace atom
 {
@@ -75,7 +75,7 @@ namespace atom
         {
             fmt::format_to(_wrap_output_type_atom_to_fmt(&out),
                 _convert_format_string_atom_to_fmt<arg_types...>(fmt),
-                _format_arg_wrapper(atom::forward<arg_types>(args))...);
+                format_arg_wrapper(atom::forward<arg_types>(args))...);
         }
         catch (const fmt::format_error& err)
         {

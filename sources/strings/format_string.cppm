@@ -2,7 +2,7 @@ export module atom_core:strings.format_string;
 
 import fmt;
 import :types;
-import :strings._format_arg_wrapper;
+import :strings.format_arg_wrapper;
 import :strings.string_view;
 
 namespace atom
@@ -35,7 +35,7 @@ namespace atom
             : str{ str }
         {
             using fmt_format_string = fmt::format_string<
-                _format_arg_wrapper<typename type_info<arg_types>::pure_type::value_type>...>;
+                format_arg_wrapper<typename type_info<arg_types>::pure_type::value_type>...>;
 
             fmt_format_string check(str);
         }

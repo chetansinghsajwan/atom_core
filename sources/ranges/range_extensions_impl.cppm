@@ -9,7 +9,7 @@ import :ranges.range_requirements;
 namespace atom
 {
     template <typename range_type>
-    class _range_extensions_impl
+    class range_extensions_impl
     {
     protected:
         using _impl_type = range_type;

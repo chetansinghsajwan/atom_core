@@ -4,7 +4,7 @@ import fmt;
 import :types;
 import :strings.string_formatter;
 import :strings.string_format_context;
-import :strings._format_arg_wrapper;
+import :strings.format_arg_wrapper;
 
 namespace atom
 {
@@ -77,7 +77,7 @@ namespace fmt
     /// calls `atom::formatter` implementation for `value_type`.
     /// --------------------------------------------------------------------------------------------
     export template <typename value_type>
-    class formatter<atom::_format_arg_wrapper<value_type>>
+    class formatter<atom::format_arg_wrapper<value_type>>
     {
     public:
         constexpr auto parse(fmt::format_parse_context& fmt_ctx) ->
@@ -88,7 +88,7 @@ namespace fmt
             return fmt_ctx.begin();
         }
 
-        constexpr auto format(atom::_format_arg_wrapper<value_type>& value,
+        constexpr auto format(atom::format_arg_wrapper<value_type>& value,
             fmt::format_context& fmt_ctx) const -> typename fmt::format_context::iterator
         {
             atom::string_format_context ctx(fmt_ctx);

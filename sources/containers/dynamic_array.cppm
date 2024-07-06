@@ -24,7 +24,7 @@ namespace atom
 
     private:
         using this_type = dynamic_array<in_value_type, in_allocator_type>;
-        using _impl_type = _dynamic_array_impl_vector<in_value_type, in_allocator_type>;
+        using _impl_type = dynamic_array_impl_vector<in_value_type, in_allocator_type>;
 
     public:
         using value_type = in_value_type;

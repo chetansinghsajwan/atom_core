@@ -7,9 +7,9 @@ import :ranges;
 namespace atom
 {
     template <typename in_elem_type, typename in_allocator_type>
-    class _dynamic_array_impl_vector
+    class dynamic_array_impl_vector
     {
-        using this_type = _dynamic_array_impl_vector;
+        using this_type = dynamic_array_impl_vector;
 
     public:
         using value_type = in_elem_type;
@@ -30,45 +30,45 @@ namespace atom
         {};
 
     public:
-        constexpr _dynamic_array_impl_vector()
+        constexpr dynamic_array_impl_vector()
             : _vector{}
         {}
 
-        constexpr _dynamic_array_impl_vector(copy_tag, const _dynamic_array_impl_vector& that)
+        constexpr dynamic_array_impl_vector(copy_tag, const dynamic_array_impl_vector& that)
             : _vector{ that._vector }
         {}
 
-        constexpr _dynamic_array_impl_vector(move_tag, _dynamic_array_impl_vector& that)
+        constexpr dynamic_array_impl_vector(move_tag, dynamic_array_impl_vector& that)
             : _vector{ std::move(that._vector) }
         {}
 
         template <typename other_iterator_type, typename other_iterator_end_type>
-        constexpr _dynamic_array_impl_vector(
+        constexpr dynamic_array_impl_vector(
             range_tag, other_iterator_type it, other_iterator_end_type it_end)
             : _vector{ move(it), move(it_end) }
         {}
 
-        constexpr _dynamic_array_impl_vector(
+        constexpr dynamic_array_impl_vector(
             create_from_raw_tag, const value_type* arr, usize count)
             : _vector{ arr, arr + count }
         {}
 
-        constexpr _dynamic_array_impl_vector(create_with_count_type, usize count)
+        constexpr dynamic_array_impl_vector(create_with_count_type, usize count)
             : _vector(count)
         {}
 
-        constexpr _dynamic_array_impl_vector(
+        constexpr dynamic_array_impl_vector(
             create_with_count_type, usize count, const value_type& value)
             : _vector{ count, value }
         {}
 
-        constexpr _dynamic_array_impl_vector(create_with_capacity_type, usize capacity)
+        constexpr dynamic_array_impl_vector(create_with_capacity_type, usize capacity)
             : _vector{}
         {
             _vector.reserve(capacity);
         }
 
-        constexpr ~_dynamic_array_impl_vector() {}
+        constexpr ~dynamic_array_impl_vector() {}
 
     public:
         constexpr auto move_this(this_type& that) -> void
