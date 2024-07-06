@@ -8,32 +8,6 @@ import :core.int_wrapper;
 
 namespace atom
 {
-    export template <typename... value_types>
-    class static_storage_for
-    {
-    private:
-        using value_types_list = type_list<value_types...>;
-
-    public:
-        constexpr auto get_data() -> void*
-        {
-            return _storage;
-        }
-
-        constexpr auto get_data() const -> const void*
-        {
-            return _storage;
-        }
-
-        constexpr auto get_size() const -> usize
-        {
-            return value_types_list::get_max_size();
-        }
-
-    public:
-        alignas(value_types_list::get_max_align()) byte _storage[value_types_list::get_max_size()];
-    };
-
     export template <usize in_size>
     class static_storage
     {
