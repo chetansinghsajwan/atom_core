@@ -24,8 +24,8 @@ namespace atom
 
         constexpr string(create_with_join_tag, const char* str0, const char* str1)
         {
-            insert_range_back(ranges::from(str0));
-            insert_range_back(ranges::from(str1));
+            insert_range_last(ranges::from(str0));
+            insert_range_last(ranges::from(str1));
         }
 
         using base_type::base_type;

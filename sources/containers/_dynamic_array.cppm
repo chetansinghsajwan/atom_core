@@ -59,7 +59,7 @@ namespace atom
             range_tag, other_iterator_type it, other_iterator_end_type it_end)
             : _dynamic_array_impl{}
         {
-            insert_range_back(move(it), move(it_end));
+            insert_range_last(move(it), move(it_end));
         }
 
         constexpr _dynamic_array_impl(create_with_count_type, usize count)
@@ -157,7 +157,7 @@ namespace atom
         constexpr auto assign_range(other_iterator_type it, other_iterator_end_type it_end)
         {
             remove_all();
-            insert_range_back(move(it), move(it_end));
+            insert_range_last(move(it), move(it_end));
         }
 
         template <typename... arg_types>
@@ -181,50 +181,50 @@ namespace atom
         }
 
         template <typename... arg_types>
-        constexpr auto emplace_front(arg_types&&... args)
+        constexpr auto emplace_first(arg_types&&... args)
         {
-            return _emplace_front(forward<arg_types>(args)...);
+            return _emplace_first(forward<arg_types>(args)...);
         }
 
         template <typename other_iterator_type, typename other_iterator_end_type>
-        constexpr auto insert_range_front(
+        constexpr auto insert_range_first(
             other_iterator_type it, other_iterator_end_type it_end) -> usize
         {
             return insert_range_at(0, move(it), move(it_end));
         }
 
         template <typename... arg_types>
-        constexpr auto emplace_back(arg_types&&... args)
+        constexpr auto emplace_last(arg_types&&... args)
         {
             return _emplace_at(_count, forward<arg_types>(args)...);
         }
 
         template <typename other_iterator_type, typename other_iterator_end_type>
-        constexpr auto insert_range_back(
+        constexpr auto insert_range_last(
             other_iterator_type it, other_iterator_end_type it_end) -> usize
         {
             if constexpr (_can_get_range_size<other_iterator_type, other_iterator_end_type>())
             {
                 usize count = _get_range_size(move(it), move(it_end));
-                _insert_range_back_counted(it, count);
+                _insert_range_last_counted(it, count);
                 return count;
             }
             else
             {
-                return _insert_range_back_uncounted(move(it), move(it_end));
+                return _insert_range_last_uncounted(move(it), move(it_end));
             }
         }
 
         constexpr auto remove_at(usize index)
         {
             _destruct_at(index);
-            _shift_range_front(index, 1);
+            _shift_range_first(index, 1);
         }
 
         constexpr auto remove_range(usize begin, usize count)
         {
             _destruct_range(begin, count);
-            _shift_range_front(begin + count, count);
+            _shift_range_first(begin + count, count);
         }
 
         constexpr auto remove_all()
@@ -346,7 +346,7 @@ namespace atom
         }
 
         // todo: improve performance.
-        constexpr auto _ensure_space_front(usize count) -> void
+        constexpr auto _ensure_space_first(usize count) -> void
         {
             _ensure_space_at(0, count);
         }
@@ -357,11 +357,11 @@ namespace atom
             _ensure_cap_for(count);
 
             if (_count != 0)
-                _shift_range_back(index, count);
+                _shift_range_last(index, count);
         }
 
         // todo: improve performance.
-        constexpr auto _ensure_space_back(usize count) -> void
+        constexpr auto _ensure_space_last(usize count) -> void
         {
             _ensure_cap_for(count);
         }
@@ -372,19 +372,19 @@ namespace atom
             usize index, other_iterator_type it, other_iterator_end_type it_end) -> usize
         {
             usize rotate_size = _count - index;
-            _insert_range_back_uncounted(move(it), move(it_end));
-            _rotate_range_back(index, rotate_size);
+            _insert_range_last_uncounted(move(it), move(it_end));
+            _rotate_range_last(index, rotate_size);
 
             return index;
         }
 
         template <typename other_iterator_type>
-        constexpr auto _insert_range_back_counted(other_iterator_type it, usize count)
+        constexpr auto _insert_range_last_counted(other_iterator_type it, usize count)
         {
             if (count == 0)
                 return;
 
-            _ensure_space_back(count);
+            _ensure_space_last(count);
 
             for (usize i = 0; i < count; i++)
             {
@@ -396,13 +396,13 @@ namespace atom
         }
 
         template <typename other_iterator_type, typename other_iterator_end_type>
-        constexpr auto _insert_range_back_uncounted(
+        constexpr auto _insert_range_last_uncounted(
             other_iterator_type it, other_iterator_end_type it_end) -> usize
         {
             usize count = 0;
             while (it != it_end)
             {
-                _ensure_space_back(1);
+                _ensure_space_last(1);
                 _construct_at(_count + count, it.value());
 
                 it.next();
@@ -474,7 +474,7 @@ namespace atom
             std::destroy(begin, end);
         }
 
-        constexpr auto _shift_range_front(usize index, usize steps) -> void
+        constexpr auto _shift_range_first(usize index, usize steps) -> void
         {
             value_type* begin = _data + index;
             value_type* end = _data + _count;
@@ -482,7 +482,7 @@ namespace atom
             std::move(begin, end, dest);
         }
 
-        constexpr auto _shift_range_back(usize index, usize steps) -> void
+        constexpr auto _shift_range_last(usize index, usize steps) -> void
         {
             value_type* begin = _data + index;
             value_type* end = _data + _count;
@@ -490,7 +490,7 @@ namespace atom
             std::move_backward(begin, end, dest);
         }
 
-        constexpr auto _rotate_range_back(usize index, usize count) -> void
+        constexpr auto _rotate_range_last(usize index, usize count) -> void
         {
             value_type* begin = _data;
             value_type* mid = begin + index;

@@ -120,22 +120,22 @@ namespace atom
             return get_mut_data(range)[i];
         }
 
-        static constexpr auto get_front(const range_type& range) -> const value_type&
+        static constexpr auto get_first(const range_type& range) -> const value_type&
         {
             return get_data(range)[0];
         }
 
-        static constexpr auto get_front_mut(range_type& range) -> value_type&
+        static constexpr auto get_first_mut(range_type& range) -> value_type&
         {
             return get_mut_data(range)[0];
         }
 
-        static constexpr auto get_back(const range_type& range) -> const value_type&
+        static constexpr auto get_last(const range_type& range) -> const value_type&
         {
             return get_data(range)[get_count(range) - 1];
         }
 
-        static constexpr auto get_back_mut(range_type& range) -> value_type&
+        static constexpr auto get_last_mut(range_type& range) -> value_type&
         {
             return get_mut_data(range)[get_count(range) - 1];
         }

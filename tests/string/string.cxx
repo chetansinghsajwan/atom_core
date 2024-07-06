@@ -22,11 +22,11 @@ TEST_CASE("atom_core.string")
     //     str.insert_at(str.get_iterator(), 0);
     //     str.insert_at(str.get_iterator(), { 1, 2 });
     //
-    //     str.insert_front(0);
-    //     str.insert_front({ 1, 2 });
+    //     str.insert_first(0);
+    //     str.insert_first({ 1, 2 });
     //
-    //     str.insert_back(0);
-    //     str.insert_back({ 1, 2 });
+    //     str.insert_last(0);
+    //     str.insert_last({ 1, 2 });
     //
     //     str.remove_at(str.get_iterator());
     //     str.remove_range({ str.get_iterator(), str.end() });

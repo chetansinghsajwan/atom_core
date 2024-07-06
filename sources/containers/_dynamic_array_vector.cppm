@@ -139,26 +139,26 @@ namespace atom
         }
 
         template <typename... arg_types>
-        constexpr auto emplace_front(arg_types&&... args)
+        constexpr auto emplace_first(arg_types&&... args)
         {
             emplace_at(0);
         }
 
         template <typename other_iterator_type, typename other_iterator_end_type>
-        constexpr auto insert_range_front(
+        constexpr auto insert_range_first(
             other_iterator_type it, other_iterator_end_type it_end) -> usize
         {
             return insert_range_at(0, move(it), move(it_end));
         }
 
         template <typename... arg_types>
-        constexpr auto emplace_back(arg_types&&... args)
+        constexpr auto emplace_last(arg_types&&... args)
         {
             _vector.emplace_back(forward<arg_types>(args)...);
         }
 
         template <typename other_iterator_type, typename other_iterator_end_type>
-        constexpr auto insert_range_back(
+        constexpr auto insert_range_last(
             other_iterator_type it, other_iterator_end_type it_end) -> usize
         {
             return insert_range_at(get_count(), move(it), move(it_end));
@@ -169,12 +169,12 @@ namespace atom
             _vector.erase(_vector.begin() + index);
         }
 
-        constexpr auto remove_front(usize index)
+        constexpr auto remove_first(usize index)
         {
             _vector.erase(_vector.begin());
         }
 
-        constexpr auto remove_back(usize index)
+        constexpr auto remove_last(usize index)
         {
             if (_vector.size() > 0)
                 _vector.erase(_vector.begin() + _vector.size() - 1);

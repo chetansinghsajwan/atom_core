@@ -115,37 +115,37 @@ namespace atom
         using at_type_info = type_info<typename impl_type::template at_type<i>>;
 
         /// ----------------------------------------------------------------------------------------
-        /// returns the `type_info` of type at the front.
+        /// returns the `type_info` of type at the first.
         /// ----------------------------------------------------------------------------------------
-        static consteval auto get_front() -> decltype(auto)
+        static consteval auto get_first() -> decltype(auto)
             requires(not is_empty())
         {
-            return impl_type::get_front();
+            return impl_type::get_first();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns the `type_info` of type at the front, or `void` if list is empty.
+        /// returns the `type_info` of type at the first, or `void` if list is empty.
         /// ----------------------------------------------------------------------------------------
-        static consteval auto get_front_try() -> decltype(auto)
+        static consteval auto get_first_try() -> decltype(auto)
         {
-            return impl_type::get_front_try();
+            return impl_type::get_first_try();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns the `type_info` of type at the back.
+        /// returns the `type_info` of type at the last.
         /// ----------------------------------------------------------------------------------------
-        static consteval auto get_back() -> decltype(auto)
+        static consteval auto get_last() -> decltype(auto)
             requires(not is_empty())
         {
-            return impl_type::get_back();
+            return impl_type::get_last();
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// returns the `type_info` of type at the back, or `void` if list is empty.
+        /// returns the `type_info` of type at the last, or `void` if list is empty.
         /// ----------------------------------------------------------------------------------------
-        static consteval auto get_back_try() -> decltype(auto)
+        static consteval auto get_last_try() -> decltype(auto)
         {
-            return impl_type::get_back_try();
+            return impl_type::get_last_try();
         }
 
         /// ----------------------------------------------------------------------------------------

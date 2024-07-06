@@ -259,12 +259,12 @@ export namespace atom::ranges
     /// constant.
     /// ----------------------------------------------------------------------------------------
     template <typename range_type>
-    constexpr auto get_front(range_type& range) -> value_type<range_type>&
+    constexpr auto get_first(range_type& range) -> value_type<range_type>&
         requires is_mut_array_range<range_type>
     {
         contract_debug_expects(not is_empty(range), "range is empty.");
 
-        return _impl_type<range_type>::get_mut_front(range);
+        return _impl_type<range_type>::get_first_mut(range);
     }
 
     /// ----------------------------------------------------------------------------------------
@@ -275,15 +275,15 @@ export namespace atom::ranges
     /// constant.
     /// ----------------------------------------------------------------------------------------
     template <typename range_type>
-    constexpr auto get_front(const range_type& range) -> const value_type<range_type>&
+    constexpr auto get_first(const range_type& range) -> const value_type<range_type>&
         requires is_array_range<range_type>
     {
         contract_debug_expects(not is_empty(range), "range is empty.");
 
-        return _impl_type<range_type>::get_front(range);
+        return _impl_type<range_type>::get_first(range);
     }
 
-    struct get_front_closure
+    struct get_first_closure
     {
         template <typename range_type>
         constexpr auto operator|(range_type& range) const -> value_type<range_type>&
@@ -291,7 +291,7 @@ export namespace atom::ranges
         {
             contract_debug_expects(not is_empty(range), "range is empty.");
 
-            return ranges::get_front(range);
+            return ranges::get_first(range);
         }
 
         template <typename range_type>
@@ -300,7 +300,7 @@ export namespace atom::ranges
         {
             contract_debug_expects(not ranges::is_empty(range), "range is empty.");
 
-            return ranges::get_front(range);
+            return ranges::get_first(range);
         }
     };
 
@@ -311,9 +311,9 @@ export namespace atom::ranges
     ///
     /// constant.
     /// ----------------------------------------------------------------------------------------
-    constexpr auto get_front() -> get_front_closure
+    constexpr auto get_first() -> get_first_closure
     {
-        return get_front_closure{};
+        return get_first_closure{};
     }
 
     /// ----------------------------------------------------------------------------------------
@@ -324,16 +324,16 @@ export namespace atom::ranges
     /// constant.
     /// ----------------------------------------------------------------------------------------
     template <typename range_type>
-    constexpr auto get_mut_front(range_type& range) -> value_type<range_type>&
+    constexpr auto get_mut_first(range_type& range) -> value_type<range_type>&
         requires is_mut_array_range<range_type>
     {
         // todo: fix this, this check is giving wrong result in atom_engine.
         contract_debug_expects(not is_empty(range), "range is empty.");
 
-        return _impl_type<range_type>::get_front_mut(range);
+        return _impl_type<range_type>::get_first_mut(range);
     }
 
-    struct get_mut_front_closure
+    struct get_mut_first_closure
     {
         template <typename range_type>
         constexpr auto operator|(range_type& range) const -> value_type<range_type>&
@@ -341,7 +341,7 @@ export namespace atom::ranges
         {
             contract_debug_expects(not is_empty(range), "range is empty.");
 
-            return ranges::get_mut_front(range);
+            return ranges::get_mut_first(range);
         }
 
         template <typename range_type>
@@ -350,7 +350,7 @@ export namespace atom::ranges
         {
             contract_debug_expects(not is_empty(range), "range is empty.");
 
-            return ranges::get_mut_front(range);
+            return ranges::get_mut_first(range);
         }
     };
 
@@ -360,9 +360,9 @@ export namespace atom::ranges
     /// # time complexity
     /// constant.
     /// ----------------------------------------------------------------------------------------
-    constexpr auto get_mut_front() -> get_mut_front_closure
+    constexpr auto get_mut_first() -> get_mut_first_closure
     {
-        return get_mut_front_closure{};
+        return get_mut_first_closure{};
     }
 
     /// ----------------------------------------------------------------------------------------
@@ -372,12 +372,12 @@ export namespace atom::ranges
     /// constant.
     /// ----------------------------------------------------------------------------------------
     template <typename range_type>
-    constexpr auto get_back(range_type& range) -> value_type<range_type>&
+    constexpr auto get_last(range_type& range) -> value_type<range_type>&
         requires is_mut_array_range<range_type>
     {
         contract_debug_expects(not is_empty(range), "range is empty.");
 
-        return _impl_type<range_type>::get_back_mut(range);
+        return _impl_type<range_type>::get_last_mut(range);
     }
 
     /// ----------------------------------------------------------------------------------------
@@ -387,15 +387,15 @@ export namespace atom::ranges
     /// constant.
     /// ----------------------------------------------------------------------------------------
     template <typename range_type>
-    constexpr auto get_back(const range_type& range) -> const value_type<range_type>&
+    constexpr auto get_last(const range_type& range) -> const value_type<range_type>&
         requires is_array_range<range_type>
     {
         contract_debug_expects(not is_empty(range), "range is empty.");
 
-        return _impl_type<range_type>::get_back(range);
+        return _impl_type<range_type>::get_last(range);
     }
 
-    struct get_back_closure
+    struct get_last_closure
     {
         template <typename range_type>
         constexpr auto operator|(range_type& range) const -> value_type<range_type>&
@@ -403,7 +403,7 @@ export namespace atom::ranges
         {
             contract_debug_expects(not is_empty(range), "range is empty.");
 
-            return ranges::get_back(range);
+            return ranges::get_last(range);
         }
 
         template <typename range_type>
@@ -412,11 +412,11 @@ export namespace atom::ranges
         {
             contract_debug_expects(not ranges::is_empty(range), "range is empty.");
 
-            return ranges::get_back(range);
+            return ranges::get_last(range);
         }
     };
 
-    constexpr auto get_back() -> get_back_closure
+    constexpr auto get_last() -> get_last_closure
     {
         return {};
     }
@@ -428,12 +428,12 @@ export namespace atom::ranges
     /// constant.
     /// ----------------------------------------------------------------------------------------
     template <typename range_type>
-    constexpr auto get_mut_back(range_type& range) -> value_type<range_type>&
+    constexpr auto get_mut_last(range_type& range) -> value_type<range_type>&
         requires is_mut_array_range<range_type>
     {
         contract_debug_expects(not is_empty(range), "range is empty.");
 
-        return _impl_type<range_type>::get_mut_back(range);
+        return _impl_type<range_type>::get_mut_last(range);
     }
 
     /// ----------------------------------------------------------------------------------------

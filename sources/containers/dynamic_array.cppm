@@ -286,7 +286,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// constructs element at front with `args`.
+        /// constructs element at first with `args`.
         ///
         /// # parameters
         ///
@@ -299,14 +299,14 @@ namespace atom
         /// all iterators are invalidated.
         /// ----------------------------------------------------------------------------------------
         template <typename... arg_types>
-        constexpr auto emplace_front(arg_types&&... args)
+        constexpr auto emplace_first(arg_types&&... args)
             requires(type_info<value_type>::template is_constructible_from<arg_types...>())
         {
-            _impl.emplace_front(forward<arg_types>(args)...);
+            _impl.emplace_first(forward<arg_types>(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// inserts elements at front. forwards each value returned by `range.get_iterator()` to
+        /// inserts elements at first. forwards each value returned by `range.get_iterator()` to
         /// constructor of element in the arr.
         ///
         /// # parameters
@@ -324,17 +324,17 @@ namespace atom
         /// all iterators are invalidated.
         /// ----------------------------------------------------------------------------------------
         template <typename range_type>
-        constexpr auto insert_range_front(range_type&& range) -> mut_iterator_type
+        constexpr auto insert_range_first(range_type&& range) -> mut_iterator_type
             requires ranges::is_range_of<range_type, value_type>
                      and (type_info<value_type>::template is_constructible_from<
                          typename range_type::value_type>())
         {
-            usize count = _impl.insert_range_front(forward<range_type&&>(range));
+            usize count = _impl.insert_range_first(forward<range_type&&>(range));
             return _impl.get_mut_iterator(count);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// constructs element at back with `args`.
+        /// constructs element at last with `args`.
         ///
         /// # parameters
         ///
@@ -347,10 +347,10 @@ namespace atom
         /// all iterators are invalidated.
         /// ----------------------------------------------------------------------------------------
         template <typename... arg_types>
-        constexpr auto emplace_back(arg_types&&... args)
+        constexpr auto emplace_last(arg_types&&... args)
             requires(type_info<value_type>::template is_constructible_from<arg_types...>())
         {
-            _impl.emplace_back(forward<arg_types>(args)...);
+            _impl.emplace_last(forward<arg_types>(args)...);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -360,11 +360,11 @@ namespace atom
         constexpr auto operator+=(arg_type&& el)
             requires(type_info<value_type>::template is_constructible_from<arg_type>())
         {
-            _impl.emplace_back(forward<arg_type>(el));
+            _impl.emplace_last(forward<arg_type>(el));
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// inserts elements at back. forwards each value returned by `range.get_iterator()` to
+        /// inserts elements at last. forwards each value returned by `range.get_iterator()` to
         /// constructor of element in the arr.
         ///
         /// # parameters
@@ -382,13 +382,13 @@ namespace atom
         /// all iterators are invalidated.
         /// ----------------------------------------------------------------------------------------
         template <typename range_type>
-        constexpr auto insert_range_back(range_type&& range) -> mut_iterator_type
+        constexpr auto insert_range_last(range_type&& range) -> mut_iterator_type
             requires ranges::is_range_of<typename type_info<range_type>::pure_type::value_type,
                          value_type>
                      and (type_info<value_type>::template is_constructible_from<
                          typename type_info<range_type>::pure_type::value_type::value_type>())
         {
-            usize count = _impl.insert_range_back(range.get_iterator(), range.get_iterator_end());
+            usize count = _impl.insert_range_last(range.get_iterator(), range.get_iterator_end());
             return _impl.get_mut_iterator_at(_impl.get_count() - count);
         }
 
@@ -403,7 +403,7 @@ namespace atom
                      and (type_info<value_type>::template is_constructible_from<
                          typename type_info<range_type>::pure_type::value_type::value_type>())
         {
-            _impl.insert_range_back(move(range.get_iterator()), move(range.get_iterator_end()));
+            _impl.insert_range_last(move(range.get_iterator()), move(range.get_iterator_end()));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -456,7 +456,7 @@ namespace atom
         ///
         /// ## explanation
         ///
-        /// after removing `to - from` elements, next elements will be shifted back to index `from`.
+        /// after removing `to - from` elements, next elements will be shifted last to index `from`.
         /// so the next element will be available at index `from`. if the last element of the arr
         /// was also removed, `from` will be equal to [`get_count()`].
         /// ----------------------------------------------------------------------------------------
@@ -497,23 +497,23 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// removes `count` elements from front.
+        /// removes `count` elements from first.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto remove_front(usize count = 1)
+        constexpr auto remove_first(usize count = 1)
         {
             contract_debug_expects(count <= get_count());
 
-            _impl.remove_front(count);
+            _impl.remove_first(count);
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// removes `count` elements from back.
+        /// removes `count` elements from last.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto remove_back(usize count = 1)
+        constexpr auto remove_last(usize count = 1)
         {
             contract_debug_expects(count <= get_count());
 
-            _impl.remove_back(count);
+            _impl.remove_last(count);
         }
 
         /// ----------------------------------------------------------------------------------------

@@ -127,7 +127,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_front() const -> const value_type&
+        constexpr auto get_first() const -> const value_type&
         {
             return *_data;
         }
