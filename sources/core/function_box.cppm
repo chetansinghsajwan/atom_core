@@ -147,7 +147,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         auto invoke_function(arg_types&&... args) -> result_type
         {
-            // return _box.get_mut().invoke(forward<arg_types>(args)...);
+            // return _box.get().invoke(forward<arg_types>(args)...);
             return _box(forward<arg_types>(args)...);
         }
 

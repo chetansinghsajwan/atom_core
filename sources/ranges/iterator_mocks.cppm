@@ -190,7 +190,7 @@ export namespace atom::mock
         auto value() const -> const value_type&;
         auto mut_value() -> value_type&;
         auto get_data() const -> const in_value_type*;
-        auto get_mut_data() -> in_value_type*;
+        auto get_data() -> in_value_type*;
         auto next(usize steps = 1) -> mut_array_iterator&;
         auto prev(usize steps = 1) -> mut_array_iterator&;
         auto operator==(mut_array_iterator end) const -> bool;

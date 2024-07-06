@@ -15,7 +15,7 @@ TEST_CASE("atom_core.string")
     REQUIRE(str.get_data() == nullptr);
 
     REQUIRE(str.get_iterator() == str.get_iterator_end());
-    REQUIRE(str.get_mut_iterator() == str.get_mut_iterator_end());
+    REQUIRE(str.get_iterator() == str.get_iterator_end());
 
     string str0(move(str));
 

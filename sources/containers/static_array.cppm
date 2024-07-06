@@ -53,11 +53,6 @@ namespace atom
             return _arr;
         }
 
-        constexpr auto get_mut_data() -> value_type*
-        {
-            return _arr;
-        }
-
         constexpr auto get_count() const -> usize
         {
             return in_count;
@@ -73,12 +68,12 @@ namespace atom
             return iterator_end_type{ _arr + in_count };
         }
 
-        constexpr auto get_mut_iterator() -> mut_iterator_type
+        constexpr auto get_iterator() -> mut_iterator_type
         {
             return mut_iterator_type{ _arr };
         }
 
-        constexpr auto get_mut_iterator_end() -> mut_iterator_end_type
+        constexpr auto get_iterator_end() -> mut_iterator_end_type
         {
             return mut_iterator_end_type{ _arr + in_count };
         }

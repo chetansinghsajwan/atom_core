@@ -25,7 +25,7 @@ namespace atom
             return _val;
         }
 
-        constexpr auto get_mut() -> value_type&
+        constexpr auto get() -> value_type&
         {
             return _val;
         }
@@ -49,7 +49,7 @@ namespace atom
             return static_cast<const value_type&>(*this);
         }
 
-        constexpr auto get_mut() -> value_type&
+        constexpr auto get() -> value_type&
         {
             return static_cast<value_type&>(*this);
         }
@@ -100,12 +100,12 @@ namespace atom
     public:
         virtual auto destroy(void* ptr) -> void override final
         {
-            destroyer_helper_type::get_mut()(static_cast<value_type*>(ptr));
+            destroyer_helper_type::get()(static_cast<value_type*>(ptr));
         }
 
         virtual auto dealloc_self() -> void override final
         {
-            allocator_helper_type::get_mut().dealloc(this);
+            allocator_helper_type::get().dealloc(this);
         }
     };
 }

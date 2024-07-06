@@ -54,22 +54,22 @@ namespace atom
             return range.get_iterator().next(i);
         }
 
-        static constexpr auto get_mut_iterator(range_type& range) -> mut_iterator_type
+        static constexpr auto get_iterator(range_type& range) -> mut_iterator_type
             requires ranges::is_mut_range<range_type>
         {
-            return range.get_mut_iterator();
+            return range.get_iterator();
         }
 
-        static constexpr auto get_mut_iterator_end(range_type& range) -> mut_iterator_end_type
+        static constexpr auto get_iterator_end(range_type& range) -> mut_iterator_end_type
             requires ranges::is_mut_range<range_type>
         {
-            return range.get_mut_iterator_end();
+            return range.get_iterator_end();
         }
 
-        static constexpr auto get_mut_iterator_at(range_type& range, usize i) -> iterator_type
+        static constexpr auto get_iterator_at(range_type& range, usize i) -> iterator_type
             requires ranges::is_mut_range<range_type>
         {
-            return range.get_mut_iterator().next(i);
+            return range.get_iterator().next(i);
         }
 
         // static constexpr auto begin(const range_type& range) -> std_iterator_type
@@ -86,7 +86,7 @@ namespace atom
         // -> std_mut_iterator_type
         {
             if constexpr (ranges::is_mut_range<range_type>)
-                return get_mut_iterator(range);
+                return get_iterator(range);
             else
                 return get_iterator(range);
         }
@@ -95,7 +95,7 @@ namespace atom
         // -> std_mut_iterator_end_type
         {
             if constexpr (ranges::is_mut_range<range_type>)
-                return get_mut_iterator_end(range);
+                return get_iterator_end(range);
             else
                 return get_iterator_end(range);
         }
@@ -105,9 +105,9 @@ namespace atom
             return range.get_data();
         }
 
-        static constexpr auto get_mut_data(range_type& range) -> value_type*
+        static constexpr auto get_data(range_type& range) -> value_type*
         {
-            return range.get_mut_data();
+            return range.get_data();
         }
 
         static constexpr auto get_at(const range_type& range, usize i) -> const value_type&
@@ -115,9 +115,9 @@ namespace atom
             return get_data(range)[i];
         }
 
-        static constexpr auto get_mut_at(range_type& range, usize i) -> value_type&
+        static constexpr auto get_at(range_type& range, usize i) -> value_type&
         {
-            return get_mut_data(range)[i];
+            return get_data(range)[i];
         }
 
         static constexpr auto get_first(const range_type& range) -> const value_type&
@@ -125,9 +125,9 @@ namespace atom
             return get_data(range)[0];
         }
 
-        static constexpr auto get_first_mut(range_type& range) -> value_type&
+        static constexpr auto get_first(range_type& range) -> value_type&
         {
-            return get_mut_data(range)[0];
+            return get_data(range)[0];
         }
 
         static constexpr auto get_last(const range_type& range) -> const value_type&
@@ -135,9 +135,9 @@ namespace atom
             return get_data(range)[get_count(range) - 1];
         }
 
-        static constexpr auto get_last_mut(range_type& range) -> value_type&
+        static constexpr auto get_last(range_type& range) -> value_type&
         {
-            return get_mut_data(range)[get_count(range) - 1];
+            return get_data(range)[get_count(range) - 1];
         }
 
         static constexpr auto get_count(const range_type& range) -> usize

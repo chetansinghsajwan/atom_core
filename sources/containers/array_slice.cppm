@@ -59,7 +59,7 @@ namespace atom
         template <typename range_type>
         constexpr array_slice(range_type& range)
             requires ranges::is_mut_array_range_of<range_type, value_type>
-            : _data{ range.get_mut_data() }
+            : _data{ range.get_data() }
             , _count{ range.get_count() }
         {}
 
@@ -70,7 +70,7 @@ namespace atom
         constexpr array_slice& operator=(range_type& range)
             requires ranges::is_mut_array_range_of<range_type, value_type>
         {
-            _data = range.get_mut_data();
+            _data = range.get_data();
             _count = range.get_count();
         }
 
@@ -134,14 +134,6 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_mut_data() -> value_type*
-        {
-            return _data;
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        ///
-        /// ----------------------------------------------------------------------------------------
         constexpr auto get_count() const -> usize
         {
             return _count;
@@ -166,7 +158,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_mut_iterator() -> mut_iterator_type
+        constexpr auto get_iterator() -> mut_iterator_type
         {
             return mut_iterator_type(_data);
         }
@@ -174,7 +166,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_mut_iterator_end() -> mut_iterator_end_type
+        constexpr auto get_iterator_end() -> mut_iterator_end_type
         {
             return mut_iterator_end_type(_data + _count);
         }

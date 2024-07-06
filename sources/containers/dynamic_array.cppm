@@ -160,11 +160,11 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_mut_at(usize index) -> value_type&
+        constexpr auto get_at(usize index) -> value_type&
         {
             contract_debug_expects(is_index_in_range(index));
 
-            return _impl.get_mut_at(index);
+            return _impl.get_at(index);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -217,7 +217,7 @@ namespace atom
 
             usize index = get_index_for_iterator(it);
             _impl.emplace_at(index, forward<arg_types>(args)...);
-            return _impl.get_mut_iterator_at(index);
+            return _impl.get_iterator_at(index);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -281,8 +281,7 @@ namespace atom
             usize index = get_index_for_iterator(it);
             usize count =
                 _impl.insert_range_at(index, range.get_iterator(), range.get_iterator_end());
-            return ranges::from(
-                _impl.get_mut_iterator_at(index), _impl.get_mut_iterator_at(index + count));
+            return ranges::from(_impl.get_iterator_at(index), _impl.get_iterator_at(index + count));
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -330,7 +329,7 @@ namespace atom
                          typename range_type::value_type>())
         {
             usize count = _impl.insert_range_first(forward<range_type&&>(range));
-            return _impl.get_mut_iterator(count);
+            return _impl.get_iterator(count);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -389,7 +388,7 @@ namespace atom
                          typename type_info<range_type>::pure_type::value_type::value_type>())
         {
             usize count = _impl.insert_range_last(range.get_iterator(), range.get_iterator_end());
-            return _impl.get_mut_iterator_at(_impl.get_count() - count);
+            return _impl.get_iterator_at(_impl.get_count() - count);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -439,7 +438,7 @@ namespace atom
 
             usize index = get_index_for_iterator(it);
             _impl.remove_at(index);
-            return _impl.get_mut_iterator_at(index);
+            return _impl.get_iterator_at(index);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -493,7 +492,7 @@ namespace atom
             usize from = get_index_for_iterator(it);
             usize to = get_index_for_iterator(it_end);
             _impl.remove_range(from, to);
-            return _impl.get_mut_iterator(from);
+            return _impl.get_iterator(from);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -614,9 +613,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_mut_data() -> value_type*
+        constexpr auto get_data() -> value_type*
         {
-            return _impl.get_mut_data();
+            return _impl.get_data();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -646,17 +645,17 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_mut_iterator() -> mut_iterator_type
+        constexpr auto get_iterator() -> mut_iterator_type
         {
-            return _impl.get_mut_iterator();
+            return _impl.get_iterator();
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_mut_iterator_end() -> mut_iterator_end_type
+        constexpr auto get_iterator_end() -> mut_iterator_end_type
         {
-            return _impl.get_mut_iterator_end();
+            return _impl.get_iterator_end();
         }
 
         /// ----------------------------------------------------------------------------------------

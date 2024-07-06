@@ -81,7 +81,7 @@ namespace atom
             return _vector[index];
         }
 
-        constexpr auto get_mut_at(usize index) -> value_type&
+        constexpr auto get_at(usize index) -> value_type&
         {
             return _vector[index];
         }
@@ -101,17 +101,17 @@ namespace atom
             return iterator_end_type(_vector.data() + _vector.size());
         }
 
-        constexpr auto get_mut_iterator() -> mut_iterator_type
+        constexpr auto get_iterator() -> mut_iterator_type
         {
             return mut_iterator_type(_vector.data());
         }
 
-        constexpr auto get_mut_iterator_at(usize index) -> mut_iterator_type
+        constexpr auto get_iterator_at(usize index) -> mut_iterator_type
         {
             return mut_iterator_type(_vector.data() + index);
         }
 
-        constexpr auto get_mut_iterator_end() -> mut_iterator_end_type
+        constexpr auto get_iterator_end() -> mut_iterator_end_type
         {
             return mut_iterator_end_type(_vector.data() + _vector.size());
         }
@@ -219,7 +219,7 @@ namespace atom
             return _vector.data();
         }
 
-        constexpr auto get_mut_data() -> value_type*
+        constexpr auto get_data() -> value_type*
         {
             return _vector.data();
         }

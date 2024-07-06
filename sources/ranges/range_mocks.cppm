@@ -36,8 +36,8 @@ namespace atom::mock
     public:
         auto get_iterator() const -> iterator_type;
         auto get_iterator_end() const -> iterator_end_type;
-        auto get_mut_iterator() -> mut_iterator_type;
-        auto get_mut_iterator_end() -> mut_iterator_end_type;
+        auto get_iterator() -> mut_iterator_type;
+        auto get_iterator_end() -> mut_iterator_end_type;
     };
 }
 

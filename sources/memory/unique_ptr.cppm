@@ -212,7 +212,7 @@ export namespace atom
         {
             _check_and_destroy_value();
 
-            _set_ptr(that._get_mut_ptr());
+            _set_ptr(that._get_ptr());
             _destroyer = move(that._destroyer);
             that._set_ptr(nullptr);
         }
@@ -228,14 +228,14 @@ export namespace atom
 
         constexpr auto _release_value() -> value_type*
         {
-            value_type* ptr = _get_mut_ptr();
+            value_type* ptr = _get_ptr();
             _set_ptr(nullptr);
             return ptr;
         }
 
         constexpr auto _destroy_value()
         {
-            _destroyer(_get_mut_ptr());
+            _destroyer(_get_ptr());
         }
 
         constexpr auto _get_ptr() const -> const value_type*
@@ -243,7 +243,7 @@ export namespace atom
             return _ptr;
         }
 
-        constexpr auto _get_mut_ptr() -> value_type*
+        constexpr auto _get_ptr() -> value_type*
         {
             return _ptr;
         }

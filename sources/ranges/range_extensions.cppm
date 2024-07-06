@@ -147,20 +147,20 @@ export namespace atom::ranges
     ///
     /// ----------------------------------------------------------------------------------------
     template <typename range_type>
-    constexpr auto get_mut_iterator(range_type& range) -> mut_iterator_type<range_type>
+    constexpr auto get_iterator(range_type& range) -> mut_iterator_type<range_type>
         requires is_mut_range<range_type>
     {
-        return _impl_type<range_type>::get_mut_iterator(range);
+        return _impl_type<range_type>::get_iterator(range);
     }
 
     /// ----------------------------------------------------------------------------------------
     ///
     /// ----------------------------------------------------------------------------------------
     template <typename range_type>
-    constexpr auto get_mut_iterator_end(range_type& range) -> mut_iterator_end_type<range_type>
+    constexpr auto get_iterator_end(range_type& range) -> mut_iterator_end_type<range_type>
         requires is_mut_range<range_type>
     {
-        return _impl_type<range_type>::get_mut_iterator_end(range);
+        return _impl_type<range_type>::get_iterator_end(range);
     }
 
     /// ----------------------------------------------------------------------------------------
@@ -171,12 +171,12 @@ export namespace atom::ranges
     /// - `i`: index of the element to get iterator at.
     /// ----------------------------------------------------------------------------------------
     template <typename range_type>
-    constexpr auto get_mut_iterator_at(range_type& range, usize i) -> mut_iterator_type<range_type>
+    constexpr auto get_iterator_at(range_type& range, usize i) -> mut_iterator_type<range_type>
         requires is_mut_array_range<range_type>
     {
         contract_expects(is_index_in_range(range, i), "index is out of range.");
 
-        return _impl_type<range_type>::get_mut_iterator_at(range, i);
+        return _impl_type<range_type>::get_iterator_at(range, i);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////
@@ -192,7 +192,7 @@ export namespace atom::ranges
     constexpr auto get_data(range_type& range) -> value_type<range_type>*
         requires is_mut_array_range<range_type>
     {
-        return _impl_type<range_type>::get_mut_data(range);
+        return _impl_type<range_type>::get_data(range);
     }
 
     /// ----------------------------------------------------------------------------------------
@@ -203,16 +203,6 @@ export namespace atom::ranges
         requires is_array_range<range_type>
     {
         return _impl_type<range_type>::get_data(range);
-    }
-
-    /// ----------------------------------------------------------------------------------------
-    /// get ptr to underlying arr.
-    /// ----------------------------------------------------------------------------------------
-    template <typename range_type>
-    constexpr auto get_mut_data(range_type& range) -> value_type<range_type>*
-        requires is_mut_array_range<range_type>
-    {
-        return _impl_type<range_type>::get_mut_data(range);
     }
 
     /// ----------------------------------------------------------------------------------------
@@ -243,12 +233,12 @@ export namespace atom::ranges
     /// constant.
     /// ----------------------------------------------------------------------------------------
     template <typename range_type>
-    constexpr auto get_mut_at(range_type& range, usize i) -> value_type<range_type>&
+    constexpr auto get_at(range_type& range, usize i) -> value_type<range_type>&
         requires is_mut_array_range<range_type>
     {
         contract_expects(is_index_in_range(range, i), "index is out of range.");
 
-        return _impl_type<range_type>::get_mut_at(range, i);
+        return _impl_type<range_type>::get_at(range, i);
     }
 
     /// ----------------------------------------------------------------------------------------
@@ -264,7 +254,7 @@ export namespace atom::ranges
     {
         contract_debug_expects(not is_empty(range), "range is empty.");
 
-        return _impl_type<range_type>::get_first_mut(range);
+        return _impl_type<range_type>::get_first(range);
     }
 
     /// ----------------------------------------------------------------------------------------
@@ -295,6 +285,15 @@ export namespace atom::ranges
         }
 
         template <typename range_type>
+        constexpr auto operator|(range_type&& range) const -> value_type<range_type>&
+            requires is_mut_array_range<range_type>
+        {
+            contract_debug_expects(not is_empty(range), "range is empty.");
+
+            return ranges::get_first(range);
+        }
+
+        template <typename range_type>
         constexpr auto operator|(const range_type& range) const -> const value_type<range_type>&
             requires is_array_range<range_type>
         {
@@ -317,55 +316,6 @@ export namespace atom::ranges
     }
 
     /// ----------------------------------------------------------------------------------------
-    /// access first element.
-    ///
-    /// # time complexity
-    ///
-    /// constant.
-    /// ----------------------------------------------------------------------------------------
-    template <typename range_type>
-    constexpr auto get_mut_first(range_type& range) -> value_type<range_type>&
-        requires is_mut_array_range<range_type>
-    {
-        // todo: fix this, this check is giving wrong result in atom_engine.
-        contract_debug_expects(not is_empty(range), "range is empty.");
-
-        return _impl_type<range_type>::get_first_mut(range);
-    }
-
-    struct get_mut_first_closure
-    {
-        template <typename range_type>
-        constexpr auto operator|(range_type& range) const -> value_type<range_type>&
-            requires is_mut_array_range<range_type>
-        {
-            contract_debug_expects(not is_empty(range), "range is empty.");
-
-            return ranges::get_mut_first(range);
-        }
-
-        template <typename range_type>
-        constexpr auto operator|(range_type&& range) const -> value_type<range_type>&
-            requires is_mut_array_range<range_type>
-        {
-            contract_debug_expects(not is_empty(range), "range is empty.");
-
-            return ranges::get_mut_first(range);
-        }
-    };
-
-    /// ----------------------------------------------------------------------------------------
-    /// access first element.
-    ///
-    /// # time complexity
-    /// constant.
-    /// ----------------------------------------------------------------------------------------
-    constexpr auto get_mut_first() -> get_mut_first_closure
-    {
-        return get_mut_first_closure{};
-    }
-
-    /// ----------------------------------------------------------------------------------------
     /// access last element.
     ///
     /// # time complexity
@@ -377,7 +327,7 @@ export namespace atom::ranges
     {
         contract_debug_expects(not is_empty(range), "range is empty.");
 
-        return _impl_type<range_type>::get_last_mut(range);
+        return _impl_type<range_type>::get_last(range);
     }
 
     /// ----------------------------------------------------------------------------------------
@@ -419,21 +369,6 @@ export namespace atom::ranges
     constexpr auto get_last() -> get_last_closure
     {
         return {};
-    }
-
-    /// ----------------------------------------------------------------------------------------
-    /// access last element.
-    ///
-    /// # time complexity
-    /// constant.
-    /// ----------------------------------------------------------------------------------------
-    template <typename range_type>
-    constexpr auto get_mut_last(range_type& range) -> value_type<range_type>&
-        requires is_mut_array_range<range_type>
-    {
-        contract_debug_expects(not is_empty(range), "range is empty.");
-
-        return _impl_type<range_type>::get_mut_last(range);
     }
 
     /// ----------------------------------------------------------------------------------------
@@ -811,7 +746,7 @@ export namespace atom
     constexpr auto begin(range_type& range) -> ranges::mut_iterator_type<range_type>
         requires ranges::is_mut_range<range_type>
     {
-        return range.get_mut_iterator();
+        return range.get_iterator();
     }
 
     /// ----------------------------------------------------------------------------------------
@@ -821,7 +756,7 @@ export namespace atom
     constexpr auto end(range_type& range) -> ranges::mut_iterator_end_type<range_type>
         requires ranges::is_mut_range<range_type>
     {
-        return range.get_mut_iterator_end();
+        return range.get_iterator_end();
     }
 
     /// ----------------------------------------------------------------------------------------

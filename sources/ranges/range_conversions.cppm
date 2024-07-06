@@ -66,12 +66,12 @@ namespace atom::ranges
         {}
 
     public:
-        constexpr auto get_mut_iterator() -> mut_iterator_type
+        constexpr auto get_iterator() -> mut_iterator_type
         {
             return this->get_iterator();
         }
 
-        constexpr auto get_mut_iterator_end() -> mut_iterator_end_type
+        constexpr auto get_iterator_end() -> mut_iterator_end_type
         {
             return this->get_iterator_end();
         }

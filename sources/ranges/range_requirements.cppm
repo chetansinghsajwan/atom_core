@@ -39,9 +39,9 @@ namespace atom::ranges
         typename range_type::mut_iterator_type;
         typename range_type::mut_iterator_end_type;
 
-        { range.get_mut_iterator() } -> std::same_as<typename range_type::mut_iterator_type>;
+        { range.get_iterator() } -> std::same_as<typename range_type::mut_iterator_type>;
         {
-            range.get_mut_iterator_end()
+            range.get_iterator_end()
         } -> std::same_as<typename range_type::mut_iterator_end_type>;
     };
 

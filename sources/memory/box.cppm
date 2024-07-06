@@ -236,11 +236,11 @@ namespace atom
         /// - `type`: type as which to get the object.
         /// ----------------------------------------------------------------------------------------
         template <typename type>
-        constexpr auto get_mut_val() -> type&
+        constexpr auto get_val() -> type&
         {
-            contract_debug_expects(get_mut_mem_as<type>() != nullptr);
+            contract_debug_expects(get_mem_as<type>() != nullptr);
 
-            return *get_mut_mem_as<type>();
+            return *get_mem_as<type>();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -254,7 +254,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// get pointer to stored object.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_mut_mem() -> void*
+        constexpr auto get_mem() -> void*
         {
             return _val.val;
         }
@@ -276,7 +276,7 @@ namespace atom
         /// @tparam type type as which to get the object.
         /// ----------------------------------------------------------------------------------------
         template <typename type>
-        constexpr auto get_mut_mem_as() -> type*
+        constexpr auto get_mem_as() -> type*
         {
             return static_cast<type*>(_val.val);
         }
@@ -659,7 +659,7 @@ namespace atom
             requires(type_info<type>::template is_same_or_derived_from<value_type>)
         {
             _impl.template emplace_val<type>(forward<arg_types>(args)...);
-            return _impl.template get_mut_val_as<type>();
+            return _impl.template get_val_as<type>();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -670,7 +670,7 @@ namespace atom
             requires(type_info<type>::template is_same_or_derived_from<value_type>)
         {
             _impl._set_val(forward<type>(obj));
-            return _impl.template get_mut_val_as<type>();
+            return _impl.template get_val_as<type>();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -694,11 +694,11 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_mut() -> value_type&
+        constexpr auto get() -> value_type&
         {
             contract_debug_expects(has_val(), "value is null.");
 
-            return _impl.template get_mut_val<value_type>();
+            return _impl.template get_val<value_type>();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -714,11 +714,11 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto check_get_mut() -> value_type&
+        constexpr auto check_get() -> value_type&
         {
             expects(has_val(), "value is null.");
 
-            return _impl.get_val_mut();
+            return _impl.get_val();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -737,12 +737,12 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename type>
-        constexpr auto get_mut_as() -> type&
+        constexpr auto get_as() -> type&
             requires(type_info<type>::template is_same_or_derived_from<value_type>)
         {
             contract_debug_expects(has_val(), "value is null.");
 
-            return _impl.template get_mut_val_as<type>();
+            return _impl.template get_val_as<type>();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -761,12 +761,12 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename type>
-        constexpr auto check_get_mut_as() -> type&
+        constexpr auto check_get_as() -> type&
             requires(type_info<type>::template is_same_or_derived_from<value_type>)
         {
             expects(has_val(), "value is null.");
 
-            return _impl.template get_mut_val_as<type>();
+            return _impl.template get_val_as<type>();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -898,7 +898,7 @@ namespace atom
             requires(not type_info<type>::is_void)
         {
             _impl.template emplace_val<type>(forward<arg_types>(args)...);
-            return _impl.template get_mut_val_as<type>();
+            return _impl.template get_val_as<type>();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -908,7 +908,7 @@ namespace atom
         constexpr auto set(type&& obj) -> type&
         {
             _impl._set_val(forward<type>(obj));
-            return _impl.template get_mut_val_as<type>();
+            return _impl.template get_val_as<type>();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -935,11 +935,11 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename type>
-        constexpr auto get_mut_as() -> type&
+        constexpr auto get_as() -> type&
         {
             contract_debug_expects(has_val(), "value is null.");
 
-            return _impl.template get_mut_val_as<type>();
+            return _impl.template get_val_as<type>();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -957,11 +957,11 @@ namespace atom
         ///
         /// ----------------------------------------------------------------------------------------
         template <typename type>
-        constexpr auto check_get_mut_as() -> type&
+        constexpr auto check_get_as() -> type&
         {
             expects(has_val(), "value is null.");
 
-            return _impl.template get_mut_val_as<type>();
+            return _impl.template get_val_as<type>();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -977,7 +977,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto mut_mem() -> void*
         {
-            return _impl.get_mut_mem();
+            return _impl.get_mem();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -997,7 +997,7 @@ namespace atom
         {
             expects(has_val(), "value is null.");
 
-            return _impl.get_mut_mem();
+            return _impl.get_mem();
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -1033,7 +1033,7 @@ namespace atom
         constexpr auto check_mut_mem_as() -> void* requires(not type_info<type>::is_void) {
             expects(has_val(), "value is null.");
 
-            return _impl.template get_mut_mem_as<type>();
+            return _impl.template get_mem_as<type>();
         }
 
         /// ----------------------------------------------------------------------------------------

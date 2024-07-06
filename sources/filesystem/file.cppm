@@ -243,7 +243,7 @@ namespace atom::filesystem
             string content{ create_with_count, size };
 
             std::fseek(_file, 0, SEEK_SET);
-            usize read_count = std::fread(content.get_mut_data(), sizeof(char), size, _file);
+            usize read_count = std::fread(content.get_data(), sizeof(char), size, _file);
 
             contract_asserts(read_count == size);
             return content;
@@ -262,7 +262,7 @@ namespace atom::filesystem
             string content{ create_with_count, size };
 
             std::fseek(_file, current_pos, SEEK_SET);
-            usize read_count = std::fread(content.get_mut_data(), sizeof(char), size, _file);
+            usize read_count = std::fread(content.get_data(), sizeof(char), size, _file);
 
             contract_asserts(read_count == size);
             return content;
