@@ -128,11 +128,11 @@ export namespace atom::ranges
     }
 
     /// ----------------------------------------------------------------------------------------
-    /// get iterator to element at index `i`.
+    /// get iterator to value at index `i`.
     ///
     /// # parameters
     ///
-    /// - `i`: index of the element to get iterator at.
+    /// - `i`: index of the value to get iterator at.
     /// ----------------------------------------------------------------------------------------
     template <typename range_type>
     constexpr auto get_iterator_at(
@@ -165,11 +165,11 @@ export namespace atom::ranges
     }
 
     /// ----------------------------------------------------------------------------------------
-    /// get iterator to element at index `i`.
+    /// get iterator to value at index `i`.
     ///
     /// # parameters
     ///
-    /// - `i`: index of the element to get iterator at.
+    /// - `i`: index of the value to get iterator at.
     /// ----------------------------------------------------------------------------------------
     template <typename range_type>
     constexpr auto get_iterator_at(range_type& range, usize i) -> iterator_type<range_type>
@@ -207,10 +207,10 @@ export namespace atom::ranges
     }
 
     /// ----------------------------------------------------------------------------------------
-    /// access element by index.
+    /// access value by index.
     ///
     /// # parameters
-    /// - `i`: index of element to access.
+    /// - `i`: index of value to access.
     ///
     /// # time complexity
     /// constant.
@@ -225,10 +225,10 @@ export namespace atom::ranges
     }
 
     /// ----------------------------------------------------------------------------------------
-    /// access element by index.
+    /// access value by index.
     ///
     /// # parameters
-    /// - `i`: index of element to access.
+    /// - `i`: index of value to access.
     ///
     /// # time complexity
     /// constant.
@@ -243,7 +243,7 @@ export namespace atom::ranges
     }
 
     /// ----------------------------------------------------------------------------------------
-    /// access first element.
+    /// access first value.
     ///
     /// # time complexity
     ///
@@ -259,7 +259,7 @@ export namespace atom::ranges
     }
 
     /// ----------------------------------------------------------------------------------------
-    /// access first element.
+    /// access first value.
     ///
     /// # time complexity
     ///
@@ -305,7 +305,7 @@ export namespace atom::ranges
     };
 
     /// ----------------------------------------------------------------------------------------
-    /// access first element.
+    /// access first value.
     ///
     /// # time complexity
     ///
@@ -317,7 +317,7 @@ export namespace atom::ranges
     }
 
     /// ----------------------------------------------------------------------------------------
-    /// access last element.
+    /// access last value.
     ///
     /// # time complexity
     /// constant.
@@ -332,7 +332,7 @@ export namespace atom::ranges
     }
 
     /// ----------------------------------------------------------------------------------------
-    /// access last element.
+    /// access last value.
     ///
     /// # time complexity
     /// constant.
@@ -373,7 +373,7 @@ export namespace atom::ranges
     }
 
     /// ----------------------------------------------------------------------------------------
-    /// get count of elements.
+    /// get count of values.
     /// ----------------------------------------------------------------------------------------
     template <typename range_type>
     constexpr auto get_count(const range_type& range) -> usize
@@ -441,7 +441,7 @@ export namespace atom::ranges
                  and (type_info<value_type<range_type>>::template is_equality_comparable_with<
                      that_value_type>())
     {
-        return impl_type<range_type>::find_elem(range, value);
+        return impl_type<range_type>::find_value(range, value);
     }
 
     /// ----------------------------------------------------------------------------------------
@@ -608,20 +608,20 @@ export namespace atom::ranges
     ///
     /// ----------------------------------------------------------------------------------------
     template <typename range_type>
-    constexpr auto count_elems(const range_type& range) -> usize
+    constexpr auto count_values(const range_type& range) -> usize
         requires const_range_concept<range_type>
     {
-        return impl_type<range_type>::count_elems(range);
+        return impl_type<range_type>::count_values(range);
     }
 
     /// ----------------------------------------------------------------------------------------
     ///
     /// ----------------------------------------------------------------------------------------
     template <typename range_type, typename value1_type>
-    constexpr auto write_elems(range_type& range, value1_type& val)
+    constexpr auto write_values(range_type& range, value1_type& val)
         -> range_type& requires(range_concept<range_type>and
                 type_info<value_type<range_type>>::template is_assignable_from<value1_type>()) {
-        impl_type<range_type>::write_elems(range, val);
+        impl_type<range_type>::write_values(range, val);
         return range;
     }
 
@@ -631,10 +631,10 @@ export namespace atom::ranges
     ATOM_PRAGMA_OPTIMIZE_OFF
 
         template <typename range_type, typename value1_type>
-        constexpr auto write_elems_no_optimize(range_type& range, value1_type& val)
+        constexpr auto write_values_no_optimize(range_type& range, value1_type& val)
             -> range_type& requires(range_concept<range_type>and
                     type_info<value_type<range_type>>::template is_assignable_from<value1_type>()) {
-            impl_type<range_type>::write_elems_no_optimize(range, val);
+            impl_type<range_type>::write_values_no_optimize(range, val);
             return range;
         }
 
@@ -710,10 +710,10 @@ export namespace atom::ranges
     ///
     /// ----------------------------------------------------------------------------------------
     template <typename range_type>
-    constexpr auto destroy_elems(range_type& range)
+    constexpr auto destroy_values(range_type& range)
         -> range_type& requires(
             range_concept<range_type>and type_info<value_type<range_type>>::is_destructible()) {
-        impl_type<range_type>::destroy_elems(range);
+        impl_type<range_type>::destroy_values(range);
         return range;
     }
 }

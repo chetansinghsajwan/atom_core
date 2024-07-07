@@ -10,16 +10,16 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    export template <typename in_elem_type>
+    export template <typename in_value_type>
     class array_view
     {
-        static_assert(type_info<in_elem_type>::is_pure());
+        static_assert(type_info<in_value_type>::is_pure());
 
     private:
         using this_type = array_view;
 
     public:
-        using value_type = in_elem_type;
+        using value_type = in_value_type;
         using const_iterator_type = array_iterator<value_type>;
         using const_iterator_end_type = const_iterator_type;
 

@@ -6,11 +6,11 @@ import :ranges;
 
 namespace atom
 {
-    export template <typename in_elem_type, usize in_count>
+    export template <typename in_value_type, usize in_count>
     class static_array
     {
     public:
-        using value_type = in_elem_type;
+        using value_type = in_value_type;
         using const_iterator_type = array_iterator<value_type>;
         using const_iterator_end_type = const_iterator_type;
         using iterator_type = mut_array_iterator<value_type>;

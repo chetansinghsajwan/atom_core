@@ -7,13 +7,13 @@ import :contracts;
 
 namespace atom
 {
-    template <typename in_elem_type, typename in_allocator_type>
+    template <typename in_value_type, typename in_allocator_type>
     class dynamic_array_impl
     {
         using this_type = dynamic_array_impl;
 
     public:
-        using value_type = in_elem_type;
+        using value_type = in_value_type;
         using allocator_type = in_allocator_type;
         using iterator_type = array_iterator<value_type>;
         using iterator_end_type = iterator_type;

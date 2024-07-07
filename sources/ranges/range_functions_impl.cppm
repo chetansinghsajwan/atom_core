@@ -151,7 +151,7 @@ namespace atom
         }
 
         template <typename that_value_type>
-        static constexpr auto find_elem(
+        static constexpr auto find_value(
             const range_type& range, const that_value_type& value) -> const_iterator_type
         {
             auto begin = get_iterator(range);
@@ -200,7 +200,7 @@ namespace atom
             return compare(range, that_range) == 0;
         }
 
-        static constexpr auto count_elems(const range_type& range) -> usize
+        static constexpr auto count_values(const range_type& range) -> usize
         {
             if constexpr (ranges::const_random_access_iterator_pair_concept<const_iterator_type,
                               const_iterator_end_type>)

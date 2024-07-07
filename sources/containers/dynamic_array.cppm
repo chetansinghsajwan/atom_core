@@ -12,7 +12,7 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     /// # to do
     /// - write time complexities after writing implementation.
-    /// - add note for case, where element or elements to be inserted are from this array.
+    /// - add note for case, where value or values to be inserted are from this array.
     /// --------------------------------------------------------------------------------------------
     export template <typename in_value_type, typename in_allocator_type = default_mem_allocator>
     class dynamic_array
@@ -168,12 +168,12 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// constructs element at index `index` with `args`.
+        /// constructs value at index `index` with `args`.
         ///
         /// # parameters
         ///
-        /// - `index`: index to insert element at.
-        /// - `args...`: args to construct element with.
+        /// - `index`: index to insert value at.
+        /// - `args...`: args to construct value with.
         ///
         /// # time complexity
         ///
@@ -191,16 +191,16 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// constructs element at pos `it` with `args`.
+        /// constructs value at pos `it` with `args`.
         ///
         /// # parameters
         ///
-        /// - `it`: pos to insert element at.
-        /// - `args...`: args to construct element with.
+        /// - `it`: pos to insert value at.
+        /// - `args...`: args to construct value with.
         ///
         /// # returns
         ///
-        /// [`iterator_type`] to element inserted.
+        /// [`iterator_type`] to value inserted.
         ///
         /// # time complexity
         ///
@@ -221,17 +221,17 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// inserts elements at index `index`. forwards each value returned by `range.get_iterator()` to
-        /// constructor of element in the arr.
+        /// inserts values at index `index`. forwards each value returned by `range.get_iterator()` to
+        /// constructor of value in the arr.
         ///
         /// # parameters
         ///
-        /// - `index`: index to insert elements at.
-        /// - `range`: range of elements to insert.
+        /// - `index`: index to insert values at.
+        /// - `range`: range of values to insert.
         ///
         /// # returns
         ///
-        /// count of elements inserted.
+        /// count of values inserted.
         ///
         /// # time complexity
         ///
@@ -251,17 +251,17 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// inserts elements at pos `it`. forwards each value returned by `range.get_iterator()` to
-        /// constructor of element in the arr.
+        /// inserts values at pos `it`. forwards each value returned by `range.get_iterator()` to
+        /// constructor of value in the arr.
         ///
         /// # parameters
         ///
-        /// - `it`: pos to insert elements at.
-        /// - `range`: range of elements to insert.
+        /// - `it`: pos to insert values at.
+        /// - `range`: range of values to insert.
         ///
         /// # returns
         ///
-        /// [`mut_array_range`] of elements inserted.
+        /// [`mut_array_range`] of values inserted.
         ///
         /// # time complexity
         ///
@@ -285,11 +285,11 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// constructs element at first with `args`.
+        /// constructs value at first with `args`.
         ///
         /// # parameters
         ///
-        /// - `args...`: args to construct element with.
+        /// - `args...`: args to construct value with.
         ///
         /// # time complexity
         ///
@@ -305,16 +305,16 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// inserts elements at first. forwards each value returned by `range.get_iterator()` to
-        /// constructor of element in the arr.
+        /// inserts values at first. forwards each value returned by `range.get_iterator()` to
+        /// constructor of value in the arr.
         ///
         /// # parameters
         ///
-        /// - `range`: range of elements to insert.
+        /// - `range`: range of values to insert.
         ///
         /// # returns
         ///
-        /// [`iterator_type`] to past the last inserted element.
+        /// [`iterator_type`] to past the last inserted value.
         ///
         /// # time complexity
         ///
@@ -333,11 +333,11 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// constructs element at last with `args`.
+        /// constructs value at last with `args`.
         ///
         /// # parameters
         ///
-        /// - `args...`: args to construct element with.
+        /// - `args...`: args to construct value with.
         ///
         /// # time complexity
         ///
@@ -363,16 +363,16 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// inserts elements at last. forwards each value returned by `range.get_iterator()` to
-        /// constructor of element in the arr.
+        /// inserts values at last. forwards each value returned by `range.get_iterator()` to
+        /// constructor of value in the arr.
         ///
         /// # parameters
         ///
-        /// - `range`: range of elements to insert.
+        /// - `range`: range of values to insert.
         ///
         /// # returns
         ///
-        /// [`iterator_type`] to the first inserted element.
+        /// [`iterator_type`] to the first inserted value.
         ///
         /// # time complexity
         ///
@@ -393,7 +393,7 @@ namespace atom
 
         /// ----------------------------------------------------------------------------------------
         /// # to do:
-        /// - what happens when the elem type accepts range as parameter?
+        /// - what happens when the value type accepts range as parameter?
         /// ----------------------------------------------------------------------------------------
         template <typename range_type>
         constexpr auto operator+=(range_type&& range)
@@ -406,11 +406,11 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// removes element at index `index`.
+        /// removes value at index `index`.
         ///
         /// # parameters
         ///
-        /// - `index`: index to remove element at.
+        /// - `index`: index to remove value at.
         /// ----------------------------------------------------------------------------------------
         constexpr auto remove_at(usize index)
         {
@@ -420,15 +420,15 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// removes element at pos `it`.
+        /// removes value at pos `it`.
         ///
         /// # parameters
         ///
-        /// - `it`: pos to remove element at.
+        /// - `it`: pos to remove value at.
         ///
         /// # returns
         ///
-        /// [iterator_type] to next element. if `it` was pointing to the last element, returns
+        /// [iterator_type] to next value. if `it` was pointing to the last value, returns
         /// [`get_iterator_end()`].
         /// ----------------------------------------------------------------------------------------
         constexpr auto remove_at(const_iterator_type it) -> iterator_type
@@ -442,12 +442,12 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// removes elements in range [[`from`, `to`]].
+        /// removes values in range [[`from`, `to`]].
         ///
         /// # parameters
         ///
-        /// - `from`: start of range to remove elements at.
-        /// - `to`: end of range to remove elements at.
+        /// - `from`: start of range to remove values at.
+        /// - `to`: end of range to remove values at.
         ///
         /// # returns
         ///
@@ -455,8 +455,8 @@ namespace atom
         ///
         /// ## explanation
         ///
-        /// after removing `to - from` elements, next elements will be shifted last to index `from`.
-        /// so the next element will be available at index `from`. if the last element of the arr
+        /// after removing `to - from` values, next values will be shifted last to index `from`.
+        /// so the next value will be available at index `from`. if the last value of the arr
         /// was also removed, `from` will be equal to [`get_count()`].
         /// ----------------------------------------------------------------------------------------
         constexpr auto remove_range(usize from, usize to) -> usize
@@ -469,17 +469,17 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// removes elements in range represented by `range`.
+        /// removes values in range represented by `range`.
         ///
         /// # parameters
         ///
-        /// - `it`: start of range to remove elements at.
-        /// - `it_end`: end of range to remove elements at.
+        /// - `it`: start of range to remove values at.
+        /// - `it_end`: end of range to remove values at.
         ///
         /// # returns
         ///
-        /// [`iterator_type`] to next element of the last removed element. if the last removed element
-        /// was also the last element of the arr, returns [`get_iterator_end()`].
+        /// [`iterator_type`] to next value of the last removed value. if the last removed value
+        /// was also the last value of the arr, returns [`get_iterator_end()`].
         /// ----------------------------------------------------------------------------------------
         constexpr auto remove_range(
             const_iterator_type it, const_iterator_type it_end) -> iterator_type
@@ -497,7 +497,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// removes `count` elements from first.
+        /// removes `count` values from first.
         /// ----------------------------------------------------------------------------------------
         constexpr auto remove_first(usize count = 1)
         {
@@ -507,7 +507,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// removes `count` elements from last.
+        /// removes `count` values from last.
         /// ----------------------------------------------------------------------------------------
         constexpr auto remove_last(usize count = 1)
         {
@@ -593,7 +593,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// removes all elements.
+        /// removes all values.
         ///
         /// # note
         /// - does not free storage.
@@ -660,7 +660,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// reserves memory for `count` elements. if there is already enough memory reserved,
+        /// reserves memory for `count` values. if there is already enough memory reserved,
         /// does nothing.
         /// ----------------------------------------------------------------------------------------
         constexpr auto reserve(usize count)
@@ -669,7 +669,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// reserves memory for `count` count more elements.
+        /// reserves memory for `count` count more values.
         /// ----------------------------------------------------------------------------------------
         constexpr auto reserve_more(usize count)
         {
@@ -685,7 +685,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// total count of places, with elements and reserved.
+        /// total count of places, with values and reserved.
         /// ----------------------------------------------------------------------------------------
         constexpr auto get_capacity() const -> usize
         {
@@ -693,7 +693,7 @@ namespace atom
         }
 
         /// ----------------------------------------------------------------------------------------
-        /// count of places reserved for elements.
+        /// count of places reserved for values.
         /// ----------------------------------------------------------------------------------------
         constexpr auto reserved_count() const -> usize
         {
