@@ -1,12 +1,12 @@
-export module atom_core:ranges.range_extensions;
+export module atom_core:ranges.range_functions;
 
 import :core;
 import :types;
 import :contracts;
-import :ranges.range_extensions_impl;
-import :ranges.iterator_requirements;
-import :ranges.range_requirements;
+import :ranges.iterator_concepts;
+import :ranges.range_concepts;
 import :ranges.range_conversions;
+import :ranges.range_functions_impl;
 
 #include "atom/core/preprocessors.h"
 
@@ -19,7 +19,7 @@ export namespace atom::ranges
     ////////////////////////////////////////////////////////////////////////////////////////////
 
     template <typename range_type>
-    using impl_type = range_extensions_impl<range_type>;
+    using impl_type = range_functions_impl<range_type>;
 
     template <typename range_type>
     using value_type = typename range_type::value_type;

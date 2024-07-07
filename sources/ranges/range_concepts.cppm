@@ -1,8 +1,8 @@
-export module atom_core:ranges.range_requirements;
+export module atom_core:ranges.range_concepts;
 
 import std;
 import :types;
-import :ranges.iterator_requirements;
+import :ranges.iterator_concepts;
 
 namespace atom::ranges
 {

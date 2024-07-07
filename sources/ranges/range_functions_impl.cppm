@@ -1,15 +1,15 @@
-export module atom_core:ranges.range_extensions_impl;
+export module atom_core:ranges.range_functions_impl;
 
 import std;
 import :core;
 import :types;
-import :ranges.iterator_requirements;
-import :ranges.range_requirements;
+import :ranges.iterator_concepts;
+import :ranges.range_concepts;
 
 namespace atom
 {
     template <typename range_type>
-    class range_extensions_impl
+    class range_functions_impl
     {
     protected:
         using _impl_type = range_type;

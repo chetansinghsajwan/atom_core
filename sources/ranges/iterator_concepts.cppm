@@ -1,4 +1,4 @@
-export module atom_core:ranges.iterator_requirements;
+export module atom_core:ranges.iterator_concepts;
 
 import std;
 import :core;

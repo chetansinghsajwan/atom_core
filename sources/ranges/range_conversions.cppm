@@ -3,8 +3,8 @@ export module atom_core:ranges.range_conversions;
 import std;
 import :core;
 import :ranges.array_iterator;
-import :ranges.iterator_requirements;
-import :ranges.range_requirements;
+import :ranges.iterator_concepts;
+import :ranges.range_concepts;
 
 namespace atom::ranges
 {

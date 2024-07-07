@@ -3,7 +3,7 @@ export module atom_core:ranges.array_iterator;
 import std;
 import :core;
 import :types;
-import :ranges.iterator_requirements;
+import :ranges.iterator_concepts;
 
 namespace atom
 {
