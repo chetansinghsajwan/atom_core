@@ -25,31 +25,17 @@ namespace atom
 
     public:
         /// ----------------------------------------------------------------------------------------
-        /// # default constructor
+        ///
         /// ----------------------------------------------------------------------------------------
         constexpr array_view()
             : _data{ nullptr }
             , _count{ 0 }
         {}
 
-        /// ----------------------------------------------------------------------------------------
-        /// # trivial copy constructor
-        /// ----------------------------------------------------------------------------------------
         constexpr array_view(const this_type& that) = default;
-
-        /// ----------------------------------------------------------------------------------------
-        /// # trivial copy operator
-        /// ----------------------------------------------------------------------------------------
         constexpr array_view& operator=(const this_type& that) = default;
 
-        /// ----------------------------------------------------------------------------------------
-        /// # trivial move constructor
-        /// ----------------------------------------------------------------------------------------
         constexpr array_view(this_type&& that) = default;
-
-        /// ----------------------------------------------------------------------------------------
-        /// # trivial move operator
-        /// ----------------------------------------------------------------------------------------
         constexpr array_view& operator=(this_type&& that) = default;
 
         /// ----------------------------------------------------------------------------------------
@@ -65,9 +51,9 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename range_type>
         constexpr array_view(const range_type& range)
-            requires ranges::const_array_range_concept<range_type, value_type>
-            : _data{ range.get_data() }
-            , _count{ range.get_count() }
+            requires(ranges::const_array_range_concept<range_type, value_type>)
+            : _data{ ranges::get_data(range) }
+            , _count{ ranges::get_count(range) }
         {}
 
         /// ----------------------------------------------------------------------------------------
@@ -75,10 +61,10 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename range_type>
         constexpr array_view& operator=(const range_type& range)
-            requires ranges::const_array_range_concept<range_type, value_type>
+            requires(ranges::const_array_range_concept<range_type, value_type>)
         {
-            _data = range.get_data();
-            _count = range.get_count();
+            _data = ranges::get_data(range);
+            _count = ranges::get_count(range);
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -153,7 +139,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto get_iterator() const -> const_iterator_type
         {
-            return const_iterator_type(_data);
+            return const_iterator_type{ _data };
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -161,7 +147,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         constexpr auto get_iterator_end() const -> const_iterator_end_type
         {
-            return const_iterator_end_type(_data + _count);
+            return const_iterator_end_type{ _data + _count };
         }
 
         /// ----------------------------------------------------------------------------------------

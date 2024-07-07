@@ -14,7 +14,7 @@
     }
 
 /// ------------------------------------------------------------------------------------------------
-/// General utility macro
+/// general utility macros
 /// ------------------------------------------------------------------------------------------------
 #define ATOM_CAT(A, B) A##B
 #define ATOM_EXPAND(...) __VA_ARGS__
@@ -37,10 +37,9 @@
 #define ATOM_ARG_N(...) _PP_ARG_GET_N(__VA_ARGS__, _ATOM_RSEQ_N())
 
 /// ------------------------------------------------------------------------------------------------
-/// Macro overloading feature support.
+/// macro overloading feature support.
 ///
-/// # Example
-///
+/// \example
 /// ```cpp
 ///
 ///     #define FOO(...)       ATOM_OVERLOAD(FOO, __VA_ARGS__)
@@ -55,7 +54,7 @@
 #define ATOM_OVERLOAD(NAME, ...) _ATOM_OVERLOAD_SELECT(NAME, ATOM_ARG_N(__VA_ARGS__))(__VA_ARGS__)
 
 /// ------------------------------------------------------------------------------------------------
-/// Mode
+/// mode
 /// ------------------------------------------------------------------------------------------------
 #if defined(NDEBUG)
 #    define ATOM_MODE_RELEASE
@@ -64,7 +63,7 @@
 #endif
 
 /// ------------------------------------------------------------------------------------------------
-/// Platform
+/// platform
 /// ------------------------------------------------------------------------------------------------
 #if defined(_WIN32)
 #    define ATOM_PLATFORM_WIN
@@ -75,7 +74,7 @@
 #endif
 
 /// ------------------------------------------------------------------------------------------------
-/// Compiler
+/// compiler
 /// ------------------------------------------------------------------------------------------------
 #if defined(__clang__)
 #    define ATOM_COMPILER_CLANG
@@ -112,9 +111,9 @@
 #endif
 
 /// ------------------------------------------------------------------------------------------------
-/// Optimization handling macros.
+/// optimization handling macros.
 ///
-/// # Macros
+/// \par macros
 /// - `ATOM_PRAGMA_OPTIMIZE_OFF`: Disables all optimization until [`ATOM_PRAGMA_OPTIMIZE_ON`] is
 ///   encountered.
 /// - `ATOM_PRAGMA_OPTIMIZE_ON`: Enables optimizations disabled by [`ATOM_PRAGMA_OPTIMIZE_OFF`].
@@ -131,7 +130,7 @@
 #endif
 
 /// ------------------------------------------------------------------------------------------------
-/// ATOM_ATTR_NO_UNIQUE_ADDRESS
+/// `ATOM_ATTR_NO_UNIQUE_ADDRESS`
 /// ------------------------------------------------------------------------------------------------
 #if defined(ATOM_COMPILER_CLANG)
 #    define ATOM_ATTR_NO_UNIQUE_ADDRESS
