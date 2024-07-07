@@ -18,56 +18,56 @@ namespace atom
         template <typename in_range_type>
         struct _mut_aliases_resolver
         {
-            using mut_iterator_type = type_utils::empty_type;
-            using mut_iterator_end_type = type_utils::empty_type;
+            using iterator_type = type_utils::empty_type;
+            using iterator_end_type = type_utils::empty_type;
         };
 
         template <typename in_range_type>
-            requires ranges::is_mut_range<in_range_type>
+            requires ranges::range_concept<in_range_type>
         struct _mut_aliases_resolver<in_range_type>
         {
-            using mut_iterator_type = typename in_range_type::mut_iterator_type;
-            using mut_iterator_end_type = typename in_range_type::mut_iterator_end_type;
+            using iterator_type = typename in_range_type::iterator_type;
+            using iterator_end_type = typename in_range_type::iterator_end_type;
         };
 
     public:
         using value_type = typename _impl_type::value_type;
-        using iterator_type = typename _impl_type::iterator_type;
-        using iterator_end_type = typename _impl_type::iterator_end_type;
-        using mut_iterator_type = typename _mut_aliases_resolver<_impl_type>::mut_iterator_type;
-        using mut_iterator_end_type =
-            typename _mut_aliases_resolver<_impl_type>::mut_iterator_end_type;
+        using const_iterator_type = typename _impl_type::const_iterator_type;
+        using const_iterator_end_type = typename _impl_type::const_iterator_end_type;
+        using iterator_type = typename _mut_aliases_resolver<_impl_type>::iterator_type;
+        using iterator_end_type = typename _mut_aliases_resolver<_impl_type>::iterator_end_type;
 
     public:
-        static constexpr auto get_iterator(const range_type& range) -> iterator_type
+        static constexpr auto get_iterator(const range_type& range) -> const_iterator_type
         {
             return range.get_iterator();
         }
 
-        static constexpr auto get_iterator_end(const range_type& range) -> iterator_end_type
+        static constexpr auto get_iterator_end(const range_type& range) -> const_iterator_end_type
         {
             return range.get_iterator_end();
         }
 
-        static constexpr auto get_iterator_at(const range_type& range, usize i) -> iterator_type
+        static constexpr auto get_iterator_at(
+            const range_type& range, usize i) -> const_iterator_type
         {
             return range.get_iterator().next(i);
         }
 
-        static constexpr auto get_iterator(range_type& range) -> mut_iterator_type
-            requires ranges::is_mut_range<range_type>
+        static constexpr auto get_iterator(range_type& range) -> iterator_type
+            requires ranges::range_concept<range_type>
         {
             return range.get_iterator();
         }
 
-        static constexpr auto get_iterator_end(range_type& range) -> mut_iterator_end_type
-            requires ranges::is_mut_range<range_type>
+        static constexpr auto get_iterator_end(range_type& range) -> iterator_end_type
+            requires ranges::range_concept<range_type>
         {
             return range.get_iterator_end();
         }
 
-        static constexpr auto get_iterator_at(range_type& range, usize i) -> iterator_type
-            requires ranges::is_mut_range<range_type>
+        static constexpr auto get_iterator_at(range_type& range, usize i) -> const_iterator_type
+            requires ranges::range_concept<range_type>
         {
             return range.get_iterator().next(i);
         }
@@ -85,7 +85,7 @@ namespace atom
         static constexpr auto begin(range_type& range)
         // -> std_mut_iterator_type
         {
-            if constexpr (ranges::is_mut_range<range_type>)
+            if constexpr (ranges::range_concept<range_type>)
                 return get_iterator(range);
             else
                 return get_iterator(range);
@@ -94,7 +94,7 @@ namespace atom
         static constexpr auto end(range_type& range)
         // -> std_mut_iterator_end_type
         {
-            if constexpr (ranges::is_mut_range<range_type>)
+            if constexpr (ranges::range_concept<range_type>)
                 return get_iterator_end(range);
             else
                 return get_iterator_end(range);
@@ -152,7 +152,7 @@ namespace atom
 
         template <typename that_value_type>
         static constexpr auto find_elem(
-            const range_type& range, const that_value_type& value) -> iterator_type
+            const range_type& range, const that_value_type& value) -> const_iterator_type
         {
             auto begin = get_iterator(range);
             auto end = get_iterator_end(range);
@@ -162,7 +162,7 @@ namespace atom
 
         template <typename function_type>
         static constexpr auto find_if(
-            const range_type& range, const function_type& pred) -> iterator_type
+            const range_type& range, const function_type& pred) -> const_iterator_type
         {
             auto begin = get_iterator(range);
             auto end = get_iterator_end(range);
@@ -172,7 +172,7 @@ namespace atom
 
         template <typename that_range_type>
         static constexpr auto find_range(
-            const range_type& range, const that_range_type& that_range) -> iterator_type
+            const range_type& range, const that_range_type& that_range) -> const_iterator_type
         {
             auto this_begin = get_iterator(range);
             auto this_end = get_iterator_end(range);
@@ -202,7 +202,8 @@ namespace atom
 
         static constexpr auto count_elems(const range_type& range) -> usize
         {
-            if constexpr (ranges::is_random_access_iterator_pair<iterator_type, iterator_end_type>)
+            if constexpr (ranges::const_random_access_iterator_pair_concept<const_iterator_type,
+                              const_iterator_end_type>)
             {
                 return get_iterator_end(range) - get_iterator(range);
             }

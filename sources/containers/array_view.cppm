@@ -20,8 +20,8 @@ namespace atom
 
     public:
         using value_type = in_elem_type;
-        using iterator_type = array_iterator<value_type>;
-        using iterator_end_type = iterator_type;
+        using const_iterator_type = array_iterator<value_type>;
+        using const_iterator_end_type = const_iterator_type;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -65,7 +65,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename range_type>
         constexpr array_view(const range_type& range)
-            requires ranges::is_array_range_of<range_type, value_type>
+            requires ranges::const_array_range_concept<range_type, value_type>
             : _data{ range.get_data() }
             , _count{ range.get_count() }
         {}
@@ -75,7 +75,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         template <typename range_type>
         constexpr array_view& operator=(const range_type& range)
-            requires ranges::is_array_range_of<range_type, value_type>
+            requires ranges::const_array_range_concept<range_type, value_type>
         {
             _data = range.get_data();
             _count = range.get_count();
@@ -151,17 +151,17 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_iterator() const -> iterator_type
+        constexpr auto get_iterator() const -> const_iterator_type
         {
-            return iterator_type(_data);
+            return const_iterator_type(_data);
         }
 
         /// ----------------------------------------------------------------------------------------
         ///
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_iterator_end() const -> iterator_end_type
+        constexpr auto get_iterator_end() const -> const_iterator_end_type
         {
-            return iterator_end_type(_data + _count);
+            return const_iterator_end_type(_data + _count);
         }
 
         /// ----------------------------------------------------------------------------------------

@@ -62,7 +62,7 @@ namespace atom
 
         template <typename range_type>
         auto write(const range_type& range) -> void
-            requires(ranges::is_range_of<range_type, char>)
+            requires(ranges::range_concept<range_type, char>)
         {
             for (char ch : range)
             {

@@ -508,7 +508,7 @@ namespace atom
         template <typename other_iterator_type, typename other_iterator_end_type>
         static constexpr auto _can_get_range_size() -> bool
         {
-            return ranges::is_unidirectional_iterator_pair<other_iterator_type,
+            return ranges::const_unidirectional_iterator_pair_concept<other_iterator_type,
                 other_iterator_end_type>;
         }
 
@@ -516,7 +516,7 @@ namespace atom
         static constexpr auto _get_range_size(
             other_iterator_type it, other_iterator_end_type it_end) -> usize
         {
-            if constexpr (ranges::is_random_access_iterator_pair<other_iterator_type,
+            if constexpr (ranges::const_random_access_iterator_pair_concept<other_iterator_type,
                               other_iterator_end_type>)
             {
                 return it - it_end;

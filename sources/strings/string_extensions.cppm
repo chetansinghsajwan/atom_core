@@ -7,8 +7,8 @@ import :strings.string_tag;
 
 namespace atom
 {
-    export using string_iterator = array_iterator<char>;
-    export using mut_string_iterator = mut_array_iterator<char>;
+    export using const_string_iterator = array_iterator<char>;
+    export using string_iterator = mut_array_iterator<char>;
 
     export template <typename final_type>
     class string_extensions: public string_tag

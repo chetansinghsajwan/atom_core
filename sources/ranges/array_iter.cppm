@@ -24,11 +24,13 @@ namespace atom
 
     public:
         using value_type = in_value_type;
-        using size_t = std::size_t;
+        using size_type = std::size_t;
         using difference_type = std::ptrdiff_t;
         using iterator_category = std::contiguous_iterator_tag;
         using pointer = const value_type*;
         using reference = const value_type&;
+
+        using tag_type = ranges::array_iterator_tag;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -235,11 +237,13 @@ namespace atom
 
     public:
         using value_type = in_value_type;
-        using size_t = std::size_t;
+        using size_type = std::size_t;
         using difference_type = std::ptrdiff_t;
         using iterator_category = std::contiguous_iterator_tag;
         using pointer = value_type*;
         using reference = value_type&;
+
+        using tag_type = ranges::array_iterator_tag;
 
     public:
         /// ----------------------------------------------------------------------------------------
