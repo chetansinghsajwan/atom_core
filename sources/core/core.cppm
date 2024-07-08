@@ -19,7 +19,7 @@ export namespace atom
     struct create_with_join_tag
     {};
 
-    struct create_from_std_vector_tag
+    struct create_from_range_tag
     {};
 
     struct create_from_variant_tag
@@ -43,7 +43,7 @@ export namespace atom
     constexpr auto create_with_size = create_with_size_tag{};
     constexpr auto create_from_raw = create_from_raw_tag{};
     constexpr auto create_with_join = create_with_join_tag{};
-    constexpr auto create_from_std_vector = create_from_std_vector_tag{};
+    constexpr auto create_from_range = create_from_range_tag{};
     constexpr auto create_from_variant = create_from_variant_tag{};
     constexpr auto create_from_result = create_from_result_tag{};
     constexpr auto create_from_void = create_from_void_tag{};

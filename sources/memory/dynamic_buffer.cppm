@@ -4,6 +4,7 @@ import std;
 import :core;
 import :default_mem_allocator;
 import :mem_helper;
+import :ranges;
 
 namespace atom
 {
@@ -75,16 +76,17 @@ namespace atom
             _data = static_cast<byte*>(_allocator.alloc(_capacity));
         }
 
-        template <typename value_type>
-        constexpr dynamic_buffer(create_from_std_vector_tag, const std::vector<value_type>& vec)
+        template <typename range_type>
+        constexpr dynamic_buffer(create_from_range_tag, const range_type& range)
+            requires(ranges::const_array_range_concept<range_type>)
             : _data{ nullptr }
-            , _size{ vec.size() * sizeof(value_type) }
-            , _capacity{ vec.size() * sizeof(value_type) }
+            , _size{ ranges::get_count(range) * sizeof(ranges::value_type<range_type>) }
+            , _capacity{ ranges::get_count(range) * sizeof(ranges::value_type<range_type>) }
             , _allocator{}
         {
             _data = static_cast<byte*>(_allocator.alloc(_capacity));
 
-            mem_helper::copy_to(vec.data(), _size, _data);
+            mem_helper::copy_to(ranges::get_data(range), _size, _data);
         }
 
         constexpr ~dynamic_buffer()
