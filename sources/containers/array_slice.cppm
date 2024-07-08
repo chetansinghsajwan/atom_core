@@ -25,9 +25,9 @@ namespace atom
 
     public:
         using value_type = in_value_type;
-        using const_iterator_type = array_iterator<value_type>;
+        using const_iterator_type = const value_type*;
         using const_iterator_end_type = const_iterator_type;
-        using iterator_type = mut_array_iterator<value_type>;
+        using iterator_type = value_type*;
         using iterator_end_type = iterator_type;
 
     public:

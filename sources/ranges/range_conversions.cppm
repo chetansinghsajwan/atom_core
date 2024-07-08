@@ -2,10 +2,10 @@ export module atom_core:ranges.range_conversions;
 
 import std;
 import :core;
-import :ranges.array_iterator;
+import :ranges.iterator_definition;
 import :ranges.iterator_concepts;
-import :ranges.range_concepts;
 import :ranges.range_definition;
+import :ranges.range_concepts;
 
 namespace atom::ranges
 {
@@ -32,7 +32,10 @@ namespace atom::ranges
             not iterator_pair_concept<in_iterator_type, in_iterator_end_type>;
 
     public:
-        using value_type = typename in_iterator_type::value_type;
+        static_assert(const_iterator_pair_concept<in_iterator_type, in_iterator_end_type>);
+
+    public:
+        using value_type = typename iterator_definition<in_iterator_type>::value_type;
         using iterator_type = in_iterator_type;
         using iterator_end_type = in_iterator_end_type;
         using const_iterator_type = in_iterator_type;
@@ -67,7 +70,7 @@ namespace atom::ranges
     ///
     /// - review this implementation after implementing character encoding.
     /// --------------------------------------------------------------------------------------------
-    constexpr auto _range_find_str_len(const char* str) -> usize
+    constexpr auto _find_str_len(const char* str) -> usize
     {
         if (std::is_constant_evaluated())
         {
@@ -93,8 +96,7 @@ export namespace atom::ranges
     template <typename value_type>
     constexpr auto from(std::initializer_list<value_type> list)
     {
-        return _range_from_iterator_pair{ array_iterator(list.begin()),
-            array_iterator(list.end()) };
+        return _range_from_iterator_pair{ list.begin(), list.end() };
     }
 
     /// --------------------------------------------------------------------------------------------
@@ -103,7 +105,7 @@ export namespace atom::ranges
     template <typename value_type>
     constexpr auto from(const value_type* begin, const value_type* end)
     {
-        return _range_from_iterator_pair{ array_iterator(begin), array_iterator(end) };
+        return _range_from_iterator_pair{ begin, end };
     }
 
     /// --------------------------------------------------------------------------------------------
@@ -112,7 +114,7 @@ export namespace atom::ranges
     template <typename value_type>
     constexpr auto from(value_type* begin, value_type* end)
     {
-        return _range_from_iterator_pair{ mut_array_iterator(begin), mut_array_iterator(end) };
+        return _range_from_iterator_pair{ begin, end };
     }
 
     /// --------------------------------------------------------------------------------------------
@@ -121,7 +123,7 @@ export namespace atom::ranges
     template <typename value_type>
     constexpr auto from(const value_type* begin, usize count)
     {
-        return _range_from_iterator_pair{ array_iterator(begin), array_iterator(begin + count) };
+        return _range_from_iterator_pair{ begin, begin + count };
     }
 
     /// --------------------------------------------------------------------------------------------
@@ -130,28 +132,7 @@ export namespace atom::ranges
     template <typename value_type>
     constexpr auto from(value_type* begin, usize count)
     {
-        return _range_from_iterator_pair{ mut_array_iterator(begin),
-            mut_array_iterator(begin + count) };
-    }
-
-    /// --------------------------------------------------------------------------------------------
-    ///
-    /// --------------------------------------------------------------------------------------------
-    template <typename value_type, usize count>
-    constexpr auto from(const value_type (&arr)[count])
-    {
-        return _range_from_iterator_pair{ array_iterator(ptr(arr)),
-            array_iterator(ptr(arr) + count) };
-    }
-
-    /// --------------------------------------------------------------------------------------------
-    ///
-    /// --------------------------------------------------------------------------------------------
-    template <typename value_type, usize count>
-    constexpr auto from(value_type (&arr)[count])
-    {
-        return _range_from_iterator_pair{ mut_array_iterator(mut_ptr(arr)),
-            mut_array_iterator(mut_ptr(arr) + count) };
+        return _range_from_iterator_pair{ begin, begin + count };
     }
 
     /// --------------------------------------------------------------------------------------------
@@ -159,8 +140,7 @@ export namespace atom::ranges
     /// --------------------------------------------------------------------------------------------
     constexpr auto from(const char* str)
     {
-        return _range_from_iterator_pair{ array_iterator(str),
-            array_iterator(str + _range_find_str_len(str) + 1) };
+        return _range_from_iterator_pair{ str, str + _find_str_len(str) + 1 };
     }
 
     /// --------------------------------------------------------------------------------------------
@@ -168,8 +148,7 @@ export namespace atom::ranges
     /// --------------------------------------------------------------------------------------------
     constexpr auto from(char* str)
     {
-        return _range_from_iterator_pair{ mut_array_iterator(str),
-            mut_array_iterator(str + _range_find_str_len(str) + 1) };
+        return _range_from_iterator_pair{ str, str + _find_str_len(str) + 1 };
     }
 
     /// --------------------------------------------------------------------------------------------
@@ -179,14 +158,7 @@ export namespace atom::ranges
     constexpr auto from(iterator_type it, iterator_end_type it_end)
         requires(const_iterator_pair_concept<iterator_type, iterator_end_type>)
     {
-        if constexpr (iterator_concept<iterator_type>)
-        {
-            return _range_from_iterator_pair{ move(it), move(it_end) };
-        }
-        else
-        {
-            return _range_from_iterator_pair{ move(it), move(it_end) };
-        }
+        return _range_from_iterator_pair{ move(it), move(it_end) };
     }
 
     /// --------------------------------------------------------------------------------------------

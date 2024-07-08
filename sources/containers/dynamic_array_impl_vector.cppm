@@ -14,9 +14,9 @@ namespace atom
     public:
         using value_type = in_value_type;
         using allocator_type = in_allocator_type;
-        using iterator_type = array_iterator<value_type>;
+        using iterator_type = const value_type*;
         using iterator_end_type = iterator_type;
-        using mut_iterator_type = mut_array_iterator<value_type>;
+        using mut_iterator_type = value_type*;
         using mut_iterator_end_type = mut_iterator_type;
 
     public:
@@ -48,8 +48,7 @@ namespace atom
             : _vector{ move(it), move(it_end) }
         {}
 
-        constexpr dynamic_array_impl_vector(
-            create_from_raw_tag, const value_type* arr, usize count)
+        constexpr dynamic_array_impl_vector(create_from_raw_tag, const value_type* arr, usize count)
             : _vector{ arr, arr + count }
         {}
 
@@ -251,7 +250,7 @@ namespace atom
 
         constexpr auto get_index_for_iterator(iterator_type it) const -> usize
         {
-            isize index = it.get_data() - _vector.data();
+            isize index = &*it - _vector.data();
             return index < 0 ? nums::get_max_usize() : index;
         }
 

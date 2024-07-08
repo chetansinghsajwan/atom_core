@@ -23,7 +23,7 @@ namespace atom
             return string_view(ranges::from(_fmt_ctx.begin(), _fmt_ctx.end()));
         }
 
-        constexpr auto advance_to(array_iterator<char> it) -> void
+        constexpr auto advance_to(const char* it) -> void
         {
             _fmt_ctx.advance_to(&*it);
         }
