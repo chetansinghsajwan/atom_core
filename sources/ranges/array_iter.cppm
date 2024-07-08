@@ -4,6 +4,7 @@ import std;
 import :core;
 import :types;
 import :ranges.iterator_concepts;
+import :ranges.iterator_definition;
 
 namespace atom
 {
@@ -30,7 +31,7 @@ namespace atom
         using pointer = const value_type*;
         using reference = const value_type&;
 
-        using tag_type = ranges::array_iterator_tag;
+        // using tag_type = ranges::array_iterator_tag;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -243,7 +244,7 @@ namespace atom
         using pointer = value_type*;
         using reference = value_type&;
 
-        using tag_type = ranges::array_iterator_tag;
+        // using tag_type = ranges::array_iterator_tag;
 
     public:
         /// ----------------------------------------------------------------------------------------
@@ -292,4 +293,20 @@ namespace atom
     {
         return it + steps;
     }
+
+    template <typename in_value_type>
+    class ranges::iterator_definition<array_iterator<in_value_type>>
+    {
+    public:
+        using value_type = in_value_type;
+        static constexpr iterator_category category = iterator_category::array_iterator;
+    };
+
+    template <typename in_value_type>
+    class ranges::iterator_definition<mut_array_iterator<in_value_type>>
+    {
+    public:
+        using value_type = in_value_type;
+        static constexpr iterator_category category = iterator_category::array_iterator;
+    };
 }

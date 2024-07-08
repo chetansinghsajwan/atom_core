@@ -7,13 +7,16 @@ import :contracts;
 
 namespace atom
 {
+    export class array_slice_tag
+    {};
+
     /// --------------------------------------------------------------------------------------------
     /// \todo add doc.
     ///
     /// \pre `type_info<in_value_type>::is_pure()`.
     /// --------------------------------------------------------------------------------------------
     export template <typename in_value_type>
-    class array_slice
+    class array_slice: public array_slice_tag
     {
         static_assert(type_info<in_value_type>::is_pure());
 
@@ -130,7 +133,7 @@ namespace atom
         /// \returns the iterator_type to the first value. if array is null, this returns
         /// iterator pointing to nullptr.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_mut_iterator() -> iterator_type
+        constexpr auto get_iterator() -> iterator_type
         {
             return iterator_type{ _data };
         }
@@ -139,7 +142,7 @@ namespace atom
         /// \returns the iterator_end_type to one past the last value. if array is null,
         /// this returns iterator pointing to nullptr.
         /// ----------------------------------------------------------------------------------------
-        constexpr auto get_mut_iterator_end() -> iterator_end_type
+        constexpr auto get_iterator_end() -> iterator_end_type
         {
             return iterator_end_type{ _data + _count };
         }
@@ -163,5 +166,39 @@ namespace atom
     private:
         value_type* _data;
         usize _count;
+    };
+
+    export template <typename range_type>
+        requires(type_info<range_type>::template is_derived_from<array_slice_tag>())
+    class ranges::range_definition<range_type>
+    {
+    public:
+        using value_type = typename range_type::value_type;
+        using const_iterator_type = typename range_type::const_iterator_type;
+        using const_iterator_end_type = typename range_type::const_iterator_end_type;
+        using iterator_type = typename range_type::iterator_type;
+        using iterator_end_type = typename range_type::iterator_end_type;
+
+    public:
+        static constexpr auto get_iterator(range_type& range) -> iterator_type
+        {
+            return range.get_iterator();
+        }
+
+        static constexpr auto get_iterator_end(range_type& range) -> iterator_end_type
+        {
+            return range.get_iterator_end();
+        }
+
+        static constexpr auto get_const_iterator(const range_type& range) -> const_iterator_type
+        {
+            return range.get_iterator();
+        }
+
+        static constexpr auto get_const_iterator_end(
+            const range_type& range) -> const_iterator_end_type
+        {
+            return range.get_iterator_end();
+        }
     };
 }

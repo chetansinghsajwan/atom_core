@@ -5,109 +5,80 @@ import :core;
 import :types;
 import :ranges.iterator_concepts;
 import :ranges.range_concepts;
+import :ranges.range_definition;
 
-namespace atom
+namespace atom::ranges
 {
     template <typename range_type>
     class range_functions_impl
     {
-    protected:
-        using _impl_type = range_type;
-
     private:
-        template <typename in_range_type>
-        struct _mut_aliases_resolver
+        template <typename other_range_type>
+        struct _alias_helper
         {
             using iterator_type = type_utils::empty_type;
             using iterator_end_type = type_utils::empty_type;
         };
 
-        template <typename in_range_type>
-            requires ranges::range_concept<in_range_type>
-        struct _mut_aliases_resolver<in_range_type>
+        template <typename other_range_type>
+            requires(ranges::range_concept<other_range_type>)
+        struct _alias_helper<other_range_type>
         {
-            using iterator_type = typename in_range_type::iterator_type;
-            using iterator_end_type = typename in_range_type::iterator_end_type;
+            using iterator_type = typename range_definition<range_type>::iterator_type;
+            using iterator_end_type = typename range_definition<range_type>::iterator_end_type;
         };
 
     public:
-        using value_type = typename _impl_type::value_type;
-        using const_iterator_type = typename _impl_type::const_iterator_type;
-        using const_iterator_end_type = typename _impl_type::const_iterator_end_type;
-        using iterator_type = typename _mut_aliases_resolver<_impl_type>::iterator_type;
-        using iterator_end_type = typename _mut_aliases_resolver<_impl_type>::iterator_end_type;
+        using value_type = typename range_definition<range_type>::value_type;
+        using const_iterator_type = typename range_definition<range_type>::const_iterator_type;
+        using const_iterator_end_type =
+            typename range_definition<range_type>::const_iterator_end_type;
+        using iterator_type = typename _alias_helper<range_type>::iterator_type;
+        using iterator_end_type = typename _alias_helper<range_type>::iterator_end_type;
 
     public:
         static constexpr auto get_iterator(const range_type& range) -> const_iterator_type
         {
-            return range.get_iterator();
+            return range_definition<range_type>::get_const_iterator(range);
         }
 
         static constexpr auto get_iterator_end(const range_type& range) -> const_iterator_end_type
         {
-            return range.get_iterator_end();
+            return range_definition<range_type>::get_const_iterator_end(range);
         }
 
         static constexpr auto get_iterator_at(
             const range_type& range, usize i) -> const_iterator_type
         {
-            return range.get_iterator().next(i);
+            return range_definition<range_type>::get_const_iterator(range) + i;
         }
 
         static constexpr auto get_iterator(range_type& range) -> iterator_type
             requires ranges::range_concept<range_type>
         {
-            return range.get_iterator();
+            return range_definition<range_type>::get_iterator(range);
         }
 
         static constexpr auto get_iterator_end(range_type& range) -> iterator_end_type
             requires ranges::range_concept<range_type>
         {
-            return range.get_iterator_end();
+            return range_definition<range_type>::get_iterator_end(range);
         }
 
-        static constexpr auto get_iterator_at(range_type& range, usize i) -> const_iterator_type
+        static constexpr auto get_iterator_at(range_type& range, usize i) -> iterator_type
             requires ranges::range_concept<range_type>
         {
-            return range.get_iterator().next(i);
-        }
-
-        // static constexpr auto begin(const range_type& range) -> std_iterator_type
-        // {
-        //     return get_iterator(range);
-        // }
-
-        // static constexpr auto end(const range_type& range) -> std_iterator_end_type
-        // {
-        //     return get_iterator_end(range);
-        // }
-
-        static constexpr auto begin(range_type& range)
-        // -> std_mut_iterator_type
-        {
-            if constexpr (ranges::range_concept<range_type>)
-                return get_iterator(range);
-            else
-                return get_iterator(range);
-        }
-
-        static constexpr auto end(range_type& range)
-        // -> std_mut_iterator_end_type
-        {
-            if constexpr (ranges::range_concept<range_type>)
-                return get_iterator_end(range);
-            else
-                return get_iterator_end(range);
+            return range_definition<range_type>::get_iterator(range) + i;
         }
 
         static constexpr auto get_data(const range_type& range) -> const value_type*
         {
-            return range.get_data();
+            return &*get_iterator(range);
         }
 
         static constexpr auto get_data(range_type& range) -> value_type*
         {
-            return range.get_data();
+            return &*get_iterator(range);
         }
 
         static constexpr auto get_at(const range_type& range, usize i) -> const value_type&
@@ -142,7 +113,7 @@ namespace atom
 
         static constexpr auto get_count(const range_type& range) -> usize
         {
-            return range.get_count();
+            return get_iterator_end(range) - get_iterator(range);
         }
 
         static constexpr auto is_empty(const range_type& range) -> bool
@@ -176,8 +147,8 @@ namespace atom
         {
             auto this_begin = get_iterator(range);
             auto this_end = get_iterator_end(range);
-            auto that_begin = that_range.get_iterator();
-            auto that_end = that_range.get_iterator_end();
+            auto that_begin = get_iterator(that_range);
+            auto that_end = get_iterator_end(that_range);
 
             return std::search(this_begin, this_end, that_begin, that_end);
         }
@@ -187,8 +158,8 @@ namespace atom
         {
             auto this_begin = get_iterator(range);
             auto this_end = get_iterator_end(range);
-            auto that_begin = that_range.get_iterator();
-            auto that_end = that_range.get_iterator_end();
+            auto that_begin = get_iterator(that_range);
+            auto that_end = get_iterator_end(that_range);
 
             return not std::equal(this_begin, this_end, that_begin, that_end);
         }
@@ -224,24 +195,24 @@ namespace atom
         static constexpr auto contains(
             const range_type& range, const that_value_type& value) -> bool
         {
-            return std::ranges::contains(range.get_iterator(), range.get_iterator_end(), value);
+            return std::ranges::contains(get_iterator(range), get_iterator_end(range), value);
         }
 
         template <typename function_type>
         static constexpr auto contains_if(
             const range_type& range, const function_type& pred) -> bool
         {
-            return std::find_if(range.get_iterator(), range.get_iterator_end(), pred)
-                   != range.get_iterator_end();
+            return std::find_if(get_iterator(range), get_iterator_end(range), pred)
+                   != get_iterator_end(range);
         }
 
         template <typename that_range_type>
         static constexpr auto contains_range(
             const range_type& range, const that_range_type& that_range) -> bool
         {
-            return std::search(range.get_iterator(), range.get_iterator_end(),
-                       that_range.get_iterator(), that_range.get_iterator_end())
-                   != range.get_iterator_end();
+            return std::search(get_iterator(range), get_iterator_end(range),
+                       get_iterator(that_range), get_iterator_end(that_range))
+                   != get_iterator_end(range);
         }
     };
 }

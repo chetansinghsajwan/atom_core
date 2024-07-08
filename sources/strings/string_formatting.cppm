@@ -9,6 +9,7 @@ import :strings.string_format_context;
 import :strings.string_formatter_provider;
 import :strings.string_format_error;
 import :strings.format_string;
+import :strings.string_view;
 import :strings.format_arg_wrapper;
 
 namespace atom
@@ -16,8 +17,9 @@ namespace atom
     constexpr auto _fmt_error_to_string_format_error(
         const fmt::format_error& err) -> string_format_error
     {
-        return string_format_error("conversion from fmt::format_error to atom::string_format_error "
-                                   "is not implemented yet.");
+        return string_format_error{
+            string_view{ "conversion from `fmt::format_error` to string_format_error is not implemented yet." }
+        };
     }
 
     template <typename... arg_types>

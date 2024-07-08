@@ -3,7 +3,9 @@ export module atom_core:ranges.range_functions;
 import :core;
 import :types;
 import :contracts;
+import :ranges.iterator_definition;
 import :ranges.iterator_concepts;
+import :ranges.range_definition;
 import :ranges.range_concepts;
 import :ranges.range_conversions;
 import :ranges.range_functions_impl;
@@ -12,6 +14,42 @@ import :ranges.range_functions_impl;
 
 export namespace atom::ranges
 {
+    /// --------------------------------------------------------------------------------------------
+    ///
+    /// --------------------------------------------------------------------------------------------
+    template <typename iterator_type>
+    using iterator_value_type = typename iterator_definition<iterator_type>::value_type;
+
+    /// --------------------------------------------------------------------------------------------
+    ///
+    /// --------------------------------------------------------------------------------------------
+    template <typename iterator_type>
+    using iterator_tag_type = typename iterator_definition<iterator_type>::tag_type;
+
+    // /// --------------------------------------------------------------------------------------------
+    // ///
+    // /// --------------------------------------------------------------------------------------------
+    // template <typename iterator_type>
+    // consteval auto get_iterator_value_type() -> decltype(auto)
+    // {}
+
+    // /// --------------------------------------------------------------------------------------------
+    // ///
+    // /// --------------------------------------------------------------------------------------------
+    // template <typename iterator_type>
+    // consteval auto get_iterator_tag_type() -> decltype(auto)
+    // {}
+
+    /// --------------------------------------------------------------------------------------------
+    ///
+    /// --------------------------------------------------------------------------------------------
+    template <typename iterator_type, typename tag_type>
+    consteval auto has_iterator_tag() -> bool
+    {
+        return type_info<iterator_tag_type<iterator_type>>::template is_same_or_derived_from<
+            tag_type>();
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////
     ////
     //// aliases
@@ -19,25 +57,104 @@ export namespace atom::ranges
     ////////////////////////////////////////////////////////////////////////////////////////////
 
     template <typename range_type>
-    using impl_type = range_functions_impl<range_type>;
+    using value_type = typename range_definition<range_type>::value_type;
 
     template <typename range_type>
-    using value_type = typename range_type::value_type;
+    using const_iterator_type = typename range_definition<range_type>::const_iterator_type;
 
-    // template <typename range_type>
-    // using const_iterator_type = typename range_type::const_iterator_type;
+    template <typename range_type>
+    using const_iterator_end_type = typename range_definition<range_type>::const_iterator_end_type;
 
-    // template <typename range_type>
-    // using const_iterator_end_type = typename range_type::const_iterator_end_type;
+    template <typename range_type>
+    using iterator_type = typename range_definition<range_type>::iterator_type;
 
-    // template <typename range_type>
-    // using iterator_type = typename range_type::iterator_type;
-
-    // template <typename range_type>
-    // using iterator_end_type = typename range_type::iterator_end_type;
+    template <typename range_type>
+    using iterator_end_type = typename range_definition<range_type>::iterator_end_type;
 
     template <typename range_type>
     using view_type = int;
+
+    template <typename range_type>
+    using impl_type = range_functions_impl<range_type>;
+
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    ////
+    //// iteration
+    ////
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+    /// ----------------------------------------------------------------------------------------
+    ///
+    /// ----------------------------------------------------------------------------------------
+    template <typename range_type>
+    constexpr auto get_iterator(const range_type& range) -> const_iterator_type<range_type>
+        requires const_range_concept<range_type>
+    {
+        return impl_type<range_type>::get_iterator(range);
+    }
+
+    /// ----------------------------------------------------------------------------------------
+    ///
+    /// ----------------------------------------------------------------------------------------
+    template <typename range_type>
+    constexpr auto get_iterator_end(const range_type& range) -> const_iterator_end_type<range_type>
+        requires const_range_concept<range_type>
+    {
+        return impl_type<range_type>::get_iterator_end(range);
+    }
+
+    /// ----------------------------------------------------------------------------------------
+    /// get iterator to value at index `i`.
+    ///
+    /// # parameters
+    ///
+    /// - `i`: index of the value to get iterator at.
+    /// ----------------------------------------------------------------------------------------
+    template <typename range_type>
+    constexpr auto get_iterator_at(
+        const range_type& range, usize i) -> const_iterator_type<range_type>
+        requires const_array_range_concept<range_type>
+    {
+        contract_expects(is_index_in_range(range, i), "index is out of range.");
+
+        return impl_type<range_type>::get_iterator_at(range, i);
+    }
+
+    /// ----------------------------------------------------------------------------------------
+    ///
+    /// ----------------------------------------------------------------------------------------
+    template <typename range_type>
+    constexpr auto get_iterator(range_type& range) -> iterator_type<range_type>
+        requires range_concept<range_type>
+    {
+        return impl_type<range_type>::get_iterator(range);
+    }
+
+    /// ----------------------------------------------------------------------------------------
+    ///
+    /// ----------------------------------------------------------------------------------------
+    template <typename range_type>
+    constexpr auto get_iterator_end(range_type& range) -> iterator_end_type<range_type>
+        requires range_concept<range_type>
+    {
+        return impl_type<range_type>::get_iterator_end(range);
+    }
+
+    /// ----------------------------------------------------------------------------------------
+    /// get iterator to value at index `i`.
+    ///
+    /// # parameters
+    ///
+    /// - `i`: index of the value to get iterator at.
+    /// ----------------------------------------------------------------------------------------
+    template <typename range_type>
+    constexpr auto get_iterator_at(range_type& range, usize i) -> iterator_type<range_type>
+        requires array_range_concept<range_type>
+    {
+        contract_expects(is_index_in_range(range, i), "index is out of range.");
+
+        return impl_type<range_type>::get_iterator_at(range, i);
+    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////
     ////
@@ -99,85 +216,6 @@ export namespace atom::ranges
     constexpr auto is_not_empty() -> is_not_empty_closure
     {
         return is_not_empty_closure{};
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////
-    ////
-    //// iteration
-    ////
-    ////////////////////////////////////////////////////////////////////////////////////////////
-
-    /// ----------------------------------------------------------------------------------------
-    ///
-    /// ----------------------------------------------------------------------------------------
-    template <typename range_type>
-    constexpr auto get_iterator(const range_type& range) -> const_iterator_type<range_type>
-    // requires const_range_concept<range_type>
-    {
-        return impl_type<range_type>::get_iterator(range);
-    }
-
-    /// ----------------------------------------------------------------------------------------
-    ///
-    /// ----------------------------------------------------------------------------------------
-    template <typename range_type>
-    constexpr auto get_iterator_end(const range_type& range) -> const_iterator_end_type<range_type>
-    // requires const_range_concept<range_type>
-    {
-        return impl_type<range_type>::get_iterator_end(range);
-    }
-
-    /// ----------------------------------------------------------------------------------------
-    /// get iterator to value at index `i`.
-    ///
-    /// # parameters
-    ///
-    /// - `i`: index of the value to get iterator at.
-    /// ----------------------------------------------------------------------------------------
-    template <typename range_type>
-    constexpr auto get_iterator_at(
-        const range_type& range, usize i) -> const_iterator_type<range_type>
-        requires const_array_range_concept<range_type>
-    {
-        contract_expects(is_index_in_range(range, i), "index is out of range.");
-
-        return impl_type<range_type>::get_iterator_at(range, i);
-    }
-
-    /// ----------------------------------------------------------------------------------------
-    ///
-    /// ----------------------------------------------------------------------------------------
-    template <typename range_type>
-    constexpr auto get_iterator(range_type& range) -> iterator_type<range_type>
-    // requires range_concept<range_type>
-    {
-        return impl_type<range_type>::get_iterator(range);
-    }
-
-    /// ----------------------------------------------------------------------------------------
-    ///
-    /// ----------------------------------------------------------------------------------------
-    template <typename range_type>
-    constexpr auto get_iterator_end(range_type& range) -> iterator_end_type<range_type>
-    // requires range_concept<range_type>
-    {
-        return impl_type<range_type>::get_iterator_end(range);
-    }
-
-    /// ----------------------------------------------------------------------------------------
-    /// get iterator to value at index `i`.
-    ///
-    /// # parameters
-    ///
-    /// - `i`: index of the value to get iterator at.
-    /// ----------------------------------------------------------------------------------------
-    template <typename range_type>
-    constexpr auto get_iterator_at(range_type& range, usize i) -> iterator_type<range_type>
-        requires array_range_concept<range_type>
-    {
-        contract_expects(is_index_in_range(range, i), "index is out of range.");
-
-        return impl_type<range_type>::get_iterator_at(range, i);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////
@@ -286,12 +324,12 @@ export namespace atom::ranges
         }
 
         template <typename range_type>
-        constexpr auto operator|(range_type&& range) const -> value_type<range_type>&
+        constexpr auto operator|(range_type&& range) const -> value_type<range_type>&&
             requires array_range_concept<range_type>
         {
             contract_debug_expects(not is_empty(range), "range is empty.");
 
-            return ranges::get_first(range);
+            return move(ranges::get_first(range));
         }
 
         template <typename range_type>
@@ -727,7 +765,7 @@ export namespace atom
     constexpr auto begin(const range_type& range) -> ranges::const_iterator_type<range_type>
         requires ranges::const_range_concept<range_type>
     {
-        return range.get_iterator();
+        return ranges::impl_type<range_type>::get_iterator(range);
     }
 
     /// ----------------------------------------------------------------------------------------
@@ -737,7 +775,7 @@ export namespace atom
     constexpr auto end(const range_type& range) -> ranges::const_iterator_end_type<range_type>
         requires ranges::const_range_concept<range_type>
     {
-        return range.get_iterator_end();
+        return ranges::impl_type<range_type>::get_iterator_end(range);
     }
 
     /// ----------------------------------------------------------------------------------------
@@ -747,7 +785,7 @@ export namespace atom
     constexpr auto begin(range_type& range) -> ranges::iterator_type<range_type>
         requires ranges::range_concept<range_type>
     {
-        return range.get_iterator();
+        return ranges::impl_type<range_type>::get_iterator(range);
     }
 
     /// ----------------------------------------------------------------------------------------
@@ -757,7 +795,7 @@ export namespace atom
     constexpr auto end(range_type& range) -> ranges::iterator_end_type<range_type>
         requires ranges::range_concept<range_type>
     {
-        return range.get_iterator_end();
+        return ranges::impl_type<range_type>::get_iterator_end(range);
     }
 
     /// ----------------------------------------------------------------------------------------

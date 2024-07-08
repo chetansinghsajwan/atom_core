@@ -241,6 +241,14 @@ namespace atom
             return std::is_trivially_destructible_v<value_type>;
         }
 
+        template <typename result_type>
+        static consteval auto is_dereferencable_to() -> bool
+        {
+            return requires(value_type value) {
+                { *value } -> std::same_as<result_type>;
+            };
+        }
+
         template <typename other_type>
         static consteval auto is_equality_comparable_with() -> bool
         {

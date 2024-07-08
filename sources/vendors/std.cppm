@@ -215,6 +215,22 @@ export namespace std
 
     namespace ranges
     {
+        using ranges::range;
+        using ranges::input_range;
+        using ranges::output_range;
+        using ranges::forward_range;
+        using ranges::bidirectional_range;
+        using ranges::random_access_range;
+        using ranges::contiguous_range;
+        using ranges::range_value_t;
+        using ranges::iterator_t;
+        // using ranges::const_iterator_t;
+        using ranges::sentinel_t;
+        // using ranges::const_sentinel_t;
+        using ranges::begin;
+        using ranges::end;
+        using ranges::cbegin;
+        using ranges::cend;
         using ranges::contains;
     }
 

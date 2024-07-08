@@ -7,11 +7,14 @@ import :types;
 
 namespace atom
 {
+    export class array_view_tag
+    {};
+
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
     export template <typename in_value_type>
-    class array_view
+    class array_view: public array_view_tag
     {
         static_assert(type_info<in_value_type>::is_pure());
 
@@ -39,15 +42,7 @@ namespace atom
         constexpr array_view& operator=(this_type&& that) = default;
 
         /// ----------------------------------------------------------------------------------------
-        /// # range constructor
-        /// ----------------------------------------------------------------------------------------
-        constexpr array_view(std::initializer_list<value_type> list)
-            : _data{ list.begin() }
-            , _count{ list.size() }
-        {}
-
-        /// ----------------------------------------------------------------------------------------
-        /// # range constructor
+        ///
         /// ----------------------------------------------------------------------------------------
         template <typename range_type>
         constexpr array_view(const range_type& range)
@@ -57,7 +52,7 @@ namespace atom
         {}
 
         /// ----------------------------------------------------------------------------------------
-        /// # range operator
+        ///
         /// ----------------------------------------------------------------------------------------
         template <typename range_type>
         constexpr array_view& operator=(const range_type& range)
@@ -65,25 +60,6 @@ namespace atom
         {
             _data = ranges::get_data(range);
             _count = ranges::get_count(range);
-        }
-
-        /// ----------------------------------------------------------------------------------------
-        /// # array constructor
-        /// ----------------------------------------------------------------------------------------
-        template <usize count>
-        constexpr array_view(const value_type (&arr)[count])
-            : _data{ arr }
-            , _count{ count }
-        {}
-
-        /// ----------------------------------------------------------------------------------------
-        /// # array operator
-        /// ----------------------------------------------------------------------------------------
-        template <usize count>
-        constexpr array_view& operator=(const value_type (&arr)[count])
-        {
-            _data = arr;
-            _count = count;
 
             return *this;
         }
@@ -161,5 +137,27 @@ namespace atom
     private:
         const value_type* _data;
         usize _count;
+    };
+
+    export template <typename range_type>
+        requires(type_info<range_type>::template is_derived_from<array_view_tag>())
+    class ranges::range_definition<range_type>
+    {
+    public:
+        using value_type = typename range_type::value_type;
+        using const_iterator_type = typename range_type::const_iterator_type;
+        using const_iterator_end_type = typename range_type::const_iterator_end_type;
+
+    public:
+        static constexpr auto get_const_iterator(const range_type& range) -> const_iterator_type
+        {
+            return range.get_iterator();
+        }
+
+        static constexpr auto get_const_iterator_end(
+            const range_type& range) -> const_iterator_end_type
+        {
+            return range.get_iterator_end();
+        }
     };
 }

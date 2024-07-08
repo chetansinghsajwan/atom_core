@@ -38,7 +38,8 @@ target_compile_options(
            "-Wno-deprecated-declarations"
            # to declare std module
            "-Wno-reserved-module-identifier"
-           "-ferror-limit=1000")
+           "-ferror-limit=1000"
+           "-ftemplate-backtrace-limit=0")
 
 # --------------------------------------------------------------------------------------------------
 # sandbox

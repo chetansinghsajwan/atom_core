@@ -9,13 +9,16 @@ import :containers.dynamic_array_impl_vector;
 
 namespace atom
 {
+    export class dynamic_array_tag
+    {};
+
     /// --------------------------------------------------------------------------------------------
     /// \todo add doc.
     /// \todo add complexities.
     /// \todo add note for cases, where value or a range of values to be inserted are from this array.
     /// --------------------------------------------------------------------------------------------
     export template <typename in_value_type, typename in_allocator_type = default_mem_allocator>
-    class dynamic_array
+    class dynamic_array: public dynamic_array_tag
     {
         static_assert(
             type_info<in_value_type>::is_pure(), "dynamic_array does not non pure types.");
@@ -766,5 +769,39 @@ namespace atom
 
     private:
         impl_type _impl;
+    };
+
+    export template <typename range_type>
+        requires(type_info<range_type>::template is_derived_from<dynamic_array_tag>())
+    class ranges::range_definition<range_type>
+    {
+    public:
+        using value_type = typename range_type::value_type;
+        using const_iterator_type = typename range_type::const_iterator_type;
+        using const_iterator_end_type = typename range_type::const_iterator_end_type;
+        using iterator_type = typename range_type::iterator_type;
+        using iterator_end_type = typename range_type::iterator_end_type;
+
+    public:
+        static constexpr auto get_iterator(range_type& range) -> iterator_type
+        {
+            return range.get_iterator();
+        }
+
+        static constexpr auto get_iterator_end(range_type& range) -> iterator_end_type
+        {
+            return range.get_iterator_end();
+        }
+
+        static constexpr auto get_const_iterator(const range_type& range) -> const_iterator_type
+        {
+            return range.get_iterator();
+        }
+
+        static constexpr auto get_const_iterator_end(
+            const range_type& range) -> const_iterator_end_type
+        {
+            return range.get_iterator_end();
+        }
     };
 }
