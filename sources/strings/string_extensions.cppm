@@ -24,7 +24,7 @@ namespace atom
 
         static constexpr auto from_std(std::string_view str)
         {
-            return final_type(ranges::from(str));
+            return final_type(ranges::from(str.data(), str.data() + str.size()));
         }
 
         static constexpr auto from_cstr(const char* str)

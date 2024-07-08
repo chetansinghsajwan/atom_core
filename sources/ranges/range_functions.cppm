@@ -825,32 +825,6 @@ export namespace atom
         return not ranges::impl_type<range_type>::is_eq(range, that_range);
     }
 
-    /// ----------------------------------------------------------------------------------------
-    ///
-    /// ----------------------------------------------------------------------------------------
-    template <typename range_type, typename that_value_type, usize that_count>
-    constexpr auto operator==(
-        const range_type& range, const that_value_type (&that_arr)[that_count]) -> bool
-        requires ranges::const_range_concept<range_type>
-                 and (type_info<ranges::value_type<range_type>>::
-                         template is_equality_comparable_with<that_value_type>())
-    {
-        return ranges::impl_type<range_type>::is_eq(range, ranges::from(that_arr));
-    }
-
-    /// ----------------------------------------------------------------------------------------
-    ///
-    /// ----------------------------------------------------------------------------------------
-    template <typename range_type, typename that_value_type, usize that_count>
-    constexpr auto operator!=(
-        const range_type& range, const that_value_type (&that_arr)[that_count]) -> bool
-        requires ranges::const_range_concept<range_type>
-                 and (type_info<ranges::value_type<range_type>>::
-                         template is_equality_comparable_with<that_value_type>())
-    {
-        return not ranges::impl_type<range_type>::is_eq(range, ranges::from(that_arr));
-    }
-
     template <typename value_type0, typename value1_type>
     constexpr auto operator|(const value1_type& value1, const value_type0& value0) -> decltype(auto)
         requires requires(

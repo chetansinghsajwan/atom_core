@@ -94,15 +94,6 @@ export namespace atom::ranges
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename value_type>
-    constexpr auto from(std::initializer_list<value_type> list)
-    {
-        return _range_from_iterator_pair{ list.begin(), list.end() };
-    }
-
-    /// --------------------------------------------------------------------------------------------
-    ///
-    /// --------------------------------------------------------------------------------------------
-    template <typename value_type>
     constexpr auto from(const value_type* begin, const value_type* end)
     {
         return _range_from_iterator_pair{ begin, end };
@@ -159,13 +150,5 @@ export namespace atom::ranges
         requires(const_iterator_pair_concept<iterator_type, iterator_end_type>)
     {
         return _range_from_iterator_pair{ move(it), move(it_end) };
-    }
-
-    /// --------------------------------------------------------------------------------------------
-    ///
-    /// --------------------------------------------------------------------------------------------
-    constexpr auto from(std::string_view str)
-    {
-        return from(str.data(), str.size());
     }
 }

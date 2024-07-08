@@ -45,7 +45,7 @@ namespace atom
         template <typename other_iterator_type, typename other_iterator_end_type>
         constexpr dynamic_array_impl_vector(
             range_tag, other_iterator_type it, other_iterator_end_type it_end)
-            : _vector{ move(it), move(it_end) }
+            : _vector{ std::move(it), std::move(it_end) }
         {}
 
         constexpr dynamic_array_impl_vector(create_from_raw_tag, const value_type* arr, usize count)

@@ -145,23 +145,24 @@ namespace atom::ranges
         static constexpr auto find_range(
             const range_type& range, const that_range_type& that_range) -> const_iterator_type
         {
-            auto this_begin = get_iterator(range);
-            auto this_end = get_iterator_end(range);
+            auto begin = get_iterator(range);
+            auto end = get_iterator_end(range);
             auto that_begin = get_iterator(that_range);
             auto that_end = get_iterator_end(that_range);
 
-            return std::search(this_begin, this_end, that_begin, that_end);
+            return std::search(begin, end, that_begin, that_end);
         }
 
         template <typename that_range_type>
-        static constexpr auto compare(const range_type& range, that_range_type& that_range) -> i8
+        static constexpr auto compare(
+            const range_type& range, const that_range_type& that_range) -> i8
         {
-            auto this_begin = get_iterator(range);
-            auto this_end = get_iterator_end(range);
+            auto begin = get_iterator(range);
+            auto end = get_iterator_end(range);
             auto that_begin = get_iterator(that_range);
             auto that_end = get_iterator_end(that_range);
 
-            return not std::equal(this_begin, this_end, that_begin, that_end);
+            return not std::equal(begin, end, that_begin, that_end);
         }
 
         template <typename that_range_type>
@@ -210,9 +211,12 @@ namespace atom::ranges
         static constexpr auto contains_range(
             const range_type& range, const that_range_type& that_range) -> bool
         {
-            return std::search(get_iterator(range), get_iterator_end(range),
-                       get_iterator(that_range), get_iterator_end(that_range))
-                   != get_iterator_end(range);
+            auto begin = get_iterator(range);
+            auto end = get_iterator_end(range);
+            auto that_begin = get_iterator(that_range);
+            auto that_end = get_iterator_end(that_range);
+
+            return std::search(begin, end, that_begin, that_end) != end;
         }
     };
 }

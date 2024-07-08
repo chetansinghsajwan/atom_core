@@ -222,11 +222,10 @@ export namespace std
         using ranges::bidirectional_range;
         using ranges::random_access_range;
         using ranges::contiguous_range;
+        using ranges::common_range;
         using ranges::range_value_t;
         using ranges::iterator_t;
-        // using ranges::const_iterator_t;
         using ranges::sentinel_t;
-        // using ranges::const_sentinel_t;
         using ranges::begin;
         using ranges::end;
         using ranges::cbegin;
