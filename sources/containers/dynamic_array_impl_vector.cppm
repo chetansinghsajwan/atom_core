@@ -52,16 +52,16 @@ namespace atom
             : _vector{ arr, arr + count }
         {}
 
-        constexpr dynamic_array_impl_vector(create_with_count_type, usize count)
+        constexpr dynamic_array_impl_vector(create_with_count_tag, usize count)
             : _vector(count)
         {}
 
         constexpr dynamic_array_impl_vector(
-            create_with_count_type, usize count, const value_type& value)
+            create_with_count_tag, usize count, const value_type& value)
             : _vector{ count, value }
         {}
 
-        constexpr dynamic_array_impl_vector(create_with_capacity_type, usize capacity)
+        constexpr dynamic_array_impl_vector(create_with_capacity_tag, usize capacity)
             : _vector{}
         {
             _vector.reserve(capacity);

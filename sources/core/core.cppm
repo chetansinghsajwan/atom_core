@@ -4,13 +4,13 @@ import std;
 
 export namespace atom
 {
-    struct create_with_count_type
+    struct create_with_count_tag
     {};
 
-    struct create_with_capacity_type
+    struct create_with_capacity_tag
     {};
 
-    struct create_with_size_type
+    struct create_with_size_tag
     {};
 
     struct create_from_raw_tag
@@ -38,9 +38,9 @@ export namespace atom
     struct create_by_emplace_tag
     {};
 
-    constexpr auto create_with_count = create_with_count_type{};
-    constexpr auto create_with_capacity = create_with_capacity_type{};
-    constexpr auto create_with_size = create_with_size_type{};
+    constexpr auto create_with_count = create_with_count_tag{};
+    constexpr auto create_with_capacity = create_with_capacity_tag{};
+    constexpr auto create_with_size = create_with_size_tag{};
     constexpr auto create_from_raw = create_from_raw_tag{};
     constexpr auto create_with_join = create_with_join_tag{};
     constexpr auto create_from_std_vector = create_from_std_vector_tag{};

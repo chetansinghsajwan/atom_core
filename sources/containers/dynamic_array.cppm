@@ -112,7 +112,7 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// initializes with `count` count default constructed values.
         /// ----------------------------------------------------------------------------------------
-        constexpr dynamic_array(create_with_count_type, usize count)
+        constexpr dynamic_array(create_with_count_tag, usize count)
             requires(value_type_info::is_default_constructible())
             : _impl{ create_with_count, count }
         {}
@@ -120,14 +120,14 @@ namespace atom
         /// ----------------------------------------------------------------------------------------
         /// initializes with `count` count values, constructed using `value`.
         /// ----------------------------------------------------------------------------------------
-        constexpr dynamic_array(create_with_count_type, usize count, const value_type& value)
+        constexpr dynamic_array(create_with_count_tag, usize count, const value_type& value)
             : _impl{ create_with_count, count, value }
         {}
 
         /// ----------------------------------------------------------------------------------------
         /// initializes with `capacity` capacity.
         /// ----------------------------------------------------------------------------------------
-        constexpr dynamic_array(create_with_capacity_type, usize capacity)
+        constexpr dynamic_array(create_with_capacity_tag, usize capacity)
             : _impl{ create_with_capacity, capacity }
         {}
 
