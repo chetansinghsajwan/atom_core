@@ -10,7 +10,7 @@ namespace std
     {
         constexpr auto operator()(const atom::string& str) const -> std::size_t
         {
-            return hash<std::string_view>()(str.to_std());
+            return hash<std::string_view>()(str);
         }
     };
 
@@ -19,7 +19,7 @@ namespace std
     {
         constexpr auto operator()(const atom::string_view& str) const -> std::size_t
         {
-            return hash<std::string_view>()(str.to_std());
+            return hash<std::string_view>()(str);
         }
     };
 }

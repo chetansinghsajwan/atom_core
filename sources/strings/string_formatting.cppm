@@ -18,14 +18,14 @@ namespace atom
         const fmt::format_error& err) -> string_format_error
     {
         return string_format_error{
-            string_view{ "conversion from `fmt::format_error` to string_format_error is not implemented yet." }
+            "conversion from `fmt::format_error` to string_format_error is not implemented yet."
         };
     }
 
     template <typename... arg_types>
     constexpr auto _convert_format_string_atom_to_fmt(format_string<arg_types...> fmt)
     {
-        return fmt::runtime(fmt.str.to_std());
+        return fmt::runtime(std::string_view{ fmt.str });
     }
 
     template <typename output_type>

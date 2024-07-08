@@ -175,7 +175,7 @@ namespace Catch
     public:
         static constexpr auto convert(atom::tests::tracked_type::operation op) -> std::string
         {
-            return std::string{ atom::enums::to_string_view(op).to_std() };
+            return std::string{ atom::enums::to_string_view(op) };
         }
     };
 }

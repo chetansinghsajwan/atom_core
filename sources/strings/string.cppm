@@ -1,5 +1,6 @@
 export module atom_core:strings.string;
 
+import std;
 import :core;
 import :default_mem_allocator;
 import :ranges;
@@ -65,6 +66,12 @@ namespace atom
             format_to(out, fmt, atom::forward<arg_types>(args)...);
 
             return out;
+        }
+
+    public:
+        constexpr operator std::string_view() const
+        {
+            return { this->get_data(), this->get_count() };
         }
 
     private:

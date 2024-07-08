@@ -81,7 +81,7 @@ namespace atom::ranges
                 len++;
             }
 
-            return len + 1;
+            return len;
         }
 
         return std::strlen(str);

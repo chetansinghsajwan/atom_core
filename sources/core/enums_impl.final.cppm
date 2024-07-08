@@ -18,9 +18,9 @@ namespace atom
         magic_optional_type<enum_type> result = [&]
         {
             if constexpr (is_flags())
-                return magic_enum::enum_flags_cast<enum_type>(str.to_std());
+                return magic_enum::enum_flags_cast<enum_type>(std::string_view{ str });
             else
-                magic_enum::enum_cast<enum_type>(str.to_std());
+                magic_enum::enum_cast<enum_type>(std::string_view{ str });
         }();
 
         if (not result.has_value())
@@ -38,9 +38,10 @@ namespace atom
         {
             if constexpr (is_flags())
                 return magic_enum::enum_flags_cast<enum_type>(
-                    str.to_std(), forward<comparer_type>(comparer));
+                    std::string_view{ str }, forward<comparer_type>(comparer));
             else
-                magic_enum::enum_cast<enum_type>(str.to_std(), forward<comparer_type>(comparer));
+                magic_enum::enum_cast<enum_type>(
+                    std::string_view{ str }, forward<comparer_type>(comparer));
         }();
 
         if (not result.has_value())
@@ -52,14 +53,14 @@ namespace atom
     template <typename enum_type, bool is_flags>
     consteval auto _enums_impl<enum_type, is_flags>::get_type_name() -> string_view
     {
-        return string_view::from_std(magic_enum::enum_type_name<enum_type>());
+        return string_view{ magic_enum::enum_type_name<enum_type>() };
     }
 
     template <typename enum_type, bool is_flags>
     consteval auto _enums_impl<enum_type, is_flags>::get_values() -> array_view<enum_type>
     {
         auto values = magic_enum::enum_values<enum_type>();
-        return array_view<enum_type>(values.data(), values.size());
+        return array_view<enum_type>{ values };
     }
 
     template <typename enum_type, bool is_flags>
@@ -71,10 +72,10 @@ namespace atom
         magic_array_type<string_view, get_count()> strings;
         for (usize i = 0; i < get_count(); i++)
         {
-            strings[i] = string_view::from_std(magic_strings[i]);
+            strings[i] = magic_strings[i];
         }
 
-        return array_view<string_view>(strings.data(), strings.size());
+        return array_view<string_view>{ strings.data(), strings.size() };
     }
 
     template <typename enum_type, bool is_flags>
@@ -87,8 +88,8 @@ namespace atom
         magic_array_type<tuple<enum_type, string_view>, get_count()> strings;
         for (usize i = 0; i < get_count(); i++)
         {
-            strings[i] = tuple<enum_type, string_view>(
-                magic_strings[i].first, string_view::from_std(magic_strings[i].second));
+            strings[i] = tuple<enum_type, string_view>{ magic_strings[i].first,
+                string_view{ magic_strings[i].second } };
         }
 
         return array_view<tuple<enum_type, string_view>>(strings.data(), strings.size());
@@ -97,18 +98,9 @@ namespace atom
     template <typename enum_type, bool is_flags>
     constexpr auto _enums_impl<enum_type, is_flags>::to_string_view(enum_type value) -> string_view
     {
-        return string_view::from_std(
-            [value]
-            {
-                if constexpr (is_flags())
-                {
-                    return magic_enum::enum_flags_name<enum_type>(value);
-                }
-                else
-                {
-                    return magic_enum::enum_name<enum_type>(value);
-                }
-            }());
-    }
+        if constexpr (is_flags())
+            return magic_enum::enum_flags_name<enum_type>(value);
 
+        return magic_enum::enum_name<enum_type>(value);
+    }
 }

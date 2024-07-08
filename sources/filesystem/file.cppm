@@ -21,7 +21,7 @@ namespace atom::filesystem
     public:
         system_error(i32 error_no)
             : error_no{ error_no }
-            , error{ string_view::from_cstr(std::strerror(error_no)) }
+            , error{ string_view{ std::strerror(error_no) } }
         {}
 
     public:

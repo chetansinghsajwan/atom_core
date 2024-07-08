@@ -57,19 +57,20 @@ export namespace atom::ranges
         using value_type = std::ranges::range_value_t<std_range_type>;
         using iterator_type = std::ranges::iterator_t<std_range_type>;
         using iterator_end_type = std::ranges::sentinel_t<std_range_type>;
-        using const_iterator_type = std::ranges::iterator_t<std_range_type>;
-        using const_iterator_end_type = std::ranges::sentinel_t<std_range_type>;
+        using const_iterator_type = decltype(std::ranges::cbegin(std::declval<std_range_type&>()));
+        using const_iterator_end_type =
+            decltype(std::ranges::cend(std::declval<std_range_type&>()));
 
     public:
         static constexpr auto get_const_iterator(const std_range_type& range) -> const_iterator_type
         {
-            return std::ranges::begin(range);
+            return std::ranges::cbegin(range);
         }
 
         static constexpr auto get_const_iterator_end(
             const std_range_type& range) -> const_iterator_end_type
         {
-            return std::ranges::end(range);
+            return std::ranges::cend(range);
         }
 
         static constexpr auto get_iterator(std_range_type& range) -> iterator_type

@@ -68,7 +68,7 @@ namespace atom
     public:
         constexpr auto format(const string_type& str, string_format_context& ctx) const -> void
         {
-            fmt::string_view fmt_str(str.get_data(), str.get_count());
+            fmt::string_view fmt_str{ str.get_data(), str.get_count() };
             base_type::format(fmt_str, ctx);
         }
     };

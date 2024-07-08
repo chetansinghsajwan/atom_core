@@ -1,6 +1,5 @@
 export module atom_core:strings;
 
-export import :strings.string_extensions;
 export import :strings.string_format_context;
 export import :strings.string_format_error;
 export import :strings.string_formatter_provider;

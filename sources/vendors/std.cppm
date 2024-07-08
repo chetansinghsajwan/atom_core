@@ -240,6 +240,7 @@ export namespace std
     using std::mutex;
     using std::realloc;
     using std::type_info;
+    using std::declval;
 
     auto get_errno() -> int
     {
