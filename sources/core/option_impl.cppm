@@ -1,7 +1,6 @@
 export module atom_core:core.option_impl;
 
 import :types;
-import :obj_helper;
 import :core.core;
 import :core.union_storage;
 
@@ -287,18 +286,18 @@ namespace atom
         template <typename... arg_types>
         constexpr auto _construct_value(arg_types&&... args)
         {
-            obj_helper::construct_as<value_type>(_get_data(), forward<arg_types>(args)...);
+            type_utils::construct_as<value_type>(_get_data(), forward<arg_types>(args)...);
         }
 
         constexpr auto _destruct_value()
         {
-            obj_helper::destruct_as<value_type>(_get_data());
+            type_utils::destruct_as<value_type>(_get_data());
         }
 
         template <typename arg_type>
         constexpr auto _assign_value(arg_type&& val)
         {
-            obj_helper::assign_as<value_type>(_get_data(), forward<arg_type>(val));
+            type_utils::assign_as<value_type>(_get_data(), forward<arg_type>(val));
         }
 
         constexpr auto _get_value() -> value_type&

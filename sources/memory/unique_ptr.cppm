@@ -3,7 +3,6 @@ export module atom_core:unique_ptr;
 import std;
 import :types;
 import :default_mem_allocator;
-import :obj_helper;
 
 export namespace atom
 {
@@ -19,7 +18,7 @@ export namespace atom
     public:
         constexpr auto operator()(value_type* val)
         {
-            obj_helper::destruct_as<value_type>(val);
+            type_utils::destruct_as<value_type>(val);
             default_mem_allocator().dealloc(val);
         }
     };
@@ -279,7 +278,7 @@ export namespace atom
         allocator_type allocator, arg_types&&... args) -> unique_ptr<value_type>
     {
         value_type* mem = (value_type*)allocator.alloc(sizeof(value_type));
-        obj_helper::construct_as<value_type>(mem, forward<arg_types>(args)...);
+        type_utils::construct_as<value_type>(mem, forward<arg_types>(args)...);
         return unique_ptr<value_type>(mem);
     }
 }

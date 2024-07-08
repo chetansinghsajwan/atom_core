@@ -15,7 +15,6 @@ export import :filesystem;
 export import :io;
 
 export import :mem_helper;
-export import :obj_helper;
 export import :lock_guard;
 export import :lockable;
 export import :box;
