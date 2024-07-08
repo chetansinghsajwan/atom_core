@@ -1,4 +1,4 @@
-export module atom_core:mem_helper;
+export module atom_core:memory_utils;
 
 import std;
 import :core.byte;
@@ -13,7 +13,7 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     /// contains basic memory utility functions.
     /// --------------------------------------------------------------------------------------------
-    export class mem_helper
+    export class memory_utils
     {
     public:
         /// ----------------------------------------------------------------------------------------

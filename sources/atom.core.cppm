@@ -14,7 +14,7 @@ export import :hash;
 export import :filesystem;
 export import :io;
 
-export import :mem_helper;
+export import :memory_utils;
 export import :lock_guard;
 export import :lockable;
 export import :box;

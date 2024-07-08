@@ -3,7 +3,7 @@ export module atom_core:dynamic_buffer;
 import std;
 import :core;
 import :default_mem_allocator;
-import :mem_helper;
+import :memory_utils;
 import :ranges;
 
 namespace atom
@@ -29,7 +29,7 @@ namespace atom
         {
             _data = static_cast<byte*>(_allocator.alloc(_capacity));
 
-            mem_helper::copy_to(that._data, _size, _data);
+            memory_utils::copy_to(that._data, _size, _data);
         }
 
         constexpr dynamic_buffer& operator=(const this_type& that)
@@ -86,7 +86,7 @@ namespace atom
         {
             _data = static_cast<byte*>(_allocator.alloc(_capacity));
 
-            mem_helper::copy_to(ranges::get_data(range), _size, _data);
+            memory_utils::copy_to(ranges::get_data(range), _size, _data);
         }
 
         constexpr ~dynamic_buffer()
@@ -169,7 +169,7 @@ namespace atom
                 _capacity = size;
                 _data = static_cast<byte*>(_allocator.alloc(_capacity));
 
-                mem_helper::copy_to(data, _size, _data);
+                memory_utils::copy_to(data, _size, _data);
                 return;
             }
 
@@ -183,7 +183,7 @@ namespace atom
             }
 
             _size = size;
-            mem_helper::copy_to(data, _size, _data);
+            memory_utils::copy_to(data, _size, _data);
         }
 
     private:
