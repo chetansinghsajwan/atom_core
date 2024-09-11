@@ -1,0 +1,64 @@
+FROM ubuntu:24.10
+
+LABEL "Description"="Build Environment"
+
+ARG cpptrace_version="0.6.3"
+ARG fmt_version="11.0.2"
+ARG magic_enum_version="0.9.6"
+ARG catch2_version="3.6.0"
+
+# Install tools
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        clang-18 \
+        clang-format-18 \
+        clang-tidy-18 \
+        lldb-18 \
+        doxygen \
+        cmake \
+        cmake-format \
+        ninja-build \
+        git \
+        ca-certificates
+
+# Set cmake env variables
+ENV CC="clang-18" \
+    CXX="clang++-18" \
+    CMAKE_GENERATOR="Ninja"
+
+WORKDIR /root/deps
+
+# Install cpptrace
+RUN git clone "https://github.com/jeremy-rifkin/cpptrace.git" \
+    --depth 1 --branch v${cpptrace_version} && \
+    cd cpptrace && \
+    cmake -S . -B build && \
+    cmake --build build && \
+    cmake --install build
+
+# Install fmt
+RUN git clone "https://github.com/fmtlib/fmt.git" \
+    --depth 1 --branch ${fmt_version} && \
+    cd fmt && \
+    cmake -S . -B build && \
+    cmake --build build && \
+    cmake --install build
+
+# Install magic_enum
+RUN git clone "https://github.com/Neargye/magic_enum.git" \
+    --depth 1 --branch v${magic_enum_version} && \
+    cd magic_enum && \
+    cmake -S . -B build && \
+    cmake --build build && \
+    cmake --install build
+
+# Install catch2
+RUN git clone "https://github.com/catchorg/Catch2.git" \
+    --depth 1 --branch v${catch2_version} && \
+    cd Catch2 && \
+    cmake -S . -B build && \
+    cmake --build build && \
+    cmake --install build
+
+# Reset to source dir
+WORKDIR /root/src
