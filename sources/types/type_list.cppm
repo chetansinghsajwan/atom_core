@@ -171,7 +171,7 @@ namespace atom
         template <typename... other_types>
         static consteval auto has_all() -> bool
         {
-            return impl_type::template has_all(type_list_impl<other_types...>{});
+            return impl_type::has_all(type_list_impl<other_types...>{});
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -180,7 +180,7 @@ namespace atom
         template <typename... other_types>
         static consteval auto has_all(type_list<other_types...>) -> bool
         {
-            return impl_type::template has_all(type_list_impl<other_types...>{});
+            return impl_type::has_all(type_list_impl<other_types...>{});
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -189,7 +189,7 @@ namespace atom
         template <typename... other_types>
         static consteval auto has_any() -> bool
         {
-            return impl_type::template has_any(type_list_impl<other_types...>{});
+            return impl_type::has_any(type_list_impl<other_types...>{});
         }
 
         /// ----------------------------------------------------------------------------------------
@@ -198,7 +198,7 @@ namespace atom
         template <typename... other_types>
         static consteval auto has_any(type_list<other_types...>) -> bool
         {
-            return impl_type::template has_any(type_list_impl<other_types...>{});
+            return impl_type::has_any(type_list_impl<other_types...>{});
         }
 
         /// ----------------------------------------------------------------------------------------

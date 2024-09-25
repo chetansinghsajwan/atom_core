@@ -155,7 +155,7 @@ namespace atom
             if (i == 0)
                 return type_info<type0>::get_id();
 
-            return next_types_list::template get_at(i - 1);
+            return next_types_list::template get_at<i - 1>();
         }
 
         /// ----------------------------------------------------------------------------------------
