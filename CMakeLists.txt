@@ -11,6 +11,7 @@ cmake_policy(SET CMP0155 NEW)
 
 option(atom_core_build_docs "Enable this to build docs." OFF)
 option(atom_core_build_tests "Enable this to build tests." OFF)
+option(atom_core_enable_install "Enable this to allow install." OFF)
 
 # --------------------------------------------------------------------------------------------------
 # atom_core
@@ -26,10 +27,8 @@ file(GLOB_RECURSE atom_core_modules "sources/**.cppm")
 target_sources(atom_core PUBLIC FILE_SET CXX_MODULES FILES ${atom_core_modules})
 
 target_include_directories(atom_core PRIVATE "include")
-target_link_libraries(atom_core PRIVATE
-    "fmt::fmt-header-only"
-    "magic_enum::magic_enum"
-    "cpptrace::cpptrace")
+target_link_libraries(atom_core PRIVATE "fmt::fmt-header-only" "magic_enum::magic_enum"
+                                        "cpptrace::cpptrace")
 
 target_compile_features(atom_core PUBLIC "cxx_std_23")
 target_compile_options(
@@ -37,9 +36,7 @@ target_compile_options(
     PUBLIC # some warning in libcxx
            "-Wno-deprecated-declarations"
            # to declare std module
-           "-Wno-reserved-module-identifier"
-           "-ferror-limit=1000"
-           "-ftemplate-backtrace-limit=0")
+           "-Wno-reserved-module-identifier" "-ferror-limit=1000" "-ftemplate-backtrace-limit=0")
 
 # --------------------------------------------------------------------------------------------------
 # sandbox
@@ -56,10 +53,8 @@ target_link_libraries(atom_core_sandbox PRIVATE atom_core)
 if(atom_core_build_docs)
     find_package("Doxygen" REQUIRED)
 
-    doxygen_add_docs(atom_core_docs
-        "${atom_core_modules}"
-        CONFIG_FILE "${CMAKE_CURRENT_LIST_DIR}/Doxyfile"
-        USE_STAMP_FILE)
+    doxygen_add_docs(atom_core_docs "${atom_core_modules}" CONFIG_FILE
+                     "${CMAKE_CURRENT_LIST_DIR}/Doxyfile" USE_STAMP_FILE)
 endif()
 
 # --------------------------------------------------------------------------------------------------
@@ -84,27 +79,29 @@ endif()
 # install
 # --------------------------------------------------------------------------------------------------
 
-include(CMakePackageConfigHelpers)
+if(atom_core_enable_install)
+    include(CMakePackageConfigHelpers)
 
-write_basic_package_version_file(
-    "atom_core-config-version.cmake"
-    VERSION ${PACKAGE_VERSION}
-    COMPATIBILITY AnyNewerVersion)
+    write_basic_package_version_file(
+        "atom_core-config-version.cmake"
+        VERSION ${PACKAGE_VERSION}
+        COMPATIBILITY AnyNewerVersion)
 
-install(
-    TARGETS atom_core
-    EXPORT atom_core_targets
-    FILE_SET CXX_MODULES
-    DESTINATION "lib"
-    INCLUDES
-    DESTINATION "include")
+    install(
+        TARGETS atom_core
+        EXPORT atom_core_targets
+        FILE_SET CXX_MODULES
+        DESTINATION "lib"
+        INCLUDES
+        DESTINATION "include")
 
-install(
-    EXPORT atom_core_targets
-    FILE "atom_core-targets.cmake"
-    DESTINATION "cmake/")
+    install(
+        EXPORT atom_core_targets
+        FILE "atom_core-targets.cmake"
+        DESTINATION "cmake/")
 
-install(DIRECTORY "include/" DESTINATION "include/")
+    install(DIRECTORY "include" DESTINATION "include")
 
-install(FILES "cmake/atom_core-config.cmake"
-              "${CMAKE_CURRENT_BINARY_DIR}/atom_core-config-version.cmake" DESTINATION "cmake/")
+    install(FILES "cmake/atom_core-config.cmake"
+                  "${CMAKE_CURRENT_BINARY_DIR}/atom_core-config-version.cmake" DESTINATION "cmake/")
+endif()
