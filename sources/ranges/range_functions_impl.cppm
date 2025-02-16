@@ -193,10 +193,20 @@ namespace atom::ranges
         }
 
         template <typename that_value_type>
-        static constexpr auto contains(
-            const range_type& range, const that_value_type& value) -> bool
+        static constexpr auto contains(const range_type& range, const that_value_type& value)
+            -> bool
         {
+            if constexpr (feat_cpp_lib_ranges_contains)
             return std::ranges::contains(get_iterator(range), get_iterator_end(range), value);
+            else
+            {
+                // todo: check this, this is a lazy implementation.
+                for (auto range_value : range)
+                    if (range_value == value)
+                        return true;
+
+                return false;
+            }
         }
 
         template <typename function_type>

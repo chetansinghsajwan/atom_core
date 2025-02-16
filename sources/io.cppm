@@ -7,9 +7,9 @@ import :strings;
 
 export namespace atom::io
 {
-    filesystem::file stdin{ ::stdin, filesystem::file::open_flags::read };
-    filesystem::file stdout{ ::stdout, filesystem::file::open_flags::write };
-    filesystem::file stderr{ ::stderr, filesystem::file::open_flags::write };
+    filesystem::file stdin{ std::stdin, filesystem::file::open_flags::read };
+    filesystem::file stdout{ std::stdout, filesystem::file::open_flags::write };
+    filesystem::file stderr{ std::stderr, filesystem::file::open_flags::write };
 
     template <typename... arg_types>
     inline auto print(format_string<arg_types...> fmt, arg_types&&... args)

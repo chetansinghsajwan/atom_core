@@ -46,9 +46,25 @@ export
     using ::fflush;
     using ::FILE;
     using ::fwrite;
-    using ::stderr;
-    using ::stdin;
-    using ::stdout;
+
+    const auto _stderr = stderr;
+    const auto _stdin = stdin;
+    const auto _stdout = stdout;
+
+#undef stderr
+#undef stdin
+#undef stdout
+
+    const auto stderr = _stderr;
+    const auto stdin = _stdin;
+    const auto stdout = _stdout;
+
+    const bool feat_cpp_lib_ranges_contains =
+#ifdef __cpp_lib_ranges_contains
+        true;
+#else
+        false;
+#endif
 }
 
 export namespace std
@@ -89,6 +105,7 @@ export namespace std
     using ::stderr;
     using ::stdin;
     using ::stdout;
+
     using std::cerr;
     using std::cin;
     using std::cout;
@@ -163,7 +180,9 @@ export namespace std
     using std::hash;
     using std::optional;
     using std::pair;
+    using std::basic_string;
     using std::string;
+    using std::basic_string_view;
     using std::string_view;
     using std::tuple;
     using std::tuple_element;
@@ -215,32 +234,32 @@ export namespace std
 
     namespace ranges
     {
-        using ranges::range;
-        using ranges::input_range;
-        using ranges::output_range;
-        using ranges::forward_range;
-        using ranges::bidirectional_range;
-        using ranges::random_access_range;
-        using ranges::contiguous_range;
-        using ranges::common_range;
-        using ranges::range_value_t;
-        using ranges::iterator_t;
-        using ranges::sentinel_t;
         using ranges::begin;
-        using ranges::end;
+        using ranges::bidirectional_range;
         using ranges::cbegin;
         using ranges::cend;
+        using ranges::common_range;
+        using ranges::contiguous_range;
+        using ranges::end;
+        using ranges::forward_range;
+        using ranges::input_range;
+        using ranges::iterator_t;
+        using ranges::output_range;
+        using ranges::random_access_range;
+        using ranges::range;
+        using ranges::range_value_t;
+        using ranges::sentinel_t;
         using ranges::contains;
     }
 
     using std::atomic;
+    using std::declval;
     using std::free;
     using std::function;
     using std::malloc;
     using std::mutex;
     using std::realloc;
     using std::type_info;
-    using std::declval;
 
     auto get_errno() -> int
     {

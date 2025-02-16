@@ -3,12 +3,12 @@ export module atom_core:ranges.range_definition;
 import std;
 import :core;
 
-export namespace atom::ranges
+namespace atom::ranges
 {
-    template <typename range_type>
+    export template <typename range_type>
     class range_definition;
 
-    template <typename in_value_type, usize count>
+    export template <typename in_value_type, usize count>
     class range_definition<const in_value_type[count]>
     {
     public:
@@ -28,7 +28,7 @@ export namespace atom::ranges
         }
     };
 
-    template <typename in_value_type, usize count>
+    export template <typename in_value_type, usize count>
     class range_definition<in_value_type[count]>
         : public range_definition<const in_value_type[count]>
     {
@@ -50,7 +50,43 @@ export namespace atom::ranges
     };
 
     template <typename std_range_type>
-        requires(std::ranges::range<std_range_type>)
+    struct _is_std_range
+    {
+        static constexpr bool value = false;
+    };
+
+    template <typename value_type>
+    struct _is_std_range<std::initializer_list<value_type>>
+    {
+        static constexpr bool value = true;
+    };
+
+    template <typename value_type>
+    struct _is_std_range<std::basic_string<value_type>>
+    {
+        static constexpr bool value = true;
+    };
+
+    template <typename value_type>
+    struct _is_std_range<std::basic_string_view<value_type>>
+    {
+        static constexpr bool value = true;
+    };
+
+    template <typename value_type>
+    struct _is_std_range<std::vector<value_type>>
+    {
+        static constexpr bool value = true;
+    };
+
+    template <typename value_type, std::size_t count>
+    struct _is_std_range<std::array<value_type, count>>
+    {
+        static constexpr bool value = true;
+    };
+
+    export template <typename std_range_type>
+        requires(_is_std_range<std_range_type>::value)
     class range_definition<std_range_type>
     {
     public:
@@ -67,8 +103,8 @@ export namespace atom::ranges
             return std::ranges::cbegin(range);
         }
 
-        static constexpr auto get_const_iterator_end(
-            const std_range_type& range) -> const_iterator_end_type
+        static constexpr auto get_const_iterator_end(const std_range_type& range)
+            -> const_iterator_end_type
         {
             return std::ranges::cend(range);
         }
