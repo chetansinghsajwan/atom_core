@@ -8,7 +8,7 @@ import :contracts;
 namespace atom
 {
     template <typename in_value_type, typename in_allocator_type>
-    class _dynamic_array_impl
+    struct _dynamic_array_impl
     {
         using this_type = _dynamic_array_impl;
 
@@ -21,13 +21,13 @@ namespace atom
         using mut_iterator_end_type = mut_iterator_type;
 
     public:
-        class copy_tag
+        struct copy_tag
         {};
 
-        class move_tag
+        struct move_tag
         {};
 
-        class range_tag
+        struct range_tag
         {};
 
     public:

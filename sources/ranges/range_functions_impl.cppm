@@ -10,7 +10,7 @@ import :ranges.range_definition;
 namespace atom::ranges
 {
     template <typename range_type>
-    class range_functions_impl
+    struct range_functions_impl
     {
     private:
         template <typename other_range_type>

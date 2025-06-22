@@ -16,7 +16,7 @@ namespace atom::filesystem
     /// --------------------------------------------------------------------------------------------
     /// error representing system level error.
     /// --------------------------------------------------------------------------------------------
-    export class system_error: public error
+    export struct system_error: public error
     {
     public:
         system_error(i32 error_no)
@@ -31,7 +31,7 @@ namespace atom::filesystem
     /// --------------------------------------------------------------------------------------------
     /// error representing some filesystem error.
     /// --------------------------------------------------------------------------------------------
-    export class filesystem_error: public system_error
+    export struct filesystem_error: public system_error
     {
     public:
         filesystem_error(i32 error_no)
@@ -42,7 +42,7 @@ namespace atom::filesystem
     /// --------------------------------------------------------------------------------------------
     /// error representing invalid options.
     /// --------------------------------------------------------------------------------------------
-    export class invalid_options_error: public error
+    export struct invalid_options_error: public error
     {
     public:
         invalid_options_error(string_view msg)
@@ -53,7 +53,7 @@ namespace atom::filesystem
     /// --------------------------------------------------------------------------------------------
     /// error representing no entry.
     /// --------------------------------------------------------------------------------------------
-    export class noentry_error: public error
+    export struct noentry_error: public error
     {
     public:
         static constexpr string_view error_msg = "no such file or directory.";
@@ -71,13 +71,13 @@ namespace atom::filesystem
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    export class file
+    export struct file
     {
     public:
         /// ----------------------------------------------------------------------------------------
         /// flags used to handle file opening.
         /// ----------------------------------------------------------------------------------------
-        enum class open_flags : byte
+        enum struct open_flags : byte
         {
             create = 1 << 0,    // allow creating file if doesn't exists
             overwrite = 1 << 1, // allow overwriting file if it exists
@@ -518,7 +518,7 @@ namespace atom::filesystem
 
         if (result.is_value())
         {
-            class file& file = result.get_value();
+            struct file& file = result.get_value();
             return file.read_str_all();
         }
 
@@ -538,7 +538,7 @@ namespace atom::filesystem
 
         if (result.is_value())
         {
-            class file& file = result.get_value();
+            struct file& file = result.get_value();
             file.write_str(str);
 
             return { create_from_void };
@@ -561,7 +561,7 @@ namespace atom::filesystem
 
         if (result.is_value())
         {
-            class file& file = result.get_value();
+            struct file& file = result.get_value();
             file.write_fmt(fmt, forward<arg_types>(args)...);
 
             return { create_from_void };
@@ -582,7 +582,7 @@ namespace atom::filesystem
 
         if (result.is_value())
         {
-            class file& file = result.get_value();
+            struct file& file = result.get_value();
             return file.read_bytes_all();
         }
 
@@ -602,7 +602,7 @@ namespace atom::filesystem
 
         if (result.is_value())
         {
-            class file& file = result.get_value();
+            struct file& file = result.get_value();
             file.write_bytes(bytes);
 
             return { create_from_void };
@@ -623,7 +623,7 @@ export namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    class error_with_msg: public error
+    struct error_with_msg: public error
     {
     public:
         error_with_msg(string msg)
@@ -639,7 +639,7 @@ export namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    class runtime_error: public error_with_msg
+    struct runtime_error: public error_with_msg
     {
     public:
         runtime_error(string msg)
@@ -650,7 +650,7 @@ export namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    class entry_exists_error: public error_with_msg
+    struct entry_exists_error: public error_with_msg
     {
     public:
         entry_exists_error(string msg)
@@ -661,7 +661,7 @@ export namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    class no_entry_error: public error_with_msg
+    struct no_entry_error: public error_with_msg
     {
     public:
         no_entry_error(string msg)

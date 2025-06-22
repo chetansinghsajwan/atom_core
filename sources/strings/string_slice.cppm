@@ -5,7 +5,7 @@ import :strings.string_tag;
 
 namespace atom
 {
-    export class string_slice
+    export struct string_slice
         : public array_slice<char>
         , public string_tag
     {

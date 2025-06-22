@@ -11,7 +11,7 @@ namespace atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename... types>
-    class type_list_impl;
+    struct type_list_impl;
 
     /// --------------------------------------------------------------------------------------------
     ///
@@ -53,10 +53,10 @@ namespace atom
     ///
     /// --------------------------------------------------------------------------------------------
     template <typename... types>
-    class type_list_impl
+    struct type_list_impl
     {
         template <typename... other_types>
-        friend class type_list_impl;
+        friend struct type_list_impl;
 
     private:
         using this_type = type_list_impl<types...>;

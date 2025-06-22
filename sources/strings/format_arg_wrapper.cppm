@@ -12,7 +12,7 @@ namespace atom
     /// implementation details.
     /// --------------------------------------------------------------------------------------------
     template <typename value_type>
-    class format_arg_wrapper
+    struct format_arg_wrapper
     {
         static_assert(type_info<value_type>::is_pure());
 

@@ -7,9 +7,9 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     /// simple_mutex implementation.
     ///
-    /// @todo implement this class without {std::lock}.
+    /// @todo implement this struct without {std::lock}.
     /// --------------------------------------------------------------------------------------------
-    export class simple_mutex
+    export struct simple_mutex
     {
     public:
         /// ----------------------------------------------------------------------------------------

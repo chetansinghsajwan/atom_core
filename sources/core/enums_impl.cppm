@@ -14,14 +14,14 @@ import :types;
 namespace atom
 {
     template <typename enum_type>
-    class _enum_impl_is_flags
+    struct _enum_impl_is_flags
     {
     public:
         static constexpr bool value = false;
     };
 
     template <typename enum_type, bool in_is_flags>
-    class _enums_impl
+    struct _enums_impl
     {
         using magic_string_type = magic_enum::string;
         using magic_string_view_type = magic_enum::string_view;

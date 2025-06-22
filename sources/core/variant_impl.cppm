@@ -12,10 +12,10 @@ namespace atom
     /// implementation of [`variant`].
     /// --------------------------------------------------------------------------------------------
     template <typename... value_types>
-    class variant_impl
+    struct variant_impl
     {
         template <typename... that_value_types>
-        friend class variant_impl;
+        friend struct variant_impl;
 
     private:
         using this_type = variant_impl;

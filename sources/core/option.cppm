@@ -11,11 +11,11 @@ namespace atom
     /// `option` template type is derived from `this` type, this helps to identify if a type is
     /// `option` template type.
     /// --------------------------------------------------------------------------------------------
-    class option_tag
+    struct option_tag
     {};
 
     /// --------------------------------------------------------------------------------------------
-    /// the option class is used to wrap the object of type `value_type`. this_type class contain either the
+    /// the option struct is used to wrap the object of type `value_type`. this_type struct contain either the
     /// value or can be empty representing no value.
     ///
     /// this_type is useful when we want to return a value that may or may not exist, without
@@ -23,10 +23,10 @@ namespace atom
     /// like `i32`.
     /// --------------------------------------------------------------------------------------------
     export template <typename in_value_type>
-    class option
+    struct option
     {
         template <typename that_value_type>
-        friend class option;
+        friend struct option;
 
     private:
         using this_type = option;

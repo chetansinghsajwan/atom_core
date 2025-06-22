@@ -6,11 +6,11 @@ import :ranges;
 
 namespace atom
 {
-    class static_array_tag
+    struct static_array_tag
     {};
 
     export template <typename in_value_type, usize count>
-    class static_array: public static_array_tag
+    struct static_array: public static_array_tag
     {
     public:
         using value_type = in_value_type;
@@ -87,7 +87,7 @@ namespace atom
 
     template <typename range_type>
         requires(type_info<range_type>::template is_derived_from<static_array_tag>())
-    class ranges::range_definition<range_type>
+    struct ranges::range_definition<range_type>
     {
     public:
         using value_type = typename range_type::value_type;

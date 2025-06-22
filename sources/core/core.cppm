@@ -76,13 +76,13 @@ export namespace atom
     using nullptr_t = std::nullptr_t;
 
     template <typename... arg_types>
-    class type_holder
+    struct type_holder
     {};
 
     template <typename value_type>
     using initializer_list = std::initializer_list<value_type>;
 
-    enum class loop_command
+    enum struct loop_command
     {
         continue_,
         break_,

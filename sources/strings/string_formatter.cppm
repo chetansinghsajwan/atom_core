@@ -12,7 +12,7 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     /// level of `string_formatter` implementation, this is used to prevent ambiguities.
     /// --------------------------------------------------------------------------------------------
-    export enum class string_formatter_level
+    export enum struct string_formatter_level
     {
         atom,
         fmt,
@@ -25,7 +25,7 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     export template <typename value_type,
         string_formatter_level level = string_formatter_level::user>
-    class string_formatter;
+    struct string_formatter;
 
     /// --------------------------------------------------------------------------------------------
     /// `string_formatter` specialization for all types for which exists a `fmt::formatter`
@@ -33,7 +33,7 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     export template <typename value_type>
         requires(type_info<fmt::formatter<value_type>>::is_default_constructible())
-    class string_formatter<value_type, string_formatter_level::fmt>
+    struct string_formatter<value_type, string_formatter_level::fmt>
     {
     public:
         constexpr auto parse(string_format_parse_context& context)
@@ -60,7 +60,7 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     export template <typename string_type>
         requires(type_info<string_type>::template is_derived_from<string_tag>())
-    class string_formatter<string_type, string_formatter_level::atom>
+    struct string_formatter<string_type, string_formatter_level::atom>
         : public string_formatter<fmt::string_view, string_formatter_level::fmt>
     {
         using base_type = string_formatter<fmt::string_view, string_formatter_level::fmt>;
@@ -78,7 +78,7 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     export template <typename enum_type>
         requires(type_info<enum_type>::is_enum())
-    class string_formatter<enum_type, string_formatter_level::atom>
+    struct string_formatter<enum_type, string_formatter_level::atom>
         : public string_formatter<string_view, string_formatter_level::atom>
     {
         using base_type = string_formatter<string_view, string_formatter_level::atom>;

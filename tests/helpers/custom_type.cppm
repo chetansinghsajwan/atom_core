@@ -4,7 +4,7 @@ import atom_core;
 
 namespace atom::tests
 {
-    export enum class custom_type_flags: u64
+    export enum struct custom_type_flags: u64
     {
         none = 0,
         all = nums::get_max_u64(),
@@ -36,7 +36,7 @@ namespace atom::tests
     ///
     /// --------------------------------------------------------------------------------------------
     export template <custom_type_flags flags>
-    class custom_type
+    struct custom_type
     {
         using this_type = custom_type;
         using this_type_lvalue_ref = this_type&;
@@ -188,7 +188,7 @@ namespace atom::tests
         }
     };
 
-    class non_default_constructible_type
+    struct non_default_constructible_type
     {
     public:
         non_default_constructible_type() = delete;

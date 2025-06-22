@@ -24,7 +24,7 @@ export namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    enum class contract_type
+    enum struct contract_type
     {
         expects,
         asserts,
@@ -125,7 +125,7 @@ export namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    class contract_violation
+    struct contract_violation
     {
     public:
         contract_type type;
@@ -137,7 +137,7 @@ export namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    class contract_violation_exception: public std::exception
+    struct contract_violation_exception: public std::exception
     {
     public:
         contract_violation_exception(contract_violation violation)
@@ -161,7 +161,7 @@ export namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    class contract_violation_handler
+    struct contract_violation_handler
     {
     public:
         static auto get() -> contract_violation_handler*
@@ -196,7 +196,7 @@ export namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    class default_contract_violation_handler final: public contract_violation_handler
+    struct default_contract_violation_handler final: public contract_violation_handler
     {
     public:
         virtual auto handle(const contract_violation& violation) -> void override

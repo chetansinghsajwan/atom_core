@@ -15,16 +15,16 @@ export module atom_core:box;
 // {
 //     template <typename in_value_type, bool in_copy, bool in_move, bool in_allow_non_move,
 //         usize in_buf_size, typename in_allocator_type>
-//     class _box_impl
+//     struct _box_impl
 //     {
 //     public:
 //         using value_type = in_value_type;
 //         using allocator_type = in_allocator_type;
 
-//         class copy_tag
+//         struct copy_tag
 //         {};
 
-//         class move_tag
+//         struct move_tag
 //         {};
 
 //     public:
@@ -608,7 +608,7 @@ export module atom_core:box;
 //         }
 
 //     private:
-//         class _val_data
+//         struct _val_data
 //         {
 //         public:
 //             value_type* val;
@@ -636,7 +636,7 @@ export module atom_core:box;
 // namespace atom
 // {
 //     template <typename in_impl_type>
-//     class box_functions
+//     struct box_functions
 //     {
 //     protected:
 //         using _impl_type = in_impl_type;
@@ -875,7 +875,7 @@ export module atom_core:box;
 
 //     template <typename in_impl_type>
 //         requires type_info<typename in_impl_type::value_type>::is_void
-//     class box_functions<in_impl_type>
+//     struct box_functions<in_impl_type>
 //     {
 //     protected:
 //         using _impl_type = in_impl_type;
@@ -1072,22 +1072,22 @@ export module atom_core:box;
 // {
 //     template <typename value_type, usize buf_size = 50,
 //         typename allocator_type = default_mem_allocator>
-//     class box;
+//     struct box;
 
 //     template <typename value_type, usize buf_size = 50,
 //         typename allocator_type = default_mem_allocator>
-//     class copy_box;
+//     struct copy_box;
 
 //     template <typename value_type, bool allow_non_move = true, usize buf_size = 50,
 //         typename allocator_type = default_mem_allocator>
-//     class move_box;
+//     struct move_box;
 
 //     template <typename value_type, bool allow_non_move = true, usize buf_size = 50,
 //         typename allocator_type = default_mem_allocator>
-//     class copy_move_box;
+//     struct copy_move_box;
 
 //     template <typename value_type, usize buf_size, typename allocator_type>
-//     class box
+//     struct box
 //         : public box_functions<_box_impl<value_type, false, false, false, buf_size, allocator_type>>
 //     {
 //         using this_type = box<value_type, buf_size, allocator_type>;
@@ -1260,7 +1260,7 @@ export module atom_core:box;
 //     };
 
 //     template <typename value_type, usize buf_size, typename allocator_type>
-//     class copy_box
+//     struct copy_box
 //         : public box_functions<_box_impl<value_type, true, false, false, buf_size, allocator_type>>
 //     {
 //         using this_type = copy_box<value_type, buf_size, allocator_type>;
@@ -1366,7 +1366,7 @@ export module atom_core:box;
 //     };
 
 //     template <typename value_type, bool allow_non_move, usize buf_size, typename allocator_type>
-//     class move_box
+//     struct move_box
 //         : public box_functions<
 //               _box_impl<value_type, false, true, allow_non_move, buf_size, allocator_type>>
 //     {
@@ -1500,7 +1500,7 @@ export module atom_core:box;
 //     };
 
 //     template <typename value_type, bool allow_non_move, usize buf_size, typename allocator_type>
-//     class copy_move_box
+//     struct copy_move_box
 //         : public box_functions<
 //               _box_impl<value_type, true, true, allow_non_move, buf_size, allocator_type>>
 //     {
@@ -1810,7 +1810,7 @@ export module atom_core:box;
 //     };
 
 //     template <typename TVal, bool allowNonMove, usize bufSize, typename TAlloc>
-//     class MoveBox: public BoxFunctions<_BoxImpl<TVal, false, true, allowNonMove, bufSize, TAlloc>>
+//     struct MoveBox: public BoxFunctions<_BoxImpl<TVal, false, true, allowNonMove, bufSize, TAlloc>>
 //     {
 //         using This = MoveBox<TVal, allowNonMove, bufSize, TAlloc>;
 //         using Base = BoxFunctions<_BoxImpl<TVal, false, true, allowNonMove, bufSize, TAlloc>>;

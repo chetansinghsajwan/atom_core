@@ -10,7 +10,7 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     /// type used to bypass compile time string formatting checks.
     /// --------------------------------------------------------------------------------------------
-    export class runtime_format_string
+    export struct runtime_format_string
     {
     public:
         constexpr runtime_format_string(string_view str)
@@ -26,7 +26,7 @@ namespace atom
     /// invalid format or args.
     /// --------------------------------------------------------------------------------------------
     template <typename... arg_types>
-    class _format_string
+    struct _format_string
     {
     public:
         template <typename string_type>

@@ -4,23 +4,23 @@ export module atom_core:core.build_config;
 
 namespace atom
 {
-    export class build_config
+    export struct build_config
     {
     public:
-        enum class mode
+        enum struct mode
         {
             debug,
             release
         };
 
-        enum class platform
+        enum struct platform
         {
             windows,
             posix,
             unknown
         };
 
-        enum class compiler
+        enum struct compiler
         {
             clang,
             clang_gnuc,
@@ -30,7 +30,7 @@ namespace atom
             unknown
         };
 
-        class version
+        struct version
         {
         public:
             unsigned int major;

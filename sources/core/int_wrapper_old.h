@@ -16,7 +16,7 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     template <typename in_final_t, typename in_signed_t, typename in_unsigned_t,
         typename in_unwrapped_t, typename limit_t>
-    class _int_wrapper_impl
+    struct _int_wrapper_impl
     {
     public:
         using final_t = in_final_t;
@@ -257,27 +257,27 @@ namespace atom
     using _umax = std::uintmax_t;
     using usize = std::size_t;
 
-    class i8;
-    class i16;
-    class i32;
-    class i64;
-    class ifast8;
-    class ifast16;
-    class ifast32;
-    class ifast64;
-    class imax;
-    class isize;
+    struct i8;
+    struct i16;
+    struct i32;
+    struct i64;
+    struct ifast8;
+    struct ifast16;
+    struct ifast32;
+    struct ifast64;
+    struct imax;
+    struct isize;
 
-    class u8;
-    class u16;
-    class u32;
-    class u64;
-    class ufast8;
-    class ufast16;
-    class ufast32;
-    class ufast64;
-    class umax;
-    class usize;
+    struct u8;
+    struct u16;
+    struct u32;
+    struct u64;
+    struct ufast8;
+    struct ufast16;
+    struct ufast32;
+    struct ufast64;
+    struct umax;
+    struct usize;
 
     ATOM_ALIAS(i8, num_wrapper<_int_wrapper_impl<i8, i8, u8, _i8, _i8>>);
     ATOM_ALIAS(i16, num_wrapper<_int_wrapper_impl<i16, i16, u16, _i16, _i16>>);

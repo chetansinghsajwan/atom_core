@@ -7,7 +7,7 @@ import :strings.string_tag;
 namespace atom
 {
     export template <usize size>
-    class static_string
+    struct static_string
         : public static_array<char, size>
         , public string_tag
     {

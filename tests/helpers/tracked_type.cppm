@@ -10,7 +10,7 @@ namespace atom::tests
     /// --------------------------------------------------------------------------------------------
     /// type used to track object state.
     /// --------------------------------------------------------------------------------------------
-    export class tracked_type
+    export struct tracked_type
     {
         using this_type = tracked_type;
 
@@ -18,7 +18,7 @@ namespace atom::tests
         /// ----------------------------------------------------------------------------------------
         /// enum used to represent state.
         /// ----------------------------------------------------------------------------------------
-        enum class operation
+        enum struct operation
         {
             none,
 
@@ -129,7 +129,7 @@ namespace atom::tests
     ///
     /// --------------------------------------------------------------------------------------------
     export template <typename value_type>
-    class tracked_type_of: public tracked_type
+    struct tracked_type_of: public tracked_type
     {
         using this_type = tracked_type_of;
         using base_type = tracked_type;
@@ -170,7 +170,7 @@ namespace atom::tests
 namespace Catch
 {
     export template <>
-    class StringMaker<atom::tests::tracked_type::operation>
+    struct StringMaker<atom::tests::tracked_type::operation>
     {
     public:
         static constexpr auto convert(atom::tests::tracked_type::operation op) -> std::string

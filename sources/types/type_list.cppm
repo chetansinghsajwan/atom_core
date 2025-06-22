@@ -12,7 +12,7 @@ namespace atom
     ///
     /// --------------------------------------------------------------------------------------------
     export template <typename... types>
-    class type_list
+    struct type_list
     {
         using usize = std::size_t;
         using this_type = type_list<types...>;

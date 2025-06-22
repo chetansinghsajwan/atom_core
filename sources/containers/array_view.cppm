@@ -7,14 +7,14 @@ import :types;
 
 namespace atom
 {
-    export class array_view_tag
+    export struct array_view_tag
     {};
 
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
     export template <typename in_value_type>
-    class array_view: public array_view_tag
+    struct array_view: public array_view_tag
     {
         static_assert(type_info<in_value_type>::is_pure());
 
@@ -141,7 +141,7 @@ namespace atom
 
     export template <typename range_type>
         requires(type_info<range_type>::template is_derived_from<array_view_tag>())
-    class ranges::range_definition<range_type>
+    struct ranges::range_definition<range_type>
     {
     public:
         using value_type = typename range_type::value_type;

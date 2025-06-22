@@ -9,7 +9,7 @@ namespace atom
     /// implmentation for `bitset`.
     /// --------------------------------------------------------------------------------------------
     template <typename storage_type>
-    class _bitset_impl
+    struct _bitset_impl
     {
         using this_type = _bitset_impl<storage_type>;
 
@@ -214,7 +214,7 @@ namespace atom
     /// type to hold and manage a number of bits.
     /// --------------------------------------------------------------------------------------------
     export template <typename storage_type>
-    class bitset
+    struct bitset
     {
         using this_type = bitset<storage_type>;
         using _impl_type = _bitset_impl<storage_type>;

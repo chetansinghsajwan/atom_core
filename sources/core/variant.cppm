@@ -12,7 +12,7 @@ namespace atom
     /// `variant` template type is derived from `this` type, this helps to identify if a type is
     /// `variant` template type.
     /// --------------------------------------------------------------------------------------------
-    class variant_tag
+    struct variant_tag
     {};
 
     /// --------------------------------------------------------------------------------------------
@@ -20,10 +20,10 @@ namespace atom
     /// `value_types` at any given moment.
     /// --------------------------------------------------------------------------------------------
     export template <typename... value_types>
-    class variant: public variant_tag
+    struct variant: public variant_tag
     {
         template <typename... that_value_types>
-        friend class variant;
+        friend struct variant;
 
     private:
         using this_type = variant<value_types...>;

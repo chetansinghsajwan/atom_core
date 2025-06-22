@@ -13,7 +13,7 @@ namespace atom
     /// `result` template type is derived from `this` type, this helps to identify if a type is
     /// `result` template type.
     /// --------------------------------------------------------------------------------------------
-    export class result_tag
+    export struct result_tag
     {};
 
     /// --------------------------------------------------------------------------------------------
@@ -21,10 +21,10 @@ namespace atom
     /// `value_type` or an error of one of the `error_types`.
     /// --------------------------------------------------------------------------------------------
     export template <typename in_value_type, typename... error_types>
-    class result: public result_tag
+    struct result: public result_tag
     {
         template <typename that_value_type, typename... that_error_types>
-        friend class result;
+        friend struct result;
 
     private:
         using this_type = result;

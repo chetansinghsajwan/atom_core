@@ -7,7 +7,7 @@ import :contracts;
 
 export namespace atom::ranges
 {
-    enum class iterator_category : byte
+    enum struct iterator_category : byte
     {
         iterator = 0b1,
         unidirectional_iterator = 0b11,
@@ -17,10 +17,10 @@ export namespace atom::ranges
     };
 
     template <typename iterator_type>
-    class iterator_definition;
+    struct iterator_definition;
 
     template <typename in_value_type>
-    class iterator_definition<const in_value_type*>
+    struct iterator_definition<const in_value_type*>
     {
     public:
         using value_type = in_value_type;
@@ -28,7 +28,7 @@ export namespace atom::ranges
     };
 
     template <typename in_value_type>
-    class iterator_definition<in_value_type*>
+    struct iterator_definition<in_value_type*>
     {
     public:
         using value_type = in_value_type;
@@ -37,7 +37,7 @@ export namespace atom::ranges
 
     template <typename iterator_type>
         requires(std::input_iterator<iterator_type>)
-    class iterator_definition<iterator_type>
+    struct iterator_definition<iterator_type>
     {
         using std_traits_type = std::iterator_traits<iterator_type>;
 

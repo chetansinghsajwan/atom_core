@@ -7,7 +7,7 @@ import :ranges;
 namespace atom
 {
     template <typename in_value_type, typename in_allocator_type>
-    class dynamic_array_impl_vector
+    struct dynamic_array_impl_vector
     {
         using this_type = dynamic_array_impl_vector;
 
@@ -20,13 +20,13 @@ namespace atom
         using mut_iterator_end_type = mut_iterator_type;
 
     public:
-        class copy_tag
+        struct copy_tag
         {};
 
-        class move_tag
+        struct move_tag
         {};
 
-        class range_tag
+        struct range_tag
         {};
 
     public:

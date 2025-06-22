@@ -7,7 +7,7 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     ///
     /// --------------------------------------------------------------------------------------------
-    export class error
+    export struct error
     {
     public:
         constexpr error()
@@ -28,6 +28,6 @@ namespace atom
         std::string_view msg;
     };
 
-    export class value_exists_error: public error
+    export struct value_exists_error: public error
     {};
 }

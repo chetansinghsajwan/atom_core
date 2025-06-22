@@ -11,7 +11,7 @@ namespace atom
     ///
     /// @todo: should we delete its constructors and operators to match {simple_mutex}?
     /// --------------------------------------------------------------------------------------------
-    export class null_lockable
+    export struct null_lockable
     {
     public:
         /// ----------------------------------------------------------------------------------------
@@ -76,7 +76,7 @@ namespace atom
     /// specialization for null_lockable to avoid any performance overhead.
     /// --------------------------------------------------------------------------------------------
     export template <>
-    class lock_guard<null_lockable>
+    struct lock_guard<null_lockable>
     {
     public:
         /// ----------------------------------------------------------------------------------------

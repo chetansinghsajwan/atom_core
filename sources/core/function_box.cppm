@@ -11,18 +11,18 @@ import :contracts;
 /// ------------------------------------------------------------------------------------------------
 namespace atom
 {
-    class function_box_tag
+    struct function_box_tag
     {};
 
     template <typename result_type, typename... arg_types>
-    class _function_box_interface
+    struct _function_box_interface
     {
     public:
         virtual auto invoke(arg_types... args) -> result_type = 0;
     };
 
     template <typename function_type, typename result_type, typename... arg_types>
-    class _function_box_wrapper: public _function_box_interface<result_type, arg_types...>
+    struct _function_box_wrapper: public _function_box_interface<result_type, arg_types...>
     {
     public:
         _function_box_wrapper(function_type&& function)
@@ -50,7 +50,7 @@ namespace atom
     /// stores an function value_type using boxing.
     /// --------------------------------------------------------------------------------------------
     template <typename result_type, typename... arg_types>
-    class _function_box_impl
+    struct _function_box_impl
     {
         using this_type = _function_box_impl<result_type, arg_types...>;
         using _box_type = std::function<result_type(arg_types...)>;
@@ -61,13 +61,13 @@ namespace atom
         // using _wrapper_type = _function_box_wrapper<function_type, result_type, arg_types...>;
 
     public:
-        class copy_tag
+        struct copy_tag
         {};
 
-        class move_tag
+        struct move_tag
         {};
 
-        class value_tag
+        struct value_tag
         {};
 
     public:
@@ -174,13 +174,13 @@ namespace atom
     /// [`function_box`] declaration.
     /// --------------------------------------------------------------------------------------------
     export template <typename signature>
-    class function_box;
+    struct function_box;
 
     /// --------------------------------------------------------------------------------------------
     /// stores an function value_type using boxing.
     /// --------------------------------------------------------------------------------------------
     export template <typename result_type, typename... arg_types>
-    class function_box<result_type(arg_types...)>: public function_box_tag
+    struct function_box<result_type(arg_types...)>: public function_box_tag
     {
         using _impl_type = _function_box_impl<result_type, arg_types...>;
 

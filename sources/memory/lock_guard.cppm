@@ -9,7 +9,7 @@ namespace atom
     /// exception safety.
     /// --------------------------------------------------------------------------------------------
     export template <typename lockable_type>
-    class lock_guard
+    struct lock_guard
     {
         static_assert(is_lockable<lockable_type>);
 

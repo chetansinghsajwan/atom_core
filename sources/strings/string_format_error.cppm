@@ -8,7 +8,7 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     /// error type used to represent to string formatting error.
     /// --------------------------------------------------------------------------------------------
-    export class string_format_error: public error
+    export struct string_format_error: public error
     {
     public:
         constexpr string_format_error(string_view msg)

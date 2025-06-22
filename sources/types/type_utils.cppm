@@ -5,10 +5,10 @@ import :contracts;
 
 namespace atom
 {
-    export class type_utils
+    export struct type_utils
     {
     public:
-        class empty_type
+        struct empty_type
         {};
 
         template <bool condition, typename true_type, typename false_type = empty_type>

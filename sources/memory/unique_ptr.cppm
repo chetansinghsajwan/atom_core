@@ -7,10 +7,10 @@ import :default_mem_allocator;
 export namespace atom
 {
     template <typename value_type>
-    class shared_ptr;
+    struct shared_ptr;
 
     template <typename value_type>
-    class unique_ptr_default_destroyer
+    struct unique_ptr_default_destroyer
     {
         static_assert(type_info<value_type>::is_pure(), "value type must be pure.");
         static_assert(not type_info<value_type>::is_void(), "value type must not be void.");
@@ -25,7 +25,7 @@ export namespace atom
 
     template <typename in_value_type,
         typename in_destroyer_type = unique_ptr_default_destroyer<in_value_type>>
-    class unique_ptr
+    struct unique_ptr
     {
         static_assert(type_info<in_value_type>::is_pure(), "value type must be pure.");
         static_assert(not type_info<in_value_type>::is_void(), "value type must not be void.");
@@ -34,7 +34,7 @@ export namespace atom
 
     private:
         template <typename other_value_type, typename other_destroyer_type>
-        friend class unique_ptr;
+        friend struct unique_ptr;
 
     public:
         /// ----------------------------------------------------------------------------------------

@@ -8,7 +8,7 @@ import :ranges;
 
 namespace atom
 {
-    export class dynamic_buffer
+    export struct dynamic_buffer
     {
         using this_type = dynamic_buffer;
         using allocator_type = default_mem_allocator;
@@ -193,7 +193,7 @@ namespace atom
         allocator_type _allocator;
     };
 
-    export class memory_view
+    export struct memory_view
     {
     public:
         constexpr memory_view()

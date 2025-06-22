@@ -7,7 +7,7 @@ import :contracts;
 
 namespace atom
 {
-    export class array_slice_tag
+    export struct array_slice_tag
     {};
 
     /// --------------------------------------------------------------------------------------------
@@ -16,7 +16,7 @@ namespace atom
     /// \pre `type_info<in_value_type>::is_pure()`.
     /// --------------------------------------------------------------------------------------------
     export template <typename in_value_type>
-    class array_slice: public array_slice_tag
+    struct array_slice: public array_slice_tag
     {
         static_assert(type_info<in_value_type>::is_pure());
 
@@ -170,7 +170,7 @@ namespace atom
 
     export template <typename range_type>
         requires(type_info<range_type>::template is_derived_from<array_slice_tag>())
-    class ranges::range_definition<range_type>
+    struct ranges::range_definition<range_type>
     {
     public:
         using value_type = typename range_type::value_type;

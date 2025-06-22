@@ -10,7 +10,7 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     /// context to parse format string.
     /// --------------------------------------------------------------------------------------------
-    export class string_format_parse_context
+    export struct string_format_parse_context
     {
     public:
         constexpr string_format_parse_context(fmt::format_parse_context& fmt_ctx)
@@ -40,7 +40,7 @@ namespace atom
     /// --------------------------------------------------------------------------------------------
     /// context to write formatted string.
     /// --------------------------------------------------------------------------------------------
-    export class string_format_context
+    export struct string_format_context
     {
     public:
         constexpr string_format_context(fmt::format_context& ctx)

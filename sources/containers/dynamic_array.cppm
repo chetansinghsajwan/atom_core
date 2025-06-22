@@ -9,7 +9,7 @@ import :containers.dynamic_array_impl_vector;
 
 namespace atom
 {
-    export class dynamic_array_tag
+    export struct dynamic_array_tag
     {};
 
     /// --------------------------------------------------------------------------------------------
@@ -18,7 +18,7 @@ namespace atom
     /// \todo add note for cases, where value or a range of values to be inserted are from this array.
     /// --------------------------------------------------------------------------------------------
     export template <typename in_value_type, typename in_allocator_type = default_mem_allocator>
-    class dynamic_array: public dynamic_array_tag
+    struct dynamic_array: public dynamic_array_tag
     {
         static_assert(
             type_info<in_value_type>::is_pure(), "dynamic_array does not non pure types.");
@@ -773,7 +773,7 @@ namespace atom
 
     export template <typename range_type>
         requires(type_info<range_type>::template is_derived_from<dynamic_array_tag>())
-    class ranges::range_definition<range_type>
+    struct ranges::range_definition<range_type>
     {
     public:
         using value_type = typename range_type::value_type;

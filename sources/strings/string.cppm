@@ -11,7 +11,7 @@ import :strings.string_formatter_provider;
 
 namespace atom
 {
-    export class string: public buf_string<40, default_mem_allocator>
+    export struct string: public buf_string<40, default_mem_allocator>
     {
         using base_type = buf_string<40, default_mem_allocator>;
 

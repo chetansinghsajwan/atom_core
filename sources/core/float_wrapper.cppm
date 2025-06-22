@@ -11,7 +11,7 @@ import :core.num_wrapper;
 namespace atom
 {
     template <typename in_final_type, typename in_unwrapped_type>
-    class _float_wrapper_impl
+    struct _float_wrapper_impl
     {
     public:
         using final_type = in_final_type;

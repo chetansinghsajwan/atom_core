@@ -11,7 +11,7 @@ import :default_mem_allocator;
 namespace atom
 {
     template <typename value_type>
-    class ebo_helper
+    struct ebo_helper
     {
     public:
         constexpr ebo_helper(value_type val)
@@ -35,7 +35,7 @@ namespace atom
 
     template <typename value_type>
         requires(type_info<value_type>::is_empty())
-    class ebo_helper<value_type>: private value_type
+    struct ebo_helper<value_type>: private value_type
     {
     public:
         constexpr ebo_helper(value_type val)
@@ -54,7 +54,7 @@ namespace atom
         }
     };
 
-    class _shared_ptr_state
+    struct _shared_ptr_state
     {
     public:
         virtual auto destroy(void* ptr) -> void = 0;
@@ -81,7 +81,7 @@ namespace atom
     };
 
     template <typename value_type, typename destroyer_type, typename allocator_type>
-    class _default_shared_ptr_state
+    struct _default_shared_ptr_state
         : public _shared_ptr_state
         , private ebo_helper<destroyer_type>
         , private ebo_helper<allocator_type>
@@ -114,14 +114,14 @@ namespace atom
 /// ------------------------------------------------------------------------------------------------
 export namespace atom
 {
-    class shared_ptr_default_allocator: public default_mem_allocator
+    struct shared_ptr_default_allocator: public default_mem_allocator
     {};
 
-    class _shared_ptr_private_ctor
+    struct _shared_ptr_private_ctor
     {};
 
     template <typename value_type>
-    class shared_ptr_default_destroyer
+    struct shared_ptr_default_destroyer
     {
         static_assert(type_info<value_type>::is_pure(),
             "shared_ptr_default_destroyer only supports pure types.");
@@ -137,7 +137,7 @@ export namespace atom
     };
 
     template <typename in_value_type>
-    class shared_ptr
+    struct shared_ptr
     {
         static_assert(type_info<in_value_type>::is_pure(), "shared_ptr only supports pure types.");
         static_assert(not type_info<in_value_type>::is_void(), "shared_ptr does not support void.");
@@ -153,7 +153,7 @@ export namespace atom
 
     private:
         template <typename value_type>
-        friend class shared_ptr;
+        friend struct shared_ptr;
 
         template <typename value_type, typename allocator_type, typename... arg_types>
         friend auto make_shared_with_alloc(

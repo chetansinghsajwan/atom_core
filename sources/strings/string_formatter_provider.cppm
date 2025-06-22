@@ -12,7 +12,7 @@ namespace atom
     /// finds and provides `string_formatter` implementation to use.
     /// --------------------------------------------------------------------------------------------
     export template <typename in_value_type>
-    class string_formatter_provider
+    struct string_formatter_provider
     {
         using value_type = type_info<in_value_type>::pure_type::value_type;
 
@@ -77,7 +77,7 @@ namespace fmt
     /// calls `atom::formatter` implementation for `value_type`.
     /// --------------------------------------------------------------------------------------------
     export template <typename value_type>
-    class formatter<atom::format_arg_wrapper<value_type>>
+    struct formatter<atom::format_arg_wrapper<value_type>>
     {
     public:
         constexpr auto parse(fmt::format_parse_context& fmt_ctx) ->

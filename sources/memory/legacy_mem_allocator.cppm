@@ -5,7 +5,7 @@ import :core;
 
 namespace atom
 {
-    export class legacy_mem_allocator
+    export struct legacy_mem_allocator
     {
     public:
         auto alloc(usize size) -> void*

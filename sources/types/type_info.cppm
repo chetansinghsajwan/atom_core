@@ -8,7 +8,7 @@ namespace atom
     export using type_id = std::size_t;
 
     export template <typename in_value_type>
-    class type_info
+    struct type_info
     {
         using this_type = type_info;
         using usize = std::size_t;

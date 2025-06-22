@@ -7,7 +7,7 @@ import :core.union_storage;
 namespace atom
 {
     template <typename in_value_type>
-    class option_impl
+    struct option_impl
     {
         using this_type = option_impl<in_value_type>;
         using value_type_info = type_info<in_value_type>;
@@ -16,13 +16,13 @@ namespace atom
     public:
         using value_type = in_value_type;
 
-        class that_tag
+        struct that_tag
         {};
 
-        class null_tag
+        struct null_tag
         {};
 
-        class emplace_tag
+        struct emplace_tag
         {};
 
     public:

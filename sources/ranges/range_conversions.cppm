@@ -10,7 +10,7 @@ import :ranges.range_concepts;
 namespace atom::ranges
 {
     template <typename iterator_type, typename iterator_end_type>
-    class _range_from_iterator_pair
+    struct _range_from_iterator_pair
     {
     public:
         constexpr _range_from_iterator_pair(iterator_type it, iterator_end_type it_end)
@@ -24,7 +24,7 @@ namespace atom::ranges
     };
 
     template <typename in_iterator_type, typename in_iterator_end_type>
-    class range_definition<_range_from_iterator_pair<in_iterator_type, in_iterator_end_type>>
+    struct range_definition<_range_from_iterator_pair<in_iterator_type, in_iterator_end_type>>
     {
         using range_type = _range_from_iterator_pair<in_iterator_type, in_iterator_end_type>;
 

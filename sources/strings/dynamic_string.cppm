@@ -6,7 +6,7 @@ import :strings.string_tag;
 namespace atom
 {
     export template <typename allocator_type>
-    class dynamic_string
+    struct dynamic_string
         : public dynamic_array<char, allocator_type>
         , public string_tag
     {

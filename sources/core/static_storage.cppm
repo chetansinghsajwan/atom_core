@@ -9,7 +9,7 @@ import :core.int_wrapper;
 namespace atom
 {
     export template <usize in_size>
-    class static_storage
+    struct static_storage
     {
     public:
         static consteval auto size() -> usize

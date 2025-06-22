@@ -31,7 +31,7 @@ namespace atom
     template <typename output_type>
     constexpr auto _wrap_output_type_atom_to_fmt(output_type* out)
     {
-        class _wrapper
+        struct _wrapper
         {
         public:
             using valueue_type = char;

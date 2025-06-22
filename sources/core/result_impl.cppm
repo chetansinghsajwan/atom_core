@@ -9,10 +9,10 @@ import :core.variant_impl;
 namespace atom
 {
     template <typename in_value_type, typename... error_types>
-    class result_impl
+    struct result_impl
     {
         template <typename that_value_type, typename... that_error_types>
-        friend class result_impl;
+        friend struct result_impl;
 
     private:
         using this_type = result_impl;
@@ -24,11 +24,11 @@ namespace atom
         using error_types_list = type_list<error_types...>;
 
     public:
-        class that_tag
+        struct that_tag
         {};
 
         template <typename value_type>
-        class emplace_tag
+        struct emplace_tag
         {};
 
     public:

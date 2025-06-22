@@ -43,7 +43,7 @@ export namespace atom::enums
     ///
     /// @example value from string.
     /// ```
-    /// enum class example
+    /// enum struct example
     /// {
     ///     value1,
     ///     value2,
@@ -55,7 +55,7 @@ export namespace atom::enums
     ///
     /// @example value from flags.
     /// ```
-    /// enum class flags
+    /// enum struct flags
     /// {
     ///     value1 = 1 << 0,
     ///     value2 = 1 << 1,
@@ -390,7 +390,7 @@ namespace atom
 {
     template <typename enum_type>
         requires enums::is_flags<enum_type>
-    class _enum_impl_is_flags<enum_type>
+    struct _enum_impl_is_flags<enum_type>
     {
     public:
         static constexpr bool value = true;

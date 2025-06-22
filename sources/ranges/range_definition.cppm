@@ -6,10 +6,10 @@ import :core;
 namespace atom::ranges
 {
     export template <typename range_type>
-    class range_definition;
+    struct range_definition;
 
     export template <typename in_value_type, usize count>
-    class range_definition<const in_value_type[count]>
+    struct range_definition<const in_value_type[count]>
     {
     public:
         using value_type = in_value_type;
@@ -29,7 +29,7 @@ namespace atom::ranges
     };
 
     export template <typename in_value_type, usize count>
-    class range_definition<in_value_type[count]>
+    struct range_definition<in_value_type[count]>
         : public range_definition<const in_value_type[count]>
     {
     public:
@@ -87,7 +87,7 @@ namespace atom::ranges
 
     export template <typename std_range_type>
         requires(_is_std_range<std_range_type>::value)
-    class range_definition<std_range_type>
+    struct range_definition<std_range_type>
     {
     public:
         using value_type = std::ranges::range_value_t<std_range_type>;

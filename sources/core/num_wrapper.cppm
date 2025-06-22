@@ -5,7 +5,7 @@ import :contracts;
 
 namespace atom
 {
-    class _num_wrapper_id
+    struct _num_wrapper_id
     {};
 
     /// --------------------------------------------------------------------------------------------
@@ -24,7 +24,7 @@ namespace atom
     /// wraps any numeric type to provide safe operations like overflow and underflow checks.
     /// --------------------------------------------------------------------------------------------
     template <typename in_impl_type>
-    class num_wrapper: public _num_wrapper_id
+    struct num_wrapper: public _num_wrapper_id
     {
         using this_type = num_wrapper<in_impl_type>;
 

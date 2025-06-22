@@ -7,7 +7,7 @@ import :strings.string_tag;
 
 namespace atom
 {
-    export class string_view
+    export struct string_view
         : public array_view<char>
         , public string_tag
     {
